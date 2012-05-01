@@ -40,7 +40,7 @@ public class TableTest {
     }
 
     @Test public void ignoresMalformedTables() {
-        ParserTestHelper.assertTranslatesTo("!|\n\n|a|\n", "!|\n" + ParserTestHelper.newLineRendered + tableWithCell("a"));
+        ParserTestHelper.assertTranslatesTo("!|\n\n|a|\n", "!|" + ParserTestHelper.newLineRendered + ParserTestHelper.newLineRendered + tableWithCell("a"));
     }
 
     @Test public void ignoreMostMarkupInLiteralTable() {

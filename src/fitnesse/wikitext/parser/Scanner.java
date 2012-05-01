@@ -7,28 +7,28 @@ import java.util.List;
 
 public class Scanner {
 
-    private static final Symbol endToken = new Symbol(SymbolType.Empty);
-
     private ScanString input;
-    private Symbol currentToken;
     private int next;
     private TextMaker textMaker;
+    private SymbolStream symbols;
 
     public Scanner(SourcePage sourcePage, String input) {
-        this.input = new ScanString(input, 0);
-        next = 0;
-        textMaker = new TextMaker(new VariableSource() {
-            public Maybe<String> findVariable(String name) {
-                return Maybe.noString;
-            }
-        },
-        sourcePage);
+        this(
+            new TextMaker(
+                new VariableSource() {
+                        public Maybe<String> findVariable(String name) {
+                            return Maybe.noString;
+                        }
+                },
+                sourcePage),
+            input);
     }
 
     public Scanner(TextMaker textMaker, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;
+        symbols = new SymbolStream();
     }
 
     public Scanner(Scanner other) {
@@ -38,9 +38,9 @@ public class Scanner {
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
 
-    public boolean isEnd() { return currentToken == endToken; }
+    public boolean isEnd() { return symbols.isEnd(); }
     public boolean isLast() { return input.isEnd(1); }
-    public Symbol getCurrent() { return currentToken; }
+    public Symbol getCurrent() { return symbols.get(0); }
 
     public Maybe<String> stringFromStart(int start) {
         int end = getOffset() - getCurrent().getContent().length();
@@ -52,15 +52,16 @@ public class Scanner {
     public void copy(Scanner other) {
         input = new ScanString(other.input);
         next = other.next;
-        currentToken = other.currentToken;
         textMaker = other.textMaker;
+        symbols = new SymbolStream(other.symbols);
     }
 
     public Symbol makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
-            SymbolMatch match = terminator.makeMatch(input);
+            SymbolMatch match = terminator.makeMatch(input, symbols);
             if (match.isMatch()) {
+                symbols.add(new Symbol(terminator));
                 Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset() + match.getMatchLength();
                 return result;
@@ -69,7 +70,7 @@ public class Scanner {
         }
         Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
         next = input.getOffset();
-        currentToken = endToken;
+        symbols.add(Symbol.emptySymbol);
         return result;
     }
 
@@ -80,7 +81,7 @@ public class Scanner {
     public void moveNextIgnoreFirst(ParseSpecification specification) {
         Step step = makeNextStep(specification, next);
         next = step.nextPosition;
-        currentToken = step.token;
+        symbols.add(step.token);
     }
 
     public List<Symbol> peek(int count, ParseSpecification specification) {
@@ -95,16 +96,13 @@ public class Scanner {
         return result;
     }
 
+
     private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
         input.setOffset(startPosition);
         int newNext = startPosition;
         Symbol matchSymbol = null;
         while (!input.isEnd()) {
-            SymbolMatch match = specification.findMatch(input, new MatchableFilter() {
-                public boolean isValid(Matchable candidate) {
-                    return input.getOffset() != startPosition || !specification.ignores(candidate);
-                }
-            });
+            SymbolMatch match = specification.findMatch(input, startPosition, symbols);
             if (match.isMatch()) {
                 matchSymbol = match.getSymbol();
                 newNext = input.getOffset() + match.getMatchLength();
@@ -117,11 +115,10 @@ public class Scanner {
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
-            return new Step(endToken, input.getOffset());
+            return new Step(Symbol.emptySymbol, input.getOffset());
         }
         return new Step(matchSymbol, newNext);
     }
-
 
     private class Step {
         public Symbol token;

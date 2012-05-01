@@ -74,6 +74,12 @@
     <!-- Same as original ant setting: -->
     <outputDirectory>${project.basedir}/classes</outputDirectory>
     <resources>
+      <resource>
+        <directory>${project.build.sourceDirectory}</directory>
+        <includes>
+          <include>fitnesse/resources/**</include>
+        </includes>
+      </resource>
     </resources>
 
     <plugins>
@@ -147,7 +153,7 @@
         <executions>
           <execution>
             <id>fitnesse-resources</id>
-            <phase>compile</phase>
+            <phase>prepare-package</phase>
             <configuration>
               <target>
                 <property name="classes" value="${project.build.outputDirectory}" />
@@ -169,7 +175,7 @@
 
   <profiles>
     <profile>
-      <id>jar-with-dependencies</id>
+      <id>standalone</id>
       <build>
         <plugins>
           <plugin>

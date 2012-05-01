@@ -7,6 +7,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Test;
+import util.TestClock;
 import util.TimeMeasurement;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -44,12 +45,11 @@ public class SuiteExecutionReportFormatterTest {
     WikiPage page = new WikiPageDummy("name", "content");
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
 
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
+    TestClock clock = new TestClock();
+    clock.currentTime = 100L;
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement(clock).start();
     formatter.announceNumberTestsToRun(0);
-    while (totalTimeMeasurement.elapsed() == 0) {
-      Thread.sleep(50);
-    }
-
+    clock.currentTime = 150L;
     formatter.allTestingComplete(totalTimeMeasurement);
     assertThat(formatter.suiteExecutionReport.getTotalRunTimeInMillis(),
       is(totalTimeMeasurement.elapsed()));
@@ -77,5 +77,4 @@ public class SuiteExecutionReportFormatterTest {
     assertThat(BaseFormatter.finalErrorCount, is(5));
 
   }
-
 }

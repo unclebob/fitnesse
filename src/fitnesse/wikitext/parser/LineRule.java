@@ -14,5 +14,4 @@ public class LineRule implements Rule {
 
         return new Maybe<Symbol>(current.add(parser.parseToEnd(SymbolType.Newline)));
     }
-
 }

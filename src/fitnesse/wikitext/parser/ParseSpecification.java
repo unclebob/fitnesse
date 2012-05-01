@@ -68,8 +68,12 @@ public class ParseSpecification {
         return priority > other.priority;
     }
 
-    public SymbolMatch findMatch(ScanString input, MatchableFilter filter) {
-        return provider.findMatch(input, filter);
+    public SymbolMatch findMatch(final ScanString input, final int startPosition, SymbolStream symbols) {
+        return provider.findMatch(input, symbols, new MatchableFilter() {
+                        public boolean isValid(Matchable candidate) {
+                            return input.getOffset() != startPosition || !ignores(candidate);
+                        }
+                    });
     }
 
     public boolean matchesFor(SymbolType symbolType) {

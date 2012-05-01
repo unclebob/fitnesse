@@ -34,10 +34,14 @@
 
  <textarea class="pageContent no_wrap" id="pageContentId" name="pageContent" wrap="off">$pageContent</textarea>
 
+ <fieldset>
+  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="Suites" value="$!suites" />
+ </fieldset>
+
  <fieldset class="edit_buttons">
 
   <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
-  <a href="$resource">Cancel</a>
+  <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
   <script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/spreadsheetSupport.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>

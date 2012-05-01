@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Symbol {
-    public static Maybe<Symbol> nothing = new Maybe<Symbol>();
+    public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
+    public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
     private SymbolType type;
     private String content = "";
@@ -23,6 +24,12 @@ public class Symbol {
 
     public SymbolType getType() { return type; }
     public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
+    public boolean isStartCell() { return isType(Table.symbolType) || isType(SymbolType.EndCell); }
+
+    public boolean isLineType() {
+        return isType(HeaderLine.symbolType) || isType(SymbolType.CenterLine) || isType(SymbolType.Meta) ||
+                isType(SymbolType.NoteLine);
+    }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 

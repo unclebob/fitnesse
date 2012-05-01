@@ -64,4 +64,12 @@ public class ListTest {
         ParserTestHelper.assertTranslatesTo(" 1 item1\n 2 item2\n",
           list("ol", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ol", 0));
     }
+
+    @Test
+     public void translatesNestedMixedLists() {
+         ParserTestHelper.assertTranslatesTo(" * item1\n  1 item2\n",
+           list("ul", 0) +
+             listItem("item1" + list("ol", 0) + listItem("item2", 1) + list("/ol", 0), 1) +
+             list("/ul", 0));
+     }
 }

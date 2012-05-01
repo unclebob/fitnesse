@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class Table extends SymbolType implements Rule, Translation {
+    public static final Table symbolType = new Table();
 
     public Table() {
         super("Table");
@@ -27,15 +28,15 @@ public class Table extends SymbolType implements Rule, Translation {
                 row.add(cell);
                 if (parser.getCurrent().getContent().indexOf("\n") > 0 || parser.atLast()) break;
             }
-            if (parser.getCurrent().getContent().indexOf("\n|") < 0 || parser.atLast()) break;
+            if (!parser.getCurrent().getContent().contains("\n|") || parser.atLast()) break;
         }
         return new Maybe<Symbol>(current);
     }
 
     private Symbol parseCell(Parser parser, String content) {
-        return (content.indexOf("!") >= 0)
+        return (content.contains("!"))
            ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
-           : parser.parseTo(SymbolType.EndCell, 1);
+           : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, 1);
     }
 
     private boolean containsNewLine(Symbol cell) {

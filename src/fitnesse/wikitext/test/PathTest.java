@@ -14,6 +14,9 @@ public class PathTest {
     @Test
     public void scansPaths() {
         ParserTestHelper.assertScansTokenType("!path stuff", "Path", true);
+        ParserTestHelper.assertScansTokenType(" !path stuff", "Path", false);
+        ParserTestHelper.assertScansTokenType("| !path stuff|", "Path", true);
+        ParserTestHelper.assertScansTokenType("!note !path stuff", "Path", true);
     }
 
     @Test

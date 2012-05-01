@@ -18,7 +18,7 @@ function doSilentRequest(url)
 /**
  *  Scenario's (after test execution)
  */
-$(document).on("click", "article tr.scenario td", function() {
+$(document).on("click", "article tr.scenario td", function () {
 	$(this).parent().toggleClass("open").next().toggle();
 });
 
@@ -26,10 +26,10 @@ $(document).on("click", "article tr.scenario td", function() {
  * Collapsible section
  */
 $(document)
-	.on("click", "article .collapsible > p.title", function() {
+	.on("click", "article .collapsible > p.title", function () {
 		$(this).parent().toggleClass('closed');
 	})
-	.on("click", "article .collapsible > p.title a", function(event) {
+	.on("click", "article .collapsible > p.title a", function (event) {
 		// Do not open when clicking on a link in the title.
 		event.stopPropagation();
 		return true;
@@ -54,11 +54,24 @@ window.onbeforeunload = function () {
 	}
 };
 
-/**
- * Field validations
- */
 $(document).ready(function() {
+
+	/**
+	 * Change a.button to a real button (so it looks the same), retaining link behaviour
+	 */
+	$('a.button').replaceWith(function () {
+		var self = $(this);
+		var button = $('<button/>');
+		button.text(self.text());
+		button.click(function () {
+			window.location = self.attr('href');
+		});
+		return button;
+	});
 	
+	/**
+	 * Field validations
+	 */
 	function validateField(re, msg) {
 		var pageNameError = $(this).data("error");
 		if (!re.test($(this).val())) {
@@ -75,13 +88,13 @@ $(document).ready(function() {
 		}
 	}
 	
-	$('input.wikiword').keyup(function() {
+	$('input.wikiword').keyup(function () {
 		validateField.apply(this, 
 				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
 		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
 	});
 	
-	$('input.wikipath').keyup(function() {
+	$('input.wikipath').keyup(function () {
 		validateField.apply(this, 
 				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);

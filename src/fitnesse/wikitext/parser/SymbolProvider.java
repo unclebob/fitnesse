@@ -10,7 +10,7 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
-            Link.symbolType, new Table(), SymbolType.EndCell,
+            Link.symbolType, new Table(),
             new HashTable(),  new HeaderLine(), Literal.symbolType, new Collapsible(),
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
@@ -25,6 +25,8 @@ public class SymbolProvider {
             SymbolType.Bold,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
+
+    public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
@@ -93,10 +95,10 @@ public class SymbolProvider {
         return symbolTypes.contains(type);
     }
 
-    public SymbolMatch findMatch(ScanString input, MatchableFilter filter) {
+    public SymbolMatch findMatch(ScanString input, SymbolStream symbols, MatchableFilter filter) {
         for (Matchable candidate: getMatchTypes(input.charAt(0))) {
             if (filter.isValid(candidate)) {
-                SymbolMatch match = candidate.makeMatch(input);
+                SymbolMatch match = candidate.makeMatch(input, symbols);
                 if (match.isMatch()) return match;
             }
         }

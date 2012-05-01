@@ -62,6 +62,14 @@ public class Parser {
         return tokens;
     }
 
+    public Symbol peek() {
+        return peek(1).get(0);
+    }
+
+    public List<Symbol> peek(int size) {
+        return scanner.peek(size, new ParseSpecification().provider(specification));
+    }
+
     public List<Symbol> peek(SymbolType[] types) {
         List<Symbol> lookAhead = scanner.peek(types.length, new ParseSpecification().provider(specification));
         if (lookAhead.size() != types.length) return emptySymbols;
@@ -113,7 +121,7 @@ public class Parser {
     }
 
     public Symbol parseTo(SymbolType terminator, int priority) {
-        return parse(new ParseSpecification().terminator(terminator).priority(priority));
+        return parse(new ParseSpecification() /*.provider(specification)*/ .terminator(terminator).priority(priority));
     }
 
     public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider, int priority) {
@@ -128,7 +136,7 @@ public class Parser {
     }
 
     public Symbol parseToEnd(SymbolType end) {
-        return parse(new ParseSpecification().end(end));
+        return parse(new ParseSpecification().provider(specification).end(end));
     }
 
     public Symbol parseToEnds(int priority, SymbolProvider provider, SymbolType[] moreEnds) {

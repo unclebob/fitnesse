@@ -88,7 +88,7 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
     private void assertMatch(String input, boolean expected) {
-        SymbolMatch match = testProvider.findMatch(new ScanString(input, 0), new MatchableFilter() {
+        SymbolMatch match = testProvider.findMatch(new ScanString(input, 0), new SymbolStream(), new MatchableFilter() {
                     public boolean isValid(Matchable candidate) { return true; }});
         assertEquals(match.isMatch(), expected);
     }
