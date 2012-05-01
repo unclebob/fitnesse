@@ -40,7 +40,10 @@ iframe.wysiwyg:focus {
     padding: 0 8px;
     margin-right: .1em;
 }
-
+.wysiwyg-toolbar ul#wm-style {
+	border-radius: 2px;
+	padding: 0;
+}
 .wysiwyg-toolbar li {
     display: block;
     float: left;
@@ -48,13 +51,11 @@ iframe.wysiwyg:focus {
     border-left: 1px solid gray;
     padding: 0 1px;
 }
-
 .wysiwyg-toolbar li:first-child {
     display: inline;
     background-color: white;
     border-left: none;
 }
-
 .wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
     background: transparent url(menusprite.png) no-repeat;
     border: none;
@@ -65,7 +66,6 @@ iframe.wysiwyg:focus {
     display: block;
     float: left;
 }
-
 .wysiwyg-toolbar li.selected :link, .wysiwyg-toolbar li.selected :visited {
 	border: 1px inset gray;
 	width: 30px;
@@ -89,6 +89,12 @@ iframe.wysiwyg:focus {
     background-image: url(desc.png);
     background-position: right bottom;
 }
+.wysiwyg-toolbar li a#wt-style:active, .wysiwyg-toolbar li.selected a#wt-style:active {
+	border: none;
+	width: 78px;
+	height: 22px;
+}
+
 .wysiwyg-toolbar li a#wt-style span {
     display: none;
     border-size: 1px;

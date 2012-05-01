@@ -304,7 +304,7 @@ Wysiwyg.prototype.createEditable = function (d, textarea) {
 Wysiwyg.prototype.createWysiwygToolbar = function (d) {
     var divider = '<li class="divider"></li>';
     var html = [
-        '<ul>',
+        '<ul id="wm-style">',
         '<li class="wysiwyg-menu-style" title="Style">',
         '<a id="wt-style" href="#">',
         '<span class="wysiwyg-menu-style">Style</span>',
