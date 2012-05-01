@@ -11,7 +11,7 @@
   <groupId>org.fitnesse</groupId>
   <artifactId>fitnesse</artifactId>
   <name>fitnesse</name>
-  <version>20120401-SNAPSHOT</version>
+  <version>20120420-SNAPSHOT</version>
   <url>http://fitnesse.org</url>
   <description>
     The fully integrated standalone wiki, and acceptance testing framework.
