@@ -96,7 +96,6 @@ public class Scanner {
         return result;
     }
 
-
     private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
         input.setOffset(startPosition);
         int newNext = startPosition;

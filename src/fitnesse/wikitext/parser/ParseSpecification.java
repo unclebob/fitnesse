@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ParseSpecification {
+    public static final int tablePriority = 1;
+    public static final int normalPriority = 0;
+
     private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
     private ArrayList<SymbolType> terminators = new ArrayList<SymbolType>();
     private ArrayList<SymbolType> ignoresFirst = new ArrayList<SymbolType>();

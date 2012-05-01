@@ -46,6 +46,7 @@ public class Parser {
     public boolean atEnd() { return scanner.isEnd(); }
     public boolean atLast() { return scanner.isLast(); }
     public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
+    public boolean endsOn(SymbolType type) { return specification.endsOn(type); }
 
     public Symbol moveNext(int count) {
         for (int i = 0; i < count; i++) scanner.moveNext();
@@ -117,7 +118,7 @@ public class Parser {
     }
     
     public Symbol parseTo(SymbolType terminator) {
-        return parseTo(terminator, 0);
+        return parseTo(terminator, ParseSpecification.normalPriority);
     }
 
     public Symbol parseTo(SymbolType terminator, int priority) {
@@ -183,7 +184,7 @@ public class Parser {
 
     private boolean parentOwns(SymbolType current, ParseSpecification specification) {
         if (parent == null) return false;
-        if (parent.specification.hasPriority(specification) && parent.specification.terminatesOn(current)) return true;
+        if (parent.specification.terminatesOn(current) && parent.specification.hasPriority(specification)) return true;
         return parent.parentOwns(current, specification);
     }
 }

@@ -35,8 +35,8 @@ public class Table extends SymbolType implements Rule, Translation {
 
     private Symbol parseCell(Parser parser, String content) {
         return (content.contains("!"))
-           ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
-           : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, 1);
+           ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+           : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
     }
 
     private boolean containsNewLine(Symbol cell) {
