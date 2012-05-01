@@ -6,8 +6,6 @@
  Wysiwyg editor for FitNesse, based on the Trac Wysiwyg editor written by
  OpenGroove and Ciklone, BSD licensed.
 
- TODO:
- - paragraph "| foo |" should convert into a table.
  ****/
 
 
@@ -557,12 +555,11 @@ Wysiwyg.prototype.execDecorate = function (name) {
 
 Wysiwyg.prototype.execDecorateMonospace = function () {
     var html = this.getSelectionHTML();
-    var removePattern = /<ins.*?>|<\/ins>/gi;
     if (/^<ins.*?>/i.test(html) && /<\/ins>$/i.test(html)) {
-        html = html.replace(removePattern, "");
+        html = html.replace(/<ins.*?>|<\/ins>/gi, "");
     } else {
         var id = this.generateDomId();
-        html = '<ins id="' + id + '">' + html.replace(removePattern, "") + "</ins>";
+        html = '<ins id="' + id + '">' + html.replace(/<[a-z]+.*?>|<\/[a-z]+>/gi, "") + "</ins>";
     }
     this.insertHTML(html);
     var node = this.contentDocument.getElementById(id);
