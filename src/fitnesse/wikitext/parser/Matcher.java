@@ -36,7 +36,7 @@ public class Matcher {
     public Matcher startLine() {
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return input.startsLine(offset) ? new Maybe<Integer>(0) : Maybe.noInteger;
+                return isStartLine(input, symbols, offset) ? new Maybe<Integer>(0) : Maybe.noInteger;
             }
         });
         return this;
@@ -45,15 +45,21 @@ public class Matcher {
     public Matcher startLineOrCell() {
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return
-                    input.startsLine(offset) ||
-                    symbols.get(0).isStartCell() ||
-                    (symbols.get(0).isType(SymbolType.Whitespace) &&
-                            (symbols.get(1).isStartCell() || symbols.get(1).isLineType()))
+                return isStartLine(input, symbols, offset) || isStartCell(symbols)
                  ? new Maybe<Integer>(0) : Maybe.noInteger;
             }
         });
         return this;
+    }
+
+    private boolean isStartLine(ScanString input, SymbolStream symbols, int offset) {
+        return input.startsLine(offset) || symbols.get(0).isStartLine();
+    }
+
+    private boolean isStartCell(SymbolStream symbols) {
+        return symbols.get(0).isStartCell() ||
+                (symbols.get(0).isType(SymbolType.Whitespace) &&
+                        (symbols.get(1).isStartCell() || symbols.get(1).isLineType()));
     }
 
     public Matcher string(final String delimiter) {

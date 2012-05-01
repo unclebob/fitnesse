@@ -9,8 +9,10 @@ public class HorizontalRuleTest {
         ParserTestHelper.assertScansTokenType("------", "HorizontalRule", true);
     }
 
-    @Test public void translatesNotes() {
+    @Test public void translatesHorizontalRules() {
         ParserTestHelper.assertTranslatesTo("----", "<hr/>" + HtmlElement.endl);
         ParserTestHelper.assertTranslatesTo("------", "<hr size=\"3\"/>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("----|a|",
+                "<hr/>" + HtmlElement.endl + ParserTestHelper.tableWithCell("a"));
     }
 }
