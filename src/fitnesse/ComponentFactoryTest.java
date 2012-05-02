@@ -2,29 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import fitnesse.wikitext.parser.*;
-import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wikitext.parser.*;
+import util.RegexTestCase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Properties;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -88,8 +81,7 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
     private void assertMatch(String input, boolean expected) {
-        SymbolMatch match = testProvider.findMatch(new ScanString(input, 0), new SymbolStream(), new MatchableFilter() {
-                    public boolean isValid(Matchable candidate) { return true; }});
+        SymbolMatch match = new ParseSpecification().provider(testProvider).findMatch(new ScanString(input, 0), 0, new SymbolStream());
         assertEquals(match.isMatch(), expected);
     }
 

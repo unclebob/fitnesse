@@ -95,12 +95,10 @@ public class SymbolProvider {
         return symbolTypes.contains(type);
     }
 
-    public SymbolMatch findMatch(ScanString input, SymbolStream symbols, MatchableFilter filter) {
-        for (Matchable candidate: getMatchTypes(input.charAt(0))) {
-            if (filter.isValid(candidate)) {
-                SymbolMatch match = candidate.makeMatch(input, symbols);
-                if (match.isMatch()) return match;
-            }
+    public SymbolMatch findMatch(Character startCharacter, SymbolMatcher matcher) {
+        for (Matchable candidate: getMatchTypes(startCharacter)) {
+            SymbolMatch match = matcher.makeMatch(candidate);
+            if (match.isMatch()) return match;
         }
         return SymbolMatch.noMatch;
     }

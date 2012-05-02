@@ -151,40 +151,12 @@ public class Parser {
     }
 
     public Symbol parse() {
-        Symbol result = new Symbol(SymbolType.SymbolList);
-        while (true) {
-            Scanner backup = new Scanner(scanner);
-            scanner.moveNextIgnoreFirst(specification);
-            if (scanner.isEnd()) break;
-            Symbol currentToken = scanner.getCurrent();
-            if (specification.endsOn(currentToken.getType()) || parentOwns(currentToken.getType(), specification)) {
-                scanner.copy(backup);
-                break;
-            }
-            if (specification.terminatesOn(currentToken.getType())) break;
-            Rule currentRule = currentToken.getType().getWikiRule();
-            if (currentRule != null) {
-                Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, this);
-                if (parsedSymbol.isNothing()) {
-                    specification.ignoreFirst(currentToken.getType());
-                    scanner.copy(backup);
-                }
-                else {
-                    result.add(parsedSymbol.getValue());
-                    specification.clearIgnoresFirst();
-                }
-            }
-            else {
-                result.add(currentToken);
-                specification.clearIgnoresFirst();
-            }
-        }
-        return result;
+        return specification.parse(this, scanner);
     }
 
-    private boolean parentOwns(SymbolType current, ParseSpecification specification) {
+    public boolean parentOwns(SymbolType current, ParseSpecification specification) {
         if (parent == null) return false;
-        if (parent.specification.terminatesOn(current) && parent.specification.hasPriority(specification)) return true;
+        if (parent.specification.owns(current, specification)) return true;
         return parent.parentOwns(current, specification);
     }
 }

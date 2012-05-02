@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -55,37 +56,67 @@ public class ParseSpecification {
         return new ParseSpecification().provider(newProvider);
     }
 
-    public boolean ignores(Matchable symbolType) {
-        return contains(ignoresFirst, symbolType);
-    }
-
-    public boolean terminatesOn(SymbolType symbolType) {
-        return contains(terminators, symbolType);
-    }
-
     public boolean endsOn(SymbolType symbolType) {
         return contains(ends, symbolType);
     }
 
-    public boolean hasPriority(ParseSpecification other) {
-        return priority > other.priority;
-    }
-
-    public SymbolMatch findMatch(final ScanString input, final int startPosition, SymbolStream symbols) {
-        return provider.findMatch(input, symbols, new MatchableFilter() {
-                        public boolean isValid(Matchable candidate) {
-                            return input.getOffset() != startPosition || !ignores(candidate);
-                        }
-                    });
+    public SymbolMatch findMatch(final ScanString input, final int startPosition, final SymbolStream symbols) {
+        return provider.findMatch(input.charAt(0), new SymbolMatcher() {
+            public SymbolMatch makeMatch(Matchable candidate) {
+                if (input.getOffset() != startPosition || !ignores(candidate)) {
+                    SymbolMatch match = candidate.makeMatch(input, symbols);
+                    if (match.isMatch()) return match;
+                }
+                return SymbolMatch.noMatch;
+            }
+        });
     }
 
     public boolean matchesFor(SymbolType symbolType) {
         return provider.matchesFor(symbolType);
     }
 
+    public boolean owns(SymbolType current, ParseSpecification other) {
+        return terminatesOn(current) && priority > other.priority;
+    }
+
+    public Symbol parse(Parser parser, Scanner scanner) {
+        Symbol result = new Symbol(SymbolType.SymbolList);
+        while (true) {
+            Scanner backup = new Scanner(scanner);
+            scanner.moveNextIgnoreFirst(this);
+            if (scanner.isEnd()) break;
+            Symbol currentToken = scanner.getCurrent();
+            if (endsOn(currentToken.getType()) || parser.parentOwns(currentToken.getType(), this)) {
+                scanner.copy(backup);
+                break;
+            }
+            if (terminatesOn(currentToken.getType())) break;
+            Rule currentRule = currentToken.getType().getWikiRule();
+            Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, parser);
+            if (parsedSymbol.isNothing()) {
+                ignoreFirst(currentToken.getType());
+                scanner.copy(backup);
+            }
+            else {
+                result.add(parsedSymbol.getValue());
+                clearIgnoresFirst();
+            }
+        }
+        return result;
+    }
+
+    private boolean terminatesOn(SymbolType symbolType) {
+        return contains(terminators, symbolType);
+    }
+
     private boolean contains(Iterable<SymbolType> terminators, Matchable currentType) {
         for (SymbolType terminator: terminators)
             if (currentType.matchesFor(terminator)) return true;
         return false;
+    }
+
+    private boolean ignores(Matchable symbolType) {
+        return contains(ignoresFirst, symbolType);
     }
 }

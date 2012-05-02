@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolType implements Matchable {
-    
+    private static final Rule defaultRule = new Rule() {
+        public Maybe<Symbol> parse(Symbol current, Parser parser) {
+            return new Maybe<Symbol>(current);
+        }
+    };
+
     public static final SymbolType Bold = new SymbolType("Bold")
             .wikiMatcher(new Matcher().string("'''"))
             .wikiRule(new EqualPairRule())
@@ -89,10 +94,10 @@ public class SymbolType implements Matchable {
             .htmlTranslation(new ListBuilder("ul"));
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
             .wikiMatcher(new Matcher().whitespace());
-    
+
     private String name;
     private ArrayList<Matcher> wikiMatchers =  new ArrayList<Matcher>();
-    private Rule wikiRule = null;
+    private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
 
     public SymbolType(String name) { this.name = name; }
