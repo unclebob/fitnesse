@@ -86,13 +86,10 @@ iframe.wysiwyg:focus {
     line-height: 1.5;
     padding-left: 2px;
     padding-right: 2px;
-    background-image: url(desc.png);
-    background-position: right bottom;
+    background-position: 51px -594px;
 }
 .wysiwyg-toolbar li a#wt-style:active, .wysiwyg-toolbar li.selected a#wt-style:active {
 	border: none;
-	width: 78px;
-	height: 22px;
 }
 
 .wysiwyg-toolbar li a#wt-style span {
@@ -142,14 +139,6 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -176px; }
 .wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -198px; }
 .wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -220px; }
-
-.wysiwyg-toolbar li a#wt-decorationmenu,
-.wysiwyg-toolbar li a#wt-tablemenu
-{
-    width: 10px;
-    background-image: url(desc.png);
-    background-position: center bottom;
-}
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
