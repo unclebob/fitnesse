@@ -28,8 +28,7 @@ var Wysiwyg = function (textarea, options) {
     this.initializeEditor(this.contentDocument);
     this.wysiwygToolbar = this.createWysiwygToolbar(document);
     this.styleMenu = this.createStyleMenu(document);
-    this.tableMenu = this.createTableMenu(document);
-    this.menus = [ this.styleMenu, this.tableMenu ];
+    this.menus = [ this.styleMenu ];
     this.toolbarButtons = this.setupMenuEvents();
     this.toggleEditorButtons = null;
     this.wrapTextareaButton = null;
@@ -327,19 +326,29 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Link"><a id="wt-link" href="#"></a></li>',
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
         '</ul>',
-        '<ul>',
+        '<ul class="non-table">',
         '<li title="List"><a id="wt-ul" href="#"></a></li>',
         '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
         '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
-        '<li><a id="wt-tablemenu" href="#"></a></li>',
         '</ul>',
-        '<ul>',
+        '<ul class="non-table">',
         '<li title="Collapsable section (default closed)"><a id="wt-collapsable-closed" href="#"></a></li>',
         '<li title="Collapsable section (default open)"><a id="wt-collapsable-open" href="#"></a></li>',
         '<li title="Collapsable section (hidden)"><a id="wt-collapsable-hidden" href="#"></a></li>',
         '<li title="Remove collapsable section"><a id="wt-remove-collapsable" href="#"></a></li>',
+        '</ul>',
+        '<ul class="in-table">',
+        '<li title="Insert cell before"><a id="wt-insert-cell-before" href="#"></a></li>',
+        '<li title="Insert cell after (|)"><a id="wt-insert-cell-after" href="#"></a></li>',
+        '<li title="Insert row before"><a id="wt-insert-row-before" href="#"></a></li>',
+        '<li title="Insert row after"><a id="wt-insert-row-after" href="#"></a></li>',
+        '<li title="Insert column before"><a id="wt-insert-col-before" href="#"></a></li>',
+        '<li title="Insert column after"><a id="wt-insert-col-after" href="#"></a></li>',
+        '<li title="Delete cell (Ctrl-|)"><a id="wt-delete-cell" href="#"></a></li>',
+        '<li title="Delete row"><a id="wt-delete-row" href="#"></a></li>',
+        '<li title="Delete column"><a id="wt-delete-col" href="#"></a></li>',
         '</ul>' ];
     var div = d.createElement("div");
     div.className = "wysiwyg-toolbar";
@@ -357,26 +366,6 @@ Wysiwyg.prototype.createStyleMenu = function (d) {
         '<h5><a id="wt-heading5" href="#">Header 5</a></h5>',
         '<h6><a id="wt-heading6" href="#">Header 6</a></h6>',
         '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>' ];
-    var menu = d.createElement("div");
-    menu.className = "wysiwyg-menu";
-    Wysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
-    menu.innerHTML = html.join("").replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
-    return menu;
-};
-
-Wysiwyg.prototype.createTableMenu = function (d) {
-    var html = [
-        '<ul class="menu">',
-        '<li><a id="wt-insert-cell-before" href="#">Insert cell before</a></li>',
-        '<li><a id="wt-insert-cell-after" href="#">Insert cell after</a></li>',
-        '<li><a id="wt-insert-row-before" href="#">Insert row before</a></li>',
-        '<li><a id="wt-insert-row-after" href="#">Insert row after</a></li>',
-        '<li><a id="wt-insert-col-before" href="#">Insert column before</a></li>',
-        '<li><a id="wt-insert-col-after" href="#">Insert column after</a></li>',
-        '<li><a id="wt-delete-cell" href="#">Delete cell</a></li>',
-        '<li><a id="wt-delete-row" href="#">Delete row</a></li>',
-        '<li><a id="wt-delete-col" href="#">Delete column</a></li>',
-        '</ul>' ];
     var menu = d.createElement("div");
     menu.className = "wysiwyg-menu";
     Wysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
@@ -451,8 +440,6 @@ Wysiwyg.prototype.setupMenuEvents = function () {
 			return [ self.indent ];
 		case "table":
 			return [ self.insertTable ];
-		case "tablemenu":
-			return [ self.toggleMenu, self.tableMenu, element ];
 		case "insert-cell-before":
 			return [ self.ui_insertTableCell, false ];
 		case "insert-cell-after":
@@ -1544,6 +1531,14 @@ Wysiwyg.prototype.selectionChanged = function () {
         }
     }
 
+    if (status["table"]) {
+    	$(".wysiwyg-toolbar .non-table").hide();
+    	$(".wysiwyg-toolbar .in-table").show();
+    } else {
+    	$(".wysiwyg-toolbar .in-table").hide();
+    	$(".wysiwyg-toolbar .non-table").show();
+    }
+    
     var styles = [ "quote", "paragraph", "code", "heading1",
         "heading2", "heading3", "heading4", "heading5", "heading6" ];
     var styleButton = toolbarButtons.style;

@@ -38,7 +38,7 @@ iframe.wysiwyg:focus {
     border-radius: 10px;
     float: left;
     padding: 0 8px;
-    margin-right: .1em;
+    margin-right: 8px;
 }
 .wysiwyg-toolbar ul#wm-style {
 	border-radius: 2px;
@@ -131,17 +131,17 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0px -550px; }
 .wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0px -572px; }
 
-.wysiwyg-toolbar li a#wt-add-table         { background-position: 0 0px; }
-.wysiwyg-toolbar li a#wt-remove-table      { background-position: 0 -22px; }
-.wysiwyg-toolbar li a#wt-add-row-below     { background-position: 0 -44px; }
-.wysiwyg-toolbar li a#wt-add-row-above     { background-position: 0 -66px; }
-.wysiwyg-toolbar li a#wt-add-column-after  { background-position: 0 -88px; }
-.wysiwyg-toolbar li a#wt-add-column-before { background-position: 0 -110px; }
-.wysiwyg-toolbar li a#wt-add-cell-after    { background-position: 0 -132px; }
-.wysiwyg-toolbar li a#wt-add-cell-before   { background-position: 0 -154px; }
-.wysiwyg-toolbar li a#wt-remove-row        { background-position: 0 -176px; }
-.wysiwyg-toolbar li a#wt-remove-column     { background-position: 0 -198px; }
-.wysiwyg-toolbar li a#wt-remove-cell       { background-position: 0 -220px; }
+.wysiwyg-toolbar li a#wt-add-table          { background-position: 0 0px; }
+.wysiwyg-toolbar li a#wt-remove-table       { background-position: 0 -22px; }
+.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 0 -44px; }
+.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 0 -66px; }
+.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 0 -88px; }
+.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 0 -110px; }
+.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 0 -132px; }
+.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 0 -154px; }
+.wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -176px; }
+.wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -198px; }
+.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -220px; }
 
 .wysiwyg-toolbar li a#wt-decorationmenu,
 .wysiwyg-toolbar li a#wt-tablemenu
@@ -189,4 +189,8 @@ iframe.wysiwyg:focus {
 }
 .wysiwyg-menu .menu {
     font-size: 85%;
+}
+
+.wysiwyg-toolbar .in-table {
+	display: none;
 }
