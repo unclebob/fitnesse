@@ -37,9 +37,7 @@ public class Scanner {
 
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
-
     public boolean isEnd() { return symbols.isEnd(); }
-    public boolean isLast() { return input.isEnd(1); }
     public Symbol getCurrent() { return symbols.get(0); }
 
     public Maybe<String> stringFromStart(int start) {

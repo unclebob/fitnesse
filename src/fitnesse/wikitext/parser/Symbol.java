@@ -25,7 +25,7 @@ public class Symbol {
     public SymbolType getType() { return type; }
     public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
     public boolean isStartCell() { return isType(Table.symbolType) || isType(SymbolType.EndCell); }
-    public boolean isStartLine() { return isType(HorizontalRule.symbolType); }
+    public boolean isStartLine() { return isType(HorizontalRule.symbolType) || isType(Nesting.symbolType); }
 
     public boolean isLineType() {
         return isType(HeaderLine.symbolType) || isType(SymbolType.CenterLine) || isType(SymbolType.Meta) ||

@@ -31,6 +31,8 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string("=}"));
     public static final SymbolType CloseLiteral = new SymbolType("CloseLiteral")
             .wikiMatcher(new Matcher().string("-!"));
+    public static final SymbolType CloseNesting = new SymbolType("CloseNesting")
+            .wikiMatcher(new Matcher().string(")!"));
     public static final SymbolType CloseParenthesis = new SymbolType("CloseParenthesis")
             .wikiMatcher(new Matcher().string(")"));
     public static final SymbolType ClosePlainTextTable = new SymbolType("ClosePlainTextTable")

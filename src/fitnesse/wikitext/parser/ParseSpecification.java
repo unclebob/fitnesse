@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ParseSpecification {
+    public static final int nestingPriority = 2;
     public static final int tablePriority = 1;
     public static final int normalPriority = 0;
 
