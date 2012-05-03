@@ -35,13 +35,15 @@ $(document)
 		return true;
 	})
 	.on('click', 'article .collapsible .expandall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
-		event.stopPropagation();
+		var section = $(this).closest('.collapsible');
+		section.find('.collapsible').andSelf().removeClass('closed');
+		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
 	.on('click', 'article .collapsible .collapseall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
-		event.stopPropagation();
+		section = $(this).closest('.collapsible');
+		section.find('.collapsible, .scenario').andSelf().addClass('closed');
+		section.find('.scenario').addClass('closed').next().hide();
 		return false;
 	});
 
