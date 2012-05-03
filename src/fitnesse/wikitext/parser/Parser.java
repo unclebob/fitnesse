@@ -43,8 +43,8 @@ public class Parser {
     public ParsingPage getPage() { return currentPage; }
     public VariableSource getVariableSource() { return variableSource; }
     public Symbol getCurrent() { return scanner.getCurrent(); }
+    public int getOffset() { return scanner.getOffset(); }
     public boolean atEnd() { return scanner.isEnd(); }
-    public boolean atLast() { return scanner.isLast(); }
     public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
     public boolean endsOn(SymbolType type) { return specification.endsOn(type); }
 
