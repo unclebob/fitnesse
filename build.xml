@@ -1,7 +1,7 @@
 <project name="Fitnesse" default="all" basedir=".">
 	<description>
-    Fitnesse is a wiki wrapper for fit, an acceptance test framework.
-  </description>
+		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
+	</description>
 
 	<property environment="env" />
 	<property name="env.FITNESSE_TEST_PORT" value="8080" />
@@ -102,7 +102,7 @@
 	</target>
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
-    <echo message="Stamping fitnesse with version ${version}" />
+		<echo message="Stamping fitnesse with version ${version}" />
 		<delete file="pom.xml" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
 		<filter token="version" value="${version}" />
@@ -146,18 +146,18 @@
 
 	<target name="release" depends="unit_tests, acceptance_tests" />
 
-  <target  name="release_xml" depends="unit_tests, acceptance_tests_xml" />
+	<target name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
-  <target  name="release_jar" depends="unit_tests, jar"/>
+	<target name="release_jar" depends="unit_tests, jar"/>
 
-  <target  name="acceptance_tests_xml" depends="jar">  
-    <java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+	<target name="acceptance_tests_xml" depends="jar">
+		<java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />
 			<arg value="9234" />
 		</java>
-  </target>
+	</target>
 
 	<target name="acceptance_tests" depends="jar">
 		<java jar="dist/fitnesse.jar" failonerror="true" fork="true">
