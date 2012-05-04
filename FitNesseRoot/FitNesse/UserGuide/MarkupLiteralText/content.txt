@@ -7,12 +7,3 @@ Any text enclosed in '''!-!--!''' and '''-!''' will be treated as a literal and 
 |!-!-'''bold'''-!-!|!-'''bold'''-!|
 |!-!-&lt;i&gt;hello&lt;/i&gt;-!-!|!-<i>hello</i>-!|
 
-If you want to show HTML rather than have it rendered you can surround it in &bang;< and >&bang;
-
-|!c '''Markup Text'''|!c '''Displays as'''|
-|&bang;<<i>hello</i>>&bang;|!-&lt;i&gt;hello&lt;/i&gt;-!|
-
-
-
-
-
