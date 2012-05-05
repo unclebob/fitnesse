@@ -89,7 +89,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   
   private boolean useManualStartForTestSystem() {
     if (isRemoteDebug) {
-      String useManualStart = page.getData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
+      String useManualStart = page.readPageData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
       return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }
     return false;

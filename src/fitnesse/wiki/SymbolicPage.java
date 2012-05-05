@@ -70,6 +70,8 @@ public class SymbolicPage extends BaseWikiPage {
     return data;
   }
 
+  public PageDataRead readPageData() { return getData(); }
+
   public PageData getDataVersion(String versionName) {
     PageData data = realPage.getDataVersion(versionName);
     data.setWikiPage(this);

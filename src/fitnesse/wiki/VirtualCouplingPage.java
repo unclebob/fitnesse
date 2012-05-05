@@ -34,6 +34,8 @@ public class VirtualCouplingPage implements WikiPage {
     return hostPage.getData();
   }
 
+  public PageDataRead readPageData() { return getData(); }
+
   public int compareTo(Object o) {
     return 0;
   }
