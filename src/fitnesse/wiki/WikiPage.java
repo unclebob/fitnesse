@@ -27,6 +27,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   String getName();
 
   PageData getData();
+  PageDataRead readPageData();
 
   PageData getDataVersion(String versionName);
 

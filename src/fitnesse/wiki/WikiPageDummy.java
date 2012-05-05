@@ -59,6 +59,8 @@ public class WikiPageDummy implements WikiPage {
     return pageData;
   }
 
+  public PageDataRead readPageData() { return getData(); }
+
   public VersionInfo commit(PageData data) {
     pageData = data;
     return new VersionInfo("mockVersionName", "mockAuthor", Clock.currentDate());

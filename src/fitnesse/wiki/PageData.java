@@ -15,15 +15,10 @@ import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class PageData implements Serializable {
+public class PageData implements PageDataRead, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-    private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
-        Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
-        SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
-        SymbolType.ClosePreformat, SymbolType.Text
-});
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -196,19 +191,18 @@ public class PageData implements Serializable {
 
   public String getHeaderPageHtml() {
     WikiPage header = wikiPage.getHeaderPage();
-    return header == null ? "" : header.getData().getHtml();
+    return header == null ? "" : header.readPageData().getHtml();
   }
 
   public String getFooterPageHtml() {
     WikiPage footer = wikiPage.getFooterPage();
-    return footer == null ? "" : footer.getData().getHtml();
+    return footer == null ? "" : footer.readPageData().getHtml();
   }
 
   public String getVariable(String name) {
       Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
       if (variable.isNothing()) return null;
-      //todo: push this into parser/translator
-      return new HtmlTranslator(null, parsingPage).translate(Parser.make(parsingPage, "${" + name + "}", variableDefinitionSymbolProvider).parse());
+      return getParsingPage().renderVariableValue(variable.getValue());
   }
 
     public Symbol getSyntaxTree() {
@@ -223,16 +217,21 @@ public class PageData implements Serializable {
 
     private void parsePageContent() {
         if (contentSyntaxTree == null) {
+            //long start = Clock.currentTimeInMillis();
             parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
-            contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
+            String content = getContent();
+            contentSyntaxTree = Parser.make(parsingPage, content).parse();
+            //long elapsed = Clock.currentTimeInMillis() - start;
+            //System.out.println((wikiPage != null && wikiPage.getName() != null ? wikiPage.getName() : "?") + " parse " + elapsed + " " + (content != null ? content.length() : 0));
         }
     }
 
-  public void setLiterals(List<String> literals) {}
-
-
     public String translateToHtml(Symbol syntaxTree) {
-        return new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
+        //long start = Clock.currentTimeInMillis();
+        String result = new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
+        //long elapsed = Clock.currentTimeInMillis() - start;
+        //System.out.println((wikiPage != null ? wikiPage.getName() : "?") + " translate " + elapsed + " " + result.length());
+        return result;
     }
 
   public void setWikiPage(WikiPage page) {
