@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageDataRead;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public abstract class TestSystem implements TestSystemListener {
     return command;
   }
 
-  private static String getRemoteDebugCommandPattern(PageData pageData) {
+  private static String getRemoteDebugCommandPattern(PageDataRead pageData) {
     String testRunner = pageData.getVariable("REMOTE_DEBUG_COMMAND");
     if (testRunner == null) {
       testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
@@ -56,14 +57,14 @@ public abstract class TestSystem implements TestSystemListener {
     return testRunner;
   }
 
-  private static String getNormalCommandPattern(PageData pageData) {
+  private static String getNormalCommandPattern(PageDataRead pageData) {
     String testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
   }
 
-  private static String getCommandPattern(PageData pageData, boolean isRemoteDebug) {
+  private static String getCommandPattern(PageDataRead pageData, boolean isRemoteDebug) {
     if (isRemoteDebug)
       return getRemoteDebugCommandPattern(pageData);
     else
@@ -92,14 +93,14 @@ public abstract class TestSystem implements TestSystemListener {
     return String.format("%s:%s", testSystemName, testRunner);
   }
 
-  private static String getTestSystem(PageData data) {
+  private static String getTestSystem(PageDataRead data) {
     String testSystemName = data.getVariable("TEST_SYSTEM");
     if (testSystemName == null)
       return "fit";
     return testSystemName;
   }
 
-  public static String getPathSeparator(PageData pageData) {
+  public static String getPathSeparator(PageDataRead pageData) {
     String separator = pageData.getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
       separator = (String) System.getProperties().get("path.separator");
@@ -127,7 +128,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void start() throws IOException;
 
-  private static String getTestRunner(PageData pageData, boolean isRemoteDebug) {
+  private static String getTestRunner(PageDataRead pageData, boolean isRemoteDebug) {
     if (isRemoteDebug)
       return getTestRunnerDebug(pageData);
     else
@@ -135,7 +136,7 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   
-  private static String getTestRunnerDebug(PageData data) {
+  private static String getTestRunnerDebug(PageDataRead data) {
     String program = data.getVariable("REMOTE_DEBUG_RUNNER");
     if (program == null) {
       program = getTestRunnerNormal(data);
@@ -146,14 +147,14 @@ public abstract class TestSystem implements TestSystemListener {
     return program;
   }
 
-  public static String getTestRunnerNormal(PageData data) {
+  public static String getTestRunnerNormal(PageDataRead data) {
     String program = data.getVariable(PageData.TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner(data);
     return program;
   }
 
-  static String defaultTestRunner(PageData data) {
+  static String defaultTestRunner(PageDataRead data) {
     String testSystemType = getTestSystemType(getTestSystem(data));
     if ("slim".equalsIgnoreCase(testSystemType))
       return "fitnesse.slim.SlimService";
@@ -169,7 +170,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException;
 
-  public static Descriptor getDescriptor(PageData data, PageFactory pageFactory, boolean isRemoteDebug) {
+  public static Descriptor getDescriptor(PageDataRead data, PageFactory pageFactory, boolean isRemoteDebug) {
     String testSystemName = getTestSystem(data);
     String testRunner = getTestRunner(data, isRemoteDebug);
     String commandPattern = getCommandPattern(data, isRemoteDebug);
@@ -178,7 +179,7 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
-    String classpathProperty = page.getData().getVariable("CLASSPATH_PROPERTY");
+    String classpathProperty = page.readPageData().getVariable("CLASSPATH_PROPERTY");
     Map<String, String> environmentVariables = null;
     if (classpathProperty != null) {
       environmentVariables = Collections.singletonMap(classpathProperty, classPath);

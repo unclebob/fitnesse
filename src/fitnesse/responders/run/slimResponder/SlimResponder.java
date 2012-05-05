@@ -18,12 +18,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
@@ -95,7 +90,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     return slimOpen;
   }
 
-  public PageData getTestResults() {
+  public PageDataRead getTestResults() {
     return testSystem.getTestResults();
   }
 

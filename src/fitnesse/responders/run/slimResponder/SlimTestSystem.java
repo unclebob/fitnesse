@@ -13,10 +13,7 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.PageCrawlerImpl;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Symbol;
 
@@ -48,7 +45,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected List<Object> instructions;
   private boolean started;
-  protected PageData testResults;
+  protected PageDataRead testResults;
   protected TableScanner tableScanner;
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
@@ -101,7 +98,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   String getSlimFlags() {
-    String slimFlags = page.getData().getVariable("SLIM_FLAGS");
+    String slimFlags = page.readPageData().getVariable("SLIM_FLAGS");
     if (slimFlags == null)
       slimFlags = "";
     return slimFlags;
@@ -154,7 +151,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private int getSlimPortBase() {
     int base = 8085;
     try {
-      String slimPort = page.getData().getVariable("SLIM_PORT");
+      String slimPort = page.readPageData().getVariable("SLIM_PORT");
       if (slimPort != null) {
         int slimPortInt = Integer.parseInt(slimPort);
         base = slimPortInt;
@@ -177,7 +174,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   String determineSlimHost() {
-    String slimHost = page.getData().getVariable("SLIM_HOST");
+    String slimHost = page.readPageData().getVariable("SLIM_HOST");
     return slimHost == null ? "localhost" : slimHost;
   }
 
@@ -253,7 +250,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     exceptions.resetForNewTest();
   }
 
-  private void checkForAndReportVersionMismatch(PageData pageData) {
+  private void checkForAndReportVersionMismatch(PageDataRead pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
     if (serverVersionNumber < expectedVersionNumber)
@@ -261,7 +258,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
   }
 
-  private double getExpectedSlimVersion(PageData pageData) {
+  private double getExpectedSlimVersion(PageDataRead pageData) {
     double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
     String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
     if (pageSpecificSlimVersion != null) {
@@ -276,7 +273,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  String processAllTablesOnPage(PageData pageData) throws IOException {
+  String processAllTablesOnPage(PageDataRead pageData) throws IOException {
     tableScanner = scanTheTables(pageData);
     allTables = createSlimTables(tableScanner);
     testResults = pageData;
@@ -300,7 +297,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return htmlResults;
   }
 
-  protected abstract TableScanner scanTheTables(PageData pageData);
+  protected abstract TableScanner scanTheTables(PageDataRead pageData);
 
   private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
     expectations.clear();
@@ -365,7 +362,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return exceptionMessage;
   }
 
-  public PageData getTestResults() {
+  public PageDataRead getTestResults() {
     return testResults;
   }
 

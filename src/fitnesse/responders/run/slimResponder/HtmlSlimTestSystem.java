@@ -7,7 +7,7 @@ import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageDataRead;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Symbol;
@@ -17,7 +17,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     super(page, listener);
   }
 
-  protected TableScanner scanTheTables(PageData pageData) {
+  protected TableScanner scanTheTables(PageDataRead pageData) {
 
     Symbol syntaxTree = pageData.getSyntaxTree();
     Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
