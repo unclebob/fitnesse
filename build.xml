@@ -1,4 +1,6 @@
-<project name="Fitnesse" default="all" basedir=".">
+<project name="Fitnesse" default="all" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+
 	<description>
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
@@ -86,7 +88,7 @@
 		</copy>
 	</target>
 
-	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
+	<target name="compile" depends="init, stamp-version, retrieve" description="compile the source (make)">
 		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" />
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
@@ -166,5 +168,57 @@
 			<arg value="-p" />
 			<arg value="9234" />
 		</java>
+	</target>
+
+	<target name="resolve" depends="ivy-init">
+		<ivy:resolve />
+	</target>
+
+	<target name="retrieve" depends="resolve">
+		<ivy:retrieve />
+	</target>
+
+	<target name="make-pom" depends="ivy-init">
+		<ivy:makepom ivyfile="${basedir}/ivy.xml" pomfile="${basedir}/dist/fitnesse.pom" conf="default,runtime">
+			   <mapping conf="default" scope="compile"/>
+		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="set-version-if-not-manualy-set,resolve,make-pom">
+		<ivy:publish resolver="sonatype-nexus-snapshots"
+			pubrevision="${version}">
+			<artifacts pattern="dist/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+
+	<target name="publish" depends="set-version-if-not-manualy-set,resolve,make-pom">
+		<ivy:publish resolver="sonatype-nexus-staging" pubrevision="${version}">
+			<artifacts pattern="dist/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+
+	<!--
+		Dependency management boilerplate
+	  -->
+	<condition property="ivy.download.not.required">
+		<resourceexists>
+			<file file="antlib/ivy.jar"/>
+		</resourceexists>
+	</condition>
+
+	<target name="ivy-init" depends="ivy-download">
+		<path id="ivy.class.path">
+			<fileset dir="antlib">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			uri="antlib:org.apache.ivy.ant"
+			classpathref="ivy.class.path" />
+	</target>
+
+	<target name="ivy-download" unless="ivy.download.not.required">
+		<mkdir dir="antlib" />
+		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
 	</target>
 </project>
