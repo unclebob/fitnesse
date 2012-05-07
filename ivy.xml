@@ -9,18 +9,23 @@
 	</info>
 	<configurations>
 		<conf name="default" visibility="public" />
-		<conf name="test" visibility="private" />
+		<conf name="standalone" visibility="private" description="include in fitnesse-standalone build" />
+		<conf name="test" visibility="private" extends="default" />
 	</configurations>
-	<publications>
+	<publications xmlns:e="urn:ant.apache.org:ivy-extras">
 		<artifact name="fitnesse" type="jar" ext="jar" conf="default" />
 		<artifact name="fitnesse" type="pom" ext="pom" conf="default" />
+		<artifact name="fitnesse" type="source" ext="jar" e:classifier="sources" />
+		<artifact name="fitnesse" type="javadoc" ext="jar" e:classifier="javadoc" />
+		<artifact name="fitnesse-standalone" type="jar" ext="jar" />
+
 	</publications>
  
 	<dependencies>
-		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="*->default" />
-		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="*->default" />
-		<dependency org="org.json" name="json" rev="20090211" conf="*->default" />
-		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="*->default" />
+		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="default,standalone->default" />
+		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="default,standalone->default" />
+		<dependency org="org.json" name="json" rev="20090211" conf="default,standalone->default" />
+		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />

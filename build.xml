@@ -29,7 +29,7 @@
 
 	<target name="unit_tests" depends="clean, unit_test" description="builds code from scratch, runs all the unit tests" />
 
-	<target name="jar" depends="build, createUpdateLists" description="generate the jar file">
+	<target name="jar" depends="compile,createUpdateLists" description="generate the jar file">
 		<mkdir dir="dist" />
 		<delete file="dist/fitnesse.jar" />
 
@@ -43,19 +43,31 @@
 
 			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
-			<!-- TODO: obtain those from ivy -->
-			<zipfileset src="lib/htmlparser.jar" />
-			<zipfileset src="lib/json.jar" />
-			<zipfileset src="lib/velocity.jar" />
-			<zipfileset src="lib/commons-lang.jar" />
-			<zipfileset src="lib/commons-collections.jar" />
-
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
+		<!-- TODO: why? -->
 		<delete dir="${classes}/Resources" />
+	</target>
+
+	<target name="standalone-jar" depends="jar" description="generate the standalone jar file">
+		<ivy:cachefileset setid="standalone.jar.fileset" conf="standalone" />
+		<jar jarfile="dist/fitnesse-standalone.jar">
+			<zipfileset src="dist/fitnesse.jar" />
+			<archives>
+				<zips>
+					<zipfileset refid="standalone.jar.fileset" />
+				</zips>
+			</archives>
+			
+			<manifest>
+				<attribute name="Built-By" value="Object Mentor, Inc." />
+				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
+			</manifest>
+		</jar>
+
 	</target>
 
 	<!-- TODO: targets for plain fitnesse.jar, -sources, -javadoc -->
@@ -109,10 +121,8 @@
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
 		<echo message="Stamping fitnesse with version ${version}" />
-		<delete file="pom.xml" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
 		<filter token="version" value="${version}" />
-		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
 		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
 	</target>
 
@@ -180,26 +190,27 @@
 		<ivy:resolve />
 	</target>
 
+	<!-- TODO: Get rid of this -->
 	<target name="retrieve" depends="resolve">
 		<ivy:retrieve pattern="lib/[artifact].[ext]" />
 	</target>
 
-	<target name="make-pom" depends="resolve,set-version-if-not-manualy-set">
-		<ivy:deliver deliverpattern="dist/ivy-delivered.xml" pubrevision="${version}" status="release" />
-		<ivy:makepom ivyfile="${basedir}/dist/ivy-delivered.xml" pomfile="${basedir}/dist/fitnesse.pom" conf="default,runtime">
+	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="dist/ivy.xml" pubrevision="${version}" status="release" />
+		<ivy:makepom ivyfile="${basedir}/dist/ivy.xml" templatefile="templates/pom.xml.template" pomfile="${basedir}/dist/fitnesse.pom" conf="default,test">
 			   <mapping conf="default" scope="compile"/>
 			   <mapping conf="test" scope="test"/>
 		</ivy:makepom>
 	</target>
 
-	<target name="snapshot" depends="set-version-if-not-manualy-set,resolve,make-pom">
+	<target name="snapshot" depends="resolve,pom">
 		<ivy:publish resolver="sonatype-nexus-snapshots"
 			pubrevision="${version}">
 			<artifacts pattern="dist/[artifact].[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="publish" depends="set-version-if-not-manualy-set,resolve,make-pom">
+	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
@@ -240,6 +251,8 @@
 	<target name="ivy-download" unless="ivy.download.not.required">
 		<mkdir dir="antlib" />
 		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
+		<!-- The following libs are used for signing artifacts
+		     when deployed to Maven Central.  -->
 		<get src="http://repo2.maven.org/maven2/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="antlib/bcprov.jar" usetimestamp="true" verbose="true" />
 		<get src="http://repo2.maven.org/maven2/org/bouncycastle/bcpg-jdk16/1.46/bcpg-jdk16-1.46.jar" dest="antlib/bcpg.jar" usetimestamp="true" verbose="true" />
 	</target>
