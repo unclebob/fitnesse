@@ -43,9 +43,12 @@
 
 			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
+			<!-- TODO: obtain those from ivy -->
 			<zipfileset src="lib/htmlparser.jar" />
 			<zipfileset src="lib/json.jar" />
-			<zipfileset src="lib/velocity-1.7-dep.jar" />
+			<zipfileset src="lib/velocity.jar" />
+			<zipfileset src="lib/commons-lang.jar" />
+			<zipfileset src="lib/commons-collections.jar" />
 
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
@@ -55,6 +58,7 @@
 		<delete dir="${classes}/Resources" />
 	</target>
 
+	<!-- TODO: targets for plain fitnesse.jar, -sources, -javadoc -->
 	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
 			<arg value="-baseDirectory:${classes}/Resources" />
@@ -115,6 +119,8 @@
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes}" />
 		<delete dir="test-results" />
+		<delete dir="lib" />
+		<delete dir="dist" />
 		<delete file="updateList"/>
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
@@ -175,12 +181,14 @@
 	</target>
 
 	<target name="retrieve" depends="resolve">
-		<ivy:retrieve />
+		<ivy:retrieve pattern="lib/[artifact].[ext]" />
 	</target>
 
-	<target name="make-pom" depends="ivy-init">
-		<ivy:makepom ivyfile="${basedir}/ivy.xml" pomfile="${basedir}/dist/fitnesse.pom" conf="default,runtime">
+	<target name="make-pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="dist/ivy-delivered.xml" pubrevision="${version}" status="release" />
+		<ivy:makepom ivyfile="${basedir}/dist/ivy-delivered.xml" pomfile="${basedir}/dist/fitnesse.pom" conf="default,runtime">
 			   <mapping conf="default" scope="compile"/>
+			   <mapping conf="test" scope="test"/>
 		</ivy:makepom>
 	</target>
 
@@ -192,8 +200,12 @@
 	</target>
 
 	<target name="publish" depends="set-version-if-not-manualy-set,resolve,make-pom">
-		<ivy:publish resolver="sonatype-nexus-staging" pubrevision="${version}">
-			<artifacts pattern="dist/[artifact].[ext]" />
+		<fail unless="upload.user" message="supply upload.user on the command line"/>
+		<fail unless="upload.password" message="supply upload.password on the command line"/>
+		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
+		
+		<ivy:publish resolver="sonatype-nexus-staging" pubrevision="${version}" publishivy="false">
+			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
@@ -201,9 +213,17 @@
 		Dependency management boilerplate
 	  -->
 	<condition property="ivy.download.not.required">
-		<resourceexists>
-			<file file="antlib/ivy.jar"/>
-		</resourceexists>
+		<and>
+			<resourceexists>
+				<file file="antlib/ivy.jar"/>
+			</resourceexists>
+			<resourceexists>
+				<file file="antlib/bcprov.jar"/>
+			</resourceexists>
+			<resourceexists>
+				<file file="antlib/bcpg.jar"/>
+			</resourceexists>
+		</and>
 	</condition>
 
 	<target name="ivy-init" depends="ivy-download">
@@ -220,5 +240,7 @@
 	<target name="ivy-download" unless="ivy.download.not.required">
 		<mkdir dir="antlib" />
 		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
+		<get src="http://repo2.maven.org/maven2/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="antlib/bcprov.jar" usetimestamp="true" verbose="true" />
+		<get src="http://repo2.maven.org/maven2/org/bouncycastle/bcpg-jdk16/1.46/bcpg-jdk16-1.46.jar" dest="antlib/bcpg.jar" usetimestamp="true" verbose="true" />
 	</target>
 </project>

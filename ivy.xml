@@ -12,16 +12,17 @@
 		<conf name="test" visibility="private" />
 	</configurations>
 	<publications>
-		<artifact name="fitnesse" type="file" ext="jar" conf="default" />
+		<artifact name="fitnesse" type="jar" ext="jar" conf="default" />
+		<artifact name="fitnesse" type="pom" ext="pom" conf="default" />
 	</publications>
  
 	<dependencies>
-		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" />
+		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="*->default" />
 		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="*->default" />
-		<dependency org="org.json" name="json" rev="20090211" />
-		<dependency org="org.apache.ant" name="ant" rev="1.7.1" />
+		<dependency org="org.json" name="json" rev="20090211" conf="*->default" />
+		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="*->default" />
 		<!-- scope: test -->
-		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->*" />
-		<dependency org="junit" name="junit" rev="4.10" conf="test->*" />
+		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
+		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
 	</dependencies>
 </ivy-module>
