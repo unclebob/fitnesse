@@ -144,12 +144,6 @@ tr.scenario-detail {
 	color: white;
 	font-weight: bold;
 }
-#test-action .ok {
- 	background-color: lightblue;
-}
-#test-action .output {
- 	background-color: lightblue;
-}
 #test-action .error {
 	background-color: red;
 }

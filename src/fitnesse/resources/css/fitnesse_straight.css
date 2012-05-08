@@ -179,6 +179,12 @@ article th {
 .dirListing tbody tr:nth-child(even) {
 	background: #efefef
 }
+#test-action .ok {
+ 	background-color: lightblue;
+}
+#test-action .output {
+ 	background-color: lightblue;
+}
 
 @media print {
 	nav ul {
