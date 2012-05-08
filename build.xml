@@ -205,17 +205,20 @@
 
 	<target name="snapshot" depends="resolve,pom">
 		<ivy:publish resolver="sonatype-nexus-snapshots"
-			pubrevision="${version}">
-			<artifacts pattern="dist/[artifact].[ext]" />
+			pubrevision="${version}"
+			publishivy="false">
+			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom">
+	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom,standalone-jar,sources-jar,javadoc-jar">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
 		
-		<ivy:publish resolver="sonatype-nexus-staging" pubrevision="${version}" publishivy="false">
+		<ivy:publish resolver="sonatype-nexus-staging"
+			pubrevision="${version}"
+			publishivy="false">
 			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
