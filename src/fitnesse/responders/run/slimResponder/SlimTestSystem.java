@@ -45,7 +45,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected List<Object> instructions;
   private boolean started;
-  protected PageDataRead testResults;
+  protected ReadOnlyPageData testResults;
   protected TableScanner tableScanner;
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
@@ -98,7 +98,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   String getSlimFlags() {
-    String slimFlags = page.readPageData().getVariable("SLIM_FLAGS");
+    String slimFlags = page.readOnlyData().getVariable("SLIM_FLAGS");
     if (slimFlags == null)
       slimFlags = "";
     return slimFlags;
@@ -151,7 +151,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private int getSlimPortBase() {
     int base = 8085;
     try {
-      String slimPort = page.readPageData().getVariable("SLIM_PORT");
+      String slimPort = page.readOnlyData().getVariable("SLIM_PORT");
       if (slimPort != null) {
         int slimPortInt = Integer.parseInt(slimPort);
         base = slimPortInt;
@@ -174,7 +174,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   String determineSlimHost() {
-    String slimHost = page.readPageData().getVariable("SLIM_HOST");
+    String slimHost = page.readOnlyData().getVariable("SLIM_HOST");
     return slimHost == null ? "localhost" : slimHost;
   }
 
@@ -231,7 +231,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
   }
 
-  public String runTestsAndGenerateHtml(PageData pageData) throws IOException {
+  public String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException {
     initializeTest();
     checkForAndReportVersionMismatch(pageData);
     String html = processAllTablesOnPage(pageData);
@@ -250,7 +250,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     exceptions.resetForNewTest();
   }
 
-  private void checkForAndReportVersionMismatch(PageDataRead pageData) {
+  private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
     if (serverVersionNumber < expectedVersionNumber)
@@ -258,7 +258,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
   }
 
-  private double getExpectedSlimVersion(PageDataRead pageData) {
+  private double getExpectedSlimVersion(ReadOnlyPageData pageData) {
     double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
     String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
     if (pageSpecificSlimVersion != null) {
@@ -273,7 +273,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  String processAllTablesOnPage(PageDataRead pageData) throws IOException {
+  String processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
     tableScanner = scanTheTables(pageData);
     allTables = createSlimTables(tableScanner);
     testResults = pageData;
@@ -297,7 +297,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return htmlResults;
   }
 
-  protected abstract TableScanner scanTheTables(PageDataRead pageData);
+  protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
 
   private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
     expectations.clear();
@@ -362,7 +362,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return exceptionMessage;
   }
 
-  public PageDataRead getTestResults() {
+  public ReadOnlyPageData getTestResults() {
     return testResults;
   }
 

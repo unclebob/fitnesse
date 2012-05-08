@@ -128,6 +128,6 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {
-    return page.readPageData().getClasspaths();
+    return page.readOnlyData().getClasspaths();
   }
 }

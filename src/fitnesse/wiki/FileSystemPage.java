@@ -341,7 +341,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     private String getCmSystemVariable() {
-      return readPageData().getVariable("CM_SYSTEM");
+      return readOnlyData().getVariable("CM_SYSTEM");
     }
   }
 }

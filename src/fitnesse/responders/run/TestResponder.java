@@ -12,13 +12,7 @@ import fitnesse.responders.run.formatters.*;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -88,7 +82,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public class WikiPageFooterRenderer {
     public String render() {
-        return page.getData().getFooterPageHtml();
+        return WikiPageUtil.getFooterPageHtml(page);
     }
   }
 

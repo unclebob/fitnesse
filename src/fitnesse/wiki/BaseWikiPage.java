@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import util.EnvironmentVariableTool;
 import util.FileUtil;
@@ -96,8 +95,9 @@ public abstract class BaseWikiPage implements WikiPage {
 
   public WikiPage getChildPage(String name) {
     WikiPage page = getNormalChildPage(name);
-    if (page == null)
-      page = createSymbolicPage(getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
+    if (page == null) {
+      page = createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
+    }
     return page;
   }
 

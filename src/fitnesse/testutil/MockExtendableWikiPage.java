@@ -45,7 +45,7 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
     return null;
   }
 
-  public PageDataRead readPageData() { return getData(); }
+  public ReadOnlyPageData readOnlyData() { return getData(); }
 
   public PageData getDataVersion(String versionName) {
     return null;

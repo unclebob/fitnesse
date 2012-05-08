@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class PageData implements PageDataRead, Serializable {
+public class PageData implements ReadOnlyPageData, Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -72,7 +72,7 @@ public class PageData implements PageDataRead, Serializable {
   private Symbol contentSyntaxTree = null;
   private ParsingPage parsingPage;
 
-    public PageData(WikiPage page) {
+  public PageData(WikiPage page) {
     wikiPage = page;
     initializeAttributes();
     versions = new HashSet<VersionInfo>();
@@ -187,16 +187,6 @@ public class PageData implements PageDataRead, Serializable {
   /* this is the public entry to page parse and translate */
   public String getHtml() {
       return translateToHtml(getSyntaxTree());
-  }
-
-  public String getHeaderPageHtml() {
-    WikiPage header = wikiPage.getHeaderPage();
-    return header == null ? "" : header.readPageData().getHtml();
-  }
-
-  public String getFooterPageHtml() {
-    WikiPage footer = wikiPage.getFooterPage();
-    return footer == null ? "" : footer.readPageData().getHtml();
   }
 
   public String getVariable(String name) {
