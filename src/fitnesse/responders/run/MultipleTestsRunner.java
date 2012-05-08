@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -89,7 +88,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   
   private boolean useManualStartForTestSystem() {
     if (isRemoteDebug) {
-      String useManualStart = page.readPageData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
+      String useManualStart = page.readOnlyData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
       return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }
     return false;
@@ -163,7 +162,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
-    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), fitNesseContext.pageFactory, isRemoteDebug);
+    Descriptor descriptor = TestSystem.getDescriptor(testPage.parsedData(), fitNesseContext.pageFactory, isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 

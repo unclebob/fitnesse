@@ -28,4 +28,14 @@ public class WikiPageUtil {
     pageData.setContent(pageContents);
     page.commit(pageData);
   }
+
+  public static String getHeaderPageHtml(WikiPage wikiPage) {
+    WikiPage header = wikiPage.getHeaderPage();
+    return header == null ? "" : header.readOnlyData().getHtml();
+  }
+
+  public static String getFooterPageHtml(WikiPage wikiPage) {
+    WikiPage footer = wikiPage.getFooterPage();
+    return footer == null ? "" : footer.readOnlyData().getHtml();
+  }
 }

@@ -91,7 +91,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includePageContent() {
-    newPageContent.append(testPage.getData().getContent());
+    newPageContent.append(testPage.parsedData().getContent());
   }
 
   private void includeTeardownPages() {

@@ -4,7 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.CommandRunningFitClient;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class FitTestSystem extends TestSystem {
    client.join();
  }
 
- public String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException {
+ public String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException {
    String html = pageData.getHtml();
    if (html.length() == 0)
      client.send(emptyPageContent);
