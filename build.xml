@@ -187,7 +187,7 @@
 
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
-		<ivy:cachepath pathid="lib.classpath" conf="test" />
+		<ivy:cachepath pathid="lib.classpath" />
 		<path id="classpath">
 			<pathelement path="${classes}" />
 			<path refid="lib.classpath" />
