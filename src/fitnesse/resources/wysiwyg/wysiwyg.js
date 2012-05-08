@@ -328,8 +328,8 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '</ul>',
         '<ul class="non-table">',
         '<li title="List"><a id="wt-ul" href="#"></a></li>',
-        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
         '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
+        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '</ul>',
@@ -342,13 +342,14 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<ul class="in-table">',
         '<li title="Insert cell before"><a id="wt-insert-cell-before" href="#"></a></li>',
         '<li title="Insert cell after (|)"><a id="wt-insert-cell-after" href="#"></a></li>',
-        '<li title="Insert row before"><a id="wt-insert-row-before" href="#"></a></li>',
-        '<li title="Insert row after"><a id="wt-insert-row-after" href="#"></a></li>',
+        '<li title="Insert row above"><a id="wt-insert-row-before" href="#"></a></li>',
+        '<li title="Insert row below"><a id="wt-insert-row-after" href="#"></a></li>',
         '<li title="Insert column before"><a id="wt-insert-col-before" href="#"></a></li>',
         '<li title="Insert column after"><a id="wt-insert-col-after" href="#"></a></li>',
         '<li title="Delete cell (Ctrl-|)"><a id="wt-delete-cell" href="#"></a></li>',
         '<li title="Delete row"><a id="wt-delete-row" href="#"></a></li>',
         '<li title="Delete column"><a id="wt-delete-col" href="#"></a></li>',
+        '<li title="Delete table"><a id="wt-remove-table" href="#"></a></li>',
         '</ul>' ];
     var div = d.createElement("div");
     div.className = "wysiwyg-toolbar";
@@ -458,6 +459,8 @@ Wysiwyg.prototype.setupMenuEvents = function () {
 			return [ self.deleteTableRow ];
 		case "delete-col":
 			return [ self.deleteTableColumn ];
+		case "remove-table":
+			return [ self.deleteTable ];
 		case "code":
 			return [ self.formatCodeBlock ];
 		case "hr":
@@ -1203,6 +1206,13 @@ Wysiwyg.prototype.deleteTableColumn = function () {
                 row.deleteCell(cellIndex);
             }
         }
+    }
+};
+
+Wysiwyg.prototype.deleteTable = function () {
+    var focus = this._getFocusForTable();
+    if (focus.table) {
+    	$(focus.table).remove();
     }
 };
 

@@ -61,7 +61,7 @@ iframe.wysiwyg:focus {
     border: none;
     cursor: default;
     width: 32px;
-    height: 22px;
+    height: 20px;
     color: #777;
     display: block;
     float: left;
@@ -109,36 +109,36 @@ iframe.wysiwyg:focus {
     display: inline;
 }
 
-.wysiwyg-toolbar li a#wt-table    { background-position: 0px 0px; }
-.wysiwyg-toolbar li a#wt-remove   { background-position: 0px -242px; }
-.wysiwyg-toolbar li a#wt-strong   { background-position: 0px -264px; }
-.wysiwyg-toolbar li a#wt-em       { background-position: 0px -286px; }
-.wysiwyg-toolbar li a#wt-strike   { background-position: 0px -308px; }
-.wysiwyg-toolbar li a#wt-link     { background-position: 0px -330px; }
-.wysiwyg-toolbar li a#wt-unlink   { background-position: 0px -352px; }
-.wysiwyg-toolbar li a#wt-hr       { background-position: 0px -374px; }
-.wysiwyg-toolbar li a#wt-ul       { background-position: 0px -396px; }
-.wysiwyg-toolbar li a#wt-indent   { background-position: 0px -418px; }
-.wysiwyg-toolbar li a#wt-outdent  { background-position: 0px -440px; }
-.wysiwyg-toolbar li a#wt-escape   { background-position: 0px -462px; }
-.wysiwyg-toolbar li a#wt-unescape { background-position: 0px -484px; }
+.wysiwyg-toolbar li a#wt-table    { background-position: 0 -2px; }
+.wysiwyg-toolbar li a#wt-remove   { background-position: 0 -207px; }
+.wysiwyg-toolbar li a#wt-strong   { background-position: 0 -226px; }
+.wysiwyg-toolbar li a#wt-em       { background-position: 0 -245px; }
+.wysiwyg-toolbar li a#wt-strike   { background-position: 0 -263px; }
+.wysiwyg-toolbar li a#wt-link     { background-position: 0 -282px; }
+.wysiwyg-toolbar li a#wt-unlink   { background-position: 0 -301px; }
+.wysiwyg-toolbar li a#wt-hr       { background-position: 0 -321px; }
+.wysiwyg-toolbar li a#wt-ul       { background-position: 0 -338px; }
+.wysiwyg-toolbar li a#wt-indent   { background-position: 0 -357px; }
+.wysiwyg-toolbar li a#wt-outdent  { background-position: 0 -376px; }
+.wysiwyg-toolbar li a#wt-escape   { background-position: 0 -394px; }
+.wysiwyg-toolbar li a#wt-unescape { background-position: 0 -485px; }
 
-.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 0px -506px; }
-.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 0px -528px; }
-.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0px -550px; }
-.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0px -572px; }
+.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 0 -413px; }
+.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 0 -432px; }
+.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0 -451px; }
+.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0 -469px; }
 
-.wysiwyg-toolbar li a#wt-add-table          { background-position: 0 0px; }
-.wysiwyg-toolbar li a#wt-remove-table       { background-position: 0 -22px; }
-.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 0 -44px; }
-.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 0 -66px; }
-.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 0 -88px; }
-.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 0 -110px; }
-.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 0 -132px; }
-.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 0 -154px; }
-.wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -176px; }
-.wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -198px; }
-.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -220px; }
+.wysiwyg-toolbar li a#wt-add-table          { background-position: 0 -2px; }
+.wysiwyg-toolbar li a#wt-remove-table       { background-position: 0 -20px; }
+.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 0 -39px; }
+.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 0 -58px; }
+.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 0 -77px; }
+.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 0 -95px; }
+.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 0 -114px; }
+.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 0 -133px; }
+.wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -152px; }
+.wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -170px; }
+.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -189px; }
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
