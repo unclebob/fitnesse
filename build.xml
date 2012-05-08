@@ -29,6 +29,14 @@
 
 	<target name="unit_tests" depends="clean, unit_test" description="builds code from scratch, runs all the unit tests" />
 
+	<zipfileset id="wikipages.fileset" prefix="Resources/FitNesseRoot" dir="FitNesseRoot">
+		<include name="FitNesse/**" />
+		<include name="FrontPage/**" />
+		<include name="PageHeader/**" />
+		<include name="PageFooter/**" />
+		<exclude name="**/*.zip" />
+	</zipfileset>
+
 	<target name="jar" depends="compile,createUpdateLists" description="generate the jar file">
 		<mkdir dir="dist" />
 		<delete file="dist/fitnesse.jar" />
@@ -43,13 +51,13 @@
 
 			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
+			<zipfileset refid="wikipages.fileset" />
+
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
-		<!-- TODO: why? -->
-		<delete dir="${classes}/Resources" />
 	</target>
 
 	<target name="standalone-jar" depends="jar" description="generate the standalone jar file">
@@ -67,13 +75,25 @@
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
+	</target>
+
+	<target name="sources-jar" depends="stamp-version">
+		<jar jarfile="dist/fitnesse-sources.jar" basedir="src">
+			<include name="**" />
+			<zipfileset refid="wikipages.fileset" />
+		</jar>
+	</target>
+
+	<target name="javadoc-jar">
+		<mkdir dir="javadoc" />
+		<javadoc sourcepath="src" destdir="javadoc" classpathref="classpath" />
+		<jar jarfile="dist/fitnesse-javadoc.jar" basedir="javadoc" />
 
 	</target>
 
-	<!-- TODO: targets for plain fitnesse.jar, -sources, -javadoc -->
-	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+	<target name="createUpdateLists" depends="compile" description="creates two lists of files to be updated">
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
-			<arg value="-baseDirectory:${classes}/Resources" />
+			<arg value="-baseDirectory:." />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
@@ -81,27 +101,12 @@
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 		</java>
-		<copy todir="${classes}/Resources">
+		<move todir="${classes}/Resources">
 			<fileset dir=".">
 				<include name="updateList" />
 				<include name="updateDoNotCopyOverList" />
 			</fileset>
-		</copy>
-	</target>
-
-	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="${classes}/Resources" />
-		<mkdir dir="${classes}/Resources" />
-		<copy todir="${classes}/Resources/FitNesseRoot">
-			<fileset dir="FitNesseRoot">
-				<include name="FitNesse/**" />
-				<include name="FrontPage/**" />
-				<include name="PageHeader/**" />
-				<include name="PageFooter/**" />
-				<include name="fitnesse/**" />
-				<exclude name="**/*.zip" />
-			</fileset>
-		</copy>
+		</move>
 	</target>
 
 	<target name="compile" depends="init, stamp-version, retrieve" description="compile the source (make)">

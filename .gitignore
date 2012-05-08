@@ -11,6 +11,9 @@ jsunit/*
 agitar/*
 dist/*
 classes/*
+antlib/*
+javadoc/*
+lib/*
 .svn
 *-*.zip
 *.ipr
