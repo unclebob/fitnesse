@@ -15,14 +15,6 @@
 	<property name="zipDir" location="dist/fitnesse" />
 	<property name="results.dir" location="test-results" />
 
-	<path id="classpath">
-		<pathelement path="${classes}" />
-		<fileset dir="lib">
-			<include name="*.jar" />
-			<exclude name="dummy.jar" />
-		</fileset>
-	</path>
-
 	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests." />
 
 	<target name="build" depends="clean, compile" description="clean, then compile the source" />
@@ -37,6 +29,10 @@
 		<exclude name="**/*.zip" />
 	</zipfileset>
 
+
+	<!--
+	  Bundling
+	  -->
 	<target name="jar" depends="compile,createUpdateLists" description="generate the jar file">
 		<mkdir dir="dist" />
 		<delete file="dist/fitnesse.jar" />
@@ -84,7 +80,7 @@
 		</jar>
 	</target>
 
-	<target name="javadoc-jar">
+	<target name="javadoc-jar" depends="compile">
 		<mkdir dir="javadoc" />
 		<javadoc sourcepath="src" destdir="javadoc" classpathref="classpath" />
 		<jar jarfile="dist/fitnesse-javadoc.jar" basedir="javadoc" />
@@ -109,7 +105,8 @@
 		</move>
 	</target>
 
-	<target name="compile" depends="init, stamp-version, retrieve" description="compile the source (make)">
+	<target name="compile" depends="stamp-version,resolve" description="compile the source (make)">
+		<mkdir dir="${classes}" />
 		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" />
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
@@ -136,11 +133,13 @@
 		<delete dir="test-results" />
 		<delete dir="lib" />
 		<delete dir="dist" />
+		<delete dir="javadoc" />
 		<delete file="updateList"/>
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
 	<target name="unit_test" depends="compile" description="run the unit tests">
+		<mkdir dir="test-results" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
 			<classpath refid="classpath" />
 			<formatter type="xml" usefile="true" />
@@ -156,11 +155,6 @@
 				</fileset>
 			</batchtest>
 		</junit>
-	</target>
-
-	<target name="init">
-		<mkdir dir="${classes}" />
-		<mkdir dir="test-results" />
 	</target>
 
 	<target name="load_fitnesse_taskdef">
@@ -193,11 +187,11 @@
 
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
-	</target>
-
-	<!-- TODO: Get rid of this -->
-	<target name="retrieve" depends="resolve">
-		<ivy:retrieve pattern="lib/[artifact].[ext]" />
+		<ivy:cachepath pathid="lib.classpath" conf="test" />
+		<path id="classpath">
+			<pathelement path="${classes}" />
+			<path refid="lib.classpath" />
+		</path>
 	</target>
 
 	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
