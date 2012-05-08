@@ -81,7 +81,7 @@ public class InMemoryPage extends CommitingPage {
     return new PageData(getDataVersion(currentVersionName));
   }
 
-  public PageDataRead readPageData() {
+  public ReadOnlyPageData readOnlyData() {
       return getDataVersion(currentVersionName);
   }
 

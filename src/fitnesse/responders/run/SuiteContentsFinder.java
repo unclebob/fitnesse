@@ -132,7 +132,7 @@ public class SuiteContentsFinder {
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
-    PageDataRead data = thePage.readPageData();
+    ReadOnlyPageData data = thePage.readOnlyData();
     List<String> pageReferences = data.getXrefPages();
     PageCrawler crawler = thePage.getPageCrawler();
     WikiPagePath testPagePath = crawler.getFullPath(thePage);

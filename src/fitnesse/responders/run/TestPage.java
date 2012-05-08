@@ -1,17 +1,12 @@
 package fitnesse.responders.run;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 public class TestPage {
     public TestPage(WikiPage sourcePage) {
         this.sourcePage = sourcePage;
-        try {
-            data = sourcePage.getData();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public TestPage(PageData data) {
@@ -20,30 +15,21 @@ public class TestPage {
     }
 
     public WikiPage getSourcePage() { return sourcePage; }
-    public PageData getData() { return data; }
-    public PageData getDecoratedData() { return decoratedData != null ? decoratedData : data; }
+    public PageData getData() { return data == null ? sourcePage.getData() : data; }
+    public ReadOnlyPageData parsedData() { return sourcePage.readOnlyData(); }
+    public PageData getDecoratedData() { return decoratedData != null ? decoratedData : getData(); }
     public String getName() { return sourcePage.getName(); }
 
     public void decorate(String decoratedContent) {
-        try {
-            decoratedData = new PageData(sourcePage, decoratedContent);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+        decoratedData = new PageData(sourcePage, decoratedContent);
+   }
 
     public boolean isSlim() {
-        try {
-            return "slim".equalsIgnoreCase(data.getVariable("TEST_SYSTEM"));
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return "slim".equalsIgnoreCase(parsedData().getVariable("TEST_SYSTEM"));
     }
 
     public boolean isTestPage() {
-      return data.hasAttribute("Test");
+      return parsedData().hasAttribute("Test");
     }
 
     private WikiPage sourcePage;

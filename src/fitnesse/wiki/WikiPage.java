@@ -6,7 +6,6 @@ package fitnesse.wiki;
 import java.io.Serializable;
 import java.util.List;
 
-
 public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getParent();
 
@@ -27,7 +26,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   String getName();
 
   PageData getData();
-  PageDataRead readPageData();
+  ReadOnlyPageData readOnlyData();
 
   PageData getDataVersion(String versionName);
 
@@ -38,12 +37,11 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getHeaderPage();
 
   WikiPage getFooterPage();
+
   //TODO Delete these method alone with ProxyPage when the time is right.
   boolean hasExtension(String extensionName);
 
   Extension getExtension(String extensionName);
-
-  String getHelpText();
 
   boolean isOpenInNewWindow();
 }
