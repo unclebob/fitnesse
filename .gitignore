@@ -12,6 +12,7 @@ agitar/*
 dist/*
 classes/*
 .svn
+.settings
 *-*.zip
 *.ipr
 fitnesse*.zip
