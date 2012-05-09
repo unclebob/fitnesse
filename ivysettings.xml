@@ -1,0 +1,28 @@
+<ivysettings>
+	<property name="sonatype.nexus.staging.url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+	<property name="sonatype.nexus.snapshots.url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+
+	<property name="pgp.keyId" value="auto" override="false"/>
+        <settings defaultResolver="default" />
+	<credentials
+		host="oss.sonatype.org"
+		realm="Sonatype Nexus Repository Manager"
+		username="${upload.user}"
+		passwd="${upload.password}" />
+	<credentials
+		host="${sonatype-nexus-snapshots}"
+		realm="Sonatype Nexus Repository Manager"
+		username="${upload.user}"
+		passwd="${upload.password}" />
+	<signers>
+		<pgp name="nexus-sig" secring="${user.home}/.gnupg/secring.gpg" password="${pgp.password}" keyId="${pgp.keyId}"/>
+	</signers>
+        <resolvers>
+		<chain name="default">
+			<ibiblio name="ibiblio" root="${maven.central.url}" m2compatible="true" />
+		</chain>
+		<url name="sonatype-nexus-staging" m2compatible="true" signer="nexus-sig">
+			<artifact pattern="${sonatype.nexus.staging.url}/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+		</url>
+        </resolvers>
+</ivysettings>
