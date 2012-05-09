@@ -19,7 +19,7 @@
 	</signers>
         <resolvers>
 		<chain name="default">
-			<ibiblio name="ibiblio" root="http://repo2.maven.org/maven2" m2compatible="true" />
+			<ibiblio name="ibiblio" root="${maven.central.url}" m2compatible="true" />
 		</chain>
 		<url name="sonatype-nexus-staging" m2compatible="true" signer="nexus-sig">
 			<artifact pattern="${sonatype.nexus.staging.url}/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
