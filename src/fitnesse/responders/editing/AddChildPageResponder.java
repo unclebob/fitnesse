@@ -21,6 +21,7 @@ public class AddChildPageResponder implements SecureResponder {
   private String childContent;
   private String pageType;
   private String helpText;
+  private String suites;
     
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
@@ -37,15 +38,16 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
-    childName = (String) request.getInput("pageName");
+    childName = (String) request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     currentPagePath = PathParser.parse(request.getResource());
     crawler = context.root.getPageCrawler();
     currentPage = crawler.getPage(context.root, currentPagePath);
-    childContent = (String) request.getInput("pageContent");
-    pageType = (String) request.getInput("pageType");
-    helpText = (String) request.getInput("helpText");
+    childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
+    pageType = (String) request.getInput(EditResponder.PAGE_TYPE);
+    helpText = (String) request.getInput(EditResponder.HELP_TEXT);
+    suites = (String) request.getInput(EditResponder.SUITES);
     if (childContent == null)
       childContent = "!contents\n";
     if (pageType == null)
@@ -81,7 +83,8 @@ public class AddChildPageResponder implements SecureResponder {
       childPageData.getProperties().remove("Suite");
     } else if ("Test".equals(pageType) || "Suite".equals(pageType))
       childPageData.setAttribute(pageType);
-    childPageData.setAttribute("Help", helpText);
+    childPageData.setAttribute(PageData.PropertyHELP, helpText);
+    childPageData.setAttribute(PageData.PropertySUITES, suites);
     childPage.commit(childPageData);
   }
 

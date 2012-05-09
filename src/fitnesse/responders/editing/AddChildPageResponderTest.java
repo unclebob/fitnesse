@@ -18,7 +18,6 @@ public class AddChildPageResponderTest {
   private String childName;
   private String childContent;
   private String pagetype;
-  private String helpText;
   private MockRequest request;
   private FitNesseContext context;
   private Responder responder;
@@ -32,14 +31,12 @@ public class AddChildPageResponderTest {
     crawler.addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
     childContent = "child content";
-    helpText = "help text";
     pagetype = "";
     request = new MockRequest();
     request.setResource("TestPage");
     request.addInput("pageName", childName);
     request.addInput("pageContent", childContent);
     request.addInput("pageType", pagetype);
-    request.addInput("helpText", helpText);
     context = FitNesseUtil.makeTestContext(root);
     responder = new AddChildPageResponder();
     path = PathParser.parse("TestPage.ChildPage");
@@ -56,10 +53,16 @@ public class AddChildPageResponderTest {
 
   @Test
   public void childPageIsMade() throws Exception {
+    String helpText = "help text";
+    String suites = "tag";
+    request.addInput("helpText", helpText);
+    request.addInput("suites", suites);
     assertTrue(crawler.getPage(root, path) == null);
     responder.makeResponse(context, request);
     assertTrue(crawler.getPage(root, path) != null);
-    assertEquals("help text", crawler.getPage(root, path).getData().getAttribute("Help"));
+    getChildPage(childName);
+    assertEquals(suites, childPageData.getAttribute("Suites"));
+    assertEquals(helpText, childPageData.getAttribute("Help"));
   }
 
   @Test

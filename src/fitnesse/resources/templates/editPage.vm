@@ -35,7 +35,7 @@
  <textarea class="pageContent no_wrap" id="pageContentId" name="pageContent" wrap="off">$pageContent</textarea>
 
  <fieldset>
-  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="Suites" value="$!suites" />
+  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
  </fieldset>
 
  <fieldset class="edit_buttons">

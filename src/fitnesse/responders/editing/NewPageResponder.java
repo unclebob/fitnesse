@@ -37,13 +37,13 @@ public class NewPageResponder implements Responder {
     html.put("resource", request.getResource());
 
     html.put("isNewPage", true);
-    html.put("helpText", "");
-    html.put("pageContent", context.defaultNewPageContent);
+    html.put(EditResponder.HELP_TEXT, "");
+    html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     if (request.hasInput("pageType")) {
       String pageType = (String) request.getInput("pageType");
       // Validate page type:
       PageType.fromString(pageType);
-      html.put("pageType", pageType);
+      html.put(EditResponder.PAGE_TYPE, pageType);
     } else {
       html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
     }
