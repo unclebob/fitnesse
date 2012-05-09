@@ -732,6 +732,28 @@ $(function() {
                 "Paragraph" ].join("\n"));
         });
 
+        unit.add("two tables", function() {
+            var dom = fragment(
+               element("p", "Paragraph"),
+               element("table",
+                   element("tbody",
+                       element("tr", element("td", " 1.1 "), element("td", " 1.2 ")),
+                       element("tr", element("td", " 2.1 "), element("td", " 2.2 ")))),
+               element("p", ""),
+               element("table",
+                   element("tbody",
+                       element("tr", element("td", " 3.1 "), element("td", " 3.2 ")),
+                       element("tr", element("td", " 4.1 "), element("td", " 4.2 ")))));
+           generate.call(this, dom, [
+               "Paragraph",
+               "",
+               "| 1.1 | 1.2 |",
+               "| 2.1 | 2.2 |",
+               "",
+               "| 3.1 | 3.2 |",
+               "| 4.1 | 4.2 |" ].join("\n"));
+       });
+
         unit.add("table + rule", function() {
             var dom = fragment(
                 element("table",

@@ -2066,6 +2066,11 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
 
         if (!inTable()) {
             h = holder;
+            
+            // Just ensure you can type between to tables
+            if (h.lastChild && h.lastChild.tagName === 'TABLE') {
+            	h.appendChild(d.createElement('p'));
+            }
             table = d.createElement("table");
             if (escaped) {
                 table.className = "escaped";
