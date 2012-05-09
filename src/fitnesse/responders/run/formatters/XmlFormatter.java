@@ -2,28 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.*;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import util.TimeMeasurement;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
   public interface WriterFactory {
@@ -45,7 +40,7 @@ public class XmlFormatter extends BaseFormatter {
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     currentTestStartTime = timeMeasurement.startedAt();
-    appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
+    appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
   
   @Override
@@ -74,7 +69,7 @@ public class XmlFormatter extends BaseFormatter {
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(timeMeasurement.elapsed());
     currentResult.relativePageName = relativeTestName;
-    currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = page.readOnlyData().getAttribute(PageData.PropertySUITES);
 
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
@@ -271,7 +266,7 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     private String expectationStatus(String message) {
-      String status = "TILT";
+      String status;
       if (message.matches(".*pass(.*)"))
         status = "right";
       else if (message.matches(".*fail(.*)"))

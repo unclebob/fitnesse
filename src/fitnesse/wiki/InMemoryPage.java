@@ -81,6 +81,10 @@ public class InMemoryPage extends CommitingPage {
     return new PageData(getDataVersion(currentVersionName));
   }
 
+  public ReadOnlyPageData readOnlyData() {
+      return getDataVersion(currentVersionName);
+  }
+
   public void doCommit(PageData newData) {
     newData.setWikiPage(this);
     newData.getProperties().setLastModificationTime(Clock.currentDate());

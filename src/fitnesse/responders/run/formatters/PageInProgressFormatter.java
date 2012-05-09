@@ -1,7 +1,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.run.TestSummary;
 import util.TimeMeasurement;
@@ -17,7 +17,7 @@ public class PageInProgressFormatter extends NullFormatter {
   }
   
   public String getLockFileName(TestPage test) {
-	PageData data = test.getData();
+	ReadOnlyPageData data = test.parsedData();
 	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
     

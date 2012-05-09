@@ -119,12 +119,12 @@ label input {
 /** Test result **/
 tr.scenario > td:first-child {
 	padding-left: 16px;
-	background-image: url("../images/collapsibleClosed.png");
+	background-image: url("../images/collapsibleOpen.png");
 	background-position: 2px;
 	background-repeat: no-repeat;
 }
-tr.scenario.open > td:first-child {
-	background-image: url("../images/collapsibleOpen.png");
+tr.scenario.closed > td:first-child {
+	background-image: url("../images/collapsibleClosed.png");
 }
 tr.scenario-detail {
 	display: none;
@@ -143,12 +143,6 @@ tr.scenario-detail {
 	background-color: red;
 	color: white;
 	font-weight: bold;
-}
-#test-action .ok {
- 	background-color: lightblue;
-}
-#test-action .output {
- 	background-color: lightblue;
 }
 #test-action .error {
 	background-color: red;

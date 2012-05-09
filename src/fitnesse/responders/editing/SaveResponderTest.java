@@ -103,6 +103,7 @@ public class SaveResponderTest {
     request.setResource("ChildPageTwo");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
     request.addInput(EditResponder.HELP_TEXT, "some help");
+    request.addInput(EditResponder.SUITES, "some help");
 
     responder.makeResponse(new FitNesseContext(root), request);
 

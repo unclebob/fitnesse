@@ -178,6 +178,11 @@ footer a, footer a:active, footer a:link, footer a:visited {
     color:#D9D9D9;
 }
 
-
+/* TESTS */
+#test-action .ok,
+#test-action .output {
+	font-weight: bold;
+	color: white;
+}
 
 

@@ -19,7 +19,7 @@ function doSilentRequest(url)
  *  Scenario's (after test execution)
  */
 $(document).on("click", "article tr.scenario td", function () {
-	$(this).parent().toggleClass("open").next().toggle();
+	$(this).parent().toggleClass('closed').next().toggle();
 });
 
 /**
@@ -30,18 +30,20 @@ $(document)
 		$(this).parent().toggleClass('closed');
 	})
 	.on("click", "article .collapsible > p.title a", function (event) {
-		// Do not open when clicking on a link in the title.
+		// Do not open section when clicking on a link in the title, just follow the link.
 		event.stopPropagation();
 		return true;
 	})
 	.on('click', 'article .collapsible .expandall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
-		event.stopPropagation();
+		var section = $(this).closest('.collapsible');
+		section.find('.collapsible').andSelf().removeClass('closed');
+		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
 	.on('click', 'article .collapsible .collapseall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
-		event.stopPropagation();
+		section = $(this).closest('.collapsible');
+		section.find('.collapsible, .scenario').andSelf().addClass('closed');
+		section.find('.scenario').addClass('closed').next().hide();
 		return false;
 	});
 
