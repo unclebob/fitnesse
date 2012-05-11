@@ -110,35 +110,35 @@ iframe.wysiwyg:focus {
 }
 
 .wysiwyg-toolbar li a#wt-table    { background-position: 0 -2px; }
-.wysiwyg-toolbar li a#wt-remove   { background-position: 0 -207px; }
-.wysiwyg-toolbar li a#wt-strong   { background-position: 0 -226px; }
-.wysiwyg-toolbar li a#wt-em       { background-position: 0 -245px; }
-.wysiwyg-toolbar li a#wt-strike   { background-position: 0 -263px; }
-.wysiwyg-toolbar li a#wt-link     { background-position: 0 -282px; }
-.wysiwyg-toolbar li a#wt-unlink   { background-position: 0 -301px; }
-.wysiwyg-toolbar li a#wt-hr       { background-position: 0 -321px; }
-.wysiwyg-toolbar li a#wt-ul       { background-position: 0 -338px; }
-.wysiwyg-toolbar li a#wt-indent   { background-position: 0 -357px; }
-.wysiwyg-toolbar li a#wt-outdent  { background-position: 0 -376px; }
-.wysiwyg-toolbar li a#wt-escape   { background-position: 0 -394px; }
+.wysiwyg-toolbar li a#wt-remove   { background-position: 0 -222px; }
+.wysiwyg-toolbar li a#wt-strong   { background-position: 0 -242px; }
+.wysiwyg-toolbar li a#wt-em       { background-position: 0 -262px; }
+.wysiwyg-toolbar li a#wt-strike   { background-position: 0 -282px; }
+.wysiwyg-toolbar li a#wt-link     { background-position: 0 -302px; }
+.wysiwyg-toolbar li a#wt-unlink   { background-position: 0 -322px; }
+.wysiwyg-toolbar li a#wt-hr       { background-position: 0 -342px; }
+.wysiwyg-toolbar li a#wt-ul       { background-position: 0 -362px; }
+.wysiwyg-toolbar li a#wt-indent   { background-position: 0 -382px; }
+.wysiwyg-toolbar li a#wt-outdent  { background-position: 0 -402px; }
+.wysiwyg-toolbar li a#wt-escape   { background-position: 0 -422px; }
 .wysiwyg-toolbar li a#wt-unescape { background-position: 0 -485px; }
 
-.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 0 -413px; }
-.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 0 -432px; }
-.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0 -451px; }
-.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0 -469px; }
+.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 0 -442px; }
+.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 0 -462px; }
+.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0 -482px; }
+.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0 -502px; }
 
 .wysiwyg-toolbar li a#wt-add-table          { background-position: 0 -2px; }
-.wysiwyg-toolbar li a#wt-remove-table       { background-position: 0 -20px; }
-.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 0 -39px; }
-.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 0 -58px; }
-.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 0 -77px; }
-.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 0 -95px; }
-.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 0 -114px; }
-.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 0 -133px; }
-.wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -152px; }
-.wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -170px; }
-.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -189px; }
+.wysiwyg-toolbar li a#wt-remove-table       { background-position: 0 -22px; }
+.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 0 -42px; }
+.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 0 -62px; }
+.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 0 -82px; }
+.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 0 -102px; }
+.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 0 -122px; }
+.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 0 -142px; }
+.wysiwyg-toolbar li a#wt-delete-row         { background-position: 0 -162px; }
+.wysiwyg-toolbar li a#wt-delete-col         { background-position: 0 -182px; }
+.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 0 -202px; }
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
