@@ -2,12 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import static fitnesse.responders.run.ExecutionResult.getExecutionResult;
+
 import java.io.IOException;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.responders.run.ExecutionReport;
+import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -44,7 +48,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
   public void announceStartNewTest(String relativeName, String fullPathName) {
     currentTest++;
-    updateSummaryDiv(getProgressHtml());
+    updateSummaryDiv(getProgressHtml(relativeName));
 
     maybeWriteTestOutputDiv();
     maybeWriteTestSystem();
@@ -87,17 +91,17 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
 
   @Override
-  public void newTestStarted(TestPage newTest, TimeMeasurement timeMeasurement) {
-    String relativeName = getRelativeName(newTest);
+  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+    super.newTestStarted(testPage, timeMeasurement);
     
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(newTest.getSourcePage());
+    WikiPagePath fullPath = pageCrawler.getFullPath(testPage.getSourcePage());
     String fullPathName = PathParser.render(fullPath);
 
-    announceStartNewTest(relativeName, fullPathName);
+    announceStartNewTest(getRelativeName(), fullPathName);
   }
 
-  private String getProgressHtml() {
+  private String getProgressHtml(String relativeName) {
     float percentFinished = (currentTest - 1) * 1000 / totalTests;
     percentFinished = percentFinished / 10;
 
@@ -106,9 +110,9 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     HtmlTag progressDiv = new HtmlTag("div", text);
 
     // need some results before we can check pageCounts for results
-    String cssClass = (currentTest == 1) ? "pass" : cssClassFor(this.pageCounts);
+    ExecutionResult cssClass = (currentTest == 1) ? ExecutionResult.PASS : getExecutionResult(relativeName, this.pageCounts);
     progressDiv.addAttribute("id", "progressBar");
-    progressDiv.addAttribute("class", cssClass);
+    progressDiv.addAttribute("class", cssClass.toString());
     progressDiv.addAttribute("style", "width:" + percentFinished + "%");
 
     return progressDiv.html();
@@ -121,7 +125,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
     HtmlTag tag = new HtmlTag("li");
 
-    tag.add(HtmlUtil.makeSpanTag("results " + cssClassFor(relativeName, testSummary), testSummary.toString()));
+    tag.add(HtmlUtil.makeSpanTag("results " + getExecutionResult(relativeName, testSummary), testSummary.toString()));
 
     HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
     link.addAttribute("class", "link");
@@ -136,29 +140,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     writeData(insertScript.html());
   }
 
-  protected String cssClassFor(String relativeName, TestSummary testSummary) {
-    if (isSuiteMetaPage(relativeName)) {
-      if (testSummary.getWrong() > 0 || wasInterupted()) {
-        return "fail";
-      } else if (testSummary.getExceptions() > 0) {
-        return "error";
-      } else if (testSummary.getIgnores() > 0) {
-        return "ignore";
-      } else {
-        return "pass";
-      }
-    } else {
-      return cssClassFor(testSummary);
-    }
-  }
-
-  private boolean isSuiteMetaPage(String relativeName) {
-    return relativeName.equals("SuiteSetUp")
-        || relativeName.endsWith(".SuiteSetUp")
-        || relativeName.equals("SuiteTearDown")
-        || relativeName.endsWith(".SuiteTearDown");
-  }
-  
   private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }

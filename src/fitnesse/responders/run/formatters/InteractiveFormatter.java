@@ -2,11 +2,13 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
@@ -21,6 +23,8 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   private TestSummary assertionCounts = new TestSummary();
 
   private CompositeExecutionLog log;
+
+  private String relativeName;
   
   protected InteractiveFormatter() {
     super();
@@ -36,6 +40,10 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
   }
 
+  protected String getRelativeName() {
+	  return relativeName;
+  }
+  
   protected String getRelativeName(TestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
@@ -59,19 +67,6 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     writeData(script.html());
   }
 
-
-  protected String cssClassFor(TestSummary testSummary) {
-    if (testSummary.getWrong() > 0 || wasInterupted)
-      return "fail";
-    else if (testSummary.getExceptions() > 0
-      || testSummary.getRight() + testSummary.getIgnores() == 0)
-      return "error";
-    else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0)
-      return "ignore";
-    else
-      return "pass";
-  }
-
   public TestSummary getAssertionCounts() {
     return assertionCounts;
   }
@@ -86,12 +81,18 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     super.errorOccured();
   }
   
+  @Override
+  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement)
+		throws IOException {
+    relativeName = getRelativeName(testPage);
+  }
+
   public String testSummary() {
     String summaryContent = (wasInterupted()) ? TESTING_INTERUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
-      + cssClassFor(getAssertionCounts()) + "\";");
+      + ExecutionResult.getExecutionResult(relativeName, getAssertionCounts()) + "\";");
     return script.html();
   }
 

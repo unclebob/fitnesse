@@ -2,15 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.CompositeExecutionLog;
 import util.RegexTestCase;
 import util.TimeMeasurement;
+import fitnesse.FitNesseContext;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;
@@ -105,7 +104,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     //assert stop button added
     assertSubString("Testing was interupted", pageBuffer.toString());
     //assert stop button removed
-    assertSubString("className = \"fail\"", pageBuffer.toString());
+    assertSubString("className = \"error\"", pageBuffer.toString());
   }
 
   public void testTimingShouldAppearInSummary() throws Exception {

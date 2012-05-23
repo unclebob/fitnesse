@@ -10,7 +10,7 @@
 #set($finalCounts = $suiteExecutionReport.FinalCounts)
 #if($finalCounts)
 <div id="test-summary">
-  <div id="progressBar" class="$suiteExecutionReport.summaryClass($finalCounts)">
+  <div id="progressBar" class="$ExecutionStatus.getExecutionStatus($suiteExecutionReport.getRootPath(), $finalCounts)">
     <strong>Test Pages:</strong>
     $finalCounts.Right right,
     $finalCounts.Wrong wrong,

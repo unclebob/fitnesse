@@ -11,7 +11,7 @@
 <hr/>
 <p/>
 <table>
-  <tr class="$testExecutionReport.summaryClass($testResult.TestSummary)">
+  <tr class="$ExecutionStatus.getExecutionStatus($testResult.RelativePageName, $testResult.TestSummary)">
     <td>
       <strong><span STYLE="font-size: 16pt">
         <a name="$testResult.RelativePageName">$testResult.RelativePageName</a>

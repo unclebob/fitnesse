@@ -29,7 +29,8 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+	super.newTestStarted(testPage, timeMeasurement);
     writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
