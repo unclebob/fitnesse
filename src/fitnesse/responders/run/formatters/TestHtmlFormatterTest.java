@@ -104,7 +104,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     //assert stop button added
     assertSubString("Testing was interupted", pageBuffer.toString());
     //assert stop button removed
-    assertSubString("className = \"error\"", pageBuffer.toString());
+    assertSubString("className = \"ignore\"", pageBuffer.toString());
   }
 
   public void testTimingShouldAppearInSummary() throws Exception {

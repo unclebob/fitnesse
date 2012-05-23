@@ -64,7 +64,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.finishWritingOutput();
 
     assertSubString("<span class=\\\"results pass\\\">0 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<strong>Test Pages:</strong> 0 right, 0 wrong, 1 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
   }
 

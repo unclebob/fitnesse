@@ -44,15 +44,20 @@ public class TestSummary {
   return 42;
   }
 
-  public void tallyPageCounts(TestSummary counts) {
-    if (counts.getWrong() > 0)
-      wrong = getWrong() + 1;
-    else if (counts.getExceptions() > 0)
-      exceptions = getExceptions() + 1;
-    else if (counts.getRight() == 0)
-      ignores = getIgnores() + 1;
-    else
-      right = getRight() + 1;
+  public void tallyPageCounts(ExecutionResult result) {
+	switch (result) {
+	case ERROR:
+		exceptions += 1;
+		break;
+	case FAIL:
+		wrong += 1;
+		break;
+	case IGNORE:
+		ignores += 1;
+		break;
+	case PASS:
+		right += 1;
+	}
   }
 
   public void add(TestSummary testSummary) {
