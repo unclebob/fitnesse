@@ -1,2 +1,1 @@
-|script|fitnesse.fixtures.Pass|
-|ok|
+# No data

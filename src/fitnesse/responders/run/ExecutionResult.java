@@ -17,11 +17,10 @@ public enum ExecutionResult {
   public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterupted) {
     if (testSummary.getWrong() > 0 || wasInterupted) {
       return FAIL;
-    } else if (testSummary.getExceptions() > 0
-			      || (!isSuiteMetaPage(relativeName)
-                         && testSummary.getRight() + testSummary.getIgnores() == 0)) {
+    } else if (testSummary.getExceptions() > 0) {
 	  return ERROR;
-    } else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0) {
+    } else if (((isSuiteMetaPage(relativeName) && testSummary.getIgnores() > 0)
+    		|| (!isSuiteMetaPage(relativeName) && testSummary.getIgnores() >= 0)) && testSummary.getRight() == 0) {
       return IGNORE;
 	}
     return PASS;

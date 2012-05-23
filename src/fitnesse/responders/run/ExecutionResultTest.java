@@ -17,7 +17,7 @@ public class ExecutionResultTest {
 	    assertEquals(FAIL, getExecutionResult("TestPage", new TestSummary(1, 1, 1, 1)));
 	    assertEquals(ERROR, getExecutionResult("TestPage", new TestSummary(0, 0, 0, 1)));
 	    assertEquals(ERROR, getExecutionResult("TestPage", new TestSummary(0, 0, 1, 1)));
-	    assertEquals(ERROR, getExecutionResult("TestPage", new TestSummary(0, 0, 0, 0)));
+	    assertEquals(IGNORE, getExecutionResult("TestPage", new TestSummary(0, 0, 0, 0)));
 	    assertEquals(IGNORE, getExecutionResult("TestPage", new TestSummary(0, 0, 1, 0)));
 	  }
 
