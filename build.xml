@@ -230,17 +230,15 @@
 	  -->
 	<property name="maven.central.url" value="http://repo2.maven.org/maven2" />
 
+	<available file="antlib/ivy.jar" type="file" property="have.ivy.jar"/>
+	<available file="antlib/bcprov.jar" type="file" property="have.bcprov.jar"/>
+	<available file="antlib/bcpg.jar" type="file" property="have.bcpg.jar"/>
+
 	<condition property="ivy.download.not.required">
 		<and>
-			<isfileselected file="antlib/ivy.jar">
-				<readable/>
-			</isfileselected>
-			<isfileselected file="antlib/bcprov.jar">
-				<readable/>
-			</isfileselected>
-			<isfileselected file="antlib/bcpg.jar">
-				<readable/>
-			</isfileselected>
+			<istrue value="${have.ivy.jar}" />
+			<istrue value="${have.bcprov.jar}" />
+			<istrue value="${have.bcpg.jar}" />
 		</and>
 	</condition>
 
