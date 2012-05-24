@@ -58,12 +58,7 @@
 		<ivy:cachefileset setid="standalone.jar.fileset" conf="standalone" />
 		<jar jarfile="dist/fitnesse-standalone.jar">
 			<zipfileset src="dist/fitnesse.jar" />
-			<archives>
-				<zips>
-					<zipfileset refid="standalone.jar.fileset" />
-				</zips>
-			</archives>
-			
+			<zipgroupfileset refid="standalone.jar.fileset" />
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
