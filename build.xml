@@ -232,15 +232,15 @@
 
 	<condition property="ivy.download.not.required">
 		<and>
-			<resourceexists>
-				<file file="antlib/ivy.jar"/>
-			</resourceexists>
-			<resourceexists>
-				<file file="antlib/bcprov.jar"/>
-			</resourceexists>
-			<resourceexists>
-				<file file="antlib/bcpg.jar"/>
-			</resourceexists>
+			<isfileselected file="antlib/ivy.jar">
+				<readable/>
+			</isfileselected>
+			<isfileselected file="antlib/bcprov.jar">
+				<readable/>
+			</isfileselected>
+			<isfileselected file="antlib/bcpg.jar">
+				<readable/>
+			</isfileselected>
 		</and>
 	</condition>
 
