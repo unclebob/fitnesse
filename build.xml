@@ -1,7 +1,9 @@
-<project name="Fitnesse" default="all" basedir=".">
+<project name="Fitnesse" default="all" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+
 	<description>
-    Fitnesse is a wiki wrapper for fit, an acceptance test framework.
-  </description>
+		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
+	</description>
 
 	<property environment="env" />
 	<property name="env.FITNESSE_TEST_PORT" value="8080" />
@@ -9,17 +11,7 @@
 	<property name="src2" location="srcFitServerTests" />
 	<property name="classes" location="classes" />
 	<property name="fitnesseRoot" value="FitNesseRoot" />
-	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
-	<property name="zipDir" location="dist/fitnesse" />
 	<property name="results.dir" location="test-results" />
-
-	<path id="classpath">
-		<pathelement path="${classes}" />
-		<fileset dir="lib">
-			<include name="*.jar" />
-			<exclude name="dummy.jar" />
-		</fileset>
-	</path>
 
 	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests." />
 
@@ -27,7 +19,19 @@
 
 	<target name="unit_tests" depends="clean, unit_test" description="builds code from scratch, runs all the unit tests" />
 
-	<target name="jar" depends="build, createUpdateLists" description="generate the jar file">
+	<zipfileset id="wikipages.fileset" prefix="Resources/FitNesseRoot" dir="FitNesseRoot">
+		<include name="FitNesse/**" />
+		<include name="FrontPage/**" />
+		<include name="PageHeader/**" />
+		<include name="PageFooter/**" />
+		<exclude name="**/*.zip" />
+	</zipfileset>
+
+
+	<!--
+	  Bundling
+	  -->
+	<target name="jar" depends="compile,createUpdateLists" description="generate the jar file">
 		<mkdir dir="dist" />
 		<delete file="dist/fitnesse.jar" />
 
@@ -41,21 +45,49 @@
 
 			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
-			<zipfileset src="lib/htmlparser.jar" />
-			<zipfileset src="lib/json.jar" />
-			<zipfileset src="lib/velocity-1.7-dep.jar" />
+			<zipfileset refid="wikipages.fileset" />
 
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
-		<delete dir="${classes}/Resources" />
 	</target>
 
-	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+	<target name="standalone-jar" depends="jar" description="generate the standalone jar file">
+		<ivy:cachefileset setid="standalone.jar.fileset" conf="standalone" />
+		<jar jarfile="dist/fitnesse-standalone.jar">
+			<zipfileset src="dist/fitnesse.jar" />
+			<archives>
+				<zips>
+					<zipfileset refid="standalone.jar.fileset" />
+				</zips>
+			</archives>
+			
+			<manifest>
+				<attribute name="Built-By" value="Object Mentor, Inc." />
+				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="sources-jar" depends="stamp-version">
+		<jar jarfile="dist/fitnesse-sources.jar" basedir="src">
+			<include name="**" />
+			<zipfileset refid="wikipages.fileset" />
+		</jar>
+	</target>
+
+	<target name="javadoc-jar" depends="compile">
+		<mkdir dir="javadoc" />
+		<javadoc sourcepath="src" destdir="javadoc" classpathref="classpath" />
+		<jar jarfile="dist/fitnesse-javadoc.jar" basedir="javadoc" />
+
+	</target>
+
+	<target name="createUpdateLists" depends="compile" description="creates two lists of files to be updated">
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
-			<arg value="-baseDirectory:${classes}/Resources" />
+			<arg value="-baseDirectory:." />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
@@ -63,30 +95,16 @@
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 		</java>
-		<copy todir="${classes}/Resources">
+		<move todir="${classes}/Resources">
 			<fileset dir=".">
 				<include name="updateList" />
 				<include name="updateDoNotCopyOverList" />
 			</fileset>
-		</copy>
+		</move>
 	</target>
 
-	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="${classes}/Resources" />
-		<mkdir dir="${classes}/Resources" />
-		<copy todir="${classes}/Resources/FitNesseRoot">
-			<fileset dir="FitNesseRoot">
-				<include name="FitNesse/**" />
-				<include name="FrontPage/**" />
-				<include name="PageHeader/**" />
-				<include name="PageFooter/**" />
-				<include name="fitnesse/**" />
-				<exclude name="**/*.zip" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
+	<target name="compile" depends="stamp-version,resolve" description="compile the source (make)">
+		<mkdir dir="${classes}" />
 		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" />
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
@@ -102,22 +120,24 @@
 	</target>
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
-    <echo message="Stamping fitnesse with version ${version}" />
-		<delete file="pom.xml" />
+		<echo message="Stamping fitnesse with version ${version}" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
 		<filter token="version" value="${version}" />
-		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
 		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes}" />
 		<delete dir="test-results" />
+		<delete dir="lib" />
+		<delete dir="dist" />
+		<delete dir="javadoc" />
 		<delete file="updateList"/>
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
 	<target name="unit_test" depends="compile" description="run the unit tests">
+		<mkdir dir="test-results" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
 			<classpath refid="classpath" />
 			<formatter type="xml" usefile="true" />
@@ -135,36 +155,112 @@
 		</junit>
 	</target>
 
-	<target name="init">
-		<mkdir dir="${classes}" />
-		<mkdir dir="test-results" />
-	</target>
-
 	<target name="load_fitnesse_taskdef">
 		<taskdef classpathref="classpath" resource="tasks.properties" />
 	</target>
 
-	<target name="release" depends="unit_tests, acceptance_tests" />
+	<target name="release" depends="unit_tests, acceptance_tests, pom" />
 
-  <target  name="release_xml" depends="unit_tests, acceptance_tests_xml" />
+	<target name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
-  <target  name="release_jar" depends="unit_tests, jar"/>
+	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
-  <target  name="acceptance_tests_xml" depends="jar">  
-    <java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+	<target name="acceptance_tests_xml" depends="standalone-jar,retrieve">
+		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />
 			<arg value="9234" />
 		</java>
-  </target>
+	</target>
 
-	<target name="acceptance_tests" depends="jar">
-		<java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+	<target name="acceptance_tests" depends="standalone-jar,retrieve">
+		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
 			<arg value="-p" />
 			<arg value="9234" />
 		</java>
+	</target>
+
+	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for IDE's">
+		<ivy:retrieve pattern="lib/[artifact].[ext]" />
+	</target>
+	
+	<target name="resolve" depends="ivy-init">
+		<ivy:resolve />
+		<ivy:cachepath pathid="lib.classpath" />
+		<path id="classpath">
+			<pathelement path="${classes}" />
+			<path refid="lib.classpath" />
+		</path>
+	</target>
+
+	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="dist/ivy.xml" pubrevision="${version}" status="release" />
+		<ivy:makepom ivyfile="${basedir}/dist/ivy.xml" templatefile="templates/pom.xml.template" pomfile="${basedir}/dist/fitnesse.pom" conf="standalone,default,test">
+			   <mapping conf="default" scope="compile"/>
+			   <mapping conf="standalone" scope="runtime"/>
+			   <mapping conf="test" scope="test"/>
+		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="resolve,pom">
+		<ivy:publish resolver="sonatype-nexus-snapshots"
+			pubrevision="${version}"
+			publishivy="false">
+			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom,standalone-jar,sources-jar,javadoc-jar">
+		<fail unless="upload.user" message="supply upload.user on the command line"/>
+		<fail unless="upload.password" message="supply upload.password on the command line"/>
+		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
+		
+		<ivy:publish resolver="sonatype-nexus-staging"
+			pubrevision="${version}"
+			publishivy="false">
+			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+	<!--
+		Dependency management boilerplate
+	  -->
+	<property name="maven.central.url" value="http://repo2.maven.org/maven2" />
+
+	<condition property="ivy.download.not.required">
+		<and>
+			<resourceexists>
+				<file file="antlib/ivy.jar"/>
+			</resourceexists>
+			<resourceexists>
+				<file file="antlib/bcprov.jar"/>
+			</resourceexists>
+			<resourceexists>
+				<file file="antlib/bcpg.jar"/>
+			</resourceexists>
+		</and>
+	</condition>
+
+	<target name="ivy-init" depends="ivy-download">
+		<path id="ivy.class.path">
+			<fileset dir="antlib">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			uri="antlib:org.apache.ivy.ant"
+			classpathref="ivy.class.path" />
+	</target>
+
+	<target name="ivy-download" unless="ivy.download.not.required">
+		<mkdir dir="antlib" />
+		<get src="${maven.central.url}/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
+		<!-- The following libs are used for signing artifacts
+		     when deployed to Maven Central.  -->
+		<get src="${maven.central.url}/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="antlib/bcprov.jar" usetimestamp="true" verbose="true" />
+		<get src="${maven.central.url}/org/bouncycastle/bcpg-jdk16/1.46/bcpg-jdk16-1.46.jar" dest="antlib/bcpg.jar" usetimestamp="true" verbose="true" />
 	</target>
 </project>
