@@ -11,8 +11,6 @@
 	<property name="src2" location="srcFitServerTests" />
 	<property name="classes" location="classes" />
 	<property name="fitnesseRoot" value="FitNesseRoot" />
-	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
-	<property name="zipDir" location="dist/fitnesse" />
 	<property name="results.dir" location="test-results" />
 
 	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests." />
@@ -161,14 +159,14 @@
 		<taskdef classpathref="classpath" resource="tasks.properties" />
 	</target>
 
-	<target name="release" depends="unit_tests, acceptance_tests" />
+	<target name="release" depends="unit_tests, acceptance_tests, pom" />
 
 	<target name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
-	<target name="release_jar" depends="unit_tests, jar"/>
+	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
-	<target name="acceptance_tests_xml" depends="jar">
-		<java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+	<target name="acceptance_tests_xml" depends="standalone-jar,retrieve">
+		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />
@@ -176,8 +174,8 @@
 		</java>
 	</target>
 
-	<target name="acceptance_tests" depends="jar">
-		<java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+	<target name="acceptance_tests" depends="standalone-jar,retrieve">
+		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
 			<arg value="-p" />
