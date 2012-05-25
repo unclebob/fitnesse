@@ -27,4 +27,12 @@
     <url>scm:git:http://github.com/unclebob/fitnesse</url>
   </scm>
 
+  <developers>
+    <developer>
+      <id>unclebob</id>
+      <name>Robert C. Martin</name>
+      <email>unclebob@cleancoder.com</email>
+    </developer>
+  </developers>
+
 </project>
