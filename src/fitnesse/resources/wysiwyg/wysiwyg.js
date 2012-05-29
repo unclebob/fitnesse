@@ -761,6 +761,8 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             var lines, next, i, c;
             inPasteAction = false;
 
+        	console.log('Pasted data', $(pastedDataBlock).html());
+
             // convert nested .pasteddata divs to br's (safari/chrome)
             $('div', pastedDataBlock).each(function (i, elem) {
                 if (!/^\s*$/.test($(this).text())) {
@@ -769,9 +771,21 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 }
                 $(this).remove();
             });
-            if (!$(pastedDataBlock).children()) {
-                lines = $(pastedDataBlock).html().split(/<br\/?>/);
+            
+            // How to determine if it's sensible html or plain text markup:
+            // markup only contains text nodes and br
+            var isPlainTextData = true
+            $(pastedDataBlock).children().each(function (j, elem) {
+            	if (elem.tagName !== 'BR') {
+            		isPlainTextData = false;
+            	}
+            });
+            
+            if (isPlainTextData) {
+            	console.log('plain text', $(pastedDataBlock).html());
+            	lines = $(pastedDataBlock).html().split(/<br\/?>/);
             } else {
+            	console.log('DOM2WIKI', $(pastedDataBlock).html());
                 lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
             }
 
@@ -795,14 +809,17 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                     $(pastedDataBlock).remove();
                 }
             } else {
+            	console.log('wiki text:', lines);
                 var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
                 var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
-                var parentTable = getSelfOrAncestor(parentTr, 'table');
+                var parentTable = getSelfOrAncestor(pastedDataBlock, 'table');
                 c = $(fragment).children();
                 for (i = 0; i < c.length; i++) {
                     if (parentTr && c[i].tagName === 'TABLE') {
                         $(c[i]).find('tr').each(function(j, elem) {
+                        	console.log(parentTr, elem);
                             $(parentTr).after(elem);
+                            parentTr = $(parentTr).next();
                         });
                     } else {
                         $(pastedDataBlock).before(c[i]);
