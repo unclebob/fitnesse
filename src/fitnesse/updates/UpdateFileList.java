@@ -96,11 +96,16 @@ public class UpdateFileList {
     File directory = new File(directoryPath);
     File[] files = FileUtil.getDirectoryListing(directory);
     for (File childFile : files)
-      addFilePathToAppropriateList(directoryPath, childFile);
+      if (!isBackupFile(childFile))
+        addFilePathToAppropriateList(directoryPath, childFile);
 
   }
 
-  private void addFilePathToAppropriateList(String directoryPath, File childFile) {
+  private boolean isBackupFile(File childFile) {
+	return childFile.getName().endsWith(".zip");
+  }
+
+private void addFilePathToAppropriateList(String directoryPath, File childFile) {
     String childPath = directoryPath + "/" + childFile.getName();
     if (childFile.isDirectory())
       addFilePathsToList(childPath);
