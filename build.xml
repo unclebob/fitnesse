@@ -81,8 +81,10 @@
 	</target>
 
 	<target name="createUpdateLists" depends="compile" description="creates two lists of files to be updated">
+		<mkdir dir="${classes}/Resources" />
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
 			<arg value="-baseDirectory:." />
+			<arg value="-outputDirectory:${classes}/Resources" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
@@ -90,12 +92,6 @@
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 		</java>
-		<move todir="${classes}/Resources">
-			<fileset dir=".">
-				<include name="updateList" />
-				<include name="updateDoNotCopyOverList" />
-			</fileset>
-		</move>
 	</target>
 
 	<target name="compile" depends="stamp-version,resolve" description="compile the source (make)">
