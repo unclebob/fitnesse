@@ -5,8 +5,7 @@ When you execute a test page, !-FitNesse-! gathers up the html and passes it to 
 Create a simple test page
 
 |script|Page Builder|
-|line|!-!path classes-!|
-|line|!-!path fitnesse.jar-!|
+|line|${SUT_PATH}|
 |line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
 |page|!-TestPage-!|
 

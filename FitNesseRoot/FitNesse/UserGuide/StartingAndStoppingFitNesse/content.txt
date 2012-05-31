@@ -1,8 +1,8 @@
 !2 Starting FitNesse
 
-To start Fitnesse, invoke the fitnesse.jar file like this:
+To start Fitnesse, invoke the fitnesse-standalone.jar file like this:
 
-!style_code(java -jar fitnesse.jar)
+!style_code(java -jar fitnesse-standalone.jar)
 
 This will start a wiki server listening on port 80.  You can modify this and other options using a CommandLineOption.
 

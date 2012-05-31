@@ -7,8 +7,7 @@ This example shows just one test subpage of two subpages being executed.
 Create a Suite page
 
 |script|Page Builder|
-|line|!-!path classes-!|
-|line|!-!path fitnesse.jar-!|
+|line|${SUT_PATH}|
 |page|!-SuitePage-!|
 
 Create two sub pages: 1 is tested, 2 is pruned/ignored

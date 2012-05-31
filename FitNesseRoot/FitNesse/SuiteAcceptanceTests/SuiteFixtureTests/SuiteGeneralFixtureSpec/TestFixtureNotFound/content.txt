@@ -6,8 +6,7 @@
 |Action fixture|
 |start|Page builder|
 |enter|attributes|Test=true|
-|enter|line|!-!path ./classes-!|
-|enter|line|!-!path ./fitnesse.jar-!|
+|enter|line|${SUT_PATH} |
 |enter|line|!-|No such fixture|-!|
 |enter|page|!-NoSuchFixturePage-!|
 

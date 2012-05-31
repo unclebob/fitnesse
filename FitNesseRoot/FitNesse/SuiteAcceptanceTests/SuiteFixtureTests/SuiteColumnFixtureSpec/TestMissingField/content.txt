@@ -2,14 +2,12 @@
 {{{Could not find field: fieldname.}}}
 
  * Here is a fitnesse page that should generate the error
-!note The !-!path-! must point to fitnesse.jar
+!note The !-!path-! must point to fitnesse-standalone.jar
 !note !-ColumnFixtureTestFixture-! is a special class used for testing Column fixtures.
 |Action fixture|
 |start|Page builder|
 |enter|attributes|Test=true|
-|enter|line|!-!path ./classes-!|
-|enter|line|!-!path ./fitnesse.jar-!|
-|enter|line|!-!path ./lib/*.jar-!|
+|enter|line|${SUT_PATH}|
 |enter|line|!-|Import|-!|
 |enter|line|!-|fitnesse.fixtures|-!|
 |enter|line||

@@ -5,8 +5,7 @@ If a !-SuiteSetUp-! or !-SuiteTearDown-! page is eecuted without errors, it shou
 !**< test content
 
 !define PATHS {
-!path classes
-!path fitnesse.jar
+${SUT_PATH}
 !-!define TEST_SYSTEM (slim:A)-!
 !-!define SLIM_PORT (9000)-!
 }

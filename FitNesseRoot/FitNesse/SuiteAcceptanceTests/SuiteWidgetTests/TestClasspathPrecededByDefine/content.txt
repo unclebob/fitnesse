@@ -4,6 +4,6 @@
 First, build a page with variable definitions followed immediately by a classpath definition. Also include a test that should pass.
 
 !|script|
-|given page|ClasspathTestPage|with content|!define PI {3.141592}!-<br>-!!path classes!-<br>-!!path fitnesse.jar!-<br>-!&bar;fitnesse.testutil.PassFixture&bar;!-<br>-!|
+|given page|ClasspathTestPage|with content|!define PI {3.141592}!-<br>-!!path classes!-<br>-!!path fitnesse-standalone.jar!-<br>-!&bar;fitnesse.testutil.PassFixture&bar;!-<br>-!|
 |its test results should contain|PassFixture|
 |and should not contain|Exception|
