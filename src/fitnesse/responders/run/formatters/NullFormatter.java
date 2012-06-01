@@ -1,19 +1,16 @@
 package fitnesse.responders.run.formatters;
 
+import util.TimeMeasurement;
+import fitnesse.FitNesseContext;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
-import util.TimeMeasurement;
 
 public class NullFormatter extends BaseFormatter {
-  NullFormatter() {
-    super(null, null);
-  }
-
-  protected WikiPage getPage() {
-    return null;
+  NullFormatter(FitNesseContext context, WikiPage page) {
+    super(context, page);
   }
 
   @Override

@@ -154,7 +154,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
   
   protected void addTestInProgressFormatter() {
-    formatters.add(new PageInProgressFormatter(page));
+    formatters.add(new PageInProgressFormatter(context, page));
   }
 
   protected void sendPreTestNotification() throws Exception {

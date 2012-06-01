@@ -1,5 +1,6 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
@@ -11,16 +12,15 @@ import java.io.IOException;
 
 public class PageInProgressFormatter extends NullFormatter {
 
-  public PageInProgressFormatter(final WikiPage page) {
-	super();
-	this.page = page;
+  public PageInProgressFormatter(FitNesseContext context, final WikiPage page) {
+	super(context, page);
   }
   
   public String getLockFileName(TestPage test) {
 	ReadOnlyPageData data = test.parsedData();
-	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
+	return context.getTestProgressPath() + "/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
-    
+
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
 	FileUtil.createFile(getLockFileName(test), "");
   }
