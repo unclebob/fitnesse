@@ -1,11 +1,10 @@
 !2 Downloading and Installing FitNesse
 It really takes very little time and effort to get FitNesse running on your machine.
- 1 Go to !style_code(http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad) and click on the most recent !style_code(fitnesse.jar) file.
+ 1 Go to !style_code(http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad) and click on the most recent !style_code(fitnesse-standalone.jar) file.
   * If this is a brand new installation, just put it in some convenient empty directory.
-  * If this is an update, then copy it on top of the old fitnesse.jar in your current installation.
- 2 Type !style_code(java -jar fitnesse.jar)
+  * If this is an update, then copy it on top of the old fitnesse(-standalone).jar in your current installation.
+ 2 Type !style_code(java -jar fitnesse-standalone.jar)
   * It will ask you to be patient as it installs or updates.
-  * When it's done, it will ask you to reload fitnesse.  Type !style_code(java -jar fitnesse.jar) again.
   * Your shell should respond with something like this:
    !img http://files/images/fitnessestarted.png
  3 Start up a browser and go to !style_code(http://localhost)
@@ -13,7 +12,7 @@ It really takes very little time and effort to get FitNesse running on your mach
 
 !3 It didn't work!
 Most likely you have another web server running.  Web servers default to port 80, so if another one is running on your machine you'll have to specify another port via a CommandLineOption.  Try this command:
- !style_code(java -jar fitnesse.jar -p 8080)
+ !style_code(java -jar fitnesse-standalone.jar -p 8080)
 
 Then point your browser to !style_code(http://localhost:8080)
 

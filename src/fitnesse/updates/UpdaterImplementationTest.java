@@ -164,7 +164,7 @@ public class UpdaterImplementationTest {
   @After
   public void tearDown() {
     FileUtil.deleteFileSystemDirectory("classes/Resources");
-    FileUtil.deleteFileSystemDirectory("testDir");
+    FileUtil.deleteFileSystemDirectory(testDir);
   }
 
   private class UpdateSpy implements Update {

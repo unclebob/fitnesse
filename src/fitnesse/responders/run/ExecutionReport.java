@@ -125,18 +125,7 @@ public abstract class ExecutionReport {
   public void setDate(Date date) {
     this.date = date;
   }
-
-  public static String summaryClass(TestSummary testSummary) {
-    if (testSummary.right > 0 && testSummary.wrong == 0 && testSummary.exceptions == 0)
-      return "pass";
-    else if (testSummary.wrong > 0)
-      return "fail";
-    else if (testSummary.exceptions > 0)
-      return "error";
-    else
-      return "ignore";
-  }
-
+	  
   public boolean hasRunTimes() {
     return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
   }

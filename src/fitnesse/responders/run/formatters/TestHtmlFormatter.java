@@ -4,6 +4,7 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import fitnesse.wiki.WikiPageUtil;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
@@ -28,8 +29,9 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
-    writeData(getPage().getData().getHeaderPageHtml());
+  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+	super.newTestStarted(testPage, timeMeasurement);
+    writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
   @Override

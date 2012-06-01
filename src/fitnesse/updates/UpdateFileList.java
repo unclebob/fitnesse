@@ -13,6 +13,7 @@ public class UpdateFileList {
   private String updateDoNotCopyOverContent;
   private HashSet<String> doNotReplaceFiles = new HashSet<String>();
   private String baseDirectory = "";
+  private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
 
   public static void main(String[] args) {
@@ -54,7 +55,9 @@ public class UpdateFileList {
     if (arg.startsWith("-doNotReplace:"))
       addADoNotReplaceFileName(arg);
     else if (arg.startsWith("-baseDirectory:"))
-      parseBaseDirectory(arg);
+        baseDirectory = parseDirectoryArgument(arg);
+    else if (arg.startsWith("-outputDirectory:"))
+        outputDirectory = parseDirectoryArgument(arg);
     else
       mainDirectories.add(baseDirectory + arg);
   }
@@ -64,10 +67,11 @@ public class UpdateFileList {
     doNotReplaceFiles.add(components[1]);
   }
 
-  private void parseBaseDirectory(String arg) {
-    baseDirectory = arg.substring(arg.indexOf(':')+1);
-    if (!baseDirectory.endsWith("/"))
-      baseDirectory += "/";
+  private String parseDirectoryArgument(String arg) {
+    String dir = arg.substring(arg.indexOf(':')+1);
+    if (!dir.endsWith("/"))
+      dir += "/";
+    return dir;
   }
 
   public List<String> getDirectories() {
@@ -88,7 +92,7 @@ public class UpdateFileList {
     for (String dirName : mainDirectories)
       addFilePathsToList(dirName);
 
-    return FileUtil.createFile(new File("updateList"), updateListContent);
+    return FileUtil.createFile(new File(outputDirectory + "updateList"), updateListContent);
 
   }
 
@@ -96,11 +100,16 @@ public class UpdateFileList {
     File directory = new File(directoryPath);
     File[] files = FileUtil.getDirectoryListing(directory);
     for (File childFile : files)
-      addFilePathToAppropriateList(directoryPath, childFile);
+      if (!isBackupFile(childFile))
+        addFilePathToAppropriateList(directoryPath, childFile);
 
   }
 
-  private void addFilePathToAppropriateList(String directoryPath, File childFile) {
+  private boolean isBackupFile(File childFile) {
+	return childFile.getName().endsWith(".zip");
+  }
+
+private void addFilePathToAppropriateList(String directoryPath, File childFile) {
     String childPath = directoryPath + "/" + childFile.getName();
     if (childFile.isDirectory())
       addFilePathsToList(childPath);
@@ -131,6 +140,6 @@ public class UpdateFileList {
       for (String dirName : mainDirectories)
         addFilePathsToList(dirName);
 
-    return FileUtil.createFile(new File("updateDoNotCopyOverList"), updateDoNotCopyOverContent);
+    return FileUtil.createFile(new File(outputDirectory + "updateDoNotCopyOverList"), updateDoNotCopyOverContent);
   }
 }

@@ -4,11 +4,7 @@ package fitnesse.testutil;
 
 import java.util.List;
 
-import fitnesse.wiki.ExtendableWikiPage;
-import fitnesse.wiki.Extension;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 
 public class MockExtendableWikiPage extends ExtendableWikiPage {
   private static final long serialVersionUID = 1L;
@@ -48,6 +44,8 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
   public PageData getData() {
     return null;
   }
+
+  public ReadOnlyPageData readOnlyData() { return getData(); }
 
   public PageData getDataVersion(String versionName) {
     return null;

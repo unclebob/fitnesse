@@ -15,15 +15,10 @@ import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class PageData implements Serializable {
+public class PageData implements ReadOnlyPageData, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-    private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
-        Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
-        SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
-        SymbolType.ClosePreformat, SymbolType.Text
-});
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -37,7 +32,6 @@ public class PageData implements Serializable {
   public static final String PropertyPROPERTIES = "Properties";
   public static final String PropertyVERSIONS = "Versions";
   public static final String PropertyEDIT = "Edit";
-  public static final String PropertyADD_CHILD = "AddChild";
   public static final String PropertySUITES = "Suites";
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
@@ -45,7 +39,7 @@ public class PageData implements Serializable {
       TEST.toString(), SUITE.toString() };
 
   public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
-      PropertyADD_CHILD, PropertyVERSIONS, PropertyPROPERTIES,
+      PropertyVERSIONS, PropertyPROPERTIES,
       PropertyREFACTOR, PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
@@ -78,7 +72,7 @@ public class PageData implements Serializable {
   private Symbol contentSyntaxTree = null;
   private ParsingPage parsingPage;
 
-    public PageData(WikiPage page) {
+  public PageData(WikiPage page) {
     wikiPage = page;
     initializeAttributes();
     versions = new HashSet<VersionInfo>();
@@ -100,7 +94,6 @@ public class PageData implements Serializable {
   public void initializeAttributes() {
     if (!isErrorLogsPage()) { 
       properties.set(PropertyEDIT, Boolean.toString(true));
-      properties.set(PropertyADD_CHILD, Boolean.toString(true));
       properties.set(PropertyPROPERTIES, Boolean.toString(true));
       properties.set(PropertyREFACTOR, Boolean.toString(true));
     }
@@ -196,21 +189,10 @@ public class PageData implements Serializable {
       return translateToHtml(getSyntaxTree());
   }
 
-  public String getHeaderPageHtml() {
-    WikiPage header = wikiPage.getHeaderPage();
-    return header == null ? "" : header.getData().getHtml();
-  }
-
-  public String getFooterPageHtml() {
-    WikiPage footer = wikiPage.getFooterPage();
-    return footer == null ? "" : footer.getData().getHtml();
-  }
-
   public String getVariable(String name) {
       Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
       if (variable.isNothing()) return null;
-      //todo: push this into parser/translator
-      return new HtmlTranslator(null, parsingPage).translate(Parser.make(parsingPage, "${" + name + "}", variableDefinitionSymbolProvider).parse());
+      return getParsingPage().renderVariableValue(variable.getValue());
   }
 
     public Symbol getSyntaxTree() {
@@ -225,16 +207,21 @@ public class PageData implements Serializable {
 
     private void parsePageContent() {
         if (contentSyntaxTree == null) {
+            //long start = Clock.currentTimeInMillis();
             parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
-            contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
+            String content = getContent();
+            contentSyntaxTree = Parser.make(parsingPage, content).parse();
+            //long elapsed = Clock.currentTimeInMillis() - start;
+            //System.out.println((wikiPage != null && wikiPage.getName() != null ? wikiPage.getName() : "?") + " parse " + elapsed + " " + (content != null ? content.length() : 0));
         }
     }
 
-  public void setLiterals(List<String> literals) {}
-
-
     public String translateToHtml(Symbol syntaxTree) {
-        return new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
+        //long start = Clock.currentTimeInMillis();
+        String result = new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
+        //long elapsed = Clock.currentTimeInMillis() - start;
+        //System.out.println((wikiPage != null ? wikiPage.getName() : "?") + " translate " + elapsed + " " + result.length());
+        return result;
     }
 
   public void setWikiPage(WikiPage page) {

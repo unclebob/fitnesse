@@ -8,6 +8,9 @@ public class SeeTest {
     public void scansSees() {
         ParserTestHelper.assertScansTokenType("!see Stuff", "See", true);
         ParserTestHelper.assertScansTokenType("!seeStuff", "See", false);
+        ParserTestHelper.assertScansTokenType(" !see Stuff", "See", false);
+        ParserTestHelper.assertScansTokenType("| !see Stuff|", "See", true);
+        ParserTestHelper.assertScansTokenType("!note !see Stuff", "See", true);
     }
 
     @Test public void parsesSees() throws Exception {

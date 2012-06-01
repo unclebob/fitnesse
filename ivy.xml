@@ -1,0 +1,33 @@
+<ivy-module version="2.0">
+	<info organisation="org.fitnesse" module="fitnesse">
+		<license name="Common Public License version 1.0"
+			url="http://www.opensource.org/licenses/cpl1.0" />
+		<description homepage="http://fitnesse.org">
+			The fully integrated standalone wiki and
+			acceptance testing framework.
+		</description>
+	</info>
+	<configurations>
+		<conf name="default" visibility="public" />
+		<conf name="standalone" visibility="public" description="include in fitnesse-standalone build" />
+		<conf name="test" visibility="public" extends="default" />
+	</configurations>
+	<publications xmlns:e="urn:ant.apache.org:ivy-extras">
+		<artifact name="fitnesse" type="jar" ext="jar" />
+		<artifact name="fitnesse" type="pom" ext="pom" />
+		<artifact name="fitnesse" type="source" ext="jar" e:classifier="sources" />
+		<artifact name="fitnesse" type="javadoc" ext="jar" e:classifier="javadoc" />
+		<artifact name="fitnesse-standalone" type="jar" ext="jar" />
+
+	</publications>
+ 
+	<dependencies>
+		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="standalone->default,default" />
+		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="standalone->default,default" />
+		<dependency org="org.json" name="json" rev="20090211" conf="standalone->default,default" />
+		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
+		<!-- scope: test -->
+		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
+		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
+	</dependencies>
+</ivy-module>

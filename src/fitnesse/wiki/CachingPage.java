@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.Clock;
 import util.TimeMeasurement;
 
 public abstract class CachingPage extends CommitingPage {
@@ -69,10 +68,24 @@ public abstract class CachingPage extends CommitingPage {
 
   public PageData getData() {
     if (cachedDataExpired()) {
-      PageData data = makePageData();
-      setCachedData(data);
+      ReloadCache();
     }
     return new PageData(getCachedData());
+  }
+
+  private void ReloadCache() {
+    //if (getCachedData() == null) System.out.println("cache null " + (getName() != null ? getName() : "?"));
+    //else if (cachedTime.elapsed() >= cacheTime) System.out.println("cache expired " + (getName() != null ? getName() : "?"));
+    PageData data = makePageData();
+    //System.out.println("reload " + getName() + " " + data.getContent().length());
+    setCachedData(data);
+  }
+
+  public ReadOnlyPageData readOnlyData() {
+    if (getCachedData() == null) {
+      ReloadCache();
+    }
+    return getCachedData();
   }
 
   private boolean cachedDataExpired() {

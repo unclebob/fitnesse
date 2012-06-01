@@ -25,6 +25,9 @@ public class EditResponder implements SecureResponder {
   public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
   public static final String HELP_TEXT = "helpText";
+  public static final String SUITES = "suites";
+  public static final String PAGE_TYPE = "pageType";
+  public static final String PAGE_NAME = "pageName";
 
   protected String content;
   protected WikiPage page;
@@ -104,7 +107,7 @@ public class EditResponder implements SecureResponder {
       html.put("redirect", redirectUrl);
     }
 
-    html.put("helpText", pageData.getAttribute(PageData.PropertyHELP));
+    html.put(HELP_TEXT, pageData.getAttribute(PageData.PropertyHELP));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }

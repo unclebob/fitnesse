@@ -106,8 +106,8 @@ public class SuiteExecutionReport extends ExecutionReport {
     pageHistoryReferences.add(reference);
   }
 
-  public void tallyPageCounts(TestSummary testSummary) {
-    finalCounts.tallyPageCounts(testSummary);
+  public void tallyPageCounts(ExecutionResult result) {
+    finalCounts.tallyPageCounts(result);
   }
   
   public static class PageHistoryReference {

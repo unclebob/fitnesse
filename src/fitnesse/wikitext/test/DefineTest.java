@@ -23,6 +23,7 @@ public class DefineTest {
         assertTranslatesDefine("!define x (y)", "x=y");
         assertTranslatesDefine("!define x [y]", "x=y");
         assertTranslatesDefine("!define x {''y''}", "x=''y''");
+        ParserTestHelper.assertTranslatesTo("|!define x {y}", "|!define x {y}");
     }
 
     @Test public void definesValues() throws Exception {

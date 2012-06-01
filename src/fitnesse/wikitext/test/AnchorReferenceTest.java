@@ -11,13 +11,9 @@ public class AnchorReferenceTest {
         ParserTestHelper.assertScansTokenType("blah.#anchorName", "AnchorReference", true);
     }
 
-    @Test public void parsesAnchors() throws Exception {
-        ParserTestHelper.assertParses(".#anchorName", "SymbolList[AnchorReference[Text]]");
-        ParserTestHelper.assertParses(".# anchorName", "SymbolList[Text, Whitespace, Text]");
-    }
-
     @Test public void translatesAnchors() {
         ParserTestHelper.assertTranslatesTo(".#anchorName", anchorReferenceWithName("anchorName"));
+        ParserTestHelper.assertTranslatesTo(".# anchorName", ".# anchorName");
         ParserTestHelper.assertTranslatesTo(".#anchorName stuff", anchorReferenceWithName("anchorName") + " stuff");
         ParserTestHelper.assertTranslatesTo("more.#anchorName stuff", "more" + anchorReferenceWithName("anchorName") + " stuff");
         ParserTestHelper.assertTranslatesTo("more\n.#anchorName stuff",

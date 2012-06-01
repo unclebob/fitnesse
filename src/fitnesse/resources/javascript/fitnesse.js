@@ -18,30 +18,32 @@ function doSilentRequest(url)
 /**
  *  Scenario's (after test execution)
  */
-$(document).on("click", "article tr.scenario td", function() {
-	$(this).parent().toggleClass("open").next().toggle();
+$(document).on("click", "article tr.scenario td", function () {
+	$(this).parent().toggleClass('closed').next().toggle();
 });
 
 /**
  * Collapsible section
  */
 $(document)
-	.on("click", "article .collapsible > p.title", function() {
+	.on("click", "article .collapsible > p.title", function () {
 		$(this).parent().toggleClass('closed');
 	})
-	.on("click", "article .collapsible > p.title a", function(event) {
-		// Do not open when clicking on a link in the title.
+	.on("click", "article .collapsible > p.title a", function (event) {
+		// Do not open section when clicking on a link in the title, just follow the link.
 		event.stopPropagation();
 		return true;
 	})
 	.on('click', 'article .collapsible .expandall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
-		event.stopPropagation();
+		var section = $(this).closest('.collapsible');
+		section.find('.collapsible').andSelf().removeClass('closed');
+		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
 	.on('click', 'article .collapsible .collapseall', function (event) {
-		$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
-		event.stopPropagation();
+		section = $(this).closest('.collapsible');
+		section.find('.collapsible, .scenario').andSelf().addClass('closed');
+		section.find('.scenario').addClass('closed').next().hide();
 		return false;
 	});
 
@@ -54,11 +56,24 @@ window.onbeforeunload = function () {
 	}
 };
 
-/**
- * Field validations
- */
 $(document).ready(function() {
+
+	/**
+	 * Change a.button to a real button (so it looks the same), retaining link behaviour
+	 */
+	$('a.button').replaceWith(function () {
+		var self = $(this);
+		var button = $('<button/>');
+		button.text(self.text());
+		button.click(function () {
+			window.location = self.attr('href');
+		});
+		return button;
+	});
 	
+	/**
+	 * Field validations
+	 */
 	function validateField(re, msg) {
 		var pageNameError = $(this).data("error");
 		if (!re.test($(this).val())) {
@@ -75,13 +90,13 @@ $(document).ready(function() {
 		}
 	}
 	
-	$('input.wikiword').keyup(function() {
+	$('input.wikiword').keyup(function () {
 		validateField.apply(this, 
 				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
 		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
 	});
 	
-	$('input.wikipath').keyup(function() {
+	$('input.wikipath').keyup(function () {
 		validateField.apply(this, 
 				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
@@ -89,3 +104,14 @@ $(document).ready(function() {
 	
 });
 
+
+
+window.onbeforeunload=stopNavIfTestRunning;
+
+function stopNavIfTestRunning(){
+  var stoptestDiv = document.querySelector("li#test-action a.stop");
+
+  if (stoptestDiv){
+    return "There is a test or suite currently running.  Are you sure you want to navigate away from this page?";
+  }
+}

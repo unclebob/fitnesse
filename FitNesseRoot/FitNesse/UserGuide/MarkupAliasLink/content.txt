@@ -3,7 +3,7 @@ You can take any word, phrase, or image and turn it into a link using the follow
 
 |!c Markup Text|!c Displayed as:|
 |!-click [[here][.FrontPage]].-!|click [[here][.FrontPage]].|
-|!-[[!img http://www.objectmentor.com/images/omLogo][http://www.objectmentor.com]]-!|[[!img http://www.objectmentor.com/images/omlogo][http://www.objectmentor.com]]|
+|!-[[!img http://objectmentor.com/Images/OMI_HeaderArea_Logo.png][http://www.objectmentor.com]]-!|[[!img http://objectmentor.com/Images/OMI_HeaderArea_Logo.png][http://www.objectmentor.com]]|
 |!-[[''Recent Changes''][RecentChanges]]-!|[[''Recent Changes''][.RecentChanges]]|
 
  * When the text is a wiki word, the link to the wiki word takes precedence, so you cannot override one wiki word to link to another.

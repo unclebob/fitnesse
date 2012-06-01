@@ -185,18 +185,4 @@ public class TestExecutionReportTest {
     result.instructions.add(instruction2);
   }
 
-  @Test
-  public void summaryClass() throws Exception {
-    assertEquals("pass", TestExecutionReport.summaryClass(new TestSummary(1, 0, 0, 0)));
-    assertEquals("pass", TestExecutionReport.summaryClass(new TestSummary(1, 0, 1, 0)));
-    assertEquals("fail", TestExecutionReport.summaryClass(new TestSummary(1, 1, 0, 0)));
-    assertEquals("fail", TestExecutionReport.summaryClass(new TestSummary(0, 1, 0, 0)));
-    assertEquals("fail", TestExecutionReport.summaryClass(new TestSummary(1, 1, 1, 0)));
-    assertEquals("fail", TestExecutionReport.summaryClass(new TestSummary(1, 1, 1, 1)));
-    assertEquals("error", TestExecutionReport.summaryClass(new TestSummary(0, 0, 0, 1)));
-    assertEquals("error", TestExecutionReport.summaryClass(new TestSummary(0, 0, 1, 1)));
-    assertEquals("ignore", TestExecutionReport.summaryClass(new TestSummary(0, 0, 0, 0)));
-    assertEquals("ignore", TestExecutionReport.summaryClass(new TestSummary(0, 0, 1, 0)));
-
-  }
 }

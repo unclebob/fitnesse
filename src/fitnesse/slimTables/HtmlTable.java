@@ -114,7 +114,7 @@ public class HtmlTable implements Table {
    */
   public void appendChildTable(int rowIndex, Table childTable) {
     Row row = rows.get(rowIndex);
-    row.rowNode.setAttribute("class", "scenario", '"');
+    row.rowNode.setAttribute("class", "scenario closed", '"');
 
     Row childRow = new Row();
     TableColumn column = (TableColumn) newTag(TableColumn.class);

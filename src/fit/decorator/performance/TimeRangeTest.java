@@ -8,8 +8,10 @@ import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
 
 public class TimeRangeTest extends FixtureDecoratorTestCase {
+  // this is used only for the FixtureDecoratorTestCase tests which don't check the time range
+  // so make it really big to prevent intermittent failures
   private static final String FIRST_HTML_ROW = "<tr><td>" + TimeRange.class.getName()
-    + "</td><td>0</td><td>milliseconds min and max</td><td>30</td><td>milliseconds</td></tr>";
+    + "</td><td>0</td><td>milliseconds min and max</td><td>999999999</td><td>milliseconds</td></tr>";
   private TimeRange decorator = new TimeRange();
 
   protected String geDecoratorHTMLRow() {

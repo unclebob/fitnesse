@@ -3,6 +3,8 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 
 public class HorizontalRule extends SymbolType implements Translation {
+    public static final HorizontalRule symbolType = new HorizontalRule();
+
     public HorizontalRule() {
         super("HorizontalRule");
         wikiMatcher(new Matcher().string("---").repeat('-'));

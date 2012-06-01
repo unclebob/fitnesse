@@ -15,6 +15,15 @@
 !2 ''Classpaths''
 !path classes
 !path lib/*.jar
+!path fitnesse-standalone.jar
+
+
+!define SUT_PATH (!-!path classes
+!path lib/*.jar
+!path fitnesse.jar
+!path fitnesse-standalone.jar-!)
+
+
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}

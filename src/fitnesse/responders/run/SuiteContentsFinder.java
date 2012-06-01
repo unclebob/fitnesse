@@ -8,13 +8,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class SuiteContentsFinder {
 
@@ -58,6 +52,7 @@ public class SuiteContentsFinder {
 
   public LinkedList<WikiPage> getAllPagesToRunForThisSuite() {
     String content = pageToRun.getData().getHtml();
+    //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
       if (runner.getPageListFromPageContent(content))
@@ -137,7 +132,7 @@ public class SuiteContentsFinder {
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
-    PageData data = thePage.getData();
+    ReadOnlyPageData data = thePage.readOnlyData();
     List<String> pageReferences = data.getXrefPages();
     PageCrawler crawler = thePage.getPageCrawler();
     WikiPagePath testPagePath = crawler.getFullPath(thePage);

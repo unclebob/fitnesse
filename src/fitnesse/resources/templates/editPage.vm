@@ -40,12 +40,12 @@
  </fieldset>
 
  <fieldset>
-  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="Suites" value="$!suites" />
+  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
  </fieldset>
 
  <fieldset id="save_buttons">
   <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
-  <a href="$resource">Cancel</a>
+  <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 
  <p class="hints">

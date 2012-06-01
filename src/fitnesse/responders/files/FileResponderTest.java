@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,11 +85,14 @@ public class FileResponderTest {
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    assertEquals("testdir/files/test File With Spaces In Name", responder.requestedFile.getPath());
-
+    assertEquals("testdir" + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
     request.setResource("files/file4%20with%20spaces%32.txt");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     assertEquals("files/file4 with spaces2.txt", responder.resource);
+  }
+
+  private String makePath(String...pathElements ) {
+    return StringUtils.join(pathElements, System.getProperty("file.separator"));
   }
 
   @Test

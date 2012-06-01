@@ -5,5 +5,5 @@
  <input type="submit" name="" value="Yes" accesskey="y"/>
  <input type="hidden" name="responder" value="deleteFile"/>
  <input type="hidden" name="filename" value="$filename"/>
- <a href="$pageName" accesskey="n">No</a>
+ <a class="button" href="$pageName" accesskey="n">No</a>
 </form>

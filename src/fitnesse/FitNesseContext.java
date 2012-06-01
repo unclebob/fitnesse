@@ -66,6 +66,10 @@ public class FitNesseContext {
     return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
   }
 
+  public String getTestProgressPath() {
+    return String.format("%s/%s/files/testProgress/", rootPath, rootDirectoryName);
+  }
+
   public void setRootPagePath() {
     rootPagePath = rootPath + "/" + rootDirectoryName;
   }

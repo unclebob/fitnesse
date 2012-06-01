@@ -11,11 +11,11 @@
 <hr/>
 <p/>
 <table>
-  <tr class="$testExecutionReport.summaryClass($testResult.TestSummary)">
+  <tr class="$ExecutionResult.getExecutionResult($testResult.RelativePageName, $testResult.TestSummary)">
     <td>
-      <strong><span STYLE="font-size: 16pt">
+      <strong>
         <a name="$testResult.RelativePageName">$testResult.RelativePageName</a>
-      </span></strong>
+      </strong>
     </td>
     <td class="numeric">
       $testResult.Right Right

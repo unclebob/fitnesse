@@ -43,9 +43,10 @@ public class Parser {
     public ParsingPage getPage() { return currentPage; }
     public VariableSource getVariableSource() { return variableSource; }
     public Symbol getCurrent() { return scanner.getCurrent(); }
+    public int getOffset() { return scanner.getOffset(); }
     public boolean atEnd() { return scanner.isEnd(); }
-    public boolean atLast() { return scanner.isLast(); }
     public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
+    public boolean endsOn(SymbolType type) { return specification.endsOn(type); }
 
     public Symbol moveNext(int count) {
         for (int i = 0; i < count; i++) scanner.moveNext();
@@ -60,6 +61,14 @@ public class Parser {
             tokens.add(current);
         }
         return tokens;
+    }
+
+    public Symbol peek() {
+        return peek(1).get(0);
+    }
+
+    public List<Symbol> peek(int size) {
+        return scanner.peek(size, new ParseSpecification().provider(specification));
     }
 
     public List<Symbol> peek(SymbolType[] types) {
@@ -109,11 +118,11 @@ public class Parser {
     }
     
     public Symbol parseTo(SymbolType terminator) {
-        return parseTo(terminator, 0);
+        return parseTo(terminator, ParseSpecification.normalPriority);
     }
 
     public Symbol parseTo(SymbolType terminator, int priority) {
-        return parse(new ParseSpecification().terminator(terminator).priority(priority));
+        return parse(new ParseSpecification() /*.provider(specification)*/ .terminator(terminator).priority(priority));
     }
 
     public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider, int priority) {
@@ -128,7 +137,7 @@ public class Parser {
     }
 
     public Symbol parseToEnd(SymbolType end) {
-        return parse(new ParseSpecification().end(end));
+        return parse(new ParseSpecification().provider(specification).end(end));
     }
 
     public Symbol parseToEnds(int priority, SymbolProvider provider, SymbolType[] moreEnds) {
@@ -142,40 +151,12 @@ public class Parser {
     }
 
     public Symbol parse() {
-        Symbol result = new Symbol(SymbolType.SymbolList);
-        while (true) {
-            Scanner backup = new Scanner(scanner);
-            scanner.moveNextIgnoreFirst(specification);
-            if (scanner.isEnd()) break;
-            Symbol currentToken = scanner.getCurrent();
-            if (specification.endsOn(currentToken.getType()) || parentOwns(currentToken.getType(), specification)) {
-                scanner.copy(backup);
-                break;
-            }
-            if (specification.terminatesOn(currentToken.getType())) break;
-            Rule currentRule = currentToken.getType().getWikiRule();
-            if (currentRule != null) {
-                Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, this);
-                if (parsedSymbol.isNothing()) {
-                    specification.ignoreFirst(currentToken.getType());
-                    scanner.copy(backup);
-                }
-                else {
-                    result.add(parsedSymbol.getValue());
-                    specification.clearIgnoresFirst();
-                }
-            }
-            else {
-                result.add(currentToken);
-                specification.clearIgnoresFirst();
-            }
-        }
-        return result;
+        return specification.parse(this, scanner);
     }
 
-    private boolean parentOwns(SymbolType current, ParseSpecification specification) {
+    public boolean parentOwns(SymbolType current, ParseSpecification specification) {
         if (parent == null) return false;
-        if (parent.specification.hasPriority(specification) && parent.specification.terminatesOn(current)) return true;
+        if (parent.specification.owns(current, specification)) return true;
         return parent.parentOwns(current, specification);
     }
 }

@@ -19,7 +19,7 @@
   * hit ''save''.
  1 Click on the '''[?]''' after !-ClassPath-!
   * Add the following to the !-ClassPath-! page:
-   * !-!path fitnesse.jar-!
+   * !-!path fitnesse-standalone.jar-!
    * !-!path FitNesseRoot/files/examples-!
     * and hit save.
  1 Click on !-[.FrontPage]-! and then on !-^ExampleAcceptanceTest-! to get back to the test page.

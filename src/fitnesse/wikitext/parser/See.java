@@ -7,7 +7,7 @@ public class See extends SymbolType implements Rule {
 
     public See() {
         super("See");
-        wikiMatcher(new Matcher().string("!see").whitespace());
+        wikiMatcher(new Matcher().startLineOrCell().string("!see").whitespace());
         wikiRule(this);
         htmlTranslation(new HtmlBuilder("b").body(0, "See: ").inline());
     }

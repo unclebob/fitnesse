@@ -5,7 +5,7 @@ When you execute a suite page with a 'not' filter, !-FitNesse-! should only run 
 Create a Suite page
 
 |script|Page Builder|
-|line|!-!path classes-!|
+|line|${SUT_PATH}|
 |line|!-!path fitnesse.jar-!|
 |page|!-SuitePage-!|
 

@@ -5,6 +5,7 @@ package fitnesse.html;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageUtil;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";
@@ -59,13 +60,13 @@ public class HtmlUtil {
 
   public static String makePageHtml(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
-    buffer.append(pageData.getHeaderPageHtml());
+    buffer.append(WikiPageUtil.getHeaderPageHtml(pageData.getWikiPage()));
     buffer.append(pageData.getHtml());
     return buffer.toString();
   }
 
   public static String makePageFooterHtml(PageData pageData) {
-    return pageData.getFooterPageHtml();
+    return WikiPageUtil.getFooterPageHtml(pageData.getWikiPage());
   }
 
   public static String metaText(String text) {

@@ -2,5 +2,5 @@
 #if( $deleteSubPages )<p class="warning">Warning, this page contains one or more subpages.</p>#end
 <form method="POST">
  <input type="submit" name="confirmed" value="Yes"/>
- <a href="$pageName" accesskey="n">No</a>
+ <a class="button" href="$pageName" accesskey="n">No</a>
 </form>

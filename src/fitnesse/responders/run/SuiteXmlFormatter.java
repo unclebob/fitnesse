@@ -32,7 +32,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
       relativeName = String.format("(%s)", testPage.getName());
     processTestResults(relativeName, testSummary, timeMeasurement);
 
-    xmlPageCounts.tallyPageCounts(testSummary);
+    xmlPageCounts.tallyPageCounts(ExecutionResult.getExecutionResult(relativeName, testSummary));
   }
 
   @Override

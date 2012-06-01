@@ -11,7 +11,11 @@ jsunit/*
 agitar/*
 dist/*
 classes/*
+antlib/*
+javadoc/*
+lib/*
 .svn
+.settings
 *-*.zip
 *.ipr
 fitnesse*.zip

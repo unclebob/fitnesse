@@ -2,8 +2,6 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-import java.util.List;
-
 public class ListRule implements Rule {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         return populateList(parser, current);
@@ -11,7 +9,7 @@ public class ListRule implements Rule {
 
     private Maybe<Symbol> populateList(Parser parser, Symbol list) {
         Symbol nextSymbol = list;
-        while (true) {
+        while (isList(nextSymbol)) {
             if (indent(nextSymbol) < indent(list)) break;
             if (nextSymbol != list) parser.moveNext(1);
             if (indent(nextSymbol) > indent(list)) {
@@ -24,11 +22,13 @@ public class ListRule implements Rule {
                 if (parser.atEnd()) return Symbol.nothing;
                 list.add(body);
             }
-            List<Symbol> nextSymbols = parser.peek(new SymbolType[] {list.getType()});
-            if (nextSymbols.size() == 0) break;
-            nextSymbol = nextSymbols.get(0);
+            nextSymbol = parser.peek();
         }
         return new Maybe<Symbol>(list);
+    }
+
+    private static boolean isList(Symbol symbol) {
+        return symbol.isType(SymbolType.OrderedList) || symbol.isType(SymbolType.UnorderedList);
     }
 
     private Symbol makeListBody(Parser parser) {

@@ -21,6 +21,9 @@ import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.ExecutionReport;
+import fitnesse.responders.run.ExecutionResult;
+import fitnesse.responders.run.ExecutionResultTest;
+import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;
@@ -119,6 +122,7 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
+    page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
   }
@@ -128,6 +132,7 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
+    page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
     return makeResponse();
   }

@@ -14,7 +14,7 @@ public class Contents extends SymbolType implements Rule, Translation {
 
     public Contents() {
         super("Contents");
-        wikiMatcher(new Matcher().string("!contents"));
+        wikiMatcher(new Matcher().startLineOrCell().string("!contents"));
         wikiRule(this);
         htmlTranslation(this);
     }

@@ -5,8 +5,7 @@ When you execute a suite page with a specified start test, !-FitNesse-! should o
 Create a Suite page
 
 !|script|Page Builder|
-|line|!-!path classes-!|
-|line|!-!path fitnesse.jar-!|
+|line|${SUT_PATH}|
 |page|!-SuitePage-!|
 
 Create two sub pages

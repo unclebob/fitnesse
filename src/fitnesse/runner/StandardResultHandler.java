@@ -5,6 +5,7 @@ package fitnesse.runner;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.TestSummary;
 
 //TODO MDM Rename to VerboseResultHandler
@@ -18,7 +19,7 @@ public class StandardResultHandler implements ResultHandler {
 
   public void acceptResult(PageResult result) {
     TestSummary testSummary = result.testSummary();
-    pageCounts.tallyPageCounts(testSummary);
+    pageCounts.tallyPageCounts(ExecutionResult.getExecutionResult("", result.testSummary()));
     for (int i = 0; i < testSummary.getRight(); i++)
       output.print(".");
     if (testSummary.getWrong() > 0 || testSummary.getExceptions() > 0) {

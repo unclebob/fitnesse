@@ -8,13 +8,13 @@ It is possible to issue single commands to FitNesse from the command line. This 
 
 You can run any REST command (See RestfulServices) from the command line by using the -c command line option as follows:
 
-|!style_code(java -jar fitnesse.jar -c <rest-command>)|
+|!style_code(java -jar fitnesse-standalone.jar -c <rest-command>)|
 
 This starts up fitnesse, runs the command, emits the output to standard out, and then exits.
 
 Most often you will use this to run tests and/or suites from the command line as follows:
 
-|!style_code(!-java -jar fitnesse.jar -c "MyTestPage?test&format=text"-!)|
+|!style_code(!-java -jar fitnesse-standalone.jar -c "MyTestPage?test&format=text"-!)|
 
 The ''text'' format causes a simple summary of the tests to be printed to standard output.  It looks like this:{{{
 Starting Test System: slim using fitnesse.slim.SlimService.

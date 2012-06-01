@@ -34,11 +34,7 @@ public class ScanString {
     }
 
     public boolean startsLine(int startAt) {
-        return startsLine(startAt, "\n");
-    }
-
-    public boolean startsLine(int startAt, String startDelimiters) {
-        return offset + startAt == 0 || offset + startAt == markStartOffset || startDelimiters.indexOf(input.charAt(offset + startAt - 1)) >= 0;
+        return offset + startAt == 0 || offset + startAt == markStartOffset || input.charAt(offset + startAt - 1) == '\n';
     }
 
     public int find(char[] matches, int startAt) {

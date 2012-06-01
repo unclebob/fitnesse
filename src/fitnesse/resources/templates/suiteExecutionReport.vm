@@ -10,7 +10,7 @@
 #set($finalCounts = $suiteExecutionReport.FinalCounts)
 #if($finalCounts)
 <div id="test-summary">
-  <div id="progressBar" class="$suiteExecutionReport.summaryClass($finalCounts)">
+  <div id="progressBar" class="$ExecutionStatus.getExecutionStatus($suiteExecutionReport.getRootPath(), $finalCounts)">
     <strong>Test Pages:</strong>
     $finalCounts.Right right,
     $finalCounts.Wrong wrong,
@@ -36,7 +36,7 @@
   </tr>
   #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())
   #set($counts = $pageHistoryReference.getTestSummary())
-  <tr class="$suiteExecutionReport.summaryClass($counts)">
+  <tr class="$ExecutionResult.getExecutionResult($pageHistoryReference.pageName, $counts)">
     <td class="numeric">
       $counts.Right
     </td>
@@ -50,7 +50,7 @@
       $counts.Exceptions
     </td>
     <td>
-      <a href="$pageHistoryReference.getPageName()?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
+      <a href="$pageHistoryReference.pageName?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
     </td>
     #if($suiteExecutionReport.hasRunTimes())
     <td class="numeric">

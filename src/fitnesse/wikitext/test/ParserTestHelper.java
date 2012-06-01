@@ -146,6 +146,15 @@ public class ParserTestHelper {
         return tableWithCellAndRow(cellContent, "<tr>");
     }
 
+    public static String tableWithCells(String[] cellContent) {
+        String cells = "";
+        for (String cell: cellContent) {
+            if (cells.length() > 0) cells += "</td>" + HtmlElement.endl + "\t\t<td>";
+            cells += cell;
+        }
+        return tableWithCellAndRow(cells, "<tr>");
+    }
+
     public static String tableWithCellAndRow(String cellContent, String firstRow) {
         return nestedTableWithCellAndRow(cellContent, firstRow) + HtmlElement.endl;
     }

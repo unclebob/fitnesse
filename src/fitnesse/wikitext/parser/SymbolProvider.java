@@ -10,8 +10,8 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
-            Link.symbolType, new Table(), SymbolType.EndCell,
-            new HashTable(),  new HeaderLine(), Literal.symbolType, new Collapsible(),
+            Link.symbolType, new Table(),
+            new HashTable(),  new HeaderLine(), Literal.symbolType, Nesting.symbolType, new Collapsible(),
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             See.symbolType, SymbolType.Style, new LastModified(), Image.symbolType,
@@ -20,11 +20,13 @@ public class SymbolProvider {
             Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
             Evaluator.symbolType, SymbolType.CloseEvaluator, Variable.symbolType, Preformat.symbolType,
-            SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
+            SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket, SymbolType.CloseNesting,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Bold,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
+
+    public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
@@ -93,12 +95,10 @@ public class SymbolProvider {
         return symbolTypes.contains(type);
     }
 
-    public SymbolMatch findMatch(ScanString input, MatchableFilter filter) {
-        for (Matchable candidate: getMatchTypes(input.charAt(0))) {
-            if (filter.isValid(candidate)) {
-                SymbolMatch match = candidate.makeMatch(input);
-                if (match.isMatch()) return match;
-            }
+    public SymbolMatch findMatch(Character startCharacter, SymbolMatcher matcher) {
+        for (Matchable candidate: getMatchTypes(startCharacter)) {
+            SymbolMatch match = matcher.makeMatch(candidate);
+            if (match.isMatch()) return match;
         }
         return SymbolMatch.noMatch;
     }

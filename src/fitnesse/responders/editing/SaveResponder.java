@@ -48,8 +48,8 @@ public class SaveResponder implements SecureResponder {
       return new MergeResponder(request).makeResponse(context, request);
     else {
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
-      helpText = (String) request.getInput("helpText");
-      suites = (String) request.getInput("Suites");
+      helpText = (String) request.getInput(EditResponder.HELP_TEXT);
+      suites = (String) request.getInput(EditResponder.SUITES);
 
       if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
         return makeBannedContentResponse(context, resource);

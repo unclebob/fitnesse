@@ -1,0 +1,258 @@
+/* ****************** 
+Style colors:
+Base: #DADFCA
+DarkerBase: #969789
+DarkGray: #494A43
+Green: #CFE48A 
+DarkGreen: #474A2D
+******************* */
+
+/* BASIC CSS */
+
+/* Makeshift CSS Reset */
+{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial','Helvetica',sans-serif;
+    /*font-size: small;*/
+    background:#979789;
+    color:black;
+}
+/* Tell the browser to render HTML 5 elements as block */
+header, footer, aside, nav, article {
+    display: block;
+}
+
+img {
+    border:0;
+}
+
+a, a:active, a:link, a:visited {
+    text-decoration: none;
+    color:darkgreen;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #362F2D;
+    font-family: Helvetica,Arial;
+    font-weight: bold;
+    line-height: 1.1em;
+    padding-bottom: 5px;
+    font-size:xx-large;
+}
+
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br, br+br {
+ display: none;
+}
+
+/* HEADER */
+header {
+ background:#94B73E;
+ padding:10px;
+ border-bottom: 2px solid #362F2D;
+}
+
+header ul {
+ float:right;
+ list-style: none;
+ margin: 35px 0;
+ padding:0;
+}
+
+header li {
+ font-size:large;
+ display: inline-block;
+}
+
+header li a:visited {
+    color:black;
+}
+
+header li:before {
+    content: "\0020 \0020 \0020 \00BB \0020";
+    color: #111111;
+}
+
+header h1 {
+ float:left
+ top:25px;
+ margin: 25px 5px 0 0;
+ font-size:xx-large;
+ color:#151515;
+}
+
+header h1:visited{
+    color:#151515;
+}
+
+#art_niche {
+    position:fixed;
+    top: 5px;
+    right:5px;
+    z-index: 1;
+ /*display:none;
+ background: url("../images/mint/fit.png") top left no-repeat;
+ width: 156px;
+ height: 49px;*/
+}
+
+
+#art_niche span{
+  color:#FFFFFF;
+  font-size:large;
+  font-weight:bold;
+  font-style:italic;
+}
+
+
+
+/* NAVIGATION */
+
+nav {
+ position: fixed;
+ top:0px;
+ left:0px;
+ background:#4C4C4C;
+ width:100%;
+ height:30px;
+ z-index:0;
+}
+
+nav ul {
+ position: relative;
+ padding: 0px 0 5px 0;
+ margin:0;
+}
+
+nav ul li {
+ display: block;
+ float: left;
+ list-style: none;
+ font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+ background-color: #f5f5f5;
+    text-decoration:none;
+    font-weight:bold;
+ 
+ height: 25px;
+ border: 2px solid #4C4C4C;
+ z-index: 99;
+}
+
+nav a, nav a:link, nav a:active, nav a:visited {
+ white-space:nowrap;
+ text-decoration: none;
+ font-size:large;
+ color: #13110E;
+ padding: 0.2em .5em 0.2em .5em;
+}
+
+nav ul ul {
+ background: #8B8B8B; /* Adding a background makes the dropdown work properly in IE7+. */
+ position: absolute;
+ display: none;
+ z-index: 999;
+ margin: 0;
+}
+
+nav .divider {
+ border-top: 1px solid #A8AC9C;
+}
+
+nav ul ul li {
+ float: none;
+ display: block;
+ border: none;
+ line-height: 1.5em;
+     margin:0 7px 0 0;
+    background-color:#f5f5f5;
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+}
+
+nav ul ul li a {
+ display: block;
+ padding:5px 0px 5px 0px;
+ border: none;
+}
+
+nav ul ul li a:hover {
+ display: block;
+ border: none;
+ background-color: black;
+ color: white;
+}
+
+nav li:hover ul {
+    display: block;
+}
+
+/* ARTICLE */
+
+
+
+article {
+ padding: 40px 40px 80px 40px;
+ background:#fff; 
+ margin: 0 20px 0 20px;
+ -moz-box-shadow: 2px 2px 2px #494A43;
+-webkit-box-shadow: 2px 2px 2px #494A43;
+box-shadow: 2px 2px 2px #494A43;
+ line-height:130%;
+ 
+}
+
+article br{
+    display: block;
+    margin: 10px 0;
+}
+
+table {
+    border: 1px solid darkgray ;
+    border-collapse:collapse;
+}
+td, th {
+    border: thin solid darkgray;
+    padding: 0.25em 0.5em;
+}
+
+
+/* FOOTER  */
+
+footer {
+    padding:20px;
+    color:white;
+}
+
+footer a, footer a:active, footer a:link, footer a:visited {
+    text-decoration: none;
+    color:white;
+}
+
+/* Test Actions */
+
+#test-action .stop {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}
+
+#test-action .ok {
+    background-color: darkgreen;
+}
+#test-action .output {
+    background-color: yellow;
+    color: black;
+}
+#test-action .error {
+    background-color: red;
+}
+
