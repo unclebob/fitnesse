@@ -73,7 +73,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void noSuchInstance() throws Exception {
     statements.add(list("id", "call", "noSuchInstance", "noSuchMethod"));
-    assertExceptionReturned("message:<<NO_INSTANCE noSuchInstance.>>", "id");
+    assertExceptionReturned("message:<<NO_INSTANCE noSuchInstance.noSuchMethod.>>", "id");
   }
 
   @Test
