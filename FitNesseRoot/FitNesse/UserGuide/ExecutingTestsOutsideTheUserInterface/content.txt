@@ -3,6 +3,6 @@ In order to support automation and contionuous integration efforts, FitNesse all
 There are several ways of doing this:
 
 |''Method''                                                                   |''Benefits''                                                                                        |
-|[[Test execution on the command line][ControllingFitnesseFromTheCommandLine]]|[[Ant/Maven support][ControllingFitnesseFromTheCommandLine#antIntegration]]                         |
+|[[Test execution on the command line][ControllingFitNesseFromTheCommandLine]]|[[Ant/Maven support][ControllingFitNesseFromTheCommandLine#antIntegration]]                         |
 |[[Test execution through JUnit][RunningFromJunit]]                           |IDE integration, [[Maven support][RunningFromMaven]], fixture debugging, JUnit XML result generation|
 |[[!-FitNesse-! Automation with REST commands][RestfulServices]]              |Can be used with any program that can send HTTP requests                                            |
