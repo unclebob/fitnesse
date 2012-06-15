@@ -57,7 +57,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
-  private SlimTableFactory slimTableFactory = new SlimTableFactory();
+  private SlimTableFactory slimTableFactory = SlimTableFactory.getInstance();
   private Symbol preparsedScenarioLibrary;
 
 
