@@ -13,7 +13,7 @@ public class FixtureMethodExecutor extends MethodExecutor {
       throws Throwable {
     Object instance = instances.get(instanceName);
     if(instance == null) {
-      return MethodExecutionResult.noInstance(instanceName);
+      return MethodExecutionResult.noInstance(instanceName+"."+methodName);
     }
     return findAndInvoke(methodName, args, instance);
   }

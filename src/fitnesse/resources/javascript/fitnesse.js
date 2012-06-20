@@ -67,6 +67,7 @@ $(document).ready(function() {
 		button.text(self.text());
 		button.click(function () {
 			window.location = self.attr('href');
+			return false;
 		});
 		return button;
 	});
