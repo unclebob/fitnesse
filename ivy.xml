@@ -22,7 +22,9 @@
 	</publications>
  
 	<dependencies>
-		<dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="standalone->default,default" />
+		<dependency org="org.htmlparser" name="htmlparser" rev="2.1" conf="standalone->default,default">
+			<exclude org="com.sun" module="tools" />
+		</dependency>
 		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="standalone->default,default" />
 		<dependency org="org.json" name="json" rev="20090211" conf="standalone->default,default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
