@@ -2215,7 +2215,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             }
 
             if (((prevIndex === 0 && text) || (match && match.index === 0 && matchNumber > 0))
-                    && !inParagraph() && !inAnchor() && !inCollapsibleBlock && !currentHeader) {
+                    && !inParagraph() && !inAnchor() && !currentHeader) {
                 closeToFragment();
             }
 
@@ -2334,7 +2334,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             fragment.appendChild(contentDocument.createElement("hr"));
             continue;
         }
-        if (line.length === 0 && !inCollapsibleBlock) {
+        if (line.length === 0) {
             closeToFragment();
             continue;
         }

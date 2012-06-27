@@ -722,6 +722,12 @@ $(function() {
                             element("td", " ", element("i", "3.2"), " "),
                             element("td", " ", element("ins", "3"), " ", element("ins", "-"), " ")))),
                 element("p", "Paragraph"));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                "| 1.1 | 1.2 |",
+                "| 2.1 |",
+                "| 3.1 | ''3.2'' | !-3-! !---! |",
+                "Paragraph" ].join("\n"));
             generate.call(this, dom, [
                 "Paragraph",
                 "",
@@ -986,14 +992,17 @@ $(function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },
                     element("p", "EXPANDED"),
+                    element("p", br()),
                     element("p", "Expanded content")),
                 element("p", br()),
                 element("div", { "class": "collapsable collapsed" },
                     element("p", "COLLAPSED"),
+                    element("p", br()),
                     element("p", "Collapsed content")),
                 element("p", br()),
                 element("div", { "class": "collapsable hidden" },
                     element("p", "HIDDEN"),
+                    element("p", br()),
                     element("p", "Hidden content")),
                 element("p", br()));
             generate.call(this, dom, [
@@ -1046,6 +1055,37 @@ $(function() {
                 "More text",
                 "",
                 "*!",
+                "*!"].join("\n"));
+        });
+
+        unit.add("Collapsible area with table", function() {
+            var dom = fragment(
+                element("div", { "class": "collapsable" },
+                    element("p", "title"),
+                    element("p", "Text"),
+                    element("table",
+                        element('tbody',
+                            element('tr',
+                                element('td', ' table '),
+                                element('td', ' row ')))),
+                    element("p", "More text")
+                ),
+                element("p", br()));
+            generateFragment.call(this, dom, [
+                "!*** title",
+                "Text",
+                "| table | row |",
+                "More text",
+                "*!"].join("\n"));
+            generateWikitext.call(this, dom, [
+                "!*** title",
+                "",
+                "Text",
+                "",
+                "| table | row |",
+                "",
+                "More text",
+                "",
                 "*!"].join("\n"));
         });
 
