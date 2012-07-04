@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 
@@ -244,8 +245,8 @@ public class ScenarioTable extends SlimTable {
 
         public void evaluateExpectation(Map<String, Object> returnValues) {
             TestSummary counts = scriptTable.getTestSummary();
-            boolean testStatus = (counts.getWrong() + counts.getExceptions()) == 0;
             SlimTable parent = scriptTable.getParent();
+            ExecutionResult testStatus = ExecutionResult.getExecutionResult(counts);
             parent.getTable().setTestStatusOnRow(getRow(), testStatus);
             parent.getTestSummary().add(scriptTable.getTestSummary());
         }

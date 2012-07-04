@@ -26,6 +26,17 @@ public enum ExecutionResult {
     return PASS;
   }
   
+  public static ExecutionResult getExecutionResult(TestSummary testSummary) {
+	if (testSummary.getWrong() > 0) {
+	  return FAIL;
+    } else if (testSummary.getExceptions() > 0) {
+	  return ERROR;
+	} else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0) {
+	  return IGNORE;
+	}
+	return PASS;
+  }
+  
   public static boolean isSuiteMetaPage(String relativeName) {
     return relativeName != null && (relativeName.equals("SuiteSetUp")
         || relativeName.endsWith(".SuiteSetUp")

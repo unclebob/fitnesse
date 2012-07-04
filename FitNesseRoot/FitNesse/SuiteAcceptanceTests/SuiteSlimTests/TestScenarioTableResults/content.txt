@@ -1,0 +1,93 @@
+!**< defines
+
+!define SLIM_SETUP (!-
+!define TEST_SYSTEM {slim}
+-!)
+
+!define SET_UP (!-
+
+|Import|
+|fitnesse.fixtures|
+
+|Library|
+|echo fixture|-!)
+
+!define NO_CHECK (!-
+!|scenario|no check|
+|echo|no check|
+
+|script|
+| no check |
+-!)
+
+!define FAIL (!-
+!|scenario|fail|
+|check|echo|pass|block|
+
+!|script|
+|fail|
+-!)
+
+!define PASS (!-
+!|scenario|pass|
+|check|echo|pass|pass|
+
+| script |
+| pass |
+-!)
+
+!define IGNORE (!-
+!|scenario|ignore|
+|check|echo|pass||
+
+| script |
+| ignore |
+-!)
+
+!define ERROR (!-
+!| scenario | error |
+| check | undefined method | does nothing ||
+
+| script |
+| error |
+-!)
+
+!define IGNORE_AND_PASS (!-
+!|scenario|ignore and pass|
+|check|echo|pass||
+|check|echo|pass|pass|
+
+| script |
+| ignore and pass |
+-!)
+
+*!
+
+!|script|
+| create page | SuitePage | with content | ${SLIM_SETUP} ${SUT_PATH} |
+| create page | SuitePage.SetUp | with content | ${SET_UP} |
+
+!|script|
+| create page | SuitePage.NoCheckPage | with content | ${NO_CHECK} |
+|test results for page|SuitePage.NoCheckPage|should contain|td class="pass"|
+
+!|script|
+| create page | SuitePage.PassPage | with content | ${PASS} |
+|test results for page|SuitePage.PassPage|should contain|td class="pass"|
+
+!|script|
+| create page | SuitePage.FailPage | with content | ${FAIL} |
+|test results for page|SuitePage.FailPage|should contain|td class="fail"|
+
+!|script|
+| create page | SuitePage.IgnorePage | with content | ${IGNORE} |
+|test results for page|SuitePage.IgnorePage|should contain|td class="ignore"|
+
+!|script|
+| create page | SuitePage.ErrorPage | with content | ${ERROR} |
+|test results for page|SuitePage.ErrorPage|should contain|td class="error"|
+
+!|script|
+| create page | SuitePage.IgnoreAndPassPage | with content | ${IGNORE_AND_PASS} |
+|test results for page|SuitePage.IgnoreAndPassPage|should contain|td class="pass"|
+

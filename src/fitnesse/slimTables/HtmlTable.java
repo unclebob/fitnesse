@@ -20,6 +20,7 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
+import fitnesse.responders.run.ExecutionResult;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
@@ -160,7 +161,7 @@ public class HtmlTable implements Table {
   }
 
   
-  public void setTestStatusOnRow(int rowIndex, boolean testStatus) {
+  public void setTestStatusOnRow(int rowIndex, ExecutionResult testStatus) {
     Row row = rows.get(rowIndex);
     row.setTestStatus(testStatus);
   }
@@ -270,13 +271,13 @@ public class HtmlTable implements Table {
       return list;
     }
 
-    public void setTestStatus(boolean testStatus) {
+    private void setTestStatus(ExecutionResult testStatus) {
       NodeList cells = rowNode.getChildren();
       for (int i = 0; i < cells.size(); i++) {
         Node cell = cells.elementAt(i);
         if (cell instanceof Tag) {
           Tag tag = (Tag) cell;
-          tag.setAttribute("class", testStatus ? "\"pass\"" : "\"fail\"");
+          tag.setAttribute("class", String.format("\"%s\"", testStatus.toString()));
         }
       }
     }

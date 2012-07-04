@@ -18,7 +18,8 @@
 !path fitnesse-standalone.jar
 
 
-!define SUT_PATH (!-!path classes
+!define SUT_PATH (!-
+!path classes
 !path lib/*.jar
 !path fitnesse.jar
 !path fitnesse-standalone.jar-!)

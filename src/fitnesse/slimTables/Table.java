@@ -4,6 +4,9 @@ package fitnesse.slimTables;
 
 import java.util.List;
 
+import fitnesse.responders.run.ExecutionResult;
+import fitnesse.responders.run.TestSummary;
+
 public interface Table {
   String getCellContents(int columnIndex, int rowIndex);
 
@@ -37,7 +40,7 @@ public interface Table {
 
   void appendChildTable(int row, Table table);
 
-  void setTestStatusOnRow(int row, boolean testStatus);
+  void setTestStatusOnRow(int row, ExecutionResult testStatus);
 
   void setName(String tableName);
 }
