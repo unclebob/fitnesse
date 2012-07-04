@@ -1922,8 +1922,11 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         }
     }
 
-    function createAnchor(link, label) {
+    function createAnchor(link, label, autolink) {
         var anchor = self.createAnchor(link, label);
+        if (autolink) {
+        	anchor.setAttribute("data-wysiwyg-autolink", true);
+        }
         holder.appendChild(anchor);
         return anchor;
     }
@@ -1964,7 +1967,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
 
     function handleWikiPageName(name, label) {
         if (!inAnchor()) {
-            createAnchor(name, label || name);
+            createAnchor(name, label || name, true);
         } else {
             holder.appendChild(contentDocument.createTextNode(label || name));
         }
@@ -2579,6 +2582,9 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     }
 
     function linkText(link, label) {
+    	if (link === label) {
+    		return link;
+    	}
         if (!/\]/.test(label) && !/^[\"\']/.test(label)) {
             return "[[" + label + "][" + link + "]]";
         }

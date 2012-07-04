@@ -68,11 +68,14 @@ $(function() {
         var fragment = unit.fragment;
         var element = unit.element;
         var br = function() { return element("br") };
-        var a = function(link, label) {
-            var attrs = {
+        var a = function(link, label, autolink) {
+        	var attrs = {
                 href: link,
                 title: link,
                 'data-wysiwyg-link': link };
+        	if (autolink) {
+        		attrs['data-wysiwyg-autolink'] = 'true';
+        	}
             return element("a", attrs, label || link);
         };
 
@@ -200,6 +203,13 @@ $(function() {
                 "Paragraph continued...",
                 "",
                 "Second paragraph continued..." ].join("\n"));
+        });
+
+        unit.add("link", function() {
+            var dom = fragment(
+                element("p", a("LinkPage", "LinkPage", true)));
+            generate.call(this, dom,
+                "LinkPage");
         });
 
         unit.add("link with markup", function() {
@@ -409,14 +419,14 @@ $(function() {
         unit.add("WikiPageName", function() {
             var dom = fragment(
                 element("p",
-                    a("CamelCase", "CamelCase"),
+                    a("CamelCase", "CamelCase", true),
                     " ", element("ins", "CamelCase"), " ",
-                    a("FooBarA", "FooBarA"), " FOo ",
-                    a("FoobarA", "FoobarA"), " ",
-                    a("<ParentLink", "<ParentLink"), " ",
-                    a(">ChildLink", ">ChildLink"), " ",
-                    a(".AbsoluteLink", ".AbsoluteLink"), " ",
-                    a(".AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage"),
+                    a("FooBarA", "FooBarA", true), " FOo ",
+                    a("FoobarA", "FoobarA", true), " ",
+                    a("<ParentLink", "<ParentLink", true), " ",
+                    a(">ChildLink", ">ChildLink", true), " ",
+                    a(".AbsoluteLink", ".AbsoluteLink", true), " ",
+                    a(".AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage", true),
                     " OneÅngström Oneångström setTextColor"));
             generateFragment.call(this, dom, 
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA <ParentLink >ChildLink .AbsoluteLink .AbsoluteLink.WikiPage OneÅngström Oneångström setTextColor");
@@ -427,7 +437,7 @@ $(function() {
         		element("p",
         			a("TestPage", "label"),
         			a("TestPage", "läbel"),
-        			a("TestPage", "TestPage"),
+        			a("TestPage", "TestPage", true),
         			a("FrontPage?edit", "Edit"),
         			" button and add a ",
         			a("FitNesse.UserGuide.WikiWord", element("ins", "WikiWord")),
@@ -436,7 +446,7 @@ $(function() {
         		
         	var wikitext = "[[label][TestPage]]"
         		+ "[[läbel][TestPage]]"
-        		+ "[[TestPage][TestPage]]"
+        		+ "TestPage"
         		+ "[[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.WikiWord]]"
         		+ "[[bla][http://external.link/bladieblah]]";
         	
@@ -450,14 +460,14 @@ $(function() {
                 element("h1", "Heading 1"),
                 element("h2", "Heading 2"),
                 element("h3", element("b", "Heading"), " ", element("i", "3")),
-                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart")),
+                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart", true)),
                 element("h5", "Heading 5"),
                 element("h6", "Heading 6"));
             generate.call(this, dom, [
                 "!1 Heading 1",
                 "!2 Heading 2",
                 "!3 '''Heading''' ''3''",
-                "!4 Heading 4 with [[WikiStart][WikiStart]]",
+                "!4 Heading 4 with WikiStart",
                 "!5 Heading 5",
                 "!6 Heading 6" ].join("\n"));
         });
@@ -467,7 +477,7 @@ $(function() {
                 element("h1", "Heading 1  "),
                 element("h2", "Heading 2"),
                 element("h3", element("b", "Heading"), " ", element("i", "3"), "    "),
-                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart"), "    "),
+                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart", true), "    "),
                 element("h5", "Heading 5      "),
                 element("h6", "Heading 6 "));
             generateFragment.call(this, dom, [
