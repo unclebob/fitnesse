@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-all.jar"/>
 	<classpathentry kind="lib" path="lib/velocity.jar"/>
+	<classpathentry kind="lib" path="lib/htmllexer.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
