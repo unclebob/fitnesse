@@ -5,14 +5,34 @@ import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slimTables.SlimTable.Disgracer;
+import org.apache.commons.lang.StringUtils;
 
 public class SlimTableFactory {
+
+  public static SlimTableFactory getInstance() {
+    String defaultFactoryClass = SlimTableFactory.class.getName();
+    return getInstance(StringUtils.defaultIfEmpty(System.getProperty(defaultFactoryClass), defaultFactoryClass));
+  }
+
+  public static SlimTableFactory getInstance(String factoryClassName) {
+    try {
+      Class<SlimTableFactory> factoryClass = (Class<SlimTableFactory>) Class.forName(factoryClassName);
+      assert SlimTableFactory.class.isAssignableFrom(factoryClass);
+      return factoryClass.newInstance();
+    } catch (ClassNotFoundException e) {
+      throw new IllegalArgumentException("SlimTableFactory class not found: " + factoryClassName, e);
+    } catch (InstantiationException e) {
+      throw new IllegalArgumentException("Could not instantiate SlimTableFactory: " + factoryClassName, e);
+    } catch (IllegalAccessException e) {
+      throw new IllegalArgumentException("Could not access constructor for SlimTableFactory: " + factoryClassName, e);
+    }
+  }
 
   private boolean doesNotHaveColon(String tableType) {
     return tableType.indexOf(":") == -1;
   }
 
-  private boolean beginsWith(String tableType, String typeCode) {
+  protected boolean beginsWith(String tableType, String typeCode) {
     return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
   }
 
