@@ -26,7 +26,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
-  private TestSystem currentTestSystem = null;
   private boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
@@ -81,7 +80,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
-      executePagesInTestSystem(descriptor, pagesByTestSystem);
+        List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
+        startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
     }
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
   }
@@ -94,19 +94,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return false;
   }
 
-  private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-                                        PagesByTestSystem pagesByTestSystem) throws IOException, InterruptedException {
-    List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
-
-    startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
-  }
-
   private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     synchronized (this) {
       if (!isStopped) {
-        currentTestSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
-        testSystem = currentTestSystem;
+        testSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
         resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
       } else {
       }
@@ -122,7 +114,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         if (!isStopped) {
           testSystem.bye();
         }
-        currentTestSystem = null;
       }
     } else {
     }
