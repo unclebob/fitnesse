@@ -89,11 +89,19 @@ public class PageDriver {
   }
 
   public void makeATestPage(String pageName) throws Exception {
+	onPageSetAttribute(pageName, "Test");
+  }
+  
+  public void makeASuitePage(String pageName) throws Exception {
+	onPageSetAttribute(pageName, "Suite");
+  }
+  
+  private void onPageSetAttribute(String pageName, String attrName) {
     WikiPage root = FitnesseFixtureContext.root;
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
     PageData data = thePage.getData();
-    data.setAttribute("Test", "true");
+    data.setAttribute(attrName, "true");
     thePage.commit(data);
   }
 
