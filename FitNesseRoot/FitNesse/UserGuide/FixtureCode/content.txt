@@ -20,7 +20,7 @@ What '''really''' happens when we click that test button? (Try clicking it again
    * FitNesse figures out whether to turn table cells red or green (or yellow, if an exception was thrown) and displays the results page accordingly
 
 !3 What is Fixture Code?
-The fixture is the Java (or some other supported language) class that Slim to process the contents of the table. In the top row of the table above, "eg" specifies a Java package (or other language namespace), and "Division" specifies the actual class to be called.
+The fixture is the Java (or some other supported language) class that Slim will use to process the contents of the table. In the top row of the table above, "eg" specifies a Java package (or other language namespace), and "Division" specifies the actual class to be called.
 
 Here is what the Java version of the Division class might look like:
 {{{
