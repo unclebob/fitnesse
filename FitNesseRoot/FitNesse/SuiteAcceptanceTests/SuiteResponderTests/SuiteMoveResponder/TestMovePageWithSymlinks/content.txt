@@ -1,0 +1,29 @@
+!contents
+
+If a symlink is created on the to-be-moved page, the symlink should be moved.
+
+!*> local setup and scenario's
+| library |
+| page driver |
+
+!| scenario | create symlink on | pageName | with name | name | link to | linkedPage |
+| check | request page | @pageName?responder=symlink&linkName=@name&linkPath=@linkedPage | 303 |
+| show | content |
+| ensure | content contains | Location: @pageName?properties |
+
+!| scenario | move page | pageName | to | location |
+| check | request page | @pageName?responder=movePage&newLocation=@location | 303 |
+| show | content |
+| ensure | content contains | Location: @location.@pageName |
+*!
+
+!| script |
+| create page | ToBeMovedPage | with content | main page |
+| create page | NewLocation | with content | new location |
+| create page | SymlinkedPage | with content | symlink |
+| create symlink on | ToBeMovedPage | with name | TestPage | link to | SymlinkedPage |
+| ensure | page | ToBeMovedPage.TestPage | is a symbolic link |
+| move page | ToBeMovedPage | to | NewLocation |
+| reject | page | ToBeMovedPage | exists |
+| ensure | page | NewLocation.ToBeMovedPage | exists |
+| ensure | page | NewLocation.ToBeMovedPage.TestPage | is a symbolic link |

@@ -2,15 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitnesse.FitNesseExpediter;
-import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.run.formatters.XmlFormatter;
-import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.testutil.MockSocket;
-import fitnesse.wiki.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -23,10 +18,19 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import fitnesse.FitNesseExpediter;
+import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.testutil.MockSocket;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class PageDriver {
   private PageCreator creator = new PageCreator();
@@ -86,6 +90,20 @@ public class PageDriver {
     WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
     PageData data = thePage.getData();
     return data.getAttribute(PageData.LAST_MODIFYING_USER);
+  }
+
+  public boolean pageIsASymbolicLink(String pageName) {
+    WikiPage root = FitnesseFixtureContext.root;
+    WikiPagePath pagePath = PathParser.parse(pageName);
+    WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
+    return thePage instanceof SymbolicPage;
+  }
+  
+  public boolean pageExists(String pageName) {
+	    WikiPage root = FitnesseFixtureContext.root;
+	    WikiPagePath pagePath = PathParser.parse(pageName);
+	    WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
+	    return thePage != null;
   }
 
   public void makeATestPage(String pageName) throws Exception {
