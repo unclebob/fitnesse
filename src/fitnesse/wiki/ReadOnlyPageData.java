@@ -1,15 +1,12 @@
 package fitnesse.wiki;
 
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.ParsedPage;
 import java.util.List;
 
 public interface ReadOnlyPageData {
     String getHtml();
     String getVariable(String name);
-    Symbol getSyntaxTree();
-    ParsingPage getParsingPage();
-    String translateToHtml(Symbol syntaxTree);
+    ParsedPage getParsedPage();
     List<String> getClasspaths();
     List<String> getXrefPages();
     String getContent();

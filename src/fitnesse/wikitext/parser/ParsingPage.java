@@ -21,14 +21,18 @@ public class ParsingPage {
         this(page, page, new HashMap<String, HashMap<String, Maybe<String>>>());
     }
 
-    public ParsingPage copyForPage(SourcePage page) {
-        return new ParsingPage(page, page, this.cache);
-    }
+  public ParsingPage copy() {
+      return new ParsingPage(page, page, this.cache);
+  }
+
+  public ParsingPage copyForPage(SourcePage page) {
+      return new ParsingPage(page, page, this.cache);
+  }
 
     public ParsingPage copyForNamedPage(SourcePage namedPage) {
         return new ParsingPage(this.page, namedPage, this.cache);
     }
-    
+
     private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> cache) {
         this.page = page;
         this.namedPage = namedPage;
