@@ -93,14 +93,17 @@ public abstract class PageMovementResponder implements SecureResponder {
     return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(newName));
   }
 
-  protected void movePage(WikiPage movedPage, WikiPage targetPage) {
+  protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) {
 	  
-	// TODO: do not move symlinked pages like this -> change the symlink path accordingly
-	// check in parent page if the moved page is a symlink:
-	System.out.println("Moving page " + movedPage.getName() + " " + movedPage.getClass().getName());
 	if (!isSymlinkedPage(movedPage)) {
-	    PageData pageData = movedPage.getData();
-	
+		// 1. is movedPage a subpage of oldRefactoredPage?
+		//   yes -> point symlink to new page location (absolute, change parent) 
+		//   no -> make symlink absolute (change parent), add to new
+		// 2. remove symlink from movedPage
+	} else {
+		PageData pageData = movedPage.getData();
+		WikiPage targetPage = newParentPage.addChildPage(pageName);
+		
 	    targetPage.commit(pageData);
 	
 	    moveChildren(movedPage, targetPage);
@@ -113,7 +116,8 @@ public abstract class PageMovementResponder implements SecureResponder {
   protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
     List<WikiPage> children = movedPage.getChildren();
     for (WikiPage page : children) {
-      movePage(page, newParentPage.addChildPage(page.getName()));
+      // TODO: only create new page if not a Symlink
+      movePage(page, newParentPage, page.getName());
     }
   }
 

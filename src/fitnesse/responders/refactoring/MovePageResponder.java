@@ -67,8 +67,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected void execute() {
-    final WikiPage newPage = newParentPage.addChildPage(getNewPageName());
-    movePage(oldRefactoredPage, newPage);
+    movePage(oldRefactoredPage, newParentPage, getNewPageName());
   }
 
   @Override
