@@ -14,8 +14,7 @@ import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.ParsedPage;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,7 +57,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  private Symbol preparsedScenarioLibrary;
+  private ParsedPage preparsedScenarioLibrary;
 
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
@@ -477,10 +476,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return allExpectations;
   }
 
-
-  public Symbol getPreparsedScenarioLibrary() {
+  public ParsedPage getPreparsedScenarioLibrary() {
     if (preparsedScenarioLibrary == null) {
-      preparsedScenarioLibrary = Parser.make(page, getScenarioLibraryContent()).parse();
+      preparsedScenarioLibrary = new ParsedPage(page.readOnlyData().getParsedPage(), getScenarioLibraryContent());
     }
     return preparsedScenarioLibrary;
   }
