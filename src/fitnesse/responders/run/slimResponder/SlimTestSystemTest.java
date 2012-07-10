@@ -16,6 +16,7 @@ import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
+import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
@@ -477,9 +478,9 @@ public class SlimTestSystemTest {
     crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"), "child library");
     SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
 
-    Symbol scenarios = sys.getPreparsedScenarioLibrary();
+    ParsedPage scenarios = sys.getPreparsedScenarioLibrary();
 
-    Symbol includeParent = getCollapsibleSymbol(scenarios);
+    Symbol includeParent = getCollapsibleSymbol(scenarios.getSyntaxTree());
     assertNotNull(includeParent);
     assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
     Symbol childLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
@@ -492,9 +493,9 @@ public class SlimTestSystemTest {
     crawler.addPage(root, PathParser.parse("ScenarioLibrary"), "uncle library");
     SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
 
-    Symbol scenarios = sys.getPreparsedScenarioLibrary();
+    ParsedPage scenarios = sys.getPreparsedScenarioLibrary();
 
-    Symbol includeParent = getCollapsibleSymbol(scenarios);
+    Symbol includeParent = getCollapsibleSymbol(scenarios.getSyntaxTree());
     assertNotNull(includeParent);
     assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
     Symbol uncleLibraryInclude = getIncludeSymbol(includeParent.childAt(1));

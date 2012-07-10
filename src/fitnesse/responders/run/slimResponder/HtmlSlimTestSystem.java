@@ -9,8 +9,7 @@ import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.Collapsible;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.ParsedPage;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
   public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
@@ -18,19 +17,10 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   protected TableScanner scanTheTables(ReadOnlyPageData pageData) {
-    Symbol syntaxTree = pageData.getSyntaxTree();
-    Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
-    syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
-    String html = pageData.translateToHtml(syntaxTree);
+    ParsedPage parsedPage = pageData.getParsedPage();
+    parsedPage.addToFront(getPreparsedScenarioLibrary());
+    String html = parsedPage.toHtml();
     return new HtmlTableScanner(html);
-  }
-
-  private Symbol findCollapsibleSymbol(Symbol syntaxTree) {
-    for (Symbol symbol : syntaxTree.getChildren()) {
-      if (symbol.getType() instanceof Collapsible)
-        return symbol;
-    }
-    throw new RuntimeException("There must be a collapsible widget in here.");
   }
 
   @Override

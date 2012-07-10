@@ -69,8 +69,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-  private Symbol contentSyntaxTree = null;
-  private ParsingPage parsingPage;
+  private transient ParsedPage parsedPage;
 
   public PageData(WikiPage page) {
     wikiPage = page;
@@ -87,8 +86,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this(data.getWikiPage(), data.content);
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
-    contentSyntaxTree = data.contentSyntaxTree;
-    parsingPage = data.parsingPage;
+    parsedPage = data.parsedPage;
   }
 
   public void initializeAttributes() {
@@ -180,13 +178,11 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void setContent(String content) {
     this.content = content;
-    contentSyntaxTree = null;
-    parsingPage = null;
   }
 
   /* this is the public entry to page parse and translate */
   public String getHtml() {
-      return translateToHtml(getSyntaxTree());
+      return getParsedPage().toHtml();
   }
 
   public String getVariable(String name) {
@@ -195,33 +191,17 @@ public class PageData implements ReadOnlyPageData, Serializable {
       return getParsingPage().renderVariableValue(variable.getValue());
   }
 
-    public Symbol getSyntaxTree() {
-        parsePageContent();
-        return contentSyntaxTree;
+  public ParsedPage getParsedPage() {
+    if (parsedPage == null) parsedPage = new ParsedPage(new WikiSourcePage(wikiPage), content);
+    return parsedPage;
+  }
+
+    private Symbol getSyntaxTree() {
+        return getParsedPage().getSyntaxTree();
     }
 
-    public ParsingPage getParsingPage() {
-        parsePageContent();
-        return parsingPage;
-    }
-
-    private void parsePageContent() {
-        if (contentSyntaxTree == null) {
-            //long start = Clock.currentTimeInMillis();
-            parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
-            String content = getContent();
-            contentSyntaxTree = Parser.make(parsingPage, content).parse();
-            //long elapsed = Clock.currentTimeInMillis() - start;
-            //System.out.println((wikiPage != null && wikiPage.getName() != null ? wikiPage.getName() : "?") + " parse " + elapsed + " " + (content != null ? content.length() : 0));
-        }
-    }
-
-    public String translateToHtml(Symbol syntaxTree) {
-        //long start = Clock.currentTimeInMillis();
-        String result = new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
-        //long elapsed = Clock.currentTimeInMillis() - start;
-        //System.out.println((wikiPage != null ? wikiPage.getName() : "?") + " translate " + elapsed + " " + result.length());
-        return result;
+    private ParsingPage getParsingPage() {
+        return getParsedPage().getParsingPage();
     }
 
   public void setWikiPage(WikiPage page) {
@@ -234,7 +214,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public List<String> getClasspaths() {
     Symbol tree = getSyntaxTree();
-    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
+    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), getParsingPage())).getPaths(tree);
   }
 
     public List<String> getXrefPages() {
