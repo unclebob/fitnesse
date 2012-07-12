@@ -93,14 +93,28 @@ public abstract class PageMovementResponder implements SecureResponder {
     return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(newName));
   }
 
-  protected void movePage(WikiPage movedPage, WikiPage targetPage) {
+  protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) {
 	  
-	// TODO: do not move symlinked pages like this -> change the symlink path accordingly
-	// check in parent page if the moved page is a symlink:
-	System.out.println("Moving page " + movedPage.getName() + " " + movedPage.getClass().getName());
-	if (!isSymlinkedPage(movedPage)) {
-	    PageData pageData = movedPage.getData();
-	
+	if (isSymlinkedPage(movedPage)) {
+		WikiPage referencedPage = ((SymbolicPage) movedPage).getRealPage();
+		PageData newParentData = newParentPage.getData();
+		WikiPageProperties properties = newParentData.getProperties();
+	    WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
+	    WikiPagePath fullPath;
+		if (isChildOf(referencedPage, oldRefactoredPage)) {
+			// Watch out: the referenced page will also be moved
+			WikiPagePath relativePath = PathParser.parse(oldRefactoredPage.getPageCrawler().getRelativeName(oldRefactoredPage.getParent(), referencedPage));
+			fullPath = newParentPage.getPageCrawler().getFullPathOfChild(this.newParentPage, relativePath);
+		} else {
+			fullPath = referencedPage.getPageCrawler().getFullPath(referencedPage);
+		}
+		fullPath.makeAbsolute();
+		symLinks.set(pageName, PathParser.render(fullPath));
+		newParentPage.commit(newParentData);
+	} else {
+		PageData pageData = movedPage.getData();
+		WikiPage targetPage = newParentPage.addChildPage(pageName);
+		
 	    targetPage.commit(pageData);
 	
 	    moveChildren(movedPage, targetPage);
@@ -110,10 +124,11 @@ public abstract class PageMovementResponder implements SecureResponder {
 	}
   }
 
+
   protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
     List<WikiPage> children = movedPage.getChildren();
     for (WikiPage page : children) {
-      movePage(page, newParentPage.addChildPage(page.getName()));
+      movePage(page, newParentPage, page.getName());
     }
   }
 
@@ -121,6 +136,13 @@ public abstract class PageMovementResponder implements SecureResponder {
 	  return page instanceof SymbolicPage;
   }
   
+  private boolean isChildOf(WikiPage childPage, WikiPage parentPage) {
+	  PageCrawler crawler = parentPage.getPageCrawler();
+	  String childPath = PathParser.render(crawler.getFullPath(childPage));
+	  String parentPath = PathParser.render(crawler.getFullPath(parentPage));
+	  return childPath.startsWith(parentPath);
+  }
+
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

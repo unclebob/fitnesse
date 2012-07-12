@@ -25,8 +25,6 @@ public abstract class CachingPage extends CommitingPage {
     addExtention(new VirtualCouplingExtension(this));
   }
 
-  public abstract boolean hasChildPage(String pageName);
-
   protected abstract WikiPage createChildPage(String name);
 
   protected abstract void loadChildren();
