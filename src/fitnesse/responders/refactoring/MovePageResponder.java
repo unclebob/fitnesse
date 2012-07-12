@@ -10,7 +10,6 @@ import fitnesse.components.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class MovePageResponder extends PageMovementResponder implements SecureResponder {

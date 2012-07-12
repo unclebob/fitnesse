@@ -95,11 +95,22 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) {
 	  
-	if (!isSymlinkedPage(movedPage)) {
-		// 1. is movedPage a subpage of oldRefactoredPage?
-		//   yes -> point symlink to new page location (absolute, change parent) 
-		//   no -> make symlink absolute (change parent), add to new
-		// 2. remove symlink from movedPage
+	if (isSymlinkedPage(movedPage)) {
+		WikiPage referencedPage = ((SymbolicPage) movedPage).getRealPage();
+		PageData newParentData = newParentPage.getData();
+		WikiPageProperties properties = newParentData.getProperties();
+	    WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
+	    WikiPagePath fullPath;
+		if (isChildOf(referencedPage, oldRefactoredPage)) {
+			// Watch out: the referenced page will also be moved
+			WikiPagePath relativePath = PathParser.parse(oldRefactoredPage.getPageCrawler().getRelativeName(oldRefactoredPage.getParent(), referencedPage));
+			fullPath = newParentPage.getPageCrawler().getFullPathOfChild(this.newParentPage, relativePath);
+		} else {
+			fullPath = referencedPage.getPageCrawler().getFullPath(referencedPage);
+		}
+		fullPath.makeAbsolute();
+		symLinks.set(pageName, PathParser.render(fullPath));
+		newParentPage.commit(newParentData);
 	} else {
 		PageData pageData = movedPage.getData();
 		WikiPage targetPage = newParentPage.addChildPage(pageName);
@@ -113,10 +124,10 @@ public abstract class PageMovementResponder implements SecureResponder {
 	}
   }
 
+
   protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
     List<WikiPage> children = movedPage.getChildren();
     for (WikiPage page : children) {
-      // TODO: only create new page if not a Symlink
       movePage(page, newParentPage, page.getName());
     }
   }
@@ -125,6 +136,13 @@ public abstract class PageMovementResponder implements SecureResponder {
 	  return page instanceof SymbolicPage;
   }
   
+  private boolean isChildOf(WikiPage childPage, WikiPage parentPage) {
+	  PageCrawler crawler = parentPage.getPageCrawler();
+	  String childPath = PathParser.render(crawler.getFullPath(childPage));
+	  String parentPath = PathParser.render(crawler.getFullPath(parentPage));
+	  return childPath.startsWith(parentPath);
+  }
+
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }
