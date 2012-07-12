@@ -94,14 +94,20 @@ public abstract class PageMovementResponder implements SecureResponder {
   }
 
   protected void movePage(WikiPage movedPage, WikiPage targetPage) {
-    PageData pageData = movedPage.getData();
-
-    targetPage.commit(pageData);
-
-    moveChildren(movedPage, targetPage);
-
-    WikiPage parentOfMovedPage = movedPage.getParent();
-    parentOfMovedPage.removeChildPage(movedPage.getName());
+	  
+	// TODO: do not move symlinked pages like this -> change the symlink path accordingly
+	// check in parent page if the moved page is a symlink:
+	System.out.println("Moving page " + movedPage.getName() + " " + movedPage.getClass().getName());
+	if (!isSymlinkedPage(movedPage)) {
+	    PageData pageData = movedPage.getData();
+	
+	    targetPage.commit(pageData);
+	
+	    moveChildren(movedPage, targetPage);
+	
+	    WikiPage parentOfMovedPage = movedPage.getParent();
+	    parentOfMovedPage.removeChildPage(movedPage.getName());
+	}
   }
 
   protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
@@ -111,6 +117,10 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
   }
 
+  private boolean isSymlinkedPage(WikiPage page) {
+	  return page instanceof SymbolicPage;
+  }
+  
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }
