@@ -133,8 +133,8 @@ Wysiwyg.prototype.initializeEditor = function (d) {
         }
     }
     // disable firefox table resizing
-    d.execCommand("enableObjectResizing", false, "false");
-    d.execCommand("enableInlineTableEditing", false, "false");
+    try { d.execCommand("enableObjectResizing", false, false); } catch (e) {}
+    try { d.execCommand("enableInlineTableEditing", false, false); } catch (e) {}
 };
 
 Wysiwyg.getWrapOn = function () {
