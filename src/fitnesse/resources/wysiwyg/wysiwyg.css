@@ -1,0 +1,192 @@
+iframe.wysiwyg {
+    border: 1px solid #d7d7d7;
+    clear: both;
+    display: block;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+div.trac-resizable {
+    clear: both;
+}
+iframe.wysiwyg:focus {
+    border: 1px solid #886;
+}
+.editor-toggle {
+    float: right;
+    font-size: 80%;
+    margin-top: 4px;
+}
+.editor-toggle label {
+	float: none;
+	display: inline;
+}
+.wysiwyg-toolbar {
+    float: left;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+	margin-bottom: 4px;
+}
+.wysiwyg-toolbar ul, .wysiwyg-toolbar li {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    text-indent: 0;
+    font-size: .9em;
+}
+.wysiwyg-toolbar ul {
+    float: left;
+    margin-right: 8px;
+}
+.wysiwyg-toolbar ul#wm-style a {
+	border-radius: 2px;
+	padding: 0;
+}
+.wysiwyg-toolbar li {
+    display: block;
+    float: left;
+    background: white; /* Old browsers */
+	background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
+	background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
+}
+.wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
+    background: transparent url(menusprite.png) no-repeat;
+    border: 1px solid gray;
+    border-right: none;
+    border-left-color: lightgray;
+    cursor: default;
+    width: 32px;
+    height: 20px;
+    display: block;
+    padding: 0 3px;
+}
+.wysiwyg-toolbar li:first-child,
+.wysiwyg-toolbar li:first-child a {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.wysiwyg-toolbar li:first-child a {
+    padding-left: 5px;
+    border-left-color: gray;
+}
+.wysiwyg-toolbar li:last-child,
+.wysiwyg-toolbar li:last-child a {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.wysiwyg-toolbar li:last-child a {
+    padding-right: 5px;
+    border-right: 1px solid gray;
+}
+.wysiwyg-toolbar li a:hover, .wysiwyg-toolbar li.selected a:hover {
+	background-color: #EEE;
+}
+.wysiwyg-toolbar li a:active, .wysiwyg-toolbar li.selected a:active {
+	border: 1px inset gray;
+	width: 30px;
+	height: 18px;
+}
+
+.wysiwyg-toolbar li a#wt-style {
+    width: 78px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    line-height: 1.5;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-position: 51px -594px;
+}
+.wysiwyg-toolbar li a#wt-style:active, .wysiwyg-toolbar li.selected a#wt-style:active {
+	border: none;
+}
+
+.wysiwyg-toolbar li a#wt-style span {
+    display: none;
+    border-size: 1px;
+}
+
+.wysiwyg-toolbar li.wysiwyg-menu-style     a#wt-style span.wysiwyg-menu-style,
+.wysiwyg-toolbar li.wysiwyg-menu-paragraph a#wt-style span.wysiwyg-menu-paragraph,
+.wysiwyg-toolbar li.wysiwyg-menu-heading1  a#wt-style span.wysiwyg-menu-heading1,
+.wysiwyg-toolbar li.wysiwyg-menu-heading2  a#wt-style span.wysiwyg-menu-heading2,
+.wysiwyg-toolbar li.wysiwyg-menu-heading3  a#wt-style span.wysiwyg-menu-heading3,
+.wysiwyg-toolbar li.wysiwyg-menu-heading4  a#wt-style span.wysiwyg-menu-heading4,
+.wysiwyg-toolbar li.wysiwyg-menu-heading5  a#wt-style span.wysiwyg-menu-heading5,
+.wysiwyg-toolbar li.wysiwyg-menu-heading6  a#wt-style span.wysiwyg-menu-heading6,
+.wysiwyg-toolbar li.wysiwyg-menu-code      a#wt-style span.wysiwyg-menu-code {
+    display: inline;
+}
+
+.wysiwyg-toolbar li a#wt-table    { background-position: 3px -2px; }
+.wysiwyg-toolbar li a#wt-remove   { background-position: 3px -222px; }
+.wysiwyg-toolbar li a#wt-strong   { background-position: 5px -242px; }
+.wysiwyg-toolbar li a#wt-em       { background-position: 3px -262px; }
+.wysiwyg-toolbar li a#wt-strike   { background-position: 3px -282px; }
+.wysiwyg-toolbar li a#wt-link     { background-position: 5px -302px; }
+.wysiwyg-toolbar li a#wt-unlink   { background-position: 3px -322px; }
+.wysiwyg-toolbar li a#wt-hr       { background-position: 3px -342px; }
+.wysiwyg-toolbar li a#wt-ul       { background-position: 5px -362px; }
+.wysiwyg-toolbar li a#wt-indent   { background-position: 3px -382px; }
+.wysiwyg-toolbar li a#wt-outdent  { background-position: 3px -402px; }
+.wysiwyg-toolbar li a#wt-escape   { background-position: 3px -422px; }
+.wysiwyg-toolbar li a#wt-unescape { background-position: 3px -485px; }
+
+.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 5px -442px; }
+.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 3px -462px; }
+.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 3px -482px; }
+.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 3px -502px; }
+
+.wysiwyg-toolbar li a#wt-add-table          { background-position: 3px -2px; }
+.wysiwyg-toolbar li a#wt-remove-table       { background-position: 3px -22px; }
+.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 3px -42px; }
+.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 3px -62px; }
+.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 3px -82px; }
+.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 3px -102px; }
+.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 3px -122px; }
+.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 5px -142px; }
+.wysiwyg-toolbar li a#wt-delete-row         { background-position: 3px -162px; }
+.wysiwyg-toolbar li a#wt-delete-col         { background-position: 3px -182px; }
+.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 3px -202px; }
+
+.wysiwyg-menu {
+    border: 1px solid #d7d7d7;
+    padding: 1px 2px;
+    background-color: #fff;
+    -moz-opacity: 0.90;
+    opacity: 0.90;
+}
+.wysiwyg-menu p,
+.wysiwyg-menu h1,
+.wysiwyg-menu h2,
+.wysiwyg-menu h3,
+.wysiwyg-menu h4,
+.wysiwyg-menu h5,
+.wysiwyg-menu h6,
+.wysiwyg-menu pre.wiki,
+.wysiwyg-menu blockquote.citation {
+    margin: 0px;
+}
+.wysiwyg-menu ul, .wysiwyg-menu li {
+    list-style-type: none;
+    text-indent: 0em;
+    margin: 0px;
+    padding: 0px;
+}
+.wysiwyg-menu :link, .wysiwyg-menu :visited {
+    display: block;
+    padding: 1px;
+    border: 1px solid #fff;
+    color: #000;
+}
+.wysiwyg-menu .selected :link, .wysiwyg-menu .selected :visited {
+    border: 1px solid #7c4;
+}
+.wysiwyg-menu a:hover, .wysiwyg-menu .selected a:hover {
+    border: 1px solid #fb2;
+}
+.wysiwyg-menu .menu {
+    font-size: 85%;
+}
+
+.wysiwyg-toolbar .in-table {
+	display: none;
+}

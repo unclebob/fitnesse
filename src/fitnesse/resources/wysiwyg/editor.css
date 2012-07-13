@@ -1,0 +1,56 @@
+body {
+ background-color: white;
+ margin: 0;
+ padding: 0;
+}
+
+p, table {
+ margin: 0.5em 0;
+}
+
+p.meta {
+ margin: 0;
+}
+
+p.comment {
+ color: #666;
+ font-style: italic;
+}
+
+ins { /* used for escaping !-..-! */
+    font-family: monospace;
+    font-size: 16px;
+    text-decoration: none;
+}
+pre.wiki {
+ overflow: visible !important;
+ word-wrap: break-word !important;
+ white-space: -moz-pre-wrap !important;
+ white-space: pre-wrap !important;
+}
+
+div.collapsable {
+ border: 1pt dotted #BF8660;
+ margin: 0.5em;
+ padding-left: 15px;
+ background: url(../images/collapsibleOpen.png) left top no-repeat #F9F9F9;
+ background-position: 2px 2px;
+ min-height: 1em;
+}
+
+div.collapsable.collapsed {
+ background: url(../images/collapsibleClosed.png) left top no-repeat #F9F9F9;
+ background-position: 2px 2px;
+}
+
+div.collapsable.hidden {
+ display: block;
+ background: url(../images/collapsibleHidden.png) left top no-repeat #F9F9F9;
+ background-position: 2px 2px;
+}
+
+div.collapsable>p:first-child {
+/* like .meta */
+ color: #BF8660;
+ font-style: italic;
+}

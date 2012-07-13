@@ -39,7 +39,7 @@ public class NewPageResponderTest extends RegexTestCase {
     assertSubString("name=\"responder\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("type=\"submit\"", body);
-    assertSubString(String.format("textarea class=\"%s no_wrap\"", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString("textarea class=\"wikitext no_wrap\"", body);
   }
 
 }

@@ -8,6 +8,7 @@ label input {
 }
 textarea {
 	font-family: monospace;
+	clear: both;
 }
 textarea.no_wrap {
 	overflow: scroll;

@@ -95,12 +95,6 @@ public class EditResponderTest extends RegexTestCase {
     assertMatches("wikiFormatterSupport.js", body);
   }
 
-  public void testWrapScriptExists() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    String body = response.getContent();
-    assertMatches("textareaWrapSupport.js", body);
-  }
-
   public void testMissingPageDoesNotGetCreated() throws Exception {
     request.setResource("MissingPage");
     responder.makeResponse(new FitNesseContext(root), request);

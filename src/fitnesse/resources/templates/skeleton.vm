@@ -18,8 +18,13 @@
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/${theme}.css" />
+  <link rel="stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
+  <link rel="wysiwyg.base" href="/"/>
+  <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse.css" media="screen"/>
+  <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/editor.css" media="screen"/>
   <script src="/files/fitnesse/javascript/jquery-1.7.2.min.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/${theme}.js" type="text/javascript"></script>
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end>

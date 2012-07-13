@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>wysiwyg test</title>
+<!--
+  <link rel="stylesheet" href="../../css/fitnesse_base.css" type="text/css" />
+-->
+  <link rel="stylesheet" href="./wysiwyg.css" type="text/css" />
+  <script type="text/javascript" src="../javascript/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="./wysiwyg.js"></script>
+  <script type="text/javascript" src="./testunit.js"></script>
+  <script type="text/javascript" src="./testcase.js"></script>
+  <script type="text/javascript">var _tracwysiwyg = { escapeNewlines: false }</script>
+  <style type="text/css">
+  html { font-size: 13px; *font-size: small; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 100%; }
+  textarea { font-size: 11px; width: 100%; border: 1px solid #999; }
+  #testunit .current { background-color: #FFFF80; }
+  #testunit .success { background-color: #33dd88; }
+  #testunit .failure textarea { background-color: #ff3333; border-style: none; }
+  #wysiwyg-html {
+    width: 100%;
+    border: 1px solid #999;
+    font-size: 11px;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  </style>
+</head>
+<body>
+  <form method="post">
+    <textarea id="textarea" class="wikitext" cols="50" rows="20" wrap="off"></textarea>
+    <div>
+      <label><input type="checkbox" id="show-wysiwyg-html" value="1"
+        onclick="document.getElementById('wysiwyg-html').style.display=this.checked?'':'none'"
+        />show html</label>
+      &nbsp;
+      <label><input type="checkbox" value="1"
+        onclick="_tracwysiwyg.escapeNewlines = this.checked"
+        />escape newlines</label>
+      <textarea id="wysiwyg-html" cols="50" rows="12" style="display:none;"></textarea>
+    </div>
+  </form>
+</body>
+</html>
