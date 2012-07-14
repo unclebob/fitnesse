@@ -37,5 +37,6 @@ public class TodayTest {
     public void translatesInTable() {
         SystemTimeKeeper.instance = new TestTimeKeeper(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime());
         ParserTestHelper.assertTranslatesTo("|!today (ddMMM)|\n", ParserTestHelper.tableWithCell("04Mar"));
+        ParserTestHelper.assertTranslatesTo("|!today -t|\n", ParserTestHelper.tableWithCell("04 Mar, 2002 15:06"));
     }
 }

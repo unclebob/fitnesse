@@ -49,7 +49,7 @@ public class Parser {
     public boolean endsOn(SymbolType type) { return specification.endsOn(type); }
 
     public Symbol moveNext(int count) {
-        for (int i = 0; i < count; i++) scanner.moveNext();
+        for (int i = 0; i < count; i++) scanner.moveNextIgnoreFirst(specification);
         return scanner.getCurrent();
     }
 
