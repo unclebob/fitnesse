@@ -44,6 +44,7 @@ public class SymbolProvider {
 
     private HashMap<Character, ArrayList<Matchable>> currentDispatch;
     private ArrayList<SymbolType> symbolTypes;
+    private SymbolProvider parent = null;
 
     public SymbolProvider(Iterable<SymbolType> types) {
         symbolTypes = new ArrayList<SymbolType>();
@@ -55,8 +56,9 @@ public class SymbolProvider {
         addTypes(types);
     }
 
-    public SymbolProvider(SymbolProvider other)  {
-        this(other.symbolTypes);
+    public SymbolProvider(SymbolProvider parent)  {
+        this(new SymbolType[] {});
+        this.parent = parent;
     }
 
     public SymbolProvider(SymbolType[] types)  {
@@ -86,16 +88,15 @@ public class SymbolProvider {
         return currentDispatch.get(defaultMatch);
     }
 
-    public void addMatcher(Matchable matcher) {
-        ArrayList<Matchable> defaults = currentDispatch.get(defaultMatch);
-        defaults.add(matcher);
-    }
-    
     public boolean matchesFor(SymbolType type) {
-        return symbolTypes.contains(type);
+        return (parent != null && parent.matchesFor(type)) || symbolTypes.contains(type);
     }
 
     public SymbolMatch findMatch(Character startCharacter, SymbolMatcher matcher) {
+        if (parent != null) {
+            SymbolMatch parentMatch = parent.findMatch(startCharacter, matcher);
+            if (parentMatch.isMatch())  return parentMatch;
+        }
         for (Matchable candidate: getMatchTypes(startCharacter)) {
             SymbolMatch match = matcher.makeMatch(candidate);
             if (match.isMatch()) return match;

@@ -10,9 +10,6 @@ public class PlainTextTable extends SymbolType implements Rule {
         htmlTranslation(new Table());
     }
     
-    private static final SymbolType[] terminators = new SymbolType[]
-            {SymbolType.PlainTextCellSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable};
-
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol table = parser.getCurrent();
         table.putProperty("class", "plain_text_table");
@@ -21,17 +18,21 @@ public class PlainTextTable extends SymbolType implements Rule {
         if (parser.atEnd()) return Symbol.nothing;
 
         SymbolProvider plainTextTableTypes;
-        if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
-            Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
+        SymbolType[] terminators;
+        Symbol cellSeparator = parser.getCurrent();
+        if (!cellSeparator.isType(SymbolType.Newline) && !cellSeparator.isType(SymbolType.Whitespace)) {
+            SymbolType plainTextCellSeparator = new SymbolType("PlainTextCellSeparator");
+            plainTextCellSeparator.wikiMatcher(new Matcher().string(cellSeparator.getContent().substring(0, 1)));
             plainTextTableTypes = new SymbolProvider(new SymbolType[]
-                {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
-            plainTextTableTypes.addMatcher(columnSeparator);
+                {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType, plainTextCellSeparator});
+            terminators = new SymbolType[] {plainTextCellSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable};
             parser.moveNext(1);
             if (parser.atEnd()) return Symbol.nothing;
         }
         else {
             plainTextTableTypes = new SymbolProvider(new SymbolType[]
                 {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            terminators = new SymbolType[] {SymbolType.Newline, SymbolType.ClosePlainTextTable};
         }
 
         if (parser.getCurrent().isType(SymbolType.Whitespace)) {
@@ -49,25 +50,6 @@ public class PlainTextTable extends SymbolType implements Rule {
             }
             row.add(line);
             if (parser.getCurrent().isType(SymbolType.Newline)) row = null;
-        }
-    }
-    
-    private class ColumnSeparator implements Matchable {
-        private Matcher matcher;
-
-        public ColumnSeparator(String separator) {
-            matcher = new Matcher().string(separator);
-        }
-
-        public boolean matchesFor(SymbolType symbolType) {
-            return symbolType == SymbolType.PlainTextCellSeparator;
-        }
-
-        public SymbolMatch makeMatch(ScanString input, SymbolStream symbols) {
-            Maybe<Integer> matchLength = matcher.makeMatch(input, symbols);
-            return matchLength.isNothing()
-                    ? SymbolMatch.noMatch
-                    : new SymbolMatch(SymbolType.PlainTextCellSeparator, input, matchLength.getValue());
         }
     }
 }
