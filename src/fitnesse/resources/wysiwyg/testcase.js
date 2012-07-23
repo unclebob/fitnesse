@@ -555,9 +555,9 @@ $(function() {
                     element("li", "Item 2")),
                 element("p", "And numbered lists can also be given an explicit number"));
             generateFragment.call(this, dom, [
-                " * Item 1",
-                "   * Item 1.1",
-                " * Item 2",
+                " - Item 1",
+                "   - Item 1.1",
+                " - Item 2",
                 "And numbered lists can also be given an explicit number" ].join("\n"));
             generate.call(this, dom, [
                 " * Item 1",
@@ -569,7 +569,13 @@ $(function() {
 
         unit.add("list at beginning of line", function() {
             var dom = fragment(
-                element("p", "- item 1 - item 2   - sub 2.1   - sub 2.2 a. item A b. item B Paragraph"));
+                element("ul",
+                    element("li", "item 1"),
+                    element("li", "item 2"),
+                    element("ul",
+                        element("li", "sub 2.1"),
+                        element("li", "sub 2.2"))),
+                 element("p", "a. item A b. item B Paragraph"));
             generateFragment.call(this, dom, [
                 "- item 1",
                 "- item 2",
@@ -578,8 +584,13 @@ $(function() {
                 "a. item A",
                 "b. item B",
                 "Paragraph" ].join("\n"));
-            generate.call(this, dom,
-                "- item 1 - item 2   - sub 2.1   - sub 2.2 a. item A b. item B Paragraph");
+            generateWikitext.call(this, dom, [
+                " * item 1",
+                " * item 2",
+                "   * sub 2.1",
+                "   * sub 2.2",
+                "",
+                "a. item A b. item B Paragraph" ].join("\n"));
         });
 
         unit.add("list + code block", function() {
