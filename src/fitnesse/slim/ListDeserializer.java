@@ -74,12 +74,10 @@ public class ListDeserializer {
   private void deserializeItem() {
     int itemLength = getLength();
     String item = getString(itemLength);
-    try {
-      List<Object> sublist = ListDeserializer.deserialize(item);
-      result.add(sublist);
-    } catch (SyntaxError e) {
+    if (item.startsWith("["))
+      result.add(ListDeserializer.deserialize(item));
+    else
       result.add(item);
-    }
   }
 
   private String getString(int length) {
