@@ -1828,7 +1828,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         if (inCollapsibleBlock) {
             inCollapsibleBlock--;
             closeToFragment("div");
-            holder = holder.parentNode;
+            if (holder !== fragment) {
+                holder = holder.parentNode;
+            }
             // Ensure the user can always edit below the block
             openParagraph();
         }
@@ -2150,12 +2152,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
 
         while (element !== _fragment) {
             var tag = element.tagName.toLowerCase();
-            if (tag === stopTag) {
-                holder = element;
-                return;
-            }
             var method = null;
             switch (tag) {
+            case stopTag:
+            case "div":
+                holder = element;
+                return;
             case "p":
                 method = closeParagraph;
                 break;
