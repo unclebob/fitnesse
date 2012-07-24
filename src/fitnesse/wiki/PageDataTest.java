@@ -196,4 +196,15 @@ public class PageDataTest extends RegexTestCase {
 
     assertEquals("Joe", data.getAttribute(LAST_MODIFYING_USER));
   }
+
+  public void testAllowsContentContainingCarriageReturns() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    String content = "|a|\n|table|";
+    WikiPage pageWithUnixLineEndings = crawler.addPage(root, PathParser.parse("PageName"), content);
+    
+    String contentWithCarriageReturns = content.replaceAll("\n", "\r\n");
+    WikiPage pageWithDosLineEndings = crawler.addPage(root, PathParser.parse("PageName2"), contentWithCarriageReturns);
+    
+    assertEquals(pageWithUnixLineEndings.getData().getHtml(), pageWithDosLineEndings.getData().getHtml());
+  }
 }
