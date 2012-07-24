@@ -173,11 +173,11 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public String getContent() {
-    return StringUtil.stripCarriageReturns(content);
+    return content;
   }
 
   public void setContent(String content) {
-    this.content = content;
+    this.content = StringUtil.stripCarriageReturns(content);
   }
 
   /* this is the public entry to page parse and translate */
