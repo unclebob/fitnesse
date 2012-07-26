@@ -7,6 +7,10 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 
+import fitnesse.slim.EnumConverter;
+
+import fitnesse.slim.test.AnEnum;
+
 public class ConverterRegistryTest {
 
   @Test
@@ -22,6 +26,11 @@ public class ConverterRegistryTest {
 
     Converter converter = ConverterRegistry.getConverterForClass(CustomClass.class);
     assertEquals("customConverter", converter.toString(new CustomClass()));
+  }
+  
+  @Test
+  public void defaultEnumConversion() {
+    assertTrue(ConverterRegistry.getConverterForClass(AnEnum.class) instanceof EnumConverter);
   }
 
   static class CustomClass {

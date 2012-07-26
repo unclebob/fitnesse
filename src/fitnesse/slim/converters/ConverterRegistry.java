@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.EnumConverter;
+
 import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
@@ -37,9 +39,16 @@ public class ConverterRegistry {
     addConverter(Double[].class, new DoubleArrayConverter());
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
-    return (Converter<T>) converters.get(clazz);
+    Converter converter = converters.get(clazz);
+    
+    if (converter != null)
+      return converter;
+    else if (Enum.class.isAssignableFrom(clazz))
+      return new EnumConverter(clazz);
+    else
+      return null;
   }
 
   public static <T> void addConverter(Class<? extends T> clazz, Converter<T> converter) {

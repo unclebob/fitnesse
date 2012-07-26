@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.DateConverter;
+import fitnesse.slim.test.AnEnum;
 import org.junit.Test;
 
 public class ConverterTest {
@@ -40,11 +41,16 @@ public class ConverterTest {
     assertConverts("false", converter, "x");
   }
 
-    private <T> void assertConverts(Converter<T> converter, String value) {
+  @Test
+  public void convertEnum() throws Exception {
+    assertConverts(new EnumConverter<AnEnum>(AnEnum.class), "ONE_VALUE");
+  }
+
+  private <T> void assertConverts(Converter<T> converter, String value) {
     assertConverts(value, converter, value);
   }
 
-    private <T> void assertConverts(String expected, Converter<T> converter, String value) {
+  private <T> void assertConverts(String expected, Converter<T> converter, String value) {
     assertEquals(expected, converter.toString(converter.fromString(value)));
   }
 }
