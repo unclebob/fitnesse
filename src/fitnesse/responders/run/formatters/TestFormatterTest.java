@@ -34,7 +34,7 @@ public class TestFormatterTest {
   }
 
   @Parameterized.Parameters
-  public static Collection formatters() throws Exception {
+  public static Collection<Object[]> formatters() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
     ChunkedResponse response = mock(ChunkedResponse.class);

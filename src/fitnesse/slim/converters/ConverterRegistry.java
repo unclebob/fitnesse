@@ -18,6 +18,7 @@ public class ConverterRegistry {
     addStandardConverters();
   }
 
+  @SuppressWarnings("unchecked")
   protected static void addStandardConverters() {
     addConverter(void.class, new VoidConverter());
     addConverter(String.class, new StringConverter());

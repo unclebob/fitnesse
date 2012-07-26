@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class MultipleTestsRunnerTest {
   private WikiPage root;
   private WikiPage suite;

@@ -6,14 +6,13 @@ import java.util.Arrays;
 
 import fitnesse.slim.Converter;
 
-public class StringArrayConverter implements Converter {
-  public String toString(Object o) {
-    if (o == null) return "null";
-    String[] strings = (String[]) o;
+public class StringArrayConverter implements Converter<String[]> {
+  public String toString(String[] strings) {
+    if (strings == null) return "null";
     return Arrays.asList(strings).toString();
   }
 
-  public Object fromString(String arg) {
+  public String[] fromString(String arg) {
     return ListConverter.fromStringToArrayOfStrings(arg);
   }
 }

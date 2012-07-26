@@ -264,12 +264,12 @@ public class TestSlim implements TestSlimInterface {
     return first + " " + second + " " + third;
   }
 
-  public void setMap(Map map) {
+  public void setMap(Map<String, String> map) {
     System.out.println("set map = " + map);
     this.map = map;
   }
 
-  public Map getMap() {
+  public Map<String, String> getMap() {
     System.out.println("got map = " + map);
     return  map;
   }

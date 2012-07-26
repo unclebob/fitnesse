@@ -8,13 +8,13 @@ import fitnesse.slim.converters.PropertyEditorConverter;
 
 class ConverterSupport {
 
-  public static Converter getConverter(Class<?> k) {
-    Converter c = ConverterRegistry.getConverterForClass(k);
+  public static <T> Converter<T> getConverter(Class<T> k) {
+    Converter<T> c = ConverterRegistry.getConverterForClass(k);
     if (c != null)
       return c;
     PropertyEditor pe = PropertyEditorManager.findEditor(k);
     if (pe != null) {
-      return new PropertyEditorConverter(pe);
+      return new PropertyEditorConverter<T>(pe);
     }
     return null;
   }
@@ -27,12 +27,13 @@ class ConverterSupport {
     return convertedArgs;
   }
 
-  private static Object convertArg(Object arg, Class<?> argumentType) throws SlimError {
+  @SuppressWarnings("unchecked")
+  private static <T> T convertArg(Object arg, Class<T> argumentType) throws SlimError {
     if (arg == null || argumentType.isInstance(arg)) {
       // arg may be a List or an instance that comes from the variable store
-      return arg;
+      return (T) arg;
     }
-    Converter converter = getConverter(argumentType);
+    Converter<T> converter = getConverter(argumentType);
     if (converter != null) {
       return converter.fromString(arg.toString());
     }

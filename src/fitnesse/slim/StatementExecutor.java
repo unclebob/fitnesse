@@ -73,7 +73,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
-  public Converter getConverter(Class<?> k) {
+  public <T> Converter<T> getConverter(Class<T> k) {
     return ConverterSupport.getConverter(k);
   }
 

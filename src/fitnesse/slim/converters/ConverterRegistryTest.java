@@ -15,7 +15,7 @@ public class ConverterRegistryTest {
 
   @Test
   public void checkInitialisationSuccessful() {
-    Converter converter = ConverterRegistry.getConverterForClass(Date.class);
+    Converter<Date> converter = ConverterRegistry.getConverterForClass(Date.class);
     Date converted = (Date) converter.fromString("27-FEB-2012");
     assertNotNull(converted);
   }
@@ -24,7 +24,7 @@ public class ConverterRegistryTest {
   public void useConverterFromCustomizing() {
     ConverterRegistry.addConverter(CustomClass.class, new CustomConverter());
 
-    Converter converter = ConverterRegistry.getConverterForClass(CustomClass.class);
+    Converter<CustomClass> converter = ConverterRegistry.getConverterForClass(CustomClass.class);
     assertEquals("customConverter", converter.toString(new CustomClass()));
   }
   
@@ -37,14 +37,14 @@ public class ConverterRegistryTest {
 
   }
 
-  static class CustomConverter implements Converter {
+  static class CustomConverter implements Converter<CustomClass> {
 
-    public String toString(Object o) {
+    public String toString(CustomClass o) {
       return "customConverter";
     }
 
-    public Object fromString(String arg) {
-      return "customConverter";
+    public CustomClass fromString(String arg) {
+      return new CustomClass();
     }
   }
 }
