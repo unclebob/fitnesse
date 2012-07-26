@@ -1,12 +1,16 @@
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
-  static Map<Class<?>, Converter> converters = new HashMap<Class<?>, Converter>();
+  static Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
 
   static {
     addStandardConverters();
@@ -33,15 +37,16 @@ public class ConverterRegistry {
     addConverter(Double[].class, new DoubleArrayConverter());
   }
 
-  public static Converter getConverterForClass(Class<?> clazz) {
-    return converters.get(clazz);
+  @SuppressWarnings("unchecked")
+  public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
+    return (Converter<T>) converters.get(clazz);
   }
 
-  public static void addConverter(Class<?> clazz, Converter converter) {
+  public static <T> void addConverter(Class<? extends T> clazz, Converter<T> converter) {
     converters.put(clazz, converter);
   }
 
-  public static Map<Class<?>, Converter> getConverters() {
+  public static Map<Class<?>, Converter<?>> getConverters() {
     return Collections.unmodifiableMap(converters);
   }
 }
