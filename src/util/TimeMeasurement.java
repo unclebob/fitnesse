@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class TimeMeasurement {

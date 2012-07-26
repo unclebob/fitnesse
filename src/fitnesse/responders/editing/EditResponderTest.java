@@ -4,8 +4,6 @@ package fitnesse.responders.editing;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;

@@ -1,7 +1,6 @@
 package fitnesse.responders.templateUtilities;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 
 import org.apache.velocity.context.InternalContextAdapter;
@@ -12,13 +11,10 @@ import org.apache.velocity.exception.TemplateInitException;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.log.Log;
-import org.apache.velocity.runtime.parser.node.ASTBlock;
 import org.apache.velocity.runtime.parser.node.Node;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
-import fitnesse.responders.search.ResultResponder;
-import fitnesse.wiki.WikiPage;
 
 public class TraverseDirective extends Directive implements TraversalListener<Object> {
 

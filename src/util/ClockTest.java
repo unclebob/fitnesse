@@ -4,9 +4,6 @@ package util;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
 
 import org.junit.After;
 import org.junit.Test;

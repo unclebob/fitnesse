@@ -5,11 +5,7 @@ package fitnesse.runner;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.components.ContentBuffer;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;

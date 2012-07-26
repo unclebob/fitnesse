@@ -8,7 +8,6 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
@@ -27,7 +26,6 @@ import util.XmlUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
 
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";

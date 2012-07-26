@@ -2,7 +2,6 @@ package fitnesse.slim;
 
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.util.List;
 
 import fitnesse.slim.converters.ConverterRegistry;
 import fitnesse.slim.converters.PropertyEditorConverter;

@@ -5,7 +5,6 @@ package fitnesse.slimTables;
 import java.util.List;
 
 import fitnesse.responders.run.ExecutionResult;
-import fitnesse.responders.run.TestSummary;
 
 public interface Table {
   String getCellContents(int columnIndex, int rowIndex);

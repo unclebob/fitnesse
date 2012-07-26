@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import util.Maybe;
 

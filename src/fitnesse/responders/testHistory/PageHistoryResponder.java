@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -22,8 +21,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.ExecutionReport;
 import fitnesse.responders.run.ExecutionResult;
-import fitnesse.responders.run.ExecutionResultTest;
-import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;

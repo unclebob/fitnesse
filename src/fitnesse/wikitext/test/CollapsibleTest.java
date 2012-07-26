@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.parser.Collapsible;
 import org.junit.Test;
 
 public class CollapsibleTest {
