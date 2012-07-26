@@ -141,7 +141,7 @@ public abstract class SlimServiceTestBase {
   public void callFunctionThatReturnsHugeResult() throws Exception {
     addImportAndMake();
     statements.add(list("id", "call", "testSlim", "returnHugeString"));
-    Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
+    slimClient.invokeAndGetResponse(statements);
     // should not crash
   }
 

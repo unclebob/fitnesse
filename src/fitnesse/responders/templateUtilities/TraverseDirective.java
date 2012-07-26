@@ -10,7 +10,6 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.TemplateInitException;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
-import org.apache.velocity.runtime.log.Log;
 import org.apache.velocity.runtime.parser.node.Node;
 
 import fitnesse.components.TraversalListener;
@@ -18,7 +17,6 @@ import fitnesse.components.Traverser;
 
 public class TraverseDirective extends Directive implements TraversalListener<Object> {
 
-    private Log log;
     private InternalContextAdapter context;
     private Node node;
     private Writer writer;
@@ -37,7 +35,6 @@ public class TraverseDirective extends Directive implements TraversalListener<Ob
     @Override
     public void init(RuntimeServices rs, InternalContextAdapter context, Node node) throws TemplateInitException {
         super.init(rs, context, node);
-        log = rs.getLog();
     }
 
     public boolean render(InternalContextAdapter context, Writer writer, Node node) 

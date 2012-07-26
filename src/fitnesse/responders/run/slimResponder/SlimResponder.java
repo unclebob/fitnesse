@@ -25,7 +25,6 @@ responders in general.
 */
 public abstract class SlimResponder implements Responder, TestSystemListener {
   private boolean slimOpen = false;
-  private ExecutionLog log;
   private boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
@@ -65,7 +64,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), context.pageFactory, false);
       System.out.println("test runner: " + descriptor.testRunner);
       try {
-        log = testSystem.getExecutionLog(classPath, descriptor);
+        testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();
         testSystem.setFastTest(fastTest);
         html = testSystem.runTestsAndGenerateHtml(pageData);

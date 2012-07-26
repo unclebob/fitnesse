@@ -20,7 +20,6 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
 public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser {
-  private int alternation = 0;
   private boolean isUpdate;
   private boolean isNonRoot;
   public PageData data;

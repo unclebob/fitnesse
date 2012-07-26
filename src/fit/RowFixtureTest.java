@@ -86,6 +86,8 @@ public class RowFixtureTest extends TestCase {
   }
 
   private class SimpleBusinessObject {
+    /** referenced via reflection */
+    @SuppressWarnings("unused")
     public int field;
   }
 

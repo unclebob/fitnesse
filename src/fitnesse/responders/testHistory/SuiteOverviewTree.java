@@ -5,9 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
-import util.GracefulNamer;
-
 import fitnesse.wiki.WikiPage;
+import util.GracefulNamer;
 
 public class SuiteOverviewTree {
 
@@ -117,7 +116,6 @@ public class SuiteOverviewTree {
 
     private double calcPercentOfTotalTests(int value) {
       int totalTests = testsPassed + testsUnrun + testsFailed;
-      double doubleValue = value;
       return ((double)(Math.round(((1000.0 * value)/totalTests))))/10;
     }
 

@@ -24,7 +24,6 @@ public class MergeResponder implements Responder {
   private String newContent;
   private String existingContent;
   private String resource;
-  private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
 
   public MergeResponder(Request request) {
     this.request = request;

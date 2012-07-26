@@ -43,7 +43,6 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
-  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -65,7 +64,7 @@ public class SuiteResponderTest {
     context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, context.socketDealer);
-    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
   }
   
   @After

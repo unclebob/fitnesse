@@ -161,7 +161,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   private class TimeoutRunnable implements Runnable {
-    long timeSlept = 0;
 
     public void run() {
       try {

@@ -6,7 +6,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
 public class NewPageResponderTest extends RegexTestCase {
@@ -14,12 +13,10 @@ public class NewPageResponderTest extends RegexTestCase {
   private WikiPage root;
   private MockRequest request;
   private NewPageResponder responder;
-  private PageCrawler crawler;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new NewPageResponder();
   }

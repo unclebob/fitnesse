@@ -11,7 +11,6 @@ import org.apache.velocity.app.VelocityEngine;
 
 public class HtmlPage {
   private static final String HEADER_TEMPLATE = "pageTitle.vm";
-  private static final String TITLE = "FitNesse";
 
   private VelocityEngine velocityEngine;
   private VelocityContext velocityContext;

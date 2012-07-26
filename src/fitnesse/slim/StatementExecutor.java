@@ -28,7 +28,6 @@ public class StatementExecutor implements StatementExecutorInterface {
   private List<String> paths = new ArrayList<String>();
 
   private boolean stopRequested = false;
-  private String lastActor;
 
   public StatementExecutor() {
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);

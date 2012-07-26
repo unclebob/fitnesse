@@ -145,7 +145,6 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   private Response makeResponse() {
-    StringWriter writer = new StringWriter();
     response.setContent(page.html());
     return response;
   }
