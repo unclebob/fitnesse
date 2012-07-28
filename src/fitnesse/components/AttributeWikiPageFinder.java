@@ -113,6 +113,11 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
 
   private boolean pageIsOfRequestedPageType(WikiPage page,
       List<PageType> requestedPageTypesEnum) {
+	
+	if (requestedPageTypesEnum == null || requestedPageTypesEnum.isEmpty()) {
+		return true;
+	}
+	
     PageType pageType = PageType.fromWikiPage(page);
 
     return (requestedPageTypesEnum.contains(pageType));
