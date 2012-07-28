@@ -107,10 +107,10 @@
    #end
    <tr>
     <td>
-     <input type="text" name="linkName"/>
+     <input type="text" name="linkName" size="30"/>
     </td>
     <td>
-     <input type="text" name="linkPath"/>
+     <input type="text" name="linkPath" size="70"/>
     </td>
     <td>
      <input type="submit" name="submit" value="Create/Replace"/>
