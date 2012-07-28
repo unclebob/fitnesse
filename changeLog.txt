@@ -1,3 +1,6 @@
+20120208 JAmes Atwill
+ * Force the TCP port that Slim uses by passing -Dslim.port= on command line (or any means of setting the system property)
+
 20110923 Dan Rollo
  maven pom.xml cleanups:
  * Remove unneeded default <groupId> tags.

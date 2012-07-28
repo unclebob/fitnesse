@@ -135,10 +135,18 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public int getNextSlimSocket() {
-    int base = getSlimPortBase();
+    int base;
+
+    if (System.getProperty("slim.port") != null) {
+      base = Integer.parseInt(System.getProperty("slim.port"));
+    } else {
+      base = getSlimPortBase();
+    }
+
     if (base == 0) {
       return findFreePort();
     }
+    
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
       offset = (offset + 1) % 10;

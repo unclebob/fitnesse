@@ -14,3 +14,6 @@ There are several commands you can run to control the FitNesse wiki, as shown be
 }}}
 
 You can find more information on the -c options at CommandLineRestCommands.
+
+If you are using SliM, you can also pass in -Dslim.port to hard code the port that the SliM server uses.  This can be used in conjunction with Jenkins Port Allocator Plugin or the reserver-network-port mojo of the Maven build-helper plugin.
+
