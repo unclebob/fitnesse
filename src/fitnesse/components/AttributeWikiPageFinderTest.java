@@ -76,8 +76,15 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     page.commit(pageData);
   }
 
+  private void setPageProperty(WikiPage page, String propertyName) {
+    PageData pageData = page.getData();
+    pageData.setAttribute(propertyName);
+    page.commit(pageData);
+  }
+
+
   private void setPageProperty(WikiPage page, String propertyName,
-      String propertyValue) throws Exception {
+      String propertyValue) {
     PageData pageData = page.getData();
     pageData.setAttribute(propertyName, propertyValue);
     page.commit(pageData);
@@ -93,14 +100,15 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     assertFalse(searcher.pageMatches(page));
 
     attributes.put(SUITE.toString(), false);
-    setPageProperty(page, TEST.toString(), "true");
+    setPageProperty(page, TEST.toString());
     assertTrue(searcher.pageMatches(page));
 
+    // No attributes set, so no settings are taken into account
     attributes.put(TEST.toString(), false);
-    assertFalse(searcher.pageMatches(page));
+    assertTrue(searcher.pageMatches(page));
 
     removePageProperty(page, TEST.toString());
-    setPageProperty(page, SUITE.toString(), "true");
+    setPageProperty(page, SUITE.toString());
     assertFalse(searcher.pageMatches(page));
   }
 
@@ -111,7 +119,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
-    setPageProperty(page, TEST.toString(), "true");
+    setPageProperty(page, TEST.toString());
     assertTrue(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -134,7 +142,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
-    setPageProperty(page, TEST.toString(), "true");
+    setPageProperty(page, TEST.toString());
     assertFalse(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -157,7 +165,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
     List<PageType> pageTypes = Arrays.asList(SUITE, TEST, STATIC);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
-    setPageProperty(page, TEST.toString(), "true");
+    setPageProperty(page, TEST.toString());
     assertTrue(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -180,7 +188,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
-    setPageProperty(page, TEST.toString(), "true");
+    setPageProperty(page, TEST.toString());
     assertFalse(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -253,7 +261,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     assertTrue(searcher.attributeMatchesInput(false, false));
     assertTrue(searcher.attributeMatchesInput(true, true));
     assertFalse(searcher.attributeMatchesInput(false, true));
-    assertFalse(searcher.attributeMatchesInput(true, false));
+    assertTrue(searcher.attributeMatchesInput(true, false));
   }
 
   @Test
