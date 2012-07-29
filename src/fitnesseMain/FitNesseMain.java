@@ -113,6 +113,7 @@ public class FitNesseMain {
     extraOutput += componentFactory.loadResponders(context.responderFactory);
     extraOutput += componentFactory.loadSymbolTypes();
     extraOutput += componentFactory.loadContentFilter();
+    extraOutput += componentFactory.loadSlimTables();
 
     context.root = wikiPageFactory.makeRootPage(context.rootPath,
       context.rootDirectoryName, componentFactory);
