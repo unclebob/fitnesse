@@ -31,7 +31,7 @@ public class SlimTableFactory {
     if (tableTypes.get(nameOrPrefix) != null) {
     	throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
     }
-	tableTypes.put(nameOrPrefix, tableClass);
+	tableTypes.put(nameOrPrefix.toLowerCase(), tableClass);
   }
 
   public SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {
