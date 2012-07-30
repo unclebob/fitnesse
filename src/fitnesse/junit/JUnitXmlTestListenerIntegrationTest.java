@@ -7,8 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 
 import util.TimeMeasurement;
 
@@ -26,7 +25,24 @@ public class JUnitXmlTestListenerIntegrationTest {
         "<properties></properties>"+
         "<testcase classname=\"FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim\""+ 
         " time=\"[0-9\\.]*\" name=\"FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim\">"+
-        "</testcase></testsuite>";    
+        "</testcase></testsuite>";
+
+  @Before
+  public void setup() {
+    /* TODO: Horrible Hack.
+    When this test is run, as part of the full suite, from IntelliJ, then there
+    are apparently some left over slim servers running, and so the JUnitHelper gets a socket bind exception because
+    it can't find a free port in the default range.  So I changed the default slim port _just_ for this test.
+    If someone could figure out why this is necessary I'd be grateful.
+    */
+    System.setProperty("slim.port", "8200");
+  }
+
+  @After
+  public void tearDown() {
+    System.clearProperty("slim.port");
+  }
+
   @Test  
   public void checkJunitXmlTestListenerPrintsXmlFiles() throws Exception{
     JUnitHelper helper = new JUnitHelper(fitNesseRootDir,htmlOutputDir,xmlTestListener);
