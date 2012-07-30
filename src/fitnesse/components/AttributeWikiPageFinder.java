@@ -112,6 +112,11 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
 
   private boolean pageIsOfRequestedPageType(WikiPage page,
       List<PageType> requestedPageTypesEnum) {
+	
+	if (requestedPageTypesEnum == null || requestedPageTypesEnum.isEmpty()) {
+		return true;
+	}
+	
     PageType pageType = PageType.fromWikiPage(page);
 
     return (requestedPageTypesEnum.contains(pageType));
@@ -119,7 +124,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
 
   protected boolean attributeMatchesInput(boolean attributeSet,
       boolean inputValueOn) {
-    return attributeSet == inputValueOn;
+    return !inputValueOn || attributeSet == inputValueOn;
   }
 
   private boolean suitesMatchInput(PageData pageData, List<String> suites) {
