@@ -5,6 +5,8 @@ package fitnesse.slim;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Uses Slim Serialization.  See ListSerializer for details.  Will deserialize lists of lists recursively.
  */
@@ -74,10 +76,27 @@ public class ListDeserializer {
   private void deserializeItem() {
     int itemLength = getLength();
     String item = getString(itemLength);
-    if (item.startsWith("["))
-      result.add(ListDeserializer.deserialize(item));
-    else
+    List<Object> sublist = maybeReadList(item);
+    
+    if (sublist == null)
       result.add(item);
+    else
+      result.add(sublist);
+  }
+
+  /**
+   * @return the string parsed as a list if possible, null otherwise  
+   */
+  private List<Object> maybeReadList(String string) {
+    if (StringUtils.isBlank(string) || !string.startsWith("[")) {
+      return null;
+    }
+    
+    try {
+      return ListDeserializer.deserialize(string);
+    } catch (SyntaxError e) {
+      return null;
+    }
   }
 
   private String getString(int length) {
