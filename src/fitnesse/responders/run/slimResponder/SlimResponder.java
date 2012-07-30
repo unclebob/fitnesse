@@ -12,7 +12,6 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
