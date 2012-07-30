@@ -8,9 +8,9 @@ import java.util.List;
 public abstract class WikiPageFinder implements TraversalListener<WikiPage>, PageFinder {
 
   protected List<WikiPage> hits;
-  protected TraversalListener observer;
+  protected TraversalListener<? super WikiPage> observer;
 
-  protected WikiPageFinder(TraversalListener observer) {
+  protected WikiPageFinder(TraversalListener<? super WikiPage> observer) {
     this.observer = observer;
   }
 

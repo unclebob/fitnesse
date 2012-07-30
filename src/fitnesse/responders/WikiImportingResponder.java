@@ -19,13 +19,13 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
-public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser {
+public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser<Object> {
   private boolean isUpdate;
   private boolean isNonRoot;
   public PageData data;
 
   private WikiImporter importer = new WikiImporter();
-  private TraversalListener traversalListener;
+  private TraversalListener<Object> traversalListener;
 
   public void setImporter(WikiImporter importer) {
     this.importer = importer;
@@ -43,7 +43,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   }
   
   @Override
-  public void traverse(TraversalListener traversalListener) {
+  public void traverse(TraversalListener<Object> traversalListener) {
     this.traversalListener = traversalListener;
     try {
       if (isNonRoot) {

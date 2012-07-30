@@ -38,7 +38,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return true;
   }
 
-  public AttributeWikiPageFinder(TraversalListener observer,
+  public AttributeWikiPageFinder(TraversalListener<? super WikiPage> observer,
       List<PageType> requestedPageTypes, Map<String, Boolean> attributes,
       List<String> suites) {
     super(observer);
@@ -48,7 +48,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     this.suites = suites;
   }
 
-  public AttributeWikiPageFinder(TraversalListener observer,
+  public AttributeWikiPageFinder(TraversalListener<? super WikiPage> observer,
       List<PageType> pageTypes, Map<String, Boolean> attributes, String suites) {
     this(observer, pageTypes, attributes, splitSuitesIntoArray(suites));
   }

@@ -14,7 +14,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SecureResponder, Traverser {
+  SecureResponder, Traverser<Object> {
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
@@ -52,7 +52,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getTitle() ;
 
-  public abstract void traverse(TraversalListener observer);
+  public abstract void traverse(TraversalListener<Object> observer);
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();

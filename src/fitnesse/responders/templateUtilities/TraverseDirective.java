@@ -20,7 +20,6 @@ public class TraverseDirective extends Directive implements TraversalListener<Ob
     private InternalContextAdapter context;
     private Node node;
     private Writer writer;
-    private Traverser traverser;
 
     @Override
     public String getName() {
@@ -42,8 +41,10 @@ public class TraverseDirective extends Directive implements TraversalListener<Ob
 
       this.context = context;
       this.writer = writer;
-      this.traverser = (Traverser) node.jjtGetChild(0).value(context);
       this.node = node.jjtGetChild(1);
+      
+      @SuppressWarnings("unchecked")
+      Traverser<Object> traverser = (Traverser<Object>) node.jjtGetChild(0).value(context);
       
       traverser.traverse(this);
       
