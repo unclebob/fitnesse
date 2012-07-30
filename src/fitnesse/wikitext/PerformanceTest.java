@@ -1,5 +1,12 @@
 package fitnesse.wikitext;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fitnesse.slim.ListDeserializer;
+
+import fitnesse.slim.ListSerializer;
+
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.test.TestRoot;
@@ -43,4 +50,21 @@ public class PerformanceTest {
         //System.out.println(result);
         assertEquals("done", "done");
     }
+
+    /** For dramatic effect, run in debug mode */
+    @Test
+    public void listDeserializationTest() {
+      List<Object> objects = new ArrayList<Object>();
+      for (int i = 0; i < 10000; i++) {
+        objects.add(new String("This is string " + i));
+      }
+      final String serializedList = ListSerializer.serialize(objects);
+
+      long start = System.currentTimeMillis();
+      List<Object> result = ListDeserializer.deserialize(serializedList);
+      System.out.println(System.currentTimeMillis() - start);
+
+      assertEquals(objects, result);
+    }
+
 }
