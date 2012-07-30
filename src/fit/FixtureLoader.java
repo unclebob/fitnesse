@@ -16,18 +16,32 @@ import fit.exception.NoSuchFixtureException;
 // REFACTOR The fixture path is really the only part of this
 
 // class that needs to be globally accessible.
-public class FixtureLoader {
-  private static FixtureLoader instance;
+public class FixtureLoader implements FixtureLoaderInterface {
+  private static FixtureLoaderInterface instance = null;
 
-  public static FixtureLoader instance() {
+  public static FixtureLoaderInterface instance() {
     if (instance == null) {
-      instance = new FixtureLoader();
+      instance = instanceForClassName(System.getProperty(FixtureLoader.class.getName()));
     }
-
     return instance;
   }
 
-  public static void setInstance(FixtureLoader loader) {
+  protected static FixtureLoaderInterface instanceForClassName(String fixtureLoaderClassName) {
+    if(fixtureLoaderClassName!=null && !fixtureLoaderClassName.isEmpty()) {
+      try {
+        return (FixtureLoaderInterface)Class.forName(fixtureLoaderClassName).newInstance();
+      } catch (Exception ex) {
+        // Possible exceptions are:
+        // - Class cannot be found 
+        // - Class cannot be instantiated (i.e. doesn't have a no arg constructor)
+        // - Class does not implement the FixtureLoaderInterface
+        ex.printStackTrace(System.err); // Don't know what to do so just print it
+      }
+    }
+    return new FixtureLoader();
+  }
+
+  public static void setInstance(FixtureLoaderInterface loader) {
     instance = loader;
   }
 
@@ -39,6 +53,7 @@ public class FixtureLoader {
     }
   };
 
+  @Override
   public Fixture disgraceThenLoad(String tableName) throws Throwable {
     FixtureName fixtureName = new FixtureName(tableName);
     Fixture fixture = instantiateFirstValidFixtureClass(fixtureName);
@@ -52,6 +67,7 @@ public class FixtureLoader {
       addPackageToPath(fixturePackage.getName());
   }
 
+  @Override
   public void addPackageToPath(String name) {
     fixturePathElements.add(name);
   }
