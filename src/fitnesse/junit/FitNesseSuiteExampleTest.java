@@ -12,6 +12,7 @@ import fitnesse.junit.FitNesseSuite.OutputDir;
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
 @FitnesseDir(".")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
+
 public class FitNesseSuiteExampleTest {
 
   @Test
