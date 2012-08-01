@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -181,16 +182,16 @@ public class TestSlim implements TestSlimInterface {
     return new NoSuchConverter();
   }
 
-  public void setStringArray(String array[]) {
-    stringArray = array;
+  public void setStringArray(String[] array) {
+    stringArray = Arrays.copyOf(array, array.length);
   }
 
   public String[] getStringArray() {
     return stringArray;
   }
 
-  public void setIntegerArray(Integer array[]) {
-    integerArray = array;
+  public void setIntegerArray(Integer[] array) {
+    integerArray = Arrays.copyOf(array, array.length);
   }
 
   public Integer[] getIntegerArray() {
@@ -202,7 +203,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public void setBooleanArray(Boolean[] booleanArray) {
-    this.booleanArray = booleanArray;
+    this.booleanArray = Arrays.copyOf(booleanArray, booleanArray.length);
   }
 
   public Double[] getDoubleArray() {
@@ -210,7 +211,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public void setDoubleArray(Double[] doubleArray) {
-    this.doubleArray = doubleArray;
+    this.doubleArray = Arrays.copyOf(doubleArray, doubleArray.length);
   }
 
   public String nullString() {

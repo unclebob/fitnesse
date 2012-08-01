@@ -2,10 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import util.StringUtil;
+import java.util.Arrays;
 
 public class SimpleResponse extends Response {
   private byte[] content = new byte[0];
@@ -34,7 +31,7 @@ public class SimpleResponse extends Response {
   }
 
   public void setContent(byte[] value) {
-    content = value;
+    content = Arrays.copyOf(value, value.length);
   }
 
   @Override

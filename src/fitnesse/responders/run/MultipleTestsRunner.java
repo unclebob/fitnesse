@@ -7,11 +7,10 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.WikiPage;
+import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.util.*;
-
-import util.TimeMeasurement;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -30,7 +29,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
-  
+
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
@@ -54,8 +53,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     try {
       internalExecuteTestPages();
       allTestingComplete();
-    }
-    catch (Exception exception) {
+    } catch (Exception exception) {
       //hoped to write exceptions to log file but will take some work.
       exception.printStackTrace(System.out);
       exceptionOccurred(exception);
@@ -80,12 +78,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
-        List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
-        startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
+      List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
+      startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
     }
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
   }
-  
+
   private boolean useManualStartForTestSystem() {
     if (isRemoteDebug) {
       String useManualStart = page.readOnlyData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
@@ -100,14 +98,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       if (!isStopped) {
         testSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
         resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
-      } else {
       }
     }
     if (testSystem != null) {
       if (testSystem.isSuccessfullyStarted()) {
         executeTestSystemPages(testSystemPages, testSystem);
         waitForTestSystemToSendResults();
-      } else {
       }
 
       synchronized (this) {
@@ -115,7 +111,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
           testSystem.bye();
         }
       }
-    } else {
     }
   }
 
@@ -199,8 +194,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
   }
 
-  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-    {
+  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) {
     List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }
@@ -219,7 +213,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }
-  
+
   public void testComplete(TestSummary testSummary) throws IOException {
     TestPage testPage = processingQueue.removeFirst();
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
@@ -229,8 +223,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     try {
       resultsListener.errorOccured();
       stop();
-    }
-    catch (Exception e1) {
+    } catch (Exception e1) {
       if (isNotStopped()) {
         e1.printStackTrace();
       }
