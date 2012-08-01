@@ -61,7 +61,7 @@ class FitMatcher {
   public String message() {
     String message = null;
     String parmString = "<b>" + parameter.toString() + "</b>";
-    if (expression.indexOf("_") == -1)
+    if (!expression.contains("_"))
       message = parmString + expression;
     else
       message = expression.replaceFirst("_", parmString);

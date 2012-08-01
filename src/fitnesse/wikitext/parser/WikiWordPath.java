@@ -26,7 +26,7 @@ public class WikiWordPath {
     }
     public int findLength(String text) {
         String candidate = text + ".";
-        int offset = "<>^.".indexOf(candidate.substring(0, 1)) >= 0 ? 1 : 0;
+        int offset = "<>^.".contains(candidate.substring(0, 1)) ? 1 : 0;
         while (offset < candidate.length()) {
             int dot = candidate.indexOf(".", offset);
             int word = wikiWordLength(candidate.substring(offset, dot));

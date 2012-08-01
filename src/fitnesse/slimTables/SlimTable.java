@@ -2,10 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.wikitext.Utils;
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.toUpperCase;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
   private String tableName;
@@ -147,7 +147,7 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName(String tableHeader) {
-    if (tableHeader.indexOf(":") == -1)
+    if (!tableHeader.contains(":"))
       return tableHeader;
     return tableHeader.split(":")[1];
   }
@@ -655,7 +655,7 @@ public abstract class SlimTable {
         String expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else if (actual.indexOf("Exception:") != -1) {
+        else if (actual.contains("Exception:")) {
           evaluationMessage = error(actual);
         } else
           evaluationMessage = failMessage(actual,

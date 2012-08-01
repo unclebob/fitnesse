@@ -40,7 +40,7 @@ public class ScientificDouble extends Number implements Comparable<Number> {
     if ((pos = s.toLowerCase().indexOf("e")) >= 0) {
       return tweak(s.substring(0, pos)) + s.substring(pos);
     }
-    if (s.indexOf(".") >= 0) {
+    if (s.contains(".")) {
       return s + "5";
     }
     return s + ".5";
