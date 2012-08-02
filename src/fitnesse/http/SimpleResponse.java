@@ -45,7 +45,7 @@ public class SimpleResponse extends Response {
   }
 
   public byte[] getContentBytes() {
-    return content;
+    return Arrays.copyOf(content, content.length);
   }
 
   @Override

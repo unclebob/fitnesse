@@ -1,11 +1,12 @@
 package fitnesse.fixtures;
 
-import java.util.Date;
+import static fitnesse.fixtures.FitnesseFixtureContext.context;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import static fitnesse.fixtures.FitnesseFixtureContext.*;
 import fitnesse.responders.testHistory.TestHistory;
 
 public class PageHistory {
@@ -22,7 +23,7 @@ public class PageHistory {
   }
 
   public void setDate(Date date) {
-    this.date = date;
+    this.date = new Date(date.getTime());
   }
 
   public void setRight(int right) {

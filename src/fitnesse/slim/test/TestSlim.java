@@ -85,7 +85,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public void oneDate(Date arg) {
-    dateArg = arg;
+    dateArg = new Date(arg.getTime());
   }
 
   public void oneList(List<Object> l) {
@@ -101,7 +101,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public Date getDateArg() {
-    return dateArg;
+    return new Date(dateArg.getTime());
   }
   
   public void oneInt(int arg) {
@@ -187,7 +187,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public String[] getStringArray() {
-    return stringArray;
+    return Arrays.copyOf(stringArray, stringArray.length);
   }
 
   public void setIntegerArray(Integer[] array) {
@@ -195,11 +195,11 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public Integer[] getIntegerArray() {
-    return integerArray;
+    return Arrays.copyOf(integerArray, integerArray.length);
   }
 
   public Boolean[] getBooleanArray() {
-    return booleanArray;
+    return Arrays.copyOf(booleanArray, booleanArray.length);
   }
 
   public void setBooleanArray(Boolean[] booleanArray) {
@@ -207,7 +207,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public Double[] getDoubleArray() {
-    return doubleArray;
+    return Arrays.copyOf(doubleArray, doubleArray.length);
   }
 
   public void setDoubleArray(Double[] doubleArray) {

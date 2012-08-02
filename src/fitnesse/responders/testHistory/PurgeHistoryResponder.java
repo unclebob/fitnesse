@@ -1,5 +1,10 @@
 package fitnesse.responders.testHistory;
 
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -10,11 +15,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import util.Clock;
 import util.FileUtil;
-
-import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PurgeHistoryResponder implements SecureResponder {
   private File resultsDirectory;
@@ -76,7 +76,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   public void setTodaysDate(Date date) {
-    todaysDate = date;
+    todaysDate = new Date(date.getTime());
   }
 
   public void deleteTestHistoryOlderThanDays(int days) {

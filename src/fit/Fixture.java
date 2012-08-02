@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -319,7 +320,7 @@ public class Fixture {
   }
 
   public String[] getArgs() {
-    return args;
+    return Arrays.copyOf(args, args.length);
   }
 
   public static void setSymbol(String name, Object value) {
