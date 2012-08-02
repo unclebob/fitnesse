@@ -2,15 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
-
-import java.io.IOException;
-import java.util.*;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -77,10 +83,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
-    for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
-      List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
-      startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
+
+    for (Map.Entry<TestSystem.Descriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
+      startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
     }
+
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
   }
 
