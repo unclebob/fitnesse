@@ -171,7 +171,7 @@ public abstract class SlimTable {
       arguments.add(table.getUnescapedCellContents(col, row));
       addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
     }
-    return arguments.toArray(new String[0]);
+    return arguments.toArray(new String[arguments.size()]);
   }
 
   protected void addCall(List<Object> instruction, String instanceName, String functionName) {

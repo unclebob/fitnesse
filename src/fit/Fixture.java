@@ -146,7 +146,7 @@ public class Fixture {
     for (; parameters != null; parameters = parameters.more)
       argumentList.add(parameters.text());
 
-    args = (String[]) argumentList.toArray(new String[0]);
+    args = argumentList.toArray(new String[argumentList.size()]);
   }
 
   public void doTable(Parse table) {
