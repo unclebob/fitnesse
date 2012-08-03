@@ -78,10 +78,10 @@ public class HtmlTag extends HtmlElement {
   }
 
   protected String makeIndent(int depth) {
-    String indent = "";
+    StringBuilder indent = new StringBuilder();
     for (int i = 0; i < depth; i++)
-      indent += '\t';
-    return indent;
+      indent.append('\t');
+    return indent.toString();
   }
 
   public static class Attribute {
@@ -173,11 +173,11 @@ public class HtmlTag extends HtmlElement {
     }
 
     private String makeAttributes() {
-      String attributes = "";
+      StringBuilder attributes = new StringBuilder();
       for (Attribute attribute : HtmlTag.this.attributes) {
-        attributes += " " + attribute.name + "=\"" + attribute.value + "\"";
+        attributes.append(" ").append(attribute.name).append("=\"").append(attribute.value).append("\"");
       }
-      return attributes;
+      return attributes.toString();
     }
 
     private String makeTag() {

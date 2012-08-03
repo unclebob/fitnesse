@@ -1,7 +1,8 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.html.HtmlElement;
 import org.junit.Test;
+
+import fitnesse.html.HtmlElement;
 
 public class ListTest {
     @Test
@@ -37,9 +38,9 @@ public class ListTest {
     }
 
     private String indent(int level) {
-        String result = "";
-        for (int i = 0; i < level; i++) result += "\t";
-        return result;
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < level; i++) result.append("\t");
+        return result.toString();
     }
 
     @Test

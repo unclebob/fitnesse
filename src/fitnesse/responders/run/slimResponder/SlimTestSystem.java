@@ -299,9 +299,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     testResults = pageData;
 
     boolean runAllTablesAtOnce = false;
-    String htmlResults = "";
+    StringBuilder htmlResults = new StringBuilder();
     if (runAllTablesAtOnce || (allTables.size() == 0)) {
-      htmlResults = processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST);
+      htmlResults.append(processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST));
     } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
@@ -310,11 +310,11 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
         oneTableList.add(theTable);
-        htmlResults += processTablesAndGetHtml(oneTableList, startWithTable, nextTable);
+        htmlResults.append(processTablesAndGetHtml(oneTableList, startWithTable, nextTable));
         oneTableList.clear();
       }
     }
-    return htmlResults;
+    return htmlResults.toString();
   }
 
   protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
@@ -505,10 +505,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private String getScenarioLibraryContent() {
-    String content = "!*> Precompiled Libraries\n\n";
-    content += includeUncleLibraries();
-    content += "*!\n";
-    return content;
+    StringBuilder content = new StringBuilder("!*> Precompiled Libraries\n\n");
+    content.append(includeUncleLibraries());
+    content.append("*!\n");
+    return content.toString();
   }
 
   private String includeUncleLibraries() {
