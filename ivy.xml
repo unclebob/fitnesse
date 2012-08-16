@@ -18,7 +18,6 @@
 		<artifact name="fitnesse" type="source" ext="jar" e:classifier="sources" />
 		<artifact name="fitnesse" type="javadoc" ext="jar" e:classifier="javadoc" />
 		<artifact name="fitnesse-standalone" type="jar" ext="jar" />
-
 	</publications>
  
 	<dependencies>

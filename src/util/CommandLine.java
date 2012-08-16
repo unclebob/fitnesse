@@ -49,6 +49,7 @@ public class CommandLine extends Option {
         currentOption.addArgument(arg);
       else // too many args
         successfulParse = false;
+
     }
     if (successfulParse && currentOption.needsMoreArguments())
       successfulParse = false;

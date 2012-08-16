@@ -647,6 +647,8 @@ public abstract class SlimTable {
 
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
+      else if (actual.equals("----mockingOnly----"))
+        evaluationMessage = pass("----mockingOnly----");
       else if (actual.equals(replacedExpected))
         evaluationMessage = pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
       else if (replacedExpected.length() == 0)

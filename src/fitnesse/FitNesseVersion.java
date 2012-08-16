@@ -10,7 +10,11 @@ public class FitNesseVersion {
   private final String version;
 	
   public FitNesseVersion() {
+<<<<<<< HEAD
+    this("v20120715");
+=======
     this("v20120730");
+>>>>>>> e8bcc085675df2b5d369e251804330ccfcee2804
   }
 
   public FitNesseVersion(String version) {
