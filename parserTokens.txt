@@ -1,0 +1,52 @@
+ *  unordered list
+ n ordered list
+!( nesting
+!* collapsible
+!- literal
+!1 to !6 header
+![ plain text table
+!anchor anchor name
+!c !C center
+!contents
+!define
+!help
+!img
+!include
+!lastmodified
+!meta
+!note
+!path
+!see
+!style_
+!today
+!{ hash table
+!| table
+# comment
+${ variable
+${= evaluate
+'' italic
+''' bold
+( open parenthesis
+) close parenthesis
+)! close nesting
+*! close collapsible
++n delta
+, comma
+-! close literal
+-!| table
+-- strike
+---- horizontal rule
+-| table
+.# anchor reference
+: colon
+=} close evaluate
+[ open bracket
+[[ alias
+] close bracket
+]! close plain text table
+http:// and https:// link
+{ open brace
+{{{ preformat
+| table
+} close brace
+}}} close preformat

@@ -5,15 +5,16 @@ package fitnesse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
-import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.slimTables.SlimTable;
+import fitnesse.slimTables.SlimTableFactory;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -26,6 +27,7 @@ public class ComponentFactory {
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
   public static final String SYMBOL_TYPES = "SymbolTypes";
+  public static final String SLIM_TABLES = "SlimTables";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
   public static final String VERSIONS_CONTROLLER = "VersionsController";
@@ -218,6 +220,25 @@ public class ComponentFactory {
     return "";
   }
 
+  @SuppressWarnings("unchecked")
+  public String loadSlimTables() throws ClassNotFoundException {
+    StringBuffer buffer = new StringBuffer();
+    String[] tableList = getListFromProperties(SLIM_TABLES);
+    if (tableList != null) {
+      buffer.append("\tCustom SLiM table types loaded:").append(endl);
+      for (String table : tableList) {
+        table = table.trim();
+        int colonIndex = table.lastIndexOf(':');
+        String key = table.substring(0, colonIndex);
+        String className = table.substring(colonIndex + 1, table.length());
+
+        SlimTableFactory.addTableType(key, (Class<? extends SlimTable>) Class.forName(className));
+        buffer.append("\t\t").append(key).append(":").append(className).append(endl);
+      }
+    }
+    return buffer.toString();
+  }
+  
   public VersionsController loadVersionsController() {
     VersionsController versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
     if (versionsController == null) {

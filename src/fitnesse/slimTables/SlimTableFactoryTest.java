@@ -14,17 +14,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-@SuppressWarnings("unchecked")
 public class SlimTableFactoryTest {
   private SlimTableFactory slimTableFactory;
   private Table table;
-  private Map map;
+  private Map<String, Class<? extends SlimTable>> map;
 
   @Before
   public void setUp() {
     slimTableFactory = new SlimTableFactory();
     table = mock(Table.class);
-    map = new HashMap();
+    map = new HashMap<String, Class<? extends SlimTable>>();
     map.put("dt:", DecisionTable.class);
     map.put("dT:", DecisionTable.class);
     map.put("decision:", DecisionTable.class);
@@ -41,16 +40,13 @@ public class SlimTableFactoryTest {
 
   @Test
   public void shouldCreateCorrectSlimTableForTablesType() {
-    Set entrySet = map.entrySet();
 
-    for (Iterator iterator = entrySet.iterator(); iterator.hasNext();) {
-      Map.Entry entry = (Entry) iterator.next();
-      assertThatTableTypeCreateSlimTableType((String) entry.getKey(), (Class) entry.getValue());
-
+    for (Map.Entry<String, Class<? extends SlimTable>> entry: map.entrySet()) {
+      assertThatTableTypeCreateSlimTableType(entry.getKey(), entry.getValue());
     }
   }
 
-  private void assertThatTableTypeCreateSlimTableType(String tableType, Class expectedClass) {
+  private void assertThatTableTypeCreateSlimTableType(String tableType, Class<? extends SlimTable> expectedClass) {
     when(table.getCellContents(0, 0)).thenReturn(tableType);
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new MockSlimTestContext());
     String message = "should have created a " + expectedClass + " for tabletype: " + tableType
@@ -82,7 +78,7 @@ public class SlimTableFactoryTest {
 
   
   private void assertThatTableTypeImportWorks(String importName, String importTypedescription, String tableName,
-      Class tableClass) {
+      Class<? extends SlimTable> tableClass) {
     addTableTypeImport(importName, importTypedescription);
     assertThatTableTypeCreateSlimTableType(tableName, tableClass);
   }
