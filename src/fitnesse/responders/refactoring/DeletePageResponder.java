@@ -2,15 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -20,33 +15,49 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.util.List;
+
 public class DeletePageResponder implements SecureResponder {
-  
+  private SimpleResponse response;
+  private String qualifiedPageName;
+  private WikiPagePath path;
+  private FitNesseContext context;
+
   public Response makeResponse(final FitNesseContext context, final Request request) {
-    SimpleResponse response = new SimpleResponse();
-    String qualifiedPageName = request.getResource();
-    WikiPagePath path = PathParser.parse(qualifiedPageName);
+    this.context = context;
+    intializeResponse(request);
 
-    if ("FrontPage".equals(qualifiedPageName)) {
+    if (shouldNotDelete())
       response.redirect("FrontPage");
-      return response;
-    }
+    else
+      tryToDeletePage(request);
 
+    return response;
+  }
+
+  private void tryToDeletePage(Request request) {
     String confirmedString = (String) request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
-      return response;
+    } else {
+      String nameOfPageToBeDeleted = path.last();
+      path.removeNameFromEnd();
+      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
+      if (parentOfPageToBeDeleted != null) {
+        parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
+      }
+      redirect(path, response);
     }
+  }
 
-    String nameOfPageToBeDeleted = path.last();
-    path.removeNameFromEnd();
-    WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
-    if (parentOfPageToBeDeleted != null) {
-      parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
-    }
-    redirect(path, response);
+  private boolean shouldNotDelete() {
+    return "FrontPage".equals(qualifiedPageName);
+  }
 
-    return response;
+  private void intializeResponse(Request request) {
+    response = new SimpleResponse();
+    qualifiedPageName = request.getResource();
+    path = PathParser.parse(qualifiedPageName);
   }
 
   private void redirect(final WikiPagePath path, final SimpleResponse response) {
