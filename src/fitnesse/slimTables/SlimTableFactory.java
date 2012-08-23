@@ -1,5 +1,6 @@
 package fitnesse.slimTables;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,50 +9,77 @@ import fitnesse.slimTables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
 
-  private boolean doesNotHaveColon(String tableType) {
-    return tableType.indexOf(":") == -1;
-  }
-
-  private boolean beginsWith(String tableType, String typeCode) {
-    return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
+  private static Map<String, Class<? extends SlimTable>> tableTypes;
+  
+  static {
+	  tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
+	  addTableType("dt:", DecisionTable.class);
+	  addTableType("decision:", DecisionTable.class);
+	  addTableType("ordered query:", OrderedQueryTable.class);
+	  addTableType("subset query:", SubsetQueryTable.class);
+	  addTableType("query:", QueryTable.class);
+	  addTableType("table:", TableTable.class);
+	  addTableType("script", ScriptTable.class);
+	  addTableType("scenario", ScenarioTable.class);
+	  addTableType("import", ImportTable.class);
+	  addTableType("library", LibraryTable.class);
   }
 
   private Map<String, String> tableTypeArrays = new HashMap<String, String>();
-  
+
+  public static void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
+    if (tableTypes.get(nameOrPrefix) != null) {
+    	throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
+    }
+	tableTypes.put(nameOrPrefix.toLowerCase(), tableClass);
+  }
+
   public SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {
     String tableType = getFullTableName(table.getCellContents(0, 0));
-    if (beginsWith(tableType, "dt:") || beginsWith(tableType, "decision:"))
-      return new DecisionTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "ordered query:"))
-      return new OrderedQueryTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "subset query:"))
-      return new SubsetQueryTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "query:"))
-      return new QueryTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "table:"))
-      return new TableTable(table, tableId, slimTestContext);
-    else if (tableType.equalsIgnoreCase("script"))
-      return new ScriptTable(table, tableId, slimTestContext);
-    else if (tableType.equalsIgnoreCase("scenario"))
-      return new ScenarioTable(table, tableId, slimTestContext);
-    else if (tableType.equalsIgnoreCase("comment"))
+    
+    // First the "exceptions to the rule"
+    if (tableType.equalsIgnoreCase("define table type"))  {
+      parseDefineTableTypeTable(table);
       return null;
-    else if (tableType.equalsIgnoreCase("import"))
-      return new ImportTable(table, tableId, slimTestContext);
-    else if (tableType.equalsIgnoreCase("library"))
-      return new LibraryTable(table, tableId, slimTestContext);
-    else if (tableType.equalsIgnoreCase("define table type"))  {
-        parseDefineTableTypeTable(table);
-        return null;
-      }
-    else if (doesNotHaveColon(tableType))
+    } else if (tableType.equalsIgnoreCase("comment")) {
+      return null;
+    }
+    
+	Class<? extends SlimTable> tableClass = getTableType(tableType);
+	
+	if (tableClass != null) {
+	  return newTableForType(tableClass, table, tableId, slimTestContext);
+	} else if (!hasColon(tableType)) {
       return new DecisionTable(table, tableId, slimTestContext);
-      
+	}
+	
     return new SlimErrorTable(table, tableId, slimTestContext);
   }
 
+  private boolean hasColon(String tableType) {
+    return tableType.contains(":");
+  }
+
+  private Class<? extends SlimTable> getTableType(String tableType) {
+    if (hasColon(tableType)) {
+	  tableType = tableType.substring(0, tableType.indexOf(':') + 1);
+	}
+	return tableTypes.get(tableType.toLowerCase());
+  }
+	  
+  private SlimTable newTableForType(Class<? extends SlimTable> tableClass,
+		Table table, String tableId, SlimTestContext slimTestContext) {
+	try {
+	  Constructor<? extends SlimTable> constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
+	  return constructor.newInstance(table, tableId, slimTestContext);
+	} catch (Exception e) {
+	  e.printStackTrace();
+      return new SlimErrorTable(table, tableId, slimTestContext);
+	}
+  }
+  
   private String getFullTableName(String tableName) {
-    if (tableName.contains(":")) {
+    if (hasColon(tableName)) {
       return tableName;
     }
     
@@ -85,4 +113,5 @@ public class SlimTableFactory {
 
     return tableType.trim();
   }
+
 }

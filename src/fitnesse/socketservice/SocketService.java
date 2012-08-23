@@ -3,6 +3,7 @@
 package fitnesse.socketservice;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -14,10 +15,11 @@ public class SocketService {
   private volatile boolean running = false;
   private SocketServer server = null;
   private LinkedList<Thread> threads = new LinkedList<Thread>();
-  private volatile boolean everRan=false;
+  private volatile boolean everRan = false;
+
   public SocketService(int port, SocketServer server) throws IOException {
     this.server = server;
-    serverSocket = new ServerSocket(port);
+    serverSocket = tryCreateServerSocket(port);
     serviceThread = new Thread(
       new Runnable() {
         public void run() {
@@ -26,6 +28,17 @@ public class SocketService {
       }
     );
     serviceThread.start();
+  }
+
+  private ServerSocket tryCreateServerSocket(int port) throws IOException {
+    ServerSocket socket;
+    try {
+      socket = new ServerSocket(port);
+    } catch (BindException e) {
+      System.out.println("Bind exception on port = " + port);
+      throw e;
+    }
+    return socket;
   }
 
   public void close() throws IOException {
@@ -47,21 +60,18 @@ public class SocketService {
 
   private void serviceThread() {
     running = true;
-    everRan=true;
+    everRan = true;
     while (running) {
       try {
         Socket s = serverSocket.accept();
         startServerThread(s);
-      }
-      catch (java.lang.OutOfMemoryError e) {
+      } catch (java.lang.OutOfMemoryError e) {
         System.err.println("Can't create new thread.  Out of Memory.  Aborting");
         e.printStackTrace();
         System.exit(99);
-      }
-      catch (SocketException sox){
-        running=false;// do nothing
-      }
-      catch (IOException e) {
+      } catch (SocketException sox) {
+        running = false;// do nothing
+      } catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
@@ -100,8 +110,7 @@ public class SocketService {
         synchronized (threads) {
           threads.remove(Thread.currentThread());
         }
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
       }
     }
   }

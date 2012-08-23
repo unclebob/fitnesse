@@ -77,7 +77,7 @@ public class ListDeserializer {
     int itemLength = getLength();
     String item = getString(itemLength);
     List<Object> sublist = maybeReadList(item);
-    
+
     if (sublist == null)
       result.add(item);
     else
@@ -85,13 +85,12 @@ public class ListDeserializer {
   }
 
   /**
-   * @return the string parsed as a list if possible, null otherwise  
+   * @return the string parsed as a list if possible, null otherwise
    */
   private List<Object> maybeReadList(String string) {
-    if (StringUtils.isBlank(string) || !string.startsWith("[")) {
+    if ("".equals(string.trim()) || !string.startsWith("["))
       return null;
-    }
-    
+
     try {
       return ListDeserializer.deserialize(string);
     } catch (SyntaxError e) {
@@ -128,11 +127,11 @@ public class ListDeserializer {
     String lengthString = serialized.substring(index, index + lengthSize);
     int length = Integer.parseInt(lengthString);
     index += lengthSize;
-    
+
     Integer next;
     while ((next = maybeReadDigit()) != null)
       length = length * 10 + next;
-    
+
     checkForColon("Length");
     return length;
   }
