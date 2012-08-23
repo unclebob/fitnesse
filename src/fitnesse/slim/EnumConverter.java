@@ -20,7 +20,16 @@ public class EnumConverter<T extends Enum<T>> implements Converter<T> {
     if (StringUtils.isBlank(name))
       return null;
     else
-      return Enum.valueOf(enumClass, name);
+      try {
+        return Enum.valueOf(enumClass, name);
+      } catch (IllegalArgumentException e) {
+        for (T value : enumClass.getEnumConstants()) {
+          if (value.toString().equals(name)) {
+            return value;
+          }
+        }
+        throw e;
+      }
   }
 
 }
