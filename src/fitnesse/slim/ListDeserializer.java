@@ -5,8 +5,6 @@ package fitnesse.slim;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Uses Slim Serialization.  See ListSerializer for details.  Will deserialize lists of lists recursively.
  */
