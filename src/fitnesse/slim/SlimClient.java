@@ -73,18 +73,30 @@ private void validateConnection() {
     return slimServerVersionMessage.startsWith("Slim -- V");
   }
 
-  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException {
+  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException, Exception {
     if (statements.size() == 0)
       return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
-    String resultLength = reader.read(6);
-    reader.read(1);
+    int resultLength = getLengthToRead();
     String results = null;
-    results = reader.read(Integer.parseInt(resultLength));
+    results = reader.read(resultLength);
     List<Object> resultList = ListDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
+
+private int getLengthToRead() throws Exception {
+	String resultLength = reader.read(6);
+    reader.read(1);
+    int length = 0;
+    try {
+    	length = Integer.parseInt(resultLength);
+    }
+    catch (NumberFormatException e){
+    	throw new Exception("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    }
+	return length;
+}
 
   private void writeString(String string) throws IOException {
     String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
