@@ -43,8 +43,18 @@ public class SlimClient {
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersionMessage = reader.readLine();
-    slimServerVersion = isConnected() ? Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", "")) : -1000;
+    validateConnection();
   }
+
+private void validateConnection() {
+	if (isConnected()) {
+		slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
+	}
+	else {
+		slimServerVersion =  -1000;
+		System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
+	}
+}
 
   private boolean tryConnect() {
     try {
