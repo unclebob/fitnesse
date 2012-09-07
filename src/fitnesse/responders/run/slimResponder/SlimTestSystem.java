@@ -10,6 +10,7 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimServerBadResponseException;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
@@ -260,9 +261,14 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
-    if (serverVersionNumber < expectedVersionNumber)
+    if (serverVersionNumber == -1000) {
+    	exceptions.addException("Sever Not Connected Error", "Server did not respond with a valid version number.");
+    }
+    else {
+    	if (serverVersionNumber < expectedVersionNumber)
       exceptions.addException("Slim Protocol Version Error",
         String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
+    }
   }
 
   private double getExpectedSlimVersion(ReadOnlyPageData pageData) {
@@ -306,7 +312,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
 
-  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
+  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException, SlimServerBadResponseException {
     expectations.clear();
 
     testTables = tables;
