@@ -73,7 +73,7 @@ private void validateConnection() {
     return slimServerVersionMessage.startsWith("Slim -- V");
   }
 
-  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException, Exception {
+  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException, SlimServerBadResponseException {
     if (statements.size() == 0)
       return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);
@@ -85,7 +85,7 @@ private void validateConnection() {
     return resultToMap(resultList);
   }
 
-private int getLengthToRead() throws Exception {
+private int getLengthToRead() throws SlimServerBadResponseException, IOException  {
 	String resultLength = reader.read(6);
     reader.read(1);
     int length = 0;
@@ -93,7 +93,7 @@ private int getLengthToRead() throws Exception {
     	length = Integer.parseInt(resultLength);
     }
     catch (NumberFormatException e){
-    	throw new Exception("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    	throw new SlimServerBadResponseException(resultLength);
     }
 	return length;
 }
