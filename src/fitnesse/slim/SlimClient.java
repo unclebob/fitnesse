@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3; 
+  public static int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -51,7 +52,7 @@ private void validateConnection() {
 		slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
 	}
 	else {
-		slimServerVersion =  -1000;
+		slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
 		System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
 	}
 }

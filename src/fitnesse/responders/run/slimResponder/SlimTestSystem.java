@@ -261,7 +261,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
-    if (serverVersionNumber == -1000) {
+    if (serverVersionNumber == SlimClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
     	exceptions.addException("Sever Not Connected Error", "Server did not respond with a valid version number.");
     }
     else {
