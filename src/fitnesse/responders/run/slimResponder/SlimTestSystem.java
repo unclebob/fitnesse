@@ -10,7 +10,6 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
-import fitnesse.slim.SlimServerBadResponseException;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
@@ -312,7 +311,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
 
-  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException, SlimServerBadResponseException {
+  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
     expectations.clear();
 
     testTables = tables;
