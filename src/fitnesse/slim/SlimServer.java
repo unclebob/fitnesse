@@ -29,6 +29,7 @@ public class SlimServer implements SocketServer {
     try {
       tryProcessInstructions(s);
     } catch (Throwable e) {
+    	e.printStackTrace();
     } finally {
       slimFactory.stop();
       close();
