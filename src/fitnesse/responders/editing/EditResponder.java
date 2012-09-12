@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -28,6 +31,7 @@ public class EditResponder implements SecureResponder {
   public static final String SUITES = "suites";
   public static final String PAGE_TYPE = "pageType";
   public static final String PAGE_NAME = "pageName";
+  public static final String TEMPLATE_LIST = "templateList";
 
   protected String content;
   protected WikiPage page;
@@ -110,6 +114,14 @@ public class EditResponder implements SecureResponder {
     html.put(HELP_TEXT, pageData.getAttribute(PageData.PropertyHELP));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
+    
+    List<String> templateList = new ArrayList<String>();
+    
+    templateList.add("Sample 1");
+    templateList.add("Sample 2");
+    templateList.add("Sample 3");
+    
+    html.put(TEMPLATE_LIST, templateList);
   }
 
   public SecureOperation getSecureOperation() {
