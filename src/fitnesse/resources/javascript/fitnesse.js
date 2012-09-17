@@ -105,14 +105,3 @@ $(document).ready(function() {
 	
 });
 
-
-
-window.onbeforeunload=stopNavIfTestRunning;
-
-function stopNavIfTestRunning(){
-  var stoptestDiv = document.querySelector("li#test-action a.stop");
-
-  if (stoptestDiv){
-    return "There is a test or suite currently running.  Are you sure you want to navigate away from this page?";
-  }
-}
