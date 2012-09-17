@@ -1,7 +1,7 @@
 function InsertTemplate(templateList, textArea)
 {
   var inserter = new TemplateInserter();
-  textArea.value = inserter.insertInto(templateList, textArea);
+  inserter.insertInto(templateList, textArea);
   textArea.focus();
 }
 

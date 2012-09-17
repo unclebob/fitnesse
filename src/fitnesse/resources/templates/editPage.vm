@@ -29,16 +29,7 @@
  </fieldset>
  
  <fieldset id="templates">
-  <label for="templateList">Template:</label>
-  <select id="templateList">
-   <option value="blank"></option>
-   #foreach ($template in $templateList)
-   <option value="$template">$template</option>
-   #end
-  </select>
   
-  <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
-  <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
  </fieldset>
 
  <fieldset id="editor">
@@ -47,6 +38,17 @@
    <script src="/files/fitnesse/javascript/spreadsheetSupport.js" type="text/javascript"></script>
    <script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
    <script src="/files/fitnesse/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
+   
+   <label for="templateList">Template:</label>
+  <select id="templateList">
+   <option value="blank"></option>
+   #foreach ($templateEntry in $templateMap.entrySet())
+   <option value="$templateEntry.key">$templateEntry.value</option>
+   #end
+  </select>
+  
+  <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
   </span>
  
   <textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
