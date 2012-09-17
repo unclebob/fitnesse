@@ -27,6 +27,13 @@
 		<exclude name="**/*.zip" />
 	</zipfileset>
 
+	<target name="run" depends="compile" description="Start FitNesse from the command line">
+		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
+			<arg value="-o" />
+			<arg value="-p" />
+			<arg value="8001" />
+		</java>
+	</target>
 
 	<!--
 	  Bundling
