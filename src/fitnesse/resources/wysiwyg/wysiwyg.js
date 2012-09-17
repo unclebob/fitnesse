@@ -232,23 +232,26 @@ Wysiwyg.prototype.activeEditor = function () {
     return this.textarea.style.position === "absolute" ? "wysiwyg" : "textarea";
 };
 
+Wysiwyg.prototype.isModified = function () {
+    return this.savedWysiwygHTML !== null && this.contentDocument.body.innerHTML !== this.savedWysiwygHTML;
+}
+
 Wysiwyg.prototype.setupFormEvent = function () {
     var self = this;
 
-    function listener(event) {
+    $(this.textarea.form).submit(function (event) {
         var textarea = self.textarea;
         try {
-            if (textarea.style.position === "absolute") {
+            if (self.activeEditor() === "wysiwyg") {
                 var body = self.contentDocument.body;
-                if (self.savedWysiwygHTML !== null && body.innerHTML !== self.savedWysiwygHTML) {
+                if (self.isModified()) {
                     self.textarea.value = self.domToWikitext(body, self.options);
                 }
             }
         } catch (e) {
             Wysiwyg.stopEvent(event || window.event);
         }
-    }
-    $(this.textarea.form).submit(listener);
+    });
 };
 
 Wysiwyg.prototype.createEditable = function (d, textarea) {
