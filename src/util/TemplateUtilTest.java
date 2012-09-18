@@ -50,6 +50,20 @@ public class TemplateUtilTest {
     assertTrue(pathList.contains(REGULAR_PARENT_PATH));
     assertTrue(pathList.contains(ROOT_PARENT_PATH));
   }
+  
+  @Test public void testGetTemplatesFromUnclesDoesntTakeTemplatesChildren() {
+    crawler.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
+    crawler.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
+    crawler.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot.TemplateFromRootChild"), "template from root child");
+    
+    crawler.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
+    WikiPage childPage = crawler.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
+    
+    List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
+    
+    assertTrue(pathList.contains(ROOT_PARENT_PATH));
+    assertFalse(pathList.contains(ROOT_PARENT_PATH + ".TemplateFromRootChild"));
+  }
 
   @Test public void testGetShortTemplateName() {
     String parsed = TemplateUtil.getShortTemplateName(REGULAR_PARENT_PATH);

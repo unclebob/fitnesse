@@ -42,7 +42,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
-    assertSubString("select id=\"" + EditResponder.TEMPLATE_LIST + "\"", body);
+    assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
     
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
@@ -102,9 +102,9 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
-    assertSubString("select id=\"" + EditResponder.TEMPLATE_LIST + "\"", body);
-    assertSubString("option value=\"" + "Template1" + "\"", body);
-    assertSubString("option value=\"" + "Template2" + "\"", body);
+    assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
+    assertSubString("option value=\"" + ".TemplateLibrary.TemplateOne" + "\"", body);
+    assertSubString("option value=\"" + ".TemplateLibrary.TemplateTwo" + "\"", body);
     
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
