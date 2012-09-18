@@ -1,3 +1,6 @@
+!2 2012-09-18
+ * Added the concept of a TemplateLibrary and the ability to insert existing templates into the plain text editor.
+
 !2 2012-03-20
  * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!
  * Introduced !-ReleaseNotes-! page
