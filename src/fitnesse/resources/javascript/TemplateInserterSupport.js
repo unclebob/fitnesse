@@ -1,6 +1,6 @@
 function InsertTemplate(templateList, textArea)
 {
-  if(Wysiwyg.getEditorMode() == "textarea")
+  if(Wysiwyg.getEditorMode() === "textarea")
   {
     var inserter = new TemplateInserter();
     inserter.insertInto(templateList, textArea);
@@ -8,4 +8,4 @@ function InsertTemplate(templateList, textArea)
   }
 }
 
-document.write('<input type="button" value="Insert Template" onClick="InsertTemplate(document.f.templateList, document.f.pageContent)" title="Inserts the selected template">');
+$('#insertTemplateButton').append('<input type="button" value="Insert Template" onClick="InsertTemplate(document.f.templateMap, document.f.pageContent)" title="Inserts the selected template">');
