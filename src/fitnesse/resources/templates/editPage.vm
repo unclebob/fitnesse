@@ -28,6 +28,10 @@
   <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
  </fieldset>
 
+  
+   
+  
+
  <fieldset id="editor">
   <span id="edit_buttons">
    <script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
@@ -41,10 +45,11 @@
     <option value="$templateEntry.key">$templateEntry.value</option>
     #end
    </select>
-   <span id="insertTemplateButton" />
+   
    <script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
+   
   
   </span>
  

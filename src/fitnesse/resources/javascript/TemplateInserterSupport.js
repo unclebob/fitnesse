@@ -8,4 +8,4 @@ function InsertTemplate(templateList, textArea)
   }
 }
 
-$('#insertTemplateButton').append('<input type="button" value="Insert Template" onClick="InsertTemplate(document.f.templateMap, document.f.pageContent)" title="Inserts the selected template">');
+document.write('<input type="button" value="Insert Template" onClick="InsertTemplate(document.f.templateMap, document.f.pageContent)" title="Inserts the selected template">');
