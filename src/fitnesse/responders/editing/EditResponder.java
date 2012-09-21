@@ -110,7 +110,7 @@ public class EditResponder implements SecureResponder {
     }
 
     html.put(HELP_TEXT, pageData.getAttribute(PageData.PropertyHELP));
-    html.put(TEMPLATE_MAP, TemplateUtil.getShortTemplateNames(TemplateUtil.getTemplatesFromUncles(page)));
+    html.put(TEMPLATE_MAP, TemplateUtil.getTemplateMap(page));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
     

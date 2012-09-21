@@ -25,6 +25,10 @@ public class TemplateUtil {
     return templatePaths;
   }
   
+  public static Map<String, String> getTemplateMap(WikiPage page){
+    return getShortTemplateNames(getTemplatesFromUncles(page));
+  }
+  
   public static Map<String, String> getShortTemplateNames(List<String> templatePaths) {
     Map<String, String> pathsAndNames = new HashMap<String, String>();
     for(String path : templatePaths){
