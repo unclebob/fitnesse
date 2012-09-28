@@ -14,23 +14,33 @@ import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
   protected String contentFrom(WikiPage requestedPage) {
-    List<String> pages = new ArrayList<String>();
-    for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
-      WikiPage child = (WikiPage) iterator.next();
-      if (request.hasInput("ShowChildCount")) {
-        String name = child.getName() + " " + Integer.toString(child.getChildren().size());
-        pages.add(name);
-      } else
-        pages.add(child.getName());
-
-    }
+    List<String> lines = addLines(requestedPage);
 
     String format = (String) request.getInput("format");
     if ("json".equalsIgnoreCase(format)) {
-      JSONArray jsonPages = new JSONArray(pages);
+      JSONArray jsonPages = new JSONArray(lines);
       return jsonPages.toString();
     }
-    return StringUtil.join(pages, System.getProperty("line.separator"));
+    return StringUtil.join(lines, System.getProperty("line.separator"));
+  }
+
+  private List<String> addLines(WikiPage requestedPage) {
+    List<String> lines = new ArrayList<String>();
+    for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
+      WikiPage child = (WikiPage) iterator.next();
+      lines.add(makeLine(child));
+    }
+    return lines;
+  }
+
+  private String makeLine(WikiPage child) {
+    String line;
+    if (request.hasInput("ShowChildCount")) {
+      int numberOfChildren = child.getChildren().size();
+      line = child.getName() + " " + numberOfChildren;
+    } else
+      line = child.getName();
+    return line;
   }
 
   protected String getContentType() {
