@@ -19,6 +19,9 @@ If you then click on that question mark, FitNesse displays an edit frame, enabli
 !3 Try Creating a New Page with a Link Back to This One
 Try it yourself. Click on the question mark at the end of this word: ThisHereNewPageExample  Put something on the page, click the Save button, and then return here. A good thing to put on the new page is the word EditingFitNessePages, so that you can return to this page easily!
 
+!3 Using Templates
+If you find yourself adding the same boilerplate wiki text in many different places, it may be worthwhile to use it as a template. All immediate children of a page named !-TemplateLibrary-! are marked as templates for all pages who have the !-TemplateLibrary-! as a brother or uncle. It will appear in the dropdown box above the text area in the plain text editor. When the "Insert Template" button is clicked, it will overwrite the current selection with the selected template (or insert the template at the caret if there is no selection).
+
 !2 A Few Formatting Examples
 The wiki markup language is fairly powerful. Two see how we accomplished each of the formatting examples below, you can simply click the Edit button and check it out for yourself.
 

@@ -4,8 +4,6 @@ package fitnesse.responders.editing;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
@@ -44,6 +42,8 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
+    assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
+    
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
   }
@@ -80,6 +80,42 @@ public class EditResponderTest extends RegexTestCase {
     String body = response.getContent();
     assertSubString("name=\"redirect\" value=\"http://fitnesse.org:8080/SomePage?boom\"", body);
   }
+  
+  public void testTemplateListPopulates() throws Exception {
+    crawler.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
+    
+    crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
+    crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
+    crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    
+    request.setResource("ChildPage");
+    
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    assertEquals(200, response.getStatus());
+
+    String body = response.getContent();
+    assertSubString("<html>", body);
+    assertSubString("<form", body);
+    assertSubString("method=\"post\"", body);
+    assertSubString("child content with &lt;html&gt;", body);
+    assertSubString("name=\"responder\"", body);
+    assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
+    assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
+    assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
+    assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
+    assertSubString("option value=\"" + ".TemplateLibrary.TemplateOne" + "\"", body);
+    assertSubString("option value=\"" + ".TemplateLibrary.TemplateTwo" + "\"", body);
+    
+    assertSubString("type=\"submit\"", body);
+    assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
+  }
+  
+  public void testTemplateInserterScriptsExists() throws Exception {
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    String body = response.getContent();
+    assertMatches("TemplateInserter.js", body);
+    assertMatches("TemplateInserterSupport.js", body);
+  }
 
   public void testPasteFromExcelExists() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
@@ -100,4 +136,5 @@ public class EditResponderTest extends RegexTestCase {
     responder.makeResponse(new FitNesseContext(root), request);
     assertFalse(root.hasChildPage("MissingPage"));
   }
+  
 }
