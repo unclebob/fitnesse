@@ -29,7 +29,6 @@ public class ScriptTable extends SlimTable {
       startActor(0);
     for (int row = 1; row < rows; row++)
       appendInstructionForRow(row);
-
   }
 
   private boolean isScript() {
