@@ -56,7 +56,10 @@ public class NewPageResponder implements Responder {
   }
 
   private WikiPage getParentWikiPage(FitNesseContext context, Request request) {
+    //the request resource is already th parent path.
     WikiPagePath parentPath = PathParser.parse(request.getResource());
+    
+    //we need a crawler to get the page from the path. The root has a crawler we can use.
     PageCrawler crawler = context.root.getPageCrawler();
     WikiPage page = crawler.getPage(context.root, parentPath);
     return page;
