@@ -1,7 +1,6 @@
 package fitnesse.responders.run.formatters;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
 
@@ -12,7 +11,6 @@ import util.TimeMeasurement;
 
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
 public class TestTextFormatterTest {

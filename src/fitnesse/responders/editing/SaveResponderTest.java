@@ -17,7 +17,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-import org.apache.tools.ant.PropertyHelper;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;

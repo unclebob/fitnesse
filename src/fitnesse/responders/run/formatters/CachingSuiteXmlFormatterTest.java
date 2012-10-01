@@ -24,7 +24,6 @@ import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
-import java.io.StringWriter;
 import java.io.Writer;
 import java.io.File;
 import java.util.Date;

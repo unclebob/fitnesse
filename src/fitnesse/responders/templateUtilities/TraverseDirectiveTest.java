@@ -39,10 +39,10 @@ public class TraverseDirectiveTest {
     assertTrue(tmpl.contains("<a href=\"PageOne\">PageOne</a>"));
   }
 
-  public static class MockTraverser implements Traverser {
+  public static class MockTraverser implements Traverser<WikiPage> {
 
     @Override
-    public void traverse(TraversalListener observer) {
+    public void traverse(TraversalListener<WikiPage> observer) {
       WikiPage root = InMemoryPage.makeRoot("root");
       PageCrawler crawler = root.getPageCrawler();
       observer.process(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));

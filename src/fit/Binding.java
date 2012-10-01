@@ -65,7 +65,7 @@ public abstract class Binding {
       Matcher matcher = fieldPattern.matcher(name);
       matcher.find();
       String fieldName = matcher.group(1);
-      Class clazz = fixture.getTargetClass();
+      Class<?> clazz = fixture.getTargetClass();
       try {
         field = clazz.getField(fieldName);
       }
@@ -82,11 +82,11 @@ public abstract class Binding {
     return TypeAdapter.on(fixture, field);
   }
 
-  private static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+  private static Field getField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
     try {
       return clazz.getDeclaredField(fieldName);
     } catch (NoSuchFieldException e) {
-      Class superClass = clazz.getSuperclass();
+      Class<?> superClass = clazz.getSuperclass();
       if (superClass == null) {
         throw e;
       } else {
@@ -141,7 +141,7 @@ public abstract class Binding {
     return field;
   }
 
-  private static Field[] getAllDeclaredFields(Class clazz){
+  private static Field[] getAllDeclaredFields(Class<?> clazz){
     if (clazz.getSuperclass() != null) {
       return (Field[]) ArrayUtils.addAll(getAllDeclaredFields(clazz.getSuperclass()), clazz.getDeclaredFields());
     } else {

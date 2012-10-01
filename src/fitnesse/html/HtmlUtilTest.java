@@ -4,7 +4,6 @@ package fitnesse.html;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.PageFactory;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;

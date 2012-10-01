@@ -10,7 +10,6 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.responders.run.ExecutionReport;
 import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;

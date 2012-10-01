@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.PageFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;

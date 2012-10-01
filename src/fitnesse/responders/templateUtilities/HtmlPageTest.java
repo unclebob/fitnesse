@@ -3,13 +3,11 @@
 package fitnesse.responders.templateUtilities;
 
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlElement;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import util.RegexTestCase;
 
 public class HtmlPageTest extends RegexTestCase {
-  private static final String endl = HtmlElement.endl;
 
   private HtmlPage page;
   private String html;

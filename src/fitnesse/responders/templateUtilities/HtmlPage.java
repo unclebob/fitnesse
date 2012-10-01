@@ -8,13 +8,9 @@ import java.io.Writer;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeInstance;
-
-import fitnesse.wiki.WikiPageActions;
 
 public class HtmlPage {
   private static final String HEADER_TEMPLATE = "pageTitle.vm";
-  private static final String TITLE = "FitNesse";
 
   private VelocityEngine velocityEngine;
   private VelocityContext velocityContext;

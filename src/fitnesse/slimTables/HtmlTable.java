@@ -2,10 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +22,6 @@ import fitnesse.responders.run.ExecutionResult;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
-  private static final Random RANDOM_GENERATOR = new SecureRandom();
   private static Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;

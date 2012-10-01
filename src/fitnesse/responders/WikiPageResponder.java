@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -27,8 +26,6 @@ import fitnesse.wiki.WikiPagePath;
 public class WikiPageResponder implements SecureResponder {
   private WikiPage page;
   private PageData pageData;
-  private String pageTitle;
-  private Request request;
   private PageCrawler crawler;
 
   public Response makeResponse(FitNesseContext context, Request request) {
@@ -60,7 +57,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context) {
-      pageTitle = PathParser.render(crawler.getFullPath(page));
+      PathParser.render(crawler.getFullPath(page));
       String html = makeHtml(context);
 
       SimpleResponse response = new SimpleResponse();

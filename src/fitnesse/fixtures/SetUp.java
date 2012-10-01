@@ -13,7 +13,6 @@ import java.io.File;
 import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;

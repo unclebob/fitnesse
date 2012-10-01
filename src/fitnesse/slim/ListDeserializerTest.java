@@ -70,4 +70,11 @@ public class ListDeserializerTest {
     list.add("single");
     check();
   }
+
+  @Test
+  public void listWithElementsWithBrackets() throws Exception {
+    list.add("hello");
+    list.add("[world, world2]");
+    check();
+  }
 }

@@ -11,11 +11,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
 public class ResponseRequester extends ColumnFixture {
   public String uri;
   public String username;

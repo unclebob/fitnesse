@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import java.util.Date;
-
 import util.Clock;
 
 import fitnesse.wiki.CachingPage;

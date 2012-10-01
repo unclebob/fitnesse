@@ -12,7 +12,6 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
@@ -40,9 +39,6 @@ import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,7 +57,6 @@ public class TestResponderTest {
   private PageCrawler crawler;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
-  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -76,7 +71,7 @@ public class TestResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
-    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
+    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
   @After

@@ -1,10 +1,5 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.responders.run.TestSummary;
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
-import util.FileUtil;
-
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

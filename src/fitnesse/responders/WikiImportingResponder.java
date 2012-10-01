@@ -2,22 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.util.Iterator;
-import java.util.List;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
@@ -26,16 +18,14 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
-public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser {
-  private int alternation = 0;
+public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser<Object> {
   private boolean isUpdate;
   private boolean isNonRoot;
   public PageData data;
 
   private WikiImporter importer = new WikiImporter();
-  private TraversalListener traversalListener;
+  private TraversalListener<Object> traversalListener;
 
   public void setImporter(WikiImporter importer) {
     this.importer = importer;
@@ -53,7 +43,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   }
   
   @Override
-  public void traverse(TraversalListener traversalListener) {
+  public void traverse(TraversalListener<Object> traversalListener) {
     this.traversalListener = traversalListener;
     try {
       if (isNonRoot) {

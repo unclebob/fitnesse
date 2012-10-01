@@ -4,15 +4,9 @@ import static org.hamcrest.core.IsNot.*;
 import static org.junit.Assert.*;
 import static org.junit.internal.matchers.StringContains.*;
 
-import java.util.regex.Pattern;
-
 import fitnesse.wiki.*;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.core.IsNot;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.matchers.TypeSafeMatcher;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;

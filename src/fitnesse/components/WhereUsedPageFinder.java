@@ -9,12 +9,12 @@ import java.util.List;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
   private WikiPage subjectPage;
-  private TraversalListener observer;
+  private TraversalListener<? super WikiPage> observer;
   private WikiPage currentPage;
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
 
-  public WhereUsedPageFinder(WikiPage subjectPage, TraversalListener observer) {
+  public WhereUsedPageFinder(WikiPage subjectPage, TraversalListener<? super WikiPage> observer) {
     this.subjectPage = subjectPage;
     this.observer = observer;
   }

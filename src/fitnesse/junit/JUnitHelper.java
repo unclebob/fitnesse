@@ -2,7 +2,6 @@ package fitnesse.junit;
 
 
 import junit.framework.Assert;
-import fitnesse.junit.FitNesseSuite.ExcludeSuiteFilter;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
 

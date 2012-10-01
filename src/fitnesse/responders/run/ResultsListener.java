@@ -5,7 +5,6 @@ package fitnesse.responders.run;
 import java.io.IOException;
 
 import util.TimeMeasurement;
-import fitnesse.wiki.WikiPage;
 
 public interface ResultsListener {
 

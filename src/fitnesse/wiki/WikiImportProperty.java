@@ -5,8 +5,6 @@ package fitnesse.wiki;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.responders.templateUtilities.HtmlPage;
 
 public class WikiImportProperty extends WikiPageProperty {

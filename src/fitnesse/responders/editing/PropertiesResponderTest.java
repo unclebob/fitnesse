@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import org.json.JSONObject;
-
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -18,7 +16,8 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
-import fitnesse.testutil.FitNesseUtil;
+import org.json.JSONObject;
+import util.RegexTestCase;
 
 public class PropertiesResponderTest extends RegexTestCase {
   private FitNesseContext context;
@@ -33,7 +32,8 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   private String content;
 
-  public void setUp() throws Exception {
+  @Override
+public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
@@ -317,8 +317,6 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   
   public void testActionPropertiesHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
-    PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Actions:", html);

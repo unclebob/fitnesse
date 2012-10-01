@@ -5,6 +5,8 @@ package fitnesse.slim;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Uses Slim Serialization.  See ListSerializer for details.  Will deserialize lists of lists recursively.
  */
@@ -74,11 +76,25 @@ public class ListDeserializer {
   private void deserializeItem() {
     int itemLength = getLength();
     String item = getString(itemLength);
-    try {
-      List<Object> sublist = ListDeserializer.deserialize(item);
-      result.add(sublist);
-    } catch (SyntaxError e) {
+    List<Object> sublist = maybeReadList(item);
+
+    if (sublist == null)
       result.add(item);
+    else
+      result.add(sublist);
+  }
+
+  /**
+   * @return the string parsed as a list if possible, null otherwise
+   */
+  private List<Object> maybeReadList(String string) {
+    if ("".equals(string.trim()) || !string.startsWith("["))
+      return null;
+
+    try {
+      return ListDeserializer.deserialize(string);
+    } catch (SyntaxError e) {
+      return null;
     }
   }
 
@@ -111,11 +127,25 @@ public class ListDeserializer {
     String lengthString = serialized.substring(index, index + lengthSize);
     int length = Integer.parseInt(lengthString);
     index += lengthSize;
+
+    Integer next;
+    while ((next = maybeReadDigit()) != null)
+      length = length * 10 + next;
+
     checkForColon("Length");
     return length;
   }
 
-  public class SyntaxError extends SlimError {
+  private Integer maybeReadDigit() {
+    char next = serialized.charAt(index);
+    if (Character.isDigit(next)) {
+      index++;
+      return Character.digit(next, 10);
+    } else
+      return null;
+}
+
+public class SyntaxError extends SlimError {
     private static final long serialVersionUID = 1L;
 
     public SyntaxError(String s) {

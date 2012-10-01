@@ -171,7 +171,7 @@ public class TimeMeasurementTest {
   @Test
   public void alteringGlobalClockShouldNotAffectExistingTimeMeasurement() throws Exception {
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    DateAlteringClock globalClock = new DateAlteringClock(Clock.currentDate()).freeze();
+    new DateAlteringClock(Clock.currentDate()).freeze();
     TimeMeasurement frozentTimeMeasurement = new TimeMeasurement().start();
     timeMeasurement.start();
     SystemClock systemClock = new SystemClock();

@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import util.Maybe;
-import java.util.List;
 
 public class Define extends SymbolType implements Rule, Translation {
     public Define() {

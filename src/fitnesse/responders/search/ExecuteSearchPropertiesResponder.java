@@ -95,7 +95,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  public void traverse(TraversalListener observer) {
+  public void traverse(TraversalListener<Object> observer) {
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);
