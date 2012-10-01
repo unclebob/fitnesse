@@ -36,6 +36,9 @@ Included at the bottom of a test page only, and after !-TearDown-!.  When a suit
 !3 !-ScenarioLibrary-!
 These pages are intended for scenario tables.  They are included just after the !-SetUp-! in any ''SLIM'' test.  Unlike the other special pages, ''all'' brother and uncle !-ScenarioLibrary-! pages are included.  The oldest (grandest uncle) is included first.  The brother, if it exists, is included last.  This allows younger !-ScenarioLibrary-! pages to override older ones.
 
+!3 !-TemplateLibrary-!
+These pages act as a marker to find templates to show as available for insertion when editing a page. All children of a !-TemplateLibrary-! will be shown in the drop-down list of templates available for insertion. Unlike the other special pages, ''all'' brother and uncle !-TemplateLibrary-! pages are included.  The oldest (grandest uncle) is included first.  The brother, if it exists, is included last.  This allows younger !-TemplateLibrary-! pages to override older ones.
+
 
 !3 Suites.
 A special word about suites.  The !-SuiteSetUp-! and !-SuiteTearDown-! that are included in a suite run are the pages that are the nearest brothers or uncles of the ''Suite'' page.  If the suite has a deep hierarchy, and there are !-SuiteSetUp-! and/or !-SuiteTearDown-! pages below the suite page, they will not be included.  

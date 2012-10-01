@@ -1,6 +1,7 @@
 package fitnesse.responders.editing;
 
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
+import util.TemplateUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -10,8 +11,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class NewPageResponder implements Responder {
 
@@ -38,6 +42,8 @@ public class NewPageResponder implements Responder {
 
     html.put("isNewPage", true);
     html.put(EditResponder.HELP_TEXT, "");
+    
+    html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
     html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     if (request.hasInput("pageType")) {
       String pageType = (String) request.getInput("pageType");
@@ -47,6 +53,16 @@ public class NewPageResponder implements Responder {
     } else {
       html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
     }
+  }
+
+  private WikiPage getParentWikiPage(FitNesseContext context, Request request) {
+    //the request resource is already th parent path.
+    WikiPagePath parentPath = PathParser.parse(request.getResource());
+    
+    //we need a crawler to get the page from the path. The root has a crawler we can use.
+    PageCrawler crawler = context.root.getPageCrawler();
+    WikiPage page = crawler.getPage(context.root, parentPath);
+    return page;
   }
 
   public SecureOperation getSecureOperation() {
