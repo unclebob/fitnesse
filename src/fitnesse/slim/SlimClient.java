@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3; 
+  public static int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -43,8 +44,18 @@ public class SlimClient {
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersionMessage = reader.readLine();
-    slimServerVersion = isConnected() ? Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", "")) : -1;
+    validateConnection();
   }
+
+private void validateConnection() {
+	if (isConnected()) {
+		slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
+	}
+	else {
+		slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
+		System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
+	}
+}
 
   private boolean tryConnect() {
     try {
@@ -68,13 +79,25 @@ public class SlimClient {
       return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
-    String resultLength = reader.read(6);
-    reader.read(1);
+    int resultLength = getLengthToRead();
     String results = null;
-    results = reader.read(Integer.parseInt(resultLength));
+    results = reader.read(resultLength);
     List<Object> resultList = ListDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
+
+private int getLengthToRead() throws IOException  {
+	String resultLength = reader.read(6);
+    reader.read(1);
+    int length = 0;
+    try {
+    	length = Integer.parseInt(resultLength);
+    }
+    catch (NumberFormatException e){
+    	throw new RuntimeException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    }
+	return length;
+}
 
   private void writeString(String string) throws IOException {
     String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);

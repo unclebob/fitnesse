@@ -17,7 +17,7 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class InteractiveFormatter extends BaseFormatter {
 
-  private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>";
+  private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>&nbsp;";
 
   private boolean wasInterupted = false;
   private TestSummary assertionCounts = new TestSummary();
