@@ -95,6 +95,10 @@
 			<arg value="-outputDirectory:${classes}/Resources" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageHeader/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/PageHeader/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
