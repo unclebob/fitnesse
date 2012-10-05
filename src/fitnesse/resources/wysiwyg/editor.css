@@ -54,3 +54,50 @@ div.collapsable>p:first-child {
  color: #BF8660;
  font-style: italic;
 }
+
+tt:before,
+tt:after {
+ color: #BF8660;
+}
+
+tt.htmlescape:before {
+ content: "<html>";
+}
+
+tt.htmlescape:after {
+ content: "</html>";
+}
+
+tt.inlinecode:before {
+ content: "<code>";
+}
+
+tt.inlinecode:after {
+ content: "</code>";
+}
+ 
+tt.plaintexttable:before {
+ content: "<plaintexttable>";
+}
+
+tt.plaintexttable:after {
+ content: "</plaintexttable>";
+}
+
+tt.hashtable:before {
+ content: "<hashtable>";
+}
+
+tt.hashtable:after {
+ content: "</hashtable>";
+}
+
+tt.nested:before {
+ content: "<nested>";
+}
+
+tt.nested:after {
+ content: "</nested>";
+}
+
+
