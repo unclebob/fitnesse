@@ -90,9 +90,40 @@ $(function () {
   };
 
   var editors = Wysiwyg.initialize();
-  toggle_edit_buttons(editors[0].activeEditor());
-  $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
-    toggle_edit_buttons($(this).val());
-  });
+  if (editors) {
+    var editor = editors[0];
+    toggle_edit_buttons(editor.activeEditor());
+    $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
+      toggle_edit_buttons($(this).val());
+    });
+  
+    // On cancel button:
+    
+    function fieldValues () {
+      return $.map($('#pageContent,#helptext,#suites', document.f), function(e) { return $(e).val(); });
+    }
+    
+    var originalFieldValues = fieldValues();
+    
+    var performingSubmit = false;
+    
+    $(document.f).submit(function () {
+      performingSubmit = true;
+    });
+
+    window.onbeforeunload = function () {
+      if (performingSubmit) {
+        return;
+      }
+
+      if (editor.activeEditor() === "wysiwyg") {
+        editor.loadWikiText();
+      }
+
+      if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
+        return "The page content has been changed.\nDo you really want to leave this page?";
+      }
+    };
+  }
 });
 </script>

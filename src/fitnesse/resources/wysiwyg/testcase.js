@@ -254,9 +254,33 @@ $(function() {
                 "----" ].join("\n"));
         });
 
-        unit.add("escape !- .. -!", function() {
-            var dom = element("p", "foo ", element("tt", "bar"), " baz");
+        unit.add("escape !- .. -! - literal escape", function() {
+            var dom = element("p", "foo ", element("tt", {'class': 'escape'}, "bar"), " baz");
             var wikitext = "foo !-bar-! baz";
+            generate.call(this, dom, wikitext);
+        });
+
+        unit.add("escape !< .. >! - html escape", function() {
+            var dom = element("p", "foo ", element("tt", {'class': 'htmlescape'}, "bar"), " baz");
+            var wikitext = "foo !<bar>! baz";
+            generate.call(this, dom, wikitext);
+        });
+
+        unit.add("escape !{ .. }! - hashtable", function() {
+            var dom = element("p", "foo ", element("tt", {'class': 'hashtable'}, "bar: val"), " baz");
+            var wikitext = "foo !{bar: val}! baz";
+            generate.call(this, dom, wikitext);
+        });
+
+        unit.add("escape !( .. )! - nested ", function() {
+            var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
+            var wikitext = "foo !(bar)! baz";
+            generate.call(this, dom, wikitext);
+        });
+
+        unit.add("escape ![ .. ]! - plain text table", function() {
+            var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
+            var wikitext = "foo ![bar\nbaz]! bee";
             generate.call(this, dom, wikitext);
         });
 
@@ -303,19 +327,18 @@ $(function() {
             var wikitext = "--strike-through--";
             generate.call(this, dom, wikitext);
         });
-        unit.add("monospace", function() {
+        unit.add("code", function() {
             var dom = element("p", "`monospace`",
-                ", ", element("tt", "mono`s`pace"),
-                ", ", "`mono", element("tt", "s"), "pace`");
+                ", ", element("tt", {'class': 'inlinecode'}, "mono`s`pace"),
+                ", ", "`mono", element("tt", {'class': 'inlinecode'}, "s"), "pace`");
             var wikitext = "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`";
-            generateFragment.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
-            generateWikitext.call(this, dom, "`monospace`, !-mono`s`pace-!, `mono!-s-!pace`");
+            generate.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
         });
-        unit.add("monospace !-..-!", function() {
+        unit.add("escaped !-..-!", function() {
             var dom = element("p", "`monospace`",
-                ", ", element("tt", "mono`s`pace"),
-                ", ", "`mono", element("tt", "s"), "pace`",
-                ", ", element("tt", "<ul><li>list item</li></ul>"));
+                ", ", element("tt", {'class': 'escape'}, "mono`s`pace"),
+                ", ", "`mono", element("tt", {'class': 'escape'}, "s"), "pace`",
+                ", ", element("tt", {'class': 'escape'}, "<ul><li>list item</li></ul>"));
             generate.call(this, dom, "`monospace`, !-mono`s`pace-!, `mono!-s-!pace`, !-<ul><li>list item</li></ul>-!");
         });
         unit.add("italic -> bold", function() {
@@ -390,34 +413,34 @@ $(function() {
 
         unit.add("! bold italic", function() {
             var dom = element("p", element("b", element("i", "bold",
-                              element("tt", "'''''"), " italic")), ".");
+                              element("tt", {'class': 'escape'}, "'''''"), " italic")), ".");
             var wikitext = "'''''bold!-'''''-! italic'''''.";
             generate.call(this, dom, wikitext);
         });
         unit.add("! bold", function() {
-            var dom = element("p", element("b", "bold", element("tt", "'''"), " bold"), ".");
+            var dom = element("p", element("b", "bold", element("tt", {'class': 'escape'}, "'''"), " bold"), ".");
             var wikitext = "'''bold!-'''-! bold'''.";
             generate.call(this, dom, wikitext);
         });
         unit.add("! italic", function() {
-            var dom = element("p", element("i", "italic", element("tt", "''"), " italic"), ".");
+            var dom = element("p", element("i", "italic", element("tt", {'class': 'escape'}, "''"), " italic"), ".");
             var wikitext = "''italic!-''-! italic''.";
             generate.call(this, dom, wikitext);
         });
         unit.add("! strike-through", function() {
-            var dom = element("p", element("strike", "strike", element("tt", "--"), "through"), ".");
+            var dom = element("p", element("strike", "strike", element("tt", {'class': 'escape'}, "--"), "through"), ".");
             var wikitext = "--strike!----!through--.";
             generate.call(this, dom, wikitext);
         });
         unit.add("! monospace", function() {
-            var dom = element("p", element("tt", "{{{monospace}}}"), " or ",
-                    element("tt", "`monospace`"));
+            var dom = element("p", element("tt", {'class': 'escape'}, "{{{monospace}}}"), " or ",
+                    element("tt", {'class': 'escape'}, "`monospace`"));
             var wikitext = "!-{{{monospace}}}-! or !-`monospace`-!";
             generate.call(this, dom, wikitext);
         });
 
         unit.add("multiline escape", function() {
-            var dom = element("p", element("tt", "escaped", br(), "\"quoted line\"", br()), br());
+            var dom = element("p", element("tt", {'class': 'escape'}, "escaped", br(), "\"quoted line\"", br()), br());
             var wikitext = [
                 "!-escaped",
                 "\"quoted line\"",
@@ -426,7 +449,7 @@ $(function() {
         });
 
         unit.add("multiline escape 2", function() {
-            var dom = element("p", {"class": "meta"}, "!define var (", element("tt", "escaped", br(), "line", br(), "123", br()), ")");
+            var dom = element("p", {"class": "meta"}, "!define var (", element("tt", {'class': 'escape'}, "escaped", br(), "line", br(), "123", br()), ")");
             var wikitext = [
                 "!define var (!-escaped",
                 "line",
@@ -439,7 +462,7 @@ $(function() {
             var dom = fragment(
                 element("p",
                     a("CamelCase", "CamelCase", true),
-                    " ", element("tt", "CamelCase"), " ",
+                    " ", element("tt", {'class': 'escape'}, "CamelCase"), " ",
                     a("FooBarA", "FooBarA", true), " FOo ",
                     a("FoobarA", "FoobarA", true), " ",
                     a("<ParentLink", "<ParentLink", true), " ",
@@ -459,7 +482,7 @@ $(function() {
         			a("TestPage", "TestPage", true),
         			a("FrontPage?edit", "Edit"),
         			" button and add a ",
-        			a("FitNesse.UserGuide.WikiWord", element("tt", "WikiWord")),
+        			a("FitNesse.UserGuide.WikiWord", element("tt", {'class': 'escape'}, "WikiWord")),
         			a("http://external.link/bladieblah", "bla")
         		));
         		
@@ -729,7 +752,7 @@ $(function() {
                         element("tr",
                             element("td", "3.1"),
                             element("td", element("i", "3.2")),
-                            element("td", element("tt", "3"), " ", element("tt", "*"))))),
+                            element("td", element("tt", {'class': 'escape'}, "3"), " ", element("tt", {'class': 'escape'}, "*"))))),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -743,7 +766,7 @@ $(function() {
             var dom = fragment(
                 element("table", { "class": "escaped" },
                     element("tbody",
-                        element("tr", element("td", " table "), element("td", " ", element("tt", "escaped"), " ")),
+                        element("tr", element("td", " table "), element("td", " ", element("tt", {'class': 'escape'}, "escaped"), " ")),
                         element("tr", element("td", " ''not italic'' "), element("td", " '''not bold''' ")))));
             generate.call(this, dom, [
                 "!| table | !-escaped-! |",
@@ -760,7 +783,7 @@ $(function() {
                         element("tr",
                             element("td", " 3.1 "),
                             element("td", " ", element("i", "3.2"), " "),
-                            element("td", " ", element("tt", "3"), " ", element("tt", " - "), " ")))),
+                            element("td", " ", element("tt", {'class': 'escape'}, "3"), " ", element("tt", {'class': 'escape'}, " - "), " ")))),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -807,7 +830,7 @@ $(function() {
                 element("p", element("b", "bold")),
                 element("table",
                     element("tbody", element("tr", element("td", " 2nd ")))),
-                element("p", element("tt", "'''normal")));
+                element("p", element("tt", {'class': 'escape'}, "'''normal")));
             generate.call(this, dom, [
                 "| 1st |",
                 "",

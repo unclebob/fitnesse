@@ -12,6 +12,7 @@
 	<property name="classes" location="classes" />
 	<property name="fitnesseRoot" value="FitNesseRoot" />
 	<property name="results.dir" location="test-results" />
+	<property name="port" value="8001" />
 
 	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests." />
 
@@ -31,7 +32,7 @@
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
 			<arg value="-p" />
-			<arg value="8001" />
+			<arg value="${port}" />
 		</java>
 	</target>
 
@@ -94,6 +95,10 @@
 			<arg value="-outputDirectory:${classes}/Resources" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageHeader/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/PageHeader/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
