@@ -11,7 +11,6 @@
   <script type="text/javascript" src="./wysiwyg.js"></script>
   <script type="text/javascript" src="./testunit.js"></script>
   <script type="text/javascript" src="./testcase.js"></script>
-  <script type="text/javascript">var _tracwysiwyg = { escapeNewlines: false }</script>
   <style type="text/css">
   html { font-size: 13px; *font-size: small; }
   body { font-family: Arial, Helvetica, sans-serif; font-size: 100%; }
@@ -38,10 +37,6 @@
       <label><input type="checkbox" id="show-wysiwyg-html" value="1"
         onclick="document.getElementById('wysiwyg-html').style.display=this.checked?'':'none'"
         />show html</label>
-      &nbsp;
-      <label><input type="checkbox" value="1"
-        onclick="_tracwysiwyg.escapeNewlines = this.checked"
-        />escape newlines</label>
       <textarea id="wysiwyg-html" cols="50" rows="12" style="display:none;"></textarea>
     </div>
   </form>
