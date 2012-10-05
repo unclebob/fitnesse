@@ -548,11 +548,10 @@ Wysiwyg.prototype.execDecorate = function (name) {
 
 Wysiwyg.prototype.execDecorateMonospace = function () {
     var html = this.getSelectionHTML();
-    if (/^<ins.*?>/i.test(html) && /<\/ins>$/i.test(html)) {
-        html = html.replace(/<ins.*?>|<\/ins>/gi, "");
+    if (/^<tt.*?>/i.test(html) && /<\/tt>$/i.test(html)) {
+        html = html.replace(/<tt.*?>|<\/tt>/gi, "");
     } else {
-        var id = this.generateDomId();
-        html = '<ins id="' + id + '">' + html.replace(/<[a-z]+.*?>|<\/[a-z]+>/gi, "") + "</ins>";
+        html = '<tt class="escape">' + html.replace(/<[a-z]+.*?>|<\/[a-z]+>/gi, "") + "</tt>";
     }
     this.insertHTML(html);
     var node = this.contentDocument.getElementById(id);
@@ -685,7 +684,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             var element = getSelfOrAncestor(range.startContainer, "table");
             if (element &&
                     getSelfOrAncestor(range.endContainer, "table") === element &&
-                    !getSelfOrAncestor(range.endContainer, /^(?:ins|tt)/)) {
+                    !getSelfOrAncestor(range.endContainer, /^(?:tt)/)) {
                 if (event.ctrlKey) {
                     self.deleteTableCell();
                 } else {
@@ -1521,7 +1520,7 @@ Wysiwyg.prototype.selectionChanged = function () {
         i: "em",
         u: "underline",
         del: "strike",
-        ins: "escape",
+        tt: "escape",
         p: "paragraph",
         h1: "heading1",
         h2: "heading2",
@@ -1597,8 +1596,8 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("''");                     // 3. italic
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
-    wikiInlineRules.push("![-<]");                // 6. escaped (open)
-    wikiInlineRules.push("[->]!");                // 7. escaped (close)
+    wikiInlineRules.push("![-<{(\\[]");                // 6. escaped (open)
+    wikiInlineRules.push("[->})\\]]!");                // 7. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 8. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
 
@@ -1904,22 +1903,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         handleOpenInlineCode(name);
     }
 
-
-    /* handle !- .. -! */
-    function handleEscapedCode(value, length) {
-        var d = contentDocument;
-        var element = d.createElement("ins");
-
-        value = value.slice(2, -2);
-        if (value.length > 0) {
-            holder.appendChild(element);
-            element.innerHTML = value;
-        }
-    }
-
     function handleInlineCode(value, length) {
         var d = contentDocument;
         var element = d.createElement("tt");
+        element.setAttribute("class", "inlinecode");
         value = value.slice(length, -length);
         if (value.length > 0) {
             element.appendChild(d.createTextNode(value));
@@ -2088,9 +2075,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     function openEscapedText(value) {
         if (!inEscapedText()) {
             var element = contentDocument.createElement("tt");
-            if (value !== '!-') {
-                element.setAttribute('class', value);
-            }
+            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!{': 'hashtable', '!(': 'nested', '![': 'plaintexttable' }[value]);
             holder.appendChild(element);
             holder = element;
         } else {
@@ -2427,7 +2412,6 @@ Wysiwyg.prototype.wikiCloseTokens = {
     "#text": true,
     "a": true,
     "tt": true,
-    "ins": true,
     "b": "'''",
     "strong": "'''",
     "i": "''",
@@ -2782,13 +2766,15 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "tt":
                 skipNode = node;
                 value = node.innerHTML.replace(/<br>/g, '\n').replace(/&gt;/g, ">").replace(/&lt;/g, "<");
-                var tags;
-                if (node.getAttribute('class') === "!<") {
-                    tags = [ "!<", ">!" ];
-                } else {
-                    tags = [ "!-", "-!" ];
-                }
                 if (value) {
+                    var tags = {
+                        'escape': [ "!-", "-!" ],
+                        'htmlescape': [ "!<", ">!" ],
+                        'hashtable': [ "!{", "}!" ],
+                        'nested': [ "!(", ")!" ],
+                        'plaintexttable': [ "![", "]!" ],
+                        'inlinecode': [ "{{{", "}}}" ]
+                    }[node.getAttribute('class') || "escape"];
                     text = tags[0] + value + tags[1];
                     pushTextWithDecorations(text, node);
                 }
