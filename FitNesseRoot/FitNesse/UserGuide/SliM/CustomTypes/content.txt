@@ -13,6 +13,6 @@ public interface Converter {
   Object fromString(String arg);
 } }}} As you can see this is pretty simple.  Your derivative must implement the toString method to convert your type to a string; and it must implement the fromString method to convert the string into your custom type.
 
-Then, in the constructor of first fixture to uses that type simply put the following line of code: {{{fitnesse.slim.Slim.addConverter(MyClass.class, new MyClassConverter())}}}
+Then, in the constructor of first fixture to uses that type simply put the following line of code: {{{fitnesse.slim.converters.ConverterRegistry.addConverter(MyClass.class, new MyClassConverter())}}}
 
 The technique for other language platforms should be similar to this.  Check the documentation of the Slim port for your platform. 
