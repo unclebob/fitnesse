@@ -11,12 +11,11 @@ article .centered {
 }
 
 .italic {
-	font-style:italic;
+  font-style:italic;
 }
 
 .code {
   font-family: courier, 'Lucida Sans Typewriter', monospace;
-  font-size: 16px;
   color: #004000;
   font-weight: bold;
 }
@@ -27,7 +26,7 @@ article .centered {
 }
 
 .note {
-	 font-size: 85%;
+  font-size: 85%;
 }
 
 /** Collapsable section */
@@ -43,11 +42,11 @@ article .centered {
 }
 
 .collapsible > div {
-	margin-left: 16px;
+  margin-left: 16px;
 }
 
 .collapsible.closed > div {
-	display: none;
+  display: none;
 }
 
 .collapsible.invisible {
@@ -70,14 +69,14 @@ article .centered {
 }
 
 .collapsible > ul {
-	float: right;
-	margin: 0;
+  float: right;
+  margin: 0;
 }
 
 .collapsible > ul li {
-	display: inline;
-	padding: 0 .5em;
-	border-left: 1px solid #BF8660;
+  display: inline;
+  padding: 0 .5em;
+  border-left: 1px solid #BF8660;
 }
 
 /** !style_* */
@@ -85,13 +84,13 @@ article .centered {
   background-color: #ffffaa;
 }
 .pass {
-	background-color: lightgreen;
+  background-color: lightgreen;
 }
 .fail {
-	background-color: red;
+  background-color: red;
 }
 .ignore {
-	background-color: lightgray;
+  background-color: lightgray;
 }
 .caps {
   font-variant: small-caps;
