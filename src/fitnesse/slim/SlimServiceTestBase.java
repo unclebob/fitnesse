@@ -140,7 +140,7 @@ public abstract class SlimServiceTestBase {
   private void assertContainsException(String message, String id, Map<String, Object> results) {
     String result = (String) results.get(id);
     assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1
-        && result.indexOf(message) != -1);
+      && result.indexOf(message) != -1);
   }
 
   @Test
@@ -160,7 +160,7 @@ public abstract class SlimServiceTestBase {
 
   @Test
   public void verboseArgument() throws Exception {
-    String args[] = { "-v", "99" };
+    String args[] = {"-v", "99"};
     assertTrue(SlimService.parseCommandLine(args));
     assertTrue(SlimService.verbose);
   }
@@ -183,6 +183,34 @@ public abstract class SlimServiceTestBase {
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("__EXCEPTION__:" + expectedStopTestExceptionMessage(), "id", results);
     assertNull(results.get("id2"));
+  }
+
+  @Test
+  public void canSpecifyAnInteractionClass() {
+    SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.DefaultInteraction"});
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+  }
+
+  @Test
+  public void canSpecifyAComplexCommandLine() {
+    String commandLine = "-v -i fitnesse.slim.fixtureInteraction.DefaultInteraction 7890";
+    String[] args = commandLine.split(" ");
+
+    assertTrue("should parse correctly", SlimService.parseCommandLine(args));
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    assertTrue("should be verbose", SlimService.verbose);
+    assertEquals("should have set port", 7890, SlimService.port);
+  }
+
+  @Test
+  public void canSpecifyComplexArgs() {
+    String commandLine = "-v -i fitnesse.slim.fixtureInteraction.DefaultInteraction 7890";
+    String[] args = commandLine.split(" ");
+
+    assertTrue("should parse correctly", SlimService.parseCommandLine(args));
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    assertTrue("should be verbose", SlimService.verbose);
+    assertEquals("should have set port", 7890, SlimService.port);
   }
 
 }

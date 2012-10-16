@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.*;
+import fitnesse.slim.converters.MapEditor;
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
@@ -36,7 +39,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     executorChain.add(new FixtureMethodExecutor(instances));
     executorChain.add(new SystemUnderTestMethodExecutor(instances));
     executorChain.add(new LibraryMethodExecutor(libraries));
-    
+
     addSlimHelperLibraryToLibraries();
   }
 
@@ -49,7 +52,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   public void setVariable(String name, Object value) {
     variables.setSymbol(name, new MethodExecutionResult(value, Object.class));
   }
-  
+
   private void setVariable(String name, MethodExecutionResult value) {
     variables.setSymbol(name, value);
   }
@@ -126,7 +129,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   private String couldNotInvokeConstructorException(String className, Object[] args) {
     return exceptionToString(new SlimError(String.format(
-        "message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)));
+      "message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)));
   }
 
   private Object createInstanceOfConstructor(String className, Object[] args) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -135,13 +138,19 @@ public class StatementExecutor implements StatementExecutorInterface {
     if (constructor == null)
       throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
-    Object newInstance = constructor.newInstance(ConverterSupport.convertArgs(args, constructor
-        .getParameterTypes()));
+    Object newInstance = newInstance(args, constructor);
     if (newInstance instanceof StatementExecutorConsumer) {
       ((StatementExecutorConsumer) newInstance).setStatementExecutor(this);
     }
     return newInstance;
-    
+
+  }
+
+  private Object newInstance(Object[] args, Constructor<?> constructor) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    Object[] initargs = ConverterSupport.convertArgs(args, constructor.getParameterTypes());
+
+      FixtureInteraction interaction = SlimService.getInteractionClass().newInstance();
+      return interaction.newInstance(constructor, initargs);
   }
 
   private Class<?> searchPathsForClass(String className) {
@@ -184,11 +193,11 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args)
-      throws Throwable {
+    throws Throwable {
     MethodExecutionResults results = new MethodExecutionResults();
     for (int i = 0; i < executorChain.size(); i++) {
       MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
-          replaceSymbols(args));
+        replaceSymbols(args));
       if (result.hasResult()) {
         return result;
       }

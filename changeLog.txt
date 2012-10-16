@@ -1,3 +1,8 @@
+20120816
+ * Allow users to wrap the calls to the SUT. Do this by extending fitnesse.slim.fixtureInteraction.FixtureInteraction, and pass in that
+   class name with the -i flag to the Slim Server.
+
+
 20120208 JAmes Atwill
  * Force the TCP port that Slim uses by passing -Dslim.port= on command line (or any means of setting the system property)
 

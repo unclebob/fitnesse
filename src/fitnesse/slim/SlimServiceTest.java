@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
+
 public class SlimServiceTest extends SlimServiceTestBase {
 
   protected String getImport() {
@@ -18,6 +23,19 @@ public class SlimServiceTest extends SlimServiceTestBase {
 
   protected String expectedStopTestExceptionMessage() {
     return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
+  }
+
+
+  @Test
+  public void nullInteractionService_returnsDefaultClass(){
+    SlimService.interactionClassName = null;
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+  }
+
+  @Test
+  public void definedInteractionService_returnsCorrectClass() {
+    SlimService.interactionClassName = "fitnesse.slim.fixtureInteraction.InteractionDemo";
+    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", SlimService.getInteractionClass().getName());
   }
 
 }

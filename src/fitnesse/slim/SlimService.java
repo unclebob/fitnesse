@@ -5,6 +5,7 @@ package fitnesse.slim;
 import java.io.IOException;
 import java.util.Arrays;
 
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import util.CommandLine;
 import fitnesse.socketservice.SocketService;
 
@@ -12,6 +13,8 @@ public class SlimService extends SocketService {
   public static SlimService instance = null;
   public static boolean verbose;
   public static int port;
+
+  protected static String interactionClassName = null;
 
   public static void main(String[] args) throws IOException {
     if (parseCommandLine(args)) {
@@ -30,11 +33,12 @@ public class SlimService extends SocketService {
   }
 
   protected static boolean parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine("[-v] port");
+    CommandLine commandLine = new CommandLine("[-v] [-i interactionClass] port ");
     if (commandLine.parse(args)) {
       verbose = commandLine.hasOption("v");
+      interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
-      port = Integer.parseInt(portString);
+      port = (portString == null) ? 8099 :Integer.parseInt(portString);
       return true;
     }
     return false;
@@ -43,5 +47,16 @@ public class SlimService extends SocketService {
   public SlimService(int port, SlimServer slimServer) throws IOException  {
     super(port, slimServer);
     instance = this;
+  }
+
+  public static Class<DefaultInteraction> getInteractionClass() {
+    if(interactionClassName==null){
+      return DefaultInteraction.class;
+    }
+    try {
+      return (Class<DefaultInteraction>) Class.forName(interactionClassName);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -1,8 +1,10 @@
 package fitnesse.slim;
 
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public abstract class MethodExecutor {
   public MethodExecutor() {
@@ -38,13 +40,12 @@ public abstract class MethodExecutor {
   }
 
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
-    Object retval = null;
+    FixtureInteraction interaction = SlimService.getInteractionClass().newInstance();
     try {
-      retval = method.invoke(instance, convertedArgs);
+      return interaction.methodInvoke(method, instance, convertedArgs);
     } catch (InvocationTargetException e) {
       throw e.getCause();
     }
-    return retval;
   }
 
   protected MethodExecutionResult findAndInvoke(String methodName, Object[] args, Object instance) throws Throwable {

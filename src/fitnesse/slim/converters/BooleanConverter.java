@@ -17,6 +17,12 @@ public class BooleanConverter implements Converter {
   }
 
   public String toString(Object o) {
-    return ((Boolean) o) ? TRUE : FALSE;
+  if (o instanceof String) {
+  		  return (String) o;
+		  	  }else {
+			  		  return ((Boolean) o) ? TRUE : FALSE;
+					  	  }
+  
   }
+
 }

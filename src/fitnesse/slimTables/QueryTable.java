@@ -22,6 +22,9 @@ public class QueryTable extends SlimTable {
   }
 
   public boolean matches(String actual, String expected) {
+    if("----mockingOnly----".equals(expected)){
+      return true;
+    }
     if (actual == null || expected == null)
       return false;
     if (actual.equals(replaceSymbols(expected)))

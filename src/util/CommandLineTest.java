@@ -43,6 +43,14 @@ public class CommandLineTest extends TestCase {
     assertEquals("blah", argument);
   }
 
+  public void testMultipleOptions(){
+    options = new CommandLine("[-opt1 arg]");
+    String[] args = new Option().split("-opt1 blah");
+    assertTrue(options.parse(args));
+    options.hasOption("opt1");
+    assertEquals("blah", options.getOptionArgument("opt1", "arg"));
+  }
+
   public void testInvalidOption() throws Exception {
     assertFalse(createOptionsAndParse("", "-badArg"));
   }
