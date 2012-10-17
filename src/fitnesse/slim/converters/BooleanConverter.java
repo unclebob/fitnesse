@@ -8,21 +8,19 @@ public class BooleanConverter implements Converter {
   public static final String TRUE = "true";
   public static final String FALSE = "false";
 
-  public Object fromString(String arg) {
+  public Boolean fromString(String arg) {
     return (
-      arg.equalsIgnoreCase("true") ||
-        arg.equalsIgnoreCase("yes") ||
-        arg.equals(TRUE)
+      arg.equalsIgnoreCase(TRUE) ||
+        arg.equalsIgnoreCase("yes")
     );
   }
 
   public String toString(Object o) {
-  if (o instanceof String) {
-  		  return (String) o;
-		  	  }else {
-			  		  return ((Boolean) o) ? TRUE : FALSE;
-					  	  }
-  
+    if (o instanceof Boolean) {
+      return ((Boolean) o) ? TRUE : FALSE;
+    } else {
+      return o.toString();
+    }
   }
 
 }
