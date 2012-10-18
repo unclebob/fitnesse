@@ -1833,11 +1833,14 @@ table {
   border-spacing: 0;
 }
 
+table,
 .table {
   width: 100%;
   margin-bottom: 20px;
 }
 
+table th,
+table td,
 .table th,
 .table td {
   padding: 8px;
@@ -1847,14 +1850,22 @@ table {
   border-top: 1px solid #dddddd;
 }
 
+table th,
 .table th {
   font-weight: bold;
 }
 
+table thead th,
 .table thead th {
   vertical-align: bottom;
 }
 
+table caption + thead tr:first-child th,
+table caption + thead tr:first-child td,
+table colgroup + thead tr:first-child th,
+table colgroup + thead tr:first-child td,
+table thead:first-child tr:first-child th,
+table thead:first-child tr:first-child td,
 .table caption + thead tr:first-child th,
 .table caption + thead tr:first-child td,
 .table colgroup + thead tr:first-child th,
@@ -1864,6 +1875,7 @@ table {
   border-top: 0;
 }
 
+table tbody + tbody,
 .table tbody + tbody {
   border-top: 2px solid #dddddd;
 }
@@ -1873,6 +1885,7 @@ table {
   padding: 4px 5px;
 }
 
+table,
 .table-bordered {
   border: 1px solid #dddddd;
   border-collapse: separate;
@@ -1883,11 +1896,23 @@ table {
           border-radius: 4px;
 }
 
+table th,
+table td,
 .table-bordered th,
 .table-bordered td {
   border-left: 1px solid #dddddd;
 }
 
+
+table caption + thead tr:first-child th,
+table caption + tbody tr:first-child th,
+table caption + tbody tr:first-child td,
+table colgroup + thead tr:first-child th,
+table colgroup + tbody tr:first-child th,
+table colgroup + tbody tr:first-child td,
+table thead:first-child tr:first-child th,
+table tbody:first-child tr:first-child th,
+table tbody:first-child tr:first-child td,
 .table-bordered caption + thead tr:first-child th,
 .table-bordered caption + tbody tr:first-child th,
 .table-bordered caption + tbody tr:first-child td,
@@ -1900,6 +1925,8 @@ table {
   border-top: 0;
 }
 
+table thead:first-child tr:first-child th:first-child,
+table tbody:first-child tr:first-child td:first-child,
 .table-bordered thead:first-child tr:first-child th:first-child,
 .table-bordered tbody:first-child tr:first-child td:first-child {
   -webkit-border-top-left-radius: 4px;
@@ -1907,6 +1934,8 @@ table {
   -moz-border-radius-topleft: 4px;
 }
 
+table thead:first-child tr:first-child th:last-child,
+table tbody:first-child tr:first-child td:last-child,
 .table-bordered thead:first-child tr:first-child th:last-child,
 .table-bordered tbody:first-child tr:first-child td:last-child {
   -webkit-border-top-right-radius: 4px;
@@ -1914,6 +1943,9 @@ table {
   -moz-border-radius-topright: 4px;
 }
 
+table thead:last-child tr:last-child th:first-child,
+table tbody:last-child tr:last-child td:first-child,
+table tfoot:last-child tr:last-child td:first-child,
 .table-bordered thead:last-child tr:last-child th:first-child,
 .table-bordered tbody:last-child tr:last-child td:first-child,
 .table-bordered tfoot:last-child tr:last-child td:first-child {
@@ -1925,6 +1957,9 @@ table {
   -moz-border-radius-bottomleft: 4px;
 }
 
+table thead:last-child tr:last-child th:last-child,
+table tbody:last-child tr:last-child td:last-child,
+table tfoot:last-child tr:last-child td:last-child,
 .table-bordered thead:last-child tr:last-child th:last-child,
 .table-bordered tbody:last-child tr:last-child td:last-child,
 .table-bordered tfoot:last-child tr:last-child td:last-child {
@@ -1942,6 +1977,10 @@ table {
   -moz-border-radius-topleft: 4px;
 }
 
+table caption + thead tr:first-child th:last-child,
+table caption + tbody tr:first-child td:last-child,
+table colgroup + thead tr:first-child th:last-child,
+table colgroup + tbody tr:first-child td:last-child,
 .table-bordered caption + thead tr:first-child th:last-child,
 .table-bordered caption + tbody tr:first-child td:last-child,
 .table-bordered colgroup + thead tr:first-child th:last-child,
@@ -1956,6 +1995,8 @@ table {
   background-color: #f9f9f9;
 }
 
+table tbody tr:hover td,
+table tbody tr:hover th,
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
   background-color: #f5f5f5;
