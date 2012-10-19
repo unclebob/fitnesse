@@ -1,6 +1,5 @@
 #if(!$pageTitle.Link)<h1>$pageTitle.Title</h1>#end
 
-<p class="lead">
-## pageData.helpText -- A smashing help text to explain the page or test case briefly.
-</p>
-
+#if( $!helpText )
+<p class="lead"> $helpText </p>
+#end

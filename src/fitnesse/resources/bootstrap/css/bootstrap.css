@@ -1827,15 +1827,13 @@ legend + .control-group {
 }
 
 table {
-  max-width: 100%;
-  background-color: transparent;
+  background-color: #f9f9f9;
   border-collapse: collapse;
   border-spacing: 0;
 }
 
 table,
 .table {
-  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -1880,6 +1878,8 @@ table tbody + tbody,
   border-top: 2px solid #dddddd;
 }
 
+table th,
+table td,
 .table-condensed th,
 .table-condensed td {
   padding: 4px 5px;
@@ -1995,8 +1995,6 @@ table colgroup + tbody tr:first-child td:last-child,
   background-color: #f9f9f9;
 }
 
-table tbody tr:hover td,
-table tbody tr:hover th,
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
   background-color: #f5f5f5;
@@ -4246,7 +4244,7 @@ input[type="submit"].btn.btn-mini {
 .navbar .brand {
   display: block;
   float: left;
-  padding: 10px 0px 10px;
+  padding: 10px 20px 10px 0;
   font-size: 20px;
   font-weight: 200;
   color: #777777;
@@ -4756,13 +4754,12 @@ input[type="submit"].btn.btn-mini {
   padding: 8px 40px;
   margin: 0 0 20px;
   list-style: none;
-  /*background-color: #f5f5f5;*/
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  background-image: -webkit-gradient(
-    linear, left top, left bottom, from(rgba(255,255,255,1.0)),
-    to(rgba(255,255,255,0.0)), color-stop(.7, #ffffff));
+  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff 70%, rgba(255,255,255,0.0));
+  background-image:    -moz-linear-gradient(top, #ffffff, #ffffff 70%, rgba(255, 255, 255, 0));
+  background-image:      -o-linear-gradient(top, #ffffff, #ffffff 70%, rgba(255, 255, 255, 0));
+  background-image:         linear-gradient(to bottom, #ffffff, #ffffff 70%, rgba(255, 255, 255, 0));
+  background-repeat: repeat-x;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffffff', endColorstr='#00ffffff', GradientType=0);
 }
 
 .breadcrumb li {
@@ -4772,6 +4769,10 @@ input[type="submit"].btn.btn-mini {
   *zoom: 1;
 }
 
+.breadcrumb li+li:before {
+    content: "/ ";
+    color: #ccc;
+}
 .breadcrumb .divider {
   padding: 0 5px;
   color: #ccc;
@@ -5825,4 +5826,54 @@ a.badge:hover {
 
 .affix {
   position: fixed;
+}
+
+
+/** Collapsable section */
+.collapsible {
+  background: transparent;
+  margin: 5px 0px 5px 0px;
+  border: 1px solid #e5e5e5;
+  padding: 9.5px;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.collapsible > div {
+  margin-left: 16px;
+}
+
+.collapsible.closed > div {
+  display: none;
+}
+
+.collapsible.invisible {
+  display: none;
+}
+
+.collapsible p.title {
+  color: #000;
+  font-style: italic;
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+
+.collapsible p.title {
+  background: url(../img/minus-sign.png) no-repeat scroll 0 2px transparent;
+}
+
+.collapsible.closed p.title {
+  background: url(../img/plus-sign.png) no-repeat scroll 0 2px transparent;
+}
+
+.collapsible > ul {
+  float: right;
+  margin: 0;
+}
+
+.collapsible > ul li {
+  display: inline;
+  padding: 0 .5em;
+  border-left: 1px solid #e5e5e5;
 }
