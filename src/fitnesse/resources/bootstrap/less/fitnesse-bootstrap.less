@@ -151,6 +151,39 @@ tr.scenario.closed > td:first-child {
   #progressBar {
     .progress .bar;
     padding: 0 0 0 .5em;
+    &.pass {
+      .progress .bar-success;
+    }
+    &.fail {
+      .progress .bar-danger;
+    }
+  }
+  &.pass {
+    .label;
+    .progress .bar-success;
+    height: 18px;
+    padding: 2px 0 0 0.5em;
+  }
+  &.fail {
+    .label;
+    .progress .bar-danger;
+    height: 18px;
+    padding: 2px 0 0 0.5em;
   }
 }
 
+
+#test-summaries {
+  .pass {
+    .label;
+    background-color: @successText;
+  }
+  .error {
+    .label;
+    background-color: @errorText;
+  }
+  .ignore {
+    .label;
+    background-color: @infoText;
+  }
+}
