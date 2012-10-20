@@ -2,10 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.wikitext.Utils;
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.toUpperCase;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
   private String tableName;
@@ -571,7 +571,7 @@ public abstract class SlimTable {
     }
 
     protected String formatSymbolValue(String name, String value) {
-      return String.format("$%s->[%s]", name, value);
+      return String.format("$%s->[%s]", name, Utils.escapeHTML(value));
     }
   }
 
@@ -626,7 +626,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);
-      return String.format("$%s<-[%s]", symbolName, actual);
+      return String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual));
     }
   }
 
