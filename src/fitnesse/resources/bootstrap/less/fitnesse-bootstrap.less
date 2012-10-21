@@ -8,8 +8,6 @@
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
 
-@import "/files/fitnesse/css/fitnesse_wiki.css";
-@import "/files/fitnesse/css/fitnesse_pages.css";
 @import "bootstrap-merged.less";
 
 body {
@@ -75,7 +73,22 @@ input[type="submit"] {
   border-top: 1px solid #e5e5e5;
  }
  
- 
+/** Rich text editor style */
+.editPage label {
+  float: none;
+  width: auto;
+}
+
+.editor-toggle label {
+  .radio;
+  .radio.inline;
+}
+
+.editor-toggle input {
+    float: left;
+    margin-left: -18px;
+}
+
 /** Collapsable section */
 .collapsible {
   background: transparent;
