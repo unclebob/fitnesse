@@ -52,9 +52,16 @@ table {
     color: #ccc;
 }
 
+button,
+input[type="button"] {
+  .btn;
+  margin-bottom: 9px;
+}
+
 input[type="submit"] {
   .btn;
   .btn-primary;
+  margin-bottom: 9px;
 }
 
 // Reset .divider class to something we can work with
@@ -133,7 +140,7 @@ tr.scenario.closed > td:first-child {
     float: left;
     font-size: 14px;
     margin-top: 10px;
-    padding: 2px 6px 3px;
+    padding: 3px 6px 3px;
   }
   .output,
   .ok {
