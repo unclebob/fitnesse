@@ -1,0 +1,67 @@
+!***< defines
+
+!define SLIM_SETUP (!-
+
+!define TEST_SYSTEM {slim}
+-!)
+
+!define LOGGING_INTERACTION (!-
+
+!define COMMAND_PATTERN {java -Xmx4g -cp %p %m -i fitnesse.slim.fixtureInteraction.LoggingInteraction }
+-!)
+
+!define MOCKING_INTERACTION (!-
+
+!define COMMAND_PATTERN {java -Xmx4g -cp %p %m -i fitnesse.slim.fixtureInteraction.MockingInteraction }
+-!)
+
+!define SET_UP (!-
+
+| Import |
+| fitnesse.fixtures |
+
+| Library |
+| echo fixture |
+| Pass |
+
+-!)
+
+!define CHECK (!-
+
+| script |
+| show | echo | no check |
+
+-!)
+
+!define CHECK_BOOLEAN (!-
+
+| script |
+| ensure | ok |
+
+-!)
+
+*!
+!2 Logging Interaction
+The Logging Interaction provides extra logging on fixture creation and fixture method invocations.
+
+| script |
+| given page | !-TestLoggingInteraction-! | with content | ${SLIM_SETUP} ${LOGGING_INTERACTION} ${SUT_PATH} ${SET_UP} ${CHECK} |
+| make | !-TestLoggingInteraction-! | a test page |
+| test results for page | !-TestLoggingInteraction-! | should contain | Output Captured |
+| page | !-ErrorLogs.TestLoggingInteraction-! | should contain | newInstance : |
+
+!2 Mocking Interaction
+
+The Mocking Interaction returns the string ''!-----mockingOnly-----!'' on every invocation.
+
+| script |
+| given page | !-TestMockingInteraction-! | with content | ${SLIM_SETUP} ${MOCKING_INTERACTION} ${SUT_PATH} ${SET_UP} ${CHECK} |
+| make | !-TestMockingInteraction-! | a test page |
+| test results for page | !-TestMockingInteraction-! | should contain | !-----mockingOnly-----! |
+
+Since the Mocking Interaction returns ''!-----mockingOnly-----!'' as response, this results in a "false" result for boolean tests like script ensure and reject.
+
+| script |
+| given page | !-TestMockingInteraction-! | with content | ${SLIM_SETUP} ${MOCKING_INTERACTION} ${SUT_PATH} ${SET_UP} ${CHECK_BOOLEAN} |
+| make | !-TestMockingInteraction-! | a test page |
+| test results for page | !-TestMockingInteraction-! | should contain | <span class="fail">ensure</span> |

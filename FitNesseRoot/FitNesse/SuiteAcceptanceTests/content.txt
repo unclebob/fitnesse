@@ -22,7 +22,8 @@
 !path classes
 !path lib/*.jar
 !path fitnesse.jar
-!path fitnesse-standalone.jar-!)
+!path fitnesse-standalone.jar
+-!)
 
 
 ----
