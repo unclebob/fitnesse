@@ -120,15 +120,7 @@
 
 	<target name="set-version-if-not-manualy-set" unless="version">
 		<tstamp />
-		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-			<arg value="describe"/>
-		</exec>
-		<condition property="version" value="v${git.revision}" else="v${DSTAMP}-nogit">
-			<and>
-				<isset property="git.revision"/>
-				<length string="${git.revision}" trim="yes" length="0" when="greater"/>
-			</and>
-		</condition>
+		<property name="version" value="v${DSTAMP}" />
 	</target>
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
