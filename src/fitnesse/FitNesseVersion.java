@@ -2,19 +2,47 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 /**
  * Represents a version of a fitnesse release. Versions have the following format: v20100103[suffix]
  * I.e. the suffix is optional.
  **/
 public class FitNesseVersion {
   private final String version;
-	
+
   public FitNesseVersion() {
-    this("v20121001");
+    this(versionFromMetaInf());
   }
 
   public FitNesseVersion(String version) {
     this.version = version;
+  }
+
+  private static String versionFromMetaInf() {
+    InputStream is = null;
+    try {
+      is = FitNesseVersion.class.getResourceAsStream("/META-INF/FitNesseVersion.txt");
+      if (is == null) {
+        return "unknown";
+      }
+      byte[] b = new byte[64];
+      int len = is.read(b);
+      return new String(b, 0, len, Charset.forName("ISO-8859-1"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      return "unknown";
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   public String toString() {
