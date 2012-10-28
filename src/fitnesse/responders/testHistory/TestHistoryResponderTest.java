@@ -1,18 +1,10 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.TestSummary;
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 
@@ -22,6 +14,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import util.FileUtil;
 
 public class TestHistoryResponderTest {
   private File resultsDirectory;
@@ -246,7 +251,7 @@ public class TestHistoryResponderTest {
       int right = (day == 31) ? 1 : 0;
       dates.add(String.format("200905%02d010203_%1d_0_0_0", day, right));
     }
-    BarGraph barGraph = makeBarGraph(dates.toArray(new String[0]));
+    BarGraph barGraph = makeBarGraph(dates.toArray(new String[dates.size()]));
     assertEquals(20, barGraph.size());
     assertEquals(dateFormat.parse("20090512010203"), barGraph.getStartingDate());
     assertEquals(dateFormat.parse("20090531010203"), barGraph.getEndingDate());

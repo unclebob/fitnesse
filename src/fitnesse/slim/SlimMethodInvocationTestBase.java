@@ -2,19 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.ListUtility.list;
 
 import java.util.Date;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.DateConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlimInterface;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -39,8 +39,8 @@ abstract public class SlimMethodInvocationTestBase {
   public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
     String response = (String) caller.call("testSlim", "noSuchMethod");
     assertTrue(response,
-      response.indexOf(SlimServer.EXCEPTION_TAG) != -1 &&
-        response.indexOf("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] " + getTestClassName() + ".>>") != -1);
+      response.contains(SlimServer.EXCEPTION_TAG) &&
+        response.contains("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] " + getTestClassName() + ".>>"));
   }
 
   @Test
@@ -134,7 +134,7 @@ abstract public class SlimMethodInvocationTestBase {
   public void convertArrayOfIntegersThrowsExceptionIfNotInteger() throws Exception {
     Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
     String resultString = (String) result;
-    assertTrue(resultString, resultString.indexOf("message:<<CANT_CONVERT_TO_INTEGER_LIST>>") != -1);
+    assertTrue(resultString, resultString.contains("message:<<CANT_CONVERT_TO_INTEGER_LIST>>"));
   }
 
   @Test
@@ -153,7 +153,7 @@ abstract public class SlimMethodInvocationTestBase {
   public void convertArrayOfDoublesThrowsExceptionIfNotInteger() throws Exception {
     Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
     String resultString = (String) result;
-    assertTrue(resultString, resultString.indexOf("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>") != -1);
+    assertTrue(resultString, resultString.contains("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>"));
   }
 
   @Test

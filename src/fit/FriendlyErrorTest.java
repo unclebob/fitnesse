@@ -14,7 +14,7 @@ public class FriendlyErrorTest extends TestCase {
     Fixture fixture = new Fixture();
     fixture.doTables(page);
     String fixtureName = page.at(0, 0, 0).body;
-    assertTrue(fixtureName.indexOf("Could not find fixture: NoSuchFixture.") != -1);
+    assertTrue(fixtureName.contains("Could not find fixture: NoSuchFixture."));
   }
 
   public void testNoSuchMethod() throws Exception {
@@ -24,7 +24,7 @@ public class FriendlyErrorTest extends TestCase {
     };
     Parse page = FixtureTest.executeFixture(table);
     String columnHeader = page.at(0, 1, 0).body;
-    assertTrue(columnHeader.indexOf("Could not find method: no such method?.") != -1);
+    assertTrue(columnHeader.contains("Could not find method: no such method?."));
   }
 
   public void testParseFailure() throws Exception {
@@ -35,7 +35,7 @@ public class FriendlyErrorTest extends TestCase {
     };
     Parse page = FixtureTest.executeFixture(table);
     String colTwoResult = page.at(0, 2, 1).body;
-    assertTrue(colTwoResult.indexOf("Could not parse: alpha, expected type: int") != -1);
+    assertTrue(colTwoResult.contains("Could not parse: alpha, expected type: int"));
   }
 
   public void testExceptionInMethod() throws Exception {
@@ -46,6 +46,6 @@ public class FriendlyErrorTest extends TestCase {
     };
     Parse page = FixtureTest.executeFixture(table);
     String colTwoResult = page.at(0, 2, 1).body;
-    assertTrue(colTwoResult.indexOf("I thowed up") != -1);
+    assertTrue(colTwoResult.contains("I thowed up"));
   }
 }

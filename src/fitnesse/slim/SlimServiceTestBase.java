@@ -139,8 +139,8 @@ public abstract class SlimServiceTestBase {
 
   private void assertContainsException(String message, String id, Map<String, Object> results) {
     String result = (String) results.get(id);
-    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1
-      && result.indexOf(message) != -1);
+    assertTrue(result, result.contains(SlimServer.EXCEPTION_TAG)
+        && result.contains(message));
   }
 
   @Test
