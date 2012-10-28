@@ -43,7 +43,7 @@ public class StringFixture extends ColumnFixture {
   }
 
   public String contains() {
-    if (value.indexOf(expected) != -1)
+    if (value.contains(expected))
       return expected;
     else {
       if (value.length() <= subStringSize)

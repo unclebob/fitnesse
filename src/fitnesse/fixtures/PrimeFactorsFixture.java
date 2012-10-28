@@ -21,7 +21,7 @@ public class PrimeFactorsFixture extends RowFixture {
     for (int f = 2; n > 1; f++)
       for (; n % f == 0; n /= f)
         factors.add(new Factor(f));
-    return factors.toArray(new Factor[0]);
+    return factors.toArray(new Factor[factors.size()]);
   }
 
   public Class<?> getTargetClass()             // get expected type of row

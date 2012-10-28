@@ -76,9 +76,9 @@ public class FixtureTest extends RegexTestCase {
     };
     Parse page = executeFixture(table);
     String colTwoResult = page.at(0, 2, 1).body;
-    assertTrue(colTwoResult.indexOf("<b>1</b>>0") != -1);
+    assertTrue(colTwoResult.contains("<b>1</b>>0"));
     String colTwoTag = page.at(0, 2, 1).tag;
-    assertTrue(colTwoTag.indexOf("pass") != -1);
+    assertTrue(colTwoTag.contains("pass"));
   }
 
   public void testNullAndBlankStrings() throws Exception {

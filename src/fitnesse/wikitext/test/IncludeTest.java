@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.WikiPage;
-import org.junit.Test;
-
 import static fitnesse.wikitext.test.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertTrue;
+
+import fitnesse.wiki.WikiPage;
+import org.junit.Test;
 
 public class IncludeTest {
   @Test
@@ -143,7 +143,7 @@ public class IncludeTest {
   }
 
   private void assertContains(String result, String substring) {
-    assertTrue(result, result.indexOf(substring) >= 0);
+    assertTrue(result, result.contains(substring));
   }
 
 }

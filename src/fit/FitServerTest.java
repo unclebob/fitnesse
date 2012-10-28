@@ -21,7 +21,6 @@ import java.net.Socket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import util.FileUtil;
 import util.RegexTestCase;
 import util.StreamReader;
@@ -77,7 +76,7 @@ public class FitServerTest {
     assertTrue(exitValue != 0);
     // TODO This started to fail with Java 5.0... why does -1 turn into 255?
     // assertEquals("stdout: " + stdoutString, -1, exitValue);
-    assertTrue(stdoutString.indexOf(errorMessage) != -1);
+    assertTrue(stdoutString.contains(errorMessage));
   }
 
   @Test
@@ -89,8 +88,8 @@ public class FitServerTest {
     String sizeString = read(10);
     int size = Integer.parseInt(sizeString);
     String output = read(size);
-    assertTrue(output.indexOf("Exception") != -1);
-    assertTrue(output.indexOf("Can't find tag: table") != -1);
+    assertTrue(output.contains("Exception"));
+    assertTrue(output.contains("Can't find tag: table"));
   }
 
   @Test
@@ -164,7 +163,7 @@ public class FitServerTest {
     String response = readWholeResponse();
 
     assertTrue(response.startsWith("<html>"));
-    assertTrue(response.indexOf("monkey") != -1);
+    assertTrue(response.contains("monkey"));
     assertTrue(response.endsWith("</html>"));
     terminateSessionProcess();
   }
@@ -294,7 +293,7 @@ public class FitServerTest {
   private void checkForAttribute_class() throws Exception {
     String output = readFromFitServer();
     assertTrue("'class' attribute was not found",
-        output.indexOf("class=") != -1);
+      output.contains("class="));
   }
 
   private String readFromFitServer() throws Exception {

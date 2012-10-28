@@ -2,6 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.ServerSocket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
@@ -11,20 +27,17 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
-import fitnesse.slimTables.*;
+import fitnesse.slimTables.ScenarioTable;
+import fitnesse.slimTables.SlimTable;
+import fitnesse.slimTables.SlimTableFactory;
+import fitnesse.slimTables.Table;
+import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.ParsedPage;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.ServerSocket;
-import java.net.SocketException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
   public static final String MESSAGE_ERROR = "!error:";
@@ -291,9 +304,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     testResults = pageData;
 
     boolean runAllTablesAtOnce = false;
-    String htmlResults = "";
+    StringBuilder htmlResults = new StringBuilder();
     if (runAllTablesAtOnce || (allTables.size() == 0)) {
-      htmlResults = processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST);
+      htmlResults.append(processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST));
     } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
@@ -302,11 +315,11 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
         oneTableList.add(theTable);
-        htmlResults += processTablesAndGetHtml(oneTableList, startWithTable, nextTable);
+        htmlResults.append(processTablesAndGetHtml(oneTableList, startWithTable, nextTable));
         oneTableList.clear();
       }
     }
-    return htmlResults;
+    return htmlResults.toString();
   }
 
   protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
@@ -429,7 +442,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void replaceIfUnignoredException(String resultKey, String resultString) {
-    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+    if (resultString.contains(SlimServer.EXCEPTION_TAG)) {
       if (shouldReportException(resultKey, resultString))
         processException(resultKey, resultString);
     }
@@ -497,10 +510,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private String getScenarioLibraryContent() {
-    String content = "!*> Precompiled Libraries\n\n";
-    content += includeUncleLibraries();
-    content += "*!\n";
-    return content;
+    StringBuilder content = new StringBuilder("!*> Precompiled Libraries\n\n");
+    content.append(includeUncleLibraries());
+    content.append("*!\n");
+    return content.toString();
   }
 
   private String includeUncleLibraries() {

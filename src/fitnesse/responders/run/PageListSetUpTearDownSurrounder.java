@@ -1,10 +1,13 @@
 package fitnesse.responders.run;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import java.util.*;
 
 public class PageListSetUpTearDownSurrounder {
   private WikiPage root;
@@ -56,10 +59,8 @@ public class PageListSetUpTearDownSurrounder {
   }
 
   private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<TestPage>> pageSetUpTearDownGroups) {
-    Set<String> groupKeys = pageSetUpTearDownGroups.keySet();
-    for (String groupKey : groupKeys) {
-      LinkedList<TestPage> pageGroup = pageSetUpTearDownGroups.get(groupKey);
-      insertSetUpTearDownPageGroup(groupKey, pageGroup);
+    for (Map.Entry<String, LinkedList<TestPage>> entry : pageSetUpTearDownGroups.entrySet()) {
+      insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue());
     }
   }
 

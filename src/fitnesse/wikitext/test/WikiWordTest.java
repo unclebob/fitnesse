@@ -1,15 +1,19 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWord;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class WikiWordTest {
     private TestRoot root;
@@ -49,7 +53,7 @@ public class WikiWordTest {
     @Test
     public void regracesWikiWords() throws Exception {
         root.setPageData(pageOne, "!define " + WikiWord.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWord.REGRACE_LINK + " {false}\n");
-        assertTrue(ParserTestHelper.translateTo(pageOne).indexOf(wikiLink("PageOne", "Page One")) >= 0);
+        assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
     }
 
     @Test

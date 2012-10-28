@@ -98,7 +98,7 @@ public class PageDriver {
     WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
     return thePage instanceof SymbolicPage;
   }
-  
+
   public boolean pageExists(String pageName) {
 	    WikiPage root = FitnesseFixtureContext.root;
 	    WikiPagePath pagePath = PathParser.parse(pageName);
@@ -109,11 +109,11 @@ public class PageDriver {
   public void makeATestPage(String pageName) throws Exception {
 	onPageSetAttribute(pageName, "Test");
   }
-  
+
   public void makeASuitePage(String pageName) throws Exception {
 	onPageSetAttribute(pageName, "Suite");
   }
-  
+
   private void onPageSetAttribute(String pageName, String attrName) {
     WikiPage root = FitnesseFixtureContext.root;
     WikiPagePath pagePath = PathParser.parse(pageName);
@@ -132,7 +132,7 @@ public class PageDriver {
   public boolean contentContains(String subString) throws Exception {
     examiner.type = "contents";
     examiner.extractValueFromResponse();
-    return examiner.getValue().indexOf(subString) != -1;
+    return examiner.getValue().contains(subString);
   }
 
   public boolean htmlContains(String subString) throws Exception {
@@ -142,7 +142,7 @@ public class PageDriver {
     html = html.replaceAll("\\s+", " ");
     System.out.println("html = " + html);
     System.out.println("subString = " + subString);
-    return (html.indexOf(subString) != -1);
+    return (html.contains(subString));
   }
 
   public boolean containsJsonPacket(String packet) throws Exception {
@@ -235,7 +235,7 @@ public class PageDriver {
 
   public boolean contentOfTagWithIdContains(String id, String contents) throws Exception {
     String html = getValueOfTagWithAttributeValue("id", id);
-    return (html.indexOf(contents) != -1);
+    return (html.contains(contents));
   }
 
   public String contentOfTagWithId(String id) throws Exception {

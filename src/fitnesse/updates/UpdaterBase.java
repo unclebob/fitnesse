@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Set;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
@@ -73,7 +74,8 @@ public class UpdaterBase implements Updater {
     awriter = new BufferedWriter(new OutputStreamWriter(OutputStream, "8859_1"));
     awriter.write("#FitNesse properties");
     awriter.newLine();
-    Object[] keys = rootProperties.keySet().toArray(new Object[0]);
+    Set<Object> objects = rootProperties.keySet();
+    Object[] keys = objects.toArray(new Object[objects.size()]);
     Arrays.sort(keys);
     for (Enumeration<Object> enumeration = rootProperties.keys(); enumeration
       .hasMoreElements();) {

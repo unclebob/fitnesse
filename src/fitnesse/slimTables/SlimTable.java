@@ -147,7 +147,7 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName(String tableHeader) {
-    if (tableHeader.indexOf(":") == -1)
+    if (!tableHeader.contains(":"))
       return tableHeader;
     return tableHeader.split(":")[1];
   }
@@ -171,7 +171,7 @@ public abstract class SlimTable {
       arguments.add(table.getUnescapedCellContents(col, row));
       addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
     }
-    return arguments.toArray(new String[0]);
+    return arguments.toArray(new String[arguments.size()]);
   }
 
   protected void addCall(List<Object> instruction, String instanceName, String functionName) {
@@ -655,7 +655,7 @@ public abstract class SlimTable {
         String expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else if (actual.indexOf("Exception:") != -1) {
+        else if (actual.contains("Exception:")) {
           evaluationMessage = error(actual);
         } else
           evaluationMessage = failMessage(actual,
