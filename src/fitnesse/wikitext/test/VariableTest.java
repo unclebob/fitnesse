@@ -1,9 +1,10 @@
 package fitnesse.wikitext.test;
 
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 
 public class VariableTest {
     @Test public void scansVariables() {
@@ -28,13 +29,13 @@ public class VariableTest {
     @Test public void translatesVariableContents() throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {''y''}\n|${x}|\n");
         String result = ParserTestHelper.translateTo(pageOne);
-        assertTrue(result.indexOf("<i>y</i>") >= 0);
+        assertTrue(result.contains("<i>y</i>"));
     }
 
     @Test public void translatesVariableContentsInLiteralTable() throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {''y''}\n!|${x}|\n");
         String result = ParserTestHelper.translateTo(pageOne);
-        assertTrue(result.indexOf("<i>y</i>") < 0);
+        assertTrue(!result.contains("<i>y</i>"));
         assertTrue(result.indexOf("''y''", result.indexOf("table")) >= 0);
     }
 

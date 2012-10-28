@@ -4,6 +4,7 @@ package fitnesse.http;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class ResponseTest {
@@ -103,13 +104,13 @@ public class ResponseTest {
   public void shouldHaveHeadersIfHtml() throws Exception {
     Response response = new MockResponse("html");
     response.addStandardHeaders();
-    assertTrue(response.makeHttpHeaders().indexOf("HTTP/1.1 200 OK") != -1);
+    assertTrue(response.makeHttpHeaders().contains("HTTP/1.1 200 OK"));
   }
 
   @Test
   public void shouldHaveHeadersIfXml() throws Exception {
     Response response = new MockResponse("xml");
     response.addStandardHeaders();
-    assertTrue(response.makeHttpHeaders().indexOf("HTTP/1.1 200 OK") != -1);
+    assertTrue(response.makeHttpHeaders().contains("HTTP/1.1 200 OK"));
   }
 }

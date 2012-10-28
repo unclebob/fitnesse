@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public class ContentsTest {
     @Test public void scansContents() {
@@ -93,6 +93,6 @@ public class ContentsTest {
     }
 
     private void assertContains(String result, String substring) {
-      assertTrue(result, result.indexOf(substring) >= 0);
+      assertTrue(result, result.contains(substring));
     }
 }
