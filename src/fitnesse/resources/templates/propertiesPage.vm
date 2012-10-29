@@ -117,6 +117,10 @@
     </td>
    </tr>
   </table>
+  
+  <fieldset>
+   <a class="button" href="$viewLocation">Cancel</a>
+  </fieldset>
  </form>
 
 

@@ -79,11 +79,6 @@ legend {
 label input {
     margin-right: 0.5em;
 }
-.propertiesPage input[type=submit],
-.searchForm input[type=submit] {
-	display: block;
-	margin-top: 1em;
-}
 #virtual-wiki-properties {
 	margin-top: 1em;
 }
