@@ -6,11 +6,12 @@
 
 package fit;
 
+import junit.framework.TestCase;
+
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 public class RowFixtureTest extends TestCase {
 
@@ -18,7 +19,7 @@ public class RowFixtureTest extends TestCase {
     private String[] strs;
 
     public BusinessObject(String[] strs) {
-      this.strs = strs;
+      this.strs = Arrays.copyOf(strs, strs.length);
     }
 
     public String[] getStrings() {

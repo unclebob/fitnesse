@@ -6,10 +6,10 @@ package fitnesse;
 
 import java.io.IOException;
 
-import util.CommandLine;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
+import util.CommandLine;
 
 public class Shutdown {
   public String hostname = "localhost";
@@ -53,7 +53,7 @@ public class Shutdown {
   public String checkResponse(ResponseParser response) {
     int status = response.getStatus();
     String serverHeader = response.getHeader("Server");
-    if (serverHeader == null || serverHeader.indexOf("FitNesse") == -1)
+    if (serverHeader == null || !serverHeader.contains("FitNesse"))
       return "Not a FitNesse server";
     else if (status != 200)
       return status + " " + Response.getReasonPhrase(status);

@@ -1,15 +1,15 @@
 package fitnesse.responders.run;
 
+import java.util.Date;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
+import util.DateTimeUtil;
 import util.StringUtil;
 import util.TimeMeasurement;
 import util.XmlUtil;
-import util.DateTimeUtil;
-
-import java.util.Date;
 
 public abstract class ExecutionReport {
   public String version;
@@ -119,11 +119,11 @@ public abstract class ExecutionReport {
   }
 
   public Date getDate() {
-    return date;
+    return new Date(date.getTime());
   }
 
   public void setDate(Date date) {
-    this.date = date;
+    this.date = new Date(date.getTime());
   }
 	  
   public boolean hasRunTimes() {

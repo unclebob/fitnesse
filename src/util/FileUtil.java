@@ -180,7 +180,7 @@ public class FileUtil {
     List<File> fileList = new LinkedList<File>();
     fileList.addAll(dirSet);
     fileList.addAll(fileSet);
-    return fileList.toArray(new File[]{});
+    return fileList.toArray(new File[fileList.size()]);
   }
 
   public static String buildPath(String[] parts) {

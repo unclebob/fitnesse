@@ -4,8 +4,8 @@ package fitnesse.fixtures;
 
 import java.text.ParseException;
 
-import junit.framework.TestCase;
 import fit.Parse;
+import junit.framework.TestCase;
 
 public class RowEntryFixtureTest extends TestCase {
   private RowEntryFixture fixture;
@@ -64,7 +64,7 @@ public class RowEntryFixtureTest extends TestCase {
       "<tr><td>1</td><td>2</td></tr>" +
       "</table>");
     fixture.doTable(table);
-    assertTrue(table.at(0, 3, 1).body.indexOf(ERROR_MESSAGE) != -1);
+    assertTrue(table.at(0, 3, 1).body.contains(ERROR_MESSAGE));
   }
 
   public void testMessageFormat() throws ParseException {
@@ -74,6 +74,6 @@ public class RowEntryFixtureTest extends TestCase {
       "<tr><td>1</td><td>2</td></tr>" +
       "</table>");
     fixture.doTable(table);
-    assertTrue(table.at(0, 3, 1).tag.indexOf("colspan=\"3\"") != -1);
+    assertTrue(table.at(0, 3, 1).tag.contains("colspan=\"3\""));
   }
 }

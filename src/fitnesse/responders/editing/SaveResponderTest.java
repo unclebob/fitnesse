@@ -2,7 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import static util.RegexTestCase.*;
+import static util.RegexTestCase.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.assertTrue;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
@@ -16,10 +20,8 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import org.apache.tools.ant.PropertyHelper;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class SaveResponderTest {
@@ -82,7 +84,7 @@ public class SaveResponderTest {
   private void checkRecentChanges(WikiPage source, String changedPage) throws Exception {
     assertTrue("RecentChanges should exist", source.hasChildPage("RecentChanges"));
     String recentChanges = source.getChildPage("RecentChanges").getData().getContent();
-    assertTrue("ChildPage should be in RecentChanges", recentChanges.indexOf(changedPage) != -1);
+    assertTrue("ChildPage should be in RecentChanges", recentChanges.contains(changedPage));
   }
 
   @Test

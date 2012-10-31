@@ -34,7 +34,7 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
   public VersionInfo(String name, String author, Date creationTime) {
     this.name = name;
     this.author = author;
-    this.creationTime = creationTime;
+    this.creationTime = new Date(creationTime.getTime());
   }
 
   public VersionInfo(String complexName) {
@@ -57,7 +57,7 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
   }
 
   public Date getCreationTime() {
-    return creationTime;
+    return new Date(creationTime.getTime());
   }
 
   public String getName() {

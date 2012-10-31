@@ -1,10 +1,10 @@
 fieldset {
 	border: none;
 	padding: 0;
-	margin: 2px;
+	margin: 0;
 }
 label input {
-    margin-right: 0.5em;
+    margin-right: 8px;
 }
 textarea {
 	font-family: monospace;
@@ -50,17 +50,24 @@ textarea.no_wrap {
 	float: right;
 }
 
-/** Properties page / Search form **/
+/** Properties page / Search form / Directory page**/
 .propertiesPage form,
 .searchForm form,
 .refactorForm form {
 	padding-bottom: 1em;
 	border-bottom: 1px solid #984D00;
 }
+.propertiesPage input[type="submit"],
+.directoryPage  input[type="submit"] {
+    display: inline-block;
+    margin-left: 145px; /* 140 + input field padding/border/margin */
+}
+
 .propertiesPage label,
-.searchForm label {
+.searchForm label,
+.directoryPage label {
 	display: inline-block;
-	width: 12em;
+	width: 140px;
 }
 .propertiesPage .properties fieldset,
 .searchForm .properties fieldset {
@@ -77,14 +84,17 @@ legend {
 	margin-bottom: 0.5em;
 }
 label input {
-    margin-right: 0.5em;
+	margin-right: 0.5em;
+}
+label.checkbox {
+	margin-left: 145px;
+	width: auto;
 }
 #virtual-wiki-properties {
 	margin-top: 1em;
 }
-.propertiesPage #wiki-import label {
-	display: inline;
-	width: auto;
+#create-dir {
+	width: 140PX;
 }
 
 /** Merge page **/

@@ -3,6 +3,7 @@
  <p>$lastModified</p>
  <form method="post">
   <input type="hidden" name="responder" value="saveProperties"/>
+  
   <div class="properties">
    <h2>Page properties</h2>
    <fieldset>
@@ -38,13 +39,18 @@
 
   <div id="virtual-wiki-properties">
    <fieldset>
-    <label for="VirtualWiki">VirtualWiki URL:</label>
-    <input type="text" id="VirtualWiki" name="VirtualWiki" value="$!virtualWikiValue"/> <strong>(DEPRECATED)</strong>
+    <label for="HelpText">Help text:</label>
+    <input type="text" id="HelpText" name="HelpText"#value( "Help" ) size="70"/>
    </fieldset>
     
    <fieldset>
     <label for="Suites">Tags:</label>
-     <input type="text" id="Suites" title="Separate tags by a comma" name="Suites"#value( "Suites" )/>
+     <input type="text" id="Suites" title="Separate tags by a comma" name="Suites"#value( "Suites" ) size="70"/>
+   </fieldset>
+
+   <fieldset>
+    <label for="VirtualWiki">VirtualWiki URL:</label>
+    <input type="text" id="VirtualWiki" name="VirtualWiki" value="$!virtualWikiValue" size="70"/> <strong>(DEPRECATED)</strong>
    </fieldset>
   </div>
   <input type="submit" name="Save" value="Save Properties" accesskey="s"/>
@@ -74,7 +80,7 @@
   #set( $submitMsg = "Update Content and Subpages" )
   #end
    
-   <label for="autoUpdate"><input type="checkbox" id="autoUpdate" name="autoUpdate"#if( $autoUpdate ) checked="checked"#end/>Automatically update imported content when executing tests</label>
+   <label class="checkbox" for="autoUpdate"><input type="checkbox" id="autoUpdate" name="autoUpdate"#if( $autoUpdate ) checked="checked"#end/>Automatically update imported content when executing tests</label>
    <input type="hidden" name="responder" value="import"/>
   </fieldset>
   <input type="submit" name="save" value="$submitMsg"/>

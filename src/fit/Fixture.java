@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -146,7 +147,7 @@ public class Fixture {
     for (; parameters != null; parameters = parameters.more)
       argumentList.add(parameters.text());
 
-    args = (String[]) argumentList.toArray(new String[0]);
+    args = argumentList.toArray(new String[argumentList.size()]);
   }
 
   public void doTable(Parse table) {
@@ -319,7 +320,7 @@ public class Fixture {
   }
 
   public String[] getArgs() {
-    return args;
+    return Arrays.copyOf(args, args.length);
   }
 
   public static void setSymbol(String name, Object value) {

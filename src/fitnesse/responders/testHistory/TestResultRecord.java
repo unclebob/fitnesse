@@ -16,7 +16,7 @@ public class TestResultRecord extends TestSummary{
   }
 
   public Date getDate() {
-    return date;
+    return new Date(date.getTime());
   }
 
   public File getFile() {

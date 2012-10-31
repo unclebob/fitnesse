@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.net.ServerSocket;
+import java.net.SocketException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -12,7 +20,11 @@ import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
@@ -21,11 +33,6 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.net.ServerSocket;
-import java.net.SocketException;
-
-import static org.junit.Assert.*;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -40,12 +47,12 @@ public class SlimTestSystemTest {
 
   private void assertTestResultsContain(String fragment) {
     String unescapedResults = unescape(testResults);
-    assertTrue(unescapedResults, unescapedResults.indexOf(fragment) != -1);
+    assertTrue(unescapedResults, unescapedResults.contains(fragment));
   }
 
   private void assertTestResultsDoNotContain(String fragment) {
     String unescapedResults = unescape(testResults);
-    assertTrue(unescapedResults, unescapedResults.indexOf(fragment) == -1);
+    assertTrue(unescapedResults, !unescapedResults.contains(fragment));
   }
 
   private void getResultsForPageContents(String pageContents) throws Exception {
@@ -122,7 +129,7 @@ public class SlimTestSystemTest {
   @Test
   public void verboseOutputIfSlimFlagSet() throws Exception {
     getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-    assertTrue(responder.getCommandLine().indexOf("fitnesse.slim.SlimService -v") != -1);
+    assertTrue(responder.getCommandLine().contains("fitnesse.slim.SlimService -v"));
   }
 
   @Test

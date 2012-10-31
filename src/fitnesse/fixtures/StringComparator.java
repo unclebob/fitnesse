@@ -12,6 +12,6 @@ public class StringComparator {
   }
 
   public boolean stringContains(String it, String part) {
-    return it.indexOf(Utils.escapeHTML(part)) != -1;
+    return it.contains(Utils.escapeHTML(part));
   }
 }

@@ -16,7 +16,7 @@ public abstract class RowEntryFixture extends ColumnFixture {
   public static final String WRONG_STYLE = "fail";
 
   public void doRow(Parse row) {
-    if (row.parts.body.indexOf(ERROR_INDICATOR) != -1)
+    if (row.parts.body.contains(ERROR_INDICATOR))
       return;
     super.doRow(row);
     try {

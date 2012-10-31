@@ -2,10 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import util.ListUtility;
-
-import java.util.*;
 
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
@@ -51,7 +55,7 @@ public class QueryTable extends SlimTable {
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     boolean isTableInstruction = resultKey.equals(tableInstruction);
-    boolean isNoMethodException = resultString.indexOf("NO_METHOD_IN_CLASS") != -1;
+    boolean isNoMethodException = resultString.contains("NO_METHOD_IN_CLASS");
     return isTableInstruction && isNoMethodException;
   }
 
