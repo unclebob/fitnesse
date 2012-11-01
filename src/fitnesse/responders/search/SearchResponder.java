@@ -20,7 +20,7 @@ public class SearchResponder extends ResultResponder {
   private String getSearchType() {
     String searchType = (String) request.getInput("searchType");
 
-    if (searchType == null || searchType.toLowerCase().indexOf("title") != -1)
+    if (searchType == null || searchType.toLowerCase().contains("title"))
       return "Title";
     else
       return "Content";

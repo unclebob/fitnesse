@@ -69,4 +69,5 @@
    <li#group(5)><a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>
   #end
   </ul>
+ </li>
 </ul>

@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -22,7 +21,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import fitnesse.responders.ErrorResponder;
+import util.FileUtil;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -90,14 +89,14 @@ public class UploadResponder implements SecureResponder {
     if (parts.length == 1)
       return filename + "_copy" + copyId;
     else {
-      String newName = "";
+      StringBuilder newName = new StringBuilder();
       for (int i = 0; i < parts.length - 1; i++) {
         if (i != 0)
-          newName += ".";
-        newName += parts[i];
+          newName.append(".");
+        newName.append(parts[i]);
       }
-      newName += "_copy" + copyId + "." + parts[parts.length - 1];
-      return newName;
+      newName.append("_copy").append(copyId).append(".").append(parts[parts.length - 1]);
+      return newName.toString();
     }
   }
 

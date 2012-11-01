@@ -113,11 +113,11 @@ public class PageHistory extends PageHistoryReader{
   }
 
   public Date getMinDate() {
-    return minDate;
+    return new Date(minDate.getTime());
   }
 
   public Date getMaxDate() {
-    return maxDate;
+    return new Date(maxDate.getTime());
   }
 
   public BarGraph getBarGraph() {
@@ -198,7 +198,7 @@ public class PageHistory extends PageHistoryReader{
     private List<PassFailReport> passFailList = new ArrayList<PassFailReport>();
 
     public Date getStartingDate() {
-      return startingDate;
+      return new Date(startingDate.getTime());
     }
 
     public String formatStartingDate(String format) {
@@ -210,7 +210,7 @@ public class PageHistory extends PageHistoryReader{
     }
 
     public Date getEndingDate() {
-      return endingDate;
+      return new Date(endingDate.getTime());
     }
 
     public void addSummary(Date date, TestResultRecord summary) {

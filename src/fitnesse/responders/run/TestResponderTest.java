@@ -2,6 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertFalse;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
+import static util.RegexTestCase.fail;
+import static util.XmlUtil.getElementByTagName;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -10,41 +32,26 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.FileUtil;
-import static util.RegexTestCase.*;
 import util.XmlUtil;
-import static util.XmlUtil.getElementByTagName;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -332,9 +339,9 @@ public class TestResponderTest {
     request.addInput("format", "text");
     doSimpleRun(passFixtureTable());
     assertEquals("text/text", response.getContentType());
-    assertTrue(results.indexOf("\n. ") != -1);
-    assertTrue(results.indexOf("R:1    W:0    I:0    E:0    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t0 Failures") != -1);
+    assertTrue(results.contains("\n. "));
+    assertTrue(results.contains("R:1    W:0    I:0    E:0    TestPage\t(TestPage)"));
+    assertTrue(results.contains("1 Tests,\t0 Failures"));
   }
 
   @Test
@@ -342,9 +349,9 @@ public class TestResponderTest {
     request.addInput("format", "text");
     doSimpleRun(failFixtureTable());
     assertEquals("text/text", response.getContentType());
-    assertTrue(results.indexOf("\nF ") != -1);
-    assertTrue(results.indexOf("R:0    W:1    I:0    E:0    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
+    assertTrue(results.contains("\nF "));
+    assertTrue(results.contains("R:0    W:1    I:0    E:0    TestPage\t(TestPage)"));
+    assertTrue(results.contains("1 Tests,\t1 Failures"));
   }
 
   @Test
@@ -352,9 +359,9 @@ public class TestResponderTest {
     request.addInput("format", "text");
     doSimpleRun(errorFixtureTable());
     assertEquals("text/text", response.getContentType());
-    assertTrue(results.indexOf("\nX ") != -1);
-    assertTrue(results.indexOf("R:0    W:0    I:0    E:1    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
+    assertTrue(results.contains("\nX "));
+    assertTrue(results.contains("R:0    W:0    I:0    E:1    TestPage\t(TestPage)"));
+    assertTrue(results.contains("1 Tests,\t1 Failures"));
   }
 
   @Test
@@ -874,12 +881,12 @@ public class TestResponderTest {
 
     private void assertInstructionHas(Element instructionElement, String content) throws Exception {
       String instruction = XmlUtil.getTextValue(instructionElement, "instruction");
-      assertTrue(String.format("instruction %s should contain: %s", instruction, content), instruction.indexOf(content) != -1);
+      assertTrue(String.format("instruction %s should contain: %s", instruction, content), instruction.contains(content));
     }
 
     private void assertResultHas(Element instructionElement, String content) throws Exception {
       String result = XmlUtil.getTextValue(instructionElement, "slimResult");
-      assertTrue(String.format("result %s should contain: %s", result, content), result.indexOf(content) != -1);
+      assertTrue(String.format("result %s should contain: %s", result, content), result.contains(content));
     }
 
     private void assertHeaderOfXmlDocumentsInResponseIsCorrect() throws Exception {

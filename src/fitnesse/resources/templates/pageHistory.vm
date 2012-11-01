@@ -1,5 +1,12 @@
+<h1>Page history</h1>
 #if($pageHistory)
-<table>
+<form action= "" method="get" name="compareHistory">
+ <fieldset class="buttons">
+  <input type="hidden" value="compareHistory" name="responder"/>
+  <input type="submit" value="Compare" />
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
+ <table>
   <tr>
     <th>Compare</th>
     <th>Time</th>
@@ -8,9 +15,6 @@
     <th colspan="50">0..$pageHistory.maxAssertions()</th>
   </tr>
   #set($dates = $pageHistory.datesInChronologicalOrder())
-  <form action= "" method="get" name="compareHistory">
-    <input type="hidden" value="compareHistory" name="responder"/>
-     <input type="submit" VALUE="Compare"/>
   #foreach($date in $dates)
     <tr id="pageHistoryRow_$pageHistory.formatDate("yyyyMMddHHmmss",$date)">
       <td><input type="checkbox" name="TestResult_$pageHistory.getPageFileName($date)"/></td>
@@ -24,11 +28,10 @@
       #if($bar.FailUnits > 0)#foreach($barsegment in [1..$bar.FailUnits])<td id="element" class="fail">&nbsp</td>#end#end
       #set($ignores=50-($bar.PassUnits+$bar.FailUnits))
       #if($ignores > 0)#foreach($barsegment in [1..$ignores])<td id="element" class="ignore">&nbsp</td>#end#end
-
- </tr>
+   </tr>
   #end
-  </form>
-</table>
+ </table>
+</form>
 #else
 <h2>No history for page: $pageTitle.Title</h2>
 #end

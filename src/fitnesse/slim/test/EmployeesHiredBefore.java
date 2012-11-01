@@ -9,7 +9,7 @@ public class EmployeesHiredBefore {
   private Date date;
 
   public EmployeesHiredBefore(Date date) {
-    this.date = date;
+    this.date = new Date(date.getTime());
   }
 
   public void table(List<List<String>> table) {

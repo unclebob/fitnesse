@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import util.Wildcard;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.WikiPage;
+import util.Wildcard;
 
 public class ClassPathBuilder extends InheritedItemBuilder {
   private List<String> allPaths;
@@ -56,7 +56,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   }
 
   private String surroundPathWithQuotesIfItHasSpaces(String path) {
-    if (path.matches(".*\\s.*") && path.indexOf("\"") == -1)
+    if (path.matches(".*\\s.*") && !path.contains("\""))
       path = "\"" + path + "\"";
     return path;
   }
@@ -103,7 +103,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   }
 
   private boolean pathHasDoubleWildCard(String path) {
-    return path.indexOf("**") != -1;
+    return path.contains("**");
   }
 
   private void addMatchingFiles(String path, File dir) {

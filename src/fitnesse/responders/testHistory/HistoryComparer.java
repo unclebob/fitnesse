@@ -271,7 +271,10 @@ public class HistoryComparer {
       return this.first + this.second;
     }
 
+    @Override
     public boolean equals(Object obj) {
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       return this.equals((MatchedPair) (obj));
     }
 
