@@ -2,6 +2,8 @@
 
 !define SLIM_SETUP (!-
 !define TEST_SYSTEM {slim}
+!define SLIM_PORT {8493}
+
 -!)
 
 !define SET_UP (!-
