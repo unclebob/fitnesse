@@ -14,9 +14,11 @@ import java.util.regex.Matcher;
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
   private Matcher symbolAssignmentMatcher;
-
+  private RowInstructionSelector instructionSelector;
+  
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
+    instructionSelector = getTestContext().getRowInstructionSelector();
   }
 
   protected String getTableType() {
@@ -37,20 +39,20 @@ public class ScriptTable extends SlimTable {
 
   private void appendInstructionForRow(int row) {
     String firstCell = table.getCellContents(0, row).trim();
-    if (firstCell.equalsIgnoreCase("start"))
-      startActor(row);
-    else if (firstCell.equalsIgnoreCase("check"))
-      checkAction(row);
-    else if (firstCell.equalsIgnoreCase("check not"))
-      checkNotAction(row);
-    else if (firstCell.equalsIgnoreCase("reject"))
-      reject(row);
-    else if (firstCell.equalsIgnoreCase("ensure"))
-      ensure(row);
-    else if (firstCell.equalsIgnoreCase("show"))
-      show(row);
-    else if (firstCell.equalsIgnoreCase("note"))
-      note(row);
+    if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_START, firstCell))
+        startActor(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_CHECK, firstCell))
+        checkAction(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_CHECK_NOT, firstCell))
+        checkNotAction(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_REJECT, firstCell))
+        reject(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_ENSURE, firstCell))
+        ensure(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_SHOW, firstCell))
+        show(row);
+    else if (instructionSelector.isInstruction(RowInstructionVariable.SYNONYM_NOTE, firstCell))
+        note(row);
     else if (isSymbolAssignment(firstCell))
       actionAndAssign(row);
     else if (firstCell.length() == 0)

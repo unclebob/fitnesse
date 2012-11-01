@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.slimTables.RowInstructionSelector;
 import fitnesse.slimTables.ScenarioTable;
 import fitnesse.slimTables.SlimTable;
 
@@ -14,7 +15,7 @@ public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
-
+  
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
   }
@@ -42,5 +43,10 @@ public class MockSlimTestContext implements SlimTestContext {
   public void evaluateExpectations(Map<String, Object> results) {
     for (SlimTable.Expectation e : expectations)
       e.evaluateExpectation(results);
+  }
+  
+
+  public RowInstructionSelector getRowInstructionSelector() {
+      return new RowInstructionSelector();
   }
 }

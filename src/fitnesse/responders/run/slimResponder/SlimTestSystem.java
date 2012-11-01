@@ -70,11 +70,13 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private ParsedPage preparsedScenarioLibrary;
+  private RowInstructionSelector rowInstructionSelector = new RowInstructionSelector();
 
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
     testSummary = new TestSummary(0, 0, 0, 0);
+    addRowInstructions();
   }
 
   public String getSymbol(String symbolName) {
@@ -113,6 +115,19 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (slimFlags == null)
       slimFlags = "";
     return slimFlags;
+  }
+  
+  private void addRowInstructions() {
+      for (RowInstructionVariable variable : RowInstructionVariable.values()) {
+          String synonym = page.readOnlyData().getVariable(variable.name());
+          rowInstructionSelector.setSynonym(variable, synonym);
+      }
+
+  }
+  
+  @Override
+  public RowInstructionSelector getRowInstructionSelector() {
+      return rowInstructionSelector;
   }
 
   protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException {
