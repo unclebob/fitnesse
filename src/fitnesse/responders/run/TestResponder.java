@@ -2,24 +2,37 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.authentication.SecureTestOperation;
-import fitnesse.http.Response;
-import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.run.formatters.*;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.wiki.*;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
+
+import fitnesse.FitNesseContext;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureTestOperation;
+import fitnesse.http.Response;
+import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.responders.run.formatters.CompositeFormatter;
+import fitnesse.responders.run.formatters.PageHistoryFormatter;
+import fitnesse.responders.run.formatters.PageInProgressFormatter;
+import fitnesse.responders.run.formatters.TestHtmlFormatter;
+import fitnesse.responders.run.formatters.TestTextFormatter;
+import fitnesse.responders.run.formatters.XmlFormatter;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
@@ -43,24 +56,24 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     data = page.getData();
 
     createFormatters();
-    
+
     if (isInteractive) {
       makeHtml().render(response.getWriter());
     } else {
       doExecuteTests();
     }
-    
+
     closeHtmlResponse(exitCode);
   }
 
   public void doExecuteTests() throws Exception {
     sendPreTestNotification();
-    
+
     performExecution();
 
     exitCode = formatters.getErrorCount();
   }
-  
+
   private HtmlPage makeHtml() {
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath(page);
@@ -69,14 +82,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
     htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath));
     htmlPage.setNavTemplate("testNav.vm");
-    htmlPage.put("actions", new WikiPageActions(page).withPageHistory());
+    htmlPage.put("actions", new WikiPageActions(page));
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
-    
+
     WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
-    
+
     return htmlPage;
   }
 
@@ -121,7 +134,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected String mainTemplate() {
     return "testPage";
   }
-  
+
   void addXmlFormatter() {
     XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
@@ -152,7 +165,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, writerFactory));
   }
-  
+
   protected void addTestInProgressFormatter() {
     formatters.add(new PageInProgressFormatter(context, page));
   }
