@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static fitnesse.responders.run.slimResponder.SlimTestSystem.*;
+import static fitnesse.responders.run.slimResponder.SlimTestSystem.MESSAGE_ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +44,6 @@ public class TableTable extends SlimTable {
     }
 
     resizeTableAndEvaluateRows(returnValues);
-  }
-
-  private boolean isExceptionFailureMessage(String value) {
-    return value.startsWith("Exception: ");
   }
 
   private boolean isTestCaseErrorMessage(String value) {

@@ -55,7 +55,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected List<SlimTable.Expectation> allExpectations = new ArrayList<SlimTable.Expectation>();
 
 
-  protected List<Object> instructions;
   private boolean started;
   protected ReadOnlyPageData testResults;
   protected TableScanner tableScanner;
@@ -159,7 +158,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (base == 0) {
       return findFreePort();
     }
-    
+
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
       offset = (offset + 1) % 10;
@@ -328,7 +327,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     expectations.clear();
 
     testTables = tables;
-    instructions = createInstructions(tables);
+    List<Object> instructions = createInstructions(tables);
     if (!exceptions.stopTestCalled()) {
       instructionResults = slimClient.invokeAndGetResponse(instructions);
     }
@@ -355,7 +354,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     List<SlimTable> allTables = new LinkedList<SlimTable>();
     for (Table table : tableScanner)
       createSlimTable(allTables, table);
-   
+
     return allTables;
   }
 

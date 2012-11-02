@@ -306,6 +306,10 @@ public abstract class SlimTable {
     return value != null && (value.startsWith(SlimTestSystem.MESSAGE_FAIL) || value.startsWith(SlimTestSystem.MESSAGE_ERROR));
   }
 
+  protected boolean isExceptionFailureMessage(String value) {
+    return value.startsWith("Exception: ");
+  }
+
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     return false;
   }
@@ -626,7 +630,11 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);
-      return String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual));
+      if (isExceptionFailureMessage(actual)) {
+        return String.format("$%s<-[%s]", symbolName, actual);
+      } else {
+        return String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual));
+      }
     }
   }
 
@@ -655,7 +663,7 @@ public abstract class SlimTable {
         String expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else if (actual.contains("Exception:")) {
+        else if (isExceptionFailureMessage(actual)) {
           evaluationMessage = error(actual);
         } else
           evaluationMessage = failMessage(actual,
@@ -870,4 +878,6 @@ public abstract class SlimTable {
       return null;
     }
   }
+
+
 }
