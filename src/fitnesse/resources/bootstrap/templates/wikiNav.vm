@@ -58,11 +58,9 @@
    <li#group(3)><a href="/RecentChanges" accesskey="">Recent Changes</a></li>
   #end
 
-  #if( $actions.withPageHistory )
-   <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
-  #end
-  #if( $actions.withTestHistory )
+  #if( $actions.testPage || $actions.suitePage )
    <li#group(4)><a href="?testHistory">Test History</a></li>
+   <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
   #end
 
   #if( $actions.withUserGuide )
