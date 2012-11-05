@@ -128,24 +128,11 @@ public class ListDeserializer {
     int length = Integer.parseInt(lengthString);
     index += lengthSize;
 
-    Integer next;
-    while ((next = maybeReadDigit()) != null)
-      length = length * 10 + next;
-
     checkForColon("Length");
     return length;
   }
 
-  private Integer maybeReadDigit() {
-    char next = serialized.charAt(index);
-    if (Character.isDigit(next)) {
-      index++;
-      return Character.digit(next, 10);
-    } else
-      return null;
-}
-
-public class SyntaxError extends SlimError {
+  public class SyntaxError extends SlimError {
     private static final long serialVersionUID = 1L;
 
     public SyntaxError(String s) {

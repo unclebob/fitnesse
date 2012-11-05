@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 public class TestSlim implements TestSlimInterface {
   private boolean niladWasCalled = false;
   private String stringArg;
@@ -71,11 +69,6 @@ public class TestSlim implements TestSlimInterface {
 
   public String returnString() {
     return "string";
-  }
-
-  /** Returns a string of more than 999999 characters */
-  public String returnHugeString() {
-      return StringUtils.repeat("x", 999999 + 10);
   }
 
   public int returnInt() {

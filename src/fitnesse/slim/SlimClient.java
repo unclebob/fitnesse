@@ -13,10 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 public class SlimClient {
-  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3; 
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -70,14 +68,10 @@ public class SlimClient {
       return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
-    Integer resultLength = Integer.parseInt(reader.read(6));
-    
-    String next;
-    while (StringUtils.isNumeric(next = reader.read(1)))
-        resultLength = resultLength * 10 + Integer.valueOf(next);
-    
+    String resultLength = reader.read(6);
+    reader.read(1);
     String results = null;
-    results = reader.read(resultLength);
+    results = reader.read(Integer.parseInt(resultLength));
     List<Object> resultList = ListDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
