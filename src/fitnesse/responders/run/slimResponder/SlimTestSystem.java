@@ -476,6 +476,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private String exceptionResult(String resultKey) {
+    // TODO: -AJM- HTML formatting should not be done here, but in HtmlTable
     return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
   }
 
