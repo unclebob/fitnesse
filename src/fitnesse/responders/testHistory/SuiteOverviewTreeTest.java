@@ -3,7 +3,6 @@ package fitnesse.responders.testHistory;
 import java.util.LinkedList;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 public class SuiteOverviewTreeTest {
 

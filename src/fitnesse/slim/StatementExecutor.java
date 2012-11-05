@@ -28,7 +28,6 @@ public class StatementExecutor implements StatementExecutorInterface {
   private List<String> paths = new ArrayList<String>();
 
   private boolean stopRequested = false;
-  private String lastActor;
 
   public StatementExecutor() {
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
@@ -73,7 +72,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
-  public Converter getConverter(Class<?> k) {
+  public <T> Converter<T> getConverter(Class<T> k) {
     return ConverterSupport.getConverter(k);
   }
 

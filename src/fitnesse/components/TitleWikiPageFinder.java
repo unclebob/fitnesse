@@ -6,7 +6,7 @@ public class TitleWikiPageFinder extends WikiPageFinder {
 
   private String searchString;
 
-  public TitleWikiPageFinder(String searchString, TraversalListener observer) {
+  public TitleWikiPageFinder(String searchString, TraversalListener<? super WikiPage> observer) {
     super(observer);
     this.searchString = searchString.toLowerCase();
   }

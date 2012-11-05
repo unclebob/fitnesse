@@ -10,8 +10,8 @@ import fitnesse.wiki.WikiPage;
 public class SearchReplaceResponder extends ResultResponder implements TraversalListener<WikiPage> {
 
   private PageFinder finder;
-  private TraversalListener contentReplaceObserver;
-  private TraversalListener webOutputObserver;
+  private TraversalListener<? super WikiPage> contentReplaceObserver;
+  private TraversalListener<? super WikiPage> webOutputObserver;
 
   protected String getPageFooterInfo(int hits) {
     return String.format("Replaced %d matches for your search.", hits);
@@ -36,7 +36,7 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
   }
 
   @Override
-  public void traverse(TraversalListener observer) {
+  public void traverse(TraversalListener<Object> observer) {
     webOutputObserver = observer;
     String searchString = getSearchString();
     String replacementString = getReplacementString();

@@ -68,7 +68,6 @@ public class TestResponderTest {
   private PageCrawler crawler;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
-  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -83,7 +82,7 @@ public class TestResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
-    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
+    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
   @After

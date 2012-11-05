@@ -4,12 +4,12 @@ package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
 
-public class StringConverter implements Converter {
-  public String toString(Object o) {
+public class StringConverter implements Converter<String> {
+  public String toString(String o) {
     return ((String) o);
   }
 
-  public Object fromString(String arg) {
+  public String fromString(String arg) {
     return arg;
   }
 }

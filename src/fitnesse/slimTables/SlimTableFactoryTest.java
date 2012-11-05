@@ -1,18 +1,17 @@
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-import org.junit.Before;
-import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SlimTableFactoryTest {
   private SlimTableFactory slimTableFactory;
@@ -40,8 +39,7 @@ public class SlimTableFactoryTest {
 
   @Test
   public void shouldCreateCorrectSlimTableForTablesType() {
-
-    for (Map.Entry<String, Class<? extends SlimTable>> entry: map.entrySet()) {
+        for (Entry<String, Class<? extends SlimTable>> entry : map.entrySet()) {
       assertThatTableTypeCreateSlimTableType(entry.getKey(), entry.getValue());
     }
   }
@@ -53,30 +51,30 @@ public class SlimTableFactoryTest {
         + " but was " + slimTable.getClass();
     assertThat(message, slimTable, instanceOf(expectedClass));
   }
-  
+
   @Test
   public void checkTableTypeDefineUsedForTable() {
     assertThatTableTypeImportWorks("My query table", "Query", "My query Table", QueryTable.class);
-    
-    assertThatTableTypeImportWorks("Graceful Difference 1", "Query", "GracefulDifference1", QueryTable.class); 
-    assertThatTableTypeImportWorks("GracefulDifference2", "Query", "Graceful Difference 2", QueryTable.class); 
 
-    assertThatTableTypeImportWorks("A Table table", "Table", "A Table table", TableTable.class); 
+    assertThatTableTypeImportWorks("Graceful Difference 1", "Query", "GracefulDifference1", QueryTable.class);
+    assertThatTableTypeImportWorks("GracefulDifference2", "Query", "Graceful Difference 2", QueryTable.class);
 
-    assertThatTableTypeImportWorks("As is allowed", "as Table", "As is allowed", TableTable.class); 
+    assertThatTableTypeImportWorks("A Table table", "Table", "A Table table", TableTable.class);
+
+    assertThatTableTypeImportWorks("As is allowed", "as Table", "As is allowed", TableTable.class);
     assertThatTableTypeImportWorks("Colon is okay too", "as:Table", "Colon is okay too", TableTable.class);
 
-    assertThatTableTypeImportWorks("", "", "This should be default", DecisionTable.class); 
+    assertThatTableTypeImportWorks("", "", "This should be default", DecisionTable.class);
   }
 
   @Test
   public void checkTableTypeDefinesIgnoredIfDifferentSpecified() {
     assertThatTableTypeImportWorks("OverrideTable", "as Table", "dt: Override Table", DecisionTable.class);
-    
-    assertThatTableTypeImportWorks("MakeQuery", "as Table", "query: Make Query", QueryTable.class); 
+
+    assertThatTableTypeImportWorks("MakeQuery", "as Table", "query: Make Query", QueryTable.class);
   }
 
-  
+
   private void assertThatTableTypeImportWorks(String importName, String importTypedescription, String tableName,
       Class<? extends SlimTable> tableClass) {
     addTableTypeImport(importName, importTypedescription);

@@ -16,7 +16,6 @@ import util.XmlUtil;
 import util.XmlWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

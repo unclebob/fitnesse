@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -15,11 +12,9 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SecureResponder, Traverser {
-  private BlockingQueue queue = new ArrayBlockingQueue<WikiPage>(64);
+  SecureResponder, Traverser<Object> {
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
@@ -57,7 +52,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getTitle() ;
 
-  public abstract void traverse(TraversalListener observer);
+  public abstract void traverse(TraversalListener<Object> observer);
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();

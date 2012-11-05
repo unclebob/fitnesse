@@ -8,7 +8,7 @@ import fitnesse.components.WhereUsedPageFinder;
 public class WhereUsedResponder extends ResultResponder {
 
   @Override
-  public void traverse(TraversalListener observer) {
+  public void traverse(TraversalListener<Object> observer) {
     new WhereUsedPageFinder(page, observer).search(root);
   }
 

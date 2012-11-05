@@ -4,16 +4,17 @@ import java.beans.PropertyEditor;
 
 import fitnesse.slim.Converter;
 
-public class PropertyEditorConverter implements Converter {
+public class PropertyEditorConverter<T> implements Converter<T> {
   private PropertyEditor editor;
 
   public PropertyEditorConverter(PropertyEditor editor ) {
     this.editor = editor;
   }
 
-  public Object fromString(String arg) {
+  @SuppressWarnings("unchecked")
+  public T fromString(String arg) {
     editor.setAsText(arg);
-    return editor.getValue();
+    return (T) editor.getValue();
   }
 
   public String toString(Object o) {

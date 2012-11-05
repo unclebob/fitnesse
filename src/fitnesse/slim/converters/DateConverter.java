@@ -10,14 +10,14 @@ import java.util.Locale;
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
-public class DateConverter implements Converter {
+public class DateConverter implements Converter<Date> {
   public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
-  public String toString(Object o) {
-    return dateFormat.format((Date) o);
+  public String toString(Date o) {
+    return dateFormat.format(o);
   }
 
-  public Object fromString(String arg) {
+  public Date fromString(String arg) {
     try {
       return dateFormat.parse(arg);
     } catch (ParseException e) {

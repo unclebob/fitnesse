@@ -135,7 +135,7 @@ public class SetupTeardownAndLibraryIncluderTest {
 
 
   @Test
-  public void shouldNotIncludeSenarioLibrariesIfNotSlimTest() throws Exception {
+  public void shouldNotIncludeScenarioLibrariesIfNotSlimTest() throws Exception {
     addPage("ScenarioLibrary", "scenario library");
     WikiPage someTest = addPage("SomeTest", "some test");
     PageData somePageData = someTest.getData();

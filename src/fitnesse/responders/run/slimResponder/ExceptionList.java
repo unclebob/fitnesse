@@ -4,7 +4,6 @@ package fitnesse.responders.run.slimResponder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.parser.Collapsible;

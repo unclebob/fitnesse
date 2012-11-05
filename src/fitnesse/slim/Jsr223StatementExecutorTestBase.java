@@ -6,17 +6,6 @@ import static org.junit.Assert.assertFalse;
 import org.junit.AfterClass;
 import org.junit.Before;
 
-import fitnesse.slim.StatementExecutorTestBase.Delete;
-import fitnesse.slim.StatementExecutorTestBase.Echo;
-import fitnesse.slim.StatementExecutorTestBase.EchoSupport;
-import fitnesse.slim.StatementExecutorTestBase.FileSupport;
-import fitnesse.slim.StatementExecutorTestBase.FixtureWithNamedSystemUnderTestBase;
-import fitnesse.slim.StatementExecutorTestBase.MyAnnotatedSystemUnderTestFixture;
-import fitnesse.slim.StatementExecutorTestBase.MySystemUnderTestBase;
-import fitnesse.slim.StatementExecutorTestBase.SimpleFixture;
-import fitnesse.slim.StatementExecutorTestBase.Speak;
-import fitnesse.slim.StatementExecutorTestBase.SystemUnderTestFixture;
-
 public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorTestBase {
   protected static Jsr223SlimFactory slimFactory;
   protected static Jsr223Bridge bridge;

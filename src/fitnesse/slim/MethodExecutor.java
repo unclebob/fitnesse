@@ -2,7 +2,6 @@ package fitnesse.slim;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public abstract class MethodExecutor {
   public MethodExecutor() {
@@ -24,7 +23,6 @@ public abstract class MethodExecutor {
     return null;
   }
 
-  @SuppressWarnings("unchecked")
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
     Object convertedArgs[] = convertArgs(method, args);
     Object retval = callMethod(instance, method, convertedArgs);

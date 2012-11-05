@@ -26,7 +26,7 @@ public interface PageCrawler {
 
   WikiPage getRoot(WikiPage page);
 
-  void traverse(WikiPage root, TraversalListener pageCrawlerTest);
+  void traverse(WikiPage root, TraversalListener<? super WikiPage> pageCrawlerTest);
 
   WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
 
