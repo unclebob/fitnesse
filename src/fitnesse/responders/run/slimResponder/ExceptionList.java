@@ -72,7 +72,8 @@ public class ExceptionList {
   private void writeExceptions() {
     for (String key : exceptions.keySet()) {
       buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
-      buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(key), Utils.escapeHTML(exceptions.get(key))));
+      buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(key),
+          "<pre>" + Utils.escapeHTML(exceptions.get(key)) + "</pre>"));
     }
     exceptions.clear();
   }
