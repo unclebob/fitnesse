@@ -575,6 +575,9 @@ public abstract class SlimTable {
     }
 
     protected String formatSymbolValue(String name, String value) {
+      if (isExceptionFailureMessage(value)) {
+        return String.format("$%s->[%s]", name, value);
+      }
       return String.format("$%s->[%s]", name, Utils.escapeHTML(value));
     }
   }
