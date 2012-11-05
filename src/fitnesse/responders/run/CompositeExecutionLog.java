@@ -35,6 +35,12 @@ public class CompositeExecutionLog {
 
     WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
+    
+    WikiPagePath wpp=new WikiPagePath(errorLogPagePath.getRest());
+    WikiPage wikiPage = crawler.getPage(root, wpp);
+    PageData pageData = wikiPage.getData();   
+    data.setAttribute(PageData.PropertySUITES,pageData.getAttribute(PageData.PropertySUITES));
+    
     data.setContent(content);
     errorLogPage.commit(data);
   }

@@ -49,8 +49,17 @@ header h1 {
 	font-weight: normal;
 	letter-spacing: 0.08em;
 	margin: 0 0 0 102px;
-	top: 28px;
+	top: 25px;
 	position: absolute;
+}
+header h5 {
+	color: #aaaaaa;
+	font: bold 2em;
+	margin: 0 0 0 102px;
+	font-weight: normal;
+	letter-spacing: 0.08em;
+	margin: 0 0 0 102px;
+	top: 56px;
 }
 header a, header a:active, header a:visited {
 	color:#800000

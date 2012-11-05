@@ -46,7 +46,7 @@ public class VersionResponder implements SecureResponder {
     PageData pageData = page.getDataVersion(version);
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
-    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
+    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     // TODO: subclass actions for specific rollback behaviour.
     html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);

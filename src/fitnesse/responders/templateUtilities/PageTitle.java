@@ -12,6 +12,7 @@ public class PageTitle {
   private String link;
   private List<BreadCrumb> breadCrumbs = new ArrayList<BreadCrumb>();
   private String pageType;
+  private String pageTags;
 
   public PageTitle(WikiPagePath pagePath) {
     pagePath = pagePath.clone();
@@ -43,6 +44,12 @@ public class PageTitle {
     this(wikiPagePath);
     this.setPageType(pageType);
   }
+  
+  public PageTitle(String pageType, WikiPagePath wikiPagePath, String pageTags) {
+      this(wikiPagePath);
+      this.setPageType(pageType);
+      this.setPageTags(pageTags);
+    }
 
   public PageTitle(String path, String separator) {
     String[] crumbs = path.split(separator);
@@ -89,6 +96,14 @@ public class PageTitle {
   public void setPageType(String pageType) {
     this.pageType = pageType;
   }
+  
+  public String getPageTags() {
+      return pageTags;
+  }
+  
+  public void setPageTags(String pageTags) {
+      this.pageTags = pageTags;
+  }   
 
   public class BreadCrumb {
     private String name;

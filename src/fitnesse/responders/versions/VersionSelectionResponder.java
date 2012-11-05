@@ -36,7 +36,7 @@ public class VersionSelectionResponder implements SecureResponder {
 
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
-    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource)));
+    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource),pageData.getAttribute(PageData.PropertySUITES)));
     html.put("versions", versions);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
