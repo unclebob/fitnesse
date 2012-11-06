@@ -1,26 +1,11 @@
 #set($noHistory = true)
-<form action="" method="get">
- <input type="hidden" value="overview" name="responder"/>
- <input type="submit" VALUE="View as Overview"/>
-</form>
-
-<form action="" method="get">
- <input type="hidden" value="purgeHistory" name="responder"/>
- <input type="hidden" value="30" name="days"/>
- <input type="submit" VALUE="Purge >30days"/>
-</form>
-
-<form action="" method="get">
- <input type="hidden" value="purgeHistory" name="responder"/>
- <input type="hidden" value="7" name="days"/>
- <input type="submit" VALUE="Purge >7days"/>
-</form>
-
-<form action="" method="get">
- <input type="hidden" value="purgeHistory" name="responder"/>
- <input type="hidden" value="0" name="days"/>
- <input type="submit" VALUE="Purge All"/>
-</form>
+<div class="buttons">
+ <a class="button" href="?responder=overview">View as Overview</a>
+ <a class="button" href="?responder=purgeHistory&days=30">Purge &gt; 30 days</a>
+ <a class="button" href="?responder=purgeHistory&days=7">Purge &gt; 7 days</a>
+ <a class="button" href="?responder=purgeHistory&days=0">Purge all</a>
+ <a class="button" href="$viewLocation">Cancel</a>
+</buttons>
 
 <table>
  <tr>

@@ -47,11 +47,10 @@
    </select>
    
    <script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
-  <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
-  <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
-   
-  
+   <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+   <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
   </span>
+
  
   <textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
  </fieldset>

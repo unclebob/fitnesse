@@ -1,0 +1,11 @@
+## The menu is only shown after the page executed.
+<div class="hidden">
+#parse( "wikiNav.vm" )
+</div>
+<script type="text/javascript">//<!--
+ $(function() {
+   $('nav .hidden').removeClass('hidden');
+ });
+//--></script>
+
+<span id="test-action"></span>
