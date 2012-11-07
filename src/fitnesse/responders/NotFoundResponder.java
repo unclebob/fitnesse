@@ -2,11 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.util.regex.Pattern;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;

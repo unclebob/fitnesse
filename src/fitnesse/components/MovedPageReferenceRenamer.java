@@ -6,7 +6,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.WikiWord;
 
 public class MovedPageReferenceRenamer extends ReferenceRenamer {

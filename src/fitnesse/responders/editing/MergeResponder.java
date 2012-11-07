@@ -8,8 +8,6 @@ import java.util.List;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -26,7 +24,6 @@ public class MergeResponder implements Responder {
   private String newContent;
   private String existingContent;
   private String resource;
-  private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
 
   public MergeResponder(Request request) {
     this.request = request;

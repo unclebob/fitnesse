@@ -19,7 +19,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,

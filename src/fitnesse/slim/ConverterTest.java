@@ -2,17 +2,17 @@ package fitnesse.slim;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.DateConverter;
+import fitnesse.slim.test.AnEnum;
+import org.junit.Test;
 
 public class ConverterTest {
   @Test
   public void convertDate() throws Exception {
     assertConverts(new DateConverter(), "05-May-2009");
   }
-  
+
   @Test
   public void convertDateWithoutLeadingZero() throws Exception {
     assertConverts("05-May-2009", new DateConverter(), "5-May-2009");
@@ -40,12 +40,17 @@ public class ConverterTest {
     assertConverts("false", converter, "1");
     assertConverts("false", converter, "x");
   }
-  
-  private void assertConverts(Converter converter, String value) {
+
+  @Test
+  public void convertEnum() throws Exception {
+    assertConverts(new EnumConverter<AnEnum>(AnEnum.class), "ONE_VALUE");
+  }
+
+  private <T> void assertConverts(Converter<T> converter, String value) {
     assertConverts(value, converter, value);
   }
-  
-  private void assertConverts(String expected, Converter converter, String value) {
+
+  private <T> void assertConverts(String expected, Converter<T> converter, String value) {
     assertEquals(expected, converter.toString(converter.fromString(value)));
   }
 }

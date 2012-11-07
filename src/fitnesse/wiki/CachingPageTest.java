@@ -3,9 +3,7 @@
 
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
 import fitnesse.testutil.SimpleCachinePage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

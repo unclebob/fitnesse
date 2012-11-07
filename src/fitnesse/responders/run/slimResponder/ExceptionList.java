@@ -4,9 +4,9 @@ package fitnesse.responders.run.slimResponder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 
 public class ExceptionList {
@@ -24,7 +24,7 @@ public class ExceptionList {
   public void addException(String key, String exceptionStack)  {
     exceptions.put(key, exceptionStack);
   }
-  
+
   public String toHtml() {
     buffer = new StringBuffer();
     if (exceptions.size() == 0) {
@@ -42,24 +42,24 @@ public class ExceptionList {
   public boolean stopTestCalled() {
     return stopTestCalled;
   }
-  
+
   public void setStopTestCalled() {
     stopTestCalled = true;
   }
-  
+
   public void resetForNewTest() {
     stopTestCalled = false;
     firstHtmlRequest = true;
     testNumber++;
   }
-  
+
   private String writeExceptionDiv() {
     header();
     writeExceptions();
     footer();
     return buffer.toString();
   }
-  
+
   private String writeUpdateExceptionDivHtml() {
     writeExceptions();
     return HtmlUtil.makeAppendElementScript(getDivName(), buffer.toString()).html();
@@ -72,7 +72,8 @@ public class ExceptionList {
   private void writeExceptions() {
     for (String key : exceptions.keySet()) {
       buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
-      buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, key, exceptions.get(key)));
+      buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(key),
+          "<pre>" + Utils.escapeHTML(exceptions.get(key)) + "</pre>"));
     }
     exceptions.clear();
   }
@@ -80,7 +81,7 @@ public class ExceptionList {
   private void header() {
     buffer.append("<div id=\"" + getDivName() + "\"><H3> <span class=\"fail\">Exceptions</span></H3><br/>");
   }
-  
+
   private String getDivName() {
     return "test_exceptions" + testNumber;
   }

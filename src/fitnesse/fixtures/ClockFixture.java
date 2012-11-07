@@ -1,9 +1,7 @@
 package fitnesse.fixtures;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
-import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 

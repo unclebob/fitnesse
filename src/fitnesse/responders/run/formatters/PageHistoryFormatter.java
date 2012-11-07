@@ -5,7 +5,6 @@ import java.io.IOException;
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;

@@ -5,8 +5,6 @@ package fitnesse.http;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 
 public class ChunkedResponse extends Response {
   private ResponseSender sender;

@@ -41,16 +41,16 @@ public class NewPageResponderTest extends RegexTestCase {
     assertSubString("type=\"submit\"", body);
     assertSubString("textarea class=\"wikitext no_wrap\"", body);
   }
-  
+
   public void testTemplateListPopulates() throws Exception {
     crawler.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
-    
+
     crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
     crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
     crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
-    
+
     request.setResource("ChildPage");
-    
+
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root),
         request);
     assertEquals(200, response.getStatus());

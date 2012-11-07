@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.responders.run.HtmlFormatterClient;
-
 public class HtmlComment extends HtmlTag {
   public String comment;
 

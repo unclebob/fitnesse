@@ -35,7 +35,7 @@ public class SearchResponder extends ResultResponder {
   }
 
   @Override
-  public void traverse(TraversalListener observer) {
+  public void traverse(TraversalListener<Object> observer) {
     String searchString = getSearchString();
     if (!"".equals(searchString)) {
       String searchType = getSearchType();

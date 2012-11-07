@@ -11,14 +11,12 @@ import java.util.Arrays;
 
 public class WikiWordBuilder {
     private final SourcePage currentPage;
-    private final String pagePath;
     private final String linkBody;
     private final String wikiWordPath;
     private final String qualifiedName;
 
     public WikiWordBuilder(SourcePage currentPage, String pagePath, String linkBody) {
         this.currentPage = currentPage;
-        this.pagePath = pagePath;
         this.linkBody = linkBody;
         this.wikiWordPath = makePath(currentPage, pagePath);
         this.qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);

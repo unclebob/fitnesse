@@ -4,23 +4,19 @@ package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
 
-public class BooleanConverter implements Converter {
+public class BooleanConverter implements Converter<Boolean> {
   public static final String TRUE = "true";
   public static final String FALSE = "false";
 
   public Boolean fromString(String arg) {
     return (
-      arg.equalsIgnoreCase(TRUE) ||
-        arg.equalsIgnoreCase("yes")
+      arg.equalsIgnoreCase("true") ||
+        arg.equalsIgnoreCase("yes") ||
+        arg.equals(TRUE)
     );
   }
 
-  public String toString(Object o) {
-    if (o instanceof Boolean) {
-      return ((Boolean) o) ? TRUE : FALSE;
-    } else {
-      return o.toString();
-    }
+  public String toString(Boolean o) {
+    return o ? TRUE : FALSE;
   }
-
 }

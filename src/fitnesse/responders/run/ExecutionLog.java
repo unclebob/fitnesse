@@ -3,22 +3,14 @@
 package fitnesse.responders.run;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import util.Clock;
 
 import fitnesse.components.CommandRunner;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlText;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
-import fitnesse.html.TagGroup;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;

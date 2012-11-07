@@ -8,7 +8,6 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
@@ -27,7 +26,6 @@ import util.XmlUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
 
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -45,7 +43,6 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
-  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -67,7 +64,7 @@ public class SuiteResponderTest {
     context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, context.socketDealer);
-    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
   }
   
   @After

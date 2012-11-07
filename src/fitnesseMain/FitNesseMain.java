@@ -10,7 +10,6 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;

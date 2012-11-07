@@ -91,7 +91,6 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public String string() throws Exception {
-    String value = null;
     if (type.equals("contents")) {
       return FitnesseFixtureContext.page.getData().getHtml();
     } else if (type.equals("line")) {

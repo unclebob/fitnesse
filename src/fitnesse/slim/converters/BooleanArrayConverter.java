@@ -7,6 +7,7 @@ import java.util.Arrays;
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
+@SuppressWarnings("rawtypes")
 public class BooleanArrayConverter implements Converter {
   private static BooleanConverter booleanConverter = new BooleanConverter();
 

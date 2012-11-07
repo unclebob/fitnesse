@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import fitnesse.responders.versions.VersionSelectionResponder;
-
 import junit.framework.TestCase;
 
 public class VersionInfoTest extends TestCase {

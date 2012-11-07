@@ -3,16 +3,18 @@
 package fitnesse.slim.converters;
 
 import java.util.Arrays;
+import java.util.List;
 
 import fitnesse.slim.Converter;
 
-public class ListConverter implements Converter {
-  public String toString(Object o) {
+@SuppressWarnings("rawtypes")
+public class ListConverter implements Converter<List> {
+  public String toString(List o) {
     if (o == null) return "null";
     return o.toString();
   }
 
-  public Object fromString(String arg) {
+  public List fromString(String arg) {
     String[] strings = fromStringToArrayOfStrings(arg);
     return Arrays.asList(strings);
   }
