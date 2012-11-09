@@ -14,7 +14,7 @@ import java.net.URLClassLoader;
 public class FileUtilTest {
   @Test
   public void testCreateDir() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp1");
     assertTrue(dir.exists());
     assertTrue(dir.isDirectory());
     FileUtil.deleteFileSystemDirectory(dir);
@@ -29,14 +29,14 @@ public class FileUtilTest {
 
   @Test
   public void testGetDirectoryListingEmpty() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp2");
     assertEquals(0, FileUtil.getDirectoryListing(dir).length);
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
   @Test
   public void testOrganizeFilesOneFile() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp3");
     File file = createFileInDir(dir, "file.txt");
     assertEquals(1, FileUtil.getDirectoryListing(dir).length);
     assertEquals(file, FileUtil.getDirectoryListing(dir)[0]);
@@ -45,7 +45,7 @@ public class FileUtilTest {
 
   @Test
     public void testOrganizeFilesFiveFiles() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp4");
     File file3 = createFileInDir(dir, "dFile.txt");
     File file1 = createFileInDir(dir, "bFile.txt");
     File file4 = createFileInDir(dir, "eFile.txt");
@@ -62,7 +62,7 @@ public class FileUtilTest {
 
   @Test
     public void testOrganizeFilesOneSubDir() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp5");
     File subDir = createSubDir(dir, "subDir");
     assertEquals(1, FileUtil.getDirectoryListing(dir).length);
     assertEquals(subDir, FileUtil.getDirectoryListing(dir)[0]);
@@ -71,7 +71,7 @@ public class FileUtilTest {
 
   @Test
     public void testOrganizeFilesFiveSubDirs() throws Exception {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp6");
     File dir3 = createSubDir(dir, "dDir");
     File dir1 = createSubDir(dir, "bDir");
     File dir4 = createSubDir(dir, "eDir");
@@ -88,7 +88,7 @@ public class FileUtilTest {
 
   @Test
     public void testOrganizeFilesMixOfFilesAndDirs() {
-    File dir = FileUtil.createDir("temp");
+    File dir = FileUtil.createDir("temp7");
     File dir3 = createSubDir(dir, "dDir");
     File file3 = createFileInDir(dir, "dFile.txt");
     File file0 = createFileInDir(dir, "aFile.txt");
