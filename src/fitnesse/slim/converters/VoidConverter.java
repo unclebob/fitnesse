@@ -4,14 +4,14 @@ package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
 
-public class VoidConverter implements Converter {
+public class VoidConverter implements Converter<Void> {
   public static final String VOID_TAG = "/__VOID__/";
 
-  public String toString(Object o) {
+  public String toString(Void v) {
     return VOID_TAG;
   }
 
-  public Object fromString(String arg) {
+  public Void fromString(String arg) {
     return null;
   }
 }

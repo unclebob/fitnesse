@@ -24,7 +24,7 @@ public class CommandRunnerTest extends RegexTestCase {
   public void testClassNotFound() throws Exception {
     CommandRunner runner = new CommandRunner("java BadClass", null);
     runner.run();
-    assertHasRegexp("java.lang.NoClassDefFoundError", runner.getError());
+    assertHasRegexp("Error", runner.getError());
     assertEquals("", runner.getOutput());
     assertTrue(0 != runner.getExitCode());
   }

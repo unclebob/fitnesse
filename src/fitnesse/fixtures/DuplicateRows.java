@@ -10,6 +10,7 @@ public class DuplicateRows {
     this.phase = phase;
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Object> query() {
     List results;
     if ("A".equalsIgnoreCase(phase)) {

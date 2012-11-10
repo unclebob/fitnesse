@@ -7,7 +7,10 @@ import java.util.Arrays;
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
+@SuppressWarnings("rawtypes")
 public class BooleanArrayConverter implements Converter {
+  private static BooleanConverter booleanConverter = new BooleanConverter();
+
   public String toString(Object o) {
     if (o == null) return "null";
     Boolean[] booleans = (Boolean[]) o;
@@ -19,7 +22,7 @@ public class BooleanArrayConverter implements Converter {
     Boolean[] booleans = new Boolean[strings.length];
     for (int i = 0; i < strings.length; i++) {
       try {
-        booleans[i] = Boolean.parseBoolean(strings[i]);
+        booleans[i] = booleanConverter.fromString(strings[i]);
       } catch (NumberFormatException e) {
         throw new SlimError("message:<<CANT_CONVERT_TO_BOOLEAN_LIST>>");
       }

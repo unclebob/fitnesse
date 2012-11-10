@@ -4,11 +4,11 @@ package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
 
-public class BooleanConverter implements Converter {
+public class BooleanConverter implements Converter<Boolean> {
   public static final String TRUE = "true";
   public static final String FALSE = "false";
 
-  public Object fromString(String arg) {
+  public Boolean fromString(String arg) {
     return (
       arg.equalsIgnoreCase("true") ||
         arg.equalsIgnoreCase("yes") ||
@@ -16,7 +16,7 @@ public class BooleanConverter implements Converter {
     );
   }
 
-  public String toString(Object o) {
-    return ((Boolean) o) ? TRUE : FALSE;
+  public String toString(Boolean o) {
+    return o ? TRUE : FALSE;
   }
 }

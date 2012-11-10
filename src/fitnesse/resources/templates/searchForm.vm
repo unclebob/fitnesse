@@ -1,11 +1,14 @@
 <form method="post">
  <input type="hidden" name="responder" value="search"/>
- <label for="searchString">Search:</label>
- <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
-
- <input type="submit" name="searchType" value="Search Titles"/>
- <input type="submit" name="searchType" value="Search Content"/>
-
+ <fieldset>
+  <label for="searchString">Search:</label>
+  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+ </fieldset>
+ <fieldset class="buttons">
+  <input type="submit" name="searchType" value="Search Titles"/>
+  <input type="submit" name="searchType" value="Search Content"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
  <p><strong>Search Titles</strong>: Searches in page titles only.  Will run fairly quickly.</p>
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>

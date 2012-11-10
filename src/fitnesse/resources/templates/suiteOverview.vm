@@ -35,6 +35,7 @@
 				</tr>
 				</table>
 		  </div>
+		  <a class="button" href="$viewLocation">Cancel</a>
 	  </div>
 	  <div>
 	  <h2>Detailed Results</h2> 	  

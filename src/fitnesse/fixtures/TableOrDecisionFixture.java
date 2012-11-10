@@ -9,12 +9,12 @@ public class TableOrDecisionFixture {
     return "Parsed as Decision fixture";
   }
   
-  public List doTable(List<List<String>> table) {
+  public List<List<String>> doTable(List<List<String>> table) {
     List<String> firstRow = new LinkedList<String>();
     firstRow.add("");
     firstRow.add("pass: Parsed as Table fixture");
     
-    List returnList = new LinkedList();
+    List<List<String>> returnList = new LinkedList<List<String>>();
     returnList.add(firstRow);
     return returnList;
   }

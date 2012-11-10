@@ -5,7 +5,7 @@
   	
   	<div>
 	  	<a href="javascript:toggleCollapsable('$branch.getFullName()');">
-			<img id="img$branch.getFullName()" class="left" src="/files/images/collapsableClosed.gif">
+			<img id="img$branch.getFullName()" class="left" src="/files/fitnesse/images/collapsableClosed.gif">
 		</a>  	
 	  	<div class="meta completion_folder"><span class="$branch.getCssClass()"> <a href="$branch.getHistoryUrl()" class="$branch.getCssClass()">$branch.getName()</a></span>  (
 		  	#if ($branch.getTestsPassed() != 0)

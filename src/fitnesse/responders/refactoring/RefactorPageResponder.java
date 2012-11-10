@@ -41,6 +41,7 @@ public class RefactorPageResponder implements SecureResponder {
     page.put("refactoredRootPage", resource);
     page.put("request", request);
     page.put("type", request.getInput("type"));
+    page.put("viewLocation", request.getResource());
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;

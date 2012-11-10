@@ -84,6 +84,7 @@ public class MethodExecutionResult {
     }
   }
   
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public String toString() {
     Converter converter = ConverterSupport.getConverter(type);
     if (converter != null)

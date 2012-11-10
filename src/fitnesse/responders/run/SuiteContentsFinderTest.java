@@ -24,10 +24,6 @@ public class SuiteContentsFinderTest {
   private PageCrawler crawler;
   private WikiPage testPage2;
   private WikiPage testChildPage;
-  private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
-  "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
-  "|string|get string arg?|\n" +
-  "|wow|wow|\n";
 
   @Before
   public void setUp() throws Exception {
@@ -109,8 +105,8 @@ public class SuiteContentsFinderTest {
 
   @Test
   public void shouldTellIfItIsASpecificationsSuite() throws Exception {
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
     setUpForGetAllTestPages();
     String content = "|Suite|\n|Title|Test|\n|Content|.|\n";
     suite.commit(new PageData(suite,content));

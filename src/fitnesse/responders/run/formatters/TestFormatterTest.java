@@ -2,7 +2,6 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.ChunkedResponse;
-import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import util.DateAlteringClock;
 import util.TimeMeasurement;
 
 import java.util.Arrays;
@@ -24,7 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -37,7 +34,7 @@ public class TestFormatterTest {
   }
 
   @Parameterized.Parameters
-  public static Collection formatters() throws Exception {
+  public static Collection<Object[]> formatters() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
     ChunkedResponse response = mock(ChunkedResponse.class);

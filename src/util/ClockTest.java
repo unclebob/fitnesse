@@ -4,9 +4,6 @@ package util;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
 
 import org.junit.After;
 import org.junit.Test;
@@ -18,6 +15,7 @@ public class ClockTest {
     Clock.restoreDefaultClock();
   }
   
+  @SuppressWarnings("static-access")
   @Test
   public void systemClockTimeInMillisShouldIncreaseAsTimeFlies() throws Exception {
     Clock clock = new SystemClock();
@@ -32,7 +30,7 @@ public class ClockTest {
   
   @Test
   public void staticTimeMethodShouldDelegateToInstance() throws Exception {
-    Clock constantTimeClock = newConstantTimeClock(1, true);
+    newConstantTimeClock(1, true);
     assertThat(Clock.currentTimeInMillis(), is(1L));
   }
 
@@ -53,7 +51,7 @@ public class ClockTest {
 
   @Test
   public void staticDateMethodShouldDelegateToInstance() throws Exception {
-    Clock constantTimeClock = newConstantTimeClock(3, true);
+    newConstantTimeClock(3, true);
     assertThat(Clock.currentDate().getTime(), is(3L));
   }
   
@@ -68,7 +66,7 @@ public class ClockTest {
   @Test
   public void shouldBeAbleToRestoreDefaultClock() throws Exception {
     long before = Clock.currentTimeInMillis();
-    Clock clock = newConstantTimeClock(0, true);
+    newConstantTimeClock(0, true);
     Clock.restoreDefaultClock();
     assertThat(Clock.currentTimeInMillis(), is(not(0L)));
     assertTrue(Clock.currentTimeInMillis() - before < 1000);

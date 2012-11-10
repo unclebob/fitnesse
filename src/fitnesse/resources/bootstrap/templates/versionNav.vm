@@ -1,0 +1,4 @@
+<ul class="nav">
+ <li ><a href="$localPath?responder=rollback&version=$rollbackVersion">Rollback</a></li>
+ <li ><a href="$localPath">Get out</a></li>
+</ul>

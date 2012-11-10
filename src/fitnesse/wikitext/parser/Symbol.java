@@ -1,9 +1,10 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
+
+import util.Maybe;
 
 public class Symbol {
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
@@ -12,8 +13,8 @@ public class Symbol {
     private SymbolType type;
     private String content = "";
     private List<Symbol> children = new ArrayList<Symbol>();
-    private HashMap<String, String> variables;
-    private HashMap<String, String> properties;
+    private Properties variables;
+    private Properties properties;
 
     public Symbol(SymbolType type) { this.type = type; }
 
@@ -37,7 +38,7 @@ public class Symbol {
     public Symbol childAt(int index) { return getChildren().get(index); }
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
-    
+
     public Symbol addToFront(Symbol child) {
         ArrayList<Symbol> newChildren = new ArrayList<Symbol>();
         newChildren.add(child);
@@ -82,7 +83,7 @@ public class Symbol {
     }
 
     public void evaluateVariables(String[] names, VariableSource source) {
-        if (variables == null) variables = new HashMap<String, String>();
+        if (variables == null) variables = new Properties();
         for (String name: names) {
             Maybe<String> value = source.findVariable(name);
             if (!value.isNothing()) variables.put(name, value.getValue());
@@ -90,11 +91,11 @@ public class Symbol {
     }
 
     public String getVariable(String name, String defaultValue) {
-        return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
+        return variables != null && variables.containsKey(name) ? variables.getProperty(name) : defaultValue;
     }
 
     public Symbol putProperty(String key, String value) {
-        if (properties == null) properties = new HashMap<String, String> ();
+        if (properties == null) properties = new Properties();
         properties.put(key, value);
         return this;
     }
@@ -104,7 +105,7 @@ public class Symbol {
     }
 
     public String getProperty(String key, String defaultValue) {
-        return properties != null && properties.containsKey(key) ? properties.get(key) : defaultValue;
+        return properties != null && properties.containsKey(key) ? properties.getProperty(key) : defaultValue;
     }
 
     public String getProperty(String key) {

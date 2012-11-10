@@ -10,20 +10,14 @@ import java.util.List;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlTableListingBuilder;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
-import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.PageTitle;
 
 public class DirectoryResponder implements SecureResponder {
   private String resource;
@@ -59,7 +53,7 @@ public class DirectoryResponder implements SecureResponder {
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.setPageTitle(new PageTitle("Files Section", resource, "/"));
     page.put("fileInfoList", makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory)));
-    page.setMainTemplate("directoryPage.vm");
+    page.setMainTemplate("directoryPage");
     return page.html();
   }
 
@@ -76,22 +70,22 @@ public class DirectoryResponder implements SecureResponder {
     return fileInfo;
   }
 
-  
+
   public class FileInfo {
     private File file;
-    
+
     public FileInfo(File file) {
       this.file = file;
     }
-    
+
     public File getFile() {
       return file;
     }
-    
+
     public boolean isDirectory() {
       return file.isDirectory();
     }
-    
+
     public String getName() {
       String name = file.getName();
       if (file.isDirectory()) {
@@ -99,7 +93,7 @@ public class DirectoryResponder implements SecureResponder {
       }
       return name;
     }
-    
+
     public String getSize() {
       if (file.isDirectory())
         return "";
@@ -111,5 +105,5 @@ public class DirectoryResponder implements SecureResponder {
       return dateFormat.format(new Date(file.lastModified()));
     }
   }
-  
+
 }

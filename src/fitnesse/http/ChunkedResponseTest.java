@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 

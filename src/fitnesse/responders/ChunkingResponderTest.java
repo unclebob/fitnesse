@@ -5,11 +5,9 @@ package fitnesse.responders;
 import fitnesse.http.ChunkedResponse;
 import org.junit.Before;
 import org.junit.Test;
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 

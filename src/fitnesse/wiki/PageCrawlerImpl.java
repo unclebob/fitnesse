@@ -136,7 +136,7 @@ public class PageCrawlerImpl implements PageCrawler {
       return getRoot(page.getParent());
   }
 
-  public void traverse(WikiPage context, TraversalListener listener) {
+  public void traverse(WikiPage context, TraversalListener<? super WikiPage> listener) {
     if (context.getClass() == SymbolicPage.class)
       return;
     //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.

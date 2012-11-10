@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import static util.ListUtility.list;
-import static util.RegexTestCase.assertSubString;
 
 import java.util.ArrayList;
 import java.util.List;

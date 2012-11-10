@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
