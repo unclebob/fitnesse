@@ -36,11 +36,18 @@ public class CompositeExecutionLog {
     WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
     
-    WikiPagePath wpp=new WikiPagePath(errorLogPagePath.getRest());
-    WikiPage wikiPage = crawler.getPage(root, wpp);
-    PageData pageData = wikiPage.getData();   
-    data.setAttribute(PageData.PropertySUITES,pageData.getAttribute(PageData.PropertySUITES));
-    
+    if(root != null) {
+      WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
+      WikiPage wikiPage = crawler.getPage(root, wpp);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();   
+        String tags = pageData.getAttribute(PageData.PropertySUITES);
+        if(tags != null && tags !="" ){
+          data.setAttribute(PageData.PropertySUITES,tags);
+        }
+      }
+    }
+  
     data.setContent(content);
     errorLogPage.commit(data);
   }

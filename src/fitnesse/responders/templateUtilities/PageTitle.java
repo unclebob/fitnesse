@@ -44,12 +44,12 @@ public class PageTitle {
     this(wikiPagePath);
     this.setPageType(pageType);
   }
-  
+
   public PageTitle(String pageType, WikiPagePath wikiPagePath, String pageTags) {
-      this(wikiPagePath);
-      this.setPageType(pageType);
-      this.setPageTags(pageTags);
-    }
+    this(wikiPagePath);
+    this.setPageType(pageType);
+    this.setPageTags(pageTags);
+  }
 
   public PageTitle(String path, String separator) {
     String[] crumbs = path.split(separator);
@@ -72,6 +72,12 @@ public class PageTitle {
     this.setPageType(pageType);
   }
 
+  public PageTitle(String pageType, String path, String separator, String pageTags) {
+    this(path, separator);
+    this.setPageType(pageType);
+    this.setPageTags(pageTags);
+  }
+  
   public PageTitle notLinked() {
     link = null;
     return this;
@@ -98,11 +104,13 @@ public class PageTitle {
   }
   
   public String getPageTags() {
-      return pageTags;
+    return pageTags;
   }
   
   public void setPageTags(String pageTags) {
-      this.pageTags = pageTags;
+    if(pageTags == null) return;
+    if(pageTags == "") return;
+    this.pageTags = pageTags;
   }   
 
   public class BreadCrumb {

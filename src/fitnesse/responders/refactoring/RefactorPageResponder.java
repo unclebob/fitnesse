@@ -22,17 +22,22 @@ public class RefactorPageResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
 
-    WikiPage root=context.root;
-    WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage wikiPage = crawler.getPage(root, path);
-    PageData pageData = wikiPage.getData();
+    String tags = "";
+    if(context.root != null){
+      WikiPagePath path = PathParser.parse(resource);
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage wikiPage = crawler.getPage(context.root, path);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();
+        tags = pageData.getAttribute(PageData.PropertySUITES);
+      }
+    }
     
     HtmlPage page = context.pageFactory.newPage();
 
     page.setMainTemplate("refactorForm");
     page.setTitle("Refactor: " + resource);
-    page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
+    page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource), tags));
     page.put("refactoredRootPage", resource);
     page.put("request", request);
     page.put("type", request.getInput("type"));

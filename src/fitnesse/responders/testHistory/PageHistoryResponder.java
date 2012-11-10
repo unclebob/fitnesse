@@ -166,14 +166,19 @@ public class PageHistoryResponder implements SecureResponder {
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
+
+    String tags = "";    
+    if (context.root != null){
+      WikiPagePath path = PathParser.parse(pageName);
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage wikiPage = crawler.getPage(context.root, path);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();
+        tags = pageData.getAttribute(PageData.PropertySUITES);
+      }
+    }
     
-    WikiPage root=context.root;
-    WikiPagePath path = PathParser.parse(pageName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage wikiPage = crawler.getPage(root, path);
-    PageData pageData = wikiPage.getData();
-    
-    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), pageData.getAttribute(PageData.PropertySUITES));
+    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
     page.setPageTitle(pageTitle);
   }
 

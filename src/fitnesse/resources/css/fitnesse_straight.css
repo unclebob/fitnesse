@@ -55,11 +55,11 @@ header h1 {
 header h5 {
 	color: #aaaaaa;
 	font: bold 2em;
-	margin: 0 0 0 102px;
 	font-weight: normal;
 	letter-spacing: 0.08em;
-	margin: 0 0 0 102px;
+	margin: 0 0 0 105px;
 	top: 56px;
+	position: absolute;
 }
 header a, header a:active, header a:visited {
 	color:#800000
