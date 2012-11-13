@@ -90,6 +90,12 @@ header h1:visited{
     color:#151515;
 }
 
+header h5 {
+ color: #151515;
+ margin: 0px 0px 0 0;
+ font-size: 10pt;
+}
+
 #art_niche {
     position:fixed;
     top: 5px;

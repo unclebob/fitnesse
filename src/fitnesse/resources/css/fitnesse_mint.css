@@ -73,6 +73,13 @@ header h1 {
  font-size:xx-large;
  color:#4A4A2E;
 }
+
+header h5 {
+ color: #aaaaaa;
+ margin: 0px 0px 0 0;
+ font-size: 10pt;
+}
+
 #art_niche {
  display:block;
  background: url("../images/fit_mint.png") top left no-repeat;

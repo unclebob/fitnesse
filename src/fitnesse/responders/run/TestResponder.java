@@ -80,7 +80,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     String fullPathName = PathParser.render(fullPath);
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
-    htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath));
+    htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath, data.getAttribute(PageData.PropertySUITES)));
     htmlPage.setNavTemplate("testNav.vm");
     htmlPage.put("actions", new WikiPageActions(page));
     htmlPage.setMainTemplate(mainTemplate());

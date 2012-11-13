@@ -1,3 +1,6 @@
+20121110 Matt Warhaftig
+ * Updated wiki page functionality to display tags in the header section.
+
 20120816
  * Allow users to wrap the calls to the SUT. Do this by extending fitnesse.slim.fixtureInteraction.FixtureInteraction, and pass in that
    class name with the -i flag to the Slim Server.

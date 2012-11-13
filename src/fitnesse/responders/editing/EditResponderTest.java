@@ -9,8 +9,10 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class EditResponderTest extends RegexTestCase {
   private WikiPage root;
@@ -27,7 +29,12 @@ public class EditResponderTest extends RegexTestCase {
   }
 
   public void testResponse() throws Exception {
-    crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPage page=crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Edit Page tags");
+    page.commit(data);
+    
     request.setResource("ChildPage");
 
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
@@ -46,6 +53,7 @@ public class EditResponderTest extends RegexTestCase {
     
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString("<h5> Edit Page tags</h5>", body);
   }
 
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
@@ -65,6 +73,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("type=\"submit\"", body);
+    assertNotSubString("<h5> </h5>", body);
   }
 
   public void testRedirectToRefererEffect() throws Exception {

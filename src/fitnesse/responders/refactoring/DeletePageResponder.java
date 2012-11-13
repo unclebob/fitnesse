@@ -11,6 +11,8 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -71,8 +73,20 @@ public class DeletePageResponder implements SecureResponder {
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
     HtmlPage html = context.pageFactory.newPage();
+    
+    String tags = "";
+    if(context.root!=null){
+      WikiPagePath path = PathParser.parse(qualifiedPageName);
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage wikiPage = crawler.getPage(root, path);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();
+        tags = pageData.getAttribute(PageData.PropertySUITES);
+      }
+    }
+      
     html.setTitle("Delete Confirmation");
-    html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
+    html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/", tags));
     makeMainContent(html, root, qualifiedPageName);
     html.setMainTemplate("deletePage");
     return html.html();

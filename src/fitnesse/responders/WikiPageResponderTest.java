@@ -17,6 +17,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualCouplingExtensionTest;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
@@ -32,7 +33,12 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testResponse() throws Exception {
-    crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
+    WikiPage page = crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Wiki Page tags");
+    page.commit(data);
+    
     final MockRequest request = new MockRequest();
     request.setResource("ChildPage");
 
@@ -48,6 +54,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("child content", body);
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
+    assertSubString("<h5> Wiki Page tags</h5>", body);
   }
 
   public void testAttributeButtons() throws Exception {

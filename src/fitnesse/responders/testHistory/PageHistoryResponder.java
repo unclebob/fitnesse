@@ -24,7 +24,11 @@ import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
@@ -157,7 +161,19 @@ public class PageHistoryResponder implements SecureResponder {
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
-    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()));
+
+    String tags = "";    
+    if (context.root != null){
+      WikiPagePath path = PathParser.parse(pageName);
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage wikiPage = crawler.getPage(context.root, path);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();
+        tags = pageData.getAttribute(PageData.PropertySUITES);
+      }
+    }
+    
+    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
     page.setPageTitle(pageTitle);
   }
 
