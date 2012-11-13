@@ -40,6 +40,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.Utils;
 import org.junit.After;
 import org.junit.Before;
@@ -502,6 +503,11 @@ public class TestResponderTest {
     crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
     crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
 
+    PageData data = testPage.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Test Page tags");
+    testPage.commit(data);
+    
     WikiPagePath testPagePath = crawler.getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
@@ -513,7 +519,8 @@ public class TestResponderTest {
 
     assertTrue(results.contains(">Output Captured<"));
     assertHasRegexp("ErrorLog", results);
-
+    assertSubString("Test Page tags", results);
+    
     WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);

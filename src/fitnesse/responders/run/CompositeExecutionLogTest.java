@@ -12,7 +12,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class CompositeExecutionLogTest {
   private static String ErrorLogName = ExecutionLog.ErrorLogName;
@@ -26,6 +28,10 @@ public class CompositeExecutionLogTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     testPage = root.addChildPage("TestPage");
+    PageData data = testPage.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Test Page tags");
+    testPage.commit(data);
     context = FitNesseUtil.makeTestContext(root);
     runner = new MockCommandRunner("some command", 123);
     log = new CompositeExecutionLog(testPage);
@@ -50,6 +56,7 @@ public class CompositeExecutionLogTest {
     assertSubString("123", content);
     assertSubString("'''Date: '''", content);
     assertSubString("'''Time elapsed: '''", content);
+    assertSubString("Test Page tags", testErrorLog.getData().getAttribute(PageData.PropertySUITES));
   }
 
 }
