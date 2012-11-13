@@ -13,6 +13,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class VersionResponderTest extends RegexTestCase {
   private String oldVersion;
@@ -25,6 +26,9 @@ public class VersionResponderTest extends RegexTestCase {
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
     page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
+    
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "New Page tags");
     data.setContent("new stuff");
     VersionInfo commitRecord = page.commit(data);
     oldVersion = commitRecord.getName();
@@ -43,6 +47,7 @@ public class VersionResponderTest extends RegexTestCase {
     assertHasRegexp("original content", response.getContent());
     assertDoesntHaveRegexp("new stuff", response.getContent());
     assertHasRegexp(oldVersion, response.getContent());
+    assertNotSubString("New Page tags", response.getContent());
   }
 
   public void testButtons() throws Exception {

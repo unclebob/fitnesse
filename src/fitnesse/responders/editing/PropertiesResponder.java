@@ -101,7 +101,13 @@ public class PropertiesResponder implements SecureResponder {
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
-    html.setPageTitle(new PageTitle("Page Properties", path));
+    
+    String tags = "";
+    if(pageData != null)  {
+      tags = pageData.getAttribute(PageData.PropertySUITES); 
+    }
+    
+    html.setPageTitle(new PageTitle("Page Properties", path, tags));
     html.put("pageData", pageData);
     html.setMainTemplate("propertiesPage");
     makeLastModifiedTag();

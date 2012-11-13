@@ -45,6 +45,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Page Tags");
     properties.set("Test", "true");
     properties.set(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
     page.commit(data);
@@ -63,6 +64,7 @@ public void setUp() throws Exception {
     assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
     assertHasRegexp("<input.*value=\"saveProperties\"", content);
+    assertSubString("<h5> Page Tags</h5>", content);
     for (String attribute : new String[]{"Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
       assertCheckboxChecked(attribute, content);
 
@@ -366,5 +368,6 @@ public void setUp() throws Exception {
 
     assertSubString("Suites", content);
     assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"smoke\"", content);
+    assertSubString("<h5> smoke</h5>", content);
   }
 }

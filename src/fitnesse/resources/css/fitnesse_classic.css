@@ -43,6 +43,16 @@ header li+li:before {
 	content: " .";
 }
 
+header h5 {
+	color: #aaaaaa;
+	font: bold 2em;
+	font-weight: normal;
+	letter-spacing: 0.08em;
+	position: fixed;
+	top: -17px;
+	right: 20px;
+}
+
 nav {
 	position: fixed;
 	left: 0;

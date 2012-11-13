@@ -17,6 +17,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class VersionSelectionResponderTest extends RegexTestCase {
   private WikiPage page;
@@ -25,6 +26,10 @@ public class VersionSelectionResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "some content");
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PageData.PropertySUITES,"Page One tags");
+    page.commit(data);
     FitNesseUtil.makeTestContext(root);
   }
 
@@ -63,5 +68,6 @@ public class VersionSelectionResponderTest extends RegexTestCase {
     assertSubString("<a", content);
     assertSubString("?responder=viewVersion", content);
     assertNotSubString("$version", content);
+    assertSubString("<h5> Page One tags</h5>", content);
   }
 }

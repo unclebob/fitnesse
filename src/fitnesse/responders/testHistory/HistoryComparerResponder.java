@@ -18,7 +18,11 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
@@ -142,12 +146,23 @@ public class HistoryComparerResponder implements Responder {
       throw new RuntimeException("File name '" + fileName + "' does not parse to a date", e);
     }
   }
-
+  
   private PageTitle makePageTitle(String resource) {
-    return new PageTitle("Test History", PathParser.parse(resource));
-
+    
+    String tags="";
+    if(context.root != null){
+      WikiPagePath path = PathParser.parse(resource);
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage wikiPage = crawler.getPage(context.root, path);
+      if(wikiPage != null) {
+        PageData pageData = wikiPage.getData();
+        tags = pageData.getAttribute(PageData.PropertySUITES);
+      }
+    }
+    
+    return new PageTitle("Test History", PathParser.parse(resource),tags);
   }
-
+  
   private Response makeErrorResponse(FitNesseContext context, Request request,
       String message) {
     return new ErrorResponder(message).makeResponse(context, request);
