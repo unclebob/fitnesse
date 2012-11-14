@@ -13,11 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 import util.TimeMeasurement;
-
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+/**
+ * Used to run tests from a JUnit test suite.
+ *
+ * @see {@link fitnesse.junit.FitNesseSuite}
+ */
 public class JavaFormatter extends BaseFormatter {
 
   private String mainPageName;
