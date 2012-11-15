@@ -3,6 +3,11 @@ fieldset {
 	padding: 0;
 	margin: 0;
 }
+label {
+    padding-right: 16px;
+    text-align: right;
+    width: 124px;
+}
 label input {
     margin-right: 8px;
 }
@@ -17,6 +22,9 @@ textarea.no_wrap {
     color: maroon;
     margin: 0 0 0 7.78em;
     font-size: 0.9em
+}
+.buttons {
+    margin-left: 145px; /* 140 + input field padding/border/margin */
 }
 
 /** Edit page **/
@@ -57,17 +65,9 @@ textarea.no_wrap {
 	padding-bottom: 1em;
 	border-bottom: 1px solid #984D00;
 }
-.propertiesPage input[type="submit"],
-.directoryPage  input[type="submit"] {
-    display: inline-block;
-    margin-left: 145px; /* 140 + input field padding/border/margin */
-}
-
-.propertiesPage label,
-.searchForm label,
-.directoryPage label {
-	display: inline-block;
-	width: 140px;
+.propertiesPage .properties,
+.searchForm .properties {
+    margin-left: 145px;
 }
 .propertiesPage .properties fieldset,
 .searchForm .properties fieldset {
@@ -78,10 +78,12 @@ textarea.no_wrap {
 .propertiesPage .properties label,
 .searchForm .properties label {
 	display: block;
+    text-align: left;
 }
 legend {
 	font-weight: bold;
 	margin-bottom: 0.5em;
+	padding: 0;
 }
 label input {
 	margin-right: 0.5em;

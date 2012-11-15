@@ -10,9 +10,11 @@
   <label for="replacementString">Replacement:</label>
   <input type="text" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
  </fieldset>
- <input type="submit" name="replace" value="Replace!"/>
- <a class="button" href="$viewLocation">Cancel</a>
-
+ <fieldset class="buttons">
+  <input type="submit" name="replace" value="Replace!"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
+ 
  <p><strong>Search &amp; Replace: </strong>
  Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).  
 </form>
@@ -23,8 +25,10 @@
  <h2>Delete page</h2>
  <p>Delete this entire sub-wiki.</p>		
  <input type="hidden" name="responder" value="deletePage"/>
- <input type="submit" name="" value="Delete Page"/>
- <a class="button" href="$viewLocation">Cancel</a>
+ <fieldset class="buttons">
+  <input type="submit" name="" value="Delete Page"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
 </form>
 #end
 
@@ -37,10 +41,12 @@
   <input type="text" id="newName" name="newName" value="" size="50" class="wikiword" />
  </fieldset>
  <fieldset>
-  <label for="refactorReferences"><input type="checkbox" id="refactorReferences" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
+  <label class="checkbox" for="refactorReferences"><input type="checkbox" id="refactorReferences" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
  </fieldset>
- <input type="submit" name="" value="Rename Page"/>
- <a class="button" href="$viewLocation">Cancel</a>
+ <fieldset class="buttons">
+  <input type="submit" name="" value="Rename Page"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset
 </form>
 #end
 
@@ -53,9 +59,11 @@
   <input type="text" name="newLocation" value="" size="80" class="wikipath" />
  </fieldset>
  <fieldset>
-  <label for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
+  <label class="checkbox" for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
  </fieldset>
- <input type="submit" name="" value="Move Page"/>
- <a class="button" href="$viewLocation">Cancel</a>
+ <fieldset class="buttons">
+  <input type="submit" name="" value="Move Page"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
 </form>
 #end
