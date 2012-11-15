@@ -163,9 +163,6 @@ footer a:hover {
 }
 
 /** Page content (article) styles **/
-h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
-	display: none;
-}
 article h1 {
 	 font: bold 1.5em;
 }
