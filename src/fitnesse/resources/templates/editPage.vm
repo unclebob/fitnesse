@@ -27,10 +27,10 @@
  <fieldset>
   <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
  </fieldset>
+ <fieldset>
+  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
+ </fieldset>
 
-  
-   
-  
 
  <fieldset id="editor">
   <span id="edit_buttons">
@@ -53,10 +53,6 @@
 
  
   <textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
- </fieldset>
-
- <fieldset>
-  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
  </fieldset>
 
  <fieldset id="save_buttons">
