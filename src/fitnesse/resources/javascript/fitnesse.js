@@ -103,5 +103,74 @@ $(document).ready(function() {
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
 	});
 	
+	function getMaxErrorNavIndex(){
+		return parseInt($("#error-nav-max").text());
+	}
+	
+	function getCurrentErrorNavIndex(){
+		return parseInt($("#error-nav-text").val());
+	}
+
+	function setCurrentErrorNavIndex(index){
+		$("#error-nav-text").val(index);
+	}
+
+	function incrementErrorNavIndex(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === getMaxErrorNavIndex()){
+			currentErrorNavIndex = 1;
+		} else {
+			currentErrorNavIndex += 1;
+		}
+		setCurrentErrorNavIndex(currentErrorNavIndex);
+	}
+
+	function decrementErrorNavIndex(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === 1){
+			currentErrorNavIndex = getMaxErrorNavIndex();
+		} else {
+			currentErrorNavIndex -= 1;
+		}
+		setCurrentErrorNavIndex(currentErrorNavIndex);
+	}
+	
+	function navigateToCurrentError(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		$("span.fail, span.error").removeClass("selected-error");
+		$("span.fail, span.error").filter(function(){return $(this).data("error-num") == currentErrorNavIndex}).each(
+				function(){ 
+					$(this).parents(".closed").removeClass("closed"); //open all folds this is in
+					$(this).parents(".scenario-detail").show(); //show all scenario tables this is in
+					$(this).parents(".scenario-detail").prev().removeClass("closed"); //open all scenario folds this is in
+					$(this).addClass("selected-error");
+					$('html, body').animate({
+         				scrollTop: $(this).offset().top - 200
+     				}, 500);
+				}
+		);
+	}
+	
+	$("#error-nav-prev").click(function(){
+		decrementErrorNavIndex();
+		navigateToCurrentError();
+	});
+	
+	$("#error-nav-next").click(function(){
+		incrementErrorNavIndex();
+		navigateToCurrentError();
+	});
+	
+	$("#error-nav-text").change(function(){
+		if(getCurrentErrorNavIndex() > 0 && getCurrentErrorNavIndex() <= getMaxErrorNavIndex()){
+			navigateToCurrentError();
+		}
+	});
+	
 });
 
+function initErrorMetadata(){
+	var i = 1;
+	$("table span.fail, table span.error").each(function(){ $(this).data("error-num", i); i++});
+	$("#error-nav-max").text(i - 1);
+}

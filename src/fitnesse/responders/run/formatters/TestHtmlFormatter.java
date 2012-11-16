@@ -60,6 +60,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     super.allTestingComplete(totalTimeMeasurement);
     removeStopTestLink();
     publishAndAddLog();
+    maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
     close();
   }
