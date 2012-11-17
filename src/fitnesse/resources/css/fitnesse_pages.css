@@ -12,13 +12,6 @@ label {
 label input {
     margin-right: 8px;
 }
-textarea {
-	font-family: monospace;
-	clear: both;
-}
-textarea.no_wrap {
-	overflow: scroll;
-}
 .validationerror {
     color: maroon;
     margin: -6px 0 8px 140px;
@@ -56,6 +49,10 @@ textarea.no_wrap {
 	display: block;
 	width: 100%;
 	height: 32em;
+    font-family: monospace;
+}
+.editPage textarea.no_wrap {
+    overflow: scroll;
 }
 .editPage .edit_options {
 	float: right;
