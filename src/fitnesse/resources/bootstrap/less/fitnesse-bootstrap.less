@@ -146,11 +146,22 @@ input[type="checkbox"] {
 
 tr.scenario > td:first-child {
   background-image: url("../img/minus-sign.png");
+  background-position: 2px 7px;
 }
 
 tr.scenario.closed > td:first-child {
   background-image: url("../img/plus-sign.png");
   padding-left: 18px;
+}
+
+.pass {
+  background-color: @btnSuccessBackground;
+}
+.fail {
+  background-color: @btnDangerBackground;
+}
+.error {
+  background-color: @btnWarningBackground;
 }
 
 #test-action {
@@ -182,8 +193,11 @@ tr.scenario.closed > td:first-child {
     &.pass {
       .progress .bar-success;
     }
-    &.error {
+    &.fail {
       .progress .bar-danger;
+    }
+    &.error {
+      .progress .bar-warning;
     }
   }
   &.pass {
@@ -192,9 +206,15 @@ tr.scenario.closed > td:first-child {
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
-  &.error {
+  &.fail {
     .label;
     .progress .bar-danger;
+    height: 18px;
+    padding: 2px 0 0 0.5em;
+  }
+  &.error {
+    .label;
+    .progress .bar-warning;
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
