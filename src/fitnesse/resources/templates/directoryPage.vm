@@ -39,7 +39,9 @@
   <label for="upload-file">Upload a file:</label>
   <input id="upload-file" type="file" name="file" value=""/>
  </fieldset>
+ <fieldset class="buttons">
   <input type="submit" name="" value="Upload"/>
+ </fieldset>
 </form>
 
 <form method="get">
@@ -48,5 +50,7 @@
   <label for="create-dir">Create a directory:</label>
   <input id="create-dir" type="text" name="dirname" value=""/>
  </fieldset>
- <input type="submit" name="" value="Create"/>
+ <fieldset class="buttons">
+  <input type="submit" name="" value="Create"/>
+ </fieldset>
 </form>

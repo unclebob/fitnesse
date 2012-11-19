@@ -21,7 +21,7 @@
  <input type="hidden" name="responder" value="executeSearchProperties"/>
 
  <fieldset>
-  <label>Tags</label>
+  <label>Tags:</label>
   <input type="text" class="searchForm" name="Suites"#if ($request.hasInput("Suite")) value="$request.getInput("Suite")"#end />
  </fieldset>
  
@@ -61,7 +61,9 @@
    #end
   </fieldset>
  </div>
- <input type="submit" name="Search" value="Search Properties"/>
+ <fieldset class="buttons">
+  <input type="submit" name="Search" value="Search Properties"/>
+ </fieldset>
 </form>
 
 <script type="text/javascript">

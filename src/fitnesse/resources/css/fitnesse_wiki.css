@@ -79,6 +79,18 @@ article .centered {
   border-left: 1px solid #BF8660;
 }
 
+table.plain_text_table {
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  border-left: 2px solid #e5e5e5;
+  margin-left: 1em;
+}
+table.plain_text_table td,
+table.plain_text_table th {
+  border: none;
+}
+
 /** !style_* */
 .error {
   background-color: #ffffaa;

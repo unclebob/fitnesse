@@ -33,6 +33,10 @@ table {
   width: auto;
 }
 
+label {
+    display: inline-block;
+}
+
 .navbar-fixed-top .navbar-inner {
   padding-right: 40px;
   padding-left: 40px;
@@ -51,6 +55,7 @@ table {
 }
 
 button,
+a.button,
 input[type="button"] {
   .btn;
   margin-bottom: 9px;
@@ -62,6 +67,11 @@ input[type="submit"] {
   margin-bottom: 9px;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    margin: 0 4px 0 0;
+}
+
 // Reset .divider class to something we can work with
 .dropdown-menu .divider {
   *width: 100%;
@@ -71,21 +81,19 @@ input[type="submit"] {
   background-color: transparent;
   border-bottom: none;
   border-top: 1px solid #e5e5e5;
- }
+}
  
-/** Rich text editor style */
-.editPage label {
-  float: none;
-  width: auto;
+.validationerror {
+  margin-left: 145px;
 }
 
+/** Rich text editor style */
 .editor-toggle label {
   .radio;
   .radio.inline;
 }
 
 .editor-toggle input {
-    float: left;
     margin-left: -18px;
 }
 
@@ -138,11 +146,22 @@ input[type="submit"] {
 
 tr.scenario > td:first-child {
   background-image: url("../img/minus-sign.png");
+  background-position: 2px 7px;
 }
 
 tr.scenario.closed > td:first-child {
   background-image: url("../img/plus-sign.png");
   padding-left: 18px;
+}
+
+.pass {
+  background-color: @btnSuccessBackground;
+}
+.fail {
+  background-color: @btnDangerBackground;
+}
+.error {
+  background-color: @btnWarningBackground;
 }
 
 #test-action {
@@ -174,8 +193,11 @@ tr.scenario.closed > td:first-child {
     &.pass {
       .progress .bar-success;
     }
-    &.error {
+    &.fail {
       .progress .bar-danger;
+    }
+    &.error {
+      .progress .bar-warning;
     }
   }
   &.pass {
@@ -184,9 +206,15 @@ tr.scenario.closed > td:first-child {
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
-  &.error {
+  &.fail {
     .label;
     .progress .bar-danger;
+    height: 18px;
+    padding: 2px 0 0 0.5em;
+  }
+  &.error {
+    .label;
+    .progress .bar-warning;
     height: 18px;
     padding: 2px 0 0 0.5em;
   }

@@ -47,10 +47,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size:xx-large;
 }
 
-h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
- display: none;
-}
-
 /* HEADER */
 header {
  background:#d9dfc9;
