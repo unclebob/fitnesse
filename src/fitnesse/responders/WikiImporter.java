@@ -57,10 +57,17 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     localPath = new WikiPagePath();
   }
 
-  public void importWiki(WikiPage page) throws Exception {
+  public void importWiki(WikiPage page) {
     catalogLocalTree(page);
 
-    Document remotePageTreeDocument = getPageTree();
+    Document remotePageTreeDocument;
+    try {
+      remotePageTreeDocument = getPageTree();
+    } catch (AuthenticationRequiredException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new WikiImporterException("Unable to process page tree", e);
+    }
     new PageXmlizer().deXmlizeSkippingRootLevel(remotePageTreeDocument, page, this);
 
     configureAutoUpdateSetting(page);
@@ -70,7 +77,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
       removeOrphans(page);
   }
 
-  private void removeOrphans(WikiPage context) throws Exception {
+  private void removeOrphans(WikiPage context) {
     for (WikiPagePath orphan : orphans) {
       WikiPagePath path = orphan;
       WikiPage wikiPage = crawler.getPage(context, path);
@@ -79,7 +86,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     }
   }
 
-  private void filterOrphans(WikiPage context) throws Exception {
+  private void filterOrphans(WikiPage context) {
     for (WikiPagePath aPageCatalog : pageCatalog) {
       WikiPagePath wikiPagePath = aPageCatalog;
       WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
@@ -92,7 +99,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     }
   }
 
-  private void catalogLocalTree(WikiPage page) throws Exception {
+  private void catalogLocalTree(WikiPage page) {
     crawler = page.getPageCrawler();
     contextPath = crawler.getFullPath(page);
     pageCatalog = new HashSet<WikiPagePath>();
@@ -132,7 +139,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     }
   }
 
-  public void configureAutoUpdateSetting(WikiPage page) throws Exception {
+  public void configureAutoUpdateSetting(WikiPage page) {
     PageData data = page.getData();
     WikiPageProperties props = data.getProperties();
     WikiImportProperty importProps = WikiImportProperty.createFrom(props);
@@ -183,7 +190,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     localPath.removeNameFromEnd();
   }
 
-  public Document getPageTree() throws Exception {
+  public Document getPageTree() throws IOException, SAXException {
     return getXmlDocument("pages");
   }
 
@@ -210,7 +217,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   public Exception getCaughtException() {
     return caughtException;
   }
-  
+
   public void setRemoteUsername(String username) {
     remoteUsername = username;
   }
@@ -315,6 +322,14 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
     public AuthenticationRequiredException(String message) {
       super(message);
+    }
+  }
+
+  public static class WikiImporterException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    public WikiImporterException(String message, Throwable t) {
+      super(message, t);
     }
   }
 

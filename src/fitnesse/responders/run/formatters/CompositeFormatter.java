@@ -1,16 +1,15 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.responders.run.TestSummary;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import util.TimeMeasurement;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.wiki.WikiPage;
 
 public class CompositeFormatter extends BaseFormatter {
   List<BaseFormatter> formatters = new ArrayList<BaseFormatter>();
@@ -37,7 +36,7 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void addMessageForBlankHtml() throws Exception {
+  public void addMessageForBlankHtml() {
     for (BaseFormatter formatter : formatters)
       formatter.addMessageForBlankHtml();
   }
