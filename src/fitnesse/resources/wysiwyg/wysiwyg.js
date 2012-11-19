@@ -37,34 +37,21 @@ var Wysiwyg = function (textarea, options) {
     this.setupToggleEditorButtons();
     this.setupSyncTextAreaHeight();
 
-    var styleStatic = { position: "static", left: "-9999px", top: "-9999px" };
-    var styleAbsolute = { position: "absolute", left: "-9999px", top: "-9999px" };
     switch (editorMode) {
-    case "textarea":
-        Wysiwyg.setStyle(textarea, styleStatic);
         Wysiwyg.setStyle(frame, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
         Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
-        Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
-        textarea.setAttribute("tabIndex", "");
         frame.setAttribute("tabIndex", "-1");
-        break;
-    case "wysiwyg":
-        Wysiwyg.setStyle(textarea, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
-        Wysiwyg.setStyle(frame, styleStatic);
-        Wysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
-        Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
-        textarea.setAttribute("tabIndex", "-1");
-        frame.setAttribute("tabIndex", "");
-        break;
-    }
+    // Hide both editors, so the current one gets properly shown:
+    textarea.style.display = frame.style.display = "none";
 
     for (i = 0; i < this.menus.length; i++) {
         body.insertBefore(this.menus[i], body.firstChild);
     }
     this.textarea.parentNode.insertBefore(this.toggleEditorButtons, this.textarea);
+    this.textarea.parentNode.insertBefore(this.textareaToolbar, this.textarea);
     this.textarea.parentNode.insertBefore(this.wysiwygToolbar, this.textarea);
+
+    this.listenerToggleEditor(editorMode)({ initializing: true });
 
     function lazySetup() {
         if (self.contentDocument.body) {
@@ -77,8 +64,8 @@ var Wysiwyg = function (textarea, options) {
             self.setupEditorEvents();
             self.setupFormEvent();
             if (exception) {
-                self.textarea.style.position = "static";
-                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
+                self.textarea.style.display = "";
+                self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
@@ -181,34 +168,46 @@ Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
     return function () {
         self.wrapTextarea = input.checked;
         setWrap(input.checked);
-        
     };
 };
 
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
+    var setEditorMode = function (mode) {
+        switch (mode) {
+        case "wysiwyg":
+            break;
+        default:
+            mode = "textarea";
+            break;
+        }
+        Wysiwyg.editorMode = mode;
+        Wysiwyg.setCookie("wysiwyg", mode);
+    };
+
 
     switch (type) {
     case "textarea":
-        return function () {
+        return function (event) {
             var textarea = self.textarea;
-            if (textarea.style.position === "absolute") {
+            if (textarea.style.display === "none") {
                 self.hideAllMenus();
-                self.loadWikiText();
-                textarea.style.position = "static";
-                self.textarea.setAttribute("tabIndex", "");
+                if (!event.initializing) { self.loadWikiText(); }
+                textarea.style.display = "";
+                textarea.setAttribute("tabIndex", "");
                 self.syncTextAreaHeight();
-                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
+                self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
                 self.wrapTextareaButton.parentNode.style.display = "";
-                Wysiwyg.setEditorMode(type);
+                self.textareaToolbar.style.display = "";
+                setEditorMode(type);
             }
             self.focusTextarea();
         };
     case "wysiwyg":
         return function (event) {
             var frame = self.frame;
-            if (frame.style.position === "absolute") {
+            if (frame.style.display === "none") {
                 try {
                     self.loadWysiwygDocument();
                 } catch (e) {
@@ -216,12 +215,13 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                     alert("Failed to activate the wysiwyg editor.");
                     throw e;
                 }
-                self.textarea.style.position = "absolute";
+                self.textarea.style.display = "none";
                 self.textarea.setAttribute("tabIndex", "-1");
-                frame.style.position = self.wysiwygToolbar.style.position = "static";
-                self.frame.setAttribute("tabIndex", "");
+                frame.style.display = self.wysiwygToolbar.style.display = "";
+                frame.setAttribute("tabIndex", "");
                 self.wrapTextareaButton.parentNode.style.display = "none";
-                Wysiwyg.setEditorMode(type);
+                self.textareaToolbar.style.display = "none";
+                setEditorMode(type);
             }
             self.focusWysiwyg();
         };
@@ -229,7 +229,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
 };
 
 Wysiwyg.prototype.activeEditor = function () {
-    return this.textarea.style.position === "absolute" ? "wysiwyg" : "textarea";
+    return this.textarea.style.display === "none" ? "wysiwyg" : "textarea";
 };
 
 Wysiwyg.prototype.isModified = function () {
@@ -371,7 +371,7 @@ Wysiwyg.prototype.createStyleMenu = function (d) {
         '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>' ];
     var menu = d.createElement("div");
     menu.className = "wysiwyg-menu";
-    Wysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
+    Wysiwyg.setStyle(menu, { display: "none" });
     menu.innerHTML = html.join("").replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
     return menu;
 };
@@ -507,8 +507,7 @@ Wysiwyg.prototype.setupMenuEvents = function () {
 Wysiwyg.prototype.toggleMenu = function (menu, element) {
     if (parseInt(menu.style.left, 10) < 0) {
         this.hideAllMenus(menu);
-        var position = Wysiwyg.elementPosition(element);
-        Wysiwyg.setStyle(menu, { left: position[0] + "px", top: (position[1] + 18) + "px" });
+        Wysiwyg.setStyle(menu, { display: "" });
     } else {
         this.hideAllMenus();
     }
@@ -521,7 +520,7 @@ Wysiwyg.prototype.hideAllMenus = function (except) {
     var i;
     for (i = 0; i < length; i++) {
         if (menus[i] !== except) {
-            Wysiwyg.setStyle(menus[i], { left: "-1000px", top: "-1000px" });
+            Wysiwyg.setStyle(menus[i], { display: "none" });
         }
     }
 };
@@ -3662,18 +3661,6 @@ Wysiwyg.getEditorMode = function () {
     return Wysiwyg.editorMode;
 };
 
-Wysiwyg.setEditorMode = function (mode) {
-    switch (mode) {
-    case "wysiwyg":
-        break;
-    default:    // "textarea"
-        mode = "textarea";
-        break;
-    }
-    Wysiwyg.editorMode = mode;
-    Wysiwyg.setCookie("wysiwyg", mode);
-};
-
 Wysiwyg.setCookie = function (key, val) {
 	var expires, pieces;
     var now = new Date();
@@ -3727,27 +3714,6 @@ if (document.defaultView) {
         return element.style[name] || element.currentStyle[name];
     };
 }
-
-Wysiwyg.elementPosition = function (element) {
-    function vector(left, top) {
-        var value = [ left, top ];
-        value.left = left;
-        value.top = top;
-        return value;
-    }
-    var position = Wysiwyg.getStyle(element, "position");
-    var left = 0, top = 0;
-    var node;
-    for (node = element; node; node = node.offsetParent) {
-        left += node.offsetLeft || 0;
-        top += node.offsetTop || 0;
-    }
-    if (position !== "absolute") {
-        return vector(left, top);
-    }
-    var offset = Wysiwyg.elementPosition(element.offsetParent);
-    return vector(left - offset.left, top - offset.top);
-};
 
 Wysiwyg.getSelfOrAncestor = function (element, name) {
     var target = element;
