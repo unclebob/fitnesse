@@ -27,9 +27,12 @@ var Wysiwyg = function (textarea, options) {
 
     this.initializeEditor(this.contentDocument);
     this.wysiwygToolbar = this.createWysiwygToolbar(document);
+    this.textareaToolbar = this.createTextareaToolbar(document);
     this.styleMenu = this.createStyleMenu(document);
     this.menus = [ this.styleMenu ];
-    this.toolbarButtons = this.setupMenuEvents();
+    this.toolbarButtons = this.setupWysiwygMenuEvents();
+    this.setupTextareaMenuEvents();
+    
     this.toggleEditorButtons = null;
     this.wrapTextareaButton = null;
     this.savedWysiwygHTML = null;
@@ -37,10 +40,6 @@ var Wysiwyg = function (textarea, options) {
     this.setupToggleEditorButtons();
     this.setupSyncTextAreaHeight();
 
-    switch (editorMode) {
-        Wysiwyg.setStyle(frame, { position: "absolute",
-        Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
-        frame.setAttribute("tabIndex", "-1");
     // Hide both editors, so the current one gets properly shown:
     textarea.style.display = frame.style.display = "none";
 
@@ -376,7 +375,7 @@ Wysiwyg.prototype.createStyleMenu = function (d) {
     return menu;
 };
 
-Wysiwyg.prototype.setupMenuEvents = function () {
+Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
     function addToolbarEvent(element, self, args) {
         var method = args.shift();
         $(element).click(function (event) {
@@ -502,6 +501,55 @@ Wysiwyg.prototype.setupMenuEvents = function () {
         setup.call(this, this.menus[i]);
     }
     return buttons;
+};
+
+Wysiwyg.prototype.createTextareaToolbar = function (d) {
+    var html = [
+        '<input id="tt-spreadsheet-to-wiki" type="button" value="Spreadsheet to FitNesse" title="This function will convert the text from spreadsheet format to FitNesse format." />',
+        '<input id="tt-wiki-to-spreadsheet" type="button" value="FitNesse to Spreadsheet" title="This function will convert the text from FitNesse format to spreadsheet." />',
+        '<input id="tt-format-wiki" type="button" accesskey="f" value="Format" title="Formats the wiki text" />',
+        '<select id="tt-template-map">' + $('#template-map').html() + '</select>',
+        '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />' ];
+    var div = d.createElement("div");
+    div.className = "textarea-toolbar";
+    div.innerHTML = html.join("");
+    return div;
+};
+
+Wysiwyg.prototype.setupTextareaMenuEvents = function () {
+    var textarea = this.textarea;
+    var container = this.textareaToolbar;
+    
+    $('#tt-spreadsheet-to-wiki', container).click(function () {
+        var translator = new SpreadsheetTranslator();
+        translator.parseExcelTable(textarea.value);
+        textarea.value = translator.getFitNesseTables();
+        textarea.focus();
+    });
+    $('#tt-wiki-to-spreadsheet', container).click(function () {
+        var selection = textarea.value;
+        selection = selection.replace(/\r\n/g, '\n');
+        selection = selection.replace(/\r/g, '\n');
+         // remove the last | at the end of the line
+        selection = selection.replace(/\|\n/g, '\n');
+         // replace all remaining | with \t
+        selection = selection.replace(/\|/g, '\t');
+        textarea.value = selection;
+        textarea.focus();
+    });
+
+    $('#tt-format-wiki', container).click(function () {    
+        var formatter = new WikiFormatter();
+        textarea.value = formatter.format(textarea.value);
+        textarea.focus();
+    });
+    
+    $('#tt-insert-template', container).click(function () {
+        var selectedValue = $('#tt-template-map').val();
+        var inserter = new TemplateInserter();
+        inserter.insertInto(selectedValue, textarea);
+        textarea.focus();
+    });
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu, element) {
