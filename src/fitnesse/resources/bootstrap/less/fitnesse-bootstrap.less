@@ -155,14 +155,22 @@ tr.scenario.closed > td:first-child {
 }
 
 .pass {
-  background-color: @btnSuccessBackground;
+  background-color: darken(@successBackground, 10%);
+  color: darken(@successText, 30%);
 }
 .fail {
-  background-color: @btnDangerBackground;
+  background-color: darken(@errorBackground, 15%);
+  color: darken(@errorText, 30%);
 }
 .error {
-  background-color: @btnWarningBackground;
+  padding: 8px 35px 8px 14px;
+  margin-bottom: @baseLineHeight;
+  background-color: darken(@warningBackground, 10%);
+  border: 1px solid darken(@warningBorder, 30%);
+  .border-radius(4px);
+  color: darken(@warningText, 30%);
 }
+
 
 #test-action {
   .test-button(@bgColor) {
