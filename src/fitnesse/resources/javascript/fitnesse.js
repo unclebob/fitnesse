@@ -88,6 +88,12 @@ $(document).ready(function() {
 				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
 	});
-	
+
+    /**
+     * Open scenario's and collapsed sections which contain failed or errorous tests
+     */
+    var problems = $('.fail,.error');
+    problems.parents('.scenario-detail').show().prev().removeClass('closed');
+	problems.parents('.collapsible').removeClass('closed invisible')
 });
 
