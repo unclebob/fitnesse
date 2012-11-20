@@ -4,7 +4,7 @@ function TemplateInserter()
     
     if(templateValue !== "")
     {
-      pageDataUrl = templateValue.substr(1, templateValue.length - 1) + "?pageData";
+      var pageDataUrl = templateValue.substr(1, templateValue.length - 1) + "?pageData";
       
       $.ajax({
         url: pageDataUrl,
