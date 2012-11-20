@@ -61,7 +61,7 @@ var Wysiwyg = function (textarea, options) {
             self.setupEditorEvents();
             self.setupFormEvent();
             if (exception) {
-                self.textarea.style.display = "";
+                self.textarea.style.display = self.textareaToolbar.style.display = "";
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
