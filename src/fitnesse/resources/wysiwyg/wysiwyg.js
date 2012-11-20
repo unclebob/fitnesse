@@ -15,7 +15,6 @@ var Wysiwyg = function (textarea, options) {
     var body = document.body;
     var i;
 
-    this.wrapTextarea = Wysiwyg.getWrapOn();
     this.textarea = textarea;
     this.options = options = options || {};
 
@@ -34,7 +33,6 @@ var Wysiwyg = function (textarea, options) {
     this.setupTextareaMenuEvents();
     
     this.toggleEditorButtons = null;
-    this.wrapTextareaButton = null;
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
@@ -65,7 +63,6 @@ var Wysiwyg = function (textarea, options) {
             if (exception) {
                 self.textarea.style.display = "";
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
-                self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
             }
@@ -146,30 +143,6 @@ Wysiwyg.getWrapOn = function () {
     return mode;
 };
 
-Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
-    var self = this;
-
-    function setWrap(wrap) {
-        if (self.textarea.wrap) {
-            self.textarea.wrap = wrap ? 'soft' : 'off';
-        } else { // wrap attribute not supported - try Mozilla workaround
-            self.textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-        }
-        if (wrap) {
-            $(self.textarea).removeClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "true");
-        } else {
-            $(self.textarea).addClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "false");
-        }
-    }
-
-    return function () {
-        self.wrapTextarea = input.checked;
-        setWrap(input.checked);
-    };
-};
-
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
     var setEditorMode = function (mode) {
@@ -197,7 +170,6 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 self.syncTextAreaHeight();
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
-                self.wrapTextareaButton.parentNode.style.display = "";
                 self.textareaToolbar.style.display = "";
                 setEditorMode(type);
             }
@@ -218,7 +190,6 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 self.textarea.setAttribute("tabIndex", "-1");
                 frame.style.display = self.wysiwygToolbar.style.display = "";
                 frame.setAttribute("tabIndex", "");
-                self.wrapTextareaButton.parentNode.style.display = "none";
                 self.textareaToolbar.style.display = "none";
                 setEditorMode(type);
             }
@@ -509,7 +480,8 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
         '<input id="tt-wiki-to-spreadsheet" type="button" value="FitNesse to Spreadsheet" title="This function will convert the text from FitNesse format to spreadsheet." />',
         '<input id="tt-format-wiki" type="button" accesskey="f" value="Format" title="Formats the wiki text" />',
         '<select id="tt-template-map">' + $('#template-map').html() + '</select>',
-        '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />' ];
+        '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />',
+        '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>' ];
     var div = d.createElement("div");
     div.className = "textarea-toolbar";
     div.innerHTML = html.join("");
@@ -550,6 +522,28 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         inserter.insertInto(selectedValue, textarea);
         textarea.focus();
     });
+    
+    function setWrap(wrap) {
+        if (textarea.wrap) {
+            textarea.wrap = wrap ? 'soft' : 'off';
+        } else { // wrap attribute not supported - try Mozilla workaround
+            textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
+        }
+        if (wrap) {
+            $(textarea).removeClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "true");
+        } else {
+            $(textarea).addClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "false");
+        }
+    }
+    
+    $('#tt-wrap-text', container)
+        .change(function () {
+            setWrap($(this).is(':checked'));
+        })
+        .prop('checked', Wysiwyg.getWrapOn())
+        .change();
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu, element) {
@@ -920,10 +914,7 @@ Wysiwyg.prototype.focusTextarea = function () {
 Wysiwyg.prototype.setupToggleEditorButtons = function () {
     var div = document.createElement("div");
     var mode = Wysiwyg.editorMode;
-    var html = '<label for="editor-wrap-@" title="Turns on/off wrapping">'
-        + '<input type="checkbox" id="editor-wrap-@" />'
-        + 'wrap </label>'
-        + '<label for="editor-wysiwyg-@">'
+    var html = '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
         + (mode === "wysiwyg" ? 'checked="checked"' : '') + ' />'
         + 'rich text</label> '
@@ -944,14 +935,6 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
         var button = buttons[i];
         var token = button.id.replace(/[0-9]+$/, "@");
         switch (token) {
-        case "editor-wrap-@":
-            var listener = this.listenerToggleWrapTextarea(button);
-            $(button).click(listener);
-            $(button).keypress(listener);
-            this.wrapTextareaButton = button;
-            button.checked = this.wrapTextarea ? "checked" : "";
-            listener();
-            break;
         case "editor-wysiwyg-@":
         case "editor-textarea-@":
             $(button).click(this.listenerToggleEditor(button.value));
