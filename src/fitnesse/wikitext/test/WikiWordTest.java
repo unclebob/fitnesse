@@ -68,12 +68,6 @@ public class WikiWordTest {
        assertEquals(true, WikiWordPath.isWikiWord("HelloThere"));
        assertEquals(false, WikiWordPath.isWikiWord("not.a.wiki.word"));
     }
-    
-    @Test
-    public void testIsUnicodeWikiWord() throws Exception {
-       assertEquals(true, WikiWordPath.isWikiWord("DennaDšr"));
-       assertEquals(false, WikiWordPath.isWikiWord("Dšr"));
-    }
 
     @Test
     public void testBackwardSearchWidget() throws Exception {

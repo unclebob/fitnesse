@@ -5,18 +5,15 @@ import java.util.regex.Pattern;
 public class WikiWordPath {
 
     //todo: get rid of these
-    private static final String SINGLE_WIKIWORD_REGEXP = "\\b[\\p{Lu}](?:[[\\p{L}&&[^\\p{Lu}]]0-9]+[\\p{Lu}][[\\p{L}&&[^\\p{Lu}]]0-9]*)+";
+    private static final String SINGLE_WIKIWORD_REGEXP = "\\b[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+";
     private static final String REGEXP = "(?:[<>^.])?(?:" + SINGLE_WIKIWORD_REGEXP + "[.]?)+\\b";
-    
-    private static final Pattern SINGLE_WIKIWORD_PATTERN = Pattern.compile(SINGLE_WIKIWORD_REGEXP, Pattern.UNICODE_CASE);
-    private static final Pattern REXEXP_PATTERN = Pattern.compile(REGEXP, Pattern.UNICODE_CASE);
 
     public static boolean isSingleWikiWord(String s) {
-      return SINGLE_WIKIWORD_PATTERN.matcher(s).matches();
+      return Pattern.matches(SINGLE_WIKIWORD_REGEXP, s);
     }
 
     public static boolean isWikiWord(String word) {
-      return   REXEXP_PATTERN.matcher(word).matches();
+      return Pattern.matches(REGEXP, word);
     }
 
     public static String makeWikiWord(String input) {
