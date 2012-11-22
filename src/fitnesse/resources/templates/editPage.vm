@@ -37,7 +37,7 @@
  </fieldset>
 
  <div id="backingData" class="hidden">
-  <select id="template-map">
+  <select id="templateMap">
    <option value=""></option>
    #foreach ($templateEntry in $templateMap.entrySet())
    <option value="$templateEntry.key">$templateEntry.value</option>

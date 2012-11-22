@@ -479,7 +479,7 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
         '<input id="tt-spreadsheet-to-wiki" type="button" value="Spreadsheet to FitNesse" title="This function will convert the text from spreadsheet format to FitNesse format." />',
         '<input id="tt-wiki-to-spreadsheet" type="button" value="FitNesse to Spreadsheet" title="This function will convert the text from FitNesse format to spreadsheet." />',
         '<input id="tt-format-wiki" type="button" accesskey="f" value="Format" title="Formats the wiki text" />',
-        '<select id="tt-template-map">' + $('#template-map').html() + '</select>',
+        '<select id="tt-template-map">' + $('#templateMap').html() + '</select>',
         '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />',
         '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>' ];
     var div = d.createElement("div");
