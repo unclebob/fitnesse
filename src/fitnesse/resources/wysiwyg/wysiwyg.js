@@ -41,12 +41,12 @@ var Wysiwyg = function (textarea, options) {
     // Hide both editors, so the current one gets properly shown:
     textarea.style.display = frame.style.display = "none";
 
-    for (i = 0; i < this.menus.length; i++) {
-        body.insertBefore(this.menus[i], body.firstChild);
-    }
     this.textarea.parentNode.insertBefore(this.toggleEditorButtons, this.textarea);
     this.textarea.parentNode.insertBefore(this.textareaToolbar, this.textarea);
     this.textarea.parentNode.insertBefore(this.wysiwygToolbar, this.textarea);
+
+    document.getElementById("wt-style").parentNode.appendChild(this.menus[0]);
+
 
     this.listenerToggleEditor(editorMode)({ initializing: true });
 
@@ -547,7 +547,7 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu, element) {
-    if (parseInt(menu.style.left, 10) < 0) {
+    if (menu.style.display === "none") {
         this.hideAllMenus(menu);
         Wysiwyg.setStyle(menu, { display: "" });
     } else {
