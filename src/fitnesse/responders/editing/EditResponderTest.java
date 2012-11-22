@@ -123,21 +123,18 @@ public class EditResponderTest extends RegexTestCase {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     String body = response.getContent();
     assertMatches("TemplateInserter.js", body);
-    assertMatches("TemplateInserterSupport.js", body);
   }
 
   public void testPasteFromExcelExists() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     String body = response.getContent();
     assertMatches("SpreadsheetTranslator.js", body);
-    assertMatches("spreadsheetSupport.js", body);
   }
 
   public void testFormatterScriptsExist() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     String body = response.getContent();
     assertMatches("WikiFormatter.js", body);
-    assertMatches("wikiFormatterSupport.js", body);
   }
 
   public void testMissingPageDoesNotGetCreated() throws Exception {
