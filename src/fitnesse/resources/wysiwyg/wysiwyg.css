@@ -44,6 +44,7 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar ul#wm-style .wysiwyg-menu a {
     background-image: none;
     width: auto;
+    height: auto;
     border: none;
     background: white; /* Old browsers */
     background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
@@ -174,6 +175,7 @@ iframe.wysiwyg:focus {
 .wysiwyg-menu pre.wiki,
 .wysiwyg-menu blockquote.citation {
     margin: 4px 0 0;
+    border: none;
 }
 .wysiwyg-menu ul, .wysiwyg-menu li {
     list-style-type: none;
