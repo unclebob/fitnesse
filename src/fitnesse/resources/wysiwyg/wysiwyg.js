@@ -164,7 +164,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
             var textarea = self.textarea;
             if (textarea.style.display === "none") {
                 self.hideAllMenus();
-                if (!event.initializing) { self.loadWikiText(); }
+                if (event && !event.initializing) { self.loadWikiText(); }
                 textarea.style.display = "";
                 textarea.setAttribute("tabIndex", "");
                 self.syncTextAreaHeight();
@@ -1387,33 +1387,42 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     var self = this;
     var range = this.getSelectionRange();
     var html = this.getSelectionHTML();
-
-    function tagsToFragment(node) {
-        var close = '', open = '';
-        while (node.parentNode && node !== self.contentDocument.body &&
-                (node.nodeType !== 1 || node.tagName !== "DIV")) {
-            if (node.nodeType === 1) {
-                var tagName = node.tagName.toLowerCase();
-                close += "</" + tagName + ">";
-                open = "<" + tagName + ">" + open;
-            }
+    var d = this.contentDocument;
+    
+    function topNode(node) {
+        while (node.parentNode && node.parentNode !== self.contentDocument.body) {
             node = node.parentNode;
         }
-        return [ close, open ];
+        return node;
     }
 
-    var start = tagsToFragment(range.startContainer);
-    var end = tagsToFragment(range.endContainer);
-
-    var id = this.generateDomId();
+    var nodes;
+    var start = topNode(range.startContainer);
+    if (range.startContainer === range.endContainer) {
+        nodes =  range.startOffset === range.endOffset ? [] : [ topNode(range.startContainer) ];
+    } else {  
+        var end = topNode(range.endContainer);
+        nodes = [];
+        for (var node = start; node !== end; node = node.nextSibling) {
+            nodes.push(node);
+        }
+        nodes.push(end);
+    }
+    console.log ("range:", nodes);
+    
     var classes = "";
     if (mode) { classes = " " + mode; }
-    this.insertHTML(start[0] + "<div class='collapsable" + classes + "' id='" + id + "'>" + start[1] + 
-    		"<p>section title</p>" + (html ? html : "") + end[0] + "</div>" + end[1]);
-    var node = this.contentDocument.getElementById(id);
-    if (node) {
-        this.selectNode(node.firstChild.nextSibling || node.firstChild);
+    var collapsible = d.createElement("div");
+    collapsible.setAttribute("class", "collapsable" + classes);
+    start.parentNode.insertBefore(collapsible, start);
+    var sectionName = d.createElement("p");
+    sectionName.appendChild(d.createTextNode("section title"));
+    collapsible.appendChild(sectionName);
+    for (var node in nodes) {
+        collapsible.appendChild(nodes[node]);
     }
+    
+    this.selectNode(sectionName);
 };
 
 Wysiwyg.prototype.deleteCollapsableSection = function () {
