@@ -1,15 +1,11 @@
 package fitnesse.updates;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 
@@ -19,7 +15,7 @@ import fitnesse.Updater;
 public class UpdaterBase implements Updater {
   public FitNesseContext context;
   public Properties rootProperties;
-  public Update[] updates;  
+  public Update[] updates;
 
   public UpdaterBase(FitNesseContext context) throws IOException {
     this.context = context;
@@ -57,7 +53,7 @@ public class UpdaterBase implements Updater {
     try {
       propFile = getPropertiesFile();
       os = new FileOutputStream(propFile);
-      writeProperties(os);
+      rootProperties.store(os, "#FitNesse properties");
     } catch (IOException e) {
       String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
       System.err.println("Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
@@ -66,25 +62,6 @@ public class UpdaterBase implements Updater {
       if (os != null)
         os.close();
     }
-  }
-
-  private void writeProperties(final OutputStream OutputStream)
-    throws IOException {
-    BufferedWriter awriter;
-    awriter = new BufferedWriter(new OutputStreamWriter(OutputStream, "8859_1"));
-    awriter.write("#FitNesse properties");
-    awriter.newLine();
-    Set<Object> objects = rootProperties.keySet();
-    Object[] keys = objects.toArray(new Object[objects.size()]);
-    Arrays.sort(keys);
-    for (Enumeration<Object> enumeration = rootProperties.keys(); enumeration
-      .hasMoreElements();) {
-      String key = (String) enumeration.nextElement();
-      String val = (String) rootProperties.get(key);
-      awriter.write(key + "=" + val);
-      awriter.newLine();
-    }
-    awriter.flush();
   }
 
   public void update() throws IOException {
