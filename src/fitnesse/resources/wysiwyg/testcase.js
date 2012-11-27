@@ -4,6 +4,9 @@ $(function() {
     var instance = new Wysiwyg(document.getElementById("textarea"), options);
     var contentDocument = instance.contentDocument;
 
+    // Ensure the wysiwyg editor is visible
+    $('#editor-wysiwyg-1').click();
+    
     var d = document;
     var wysiwygHtml = d.getElementById("wysiwyg-html");
     var showWysiwygHtml = d.getElementById("show-wysiwyg-html");

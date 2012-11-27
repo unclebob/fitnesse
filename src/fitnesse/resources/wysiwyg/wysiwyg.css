@@ -41,6 +41,15 @@ iframe.wysiwyg:focus {
 	border-radius: 2px;
 	padding: 0;
 }
+.wysiwyg-toolbar ul#wm-style .wysiwyg-menu a {
+    background-image: none;
+    width: auto;
+    height: auto;
+    border: none;
+    background: white; /* Old browsers */
+    background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
+    background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
+}
 .wysiwyg-toolbar li {
     display: block;
     float: left;
@@ -149,11 +158,13 @@ iframe.wysiwyg:focus {
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
-    padding: 1px 2px;
+    padding: 2px 4px;
     background-color: #fff;
     -moz-opacity: 0.90;
     opacity: 0.90;
+    position: absolute;
 }
+
 .wysiwyg-menu p,
 .wysiwyg-menu h1,
 .wysiwyg-menu h2,
@@ -163,7 +174,8 @@ iframe.wysiwyg:focus {
 .wysiwyg-menu h6,
 .wysiwyg-menu pre.wiki,
 .wysiwyg-menu blockquote.citation {
-    margin: 0px;
+    margin: 4px 0 0;
+    border: none;
 }
 .wysiwyg-menu ul, .wysiwyg-menu li {
     list-style-type: none;

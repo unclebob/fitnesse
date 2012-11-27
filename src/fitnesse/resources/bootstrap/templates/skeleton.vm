@@ -51,9 +51,11 @@
    #parse( $mainTemplate )
   </article>
   
+  #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
   </footer>
-    
+  #end
+  
  </body>
 </html>

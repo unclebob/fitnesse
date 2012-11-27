@@ -9,3 +9,13 @@
 //--></script>
 
 <span id="test-action"></span>
+## The error navigator is also hidden until page is complete.
+<div id="error-nav" class="error-nav-hidden">
+	<p id="error-nav-label">Failure Navigator</p>
+	<div id="error-nav-controls">
+	<button id="error-nav-prev"><</button>
+	<input id="error-nav-text" type="text">
+	 of <span id="error-nav-max"></span>
+	<button id="error-nav-next">></button>
+	</div>
+</div>
