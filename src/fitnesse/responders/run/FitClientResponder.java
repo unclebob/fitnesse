@@ -77,7 +77,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 
   private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws IOException, InterruptedException {
     FitClient client = startClient(socket);
-    SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
+    SuiteFilter filter = new SuiteFilter(suiteFilter, null, null, null);
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     List<WikiPage> testPages = suiteTestFinder.makePageList();
 
