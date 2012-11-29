@@ -87,6 +87,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
+    htmlPage.setErrorNavTemplate("errorNavigator");
+    htmlPage.put("errorNavOnDocumentReady", false);
 
     WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
 

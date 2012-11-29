@@ -53,6 +53,10 @@ public class HtmlPage {
   public void setFooterTemplate(String footerTemplate) {
     velocityContext.put("footerTemplate", ensureSuffix(footerTemplate));
   }
+  
+  public void setErrorNavTemplate(String errorNavTemplate) {
+    velocityContext.put("errorNavTemplate", ensureSuffix(errorNavTemplate));
+  }
 
   public String ensureSuffix(String templateName) {
     if (templateName.endsWith(".vm")) {

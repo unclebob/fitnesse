@@ -43,6 +43,10 @@
    #parse( 'breadcrumb.vm' )
   </nav>
   
+  #if( $!errorNavTemplate )
+   #parse( $errorNavTemplate )
+  #end
+  
   <header>
    #parse( $headerTemplate )
   </header>
