@@ -49,7 +49,7 @@ public class ConverterRegistry {
 		// com.sun.beans.EnumEditor and sun.beans.EnumEditor seem to be used in
 		// different usages.
 		if (Enum.class.isAssignableFrom(clazz)
-				&& "EnumEditor".equals(pe.getClass().getSimpleName()))
+				&& (pe == null || "EnumEditor".equals(pe.getClass().getSimpleName())))
 			return new EnumConverter(clazz);
 
 		if (pe != null) {
