@@ -1,27 +1,8 @@
 package fitnesse.slim;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-
 import fitnesse.slim.converters.ConverterRegistry;
-import fitnesse.slim.converters.PropertyEditorConverter;
 
 class ConverterSupport {
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> Converter<T> getConverter(Class<? extends T> k) {
-		Converter<T> c = ConverterRegistry.getConverterForClass(k);
-		if (c != null)
-			return c;
-		PropertyEditor pe = PropertyEditorManager.findEditor(k);
-		// com.sun.beans.EnumEditor and sun.beans.EnumEditor seem to be used in different usages.
-	    if (Enum.class.isAssignableFrom(k) && "EnumEditor".equals(pe.getClass().getSimpleName()))
-	    	return new EnumConverter(k);
-	    if (pe != null) {
-	    	return new PropertyEditorConverter<T>(pe);
-	    }
-		return null;
-	}
 
 	public static Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
 		Object[] convertedArgs = new Object[args.length];
@@ -39,7 +20,7 @@ class ConverterSupport {
 			// store
 			return (T) arg;
 		}
-		Converter<T> converter = getConverter(argumentType);
+		Converter<T> converter = ConverterRegistry.getConverterForClass(argumentType);
 		if (converter != null) {
 			return converter.fromString(arg.toString());
 		}

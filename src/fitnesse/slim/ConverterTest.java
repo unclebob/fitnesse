@@ -3,7 +3,9 @@ package fitnesse.slim;
 import static org.junit.Assert.*;
 
 import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.ConverterRegistry;
 import fitnesse.slim.converters.DateConverter;
+import fitnesse.slim.converters.EnumConverter;
 import fitnesse.slim.test.AnEnum;
 import fitnesse.slim.test.AnotherEnum;
 
@@ -45,7 +47,7 @@ public class ConverterTest {
 
 	@Test
 	public void defaultEnumConversion() {
-		assertTrue(ConverterSupport.getConverter(AnEnum.class) instanceof EnumConverter);
+		assertTrue(ConverterRegistry.getConverterForClass(AnEnum.class) instanceof EnumConverter);
 	}
 
 	@Test
@@ -56,7 +58,7 @@ public class ConverterTest {
 	@Test
 	public void usesEditorForEnum() throws Exception {
 		assertConverts("enum property editor called with \"some value\"",
-				ConverterSupport.getConverter(AnotherEnum.class), "some value");
+				ConverterRegistry.getConverterForClass(AnotherEnum.class), "some value");
 	}
 
 	private <T> void assertConverts(Converter<T> converter, String value) {

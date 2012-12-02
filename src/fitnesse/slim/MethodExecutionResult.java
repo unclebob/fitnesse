@@ -2,6 +2,8 @@ package fitnesse.slim;
 
 import java.util.List;
 
+import fitnesse.slim.converters.ConverterRegistry;
+
 public class MethodExecutionResult {
   private static class NoMethod extends MethodExecutionResult {
     static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
@@ -86,7 +88,7 @@ public class MethodExecutionResult {
   
   @SuppressWarnings({"unchecked", "rawtypes"})
   public String toString() {
-    Converter converter = ConverterSupport.getConverter(type);
+    Converter converter = ConverterRegistry.getConverterForClass(type);
     if (converter != null)
       return converter.toString(value);
     if (value == null)

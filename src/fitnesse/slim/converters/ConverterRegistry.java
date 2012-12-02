@@ -1,5 +1,7 @@
 package fitnesse.slim.converters;
 
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,9 +40,22 @@ public class ConverterRegistry {
 		addConverter(Double[].class, new DoubleArrayConverter());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
-		return (Converter<T>) converters.get(clazz);
+		if (converters.containsKey(clazz))
+			return (Converter<T>) converters.get(clazz);
+
+		PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
+		// com.sun.beans.EnumEditor and sun.beans.EnumEditor seem to be used in
+		// different usages.
+		if (Enum.class.isAssignableFrom(clazz)
+				&& "EnumEditor".equals(pe.getClass().getSimpleName()))
+			return new EnumConverter(clazz);
+
+		if (pe != null) {
+			return new PropertyEditorConverter<T>(pe);
+		}
+		return null;
 	}
 
 	public static <T> void addConverter(Class<? extends T> clazz,
