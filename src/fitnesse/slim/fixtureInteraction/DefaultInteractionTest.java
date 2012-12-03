@@ -24,7 +24,7 @@ public class DefaultInteractionTest {
     DefaultInteraction interaction = new DefaultInteraction();
 
 
-    Testee o = (Testee) interaction.newInstance(cstr, null);
+    Testee o = (Testee) interaction.newInstance(cstr, (Object[]) null);
     interaction.methodInvoke(setI, o, expectedInt);
     Integer gotI = (Integer) interaction.methodInvoke(getI, o);
 
@@ -35,7 +35,7 @@ public class DefaultInteractionTest {
   public void canUseMockingFramework() throws Exception {
     MockingInteraction interaction = new MockingInteraction();
 
-    Testee testee = (Testee) interaction.newInstance(cstr, null);
+    Testee testee = (Testee) interaction.newInstance(cstr, (Object[]) null);
     interaction.methodInvoke(setI, testee, new Integer(3));
     String gotI = (String) interaction.methodInvoke(getI, testee);
 
