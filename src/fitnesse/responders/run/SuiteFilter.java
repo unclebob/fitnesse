@@ -17,8 +17,9 @@ import java.util.List;
 
 public class SuiteFilter {
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
-  private static final String AND_FILTER_ARG = "intersectFilters";
-  private static final String OR_FILTER_ARG = "suiteFilter";
+  private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
+  private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
+  private static final String OR_FILTER_ARG_2 = "suiteFilter";
   final private SuiteTagMatcher notMatchTags;
   final private SuiteTagMatcher matchTags;
   final private boolean andStrategy;
@@ -52,7 +53,18 @@ public class SuiteFilter {
   }
   
   private static String getOrTagFilter(Request request) {
-    return request != null ? (String) request.getInput(OR_FILTER_ARG) : null;
+    return request != null ? getOrFilterString(request) : null;
+  }
+
+  private static String getOrFilterString(Request request) {
+    //request already confirmed not-null
+    String orFilterString = null;
+    if(request.getInput(OR_FILTER_ARG_1) != null){
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+    } else {
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+    }
+    return orFilterString;
   }
 
   private static String getNotSuiteFilter(Request request) {
