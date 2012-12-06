@@ -1634,31 +1634,29 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("''");                     // 3. italic
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
-    wikiInlineRules.push("![-<{(\\[]");                // 6. escaped (open)
-    wikiInlineRules.push("[->})\\]]!");                // 7. escaped (close)
+    wikiInlineRules.push("![-<{(\\[]");             // 6. escaped (open)
+    wikiInlineRules.push("[->})\\]]!");             // 7. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 8. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
 
-    var wikiRules = wikiInlineRules.slice(0);
-    // -1. citation
-    //wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
+    var wikiRules = [];
     // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -2. list
     wikiRules.push("^[ \\t\\r\\f\\v]*[*-][ \\t\\r\\f\\v]");
     // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
-    // -5. leading space
-    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
     // -4. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
     // -5. cell
-    wikiRules.push("!?(?:\\|)");
+    wikiRules.push("^-?!?\\||\\|");
     // -6: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
     // -7: close collapsible section
     wikiRules.push("^\\*+!$");
 
+    wikiRules = wikiRules.concat(wikiInlineRules);
+    
     // TODO could be removed?
     var wikiDetectLinkRules = [ _wikiPageName ];
 
@@ -1671,6 +1669,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     Wysiwyg.prototype._quotedString = _quotedString;
     Wysiwyg.prototype._wikiPageName = _wikiPageName;
     Wysiwyg.prototype.wikiInlineRules = wikiInlineRules;
+    Wysiwyg.prototype.wikiRules = wikiRules;
     Wysiwyg.prototype.xmlNamePattern = new RegExp("^" + _xmlName + "$");
     Wysiwyg.prototype.domToWikiInlinePattern = domToWikiInlinePattern;
     Wysiwyg.prototype.wikiRulesPattern = wikiRulesPattern;
@@ -1762,6 +1761,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     var _linkScheme = this._linkScheme;
     var _quotedString = this._quotedString;
     var wikiInlineRulesCount = this.wikiInlineRules.length;
+    var wikiRulesCount = this.wikiRules.length - wikiInlineRulesCount;
 
     var self = this;
     var fragment = contentDocument.createDocumentFragment();
@@ -2131,7 +2131,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         }
     }
 
-    function handleTableCell(action, escaped) {
+    function handleTableCell(action, escaped, hidden) {
         var d = contentDocument;
         var h, table, tbody, cell;
 
@@ -2166,6 +2166,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         case 1:
             row = d.createElement("tr");
             tbody.appendChild(row);
+            if (hidden) {
+                row.className = "hidden";
+            }
             break;
         case 0:
             row = getSelfOrAncestor(h, "tr");
@@ -2240,10 +2243,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         var i;
         for (i = 1; i < length; i++) {
             if (match[i]) {
-                if (i <= wikiInlineRulesCount) {
-                    return i;
+                if (i <= wikiRulesCount) {
+                    return -i;
                 }
-                return wikiInlineRulesCount - i;
+                return i - wikiRulesCount;
             }
         }
         return null;
@@ -2350,12 +2353,19 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 }
                 break;
             case -5:    // cell
-                if (inEscapedText()) { break; }
+                if (inEscapedText()) { 
+                    if (/^-!/.test(matchText)) {
+                        closeEscapedText(matchText);
+                        matchText = matchText.substring(2);
+                    }
+                    break;
+                }
                 if (!inTable() && match.index === 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                handleTableCell(inTableRow() ? 0 : 1, /^!/.test(matchText));
+                console.log('match text', matchText);
+                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
                 continue;
             case -6: // collapsible section
                 if (inEscapedText()) { break; }
@@ -2692,8 +2702,13 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (token !== true) {
                 pushToken(token);
             }
-            if (name === "table" && $(node).hasClass("escaped")) {
-                _texts.push("!");
+            if (name === "table") {
+                if ($('tr', node).first().hasClass('hidden')) {
+                    _texts.push("-");
+                }
+                if ($(node).hasClass("escaped")) {
+                    _texts.push("!");
+                }
             }
         } else {
             var value, text;

@@ -34,6 +34,10 @@
    #parse( $headerTemplate )
   </header>
   
+  #if( $!errorNavTemplate )
+   #parse( $errorNavTemplate )
+  #end
+  
   <nav>
    #parse( $navTemplate )
   </nav>

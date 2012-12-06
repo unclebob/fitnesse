@@ -121,20 +121,25 @@ $(document).ready(function() {
 		setCurrentErrorNavIndex(currentErrorNavIndex);
 	}
 
+    function unfoldErrors(element) {
+        element.parents('.scenario-detail').show().prev().removeClass('closed');
+        element.parents('.collapsible').removeClass('closed invisible');
+        element.parents('tr.hidden').removeClass('hidden');
+    }
+    
 	function navigateToCurrentError(){
 		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		$("span.fail, span.error").removeClass("selected-error");
-		$("span.fail, span.error").filter(function(){return $(this).data("error-num") == currentErrorNavIndex}).each(
-				function(){
-					$(this).parents(".closed").removeClass("closed"); //open all folds this is in
-					$(this).parents(".scenario-detail").show(); //show all scenario tables this is in
-					$(this).parents(".scenario-detail").prev().removeClass("closed"); //open all scenario folds this is in
-					$(this).addClass("selected-error");
-					$('html, body').animate({
-         				scrollTop: $(this).offset().top - 200
-     				}, 500);
-				}
-		);
+		$("span.fail, span.error")
+            .removeClass("selected-error")
+		    .filter(function() {
+                return $(this).data("error-num") == currentErrorNavIndex
+            }).each(function(){
+				unfoldErrors($(this)); 
+				$(this).addClass("selected-error");
+				$('html, body').animate({
+     				scrollTop: $(this).offset().top - 200
+ 				}, 500);
+			});
 	}
 
 	$("#error-nav-prev").click(function(){
@@ -157,9 +162,7 @@ $(document).ready(function() {
     /**
      * Open scenario's and collapsed sections which contain failed or errorous tests
      */
-    var problems = $('.fail,.error');
-    problems.parents('.scenario-detail').show().prev().removeClass('closed');
-	problems.parents('.collapsible').removeClass('closed invisible')
+    unfoldErrors($('.fail,.error'));
 });
 
 function initErrorMetadata(){
