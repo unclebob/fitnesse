@@ -1,12 +1,10 @@
 function TemplateInserter()
 {
-  this.insertInto = function(templateList, textArea) {
+  this.insertInto = function(templateValue, textArea) {
     
-    var selectedValue = templateList.options[templateList.selectedIndex].value;
-    
-    if(selectedValue !== "")
+    if(templateValue !== "")
     {
-      pageDataUrl = selectedValue.substr(1, selectedValue.length - 1) + "?pageData";
+      var pageDataUrl = templateValue.substr(1, templateValue.length - 1) + "?pageData";
       
       $.ajax({
         url: pageDataUrl,

@@ -4,6 +4,9 @@ $(function() {
     var instance = new Wysiwyg(document.getElementById("textarea"), options);
     var contentDocument = instance.contentDocument;
 
+    // Ensure the wysiwyg editor is visible
+    $('#editor-wysiwyg-1').click();
+    
     var d = document;
     var wysiwygHtml = d.getElementById("wysiwyg-html");
     var showWysiwygHtml = d.getElementById("show-wysiwyg-html");
@@ -772,6 +775,46 @@ $(function() {
                 "!| table | !-escaped-! |",
                 "| ''not italic'' | '''not bold''' |" ].join("\n"));
         });
+
+        unit.add("table, hidden top row", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr", { "class": "hidden" }, element("td", " table "), element("td", " ", element("tt", {'class': 'escape'}, "escaped"), " ")),
+                        element("tr", element("td", " ", element("i", "italic"), " "), element("td", " ", element("b", "bold"), " ")))));
+            generate.call(this, dom, [
+                "-| table | !-escaped-! |",
+                "| ''italic'' | '''bold''' |" ].join("\n"));
+        });
+
+        unit.add("escaped table, hidden top row", function() {
+            var dom = fragment(
+                element("table", { "class": "escaped" },
+                    element("tbody",
+                        element("tr", { "class": "hidden" }, element("td", " table "), element("td", " ", element("tt", {'class': 'escape'}, "escaped"), " ")),
+                        element("tr", element("td", " ''not italic'' "), element("td", " '''not bold''' ")))));
+            generate.call(this, dom, [
+                "-!| table | !-escaped-! |",
+                "| ''not italic'' | '''not bold''' |" ].join("\n"));
+        });
+
+        unit.add("escaped text + table", function() {
+            var dom = fragment(
+                element("p", element("tt", { "class": "escape"}, " escaped text", br()), "| table |"),
+                element("table",
+                    element("tbody",
+                        element("tr", element("td", " table text ")))));
+            generateFragment.call(this, dom, [
+                "!- escaped text",
+                "-!| table |",
+                "| table text |" ].join("\n"));
+            generateFragment.call(this, dom, [
+                "!- escaped text",
+                "-!| table |",
+                "",
+                "| table text |" ].join("\n"));
+        });
+
 
         unit.add("table 2", function() {
              var dom = fragment(

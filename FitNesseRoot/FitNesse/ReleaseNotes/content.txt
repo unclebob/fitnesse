@@ -1,3 +1,6 @@
+!2 2012-11-16
+ * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables. 
+
 !2 2012-09-18
  * Added the concept of a TemplateLibrary and the ability to insert existing templates into the plain text editor.
 

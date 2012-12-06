@@ -15,7 +15,6 @@ var Wysiwyg = function (textarea, options) {
     var body = document.body;
     var i;
 
-    this.wrapTextarea = Wysiwyg.getWrapOn();
     this.textarea = textarea;
     this.options = options = options || {};
 
@@ -27,44 +26,29 @@ var Wysiwyg = function (textarea, options) {
 
     this.initializeEditor(this.contentDocument);
     this.wysiwygToolbar = this.createWysiwygToolbar(document);
+    this.textareaToolbar = this.createTextareaToolbar(document);
     this.styleMenu = this.createStyleMenu(document);
     this.menus = [ this.styleMenu ];
-    this.toolbarButtons = this.setupMenuEvents();
+    this.toolbarButtons = this.setupWysiwygMenuEvents();
+    this.setupTextareaMenuEvents();
+    
     this.toggleEditorButtons = null;
-    this.wrapTextareaButton = null;
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
     this.setupSyncTextAreaHeight();
 
-    var styleStatic = { position: "static", left: "-9999px", top: "-9999px" };
-    var styleAbsolute = { position: "absolute", left: "-9999px", top: "-9999px" };
-    switch (editorMode) {
-    case "textarea":
-        Wysiwyg.setStyle(textarea, styleStatic);
-        Wysiwyg.setStyle(frame, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
-        Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
-        Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
-        textarea.setAttribute("tabIndex", "");
-        frame.setAttribute("tabIndex", "-1");
-        break;
-    case "wysiwyg":
-        Wysiwyg.setStyle(textarea, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
-        Wysiwyg.setStyle(frame, styleStatic);
-        Wysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
-        Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
-        textarea.setAttribute("tabIndex", "-1");
-        frame.setAttribute("tabIndex", "");
-        break;
-    }
+    // Hide both editors, so the current one gets properly shown:
+    textarea.style.display = frame.style.display = "none";
 
-    for (i = 0; i < this.menus.length; i++) {
-        body.insertBefore(this.menus[i], body.firstChild);
-    }
     this.textarea.parentNode.insertBefore(this.toggleEditorButtons, this.textarea);
+    this.textarea.parentNode.insertBefore(this.textareaToolbar, this.textarea);
     this.textarea.parentNode.insertBefore(this.wysiwygToolbar, this.textarea);
+
+    document.getElementById("wt-style").parentNode.appendChild(this.menus[0]);
+
+
+    this.listenerToggleEditor(editorMode)({ initializing: true });
 
     function lazySetup() {
         if (self.contentDocument.body) {
@@ -77,9 +61,8 @@ var Wysiwyg = function (textarea, options) {
             self.setupEditorEvents();
             self.setupFormEvent();
             if (exception) {
-                self.textarea.style.position = "static";
-                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
-                self.wrapTextareaButton.parentNode.style.display = "none";
+                self.textarea.style.display = self.textareaToolbar.style.display = "";
+                self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
             }
@@ -160,55 +143,42 @@ Wysiwyg.getWrapOn = function () {
     return mode;
 };
 
-Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
-    var self = this;
-
-    function setWrap(wrap) {
-        if (self.textarea.wrap) {
-            self.textarea.wrap = wrap ? 'soft' : 'off';
-        } else { // wrap attribute not supported - try Mozilla workaround
-            self.textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-        }
-        if (wrap) {
-            $(self.textarea).removeClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "true");
-        } else {
-            $(self.textarea).addClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "false");
-        }
-    }
-
-    return function () {
-        self.wrapTextarea = input.checked;
-        setWrap(input.checked);
-        
-    };
-};
-
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
+    var setEditorMode = function (mode) {
+        switch (mode) {
+        case "wysiwyg":
+            break;
+        default:
+            mode = "textarea";
+            break;
+        }
+        Wysiwyg.editorMode = mode;
+        Wysiwyg.setCookie("wysiwyg", mode);
+    };
+
 
     switch (type) {
     case "textarea":
-        return function () {
+        return function (event) {
             var textarea = self.textarea;
-            if (textarea.style.position === "absolute") {
+            if (textarea.style.display === "none") {
                 self.hideAllMenus();
-                self.loadWikiText();
-                textarea.style.position = "static";
-                self.textarea.setAttribute("tabIndex", "");
+                if (event && !event.initializing) { self.loadWikiText(); }
+                textarea.style.display = "";
+                textarea.setAttribute("tabIndex", "");
                 self.syncTextAreaHeight();
-                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
+                self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
-                self.wrapTextareaButton.parentNode.style.display = "";
-                Wysiwyg.setEditorMode(type);
+                self.textareaToolbar.style.display = "";
+                setEditorMode(type);
             }
             self.focusTextarea();
         };
     case "wysiwyg":
         return function (event) {
             var frame = self.frame;
-            if (frame.style.position === "absolute") {
+            if (frame.style.display === "none") {
                 try {
                     self.loadWysiwygDocument();
                 } catch (e) {
@@ -216,12 +186,12 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                     alert("Failed to activate the wysiwyg editor.");
                     throw e;
                 }
-                self.textarea.style.position = "absolute";
+                self.textarea.style.display = "none";
                 self.textarea.setAttribute("tabIndex", "-1");
-                frame.style.position = self.wysiwygToolbar.style.position = "static";
-                self.frame.setAttribute("tabIndex", "");
-                self.wrapTextareaButton.parentNode.style.display = "none";
-                Wysiwyg.setEditorMode(type);
+                frame.style.display = self.wysiwygToolbar.style.display = "";
+                frame.setAttribute("tabIndex", "");
+                self.textareaToolbar.style.display = "none";
+                setEditorMode(type);
             }
             self.focusWysiwyg();
         };
@@ -229,7 +199,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
 };
 
 Wysiwyg.prototype.activeEditor = function () {
-    return this.textarea.style.position === "absolute" ? "wysiwyg" : "textarea";
+    return this.textarea.style.display === "none" ? "wysiwyg" : "textarea";
 };
 
 Wysiwyg.prototype.isModified = function () {
@@ -371,12 +341,12 @@ Wysiwyg.prototype.createStyleMenu = function (d) {
         '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>' ];
     var menu = d.createElement("div");
     menu.className = "wysiwyg-menu";
-    Wysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
+    Wysiwyg.setStyle(menu, { display: "none" });
     menu.innerHTML = html.join("").replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
     return menu;
 };
 
-Wysiwyg.prototype.setupMenuEvents = function () {
+Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
     function addToolbarEvent(element, self, args) {
         var method = args.shift();
         $(element).click(function (event) {
@@ -504,11 +474,82 @@ Wysiwyg.prototype.setupMenuEvents = function () {
     return buttons;
 };
 
+Wysiwyg.prototype.createTextareaToolbar = function (d) {
+    var html = [
+        '<input id="tt-spreadsheet-to-wiki" type="button" value="Spreadsheet to FitNesse" title="This function will convert the text from spreadsheet format to FitNesse format." />',
+        '<input id="tt-wiki-to-spreadsheet" type="button" value="FitNesse to Spreadsheet" title="This function will convert the text from FitNesse format to spreadsheet." />',
+        '<input id="tt-format-wiki" type="button" accesskey="f" value="Format" title="Formats the wiki text" />',
+        '<select id="tt-template-map">' + $('#templateMap').html() + '</select>',
+        '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />',
+        '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>' ];
+    var div = d.createElement("div");
+    div.className = "textarea-toolbar";
+    div.innerHTML = html.join("");
+    return div;
+};
+
+Wysiwyg.prototype.setupTextareaMenuEvents = function () {
+    var textarea = this.textarea;
+    var container = this.textareaToolbar;
+    
+    $('#tt-spreadsheet-to-wiki', container).click(function () {
+        var translator = new SpreadsheetTranslator();
+        translator.parseExcelTable(textarea.value);
+        textarea.value = translator.getFitNesseTables();
+        textarea.focus();
+    });
+    $('#tt-wiki-to-spreadsheet', container).click(function () {
+        var selection = textarea.value;
+        selection = selection.replace(/\r\n/g, '\n');
+        selection = selection.replace(/\r/g, '\n');
+         // remove the last | at the end of the line
+        selection = selection.replace(/\|\n/g, '\n');
+         // replace all remaining | with \t
+        selection = selection.replace(/\|/g, '\t');
+        textarea.value = selection;
+        textarea.focus();
+    });
+
+    $('#tt-format-wiki', container).click(function () {    
+        var formatter = new WikiFormatter();
+        textarea.value = formatter.format(textarea.value);
+        textarea.focus();
+    });
+    
+    $('#tt-insert-template', container).click(function () {
+        var selectedValue = $('#tt-template-map').val();
+        var inserter = new TemplateInserter();
+        inserter.insertInto(selectedValue, textarea);
+        textarea.focus();
+    });
+    
+    function setWrap(wrap) {
+        if (textarea.wrap) {
+            textarea.wrap = wrap ? 'soft' : 'off';
+        } else { // wrap attribute not supported - try Mozilla workaround
+            textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
+        }
+        if (wrap) {
+            $(textarea).removeClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "true");
+        } else {
+            $(textarea).addClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "false");
+        }
+    }
+    
+    $('#tt-wrap-text', container)
+        .change(function () {
+            setWrap($(this).is(':checked'));
+        })
+        .prop('checked', Wysiwyg.getWrapOn())
+        .change();
+};
+
 Wysiwyg.prototype.toggleMenu = function (menu, element) {
-    if (parseInt(menu.style.left, 10) < 0) {
+    if (menu.style.display === "none") {
         this.hideAllMenus(menu);
-        var position = Wysiwyg.elementPosition(element);
-        Wysiwyg.setStyle(menu, { left: position[0] + "px", top: (position[1] + 18) + "px" });
+        Wysiwyg.setStyle(menu, { display: "" });
     } else {
         this.hideAllMenus();
     }
@@ -521,7 +562,7 @@ Wysiwyg.prototype.hideAllMenus = function (except) {
     var i;
     for (i = 0; i < length; i++) {
         if (menus[i] !== except) {
-            Wysiwyg.setStyle(menus[i], { left: "-1000px", top: "-1000px" });
+            Wysiwyg.setStyle(menus[i], { display: "none" });
         }
     }
 };
@@ -873,10 +914,7 @@ Wysiwyg.prototype.focusTextarea = function () {
 Wysiwyg.prototype.setupToggleEditorButtons = function () {
     var div = document.createElement("div");
     var mode = Wysiwyg.editorMode;
-    var html = '<label for="editor-wrap-@" title="Turns on/off wrapping">'
-        + '<input type="checkbox" id="editor-wrap-@" />'
-        + 'wrap </label>'
-        + '<label for="editor-wysiwyg-@">'
+    var html = '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
         + (mode === "wysiwyg" ? 'checked="checked"' : '') + ' />'
         + 'rich text</label> '
@@ -897,14 +935,6 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
         var button = buttons[i];
         var token = button.id.replace(/[0-9]+$/, "@");
         switch (token) {
-        case "editor-wrap-@":
-            var listener = this.listenerToggleWrapTextarea(button);
-            $(button).click(listener);
-            $(button).keypress(listener);
-            this.wrapTextareaButton = button;
-            button.checked = this.wrapTextarea ? "checked" : "";
-            listener();
-            break;
         case "editor-wysiwyg-@":
         case "editor-textarea-@":
             $(button).click(this.listenerToggleEditor(button.value));
@@ -1357,33 +1387,42 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     var self = this;
     var range = this.getSelectionRange();
     var html = this.getSelectionHTML();
-
-    function tagsToFragment(node) {
-        var close = '', open = '';
-        while (node.parentNode && node !== self.contentDocument.body &&
-                (node.nodeType !== 1 || node.tagName !== "DIV")) {
-            if (node.nodeType === 1) {
-                var tagName = node.tagName.toLowerCase();
-                close += "</" + tagName + ">";
-                open = "<" + tagName + ">" + open;
-            }
+    var d = this.contentDocument;
+    
+    function topNode(node) {
+        while (node.parentNode && node.parentNode !== self.contentDocument.body) {
             node = node.parentNode;
         }
-        return [ close, open ];
+        return node;
     }
 
-    var start = tagsToFragment(range.startContainer);
-    var end = tagsToFragment(range.endContainer);
-
-    var id = this.generateDomId();
+    var nodes;
+    var start = topNode(range.startContainer);
+    if (range.startContainer === range.endContainer) {
+        nodes =  range.startOffset === range.endOffset ? [] : [ topNode(range.startContainer) ];
+    } else {  
+        var end = topNode(range.endContainer);
+        nodes = [];
+        for (var node = start; node !== end; node = node.nextSibling) {
+            nodes.push(node);
+        }
+        nodes.push(end);
+    }
+    console.log ("range:", nodes);
+    
     var classes = "";
     if (mode) { classes = " " + mode; }
-    this.insertHTML(start[0] + "<div class='collapsable" + classes + "' id='" + id + "'>" + start[1] + 
-    		"<p>section title</p>" + (html ? html : "") + end[0] + "</div>" + end[1]);
-    var node = this.contentDocument.getElementById(id);
-    if (node) {
-        this.selectNode(node.firstChild.nextSibling || node.firstChild);
+    var collapsible = d.createElement("div");
+    collapsible.setAttribute("class", "collapsable" + classes);
+    start.parentNode.insertBefore(collapsible, start);
+    var sectionName = d.createElement("p");
+    sectionName.appendChild(d.createTextNode("section title"));
+    collapsible.appendChild(sectionName);
+    for (var node in nodes) {
+        collapsible.appendChild(nodes[node]);
     }
+    
+    this.selectNode(sectionName);
 };
 
 Wysiwyg.prototype.deleteCollapsableSection = function () {
@@ -1595,31 +1634,29 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("''");                     // 3. italic
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
-    wikiInlineRules.push("![-<{(\\[]");                // 6. escaped (open)
-    wikiInlineRules.push("[->})\\]]!");                // 7. escaped (close)
+    wikiInlineRules.push("![-<{(\\[]");             // 6. escaped (open)
+    wikiInlineRules.push("[->})\\]]!");             // 7. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 8. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
 
-    var wikiRules = wikiInlineRules.slice(0);
-    // -1. citation
-    //wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
+    var wikiRules = [];
     // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -2. list
     wikiRules.push("^[ \\t\\r\\f\\v]*[*-][ \\t\\r\\f\\v]");
     // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
-    // -5. leading space
-    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
     // -4. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
     // -5. cell
-    wikiRules.push("!?(?:\\|)");
+    wikiRules.push("^-?!?\\||\\|");
     // -6: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
     // -7: close collapsible section
     wikiRules.push("^\\*+!$");
 
+    wikiRules = wikiRules.concat(wikiInlineRules);
+    
     // TODO could be removed?
     var wikiDetectLinkRules = [ _wikiPageName ];
 
@@ -1632,6 +1669,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     Wysiwyg.prototype._quotedString = _quotedString;
     Wysiwyg.prototype._wikiPageName = _wikiPageName;
     Wysiwyg.prototype.wikiInlineRules = wikiInlineRules;
+    Wysiwyg.prototype.wikiRules = wikiRules;
     Wysiwyg.prototype.xmlNamePattern = new RegExp("^" + _xmlName + "$");
     Wysiwyg.prototype.domToWikiInlinePattern = domToWikiInlinePattern;
     Wysiwyg.prototype.wikiRulesPattern = wikiRulesPattern;
@@ -1723,6 +1761,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     var _linkScheme = this._linkScheme;
     var _quotedString = this._quotedString;
     var wikiInlineRulesCount = this.wikiInlineRules.length;
+    var wikiRulesCount = this.wikiRules.length - wikiInlineRulesCount;
 
     var self = this;
     var fragment = contentDocument.createDocumentFragment();
@@ -2092,7 +2131,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         }
     }
 
-    function handleTableCell(action, escaped) {
+    function handleTableCell(action, escaped, hidden) {
         var d = contentDocument;
         var h, table, tbody, cell;
 
@@ -2127,6 +2166,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         case 1:
             row = d.createElement("tr");
             tbody.appendChild(row);
+            if (hidden) {
+                row.className = "hidden";
+            }
             break;
         case 0:
             row = getSelfOrAncestor(h, "tr");
@@ -2201,10 +2243,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         var i;
         for (i = 1; i < length; i++) {
             if (match[i]) {
-                if (i <= wikiInlineRulesCount) {
-                    return i;
+                if (i <= wikiRulesCount) {
+                    return -i;
                 }
-                return wikiInlineRulesCount - i;
+                return i - wikiRulesCount;
             }
         }
         return null;
@@ -2311,12 +2353,19 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 }
                 break;
             case -5:    // cell
-                if (inEscapedText()) { break; }
+                if (inEscapedText()) { 
+                    if (/^-!/.test(matchText)) {
+                        closeEscapedText(matchText);
+                        matchText = matchText.substring(2);
+                    }
+                    break;
+                }
                 if (!inTable() && match.index === 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                handleTableCell(inTableRow() ? 0 : 1, /^!/.test(matchText));
+                console.log('match text', matchText);
+                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
                 continue;
             case -6: // collapsible section
                 if (inEscapedText()) { break; }
@@ -2653,8 +2702,13 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (token !== true) {
                 pushToken(token);
             }
-            if (name === "table" && $(node).hasClass("escaped")) {
-                _texts.push("!");
+            if (name === "table") {
+                if ($('tr', node).first().hasClass('hidden')) {
+                    _texts.push("-");
+                }
+                if ($(node).hasClass("escaped")) {
+                    _texts.push("!");
+                }
             }
         } else {
             var value, text;
@@ -3662,18 +3716,6 @@ Wysiwyg.getEditorMode = function () {
     return Wysiwyg.editorMode;
 };
 
-Wysiwyg.setEditorMode = function (mode) {
-    switch (mode) {
-    case "wysiwyg":
-        break;
-    default:    // "textarea"
-        mode = "textarea";
-        break;
-    }
-    Wysiwyg.editorMode = mode;
-    Wysiwyg.setCookie("wysiwyg", mode);
-};
-
 Wysiwyg.setCookie = function (key, val) {
 	var expires, pieces;
     var now = new Date();
@@ -3727,27 +3769,6 @@ if (document.defaultView) {
         return element.style[name] || element.currentStyle[name];
     };
 }
-
-Wysiwyg.elementPosition = function (element) {
-    function vector(left, top) {
-        var value = [ left, top ];
-        value.left = left;
-        value.top = top;
-        return value;
-    }
-    var position = Wysiwyg.getStyle(element, "position");
-    var left = 0, top = 0;
-    var node;
-    for (node = element; node; node = node.offsetParent) {
-        left += node.offsetLeft || 0;
-        top += node.offsetTop || 0;
-    }
-    if (position !== "absolute") {
-        return vector(left, top);
-    }
-    var offset = Wysiwyg.elementPosition(element.offsetParent);
-    return vector(left - offset.left, top - offset.top);
-};
 
 Wysiwyg.getSelfOrAncestor = function (element, name) {
     var target = element;

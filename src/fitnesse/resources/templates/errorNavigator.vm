@@ -1,0 +1,21 @@
+<div id="error-nav" class="error-nav-hidden">
+  <p id="error-nav-label">Failure Navigator</p>
+  <div id="error-nav-controls">
+  <button id="error-nav-prev"><</button>
+  <input id="error-nav-text" type="text">
+   of <span id="error-nav-max"></span>
+  <button id="error-nav-next">></button>
+  </div>
+</div>
+#if ($!errorNavOnDocumentReady)
+<script>
+  $(document).ready(
+    function() {
+      if ( $('span.fail, span.exception').length ){
+        $('#error-nav').toggleClass('error-nav-hidden');
+        initErrorMetadata();
+      }
+    }
+  )
+</script>
+#end

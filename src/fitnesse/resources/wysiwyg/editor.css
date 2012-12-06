@@ -50,6 +50,12 @@ div.collapsable>p:first-child {
  font-style: italic;
 }
 
+tr.hidden {
+ display: table-row;
+ background-color: #eee;
+ color: #666;
+}
+
 tt:before,
 tt:after {
  color: #BF8660;

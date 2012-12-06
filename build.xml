@@ -50,6 +50,7 @@
 			<include name="fitnesse/resources/**" />
 			<include name="Resources/**" />
 			<include name="tasks.properties" />
+			<include name="META-INF/FitNesseVersion.txt" />
 
 			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
@@ -119,14 +120,13 @@
 
 	<target name="set-version-if-not-manualy-set" unless="version">
 		<tstamp />
-		<property name="version" value="${DSTAMP}" />
+		<property name="version" value="v${DSTAMP}" />
 	</target>
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
 		<echo message="Stamping fitnesse with version ${version}" />
-		<delete file="src/fitnesse/FitNesseVersion.java" />
-		<filter token="version" value="${version}" />
-		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
+		<mkdir dir="${classes}/META-INF" />
+		<echo message="${version}" file="${classes}/META-INF/FitNesseVersion.txt" />
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">
@@ -220,10 +220,13 @@
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
-		
+		<ivy:settings id="ivy.publish.instance"
+			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-staging"
 			pubrevision="${version}"
-			publishivy="false">
+			publishivy="false"
+			settingsref="ivy.publish.instance"
+			overwrite="true">
 			<artifacts pattern="dist/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>

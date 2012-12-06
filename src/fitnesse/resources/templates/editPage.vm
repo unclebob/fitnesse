@@ -1,3 +1,8 @@
+<script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+
 <form method="post" action="$resource" name="f">
 #if($!editTime)
  <input type="hidden" name="editTime" value="$editTime"/>
@@ -31,27 +36,18 @@
   <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
  </fieldset>
 
+ <div id="backingData" class="hidden">
+  <select id="templateMap">
+   <option value=""></option>
+   #foreach ($templateEntry in $templateMap.entrySet())
+   <option value="$templateEntry.key">$templateEntry.value</option>
+   #end
+  </select>
+
+ </div>
+
 
  <fieldset id="editor">
-  <span id="edit_buttons">
-   <script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/spreadsheetSupport.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
-   
-   <select id="templateMap">
-    <option value=""></option>
-    #foreach ($templateEntry in $templateMap.entrySet())
-    <option value="$templateEntry.key">$templateEntry.value</option>
-    #end
-   </select>
-   
-   <script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
-   <script src="/files/fitnesse/javascript/TemplateInserterSupport.js" type="text/javascript"></script>
-  </span>
-
- 
   <textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
  </fieldset>
 
@@ -76,22 +72,10 @@ $(function () {
   document.f.pageContent.focus();
 #end
 
-  function toggle_edit_buttons(type) {
-    if (type == "textarea") {
-      $("#edit_buttons").show();
-    } else {
-      $("#edit_buttons").hide();
-    }
-  };
-
   var editors = Wysiwyg.initialize();
   if (editors) {
     var editor = editors[0];
-    toggle_edit_buttons(editor.activeEditor());
-    $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
-      toggle_edit_buttons($(this).val());
-    });
-  
+
     // On cancel button:
     
     function fieldValues () {

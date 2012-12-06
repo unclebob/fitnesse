@@ -134,6 +134,8 @@ public class PageHistoryResponder implements SecureResponder {
     page.put("testExecutionReport", report);
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
+    page.setErrorNavTemplate("errorNavigator");
+    page.put("errorNavOnDocumentReady", true);
     return makeResponse();
   }
 

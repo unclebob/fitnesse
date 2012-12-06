@@ -188,4 +188,44 @@ footer a, footer a:active, footer a:link, footer a:visited {
 	color: white;
 }
 
+#error-nav {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    font-weight: bold;
+    border-width: 3px;
+    border-style: solid;
+    border-color: Black;
+    height: 60px;
+    width: 180px;
+    background-color: #FFAAAA ;
+}
+
+#error-nav-label {
+    text-align: center;
+    line-height: 50%;
+}
+
+#error-nav-controls {
+    text-align: center;
+}
+
+#error-nav button{
+    width: 30px;
+}
+
+#error-nav input{
+    width: 40px;
+}
+
+.error-nav-hidden{
+    visibility:hidden;
+}
+
+.selected-error{
+    border-style:solid;
+  border-width:4px;
+  border-color:SlateGray;
+}
+
 

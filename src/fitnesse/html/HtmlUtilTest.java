@@ -86,6 +86,18 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString(expected, scriptTag.html());
   }
   
+  public void testMakeToggleClassScript() {
+    HtmlTag scriptTag = HtmlUtil.makeToggleClassScript("some-id", "some-class");
+    String expected = "<script>$(\"#some-id\").toggleClass(\"some-class\");</script>";
+    assertSubString(expected, scriptTag.html());
+  }
+  
+  public void testMakeInitErrorMetadataScript() {
+    HtmlTag scriptTag = HtmlUtil.makeInitErrorMetadataScript();
+    String expected = "<script>initErrorMetadata();</script>";
+    assertSubString(expected, scriptTag.html());
+  }
+  
   public void testMakeAppendElementScript() {
     String appendText = "<p>My string has \"quotes\" and \r \n</p>";
     HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);

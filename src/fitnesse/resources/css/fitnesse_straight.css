@@ -163,6 +163,9 @@ footer a:hover {
 }
 
 /** Page content (article) styles **/
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
+	display: none;
+}
 article h1 {
 	 font: bold 1.5em;
 }
@@ -196,5 +199,45 @@ article th {
 	nav ul {
 		display: none;
 	}
+}
+
+#error-nav {
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	font-weight: bold;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Black;
+	height: 60px;
+	width: 180px;
+	background-color: #FFAAAA ;
+}
+
+#error-nav-label {
+	text-align: center;
+	line-height: 50%;
+}
+
+#error-nav-controls {
+	text-align: center;
+}
+
+#error-nav button{
+	width: 30px;
+}
+
+#error-nav input{
+	width: 40px;
+}
+
+.error-nav-hidden{
+	visibility:hidden;
+}
+
+.selected-error{
+	border-style:solid;
+  border-width:4px;
+  border-color:SlateGray;
 }
 
