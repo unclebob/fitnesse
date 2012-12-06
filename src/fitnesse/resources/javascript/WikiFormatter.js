@@ -28,7 +28,7 @@ function WikiFormatter()
 
     formatted += this.formatTable(currentTable);
     return formatted.slice(0, formatted.length - 1);
-  }
+  };
 
   /*
    * This function receives an array of strings(rows), it splits each of those strings
@@ -61,7 +61,7 @@ function WikiFormatter()
     }
 
     return formatted;
-  }
+  };
 
   /*
    * This is where the nastiness starts due to trying to emulate
@@ -88,11 +88,11 @@ function WikiFormatter()
     this.adjustColspansForWidths(widths, maxWidths);
 
     return widths;
-  }
+  };
 
   this.isTableRow = function(line) {
     return line.match(/^!?\|/);
-  }
+  };
 
   this.splitRows = function(rows) {
     var splitRows = [];
@@ -105,10 +105,13 @@ function WikiFormatter()
     }, this);
 
     return {rows: splitRows, suffixes: rowSuffixes};
-  }
+  };
 
   this.splitRow = function(row) {
-    row = row.replace(/!-\|-!/, '!TEMP_PIPE_CHARACTER!');
+    var replacement = '__TEMP_PIPE_CHARACTER__';
+    if (row.match(/!-/)){
+      row = this.replacePipesInLiteralsWithPlaceholder(row,replacement );
+    }
     var columns = this.trim(row).split('|');
 
     if(!this.wikificationPrevention && columns[0] == '!') {
@@ -119,11 +122,46 @@ function WikiFormatter()
     columns = columns.slice(1, columns.length);
 
     this.each(columns, function(column, i) {
-      columns[i] = this.trim(column).replace('!TEMP_PIPE_CHARACTER!', '!-|-!');
+      columns[i] = this.trim(column).replace(/__TEMP_PIPE_CHARACTER__/g, '|');
     }, this);
 
     return columns;
-  }
+  };
+
+  this.replacePipesInLiteralsWithPlaceholder = function(text, rep){
+     var newText = "";
+
+     while(text.match(/!-/)){
+         var textParts = this.splitLiteral(text);
+         newText = newText  + textParts.left + textParts.literal.replace(/\|/g, rep);
+         text = textParts.right;
+     }
+
+     return newText + text;
+  };
+
+
+  this.splitLiteral = function(text){
+    var leftText = "";
+    var rightText = "";
+    var literalText = "";
+
+    var matchOpenLiteral = text.match(/(.*?)(!-.*)/);
+    leftText = matchOpenLiteral[1];
+    if (matchOpenLiteral[2].match(/-!/)){
+      var matchCloseLiteral = matchOpenLiteral[2].match(/(.*?-!)(.*)/);
+      literalText = matchCloseLiteral[1];
+      rightText = matchCloseLiteral[2];
+    }
+    else {
+      literalText = matchOpenLiteral[2];
+      rightText = "";
+    }
+
+    return {left:leftText, literal:literalText, right:rightText};
+
+  };
+
 
   this.getRealColumnWidths = function(rows) {
     var widths = [];
@@ -137,7 +175,7 @@ function WikiFormatter()
     }, this);
 
     return widths;
-  }
+  };
 
   this.getMaxWidths = function(widths, totalNumberOfColumns) {
     var maxWidths = [];
@@ -159,7 +197,7 @@ function WikiFormatter()
     }, this);
 
     return maxWidths;
-  }
+  };
 
   this.getNumberOfColumns = function(rows) {
     var numberOfColumns = 0;
@@ -171,7 +209,7 @@ function WikiFormatter()
     });
 
     return numberOfColumns;
-  }
+  };
 
   this.getColspanWidth = function(widths, totalNumberOfColumns) {
     var colspanWidths = [];
@@ -193,7 +231,7 @@ function WikiFormatter()
     });
 
     return colspanWidths;
-  }
+  };
 
   this.setMaxWidthsOnNonColspanColumns = function(widths, maxWidths) {
     this.each(widths, function(row, rowIndex) {
@@ -205,17 +243,17 @@ function WikiFormatter()
         row[columnIndex] = maxWidths[columnIndex];
       }, this);
     }, this);
-  }
+  };
 
   this.getWidthOfLastNumberOfColumns = function(maxWidths, numberOfColumns) {
     var width = 0;
 
     for(var i = 1; i <= numberOfColumns; i++) {
-      width += maxWidths[maxWidths.length - i]
+      width += maxWidths[maxWidths.length - i];
     }
 
     return width + numberOfColumns - 1; //add in length of separators
-  }
+  };
 
   this.spreadOutExcessOverLastNumberOfColumns = function(maxWidths, excess, numberOfColumns){
     var columnToApplyExcessTo = maxWidths.length - numberOfColumns;
@@ -227,7 +265,7 @@ function WikiFormatter()
         columnToApplyExcessTo = maxWidths.length - numberOfColumns;
       }
     }
-  }
+  };
 
   this.adjustWidthsForColspans = function(widths, maxWidths, colspanWidths) {
     var lastNumberOfColumnsWidth = null;
@@ -242,7 +280,7 @@ function WikiFormatter()
         this.setMaxWidthsOnNonColspanColumns(widths, maxWidths);
       }
     }, this);
-  }
+  };
 
   this.adjustColspansForWidths = function(widths, maxWidths) {
     var colspan = null;
@@ -255,14 +293,14 @@ function WikiFormatter()
         row[row.length - 1] = this.getWidthOfLastNumberOfColumns(maxWidths, colspan);
       }
     }, this);
-  }
+  };
 
   /*
    * Utility functions
    */
   this.trim = function(text) {
     return (text || "").replace( /^\s+|\s+$/g, "" );
-  }
+  };
 
   this.each = function(array, callback, context) {
     var index = 0;
@@ -281,6 +319,6 @@ function WikiFormatter()
     }
 
     return padded;
-  }
+  };
 
 }
