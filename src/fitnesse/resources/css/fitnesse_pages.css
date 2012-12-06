@@ -139,6 +139,7 @@ tr.scenario-detail {
 }
 #test-summary, #progressBar {
 	padding: 0.5em;
+    padding-left: 1.5em;
 }
 #test-summaries ul {
 	list-style: none;
