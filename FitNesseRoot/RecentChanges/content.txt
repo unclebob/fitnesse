@@ -1,4 +1,4 @@
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ChainTest||11:52:35 Thu, Nov 29, 2012|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestSuiteFilter||09:10:00 Mon, Dec 03, 2012|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LastLibraryPreceedsEarlierLibraryTest||10:30:54 Tue, Nov 27, 2012|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestFixtureInteraction||13:27:39 Tue, Nov 06, 2012|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestScenarioTableResults||13:07:25 Tue, Nov 06, 2012|

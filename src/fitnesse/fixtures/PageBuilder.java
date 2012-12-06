@@ -53,6 +53,9 @@ public class PageBuilder extends Fixture {
     StringTokenizer tokenizer = new StringTokenizer(pageAttributes, ",");
     while (tokenizer.hasMoreTokens()) {
       String nameValuePair = tokenizer.nextToken();
+      if(nameValuePair.contains("!COMMA!")){
+        nameValuePair = nameValuePair.replace("!COMMA!", ",");
+      }
       int equals = nameValuePair.indexOf("=");
       if (equals < 0)
         throw new Exception("Attribute must have form name=value");
