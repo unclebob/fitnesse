@@ -159,6 +159,40 @@ tr.scenario-detail {
 	display: inline;
 }
 
+/** Suite overview */
+.overview_results table {
+    border: none;
+}
+.overview_bar {
+    border: 1px solid black;
+    height: 1.4em;
+    margin: 0 -0.5px;
+}
+.overview_part {
+    float: left;
+    height: 1.4em;
+    margin: 0;
+    padding: 0;
+}
+.unrun {
+    background-color: #FFF3B4;
+}
+
+.passed_tests, .unrun_tests, .failed_tests {
+    background-repeat: no-repeat;
+    margin: 0 4px;
+    padding-left: 22px;
+}
+.passed_tests {
+    background-image: url("../images/pass.png");
+}
+.unrun_tests {
+    background-image: url("../images/unrun.png");
+}
+.failed_tests {
+    background-image: url("../images/fail.png");
+}
+
 /** Virtual and import pages */
 .virtual header {
 	background-image: url("../images/virtualPage.jpg");
