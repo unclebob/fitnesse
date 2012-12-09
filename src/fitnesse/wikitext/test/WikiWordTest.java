@@ -61,6 +61,7 @@ public class WikiWordTest {
       assertTrue(WikiWordPath.isSingleWikiWord("WikiWord"));
       assertFalse(WikiWordPath.isSingleWikiWord("notWikiWord"));
       assertFalse(WikiWordPath.isSingleWikiWord("NotSingle.WikiWord"));
+      assertFalse(WikiWordPath.isSingleWikiWord("WikiW\u00F0rd"));
     }
 
     @Test
