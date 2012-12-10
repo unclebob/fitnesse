@@ -14,7 +14,6 @@ import util.CommandLine;
 import fitnesse.socketservice.SocketService;
 
 public class SlimService {
-	public static SlimService instance = null;
 	public static boolean verbose;
 	public static int port;
 
@@ -69,7 +68,6 @@ public class SlimService {
 	}
 
 	public SlimService(SlimServer slimServer) throws IOException {
-		instance = this;
 		this.slimServer = slimServer;
 
 		try {
