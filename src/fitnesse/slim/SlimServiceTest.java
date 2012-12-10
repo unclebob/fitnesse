@@ -14,7 +14,8 @@ public class SlimServiceTest extends SlimServiceTestBase {
   }
 
   protected void startSlimService() throws Exception {
-    SlimService.main(new String[] { "8099" });
+    SlimService.parseCommandLine(new String[] { "8099" });
+    SlimService.startWithFactoryAsync(new JavaSlimFactory());
   }
 
   protected String expectedExceptionMessage() {
