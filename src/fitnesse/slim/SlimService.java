@@ -14,10 +14,9 @@ import util.CommandLine;
 import fitnesse.socketservice.SocketService;
 
 public class SlimService {
-	public static boolean verbose;
-	public static int port;
-
-	protected static String interactionClassName = null;
+	static boolean verbose;
+	static int port;
+	static String interactionClassName = null;
 
 	private final ServerSocket serverSocket;
 	private final SlimServer slimServer;
