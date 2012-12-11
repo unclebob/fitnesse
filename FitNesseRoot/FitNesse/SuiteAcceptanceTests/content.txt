@@ -13,7 +13,6 @@
 |>SuiteTestHistory|''Test History tests''|
 
 !2 ''Classpaths''
-!path ${java.class.path}
 !define SUT_PATH (!-
 !path ${java.class.path}
 -!)
