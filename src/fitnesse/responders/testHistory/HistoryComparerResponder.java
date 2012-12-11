@@ -132,7 +132,7 @@ public class HistoryComparerResponder implements Responder {
     page.put("firstTables", comparer.firstTableResults);
     page.put("secondTables", comparer.secondTableResults);
     page.put("count", count);
-    page.setMainTemplate("compareHistory.vm");
+    page.setMainTemplate("compareHistory");
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
@@ -146,9 +146,9 @@ public class HistoryComparerResponder implements Responder {
       throw new RuntimeException("File name '" + fileName + "' does not parse to a date", e);
     }
   }
-  
+
   private PageTitle makePageTitle(String resource) {
-    
+
     String tags="";
     if(context.root != null){
       WikiPagePath path = PathParser.parse(resource);
@@ -159,10 +159,10 @@ public class HistoryComparerResponder implements Responder {
         tags = pageData.getAttribute(PageData.PropertySUITES);
       }
     }
-    
+
     return new PageTitle("Test History", PathParser.parse(resource),tags);
   }
-  
+
   private Response makeErrorResponse(FitNesseContext context, Request request,
       String message) {
     return new ErrorResponder(message).makeResponse(context, request);
