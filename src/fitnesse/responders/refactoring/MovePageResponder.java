@@ -65,7 +65,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
   }
 
   @Override
-  protected void execute() {
+  protected void execute() throws RefactorException {
     movePage(oldRefactoredPage, newParentPage, getNewPageName());
   }
 
