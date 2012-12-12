@@ -44,14 +44,20 @@ public class NewPageResponder implements Responder {
     html.put(EditResponder.HELP_TEXT, "");
 
     html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
-    html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
-    if (request.hasInput("pageType")) {
+    if (request.hasInput("pageTemplate")) {
+      PageCrawler crawler = context.root.getPageCrawler();
+      WikiPage pageTemplate = crawler.getPage(PathParser.parse((String) request.getInput("pageTemplate")));
+      html.put(EditResponder.CONTENT_INPUT_NAME, pageTemplate.getData().getContent());
+      html.put(EditResponder.PAGE_TYPE, PageType.fromWikiPage(pageTemplate));
+    } else if (request.hasInput("pageType")) {
       String pageType = (String) request.getInput("pageType");
       // Validate page type:
       PageType.fromString(pageType);
       html.put(EditResponder.PAGE_TYPE, pageType);
+      html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     } else {
       html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+      html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     }
   }
 

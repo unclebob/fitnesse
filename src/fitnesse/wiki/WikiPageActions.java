@@ -1,5 +1,9 @@
 package fitnesse.wiki;
 
+import java.util.Collections;
+import java.util.Map;
+
+import fitnesse.responders.editing.TemplateUtil;
 
 // Work in progress, WikiPage, versions, directory should each have specific actions instances.
 public class WikiPageActions {
@@ -27,6 +31,12 @@ public class WikiPageActions {
     return hasAction("Edit");
   }
 
+  public Map<String, String> getNewPageTemplates() {
+    if (isWithEdit()) {
+      return TemplateUtil.getTemplatePageMap(page);
+    }
+    return Collections.emptyMap();
+  }
   public boolean isWithProperties() {
     return hasAction("Properties");
   }
@@ -67,10 +77,6 @@ public class WikiPageActions {
   private boolean hasAction(String action) {
     PageData data = getData();
     return data != null && data.hasAttribute(action);
-  }
-
-  private boolean isTestablePage() {
-    return hasAction("Test") || hasAction("Suite");
   }
 
   private PageData getData() {

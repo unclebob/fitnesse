@@ -40,7 +40,7 @@
   <select id="templateMap">
    <option value=""></option>
    #foreach ($templateEntry in $templateMap.entrySet())
-   <option value="$templateEntry.key">$templateEntry.value</option>
+   <option value="$templateEntry.value">$templateEntry.key</option>
    #end
   </select>
 
