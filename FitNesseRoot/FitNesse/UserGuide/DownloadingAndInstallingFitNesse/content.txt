@@ -22,14 +22,13 @@ Then point your browser to !style_code(http://localhost:8080)
 FitNesse requires version 1.5 or later of the Java Runtime Environment (JRE).
 If you see the messages:
 
-''!-C:\fitnesse>java -jar fitnesse-standalone.jar-!
-!-Exception in thread "main" java.lang.NoClassDefFoundError:-!
-!-java/lang/CharSequence-!
-!-       at fitnesse.FitNesse.parseCommandLine(Unknown Source)-!
-!-        at fitnesse.FitNesse.main(Unknown Source)-!
-
-!-C:\fitnesse>pause-!
-!-Press any key to continue . . .-!''
+{{{
+C:\fitnesse>java -jar fitnesse-standalone.jar
+Exception in thread "main" java.lang.NoClassDefFoundError:
+java/lang/CharSequence
+        at fitnesse.FitNesse.parseCommandLine(Unknown Source)
+        at fitnesse.FitNesse.main(Unknown Source)
+}}}
 
 Then you need to download and install version 1.5 or later of the JRE. Follow these steps:
  * Press a key to close the command window
@@ -44,6 +43,24 @@ Then you need to download and install version 1.5 or later of the JRE. Follow th
    * Save the PATH environment variable, and close the System control panel
  * Double-click run.bat again.
  * Return to DownloadingAndInstallingFitNesse.
+
+!2 What to do if Apache Velocity is not found
+There are two builds of the FitNesse binary:
+ * '''fitnesse.jar''' contains only the fitnesse code, no dependencies. This is the version you use if you're using a dependency management system like [[Maven][http://maven.apache.org/]] or [[Apache Ivy][http://ant.apache.org/ivy/]].
+ * '''fitnesse-standalone.jar''' is the big one-has-all jar file containing FitNesse and support libraries.
+
+If you're seeing this:
+
+{{{
+C:\fitnesse>java -jar fitnesse.jar
+Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/velocity/context/Context
+        at fitnesse.FitNesseContext.(FitNesseContext.java:29)
+        at fitnesse.FitNesseContext.(FitNesseContext.java:39)
+        at fitnesseMain.FitNesseMain.loadContext(FitNesseMain.java:88)
+        at fitnesseMain.FitNesseMain.launchFitNesse(FitNesseMain.java:36)
+}}}
+
+You probably want the latter.
 *!
 
 !2 Learning More
