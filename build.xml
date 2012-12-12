@@ -109,7 +109,7 @@
 
 	<target name="compile" depends="stamp-version,resolve" description="compile the source (make)">
 		<mkdir dir="${classes}" />
-		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" />
+		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
 			<fileset dir="src">
