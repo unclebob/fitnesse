@@ -1,7 +1,8 @@
+/* Styles in editor that differ from the "live" layout **/
 body {
  background-color: white;
  margin: 0;
- padding: 0;
+ padding: 0 40px;
 }
 
 p, table {

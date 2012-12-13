@@ -227,48 +227,14 @@ Wysiwyg.prototype.setupFormEvent = function () {
 Wysiwyg.prototype.createEditable = function (d, textarea) {
     var self = this;
     var getStyle = Wysiwyg.getStyle;
-    var dimension = getDimension(textarea);
-    if (!dimension.width || !dimension.height) {
-        setTimeout(lazy, 100);
-    }
-    if (!dimension.width) {
-        dimension.width = parseInt(getStyle(textarea, "fontSize"), 10) * (textarea.cols || 10) * 0.5;
-    }
-    if (!dimension.height) {
-        dimension.height = parseInt(getStyle(textarea, "lineHeight"), 10) * (textarea.rows || 3);
-    }
     var wrapper = d.createElement("div");
     wrapper.innerHTML = '<iframe class="wysiwyg" '
         + 'src="javascript:\'\'" '
-        + 'width="' + dimension.width + '" height="' + dimension.height + '" '
         + 'frameborder="0" marginwidth="0" marginheight="0">'
         + '</iframe>';
     var frame = this.frame = wrapper.firstChild;
 
     textarea.parentNode.insertBefore(frame, textarea.nextSibling);
-
-    function getDimension(textarea) {
-        var width = textarea.offsetWidth;
-        if (width) {
-            var parentWidth = textarea.parentNode.offsetWidth
-                            + parseInt(getStyle(textarea, 'borderLeftWidth'), 10)
-                            + parseInt(getStyle(textarea, 'borderRightWidth'), 10);
-            if (width === parentWidth) {
-                width = "100%";
-            }
-        }
-        return { width: width, height: textarea.offsetHeight };
-    }
-
-    function lazy() {
-        var dimension = getDimension(textarea);
-        if (dimension.width && dimension.height) {
-            self.frame.width = dimension.width;
-            self.frame.height = dimension.height;
-            return;
-        }
-        setTimeout(lazy, 100);
-    }
 };
 
 Wysiwyg.prototype.createWysiwygToolbar = function (d) {
@@ -484,7 +450,7 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
         '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>' ];
     var div = d.createElement("div");
     div.className = "textarea-toolbar";
-    div.innerHTML = html.join("");
+    div.innerHTML = html.join(" ");
     return div;
 };
 
@@ -898,6 +864,7 @@ Wysiwyg.prototype.focusWysiwyg = function () {
         try { self.execCommand("useCSS", false); } catch (e1) { }
         try { self.execCommand("styleWithCSS", false); } catch (e2) { }
         self.selectionChanged();
+        $(window).resize();
     }
     setTimeout(lazy, 10);
 };
@@ -909,6 +876,7 @@ Wysiwyg.prototype.loadWikiText = function () {
 
 Wysiwyg.prototype.focusTextarea = function () {
     this.textarea.focus();
+    $(window).resize();
 };
 
 Wysiwyg.prototype.setupToggleEditorButtons = function () {
@@ -1605,6 +1573,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     	$(".wysiwyg-toolbar .in-table").hide();
     	$(".wysiwyg-toolbar .non-table").show();
     }
+    $(window).resize();
     
     var styles = [ "quote", "paragraph", "code", "heading1",
         "heading2", "heading3", "heading4", "heading5", "heading6" ];
@@ -2364,7 +2333,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                console.log('match text', matchText);
                 handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
                 continue;
             case -6: // collapsible section
