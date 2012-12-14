@@ -18,12 +18,11 @@ public class SocketCatchingResponderTest extends RegexTestCase {
   private MockRequest request;
 
   public void setUp() throws Exception {
-    dealer = new SocketDealer();
     seeker = new SimpleSocketSeeker();
     sender = new MockResponseSender();
     responder = new SocketCatchingResponder();
     context = new FitNesseContext();
-    context.socketDealer = dealer;
+    dealer = context.socketDealer;
     request = new MockRequest();
   }
 

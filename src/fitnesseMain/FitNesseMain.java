@@ -8,7 +8,6 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.PageFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
@@ -95,7 +94,6 @@ public class FitNesseMain {
     if (defaultNewPageContent != null)
       context.defaultNewPageContent = defaultNewPageContent;
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    context.responderFactory = new ResponderFactory(context.getRootPagePath());
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
@@ -105,10 +103,10 @@ public class FitNesseMain {
     }
     context.pageFactory = new PageFactory(context);
 
-    extraOutput = componentFactory.loadPlugins(context.responderFactory,
+    extraOutput = componentFactory.loadPlugins(context.getResponderFactory(),
       wikiPageFactory);
     extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
-    extraOutput += componentFactory.loadResponders(context.responderFactory);
+    extraOutput += componentFactory.loadResponders(context.getResponderFactory());
     extraOutput += componentFactory.loadSymbolTypes();
     extraOutput += componentFactory.loadContentFilter();
     extraOutput += componentFactory.loadSlimTables();

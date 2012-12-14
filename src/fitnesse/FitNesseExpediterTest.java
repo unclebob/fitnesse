@@ -8,7 +8,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
@@ -32,7 +31,6 @@ public class FitNesseExpediterTest extends RegexTestCase {
     root.addChildPage("FrontPage");
     socket = new MockSocket();
     context = FitNesseUtil.makeTestContext(root);
-    context.responderFactory = new ResponderFactory(".");
     expediter = new FitNesseExpediter(socket, context);
   }
 

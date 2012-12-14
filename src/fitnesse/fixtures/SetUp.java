@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import static fitnesse.fixtures.FitnesseFixtureContext.baseDir;
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
 import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
@@ -13,7 +12,6 @@ import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.components.SaveRecorder;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -26,7 +24,6 @@ public class SetUp extends Fixture {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     context.port = 9123;
-    context.responderFactory = new ResponderFactory(baseDir);
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

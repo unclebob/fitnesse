@@ -8,7 +8,6 @@ import util.RegexTestCase;
 import fitnesse.components.LogData;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
@@ -121,8 +120,7 @@ public class FitNesseServerTest extends RegexTestCase {
 
   private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
     MockSocket s = new MockSocket(requestLine);
-    context.rootPath = SampleFileUtility.base;
-    context.responderFactory = new ResponderFactory(SampleFileUtility.base);
+    context.rootDirectoryName = SampleFileUtility.base;
     context.root = page;
     FitNesseServer server = new FitNesseServer(context);
     server.serve(s, 1000);

@@ -7,7 +7,6 @@ import java.io.IOException;
 import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
@@ -21,7 +20,6 @@ public class FitNesseUtil {
 
   public static void startFitnesse(WikiPage root) {
     context = makeTestContext(root);
-    context.responderFactory = new ResponderFactory(context.getRootPagePath());
     context.port = port;
     startFitnesseWithContext(context);
   }

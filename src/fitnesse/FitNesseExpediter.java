@@ -118,7 +118,7 @@ public class FitNesseExpediter implements ResponseSender {
     Response response;
     if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
-    Responder responder = context.responderFactory.makeResponder(request, context.root);
+    Responder responder = context.getResponderFactory().makeResponder(request, context.root);
     responder = context.authenticator.authenticate(context, request, responder);
     response = responder.makeResponse(context, request);
     response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);

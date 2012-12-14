@@ -20,14 +20,14 @@ public class FitNesseContext {
   public String rootDirectoryName = "FitNesseRoot";
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public WikiPage root;
-  public ResponderFactory responderFactory = new ResponderFactory(getRootPagePath());
+  private ResponderFactory responderFactory;
   public Logger logger;
-  public SocketDealer socketDealer = new SocketDealer();
-  public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
+  public final SocketDealer socketDealer = new SocketDealer();
+  public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
   public Authenticator authenticator = new PromiscuousAuthenticator();
   public PageFactory pageFactory = new PageFactory(this);
-  public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
-  public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
+  public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
+  public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
   public final String testResultsDirectoryName = "testResults";
   public boolean doNotChunk;
@@ -72,4 +72,10 @@ public class FitNesseContext {
     return String.format("%s/%s", rootPath, rootDirectoryName);
   }
 
+  public ResponderFactory getResponderFactory() {
+    if (responderFactory == null) {
+      responderFactory = new ResponderFactory(getRootPagePath());
+    }
+    return responderFactory;
+  }
 }
