@@ -53,7 +53,7 @@ public class ParsingPage {
         else if (key.equals("PAGE_PATH"))
             value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(FitNesseContext.globalContext.port);
+            value = Integer.toString(FitNesseContext.getPort());
         else if (key.equals("FITNESSE_ROOTPATH"))
           value = FitNesseContext.globalContext.rootPath;
         else if (key.equals("FITNESSE_VERSION"))
