@@ -96,10 +96,7 @@ public class FitNesseMain {
     WikiPage root = wikiPageFactory.makeRootPage(rootPath,
       rootDirectoryName, componentFactory);
 
-    FitNesseContext context = new FitNesseContext(root);
-    context.port = port;
-    context.rootPath = rootPath;
-    context.rootDirectoryName = rootDirectoryName;
+    FitNesseContext context = new FitNesseContext(root, rootPath, rootDirectoryName, port);
 
     String defaultNewPageContent = componentFactory
         .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);

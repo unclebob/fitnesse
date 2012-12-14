@@ -31,7 +31,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     testData.createLocalRoot();
 
     FitNesseUtil.startFitnesse(testData.remoteRoot);
-    baseUrl = "http://localhost:" + FitNesseUtil.port + "/";
+    baseUrl = "http://localhost:" + FitNesseUtil.PORT + "/";
 
     createResponder();
   }

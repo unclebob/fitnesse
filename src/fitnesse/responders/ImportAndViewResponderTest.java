@@ -47,7 +47,7 @@ public class ImportAndViewResponderTest extends TestCase {
     PageData data = testData.pageTwo.getData();
     WikiPageProperties props = data.getProperties();
 
-    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
     importProps.addTo(props);
     testData.pageTwo.commit(data);
 

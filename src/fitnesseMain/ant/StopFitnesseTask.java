@@ -25,8 +25,7 @@ public class StopFitnesseTask extends Task {
 
   @Override
   public void execute() throws BuildException {
-    FitNesseContext context = new FitNesseContext();
-    context.port = fitnessePort;
+    FitNesseContext context = new FitNesseContext(null, null, null, fitnessePort);
     try {
       new FitNesse(context).stop();
       log("Sucessfully stoped Fitnesse on port " + fitnessePort);

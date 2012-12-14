@@ -17,8 +17,7 @@ public class ShutdownResponderTest extends TestCase {
   private boolean doneShuttingDown;
 
   protected void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext();
-    context.port = FitNesseUtil.port;
+    context = FitNesseUtil.makeTestContext(FitNesseUtil.PORT);
     fitnesse = new FitNesse(context);
     fitnesse.start();
   }
@@ -39,7 +38,7 @@ public class ShutdownResponderTest extends TestCase {
       public void run() {
         try {
           RequestBuilder request = new RequestBuilder("/?responder=shutdown");
-          ResponseParser.performHttpRequest("localhost", FitNesseUtil.port, request);
+          ResponseParser.performHttpRequest("localhost", FitNesseUtil.PORT, request);
           doneShuttingDown = true;
         }
         catch (Exception e) {

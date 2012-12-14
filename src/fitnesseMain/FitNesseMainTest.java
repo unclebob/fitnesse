@@ -65,7 +65,6 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    context.port = 80;
     context.rootDirectoryName = "testFitnesseRoot";
     new FitNesse(context);
 
@@ -103,7 +102,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testIsRunning() throws Exception {
-    context.port = FitNesseUtil.port;
+    context = new FitNesseContext(null, null, null, FitNesseUtil.PORT);
     FitNesse fitnesse = new FitNesse(context, false);
 
     assertFalse(fitnesse.isRunning());
@@ -117,7 +116,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testShouldInitializeFitNesseContext() {
-    context.port = FitNesseUtil.port;
+    context = new FitNesseContext(null, null, null, FitNesseUtil.PORT);
     new FitNesse(context, false);
     assertNotNull(FitNesse.FITNESSE_INSTANCE.getContext());
   }

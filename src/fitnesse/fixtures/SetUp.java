@@ -22,8 +22,7 @@ public class SetUp extends Fixture {
     WikiImportTestEventListener.register();
 
     root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    context.port = 9123;
+    context = FitNesseUtil.makeTestContext(root, 9123);
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

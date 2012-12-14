@@ -33,7 +33,7 @@ public class ExposeThreadingIssueInMockResponseTest {
   private String results;
   private PageCrawler crawler;
   private String simpleRunPageName;
-  private int port = 9123;
+  private final int port = 9123;
   private FitSocketReceiver receiver;
 
   @Before
@@ -42,8 +42,7 @@ public class ExposeThreadingIssueInMockResponseTest {
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new TestResponder();
-    context = FitNesseUtil.makeTestContext(root);
-    context.port = port;
+    context = FitNesseUtil.makeTestContext(root, port);
 
     receiver = new FitSocketReceiver(port, context.socketDealer);
     receiver.receiveSocket();

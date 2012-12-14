@@ -133,7 +133,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
     crawler.addPage(targetPage, PathParser.parse("ChildPage"));
     final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
+    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
 
     FitNesseUtil.startFitnesse(root);
     SimpleResponse response = null;

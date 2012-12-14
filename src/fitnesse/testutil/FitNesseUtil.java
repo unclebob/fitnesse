@@ -14,13 +14,12 @@ import fitnesse.wiki.WikiPage;
 
 public class FitNesseUtil {
   private static FitNesse instance = null;
-  public static final int port = 1999;
+  public static final int PORT = 1999;
   public static FitNesseContext context;
-  public static final String URL = "http://localhost:" + port + "/";
+  public static final String URL = "http://localhost:" + PORT + "/";
 
   public static void startFitnesse(WikiPage root) {
     context = makeTestContext(root);
-    context.port = port;
     startFitnesseWithContext(context);
   }
 
@@ -44,14 +43,31 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root) {
-    FitNesseContext context = new FitNesseContext(root);
+    return makeTestContext(root, PORT);
+  }
+
+  public static FitNesseContext makeTestContext(int port) {
+    return makeTestContext(InMemoryPage.makeRoot("root"), port);
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, int port) {
+    FitNesseContext context = new FitNesseContext(root, ".", SampleFileUtility.base, port);
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
     context.pageFactory.getVelocityEngine();
-    context.rootDirectoryName = SampleFileUtility.base;
     return context;
   }
+
+  public static FitNesseContext makeTestContext(FitNesseContext context,
+      int port) {
+    return new FitNesseContext(context.root,
+        context.rootPath,
+        context.rootDirectoryName,
+        port, context.socketDealer);
+  }
+
 
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
+
 }
