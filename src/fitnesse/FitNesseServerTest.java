@@ -35,7 +35,6 @@ public class FitNesseServerTest extends RegexTestCase {
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);
-    context.rootDirectoryName = SampleFileUtility.base;
   }
 
   public void tearDown() throws Exception {

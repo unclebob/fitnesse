@@ -18,7 +18,7 @@ public class UpdaterTest extends UpdateTestCase {
 
   @Test
   public void testProperties() throws Exception {
-    File file = new File("testDir/RooT/properties");
+    File file = new File("TestDir/properties");
     assertFalse(file.exists());
     updater.updates = new Update[]{};
     updater.update();

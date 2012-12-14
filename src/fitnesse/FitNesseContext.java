@@ -23,8 +23,8 @@ public class FitNesseContext {
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
   public final int port;
-  public String rootPath;
-  public String rootDirectoryName;
+  public final String rootPath;
+  public final String rootDirectoryName;
 
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public Logger logger;

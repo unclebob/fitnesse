@@ -29,7 +29,7 @@ public class FitNesseMainTest {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext();
+    context = new FitNesseContext(null, null, "testFitnesseRoot", 80);
   }
 
   @After
@@ -65,7 +65,6 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    context.rootDirectoryName = "testFitnesseRoot";
     new FitNesse(context);
 
     assertTrue(new File("testFitnesseRoot").exists());
