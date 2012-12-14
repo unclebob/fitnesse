@@ -90,13 +90,12 @@ public class FitNesseMain {
     context.rootPath = arguments.getRootPath();
     ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
     context.rootDirectoryName = arguments.getRootDirectory();
-    context.setRootPagePath();
     String defaultNewPageContent = componentFactory
       .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     if (defaultNewPageContent != null)
       context.defaultNewPageContent = defaultNewPageContent;
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    context.responderFactory = new ResponderFactory(context.rootPagePath);
+    context.responderFactory = new ResponderFactory(context.getRootPagePath());
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);

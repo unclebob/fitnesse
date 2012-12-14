@@ -9,6 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
 
 public class DirectoryResponderTest extends RegexTestCase {
   MockRequest request;
@@ -18,7 +19,6 @@ public class DirectoryResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
-    context.rootPagePath = SampleFileUtility.base;
     SampleFileUtility.makeSampleFiles();
   }
 

@@ -9,6 +9,7 @@ import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 
 public class DeleteFileResponderTest extends RegexTestCase {
   public MockRequest request;
@@ -17,8 +18,7 @@ public class DeleteFileResponderTest extends RegexTestCase {
   public void setUp() {
     FileUtil.makeDir("testdir");
     request = new MockRequest();
-    context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+    context = FitNesseUtil.makeTestContext(null);
   }
 
   public void tearDown() throws Exception {

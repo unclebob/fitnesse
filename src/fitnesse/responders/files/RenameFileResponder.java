@@ -23,7 +23,7 @@ public class RenameFileResponder implements SecureResponder {
     newFilename = (String) request.getInput("newName");
     newFilename = newFilename.trim();
 
-    String pathname = context.rootPagePath + "/" + resource;
+    String pathname = context.getRootPagePath() + "/" + resource;
     File file = new File(pathname + filename);
     file.renameTo(new File(pathname + newFilename));
     response.redirect("/" + resource);

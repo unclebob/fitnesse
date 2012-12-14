@@ -21,7 +21,7 @@ public class FitNesseUtil {
 
   public static void startFitnesse(WikiPage root) {
     context = makeTestContext(root);
-    context.responderFactory = new ResponderFactory(context.rootPagePath);
+    context.responderFactory = new ResponderFactory(context.getRootPagePath());
     context.port = port;
     startFitnesseWithContext(context);
   }
@@ -44,13 +44,12 @@ public class FitNesseUtil {
   public static FitNesseContext makeTestContext() {
     return makeTestContext(InMemoryPage.makeRoot("root"));
   }
-  
+
   public static FitNesseContext makeTestContext(WikiPage root) {
     FitNesseContext context = new FitNesseContext(root);
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
     context.pageFactory.getVelocityEngine();
-    context.rootDirectoryName = "TestDir";
-    context.setRootPagePath();
+    context.rootDirectoryName = SampleFileUtility.base;
     return context;
   }
 

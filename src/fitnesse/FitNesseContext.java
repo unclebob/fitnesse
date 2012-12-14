@@ -18,10 +18,9 @@ public class FitNesseContext {
   public int port = 80;
   public String rootPath = ".";
   public String rootDirectoryName = "FitNesseRoot";
-  public String rootPagePath = "";
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public WikiPage root;
-  public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
+  public ResponderFactory responderFactory = new ResponderFactory(getRootPagePath());
   public Logger logger;
   public SocketDealer socketDealer = new SocketDealer();
   public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
@@ -30,8 +29,7 @@ public class FitNesseContext {
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
-  public String testResultsDirectoryName = "testResults";
-  public boolean shouldCollectHistory = false;
+  public final String testResultsDirectoryName = "testResults";
   public boolean doNotChunk;
   public String pageTheme = "fitnesse_straight";
 
@@ -63,15 +61,15 @@ public class FitNesseContext {
 
 
   public File getTestHistoryDirectory() {
-    return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
+    return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
   }
 
   public String getTestProgressPath() {
-    return String.format("%s/%s/files/testProgress/", rootPath, rootDirectoryName);
+    return String.format("%s/files/testProgress/", getRootPagePath());
   }
 
-  public void setRootPagePath() {
-    rootPagePath = rootPath + "/" + rootDirectoryName;
+  public String getRootPagePath() {
+    return String.format("%s/%s", rootPath, rootDirectoryName);
   }
 
 }

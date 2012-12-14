@@ -80,8 +80,8 @@ public class FitNesse {
   }
 
   private void establishRequiredDirectories() {
-    establishDirectory(context.rootPagePath);
-    establishDirectory(context.rootPagePath + "/files");
+    establishDirectory(context.getRootPagePath());
+    establishDirectory(context.getRootPagePath() + "/files");
   }
 
   public void applyUpdates() throws IOException{

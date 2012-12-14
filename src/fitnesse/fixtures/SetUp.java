@@ -5,7 +5,6 @@ package fitnesse.fixtures;
 import static fitnesse.fixtures.FitnesseFixtureContext.baseDir;
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
 import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
-import static fitnesse.fixtures.FitnesseFixtureContext.responderFactory;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.File;
@@ -25,11 +24,9 @@ public class SetUp extends Fixture {
     WikiImportTestEventListener.register();
 
     root = InMemoryPage.makeRoot("RooT");
-    responderFactory = new ResponderFactory(baseDir + "/RooT/");
     context = FitNesseUtil.makeTestContext(root);
-    context.responderFactory = responderFactory;
     context.port = 9123;
-    context.rootPagePath = baseDir;
+    context.responderFactory = new ResponderFactory(baseDir);
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

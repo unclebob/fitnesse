@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
-import java.util.Set;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 
@@ -43,7 +41,7 @@ public class UpdaterBase implements Updater {
   }
 
   private File getPropertiesFile() {
-    String filename = context.rootPagePath + "/properties";
+    String filename = context.getRootPagePath() + "/properties";
     return new File(filename);
   }
 

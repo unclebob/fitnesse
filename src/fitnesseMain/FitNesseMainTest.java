@@ -64,7 +64,7 @@ public class FitNesseMainTest {
   @Test
   public void testDirCreations() throws Exception {
     context.port = 80;
-    context.rootPagePath = "testFitnesseRoot";
+    context.rootDirectoryName = "testFitnesseRoot";
     new FitNesse(context);
 
     assertTrue(new File("testFitnesseRoot").exists());

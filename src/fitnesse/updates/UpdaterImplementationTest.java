@@ -51,7 +51,6 @@ public class UpdaterImplementationTest {
     context = new FitNesseContext();
     context.rootPath = testDir;
     context.rootDirectoryName = rootName;
-    context.rootPagePath = testDir + "/" + rootName;
   }
 
   private void createFakeUpdateListFiles() {
@@ -139,7 +138,7 @@ public class UpdaterImplementationTest {
     Properties properties = updater.loadProperties();
     assertTrue(properties.containsKey("Version"));
     assertEquals(version, properties.get("Version"));
-    FileUtil.deleteFile(propertiesFile);    
+    FileUtil.deleteFile(propertiesFile);
   }
 
   @Test

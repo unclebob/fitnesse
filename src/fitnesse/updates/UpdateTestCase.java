@@ -3,6 +3,7 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -25,10 +26,9 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext(null);
     context.rootPath = testDir;
     context.rootDirectoryName = rootName;
-    context.rootPagePath = testDir + "/" + rootName;
 
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(context.rootPath, context.rootDirectoryName);

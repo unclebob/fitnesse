@@ -1,13 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.files;
+package fitnesse.testutil;
 
 import java.io.File;
 
 import util.FileUtil;
 
 public class SampleFileUtility {
-  public static String base = "testdir";
+  public static String base = "TestDir";
   public static File filesDir;
   public static File testDir;
   public static File testFile1;

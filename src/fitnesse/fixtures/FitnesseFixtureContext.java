@@ -6,7 +6,7 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.responders.ResponderFactory;
+import fitnesse.testutil.SampleFileUtility;
 import fitnesse.wiki.WikiPage;
 
 public class FitnesseFixtureContext {
@@ -14,8 +14,7 @@ public class FitnesseFixtureContext {
   public static WikiPage page;
   public static Response response;
   public static MockResponseSender sender;
-  public static ResponderFactory responderFactory;
-  public static String baseDir = "temp";
+  public static String baseDir = SampleFileUtility.base;
   public static FitNesseContext context;
   public static FitNesse fitnesse;
 }

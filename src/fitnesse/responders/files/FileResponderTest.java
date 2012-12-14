@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +26,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
 
 public class FileResponderTest {
   MockRequest request;
@@ -40,8 +40,7 @@ public class FileResponderTest {
   @Before
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = new FitNesseContext();
-    context.rootPagePath = SampleFileUtility.base;
+    context = FitNesseUtil.makeTestContext(null);
     SampleFileUtility.makeSampleFiles();
     response = null;
     saveLocale = Locale.getDefault();
@@ -80,14 +79,10 @@ public class FileResponderTest {
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    assertEquals("testdir" + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
+    assertEquals(context.rootDirectoryName + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
     request.setResource("files/file4%20with%20spaces%32.txt");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     assertEquals("files/file4 with spaces2.txt", responder.resource);
-  }
-
-  private String makePath(String...pathElements ) {
-    return StringUtils.join(pathElements, System.getProperty("file.separator"));
   }
 
   @Test
@@ -151,7 +146,7 @@ public class FileResponderTest {
     response = responder.makeResponse(context, request);
     assertEquals("text/css", response.getContentType());
   }
-  
+
   @Test
   public void testNavigationBackToFrontPage() throws Exception {
     request.setResource("files/");
