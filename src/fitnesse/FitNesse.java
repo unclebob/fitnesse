@@ -13,10 +13,14 @@ import java.lang.reflect.Method;
 import java.net.BindException;
 
 public class FitNesse {
-  private FitNesseContext context;
-  private SocketService theService;
-  private Updater updater;
   public static final FitNesseVersion VERSION = new FitNesseVersion();
+
+  public static FitNesse FITNESSE_INSTANCE;
+
+  private SocketService theService;
+  private final Updater updater;
+
+  public final FitNesseContext context;
 
   public static void main(String[] args) throws Exception {
     System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
@@ -53,16 +57,17 @@ public class FitNesse {
   // TODO MdM. This boolean agument is annoying... please fix.
   public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
     this.updater = updater;
+    FITNESSE_INSTANCE = this;
     this.context = context;
-    context.fitnesse = this;
-    FitNesseContext.globalContext = context;
     if (makeDirs)
       establishRequiredDirectories();
   }
 
   public boolean start() {
     try {
-      if (context.port>0) theService = new SocketService(context.port, new FitNesseServer(context));
+      if (context.port > 0) {
+        theService = new SocketService(context.port, new FitNesseServer(context));
+      }
       return true;
     } catch (BindException e) {
       printBadPortMessage(context.port);

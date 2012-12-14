@@ -21,7 +21,6 @@ public class ShutdownResponderTest extends TestCase {
     context.port = FitNesseUtil.port;
     fitnesse = new FitNesse(context);
     fitnesse.start();
-    context.fitnesse = fitnesse;
   }
 
   protected void tearDown() throws Exception {

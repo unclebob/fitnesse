@@ -110,7 +110,7 @@ public class UpdaterImplementation extends UpdaterBase {
           "********************************************************************************\n" +
           "    Files have been updated to a new version. Please read the release notes\n" +
           "    on http://localhost:" +
-          context.getPort() +
+          FitNesse.FITNESSE_INSTANCE.getContext().port +
           "/FitNesse.ReleaseNotes to find out about the new\n" +
           "    features and fixes.\n" +
           "********************************************************************************\n\n");

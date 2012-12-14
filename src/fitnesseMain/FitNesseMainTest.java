@@ -42,7 +42,8 @@ public class FitNesseMainTest {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
     FitNesse fitnesse = mock(FitNesse.class);
-    FitNesseMain.updateAndLaunch(args, context, fitnesse);
+    FitNesseMain.update(args, fitnesse);
+    FitNesseMain.launch(args, context, fitnesse);
     verify(fitnesse, never()).start();
     verify(fitnesse, times(1)).applyUpdates();
   }
@@ -54,7 +55,8 @@ public class FitNesseMainTest {
     args.setCommand("command");
     FitNesse fitnesse = mock(FitNesse.class);
     when(fitnesse.start()).thenReturn(true);
-    FitNesseMain.updateAndLaunch(args, context, fitnesse);
+    FitNesseMain.update(args, fitnesse);
+    FitNesseMain.launch(args, context, fitnesse);
     verify(fitnesse, times(1)).applyUpdates();
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
@@ -100,12 +102,6 @@ public class FitNesseMainTest {
   }
 
   @Test
-  public void testContextFitNesseGetSet() throws Exception {
-    FitNesse fitnesse = new FitNesse(context, false);
-    assertSame(fitnesse, context.fitnesse);
-  }
-
-  @Test
   public void testIsRunning() throws Exception {
     context.port = FitNesseUtil.port;
     FitNesse fitnesse = new FitNesse(context, false);
@@ -123,7 +119,7 @@ public class FitNesseMainTest {
   public void testShouldInitializeFitNesseContext() {
     context.port = FitNesseUtil.port;
     new FitNesse(context, false);
-    assertNotNull(FitNesseContext.globalContext);
+    assertNotNull(FitNesse.FITNESSE_INSTANCE.getContext());
   }
 
   @Test

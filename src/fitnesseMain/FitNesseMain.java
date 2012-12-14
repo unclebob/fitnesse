@@ -40,28 +40,28 @@ public class FitNesseMain {
     PageVersionPruner.daysTillVersionsExpire = arguments
       .getDaysTillVersionsExpire();
     FitNesse fitnesse = new FitNesse(context, updater);
-    updateAndLaunch(arguments, context, fitnesse);
+    update(arguments, fitnesse);
+    launch(arguments, context, fitnesse);
   }
 
   private static void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  static void updateAndLaunch(Arguments arguments, FitNesseContext context,
-                              FitNesse fitnesse) throws Exception {
+  static void update(Arguments arguments,FitNesse fitnesse) throws Exception {
     if (!arguments.isOmittingUpdates())
       fitnesse.applyUpdates();
-    if (!arguments.isInstallOnly()) {
-      runFitNesse(arguments, context, fitnesse);
-    }
   }
 
-  private static void runFitNesse(Arguments arguments, FitNesseContext context, FitNesse fitnesse) throws Exception {
-    boolean started = fitnesse.start();
-    if (started) {
-      printStartMessage(arguments, context);
-      if (arguments.getCommand() != null) {
-        executeSingleCommand(arguments, fitnesse, context);
+  static void launch(Arguments arguments, FitNesseContext context,
+      FitNesse fitnesse) throws Exception {
+    if (!arguments.isInstallOnly()) {
+      boolean started = fitnesse.start();
+      if (started) {
+        printStartMessage(arguments, context);
+        if (arguments.getCommand() != null) {
+          executeSingleCommand(arguments, fitnesse, context);
+        }
       }
     }
   }

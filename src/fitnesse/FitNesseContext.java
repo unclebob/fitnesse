@@ -18,13 +18,10 @@ public class FitNesseContext {
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
 
-  public static FitNesseContext globalContext;
-
   public final WikiPage root;
   public final SocketDealer socketDealer = new SocketDealer();
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
-  public FitNesse fitnesse;
   public int port = 80;
   public String rootPath = ".";
   public String rootDirectoryName = "FitNesseRoot";
@@ -58,11 +55,6 @@ public class FitNesseContext {
 
     return buffer.toString();
   }
-
-  public static int getPort() {
-    return globalContext != null ? globalContext.port : -1;
-  }
-
 
   public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
