@@ -26,14 +26,13 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null);
+    root = new FileSystemPage(testDir, rootName);
+    context = FitNesseUtil.makeTestContext(root);
     context.rootPath = testDir;
     context.rootDirectoryName = rootName;
 
     FileUtil.makeDir(testDir);
-    root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
     crawler = root.getPageCrawler();
-    context.root = root;
 
     pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
     pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");

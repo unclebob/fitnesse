@@ -14,24 +14,28 @@ import fitnesse.wiki.WikiPage;
 import java.io.File;
 
 public class FitNesseContext {
+  public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
+  public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
+  public static final String testResultsDirectoryName = "testResults";
+
+  public static FitNesseContext globalContext;
+
+  public final WikiPage root;
+  public final SocketDealer socketDealer = new SocketDealer();
+  public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
+
   public FitNesse fitnesse;
   public int port = 80;
   public String rootPath = ".";
   public String rootDirectoryName = "FitNesseRoot";
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
-  public WikiPage root;
-  private ResponderFactory responderFactory;
   public Logger logger;
-  public final SocketDealer socketDealer = new SocketDealer();
-  public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
   public Authenticator authenticator = new PromiscuousAuthenticator();
   public PageFactory pageFactory = new PageFactory(this);
-  public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
-  public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
-  public static FitNesseContext globalContext;
-  public final String testResultsDirectoryName = "testResults";
   public boolean doNotChunk;
   public String pageTheme = "fitnesse_straight";
+
+  private ResponderFactory responderFactory;
 
   public FitNesseContext() {
     this(null);

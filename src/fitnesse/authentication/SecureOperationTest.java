@@ -23,8 +23,7 @@ public class SecureOperationTest extends TestCase {
 
   protected void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    context = new FitNesseContext();
-    context.root = root;
+    context = new FitNesseContext(root);
     sro = new SecureReadOperation();
     request = new MockRequest();
     crawler = root.getPageCrawler();

@@ -39,7 +39,6 @@ public class SuiteSpecificationRunnerTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     context = FitNesseUtil.makeTestContext(root);
-    context.root = root;
     runner = new SuiteSpecificationRunner(root);
   }
 

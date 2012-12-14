@@ -35,6 +35,7 @@ public class FitNesseServerTest extends RegexTestCase {
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);
+    context.rootDirectoryName = SampleFileUtility.base;
   }
 
   public void tearDown() throws Exception {
@@ -79,7 +80,6 @@ public class FitNesseServerTest extends RegexTestCase {
   }
 
   public void testRelativeAndAbsoluteLinks() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RootPage");
     crawler.addPage(root, pageOnePath, "PageOne");
     crawler.addPage(root, pageOneTwoPath, "PageTwo");
     String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n", root);
@@ -120,8 +120,6 @@ public class FitNesseServerTest extends RegexTestCase {
 
   private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
     MockSocket s = new MockSocket(requestLine);
-    context.rootDirectoryName = SampleFileUtility.base;
-    context.root = page;
     FitNesseServer server = new FitNesseServer(context);
     server.serve(s, 1000);
     String output = s.getOutput();

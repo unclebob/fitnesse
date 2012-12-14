@@ -12,6 +12,7 @@ import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.WikiPage;
 import util.CommandLine;
 
 import java.io.File;
@@ -84,35 +85,43 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    FitNesseContext context = new FitNesseContext();
-    context.port = arguments.getPort();
-    context.rootPath = arguments.getRootPath();
-    ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
-    context.rootDirectoryName = arguments.getRootDirectory();
-    String defaultNewPageContent = componentFactory
-      .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-    if (defaultNewPageContent != null)
-      context.defaultNewPageContent = defaultNewPageContent;
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    context.logger = makeLogger(arguments);
-    context.authenticator = makeAuthenticator(arguments.getUserpass(),
-      componentFactory);
+    final int port = arguments.getPort();
+    final String rootPath = arguments.getRootPath();
+    final String rootDirectoryName = arguments.getRootDirectory();
+
+    ComponentFactory componentFactory = new ComponentFactory(rootPath);
     String newPageTheme = componentFactory.getProperty(ComponentFactory.THEME);
+
+    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    WikiPage root = wikiPageFactory.makeRootPage(rootPath,
+      rootDirectoryName, componentFactory);
+
+    FitNesseContext context = new FitNesseContext(root);
+    context.port = port;
+    context.rootPath = rootPath;
+    context.rootDirectoryName = rootDirectoryName;
+
+    String defaultNewPageContent = componentFactory
+        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    if (defaultNewPageContent != null) {
+      context.defaultNewPageContent = defaultNewPageContent;
+    }
+    context.pageFactory = new PageFactory(context);
     if (newPageTheme != null) {
       context.pageTheme = newPageTheme;
     }
-    context.pageFactory = new PageFactory(context);
+    context.logger = makeLogger(arguments);
+    context.authenticator = makeAuthenticator(arguments.getUserpass(),
+      componentFactory);
 
     extraOutput = componentFactory.loadPlugins(context.getResponderFactory(),
-      wikiPageFactory);
+        wikiPageFactory);
     extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
     extraOutput += componentFactory.loadResponders(context.getResponderFactory());
     extraOutput += componentFactory.loadSymbolTypes();
     extraOutput += componentFactory.loadContentFilter();
     extraOutput += componentFactory.loadSlimTables();
 
-    context.root = wikiPageFactory.makeRootPage(context.rootPath,
-      context.rootDirectoryName, componentFactory);
 
     WikiImportTestEventListener.register();
 

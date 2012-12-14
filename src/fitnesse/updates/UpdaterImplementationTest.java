@@ -34,21 +34,21 @@ public class UpdaterImplementationTest {
   @Before
   public void setUp() throws Exception {
     setTheContext();
-    setTheRoot();
+    root = setTheRoot();
     createFakeJarFileResources();
     createFakeUpdateListFiles();
     updater = new UpdaterImplementation(context);
   }
 
-  private void setTheRoot() throws Exception {
-    FileUtil.makeDir(testDir);
-    root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
-    crawler = root.getPageCrawler();
-    context.root = root;
+  private WikiPage setTheRoot() throws Exception {
+    return root;
   }
 
   private void setTheContext() {
-    context = new FitNesseContext();
+    FileUtil.makeDir(testDir);
+    root = new FileSystemPage(testDir, rootName);
+    crawler = root.getPageCrawler();
+    context = new FitNesseContext(root);
     context.rootPath = testDir;
     context.rootDirectoryName = rootName;
   }

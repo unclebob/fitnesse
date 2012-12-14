@@ -27,8 +27,7 @@ public class ChunkingResponderTest {
 
  @Before
  public void setUp() throws Exception {
-    context = new FitNesseContext();
-    context.root = root;
+    context = new FitNesseContext(root);
   }
 
   @Test
