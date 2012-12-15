@@ -25,15 +25,15 @@ public class FitNesseContext {
   public final int port;
   public final String rootPath;
   public final String rootDirectoryName;
+  public final ResponderFactory responderFactory;
+  public final PageFactory pageFactory = new PageFactory(this);
 
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public Logger logger;
   public Authenticator authenticator = new PromiscuousAuthenticator();
-  public PageFactory pageFactory = new PageFactory(this);
   public boolean doNotChunk;
   public String pageTheme = "fitnesse_straight";
 
-  private ResponderFactory responderFactory;
 
   public FitNesseContext() {
     this(null, null, null, 80);
@@ -55,6 +55,7 @@ public class FitNesseContext {
     this.rootPath = rootPath != null ? rootPath : "." ;
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
     this.socketDealer = socketDealer != null ? socketDealer : new SocketDealer();
+    responderFactory = new ResponderFactory(getRootPagePath());
   }
 
   public String toString() {
@@ -80,12 +81,5 @@ public class FitNesseContext {
 
   public String getRootPagePath() {
     return String.format("%s/%s", rootPath, rootDirectoryName);
-  }
-
-  public ResponderFactory getResponderFactory() {
-    if (responderFactory == null) {
-      responderFactory = new ResponderFactory(getRootPagePath());
-    }
-    return responderFactory;
   }
 }
