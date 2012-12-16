@@ -21,6 +21,15 @@ label input {
     margin-left: 145px; /* 140 + input field padding/border/margin */
 }
 
+/** Wiki pages (wiki, test, suite, report) **/
+.wikiPage td,
+.testPage td,
+.suitePage td,
+.testExecutionReport td,
+.compareHistory td {
+  white-space: pre-wrap;
+}
+
 /** Edit page **/
 .editPage #editor {
     margin-top: 8px;
