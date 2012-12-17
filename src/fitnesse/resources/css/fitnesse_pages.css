@@ -21,6 +21,15 @@ label input {
     margin-left: 145px; /* 140 + input field padding/border/margin */
 }
 
+/** Wiki pages (wiki, test, suite, report) **/
+.wikiPage td,
+.testPage td,
+.suitePage td,
+.testExecutionReport td,
+.compareHistory td {
+  white-space: pre-wrap;
+}
+
 /** Edit page **/
 .editPage #editor {
     margin-top: 8px;
@@ -140,6 +149,7 @@ tr.scenario-detail {
 #test-summary, #progressBar {
 	padding: 0.5em;
     padding-left: 1.5em;
+    background-position: 0 0.3em;
 }
 #test-summaries ul {
 	list-style: none;
@@ -158,6 +168,40 @@ tr.scenario-detail {
 }
 .test_output_name h3 {
 	display: inline;
+}
+
+/** Suite overview */
+.overview_results table {
+    border: none;
+}
+.overview_bar {
+    border: 1px solid black;
+    height: 1.4em;
+    margin: 0 -0.5px;
+}
+.overview_part {
+    float: left;
+    height: 1.4em;
+    margin: 0;
+    padding: 0;
+}
+.unrun {
+    background-color: #FFF3B4;
+}
+
+.passed_tests, .unrun_tests, .failed_tests {
+    background-repeat: no-repeat;
+    margin: 0 4px;
+    padding-left: 22px;
+}
+.passed_tests {
+    background-image: url("../images/checkmark.png");
+}
+.unrun_tests {
+    background-image: url("../images/exception.png");
+}
+.failed_tests {
+    background-image: url("../images/wrong.png");
 }
 
 /** Virtual and import pages */

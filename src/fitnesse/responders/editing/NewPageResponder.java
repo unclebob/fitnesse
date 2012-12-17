@@ -20,7 +20,7 @@ import fitnesse.wiki.WikiPagePath;
 public class NewPageResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    
+
     SimpleResponse response = new SimpleResponse();
     response.setContent(doMakeHtml(context, request));
     return response;
@@ -28,12 +28,12 @@ public class NewPageResponder implements Responder {
 
   private String doMakeHtml(FitNesseContext context, Request request) {
     HtmlPage html = context.pageFactory.newPage();
-    html.setTitle("New page:");
+    html.setTitle("New page");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));
     html.setMainTemplate("editPage");
     makeEditForm(html, context, request);
-    
+
     return html.html();
   }
 
@@ -42,7 +42,7 @@ public class NewPageResponder implements Responder {
 
     html.put("isNewPage", true);
     html.put(EditResponder.HELP_TEXT, "");
-    
+
     html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
     html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     if (request.hasInput("pageType")) {
@@ -58,7 +58,7 @@ public class NewPageResponder implements Responder {
   private WikiPage getParentWikiPage(FitNesseContext context, Request request) {
     //the request resource is already th parent path.
     WikiPagePath parentPath = PathParser.parse(request.getResource());
-    
+
     //we need a crawler to get the page from the path. The root has a crawler we can use.
     PageCrawler crawler = context.root.getPageCrawler();
     WikiPage page = crawler.getPage(context.root, parentPath);

@@ -1,8 +1,6 @@
-|!c !2 Contents|
-|!contents -g|
+!contents -g
 
-!path fitnesse-standalone.jar
-!path classes
+!path ${java.class.path}
 
 
 

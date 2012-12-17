@@ -33,7 +33,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected abstract String getErrorMessageHeader();
 
-  protected abstract void execute();
+  protected abstract void execute() throws RefactorException;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     if (!getAndValidateRefactoredPage(context, request)) {
@@ -93,18 +93,21 @@ public abstract class PageMovementResponder implements SecureResponder {
     return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(newName));
   }
 
-  protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) {
-	  
+  protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) throws RefactorException {
+
   	if (isSymlinkedPage(movedPage)) {
+  	  if (isSymlinkedPage(movedPage.getParent())) {
+  	    throw new RefactorException("Can not move symlink page when parent page is also a symlink");
+  	  }
   		WikiPage referencedPage = ((SymbolicPage) movedPage).getRealPage();
   		removeSymlink(movedPage);
   		createSymlink(referencedPage, newParentPage, pageName);
   	} else {
   		PageData pageData = movedPage.getData();
   		WikiPage targetPage = newParentPage.addChildPage(pageName);
-  		
+
 	    targetPage.commit(pageData);
-  	
+
 	    moveChildren(movedPage, targetPage);
 
 	    WikiPage parentOfMovedPage = movedPage.getParent();
@@ -112,7 +115,7 @@ public abstract class PageMovementResponder implements SecureResponder {
   	}
   }
 
-  protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
+  protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) throws RefactorException {
     List<WikiPage> children = movedPage.getChildren();
     for (WikiPage page : children) {
       movePage(page, newParentPage, page.getName());
