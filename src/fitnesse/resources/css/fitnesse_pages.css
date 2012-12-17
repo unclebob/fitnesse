@@ -151,6 +151,8 @@ tr.scenario-detail {
 }
 #test-summary, #progressBar {
 	padding: 0.5em;
+    padding-left: 1.5em;
+    background-position: 0 0.3em;
 }
 #test-summaries ul {
 	list-style: none;
@@ -196,13 +198,13 @@ tr.scenario-detail {
     padding-left: 22px;
 }
 .passed_tests {
-    background-image: url("../images/pass.png");
+    background-image: url("../images/checkmark.png");
 }
 .unrun_tests {
-    background-image: url("../images/unrun.png");
+    background-image: url("../images/exception.png");
 }
 .failed_tests {
-    background-image: url("../images/fail.png");
+    background-image: url("../images/wrong.png");
 }
 
 /** Virtual and import pages */
