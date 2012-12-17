@@ -1,4 +1,30 @@
 //
+// FITNESSE: Added special features to enable run from Ant
+function readFile(filePath) {
+    print ('readFile: ' + filePath); 
+    var br = new java.io.BufferedReader(new java.io.FileReader(new java.io.File(filePath)));
+
+    // Read the file we just retrieved from the webservice that contains JSON.
+    var text = "";
+    var s;
+    while ((s = br.readLine())) {
+        text = text + s + "\n";
+    }
+    br.close();
+    return text;
+}
+
+function quit (exitCode) {
+    java.lang.System.exit(exitCode);
+}
+
+arguments = [attributes.get('file'), attributes.get('tofile')];
+
+//arguments = [ "src/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less" ];
+
+//// less-rhino-1.3.1.js
+
+//
 // Stub out `require` in rhino
 //
 function require(arg) {
@@ -127,7 +153,8 @@ if (!String.prototype.trim) {
 }
 var less, tree;
 
-if (typeof environment === "object" && ({}).toString.call(environment) === "[object Environment]") {
+// Fix: enforce Rhino
+if (true || typeof environment === "object" && ({}).toString.call(environment) === "[object Environment]") {
     // Rhino
     // Details on how to detect Rhino: https://github.com/ringo/ringojs/issues/88
     if (typeof(window) === 'undefined') { less = {} }
@@ -3684,7 +3711,8 @@ function writeFile(filename, content) {
                 } else {
                     print(result);
                 }
-                quit(0);
+		// Fix: do not quit unless an error occurs
+                //quit(0);
             }
         });
     }
