@@ -879,6 +879,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
 Wysiwyg.prototype.loadWysiwygDocument = function () {
     var d = this.contentDocument;
     var container = d.body;
+    if (!container) { return; }
     var tmp = container.lastChild;
 
     while (tmp) {
