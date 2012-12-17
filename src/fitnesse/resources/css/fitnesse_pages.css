@@ -39,11 +39,6 @@ label input {
     margin: 0;
 }
 
-.editPage fieldset {
-    margin-left: 40px;
-    margin-right: 40px;
-}
-
 .editPage #editor {
     margin: 8px 0 0 0;
 }

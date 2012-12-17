@@ -23,16 +23,11 @@ iframe.wysiwyg:focus {
 	float: none;
 	display: inline;
 }
-.textarea-toolbar,
-.wysiwyg-toolbar {
-    margin-left: 40px;
-}
 .wysiwyg-toolbar {
     float: left;
     -moz-user-select: none;
     -webkit-user-select: none;
 	margin-bottom: 4px;
-	margin-left: 40px;
 }
 .wysiwyg-toolbar ul, .wysiwyg-toolbar li {
     list-style-type: none;
