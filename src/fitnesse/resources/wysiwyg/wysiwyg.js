@@ -100,7 +100,7 @@ Wysiwyg.prototype.initializeEditor = function (d) {
         html.push('<link rel="stylesheet" href="' + stylesheets[i] + '" type="text/css" />');
     }
 
-    html.push('<title></title>', '</head>', '<body></body>', '</html>');
+    html.push('<title></title>', '</head>', '<body class="editing"></body>', '</html>');
 
     var first = !window.opera && d.addEventListener ? true : false;
     if (first) {
