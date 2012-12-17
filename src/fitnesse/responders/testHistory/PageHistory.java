@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import fitnesse.responders.run.ExecutionResult;
+
 public class PageHistory extends PageHistoryReader{
   private int failures = 0;
   private int passes = 0;
@@ -93,7 +95,8 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void countResult(TestResultRecord summary) {
-    if (summary.getWrong() > 0 || summary.getExceptions() > 0 || summary.getRight() == 0)
+    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+    if (result == ExecutionResult.FAIL || result == ExecutionResult.ERROR)
       failures++;
     else
       passes++;
@@ -210,8 +213,10 @@ public class PageHistory extends PageHistoryReader{
 
     public void addSummary(Date date, TestResultRecord summary) {
       minMaxDate(summary);
-      boolean pass = summary.getWrong() == 0 && summary.getExceptions() == 0 && summary.getRight() > 0;
-      passFailList.add(new PassFailReport(date, pass));
+
+      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+
+      passFailList.add(new PassFailReport(date, result == ExecutionResult.PASS));
     }
 
     private void minMaxDate(TestResultRecord summary) {

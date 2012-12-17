@@ -129,6 +129,9 @@ label.checkbox {
 }
 
 /** Test history **/
+.testHistory td {
+    white-space: pre;
+}
 .testHistory td a {
 	text-decoration: none;
 }
