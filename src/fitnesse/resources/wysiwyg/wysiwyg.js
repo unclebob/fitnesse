@@ -8,7 +8,6 @@
 
  ****/
 
-
 var Wysiwyg = function (textarea, options) {
     var self = this;
     var editorMode = Wysiwyg.getEditorMode();
@@ -803,8 +802,6 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             var lines, next, i, c;
             inPasteAction = false;
 
-        	console.log('Pasted data', $(pastedDataBlock).html());
-
             // convert nested .pasteddata divs to br's (safari/chrome)
             $('div', pastedDataBlock).each(function (i, elem) {
                 if (!/^\s*$/.test($(this).text())) {
@@ -824,10 +821,10 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             });
             
             if (isPlainTextData) {
-            	console.log('plain text', $(pastedDataBlock).html());
+                if (window.console) console.log('plain text', $(pastedDataBlock).html());
             	lines = $(pastedDataBlock).html().split(/<br\/?>/);
             } else {
-            	console.log('DOM2WIKI', $(pastedDataBlock).html());
+            	if (window.console) console.log('DOM2WIKI', $(pastedDataBlock).html());
                 lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
             }
 
@@ -851,7 +848,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                     $(pastedDataBlock).remove();
                 }
             } else {
-            	console.log('wiki text:', lines);
+            	if (window.console) console.log('wiki text:', lines);
                 var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
                 var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
                 var parentTable = getSelfOrAncestor(pastedDataBlock, 'table');
@@ -859,7 +856,6 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 for (i = 0; i < c.length; i++) {
                     if (parentTr && c[i].tagName === 'TABLE') {
                         $(c[i]).find('tr').each(function(j, elem) {
-                        	console.log(parentTr, elem);
                             $(parentTr).after(elem);
                             parentTr = $(parentTr).next();
                         });
@@ -1409,7 +1405,6 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
         }
         nodes.push(end);
     }
-    console.log ("range:", nodes);
     
     var classes = "";
     if (mode) { classes = " " + mode; }
@@ -2365,7 +2360,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                console.log('match text', matchText);
                 handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
                 continue;
             case -6: // collapsible section
