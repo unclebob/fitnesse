@@ -5,30 +5,34 @@ import fitnesse.http.Request;
 
 public class MockRequestBuilder {
   protected String specification;
-  
+  private boolean noChunk = false;
+
   public MockRequestBuilder(String specification) {
     this.specification = specification;
     validate();
   }
 
   public Request build() {
-    Request request = new MockRequest();
+    MockRequest request = new MockRequest();
     request.parseRequestUri(getCommand());
     if (hasCredentials()) {
       request.setCredentials(getUsername(), getPassword());
     }
+    if (noChunk) {
+      request.addInput("noChunk", true);
+    }
     return request;
   }
-  
+
   private String getCommand() {
     String actualCommand = null;
-    
+
     if (hasCredentials())
       actualCommand = commandParts()[2];
     else
       actualCommand = specification;
-      
-    
+
+
     if (actualCommand.startsWith("/"))
       return actualCommand;
     else
@@ -42,12 +46,12 @@ public class MockRequestBuilder {
   private boolean hasNoCredentials() {
     return (commandParts().length == 1);
   }
-  
+
   private void validate() {
     if (!hasCredentials() && !hasNoCredentials())
       throw new IllegalArgumentException("Command specification [" + specification + "] invalid. Format shold be /cmd or user:pass:/cmd");
   }
-  
+
   private String[] commandParts() {
     return specification.split(":");
   }
@@ -58,5 +62,10 @@ public class MockRequestBuilder {
 
   private String getPassword() {
     return commandParts()[1];
+  }
+
+  public MockRequestBuilder noChunk() {
+    this.noChunk = true;
+    return this;
   }
 }

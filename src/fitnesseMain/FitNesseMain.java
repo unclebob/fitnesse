@@ -66,7 +66,6 @@ public class FitNesseMain {
   }
 
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
-    context.doNotChunk = true;
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
     System.out.println("-----Command Output-----");

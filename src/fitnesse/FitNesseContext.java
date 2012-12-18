@@ -31,7 +31,6 @@ public class FitNesseContext {
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public Logger logger;
   public Authenticator authenticator = new PromiscuousAuthenticator();
-  public boolean doNotChunk;
   public String pageTheme = "fitnesse_straight";
 
 

@@ -104,7 +104,7 @@ public class FitNesse {
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
-    Request request = new MockRequestBuilder(command).build();
+    Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
