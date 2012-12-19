@@ -88,7 +88,7 @@ public class FitNesseContext {
   public final String pageTheme;
 
 
-  public FitNesseContext(WikiPage root, String rootPath,
+  private FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
       int port, SocketDealer socketDealer, Authenticator authenticator,
       Logger logger) {
