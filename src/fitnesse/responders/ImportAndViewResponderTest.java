@@ -37,7 +37,7 @@ public class ImportAndViewResponderTest extends TestCase {
   }
 
   private Response getResponse() throws Exception {
-    FitNesseContext context = new FitNesseContext(testData.localRoot);
+    FitNesseContext context = FitNesseUtil.makeTestContext(testData.localRoot);
     MockRequest request = new MockRequest();
     request.setResource("PageTwo");
     return responder.makeResponse(context, request);

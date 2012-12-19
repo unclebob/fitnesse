@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -31,7 +32,7 @@ public class RollbackResponderTest extends TestCase {
     request.addInput("version", commitRecord.getName());
 
     Responder responder = new RollbackResponder();
-    response = responder.makeResponse(new FitNesseContext(root), request);
+    response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   public void tearDown() throws Exception {

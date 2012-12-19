@@ -42,7 +42,7 @@ public class NotFoundResponderTest extends RegexTestCase {
     WikiPage root = InMemoryPage.makeRoot("RooT");
 
     Responder responder = new NotFoundResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
   }

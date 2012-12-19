@@ -179,7 +179,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
   }
 
   private ChunkedResponse getResponse(MockRequest request) {
-    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
     response.turnOffChunking();
     return response;
   }
@@ -195,7 +195,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
   public void testMakeResponseImportingNonRootPage() throws Exception {
     MockRequest request = makeRequest(baseUrl + "PageOne");
 
-    Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();

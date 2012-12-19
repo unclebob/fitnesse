@@ -28,7 +28,7 @@ public class NewPageResponderTest extends RegexTestCase {
   public void testResponse() throws Exception {
     request.setResource("root");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root),
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
         request);
     assertEquals(200, response.getStatus());
 
@@ -51,7 +51,7 @@ public class NewPageResponderTest extends RegexTestCase {
 
     request.setResource("ChildPage");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root),
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
         request);
     assertEquals(200, response.getStatus());
 

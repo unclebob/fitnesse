@@ -31,7 +31,7 @@ public class WhereUsedResponderTest extends RegexTestCase {
     request.setResource("PageOne");
     WhereUsedResponder responder = new WhereUsedResponder();
 
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     MockResponseSender sender = new MockResponseSender();
     response.sendTo(sender);
 

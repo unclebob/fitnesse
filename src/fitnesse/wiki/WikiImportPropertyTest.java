@@ -105,7 +105,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     MockRequest request = new MockRequest();
     request.setResource(name);
     Responder responder = new WikiPageResponder();
-    return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   public void testVirtualPageIndication() throws Exception {

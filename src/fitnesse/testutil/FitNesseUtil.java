@@ -7,6 +7,7 @@ import java.io.IOException;
 import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContext.Builder;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
@@ -51,7 +52,12 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
-    FitNesseContext context = new FitNesseContext(root, ".", SampleFileUtility.base, port);
+    Builder builder = new Builder();
+    builder.root = root;
+    builder.rootDirectoryName = SampleFileUtility.base;
+    builder.port = port;
+    FitNesseContext context = builder.createFitNesseContext();
+
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
     context.pageFactory.getVelocityEngine();
     return context;
@@ -59,15 +65,13 @@ public class FitNesseUtil {
 
   public static FitNesseContext makeTestContext(FitNesseContext context,
       int port) {
-    return new FitNesseContext(context.root,
-        context.rootPath,
-        context.rootDirectoryName,
-        port, context.socketDealer);
+    Builder builder = new Builder(context);
+    builder.port = port;
+    return builder.createFitNesseContext();
   }
 
 
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
-
 }
