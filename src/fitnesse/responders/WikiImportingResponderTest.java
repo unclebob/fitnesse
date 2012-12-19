@@ -24,13 +24,14 @@ public class WikiImportingResponderTest extends RegexTestCase {
   private WikiImportingResponder responder;
   private String baseUrl;
   private WikiImporterTest testData;
+  private FitNesseContext context;
 
   public void setUp() throws Exception {
     testData = new WikiImporterTest();
     testData.createRemoteRoot();
     testData.createLocalRoot();
 
-    FitNesseUtil.startFitnesse(testData.remoteRoot);
+    context = FitNesseUtil.startFitnesse(testData.remoteRoot);
     baseUrl = "http://localhost:" + FitNesseUtil.PORT + "/";
 
     createResponder();
@@ -136,7 +137,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     String content = sender.sentData();
 
     System.out.println(content);
-    
+
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
 
@@ -238,7 +239,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     PageData data = page.getData();
     data.setAttribute(PageData.PropertySECURE_READ);
     page.commit(data);
-    FitNesseUtil.context.authenticator = new OneUserAuthenticator("joe", "blow");
+    context.authenticator = new OneUserAuthenticator("joe", "blow");
   }
 
   private void checkRemoteLoginForm(String content) {
@@ -282,7 +283,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     WikiImporter importer = new WikiImporter();
 
     responder.setImporter(importer);
-    
+
     MockRequest request = makeRequest(baseUrl);
     String content = simulateWebRequest(request);
 
@@ -315,9 +316,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testAutoUpdateSettingDisplayed() throws Exception {
     WikiImporter importer = new MockWikiImporter();
-    
+
     responder.setImporter(importer);
-    
+
     MockRequest request = makeRequest(baseUrl);
     request.addInput("autoUpdate", true);
     String content = simulateWebRequest(request);
@@ -326,7 +327,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
     request = makeRequest(baseUrl);
     content = simulateWebRequest(request);
-    
+
     assertSubString("Automatic Update turned OFF", content);
   }
 }

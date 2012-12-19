@@ -15,12 +15,12 @@ import fitnesse.wiki.WikiPage;
 public class FitNesseUtil {
   private static FitNesse instance = null;
   public static final int PORT = 1999;
-  public static FitNesseContext context;
   public static final String URL = "http://localhost:" + PORT + "/";
 
-  public static void startFitnesse(WikiPage root) {
-    context = makeTestContext(root);
+  public static FitNesseContext startFitnesse(WikiPage root) {
+    FitNesseContext context = makeTestContext(root);
     startFitnesseWithContext(context);
+    return context;
   }
 
   public static void startFitnesseWithContext(FitNesseContext context) {
