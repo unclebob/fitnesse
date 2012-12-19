@@ -1,6 +1,7 @@
 package fitnesseMain;
 
 import fitnesse.*;
+import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -11,7 +12,6 @@ import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.WikiPage;
 import util.CommandLine;
 
 import java.io.File;
@@ -83,30 +83,26 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    final int port = arguments.getPort();
-    final String rootPath = arguments.getRootPath();
-    final String rootDirectoryName = arguments.getRootDirectory();
-
-    ComponentFactory componentFactory = new ComponentFactory(rootPath);
-    String newPageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-
+    Builder builder = new Builder();
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    WikiPage root = wikiPageFactory.makeRootPage(rootPath,
-      rootDirectoryName, componentFactory);
+    ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
 
-    FitNesseContext context = new FitNesseContext(root, rootPath, rootDirectoryName, port);
+    builder.port = arguments.getPort();
+    builder.rootPath = arguments.getRootPath();
+    builder.rootDirectoryName = arguments.getRootDirectory();
 
-    String defaultNewPageContent = componentFactory
+    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
+    builder.defaultNewPageContent = componentFactory
         .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-    if (defaultNewPageContent != null) {
-      context.defaultNewPageContent = defaultNewPageContent;
-    }
-    if (newPageTheme != null) {
-      context.pageTheme = newPageTheme;
-    }
-    context.logger = makeLogger(arguments);
-    context.authenticator = makeAuthenticator(arguments.getUserpass(),
+
+    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
+      builder.rootDirectoryName, componentFactory);
+
+    builder.logger = makeLogger(arguments);
+    builder.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
+
+    FitNesseContext context = builder.createFitNesseContext();
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
         wikiPageFactory);
