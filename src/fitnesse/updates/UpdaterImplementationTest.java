@@ -1,6 +1,7 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -49,7 +50,7 @@ public class UpdaterImplementationTest {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(testDir, rootName);
     crawler = root.getPageCrawler();
-    context = new FitNesseContext(root, testDir, rootName, 80);
+    context = FitNesseUtil.makeTestContext(root, testDir, rootName, 80);
   }
 
   private void createFakeUpdateListFiles() {

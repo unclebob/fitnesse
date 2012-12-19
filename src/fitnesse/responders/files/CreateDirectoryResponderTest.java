@@ -9,6 +9,7 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 
 public class CreateDirectoryResponderTest extends TestCase {
   public void setUp() throws Exception {
@@ -21,7 +22,7 @@ public class CreateDirectoryResponderTest extends TestCase {
   }
 
   public void testMakeResponse() throws Exception {
-    FitNesseContext context = new FitNesseContext(null, null, "testdir", 80);
+    FitNesseContext context = FitNesseUtil.makeTestContext(null, null, "testdir", 80);
     CreateDirectoryResponder responder = new CreateDirectoryResponder();
     MockRequest request = new MockRequest();
     request.addInput("dirname", "subdir");

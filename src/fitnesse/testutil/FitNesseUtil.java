@@ -52,9 +52,15 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
+    return makeTestContext(root, null, SampleFileUtility.base, port);
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
+      String rootDirectoryName, int port) {
     Builder builder = new Builder();
     builder.root = root;
-    builder.rootDirectoryName = SampleFileUtility.base;
+    builder.rootPath = rootPath;
+    builder.rootDirectoryName = rootDirectoryName;
     builder.port = port;
     FitNesseContext context = builder.createFitNesseContext();
 
@@ -74,4 +80,5 @@ public class FitNesseUtil {
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
+
 }

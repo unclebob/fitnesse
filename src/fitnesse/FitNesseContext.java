@@ -89,17 +89,6 @@ public class FitNesseContext {
 
 
   public FitNesseContext(WikiPage root, String rootPath,
-      String rootDirectoryName, int port) {
-    this(root, rootPath, rootDirectoryName, port, null);
-  }
-
-  public FitNesseContext(WikiPage root, String rootPath,
-        String rootDirectoryName, int port, SocketDealer socketDealer) {
-    this(root, rootPath, rootDirectoryName, null, null, port, socketDealer, null, null);
-  }
-
-
-  public FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
       int port, SocketDealer socketDealer, Authenticator authenticator,
       Logger logger) {

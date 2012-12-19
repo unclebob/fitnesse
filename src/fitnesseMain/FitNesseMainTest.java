@@ -29,7 +29,7 @@ public class FitNesseMainTest {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext(null, null, "testFitnesseRoot", 80);
+    context = FitNesseUtil.makeTestContext(null, null, "testFitnesseRoot", 80);
   }
 
   @After
@@ -101,7 +101,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testIsRunning() throws Exception {
-    context = new FitNesseContext(null, null, null, FitNesseUtil.PORT);
+    context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
     FitNesse fitnesse = new FitNesse(context, false);
 
     assertFalse(fitnesse.isRunning());
@@ -115,7 +115,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testShouldInitializeFitNesseContext() {
-    context = new FitNesseContext(null, null, null, FitNesseUtil.PORT);
+    context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
     new FitNesse(context, false);
     assertNotNull(FitNesse.FITNESSE_INSTANCE.getContext());
   }

@@ -118,7 +118,7 @@ public class TestSystemTest {
   @Test
   public void testTestRunnerWithRootPathVariable() throws Exception {
     String fitnesseRootpath = "/home/fitnesse";
-    FitNesseContext context = new FitNesseContext(null, fitnesseRootpath, null, 80);
+    FitNesseContext context = FitNesseUtil.makeTestContext(null, fitnesseRootpath, null, 80);
     new FitNesse(context, false);
 
     String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
