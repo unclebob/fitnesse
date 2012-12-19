@@ -38,6 +38,8 @@ public class FitNesseExpediterTest extends RegexTestCase {
   }
 
   public void testAuthenticationGetsCalled() throws Exception {
+    context = FitNesseUtil.makeTestContext(context, new StoneWallAuthenticator());
+    expediter = new FitNesseExpediter(socket, context);
     context.authenticator = new StoneWallAuthenticator();
     MockRequest request = new MockRequest();
     Response response = expediter.createGoodResponse(request);

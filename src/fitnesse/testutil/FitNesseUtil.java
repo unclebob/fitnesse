@@ -8,6 +8,7 @@ import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
+import fitnesse.authentication.Authenticator;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
@@ -73,6 +74,13 @@ public class FitNesseUtil {
       int port) {
     Builder builder = new Builder(context);
     builder.port = port;
+    return builder.createFitNesseContext();
+  }
+
+  public static FitNesseContext makeTestContext(FitNesseContext context,
+      Authenticator authenticator) {
+    Builder builder = new Builder(context);
+    builder.authenticator = authenticator;
     return builder.createFitNesseContext();
   }
 

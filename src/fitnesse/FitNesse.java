@@ -65,12 +65,12 @@ public class FitNesse {
 
   public boolean start() {
     try {
-      if (getContext().port > 0) {
-        theService = new SocketService(getContext().port, new FitNesseServer(getContext()));
+      if (context.port > 0) {
+        theService = new SocketService(context.port, new FitNesseServer(context));
       }
       return true;
     } catch (BindException e) {
-      printBadPortMessage(getContext().port);
+      printBadPortMessage(context.port);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -85,8 +85,8 @@ public class FitNesse {
   }
 
   private void establishRequiredDirectories() {
-    establishDirectory(getContext().getRootPagePath());
-    establishDirectory(getContext().getRootPagePath() + "/files");
+    establishDirectory(context.getRootPagePath());
+    establishDirectory(context.getRootPagePath() + "/files");
   }
 
   public void applyUpdates() throws IOException{
@@ -105,7 +105,7 @@ public class FitNesse {
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
     Request request = new MockRequestBuilder(command).noChunk().build();
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), getContext());
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
     sender.doSending(response);
