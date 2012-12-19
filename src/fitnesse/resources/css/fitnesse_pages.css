@@ -161,6 +161,22 @@ tr.scenario-detail {
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }
+#test-summaries .pass {
+  padding: 0px 0px 0px 20px;
+}
+#test-summary.pass,
+#test-summaries .pass {
+  background-image: url("../images/checkmark.png");
+  background-repeat: no-repeat;
+}
+#test-summaries .fail {
+  padding: 0px 0px 0px 20px;
+}
+#test-summary.fail,
+#test-summaries .fail {
+  background-image: url("../images/wrong.png");
+  background-repeat: no-repeat;
+}
 #test-action .stop {
 	background-color: red;
 	color: white;

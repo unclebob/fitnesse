@@ -100,15 +100,9 @@ table.plain_text_table th {
 }
 .pass {
   background-color: #AAFFAA;
-  padding: 0px 0px 0px 20px;
-  background-image: url("../images/checkmark.png");
-  background-repeat: no-repeat;
 }
 .fail {
   background-color: #FFAAAA;
-  padding: 0px 0px 0px 20px;
-  background-image: url("../images/wrong.png");
-  background-repeat: no-repeat;
 }
 .ignore {
   background-color: lightgray;
