@@ -88,10 +88,6 @@ public class FitNesseContext {
   public final String pageTheme;
 
 
-  public FitNesseContext() {
-    this(null, null, null, 80);
-  }
-
   public FitNesseContext(WikiPage root) {
     this(root, null, null, 80);
   }

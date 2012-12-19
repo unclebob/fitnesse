@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleSocketSeeker;
 
 public class SocketCatchingResponderTest extends RegexTestCase {
@@ -21,7 +22,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
     seeker = new SimpleSocketSeeker();
     sender = new MockResponseSender();
     responder = new SocketCatchingResponder();
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext();
     dealer = context.socketDealer;
     request = new MockRequest();
   }
