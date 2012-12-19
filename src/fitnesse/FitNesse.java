@@ -20,7 +20,7 @@ public class FitNesse {
   private SocketService theService;
   private final Updater updater;
 
-  public final FitNesseContext context;
+  private final FitNesseContext context;
 
   public static void main(String[] args) throws Exception {
     System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
@@ -65,12 +65,12 @@ public class FitNesse {
 
   public boolean start() {
     try {
-      if (context.port > 0) {
-        theService = new SocketService(context.port, new FitNesseServer(context));
+      if (getContext().port > 0) {
+        theService = new SocketService(getContext().port, new FitNesseServer(getContext()));
       }
       return true;
     } catch (BindException e) {
-      printBadPortMessage(context.port);
+      printBadPortMessage(getContext().port);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -85,8 +85,8 @@ public class FitNesse {
   }
 
   private void establishRequiredDirectories() {
-    establishDirectory(context.getRootPagePath());
-    establishDirectory(context.getRootPagePath() + "/files");
+    establishDirectory(getContext().getRootPagePath());
+    establishDirectory(getContext().getRootPagePath() + "/files");
   }
 
   public void applyUpdates() throws IOException{
@@ -105,7 +105,7 @@ public class FitNesse {
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
     Request request = new MockRequestBuilder(command).noChunk().build();
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), getContext());
     Response response = expediter.createGoodResponse(request);
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
     sender.doSending(response);

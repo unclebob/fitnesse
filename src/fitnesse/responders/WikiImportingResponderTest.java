@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
@@ -239,6 +240,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     PageData data = page.getData();
     data.setAttribute(PageData.PropertySECURE_READ);
     page.commit(data);
+    Builder builder = new Builder(context);
     context.authenticator = new OneUserAuthenticator("joe", "blow");
   }
 
