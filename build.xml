@@ -120,13 +120,13 @@
 
 	<target name="set-version-if-not-manualy-set" unless="version">
 		<tstamp />
-		<property name="version" value="v${DSTAMP}" />
+		<property name="version" value="${DSTAMP}" />
 	</target>
 
 	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
 		<echo message="Stamping fitnesse with version ${version}" />
 		<mkdir dir="${classes}/META-INF" />
-		<echo message="${version}" file="${classes}/META-INF/FitNesseVersion.txt" />
+		<echo message="v${version}" file="${classes}/META-INF/FitNesseVersion.txt" />
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">
