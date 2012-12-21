@@ -14,9 +14,11 @@ public class TearDown extends Fixture {
   public TearDown() throws Exception {
     fitnesse.stop();
     root = null;
+    authenticator = null;
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);
     Clock.restoreDefaultClock();
+    context = null;
   }
 }
