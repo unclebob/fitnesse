@@ -18,6 +18,7 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
+import fitnesse.FitNesseContext.Builder;
 import fitnesse.FitNesseExpediter;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.MockRequest;
@@ -276,7 +277,9 @@ public class PageDriver {
   }
 
   public void givenUserWithPassword(String user, String password) {
-    FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(user, password);
+    Builder builder = new Builder(FitnesseFixtureContext.context);
+    builder.authenticator = new OneUserAuthenticator(user, password);
+    FitnesseFixtureContext.context = builder.createFitNesseContext();
   }
 
   public void sendAsHash(Map<String, String> hash) {

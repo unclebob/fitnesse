@@ -4,7 +4,6 @@ package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.SampleFileUtility;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -26,10 +25,10 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = new FileSystemPage(SampleFileUtility.base, rootName);
+    root = new FileSystemPage(FitNesseUtil.base, rootName);
     context = FitNesseUtil.makeTestContext(root);
 
-    FileUtil.makeDir(SampleFileUtility.base);
+    FileUtil.makeDir(FitNesseUtil.base);
     crawler = root.getPageCrawler();
 
     pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
@@ -42,7 +41,7 @@ public abstract class UpdateTestCase {
 
   @After
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory(SampleFileUtility.base);
+    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 
   protected Update makeUpdate() throws Exception {

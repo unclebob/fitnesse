@@ -11,6 +11,7 @@ import java.io.File;
 import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
+import fitnesse.authentication.Authenticator;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.testutil.FitNesseUtil;
@@ -22,7 +23,14 @@ public class SetUp extends Fixture {
     WikiImportTestEventListener.register();
 
     root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root, 9123);
+    context = FitNesseUtil.makeTestContext(root, 9123, new Authenticator() {
+      @Override public boolean isAuthenticated(String username, String password) {
+        if (FitnesseFixtureContext.authenticator != null) {
+          return FitnesseFixtureContext.authenticator.isAuthenticated(username, password);
+        }
+        return true;
+      }
+    });
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

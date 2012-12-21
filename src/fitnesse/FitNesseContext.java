@@ -47,15 +47,17 @@ public class FitNesseContext {
 
     public Builder(FitNesseContext context) {
       super();
-      root = context.root;
-      port = context.port;
-      rootPath = context.rootPath;
-      rootDirectoryName = context.rootDirectoryName;
-      socketDealer = context.socketDealer;
-      logger = context.logger;
-      authenticator = context.authenticator;
-      defaultNewPageContent = context.defaultNewPageContent;
-      pageTheme = context.pageTheme;
+      if (context != null) {
+        root = context.root;
+        port = context.port;
+        rootPath = context.rootPath;
+        rootDirectoryName = context.rootDirectoryName;
+        socketDealer = context.socketDealer;
+        logger = context.logger;
+        authenticator = context.authenticator;
+        defaultNewPageContent = context.defaultNewPageContent;
+        pageTheme = context.pageTheme;
+      }
     }
 
     public final FitNesseContext createFitNesseContext() {
@@ -84,7 +86,7 @@ public class FitNesseContext {
 
   public final String defaultNewPageContent;
   public final Logger logger;
-  public Authenticator authenticator = new PromiscuousAuthenticator();
+  public final Authenticator authenticator;
   public final String pageTheme;
 
 

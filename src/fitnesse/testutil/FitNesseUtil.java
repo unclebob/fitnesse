@@ -15,9 +15,11 @@ import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
 
 public class FitNesseUtil {
-  private static FitNesse instance = null;
+  public static final String base = "TestDir";
   public static final int PORT = 1999;
   public static final String URL = "http://localhost:" + PORT + "/";
+
+  private static FitNesse instance = null;
 
   public static FitNesseContext startFitnesse(WikiPage root) {
     FitNesseContext context = makeTestContext(root);
@@ -53,16 +55,34 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
-    return makeTestContext(root, null, SampleFileUtility.base, port);
+    return makeTestContext(root, null, FitNesseUtil.base, port, null);
   }
+
+  public static FitNesseContext makeTestContext(WikiPage root,
+      Authenticator authenticator) {
+    return makeTestContext(root, null, FitNesseUtil.base, PORT, authenticator);
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, int port,
+      Authenticator authenticator) {
+    return makeTestContext(root, null, FitNesseUtil.base, port, authenticator);
+  }
+
+
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port) {
+    return makeTestContext(root, rootPath, rootDirectoryName, port, null);
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
+      String rootDirectoryName, int port, Authenticator authenticator) {
     Builder builder = new Builder();
     builder.root = root;
     builder.rootPath = rootPath;
     builder.rootDirectoryName = rootDirectoryName;
     builder.port = port;
+    builder.authenticator = authenticator;
     FitNesseContext context = builder.createFitNesseContext();
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)

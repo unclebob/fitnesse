@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import org.junit.Test;
 
-import fitnesse.testutil.SampleFileUtility;
+import fitnesse.testutil.FitNesseUtil;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -18,7 +18,7 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
   public final File sourceFile = new File(sourceFilename);
 
   public final String destDirName = "subDir";
-  public final String destPath = SampleFileUtility.base + "/" + destDirName + "/testFile";
+  public final String destPath = FitNesseUtil.base + "/" + destDirName + "/testFile";
   public final File destFile = new File(destPath);
 
   public void setUp() throws Exception {
