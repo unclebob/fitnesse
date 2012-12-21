@@ -54,9 +54,9 @@ public class JavaFormatter extends BaseFormatter {
             currentWriter.write(testName);
             currentWriter
                     .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-                            + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
-                            + "<script src='jquery-1.7.2.min.js' type='text/javascript'></script>"
-                            + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
+                            + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
+                            + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
+                            + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
             currentWriter.write(testName);
             currentWriter.write("</h2></header><article>");
 
@@ -73,15 +73,15 @@ public class JavaFormatter extends BaseFormatter {
             currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
         }
 
-        public void addFile(String r, String relativeFilePath) throws IOException {
+        public void addFile(String resource, String relativeFilePath) throws IOException {
             File dst = new File(outputPath, relativeFilePath);
             dst.getParentFile().mkdirs();
-            copy(r, dst);
+            copy(resource, dst);
         }
 
-        private void copy(String src, File dst) throws IOException {
-            InputStream in = getClass().getResourceAsStream(src);
-            OutputStream out = new FileOutputStream(dst);
+        private void copy(String source, File destination) throws IOException {
+            InputStream in = getClass().getResourceAsStream(source);
+            OutputStream out = new FileOutputStream(destination);
             // Transfer bytes from in to out
             byte[] buf = new byte[1024];
             int len;
@@ -95,10 +95,10 @@ public class JavaFormatter extends BaseFormatter {
         private void initFolder(String fitnesseRoot) throws IOException {
             String base = "/fitnesse/resources/";
             String cssDir = base + "css/";
-            addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
+            addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse.css");
             String javascriptDir = base + "javascript/";
-            addFile(javascriptDir + "jquery-1.7.2.min.js", "jquery-1.7.2.min.js");
-            addFile(javascriptDir + "fitnesse.js", "fitnesse.js");
+            addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
+            addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
             String imagesDir = base + "images/";
             addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
             addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
@@ -200,7 +200,7 @@ public class JavaFormatter extends BaseFormatter {
     }
 
     public String summaryRow(String testName, TestSummary testSummary) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
                 "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
                 "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
