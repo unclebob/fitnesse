@@ -33,12 +33,12 @@ public class RssResponderTest extends ResponderTestCase {
 
   public void setUp() throws Exception {
     super.setUp();
+    Locale.setDefault(Locale.US);
     SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
     date = dateFormat.format(Clock.currentDate());
     SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
     rfcDate = rfcDateFormat.format(Clock.currentDate());
     hostName = java.net.InetAddress.getLocalHost().getHostName();
-    Locale.setDefault(Locale.US);
   }
 
   public void testEmptyRssReport() throws Exception {

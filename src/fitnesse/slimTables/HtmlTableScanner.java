@@ -103,7 +103,7 @@ public class HtmlTableScanner implements TableScanner {
         endIndex = nodeIndex;
       }
     }
-    return htmlTree.toHtml().substring(startIndex, endIndex);
+    return allHtml.substring(startIndex, endIndex);
   }
   
   public String toHtml() {
