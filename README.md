@@ -55,6 +55,12 @@ To run the unit tests:
 $ ant unit_test
 ```
 
+To run the acceptance tests:
+
+```
+$ ant acceptance_tests
+```
+
 There is a second source directory, `srcFitServerTests`, which contains units
 tests that test invocation of Fit servers written in Ruby, C++, and .NET. These
 tests are not run as part of the normal ant test-related targets. When using an
