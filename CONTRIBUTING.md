@@ -1,14 +1,15 @@
-BYLAWS for the committers of FitNesse.
+# Bylaws for the committers of FitNesse.
 
-1. Use the coding style that you'll see in the extras/fitnesse.xml file.  This is an intelliJ idea file.
+1. Use the coding style that you'll see in the `extras/fitnesse.xml` file.  This is an intelliJ idea file.
 You can move it into the codestyles directory somewhere beneath intellij preferences home.  I found it on my MAC
-in ~/Library/Preferences/IntelijIDEA8/codestyles
-
+in `~/Library/Preferences/IntelijIDEA8/codestyles`.
 If you can't use this file in your IDE then look carefully then you can emulate any of the source files in FitNesse.
-Remember that indentation level is 2 spaces, and we never use tabs.  Braces follow K&R style:
-  void f() {
-    //
-  }
+Remember that **indentation level is 2 spaces**, and we **never use tabs**.  Braces follow K&R style:
+```
+    void f() {
+      //
+    }
+```
 
 2. Never commit changes without running BOTH the unit tests AND the acceptance tests.  The ant target 'all' in
 the build.xml file will run them both, but it's slow.  I just use the IDE to run the unit tests, and then run the
@@ -20,5 +21,5 @@ as you can.  Maintain the highest pride in your workmanship.  Don't make messes.
 4. Whenever you make a change, add a few sentences to the changeLog.txt file describing your changes.  We used this file
 to build the release notes.
 
-5. If you have any questions, ask Uncle Bob.  unclebob@objectmentor.com.
+5. If you have any questions, ask [Uncle Bob](https://github.com/unclebob).
 
