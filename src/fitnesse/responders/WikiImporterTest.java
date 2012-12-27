@@ -38,7 +38,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
     importer = new WikiImporter();
     importer.setWikiImporterClient(this);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port);
+    importer.parseUrl("http://localhost:" + FitNesseUtil.PORT);
 
     imports = new LinkedList<WikiPage>();
     errors = new LinkedList<Exception>();
@@ -203,7 +203,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
   public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
     addLocalPageWithImportProperty(localRoot, "PageOne", false);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+    importer.parseUrl("http://localhost:" + FitNesseUtil.PORT + "/PageOne");
 
     importer.importWiki(localRoot.getChildPage("PageOne"));
 
@@ -212,7 +212,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
   public void testAutoUpdatePropertySetOnRoot() throws Exception {
     addLocalPageWithImportProperty(localRoot, "PageOne", false);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+    importer.parseUrl("http://localhost:" + FitNesseUtil.PORT + "/PageOne");
     importer.setAutoUpdateSetting(true);
     WikiPage importedPage = localRoot.getChildPage("PageOne");
     importer.importWiki(importedPage);
@@ -255,7 +255,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     PageData data = page.getData();
 
     WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
-    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/" + PathParser.render(pagePath));
+    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/" + PathParser.render(pagePath));
     if (isRoot)
       importProps.setRoot(true);
     importProps.addTo(data.getProperties());

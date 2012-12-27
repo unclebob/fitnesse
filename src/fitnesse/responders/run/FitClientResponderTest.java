@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -27,7 +28,7 @@ public class FitClientResponderTest extends RegexTestCase {
     root = InMemoryPage.makeRoot("RooT");
     responder = new FitClientResponder();
     request = new MockRequest();
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
 
     buildSuite(root);
   }

@@ -20,7 +20,7 @@ public class DeleteFileResponder implements SecureResponder {
     Response response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
-    String pathname = context.rootPagePath + "/" + resource + filename;
+    String pathname = context.getRootPagePath() + "/" + resource + filename;
     File file = new File(pathname);
 
     if (file.isDirectory())

@@ -10,6 +10,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
+import fitnesse.testutil.FitNesseUtil;
 
 public class UploadResponderTest extends TestCase {
   private FitNesseContext context;
@@ -18,8 +19,7 @@ public class UploadResponderTest extends TestCase {
   private File testFile;
 
   public void setUp() throws Exception {
-    context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+    context = FitNesseUtil.makeTestContext(null);
     FileUtil.makeDir("testdir");
     FileUtil.makeDir("testdir/files");
     testFile = FileUtil.createFile("testdir/tempFile.txt", "test content");

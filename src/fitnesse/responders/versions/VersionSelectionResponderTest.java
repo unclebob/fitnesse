@@ -62,7 +62,7 @@ public class VersionSelectionResponderTest extends RegexTestCase {
     request.setResource("PageOne");
 
     Responder responder = new VersionSelectionResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     String content = response.getContent();
     assertSubString("<a", content);

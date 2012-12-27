@@ -29,7 +29,7 @@ public class UploadResponder implements SecureResponder {
   private String rootPath;
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
-    rootPath = context.rootPagePath;
+    rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource().replace("%20", " ");
     UploadedFile uploadedFile = (UploadedFile) request.getInput("file");

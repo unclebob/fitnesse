@@ -82,7 +82,7 @@ public class TestResponderTest {
     responder.setFastTest(true);
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
-    context.port = receiver.receiveSocket();
+    context = FitNesseUtil.makeTestContext(context, receiver.receiveSocket());
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
@@ -507,7 +507,7 @@ public class TestResponderTest {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
-    
+
     WikiPagePath testPagePath = crawler.getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
@@ -520,7 +520,7 @@ public class TestResponderTest {
     assertTrue(results.contains(">Output Captured<"));
     assertHasRegexp("ErrorLog", results);
     assertSubString("Test Page tags", results);
-    
+
     WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);
@@ -550,7 +550,7 @@ public class TestResponderTest {
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }
-  
+
   @Test
   public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
     responder.setFastTest(false);
@@ -573,7 +573,7 @@ public class TestResponderTest {
     assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
   }
-  
+
   @Test
   public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
     responder.setFastTest(false);
@@ -598,7 +598,7 @@ public class TestResponderTest {
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }
-  
+
   private void assertMessageHasJustOneOccurrenceOf(String output, String regexp) {
     Matcher match = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL).matcher(output);
     match.find();

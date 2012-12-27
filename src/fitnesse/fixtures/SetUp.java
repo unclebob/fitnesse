@@ -2,10 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import static fitnesse.fixtures.FitnesseFixtureContext.baseDir;
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
 import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
-import static fitnesse.fixtures.FitnesseFixtureContext.responderFactory;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.File;
@@ -13,8 +11,8 @@ import java.io.File;
 import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
+import fitnesse.authentication.Authenticator;
 import fitnesse.components.SaveRecorder;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -25,11 +23,14 @@ public class SetUp extends Fixture {
     WikiImportTestEventListener.register();
 
     root = InMemoryPage.makeRoot("RooT");
-    responderFactory = new ResponderFactory(baseDir + "/RooT/");
-    context = FitNesseUtil.makeTestContext(root);
-    context.responderFactory = responderFactory;
-    context.port = 9123;
-    context.rootPagePath = baseDir;
+    context = FitNesseUtil.makeTestContext(root, 9123, new Authenticator() {
+      @Override public boolean isAuthenticated(String username, String password) {
+        if (FitnesseFixtureContext.authenticator != null) {
+          return FitnesseFixtureContext.authenticator.isAuthenticated(username, password);
+        }
+        return true;
+      }
+    });
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

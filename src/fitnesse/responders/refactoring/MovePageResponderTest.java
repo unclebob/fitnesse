@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -71,7 +72,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     request.setResource(pageToMove);
     if (refactorReferences)
       request.addInput("refactorReferences", "on");
-    return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   private SimpleResponse movePage(WikiPagePath pageToMove, WikiPagePath newParent, boolean refactorReferences) throws Exception {

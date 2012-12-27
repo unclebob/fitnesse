@@ -64,7 +64,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     request = new MockRequest();
     request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "");
     request.setResource("LinkerPage");
-    responder.makeResponse(new FitNesseContext(root), request);
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(0, linker.getChildren().size());
   }
 
@@ -91,10 +91,10 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     // new request to get rid of the virtual wiki link
     SavePropertiesResponder responder = new SavePropertiesResponder();
     request = new MockRequest();
-    request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port
+    request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.PORT
       + "/LinkeePageTwo");
     request.setResource("LinkerPage");
-    responder.makeResponse(new FitNesseContext(root), request);
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     assertTrue(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage);
   }
@@ -103,7 +103,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     createRequest();
 
     Responder responder = new SavePropertiesResponder();
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     PageData data = page.getData();
     assertEquals("http://www.fitnesse.org", data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));

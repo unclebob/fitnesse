@@ -1,14 +1,13 @@
 package fitnesseMain;
 
 import fitnesse.*;
+import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
@@ -40,34 +39,33 @@ public class FitNesseMain {
     PageVersionPruner.daysTillVersionsExpire = arguments
       .getDaysTillVersionsExpire();
     FitNesse fitnesse = new FitNesse(context, updater);
-    updateAndLaunch(arguments, context, fitnesse);
+    update(arguments, fitnesse);
+    launch(arguments, context, fitnesse);
   }
 
   private static void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  static void updateAndLaunch(Arguments arguments, FitNesseContext context,
-                              FitNesse fitnesse) throws Exception {
+  static void update(Arguments arguments,FitNesse fitnesse) throws Exception {
     if (!arguments.isOmittingUpdates())
       fitnesse.applyUpdates();
-    if (!arguments.isInstallOnly()) {
-      runFitNesse(arguments, context, fitnesse);
-    }
   }
 
-  private static void runFitNesse(Arguments arguments, FitNesseContext context, FitNesse fitnesse) throws Exception {
-    boolean started = fitnesse.start();
-    if (started) {
-      printStartMessage(arguments, context);
-      if (arguments.getCommand() != null) {
-        executeSingleCommand(arguments, fitnesse, context);
+  static void launch(Arguments arguments, FitNesseContext context,
+      FitNesse fitnesse) throws Exception {
+    if (!arguments.isInstallOnly()) {
+      boolean started = fitnesse.start();
+      if (started) {
+        printStartMessage(arguments, context);
+        if (arguments.getCommand() != null) {
+          executeSingleCommand(arguments, fitnesse, context);
+        }
       }
     }
   }
 
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
-    context.doNotChunk = true;
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
     System.out.println("-----Command Output-----");
@@ -85,37 +83,35 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    FitNesseContext context = new FitNesseContext();
-    context.port = arguments.getPort();
-    context.rootPath = arguments.getRootPath();
-    ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
-    context.rootDirectoryName = arguments.getRootDirectory();
-    context.setRootPagePath();
-    String defaultNewPageContent = componentFactory
-      .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-    if (defaultNewPageContent != null)
-      context.defaultNewPageContent = defaultNewPageContent;
+    Builder builder = new Builder();
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    context.responderFactory = new ResponderFactory(context.rootPagePath);
-    context.logger = makeLogger(arguments);
-    context.authenticator = makeAuthenticator(arguments.getUserpass(),
+    ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
+
+    builder.port = arguments.getPort();
+    builder.rootPath = arguments.getRootPath();
+    builder.rootDirectoryName = arguments.getRootDirectory();
+
+    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
+    builder.defaultNewPageContent = componentFactory
+        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+
+    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
+      builder.rootDirectoryName, componentFactory);
+
+    builder.logger = makeLogger(arguments);
+    builder.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
-    String newPageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-    if (newPageTheme != null) {
-      context.pageTheme = newPageTheme;
-    }
-    context.pageFactory = new PageFactory(context);
+
+    FitNesseContext context = builder.createFitNesseContext();
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
-      wikiPageFactory);
+        wikiPageFactory);
     extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
     extraOutput += componentFactory.loadResponders(context.responderFactory);
     extraOutput += componentFactory.loadSymbolTypes();
     extraOutput += componentFactory.loadContentFilter();
     extraOutput += componentFactory.loadSlimTables();
 
-    context.root = wikiPageFactory.makeRootPage(context.rootPath,
-      context.rootDirectoryName, componentFactory);
 
     WikiImportTestEventListener.register();
 

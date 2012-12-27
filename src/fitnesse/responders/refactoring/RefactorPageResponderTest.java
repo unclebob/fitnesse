@@ -32,7 +32,7 @@ public class RefactorPageResponderTest extends RegexTestCase {
   }
 
   public void testHtml() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(200, response.getStatus());
 
     String content = response.getContent();

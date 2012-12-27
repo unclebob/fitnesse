@@ -4,6 +4,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
+
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -32,7 +34,7 @@ public class PurgeHistoryResponderTest {
     history = new TestHistory();
     responder = new PurgeHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext();
     request = new MockRequest();
     request.setResource("TestPage");
   }

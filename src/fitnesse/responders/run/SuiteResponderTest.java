@@ -66,7 +66,7 @@ public class SuiteResponderTest {
     receiver = new FitSocketReceiver(0, context.socketDealer);
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
   }
-  
+
   @After
   public void restoreDefaultClock() {
     Clock.restoreDefaultClock();
@@ -91,8 +91,9 @@ public class SuiteResponderTest {
   }
 
   private String runSuite() throws Exception {
-    context.port = receiver.receiveSocket();
-    Response response = responder.makeResponse(context, request);
+    int port = receiver.receiveSocket();
+    FitNesseContext localContext = FitNesseUtil.makeTestContext(context, port);
+    Response response = responder.makeResponse(localContext, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String results = sender.sentData();
@@ -313,7 +314,7 @@ public class SuiteResponderTest {
     PageData data2 = test2.getData();
     PageData data3 = test3.getData();
     data2.setAttribute(PageData.PropertySUITES, "foo");
-    data3.setAttribute(PageData.PropertySUITES, "bar, smoke");             
+    data3.setAttribute(PageData.PropertySUITES, "bar, smoke");
     test2.commit(data2);
     test3.commit(data3);
   }
@@ -393,7 +394,7 @@ public class SuiteResponderTest {
     addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
     addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
     String results = runSuite();
-    assertSubString("<content><![CDATA[", results);   
+    assertSubString("<content><![CDATA[", results);
   }
 
   private File expectedXmlResultsFile() {

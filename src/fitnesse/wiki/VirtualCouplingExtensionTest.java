@@ -25,7 +25,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
     page1 = (BaseWikiPage) crawler.addPage(root, PathParser.parse("PageOne"), "page one content\n!contents\n");
     crawler.addPage(page1, PathParser.parse("SomeOtherPage"), "some other page");
 
-    setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
   }
 
   public static void setVirtualWiki(WikiPage page, String virtualWikiURL) throws Exception {
@@ -66,7 +66,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
 
   public void testProxyChildrenAreFoundOnStartUp() throws Exception {
     WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
-    setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
 
     assertTrue(page3.hasExtension(VirtualCouplingExtension.NAME));
 
@@ -80,7 +80,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
     CachingPage.cacheTime = 10000;
     ProxyPage.retrievalCount = 0;
     SimpleCachinePage page = new SimpleCachinePage("RooT", null);
-    setVirtualWiki(page, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    setVirtualWiki(page, "http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
     VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
     extension.getVirtualCoupling().getChildren();
     assertEquals(1, ProxyPage.retrievalCount);

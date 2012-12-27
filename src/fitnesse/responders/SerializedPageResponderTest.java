@@ -11,6 +11,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -74,7 +75,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
 
   private Object getObject(WikiPage root, MockRequest request) throws Exception {
     Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
     return ois.readObject();
@@ -114,7 +115,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
     request.setResource("root");
     request.addInput("type", "pages");
     Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String xml = response.getContent();
 
     assertEquals("text/xml", response.getContentType());
@@ -137,7 +138,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
     request.setResource("root");
     request.addInput("type", "pages");
     Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String xml = response.getContent();
 
     assertEquals("text/xml", response.getContentType());
@@ -153,7 +154,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
     request.setResource("TestPageOne");
     request.addInput("type", "data");
     Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String xml = response.getContent();
 
     assertEquals("text/xml", response.getContentType());

@@ -61,8 +61,8 @@ public class UpdaterImplementation extends UpdaterBase {
 
   private void createUpdateAndDoNotCopyOverLists() {
     tryToGetUpdateFilesFromJarFile();
-    File updateFileList = new File(context.rootPagePath, "updateList");
-    File updateDoNotCopyOverFileList = new File(context.rootPagePath, "updateDoNotCopyOverList");
+    File updateFileList = new File(context.getRootPagePath(), "updateList");
+    File updateDoNotCopyOverFileList = new File(context.getRootPagePath(), "updateDoNotCopyOverList");
     tryToParseTheFileIntoTheList(updateFileList, updateList);
     tryToParseTheFileIntoTheList(updateDoNotCopyOverFileList, updateDoNotCopyOver);
   }
@@ -76,9 +76,9 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   public void getUpdateFilesFromJarFile() throws IOException {
-    Update update = new FileUpdate(context.rootPagePath, "Resources/updateList", ".");
+    Update update = new FileUpdate(context.getRootPagePath(), "Resources/updateList", ".");
     update.doUpdate();
-    update = new FileUpdate(this.context.rootPagePath, "Resources/updateDoNotCopyOverList", ".");
+    update = new FileUpdate(this.context.getRootPagePath(), "Resources/updateDoNotCopyOverList", ".");
     update.doUpdate();
   }
 
@@ -110,11 +110,11 @@ public class UpdaterImplementation extends UpdaterBase {
           "********************************************************************************\n" +
           "    Files have been updated to a new version. Please read the release notes\n" +
           "    on http://localhost:" +
-          context.getPort() +
+          (FitNesse.FITNESSE_INSTANCE != null ? FitNesse.FITNESSE_INSTANCE.getContext().port : "xxx") +
           "/FitNesse.ReleaseNotes to find out about the new\n" +
           "    features and fixes.\n" +
           "********************************************************************************\n\n");
-      
+
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
     }

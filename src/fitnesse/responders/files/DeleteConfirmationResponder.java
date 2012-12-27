@@ -38,7 +38,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
   }
 
   private void makeConfirmationHTML(HtmlPage page, String filename, FitNesseContext context) {
-    String pathname = context.rootPagePath + "/" + resource + filename;
+    String pathname = context.getRootPagePath() + "/" + resource + filename;
     File file = new File(pathname);
     boolean isDir = file.isDirectory();
 

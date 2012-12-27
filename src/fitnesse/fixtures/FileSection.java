@@ -12,7 +12,7 @@ public class FileSection {
   public FileSection(String type) throws Exception {
     if ("setup".equals(type.toLowerCase())) {
       new File(FitnesseFixtureContext.baseDir).mkdir();
-      File dir = new File(FitnesseFixtureContext.baseDir + "/" + FitnesseFixtureContext.root.getName());
+      File dir = new File(FitnesseFixtureContext.baseDir);
       dir.mkdir();
       fileSection = new File(dir, "files");
       fileSection.mkdir();

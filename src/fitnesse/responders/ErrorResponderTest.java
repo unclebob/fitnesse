@@ -10,13 +10,16 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 
 public class ErrorResponderTest extends RegexTestCase {
-  
+
+  private FitNesseContext context;
+
   public void setUp() {
-    FitNesseUtil.makeTestContext();
+    context = FitNesseUtil.makeTestContext();
   }
+
   public void testResponse() throws Exception {
     Responder responder = new ErrorResponder(new Exception("some error message"));
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
 
     assertEquals(400, response.getStatus());
 
@@ -29,7 +32,7 @@ public class ErrorResponderTest extends RegexTestCase {
 
   public void testWithMessage() throws Exception {
     Responder responder = new ErrorResponder("error Message");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
     String body = response.getContent();
 
     assertSubString("error Message", body);

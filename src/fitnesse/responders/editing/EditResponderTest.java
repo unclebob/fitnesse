@@ -37,7 +37,7 @@ public class EditResponderTest extends RegexTestCase {
     
     request.setResource("ChildPage");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -60,7 +60,7 @@ public class EditResponderTest extends RegexTestCase {
     request.setResource("NonExistentPage");
     request.addInput("nonExistent", true);
 
-    FitNesseContext context = new FitNesseContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
@@ -83,7 +83,7 @@ public class EditResponderTest extends RegexTestCase {
     request.addInput("redirectAction", "boom");
     request.addHeader("Referer", "http://fitnesse.org:8080/SomePage");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -99,7 +99,7 @@ public class EditResponderTest extends RegexTestCase {
     
     request.setResource("ChildPage");
     
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -120,26 +120,26 @@ public class EditResponderTest extends RegexTestCase {
   }
   
   public void testTemplateInserterScriptsExists() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("TemplateInserter.js", body);
   }
 
   public void testPasteFromExcelExists() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("SpreadsheetTranslator.js", body);
   }
 
   public void testFormatterScriptsExist() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("WikiFormatter.js", body);
   }
 
   public void testMissingPageDoesNotGetCreated() throws Exception {
     request.setResource("MissingPage");
-    responder.makeResponse(new FitNesseContext(root), request);
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertFalse(root.hasChildPage("MissingPage"));
   }
   

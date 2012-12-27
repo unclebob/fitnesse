@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -25,7 +26,7 @@ public class PageDataWikiPageResponderTest extends RegexTestCase {
     MockRequest request = new MockRequest();
     request.setResource("PageOne");
     request.addInput("pageData", "");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(pageOne.getData().getContent(), response.getContent());
   }
 }

@@ -8,10 +8,9 @@ import util.RegexTestCase;
 import fitnesse.components.LogData;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -80,7 +79,6 @@ public class FitNesseServerTest extends RegexTestCase {
   }
 
   public void testRelativeAndAbsoluteLinks() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RootPage");
     crawler.addPage(root, pageOnePath, "PageOne");
     crawler.addPage(root, pageOneTwoPath, "PageTwo");
     String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n", root);
@@ -121,9 +119,6 @@ public class FitNesseServerTest extends RegexTestCase {
 
   private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
     MockSocket s = new MockSocket(requestLine);
-    context.rootPagePath = SampleFileUtility.base;
-    context.responderFactory = new ResponderFactory(SampleFileUtility.base);
-    context.root = page;
     FitNesseServer server = new FitNesseServer(context);
     server.serve(s, 1000);
     String output = s.getOutput();
