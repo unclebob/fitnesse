@@ -6,11 +6,11 @@ This is an IntelliJ IDEA file. You can move it into the `codestyles` directory s
 in `~/Library/Preferences/IntelijIDEA8/codestyles`.
 If you can't use this file in your IDE then look carefully then you can emulate any of the source files in FitNesse.
 Remember that **indentation level is 2 spaces**, and we **never use tabs**.  Braces follow K&R style:
-```
-    void f() {
-      //
-    }
-```
+    ```
+      void f() {
+        //
+      }
+    ```
 
 2. Never commit changes without running BOTH the unit tests AND the acceptance tests.  The ant target 'all' in
 the build.xml file will run them both, but it's slow.  I just use the IDE to run the unit tests, and then run the
