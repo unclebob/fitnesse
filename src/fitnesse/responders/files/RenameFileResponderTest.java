@@ -16,9 +16,9 @@ public class RenameFileResponderTest extends TestCase {
   private FitNesseContext context;
 
   public void setUp() {
-    FileUtil.makeDir("testdir");
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
+    FileUtil.makeDir(context.getRootPagePath());
   }
 
   public void tearDown() throws Exception {
