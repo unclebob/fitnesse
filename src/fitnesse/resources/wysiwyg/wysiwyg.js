@@ -1598,11 +1598,12 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("'''");                    // 2. bold
     wikiInlineRules.push("''");                     // 3. italic
     wikiInlineRules.push("--");                     // 4. strike
-    wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
-    wikiInlineRules.push("![-<{(\\[]");             // 6. escaped (open)
-    wikiInlineRules.push("[->})\\]]!");             // 7. escaped (close)
-    wikiInlineRules.push(_wikiTextLink);			// 8. Wiki link
-    wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
+    wikiInlineRules.push("\\{\\{\\{");              // 5. code block (open)
+    wikiInlineRules.push("\\}\\}\\}");              // 6. code block (close)
+    wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
+    wikiInlineRules.push("[->})\\]]!");             // 8. escaped (close)
+    wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
+    wikiInlineRules.push(_wikiPageName);            // 10. WikiPageName
 
     var wikiRules = [];
     // -1. header
@@ -1612,7 +1613,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
     // -4. closing table row
-    wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
+    wikiRules.push("\\|[ \\t\\r\\f\\v]*$");
     // -5. cell
     wikiRules.push("^-?!?\\||\\|");
     // -6: open collapsible section
@@ -1738,8 +1739,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     var decorationStatus;
     var decorationStack;
     var indexLines;
-    var inCodeBlock, inCollapsibleBlock;
-    inCodeBlock = inCollapsibleBlock = false;
+    var inCollapsibleBlock;
+    inCollapsibleBlock = false;
 
     function inParagraph() { return getSelfOrAncestor(holder, "p"); }
     function inDefinition() { return $(holder).parents().andSelf().filter("p.meta, p.comment").get(0); }
@@ -1748,31 +1749,24 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     function inTableRow() { return getSelfOrAncestor(holder, "tr"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
     function inEscapedText() { return getSelfOrAncestor(holder, "tt"); }
-
-    function handleCodeBlock(line) {
-        if (/^ *\{\{\{ *$/.test(line)) {
-            inCodeBlock++;
-            if (inCodeBlock === 1) {
-                closeParagraph();
-                codeText = [];
-            } else {
-                codeText.push(line);
-            }
-        } else if (/^ *\}\}\} *$/.test(line)) {
-            inCodeBlock--;
-            if (inCodeBlock === 0) {
-                var pre = contentDocument.createElement("pre");
-                pre.className = "wiki";
-                pre.appendChild(contentDocument.createTextNode(codeText.join(
-                    pre.addEventListener && !window.opera ? "\n" : "\n\r"
-                )));
-                holder.appendChild(pre);
-                codeText = [];
-            } else {
-                codeText.push(line);
-            }
+    function inCodeBlock() { return getSelfOrAncestor(holder, "pre"); }
+    
+    function handleCodeBlock(value) {
+        if (!inCodeBlock()) {
+            var element = contentDocument.createElement("pre");
+            holder.appendChild(element);
+            holder = element;
         } else {
-            codeText.push(line);
+            holder.appendChild(contentDocument.createTextNode(value));
+        }
+    }
+
+    function closeCodeBlock(value) {
+        if (inCodeBlock()) {
+            var target = getSelfOrAncestor(holder, "pre");
+            holder = target.parentNode;
+        } else {
+            holder.appendChild(contentDocument.createTextNode(value));
         }
     }
 
@@ -2189,6 +2183,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             case "table":
                 method = closeTable;
                 break;
+            case "pre":
+                method = closeCodeBlock;
+                break;
             default:
                 break;
             }
@@ -2237,7 +2234,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             }
 
             if (((prevIndex === 0 && text) || (match && match.index === 0 && matchNumber > 0))
-                    && !inParagraph() && !inAnchor() && !currentHeader) {
+                    && !inParagraph() && !inAnchor() && !inEscapedText() && !inCodeBlock() && !currentHeader) {
                 closeToFragment();
             }
 
@@ -2277,23 +2274,27 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 if (inEscapedTable() || inEscapedText()) { break; }
                 handleInline("strike");
                 continue;
-            case 5:     // code block
+            case 5:     // open code block
                 if (inEscapedTable() || inEscapedText()) { break; }
-                handleInlineCode(matchText, 3);
+                handleCodeBlock(matchText);
                 continue;
-            case 6:     // open escaped
+            case 6:     // close code block
+                if (inEscapedTable() || inEscapedText()) { break; }
+                closeCodeBlock(matchText);
+                continue;
+            case 7:     // open escaped
                 if (inEscapedText()) { break; }
                 openEscapedText(matchText);
                 continue;
-            case 7:     // close escaped
+            case 8:     // close escaped
                 closeEscapedText(matchText);
                 continue;
-            case 8:		// Wiki link
-                if (inEscapedTable() || inEscapedText()) { break; }
+            case 9:		// Wiki link
+                if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleLinks(matchText);
                 continue;
-            case 9:		// WikiPageName
-                if (inEscapedTable() || inEscapedText()) { break; }
+            case 10:		// WikiPageName
+                if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleWikiPageName(matchText);
                 continue;
             case -1:    // header
@@ -2305,23 +2306,29 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 }
                 break;
             case -2:    // list
+                if (inEscapedText() || inCodeBlock()) { break; }
                 handleList(matchText);
                 continue;
             case -3:    // definition (leading "!")
+                if (inEscapedText() || inCodeBlock()) { break; }
                 handleDefinition(matchText);
                 break;
             case -4:    // closing table row
-                if (inEscapedText()) { break; }
+                if (inEscapedText() || inCodeBlock()) { break; }
                 if (inTable()) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
             case -5:    // cell
-                if (inEscapedText()) { 
+                if (inEscapedText() || inCodeBlock()) { 
                     if (/^-!/.test(matchText)) {
                         closeEscapedText(matchText);
                         matchText = matchText.substring(2);
+                        if (inTable()) {
+                            handleTableCell(-1);
+                            continue;
+                        }
                     }
                     break;
                 }
@@ -2349,7 +2356,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             }
         }
 
-        if (inEscapedText()) {
+        if (inEscapedText() || inCodeBlock()) {
             var element = contentDocument.createElement("br");
             holder.appendChild(element);
         } else if (inParagraph()) {
@@ -2362,10 +2369,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
 
     for (indexLines = 0; indexLines < lines.length; indexLines++) {
         var line = lines[indexLines].replace(/\r$/, "");
-        if (inCodeBlock || /^ *\{\{\{ *$/.test(line)) {
-            handleCodeBlock(line);
-            continue;
-        }
         if (/^----/.test(line)) {
             closeToFragment();
             fragment.appendChild(contentDocument.createElement("hr"));
@@ -2386,7 +2389,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         if (currentHeader) {
             closeHeader();
         }
-        if (inTable()) {
+        if (inTable() && !inEscapedText()) {
             handleTableCell(-1);
         }
     }
@@ -2430,7 +2433,6 @@ Wysiwyg.prototype.wikiCloseTokens = {
     "em": "''",
     "del": "--",
     "strike": "--",
-    "br": true,
     "hr": true,
     "tbody": true,
     "tr": "|\n",
@@ -2752,18 +2754,14 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 listDepth++;
                 break;
             case "br":
-                if (!self.isBogusLineBreak(node)) {
-                    value = null;
-                    if (inCodeBlock) {
-                        value = "\n";
-                    } else {
-                        value = " ";
-                    }
-                    _texts.push(value);
+                if (inCodeBlock) {
+                    _texts.push("\n");
+                } else if (!self.isBogusLineBreak(node)) {
+                    _texts.push(" ");
                 }
                 break;
             case "pre":
-                _texts.push("\n{{{\n");
+                _texts.push("{{{");
                 inCodeBlock = true;
                 break;
             case "th":
@@ -2870,17 +2868,17 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     if (!nextSibling) {
                         text = "\n}}}";
                     } else if (nextSibling.nodeType !== 1) {
-                        text = "\n}}}\n";
-                    } else if (nextSibling.tagName.toLowerCase() === "pre") {
                         text = "\n}}}";
+                    } else if (nextSibling.tagName.toLowerCase() === "pre") {
+                        text = "}}}";
                     } else {
-                        text = "\n}}}\n";
+                        text = "\n}}}";
                     }
                     if (text.slice(-1) === "\n") {
                         text += listDepth > 0 ? " " + string("  ", listDepth) : "    ";
                     }
                 } else {
-                    text = "\n}}}\n";
+                    text = "}}}";
                 }
                 _texts.push(text);
                 inCodeBlock = false;

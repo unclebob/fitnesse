@@ -166,10 +166,9 @@ $(function() {
         unit.add("code block", function() {
             var dom = fragment(
                 element("p", "`abc`"),
-                element("pre", { "class": "wiki" }, "{{{code-block"));
+                element("p", element("pre", br(), "{{{code-block", br())));
             var wikitext = [
                 "`abc`",
-                "",
                 "",
                 "{{{",
                 "{{{code-block",
@@ -178,7 +177,7 @@ $(function() {
         });
         unit.add("code block nest", function() {
             var dom = fragment(
-                element("pre", { "class": "wiki" }, "#!python\n= level 1\n{{{\n= level 2\n}}}\n= level 1"));
+                element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), " = level 1}}}"));
             var wikitext = [
                 "{{{",
                 "#!python",
@@ -188,7 +187,14 @@ $(function() {
                 "}}}",
                 "= level 1",
                 "}}}" ].join("\n");
-            generate.call(this, dom, wikitext);
+            generateFragment.call(this, dom, wikitext);
+            generateWikitext.call(this, dom, [
+                "{{{",
+                "#!python",
+                "= level 1",
+                "{{{",
+                "= level 2",
+                "}}}= level 1}}}" ].join("\n"));
         });
 
         unit.add("paragraph", function() {
@@ -332,10 +338,11 @@ $(function() {
         });
         unit.add("code", function() {
             var dom = element("p", "`monospace`",
-                ", ", element("tt", {'class': 'inlinecode'}, "mono`s`pace"),
-                ", ", "`mono", element("tt", {'class': 'inlinecode'}, "s"), "pace`");
+                ", ", element("pre", "mono`s`pace"),
+                ", ", "`mono", element("pre", "s"), "pace`");
             var wikitext = "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`";
-            generate.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
+            generateFragment.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
+            generateWikitext.call(this, dom, "`monospace`,{{{mono`s`pace}}}, `mono{{{s}}}pace`");
         });
         unit.add("escaped !-..-!", function() {
             var dom = element("p", "`monospace`",
@@ -643,16 +650,20 @@ $(function() {
                 element("p", "Paragraph"),
                 element("ul",
                     element("li",
-                        "item 1",
-                        element("pre", { "class": "wiki" }, "code")),
-                    element("ul",
-                        element("li",
-                            "item 1.1",
-                            element("pre", { "class": "wiki" }, "code"),
-                            element("pre", { "class": "wiki" }, "code"))),
+                        "item 1")),
+                element("p",
+                    element("pre", br(), "code", br())),
+                element("ul",
                     element("li",
-                        "item 2",
-                        element("pre", { "class": "wiki" }, "code"))));
+                        "item 1.1")),
+                element("p",
+                    element("pre", br(), "code", br()),
+                    element("pre", br(), "code", br())),
+                element("ul",
+                    element("li",
+                        "item 2")),
+                element("p",
+                    element("pre", br(), "code", br())));
             generateFragment.call(this, dom, [
                 "Paragraph",
                 " * item 1",
@@ -674,17 +685,21 @@ $(function() {
                 "Paragraph",
                 "",
                 " * item 1",
+                "",
                 "{{{",
                 "code",
                 "}}}",
-                "   * item 1.1",
+                "",
+                " * item 1.1",
+                "",
                 "{{{",
                 "code",
-                "}}}",
-                "{{{",
+                "}}}{{{",
                 "code",
                 "}}}",
+                "",
                 " * item 2",
+                "",
                 "{{{",
                 "code",
                 "}}}" ].join("\n"));
@@ -1224,6 +1239,51 @@ $(function() {
                 "More text",
                 "",
                 "*!"].join("\n"));
+        });
+
+        unit.add("table with escaped content", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr",
+                            element("td", "sql")
+                        ), element("tr",
+                            element("td",
+                                element("tt", { "class": "escape" }, " SELECT *", br(), "     FROM bar", br()), br()
+                            )
+                        )
+                    )
+                ));
+            generateFragment.call(this, dom, [
+                "|sql|",
+                "|!- SELECT *",
+                "     FROM bar",
+                "-!|",
+                ""].join("\n"));
+            generateWikitext.call(this, dom, "| sql |\n| !- SELECT *\n     FROM bar\n-! |");
+        });
+
+        unit.add("table with preformatted, escaped content", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr",
+                            element("td", "sql")
+                        ), element("tr",
+                            element("td",
+                                element("pre",
+                                    element("tt", { "class": "escape" }, " SELECT *", br(), "     FROM bar", br())
+                                )
+                            )
+                        )
+                    )
+                ));
+            generateFragment.call(this, dom, [
+                "|sql|",
+                "|{{{!- SELECT *",
+                "     FROM bar",
+                "-!}}}|",
+                ""].join("\n"));
         });
 
         unit.run();
