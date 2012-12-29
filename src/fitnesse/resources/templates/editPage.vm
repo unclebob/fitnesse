@@ -55,14 +55,6 @@
   <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
-
- <p class="hints">
-  Hints:
-  <ul>
-   <li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the "Save" button!</li>
-   <li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>
-  </ul>
- </p>
 </form>
 <script type="text/javascript">
 $(function () {
@@ -104,5 +96,14 @@ $(function () {
       }
     };
   }
+
+  var rte = $('#editor iframe');
+  var textarea = $('#editor textarea');
+  $(window).resize(function () {
+    var h = $('#save_buttons').position().top;
+    rte.height(h - rte.position().top - 1);
+    textarea.height(h - textarea.position().top - 1);
+    console.log('textarea', textarea.height(), 'rte', rte.height());
+  }).resize();
 });
 </script>

@@ -1,6 +1,5 @@
 iframe.wysiwyg {
     border: 1px solid #d7d7d7;
-    clear: both;
     display: block;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -8,13 +7,17 @@ iframe.wysiwyg {
 div.trac-resizable {
     clear: both;
 }
+textarea#pageContent {
+    padding: 4px 0;
+    border: 1px solid #d7d7d7;
+}
+
 iframe.wysiwyg:focus {
     border: 1px solid #886;
 }
 .editor-toggle {
     float: right;
     font-size: 80%;
-    margin-top: 4px;
 }
 .editor-toggle label {
 	float: none;
