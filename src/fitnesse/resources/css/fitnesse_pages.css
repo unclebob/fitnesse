@@ -31,8 +31,16 @@ label input {
 }
 
 /** Edit page **/
+.editPage {
+    overflow: hidden;
+}
+
+.editPage article {
+    margin: 0;
+}
+
 .editPage #editor {
-    margin-top: 8px;
+    margin: 8px 0 0 0;
 }
 
 .editPage #editor label {
@@ -54,7 +62,7 @@ label input {
 	display: inline;
 	float: none;
 }
-.editPage textarea {
+.editPage textarea, .editPage iframe {
 	display: block;
 	width: 100%;
 	height: 32em;
@@ -65,6 +73,12 @@ label input {
 }
 .editPage .edit_options {
 	float: right;
+}
+.editPage #save_buttons {
+    bottom: 0;
+    margin-top: 16px;
+    margin-bottom: 7px; /* buttons have 9px bottom padding */
+    position: fixed;
 }
 
 /** Properties page / Search form / Directory page**/
