@@ -28,7 +28,7 @@
 		<exclude name="**/*.zip" />
 	</zipfileset>
 
-	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
+	<target name="run" depends="compile, compile-bootstrap-less" description="Start FitNesse from the command line">
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
 			<arg value="-p" />
@@ -154,7 +154,7 @@
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
-	<target name="unit_test" depends="compile, retrieve" description="run the unit tests">
+	<target name="unit_test" depends="compile" description="run the unit tests">
 		<mkdir dir="test-results" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
 			<classpath refid="classpath" />
@@ -183,7 +183,7 @@
 
 	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
-	<target name="acceptance_tests_xml" depends="standalone-jar,retrieve">
+	<target name="acceptance_tests_xml" depends="standalone-jar">
 		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
@@ -192,7 +192,7 @@
 		</java>
 	</target>
 
-	<target name="acceptance_tests" depends="standalone-jar,retrieve">
+	<target name="acceptance_tests" depends="standalone-jar">
 		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
@@ -201,10 +201,6 @@
 		</java>
 	</target>
 
-	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for IDE's">
-		<ivy:retrieve pattern="lib/[artifact].[ext]" />
-	</target>
-	
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />
