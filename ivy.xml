@@ -32,6 +32,6 @@
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
-		<dependency org="org.mozilla" name="rhino" rev="1.7R4" />
+		<dependency org="org.mozilla" name="rhino" rev="1.7R4" conf="lesscss->default" />
 	</dependencies>
 </ivy-module>
