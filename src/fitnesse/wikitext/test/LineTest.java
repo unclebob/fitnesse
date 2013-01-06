@@ -47,7 +47,7 @@ public class LineTest {
     }
 
     @Test public void translatesNotes() {
-        ParserTestHelper.assertTranslatesTo("!note some note", "<span class=\"note\">some note</span>");
+        ParserTestHelper.assertTranslatesTo("!note some note", "<p class=\"note\">some note</p>");
     }
 
     @Test public void translatesMetas() {
