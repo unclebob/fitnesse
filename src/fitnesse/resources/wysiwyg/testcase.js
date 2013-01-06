@@ -737,6 +737,7 @@ $(function() {
                 element("p", { 'class': 'comment' }, "# second comment"),
                 element("p", " #Not a comment"),
                 element("p", { 'class': 'comment' }, "# third comment"),
+                element("p", { 'class': 'comment' }, "# | table comment |"),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -745,6 +746,7 @@ $(function() {
                 "",
                 " #Not a comment",
                 "# third comment",
+                "# | table comment |",
                 "Paragraph" ].join("\n"));
             generateWikitext.call(this, dom, [
                 "Paragraph",
@@ -756,6 +758,8 @@ $(function() {
                 "#Not a comment",
                 "",
                 "# third comment",
+                "",
+                "# | table comment |",
                 "",
                 "Paragraph" ].join("\n"));
         });
