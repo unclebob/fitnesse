@@ -1946,34 +1946,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         createAnchor(value, value);
     }
 
-    function handleBracketLinks(value) {
-        var d = contentDocument;
-        var link = value.slice(1, -1);
-        var anchor = self.createAnchor(link, link);
-        var _holder = holder;
-        _holder.appendChild(d.createTextNode("<"));
-        _holder.appendChild(anchor);
-        _holder.appendChild(d.createTextNode(">"));
-    }
-
     function handleWikiPageName(name, label) {
         if (!inAnchor()) {
             createAnchor(name, label || name, true);
         } else {
             holder.appendChild(contentDocument.createTextNode(label || name));
         }
-    }
-
-    function handleWikiAnchor(text) {
-        var match = /^\[=#([^ \t\r\f\v\]]+)(?:[ \t\r\f\v]+([^\]]*))?\]$/.exec(text);
-        var d = contentDocument;
-        var element = d.createElement("span");
-        element.className = "wikianchor";
-        element.id = match[1];
-        if (match[2]) {
-            element.appendChild(self.wikitextToOnelinerFragment(match[2], d, self.options));
-        }
-        holder.appendChild(element);
     }
 
     function handleList(value) {
@@ -2367,12 +2345,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             if (inDefinition()) {
                 closeParagraph();
             }
-        } else if (currentHeader) {
-            closeHeader();
-        } else if (inTable() && !inEscapedText()) {
-            handleTableCell(-1);
         }
-        
     }
 
     for (indexLines = 0; indexLines < lines.length; indexLines++) {
@@ -2393,6 +2366,15 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         decorationStack = [];
 
         handleLine(line);
+        
+        // Close headers here, since they should not interfere with other line types parsed.
+        if (currentHeader) {
+            closeHeader();
+        }
+        if (inTable() && !inEscapedText()) {
+            handleTableCell(-1);
+        }
+        
     }
     closeToFragment();
 

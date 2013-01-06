@@ -541,6 +541,16 @@ $(function() {
                 "!6 Heading 6 " ].join("\n"));
         });
 
+        unit.add("header with link", function() {
+            var dom = fragment(
+                element("h3",
+                    a("http://encyclopedia.thefreedictionary.com/XUnit", "xUnit"),
+                    ": Building the ", element("i", "Code Right")));
+            generateFragment.call(this, dom, [
+                "!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''",
+                ].join("\n"));
+        });
+
         unit.add("list", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
