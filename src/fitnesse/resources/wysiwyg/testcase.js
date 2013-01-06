@@ -197,6 +197,18 @@ $(function() {
                 "}}}= level 1}}}" ].join("\n"));
         });
 
+        unit.add("code block with empty lines", function() {
+            var dom = fragment(
+                element("p", "test:",
+                    element("pre", br(), "first line", br(), br(), "  second line ")));
+            var wikitext = [
+                "test:{{{",
+                "first line",
+                "",
+                "  second line }}}" ].join("\n");
+            generate.call(this, dom, wikitext);
+        });
+
         unit.add("paragraph", function() {
             var dom = fragment(
                 element("p", "Paragraph continued..."),

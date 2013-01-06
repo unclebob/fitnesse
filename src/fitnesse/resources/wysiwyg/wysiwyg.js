@@ -2355,7 +2355,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             fragment.appendChild(contentDocument.createElement("hr"));
             continue;
         }
-        if (line.length === 0) {
+        if (line.length === 0 && !inCodeBlock()) {
             closeToFragment();
             continue;
         }
