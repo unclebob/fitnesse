@@ -17,7 +17,6 @@ Most likely you have another web server running.  Web servers default to port 80
 Then point your browser to !style_code(http://localhost:8080)
 
 !**> Still no?  Open me up.
-
 !2 What to Do If You Have the Wrong Java Runtime Environment
 FitNesse requires version 1.5 or later of the Java Runtime Environment (JRE).
 If you see the messages:
