@@ -27,7 +27,7 @@ label input {
 .suitePage td,
 .testExecutionReport td,
 .compareHistory td {
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 
 /** Edit page **/
