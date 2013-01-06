@@ -1795,6 +1795,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     function handleDefinition(line) {
         closeToFragment();
         openParagraph();
+        holder.appendChild(contentDocument.createTextNode(line));
+        self.updateElementClassName(holder);
     }
 
     function handleCollapsibleBlock(value) {
@@ -2309,10 +2311,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleList(matchText);
                 continue;
-            case -3:    // definition (leading "!")
+            case -3:    // definition (leading "!") and comments (leading "#")
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleDefinition(matchText);
-                break;
+                continue;
             case -4:    // closing table row
                 if (inEscapedText() || inCodeBlock()) { break; }
                 if (inTable()) {
@@ -2321,6 +2323,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 }
                 break;
             case -5:    // cell
+                if (inDefinition()) { break; }
                 if (inEscapedText() || inCodeBlock()) { 
                     if (/^-!/.test(matchText)) {
                         closeEscapedText(matchText);
