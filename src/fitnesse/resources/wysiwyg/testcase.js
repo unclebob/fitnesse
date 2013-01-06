@@ -1214,6 +1214,29 @@ $(function() {
                 "*!"].join("\n"));
         });
 
+        unit.add("Collapsible area with header", function() {
+            var dom = fragment(
+                element("div", { "class": "collapsable" },
+                    element("p", "title"),
+                    element("p", br()),
+                    element("h2", "Header"),
+                    element("p", "More text")
+                ),
+                element("p", br()));
+            generateFragment.call(this, dom, [
+                "!*** title",
+                "!2 Header",
+                "More text",
+                "*!"].join("\n"));
+            generateWikitext.call(this, dom, [
+                "!*** title",
+                "",
+                "!2 Header",
+                "More text",
+                "",
+                "*!"].join("\n"));
+        });
+
         unit.add("Collapsible area with list", function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },

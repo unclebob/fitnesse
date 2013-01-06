@@ -1779,7 +1779,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         closeToFragment();
         var tag = "h" + match[1];
         var element = contentDocument.createElement(tag);
-        fragment.appendChild(element);
+        holder.appendChild(element);
         holder = element;
         return tag;
     }
@@ -2367,7 +2367,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             if (inDefinition()) {
                 closeParagraph();
             }
+        } else if (currentHeader) {
+            closeHeader();
+        } else if (inTable() && !inEscapedText()) {
+            handleTableCell(-1);
         }
+        
     }
 
     for (indexLines = 0; indexLines < lines.length; indexLines++) {
@@ -2388,13 +2393,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         decorationStack = [];
 
         handleLine(line);
-
-        if (currentHeader) {
-            closeHeader();
-        }
-        if (inTable() && !inEscapedText()) {
-            handleTableCell(-1);
-        }
     }
     closeToFragment();
 
