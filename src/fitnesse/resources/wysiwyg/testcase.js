@@ -54,7 +54,7 @@ $(function() {
             this.assertEqual(anonymous.innerHTML, generatedHtml, "wikitextToFragment");
         }
         if (!withoutDomToWikitext) {
-            this.assertEqual(wikitext, instance.domToWikitext(anonymous, options), "domToWikitext");
+            this.assertEqual(wikitext + "\n", instance.domToWikitext(anonymous, options), "domToWikitext");
         }
     }
 
@@ -608,7 +608,8 @@ $(function() {
                 "            * Subitem 2",
                 "            * Subitem 3",
                 "    * item 2",
-                "Paragraph" ].join("\n"));
+                "Paragraph",
+                "" ].join("\n"));
             generate.call(this, dom, [
                 " * foo bar",
                 "   * Subitem 1",
@@ -1061,7 +1062,8 @@ $(function() {
                 "   1 item 1.1",
                 "",
                 "!define def {dt dd}",
-                "| cell 1 | cell 2 |" ].join("\n"), wikitext);
+                "| cell 1 | cell 2 |",
+                "" ].join("\n"), wikitext);
         });
 
         unit.add("selectRange", function() {

@@ -2614,8 +2614,6 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         var autolink = node.getAttribute("data-wysiwyg-autolink");
 
         link = (link || node.href).replace(/^\s+|\s+$/g, "");
-        // Obtain label as text content. Allow to render special attributes
-        //var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
         var label = self.domToWikitext(node, options);
         if (!label) {
             return;
@@ -2727,7 +2725,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "td":
                 skipNode = node;
                 _texts.push("|");
-                text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "");
+                text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "").replace(/\n$/, "");
                 if (text) {
                     _texts.push(" ", text, " ");
                     break;
@@ -2908,7 +2906,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     }
 
     this.treeWalk(root, iterator);
-    return texts.join("").replace(/^(?: *\n)+|(?: *\n)+$/g, "");
+    return texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n");
 };
 
 Wysiwyg.prototype.updateElementClassName = function (element) {
