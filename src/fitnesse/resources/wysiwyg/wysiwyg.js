@@ -1609,7 +1609,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -2. list
-    wikiRules.push("^[ \\t\\r\\f\\v]*[*-][ \\t\\r\\f\\v]");
+    wikiRules.push("^[ \\t\\r\\f\\v]*[*1-9-][ \\t\\r\\f\\v]");
     // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
     // -4. closing table row
@@ -1955,7 +1955,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     }
 
     function handleList(value) {
-        var match = /^(\s*)[*-]\s/.exec(value);
+        var match = /^(\s*)([*1-9-])\s/.exec(value);
         var className, depth, start;
         if (!match) {
             holder.appendChild(contentDocument.createTextNode(value));
@@ -1967,7 +1967,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         var last = listDepth.length - 1;
         if (depth > (last >= 0 ? listDepth[last] : -1)) {
             closeToFragment("li");
-            openList("ul", className, start, depth);
+            openList(/[1-9]/.test(match[2]) ? "ol" : "ul", className, start, depth);
         } else {
             var container, list, tmp;
             if (listDepth.length > 1 && depth < listDepth[last]) {
@@ -2694,31 +2694,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 _texts.push(" " + string("  ", listDepth - 1));
                 var container = node.parentNode;
                 if ((container.tagName || "").toLowerCase() === "ol") {
-                    var start = container.getAttribute("start") || "";
-                    if (start !== "1" && /^(?:[0-9]+|[a-zA-Z]|[ivxIVX]{1,5})$/.test(start)) {
-                        _texts.push(start, ". ");
-                    } else {
-                        switch (container.className) {
-                        case "arabiczero":
-                            _texts.push("0. ");
-                            break;
-                        case "lowerroman":
-                            _texts.push("i. ");
-                            break;
-                        case "upperroman":
-                            _texts.push("I. ");
-                            break;
-                        case "loweralpha":
-                            _texts.push("a. ");
-                            break;
-                        case "upperalpha":
-                            _texts.push("A. ");
-                            break;
-                        default:
-                            _texts.push("1. ");
-                            break;
-                        }
-                    }
+                    _texts.push("1 ");
                 } else {
                     _texts.push("* ");
                 }

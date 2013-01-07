@@ -641,6 +641,18 @@ $(function() {
                 "And numbered lists can also be given an explicit number" ].join("\n"));
         });
 
+        unit.add("ordered list", function() {
+            var dom = fragment(
+                element("ol",
+                    element("li", "foo bar"),
+                    element("ol", element("li", "Subitem")),
+                    element("li", "item 2")));
+            generate.call(this, dom, [
+                " 1 foo bar",
+                "   1 Subitem",
+                " 1 item 2" ].join("\n"));
+        });
+
         unit.add("list at beginning of line", function() {
             var dom = fragment(
                 element("ul",
@@ -1046,7 +1058,7 @@ $(function() {
                 "quote continued",
                 "",
                 " * item 1 continued",
-                "   1. item 1.1",
+                "   1 item 1.1",
                 "",
                 "!define def {dt dd}",
                 "| cell 1 | cell 2 |" ].join("\n"), wikitext);
