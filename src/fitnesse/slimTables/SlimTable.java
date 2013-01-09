@@ -249,11 +249,6 @@ public abstract class SlimTable {
     return table.ignore(value);
   }
 
-  protected ReturnedValueExpectation makeReturnedValueExpectation(
-    String instructionTag, int col, int row) {
-    return new ReturnedValueExpectation(instructionTag, col, row);
-  }
-
   public static boolean approximatelyEqual(String standard, String candidate) {
     try {
       double candidateValue = Double.parseDouble(candidate);
