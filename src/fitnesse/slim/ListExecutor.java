@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.statement.Statement;
 import util.ListUtility;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class ListExecutor {
     }
 
     public Object executeStatement(Object statement) {
-      return new Statement(asStatementList(statement), methodNameTranslator).execute(executor);
+      return Statement.Factory.createStatement(asStatementList(statement), methodNameTranslator).execute(executor);
     }
 
     public void finalizeExecution() {
