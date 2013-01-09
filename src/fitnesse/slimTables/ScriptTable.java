@@ -22,7 +22,7 @@ public class ScriptTable extends SlimTable {
     return "scriptTable";
   }
 
-  public List<Object> getInstructions() {
+  public List<Object> getInstructions() throws SyntaxError {
     int rows = table.getRowCount();
     List<Object> instructions = new ArrayList<Object>();
     if (isScript() && table.getColumnCountInRow(0) > 1)
@@ -37,7 +37,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // returns a list of statements
-  private List<Object> instructionForRow(int row) {
+  private List<Object> instructionForRow(int row) throws SyntaxError {
     String firstCell = table.getCellContents(0, row).trim();
     List<Object> instruction;
     String match;
@@ -79,7 +79,7 @@ public class ScriptTable extends SlimTable {
     return Collections.emptyList();
   }
 
-  private List<Object> action(int row) {
+  private List<Object> action(int row) throws SyntaxError {
     List<Object> instructions = instructionsFromScenario(row);
     if (instructions == null) {
       int lastCol = table.getColumnCountInRow(row) - 1;
@@ -91,7 +91,7 @@ public class ScriptTable extends SlimTable {
     return instructions;
   }
 
-  private List<Object> instructionsFromScenario(int row) {
+  private List<Object> instructionsFromScenario(int row) throws SyntaxError {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));

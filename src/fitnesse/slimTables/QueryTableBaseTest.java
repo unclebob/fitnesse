@@ -44,7 +44,7 @@ public abstract class QueryTableBaseTest {
 
   private QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
     qt = makeQueryTable(pageContents);
-    qt.appendInstructions(instructions);
+    instructions.addAll(qt.getInstructions());
     return qt;
   }
 

@@ -37,7 +37,7 @@ public class ScenarioTableTest {
         Table t = ts.getTable(0);
         testContext = new MockSlimTestContext();
         st = new ScenarioTable(t, "id", testContext);
-        st.appendInstructions(instructions);
+        instructions.addAll(st.getInstructions());
 
         return st;
     }

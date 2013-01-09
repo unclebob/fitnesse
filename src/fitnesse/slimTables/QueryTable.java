@@ -46,9 +46,9 @@ public class QueryTable extends SlimTable {
     return c.evaluate();
   }
 
-  public List<Object> getInstructions() {
+  public List<Object> getInstructions() throws SyntaxError {
     if (table.getRowCount() < 2)
-      throw new SlimTable.SyntaxError("Query tables must have at least two rows.");
+      throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
     List<Object> make = constructFixture();
     List<Object> ti = callFunction(getTableName(), "table", tableAsList());

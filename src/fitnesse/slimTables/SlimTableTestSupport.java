@@ -18,11 +18,11 @@ import fitnesse.wiki.WikiPageUtil;
  * Test support class for testing slim tables. Class provides
  * the List of {@link #instructions} created and the {@link #tableUnderTest}
  * as protected fields.
- * 
+ *
  * @param <T> The type of the table under test.
  */
 public abstract class SlimTableTestSupport<T extends SlimTable> {
-  
+
   private WikiPage root;
   protected List<Object> instructions;
   protected T tableUnderTest;
@@ -36,7 +36,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
     }
     throw new IllegalStateException("Unable to detect the actual type of SlimTable.");
   }
-  
+
   public T createSlimTable(String tableText) {
     try {
       Constructor<T> constructor = getParameterizedClass().getConstructor(Table.class, String.class, SlimTestContext.class);
@@ -59,7 +59,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
 
   protected T makeSlimTableAndBuildInstructions(String pageContents) throws Exception {
     tableUnderTest = createSlimTable(pageContents);
-    tableUnderTest.appendInstructions(instructions);
+    instructions.addAll(tableUnderTest.getInstructions());
     return tableUnderTest;
   }
 }

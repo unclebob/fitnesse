@@ -23,7 +23,7 @@ public class DecisionTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Object> getInstructions() {
+  public List<Object> getInstructions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String scenarioName = getScenarioName();
@@ -81,7 +81,7 @@ public class DecisionTable extends SlimTable {
       }
     }
 
-    protected void checkRow(int row) {
+    protected void checkRow(int row) throws SyntaxError {
       int columns = table.getColumnCountInRow(row);
       if (columns < columnHeaders)
         throw new SyntaxError(
@@ -93,7 +93,7 @@ public class DecisionTable extends SlimTable {
   }
 
   private class ScenarioCaller extends DecisionTableCaller {
-    public ArrayList<Object> call(ScenarioTable scenario) {
+    public ArrayList<Object> call(ScenarioTable scenario) throws SyntaxError {
       gatherFunctionsAndVariablesFromColumnHeader();
       ArrayList<Object> instructions = new ArrayList<Object>();
       for (int row = 2; row < table.getRowCount(); row++)
@@ -101,7 +101,7 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> callScenarioForRow(ScenarioTable scenario, int row) {
+    private List<Object> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
       checkRow(row);
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
@@ -119,7 +119,7 @@ public class DecisionTable extends SlimTable {
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-    public List<Object> call(String fixtureName) {
+    public List<Object> call(String fixtureName) throws SyntaxError {
       final List<Object> instructions = new ArrayList<Object>();
       instructions.add(constructFixture(fixtureName));
       final List<Object> callTable = callFunction(getTableName(), "table", tableAsList());
@@ -130,7 +130,7 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> invokeRows() {
+    private List<Object> invokeRows() throws SyntaxError {
       List<Object> instructions = new ArrayList<Object>();
       instructions.add(callUnreportedFunction("beginTable"));
       gatherFunctionsAndVariablesFromColumnHeader();
@@ -140,7 +140,7 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> invokeRow(int row) {
+    private List<Object> invokeRow(int row) throws SyntaxError {
       List<Object> instructions = new ArrayList<Object>();
       checkRow(row);
       instructions.add(callUnreportedFunction("reset"));

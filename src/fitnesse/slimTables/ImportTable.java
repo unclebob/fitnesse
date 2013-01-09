@@ -19,11 +19,11 @@ public class ImportTable extends SlimTable {
     return "import";
   }
 
-  public List<Object> getInstructions() {
+  public List<Object> getInstructions() throws SyntaxError {
     int rows = table.getRowCount();
     List<Object> instructions = new ArrayList<Object>(rows);
     if (rows < 2)
-      throw new SlimTable.SyntaxError("Import tables must have at least two rows.");
+      throw new SyntaxError("Import tables must have at least two rows.");
 
     for (int row = 1; row < rows; row++) {
       String importString = table.getCellContents(0, row);

@@ -35,8 +35,8 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     script = new ScriptTable(t, "id", this);
-    st.appendInstructions(instructions);
-    script.appendInstructions(instructions);
+    instructions.addAll(st.getInstructions());
+    instructions.addAll(script.getInstructions());
   }
 
   @Test
@@ -268,16 +268,16 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    st1.appendInstructions(instructions);
-    st2.appendInstructions(instructions);
-    script.appendInstructions(instructions);
+    instructions.addAll(st1.getInstructions());
+    instructions.addAll(st2.getInstructions());
+    instructions.addAll(script.getInstructions());
     List<Object> expectedInstructions =
       list(
         list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
       );
     assertEquals(expectedInstructions, instructions);
   }
-  
+
   @Test
   public void doesntMatchScenarioWithNoArgumentsThatSharesFirstWord() throws Exception {
     WikiPageUtil.setPageContents(root, "" +
@@ -293,9 +293,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    st1.appendInstructions(instructions);
-    st2.appendInstructions(instructions);
-    script.appendInstructions(instructions);
+    instructions.addAll(st1.getInstructions());
+    instructions.addAll(st2.getInstructions());
+    instructions.addAll(script.getInstructions());
     List<Object> expectedInstructions =
       list(
         list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
@@ -303,7 +303,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     assertEquals(expectedInstructions, instructions);
   }
 
-  
+
   @Test
   public void dontTryParameterizedForRowWithMultipleCells() throws Exception {
     WikiPageUtil.setPageContents(root, "" +
@@ -319,14 +319,14 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    st1.appendInstructions(instructions);
-    st2.appendInstructions(instructions);
-    script.appendInstructions(instructions);
+    instructions.addAll(st1.getInstructions());
+    instructions.addAll(st2.getInstructions());
+    instructions.addAll(script.getInstructions());
     List<Object> expectedInstructions =
       list(
         list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
       );
     assertEquals(expectedInstructions, instructions);
   }
- 
+
 }

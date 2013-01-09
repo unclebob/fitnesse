@@ -79,18 +79,7 @@ public abstract class SlimTable {
 
   protected abstract String getTableType();
 
-  public void appendInstructions(List<Object> instructions) {
-    try {
-      for (Object instruction: getInstructions()) {
-        instructions.add(instruction);
-      }
-    } catch (Throwable e) {
-      String tableName = table.getCellContents(0, 0);
-      table.setCell(0, 0, fail(String.format("%s: Bad table: <br/><pre>%s</pre>", tableName, Utils.getStackTrace(e))));
-    }
-  }
-
-  public abstract List<Object> getInstructions();
+  public abstract List<Object> getInstructions() throws SyntaxError;
 
   protected List<Object> prepareInstruction() {
     List<Object> instruction = new ArrayList<Object>();
@@ -576,14 +565,6 @@ public abstract class SlimTable {
         return String.format("$%s->[%s]", name, value);
       }
       return String.format("$%s->[%s]", name, Utils.escapeHTML(value));
-    }
-  }
-
-  public static class SyntaxError extends Error {
-    private static final long serialVersionUID = 1L;
-
-    public SyntaxError(String message) {
-      super(message);
     }
   }
 

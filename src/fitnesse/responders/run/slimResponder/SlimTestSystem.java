@@ -31,6 +31,7 @@ import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slimTables.ScenarioTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.SlimTableFactory;
+import fitnesse.slimTables.SyntaxError;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.MockCommandRunner;
@@ -38,6 +39,7 @@ import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.ParsedPage;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
@@ -347,7 +349,13 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private List<Object> createInstructions(List<SlimTable> tables) {
     List<Object> instructions = new ArrayList<Object>();
     for (SlimTable table : tables) {
-      table.appendInstructions(instructions);
+      try {
+        instructions.addAll(table.getInstructions());
+      } catch (SyntaxError e) {
+        String tableName = table.getTable().getCellContents(0, 0);
+        // TODO: remove: raise TableFormatException or something like that.
+        table.getTable().setCell(0, 0, table.getTable().fail(String.format("%s: Bad table: <br/><pre>%s</pre>", tableName, Utils.getStackTrace(e))));
+      }
     }
     return instructions;
   }

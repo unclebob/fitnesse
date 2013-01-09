@@ -39,7 +39,7 @@ public class DecisionTableTest {
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
     decisionTable = makeDecisionTable(tableText);
-    decisionTable.appendInstructions(instructions);
+    instructions.addAll(decisionTable.getInstructions());
     return decisionTable;
   }
 
@@ -50,9 +50,9 @@ public class DecisionTableTest {
     return new DecisionTable(t, "id", testContext);
   }
 
-  @Test
+  @Test(expected=SyntaxError.class)
   public void aDecisionTableWithOnlyTwoRowsIsBad() throws Exception {
-    assertTableIsBad(makeDecisionTableWithTwoRows());
+    makeDecisionTableWithTwoRows();
   }
 
   private void assertTableIsBad(DecisionTable decisionTable) {
@@ -67,7 +67,7 @@ public class DecisionTableTest {
     return makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
   }
 
-  @Test
+  @Test(expected=SyntaxError.class)
   public void wrongNumberOfColumns() throws Exception {
     DecisionTable aDecisionTable = makeDecisionTableAndBuildInstructions(
       "|DT:fixture|argument|\n" +
@@ -212,7 +212,7 @@ public class DecisionTableTest {
       list(
         list(id(n++), "OK"),
         list(id(n++), VoidConverter.VOID_TAG),
-        list(id(n++), VoidConverter.VOID_TAG), // beginTable        
+        list(id(n++), VoidConverter.VOID_TAG), // beginTable
         list(id(n++), VoidConverter.VOID_TAG), //reset
         list(id(n++), VoidConverter.VOID_TAG), //set
         list(id(n++), VoidConverter.VOID_TAG), //execute
@@ -221,7 +221,7 @@ public class DecisionTableTest {
         list(id(n++), VoidConverter.VOID_TAG),
         list(id(n++), VoidConverter.VOID_TAG),
         list(id(n++), "5"),
-        list(id(n++), VoidConverter.VOID_TAG) //endTable        
+        list(id(n++), VoidConverter.VOID_TAG) //endTable
       )
     );
     testContext.evaluateExpectations(pseudoResults);
@@ -254,7 +254,7 @@ public class DecisionTableTest {
         list(id(n++), VoidConverter.VOID_TAG),
         list(id(n++), VoidConverter.VOID_TAG),
         list(id(n++), "5"),
-        list(id(n++), VoidConverter.VOID_TAG) //endTable        
+        list(id(n++), VoidConverter.VOID_TAG) //endTable
       )
     );
     testContext.evaluateExpectations(pseudoResults);

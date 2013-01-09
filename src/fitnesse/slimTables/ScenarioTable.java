@@ -37,7 +37,7 @@ public class ScenarioTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Object> getInstructions() {
+  public List<Object> getInstructions() throws SyntaxError {
     parseTable();
 
     // Note: scenario's only add instructions when needed to,
@@ -45,7 +45,7 @@ public class ScenarioTable extends SlimTable {
     return Collections.emptyList();
   }
 
-  private void parseTable() {
+  private void parseTable() throws SyntaxError {
     validateHeader();
 
     String firstNameCell = table.getCellContents(1, 0);
@@ -119,7 +119,7 @@ public class ScenarioTable extends SlimTable {
     return Disgracer.disgraceClassName(nameBuffer.toString().trim());
   }
 
-  private void validateHeader() {
+  private void validateHeader() throws SyntaxError {
     if (colsInHeader <= 1) {
       throw new SyntaxError("Scenario tables must have a name.");
     }
@@ -142,13 +142,13 @@ public class ScenarioTable extends SlimTable {
   }
 
   public List<Object> call(Map<String, String> scenarioArguments,
-                   SlimTable parentTable, int row) {
+                   SlimTable parentTable, int row) throws SyntaxError {
     String script = getTable().toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
     return insertAndProcessScript(script, parentTable, row);
   }
 
-  public List<Object> call(String[] args, ScriptTable parentTable, int row) {
+  public List<Object> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
@@ -160,12 +160,11 @@ public class ScenarioTable extends SlimTable {
   private List<Object> insertAndProcessScript(String script, SlimTable parentTable,
                                       int row) {
     try {
-      ArrayList<Object> instructions = new ArrayList<Object>();
       TableScanner ts = new HtmlTableScanner(script);
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
         parentTable.getTestContext());
       parentTable.addChildTable(t, row);
-      t.appendInstructions(instructions);
+      List<Object> instructions = t.getInstructions();
       parentTable.addExpectation(new ScenarioExpectation(t, row));
       return instructions;
     } catch (Exception e) {
@@ -173,7 +172,7 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) {
+  private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) throws SyntaxError {
     for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
       String arg = scenarioArgument.getKey();
       if (getInputs().contains(arg)) {

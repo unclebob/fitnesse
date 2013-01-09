@@ -4,8 +4,6 @@ package fitnesse.slimTables;
 
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
-import static util.RegexTestCase.assertSubString;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +36,10 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     dt = new DecisionTable(t, "did", this);
-    st.appendInstructions(instructions);
-    dt.appendInstructions(instructions);
+    instructions.addAll(st.getInstructions());
+    instructions.addAll(dt.getInstructions());
   }
-  
+
   @Test
   public void bracesArountArgumentInTable() throws Exception {
     makeTables(
@@ -162,7 +160,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     assertEquals(0, dt.getTestSummary().getExceptions());
   }
 
-  @Test
+  @Test(expected=SyntaxError.class)
   public void scenarioHasTooFewArguments() throws Exception {
     makeTables(
       "!|scenario|echo|input|giving|\n" +
@@ -172,15 +170,6 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         "|input|output|\n" +
         "|7|8|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_did.0_0", "7")
-      )
-    );
-    evaluateExpectations(pseudoResults);
-    String dtHtml = dt.getTable().toString();
-    assertSubString("<span class=\"fail\">DT:EchoGiving: Bad table:", dtHtml);
-    assertSubString("The argument output is not an input to the scenario.", dtHtml);
   }
 
   @Test

@@ -35,7 +35,7 @@ public class TableTableTest {
 
   private TableTable makeTableTableAndBuildInstructions(String pageContents) throws Exception {
     tt = makeTableTable(pageContents);
-    tt.appendInstructions(instructions);
+    instructions.addAll(tt.getInstructions());
     return tt;
   }
 
