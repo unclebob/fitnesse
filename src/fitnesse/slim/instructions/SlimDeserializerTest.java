@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim;
+package fitnesse.slim.instructions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ListDeserializerTest {
+public class SlimDeserializerTest {
   private List<Object> list;
 
   @Before
@@ -18,29 +18,29 @@ public class ListDeserializerTest {
   }
 
   private void check() {
-    String serialized = ListSerializer.serialize(list);
-    List<Object> deserialized = ListDeserializer.deserialize(serialized);
+    String serialized = SlimSerializer.serialize(list);
+    List<Object> deserialized = SlimDeserializer.deserialize(serialized);
     Assert.assertEquals(list, deserialized);
   }
 
-  @Test(expected = ListDeserializer.SyntaxError.class)
+  @Test(expected = SlimDeserializer.SyntaxError.class)
   public void cantDeserializeNullString() throws Exception {
-    ListDeserializer.deserialize(null);
+    SlimDeserializer.deserialize(null);
   }
 
-  @Test(expected = ListDeserializer.SyntaxError.class)
+  @Test(expected = SlimDeserializer.SyntaxError.class)
   public void cantDeserializeEmptyString() throws Exception {
-    ListDeserializer.deserialize("");
+    SlimDeserializer.deserialize("");
   }
 
-  @Test(expected = ListDeserializer.SyntaxError.class)
+  @Test(expected = SlimDeserializer.SyntaxError.class)
   public void cantDeserializeStringThatDoesntStartWithBracket() throws Exception {
-    ListDeserializer.deserialize("hello");
+    SlimDeserializer.deserialize("hello");
   }
 
-  @Test(expected = ListDeserializer.SyntaxError.class)
+  @Test(expected = SlimDeserializer.SyntaxError.class)
   public void cantDeserializeStringThatDoesntEndWithBracket() throws Exception {
-    ListDeserializer.deserialize("[000000:");
+    SlimDeserializer.deserialize("[000000:");
   }
 
   @Test

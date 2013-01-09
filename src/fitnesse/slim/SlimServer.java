@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.instructions.SlimDeserializer;
+import fitnesse.slim.instructions.SlimSerializer;
 import fitnesse.socketservice.SocketServer;
 import util.StreamReader;
 
@@ -77,13 +79,13 @@ public class SlimServer implements SocketServer {
   }
 
   private List<Object> executeInstructions(String instructions) {
-    List<Object> statements = ListDeserializer.deserialize(instructions);
+    List<Object> statements = SlimDeserializer.deserialize(instructions);
     List<Object> results = executor.execute(statements);
     return results;
   }
 
   private void sendResultsToClient(List<Object> results) throws IOException {
-    String resultString = ListSerializer.serialize(results);
+    String resultString = SlimSerializer.serialize(results);
     writer.write(String.format("%06d:%s", resultString.getBytes("UTF-8").length, resultString));
     writer.flush();
   }

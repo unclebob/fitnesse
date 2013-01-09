@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim;
+package fitnesse.slim.instructions;
 
 import java.util.List;
 
@@ -15,17 +15,17 @@ import util.ListUtility;
  * in the list followed by a :.  Then comes each item which is composed of a 6 digit length a : and then the value
  * of the item followed by a :.
  */
-public class ListSerializer {
+public class SlimSerializer {
   private StringBuffer result;
   private List<Object> list;
 
-  public ListSerializer(List<Object> list) {
+  public SlimSerializer(List<Object> list) {
     this.list = list;
     result = new StringBuffer();
   }
 
   public static String serialize(List<Object> list) {
-    return new ListSerializer(list).serialize();
+    return new SlimSerializer(list).serialize();
   }
 
   public String serialize() {
@@ -49,7 +49,7 @@ public class ListSerializer {
     else if (o instanceof String)
       s = (String) o;
     else if (o instanceof List)
-      s = ListSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
+      s = SlimSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
     else
       s = o.toString();
     return s;

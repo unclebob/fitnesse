@@ -1,11 +1,11 @@
-package fitnesse.slim.statement;
+package fitnesse.slim.instructions;
 
 import fitnesse.slim.NameTranslator;
-import fitnesse.slim.StatementExecutorInterface;
 
 import static util.ListUtility.list;
 
-public class CallAndAssignStatement implements Statement {
+public class CallAndAssignInstruction
+    implements Instruction<CallAndAssignInstruction.CallAndAssignExecutor> {
   public static final String INSTRUCTION = "callAndAssign";
   private String id;
   private String symbolName;
@@ -13,7 +13,8 @@ public class CallAndAssignStatement implements Statement {
   private String methodName;
   private Object[] args;
 
-  public CallAndAssignStatement(String id, String symbolName, String instanceName, String methodName, Object[] args, NameTranslator methodNameTranslator) {
+  public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName, Object[] args,
+                                  NameTranslator methodNameTranslator) {
     this.id = id;
     this.symbolName = symbolName;
     this.instanceName = instanceName;
@@ -22,8 +23,12 @@ public class CallAndAssignStatement implements Statement {
   }
 
   @Override
-  public Object execute(StatementExecutorInterface executor) {
+  public Object execute(CallAndAssignExecutor executor) {
     Object result = executor.callAndAssign(symbolName, instanceName, methodName, args);
     return list(id, result);
+  }
+
+  public static interface CallAndAssignExecutor extends InstructionExecutor {
+    Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments);
   }
 }

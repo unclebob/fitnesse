@@ -1,22 +1,19 @@
 package fitnesse.slim;
 
-public interface StatementExecutorInterface {
+import fitnesse.slim.instructions.CallAndAssignInstruction;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.MakeInstruction;
+
+public interface StatementExecutorInterface
+    extends CallAndAssignInstruction.CallAndAssignExecutor, CallInstruction.CallExecutor,
+    ImportInstruction.ImportExecutor, MakeInstruction.MakeExecutor {
 
   public abstract void setVariable(String name, Object value);
 
-  public abstract Object addPath(String path);
-
   public abstract Object getInstance(String instanceName);
-
-  public abstract Object create(String instanceName, String className, Object[] args);
-
-  public abstract Object call(String instanceName, String methodName, Object... args);
 
   public abstract boolean stopHasBeenRequested();
 
   public abstract void reset();
-
-  public abstract Object callAndAssign(String variable, String instanceName, String methodName,
-      Object[] args);
-
 }

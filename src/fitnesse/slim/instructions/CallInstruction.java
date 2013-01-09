@@ -1,18 +1,18 @@
-package fitnesse.slim.statement;
+package fitnesse.slim.instructions;
 
 import fitnesse.slim.NameTranslator;
-import fitnesse.slim.StatementExecutorInterface;
 
 import static util.ListUtility.list;
 
-public class CallStatement implements Statement {
+public class CallInstruction implements Instruction<CallInstruction.CallExecutor> {
   public static final String INSTRUCTION = "call";
   private String id;
   private String instanceName;
   private String methodName;
   private Object[] args;
 
-  public CallStatement(String id, String instanceName, String methodName, Object[] args, NameTranslator methodNameTranslator) {
+  public CallInstruction(String id, String instanceName, String methodName, Object[] args,
+                         NameTranslator methodNameTranslator) {
     this.id = id;
     this.instanceName = instanceName;
     this.methodName = methodNameTranslator.translate(methodName);
@@ -20,8 +20,12 @@ public class CallStatement implements Statement {
   }
 
   @Override
-  public Object execute(StatementExecutorInterface executor) {
+  public Object execute(CallExecutor executor) {
     Object result = executor.call(this.instanceName, this.methodName, this.args);
     return list(id, result);
+  }
+
+  public static interface CallExecutor extends InstructionExecutor {
+    Object call(String instanceName, String methodName, Object... arguments);
   }
 }

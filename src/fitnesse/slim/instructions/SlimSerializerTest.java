@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim;
+package fitnesse.slim.instructions;
 
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ListSerializerTest {
+public class SlimSerializerTest {
   private List<Object> list;
 
   @Before
@@ -21,20 +21,20 @@ public class ListSerializerTest {
 
   @Test
   public void nullListSerialize() throws Exception {
-    assertEquals("[000000:]", ListSerializer.serialize(list));
+    assertEquals("[000000:]", SlimSerializer.serialize(list));
   }
 
   @Test
   public void oneItemListSerialize() throws Exception {
     list.add("hello");
-    assertEquals("[000001:000005:hello:]", ListSerializer.serialize(list));
+    assertEquals("[000001:000005:hello:]", SlimSerializer.serialize(list));
   }
 
   @Test
   public void twoItemListSerialize() throws Exception {
     list.add("hello");
     list.add("world");
-    assertEquals("[000002:000005:hello:000005:world:]", ListSerializer.serialize(list));
+    assertEquals("[000002:000005:hello:000005:world:]", SlimSerializer.serialize(list));
   }
 
   @Test
@@ -42,13 +42,13 @@ public class ListSerializerTest {
     List<String> sublist = new ArrayList<String>();
     sublist.add("element");
     list.add(sublist);
-    assertEquals("[000001:000024:[000001:000007:element:]:]", ListSerializer.serialize(list));
+    assertEquals("[000001:000024:[000001:000007:element:]:]", SlimSerializer.serialize(list));
   }
 
   @Test
   public void serializeListWithNonString() throws Exception {
-    String s = ListSerializer.serialize(list(1));
-    list = ListDeserializer.deserialize(s);
+    String s = SlimSerializer.serialize(list(1));
+    list = SlimDeserializer.deserialize(s);
     assertEquals("1", list.get(0));
   }
 
@@ -56,7 +56,7 @@ public class ListSerializerTest {
   public void serializeNullElement() throws Exception {
     List<Object> list = list();
     list.add(null);
-    String s = ListSerializer.serialize(list);
+    String s = SlimSerializer.serialize(list);
     assertEquals("[000001:000004:null:]", s);
   }
 

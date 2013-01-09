@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.instructions.SlimDeserializer;
+import fitnesse.slim.instructions.SlimSerializer;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -77,12 +79,12 @@ private void validateConnection() {
   public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException {
     if (statements.size() == 0)
       return new HashMap<String, Object>();
-    String instructions = ListSerializer.serialize(statements);
+    String instructions = SlimSerializer.serialize(statements);
     writeString(instructions);
     int resultLength = getLengthToRead();
     String results = null;
     results = reader.read(resultLength);
-    List<Object> resultList = ListDeserializer.deserialize(results);
+    List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
 

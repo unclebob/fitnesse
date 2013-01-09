@@ -1,25 +1,27 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim;
+package fitnesse.slim.instructions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.slim.SlimError;
+
 /**
- * Uses Slim Serialization.  See ListSerializer for details.  Will deserialize lists of lists recursively.
+ * Uses Slim Serialization.  See SlimSerializer for details.  Will deserialize lists of lists recursively.
  */
 
-public class ListDeserializer {
+public class SlimDeserializer {
   private ArrayList<Object> result;
 
   public static List<Object> deserialize(String serialized) {
-    return new ListDeserializer(serialized).deserialize();
+    return new SlimDeserializer(serialized).deserialize();
   }
 
   private String serialized;
   private int index = 0;
 
-  public ListDeserializer(String serialized) {
+  public SlimDeserializer(String serialized) {
     this.serialized = serialized;
   }
 
@@ -90,7 +92,7 @@ public class ListDeserializer {
       return null;
 
     try {
-      return ListDeserializer.deserialize(string);
+      return SlimDeserializer.deserialize(string);
     } catch (SyntaxError e) {
       return null;
     }
