@@ -10,11 +10,9 @@ import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wikitext.Utils;
 
 import java.util.*;
-import java.util.regex.Matcher;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
-  private Matcher symbolAssignmentMatcher;
 
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
@@ -42,6 +40,7 @@ public class ScriptTable extends SlimTable {
   private List<Object> instructionForRow(int row) {
     String firstCell = table.getCellContents(0, row).trim();
     List<Object> instruction;
+    String match;
     if (firstCell.equalsIgnoreCase("start"))
       instruction = startActor(row);
     else if (firstCell.equalsIgnoreCase("check"))
@@ -56,8 +55,8 @@ public class ScriptTable extends SlimTable {
       instruction = show(row);
     else if (firstCell.equalsIgnoreCase("note"))
       instruction = note(row);
-    else if (isSymbolAssignment(firstCell))
-      instruction = actionAndAssign(row);
+    else if ((match = ifSymbolAssignment(0, row)) != null)
+      instruction = actionAndAssign(match, row);
     else if (firstCell.length() == 0)
       instruction = note(row);
     else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
@@ -69,9 +68,8 @@ public class ScriptTable extends SlimTable {
     return instruction.isEmpty() ? instruction : list(instruction);
   }
 
-  private List<Object> actionAndAssign(int row) {
+  private List<Object> actionAndAssign(String symbolName, int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    String symbolName = symbolAssignmentMatcher.group(1);
     addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionTag(), 0, row));
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
@@ -79,11 +77,6 @@ public class ScriptTable extends SlimTable {
       return callAndAssign(symbolName, "scriptTableActor", actionName, args);
     }
     return Collections.emptyList();
-  }
-
-  private boolean isSymbolAssignment(String firstCell) {
-    symbolAssignmentMatcher = symbolAssignmentPattern.matcher(firstCell);
-    return symbolAssignmentMatcher.matches();
   }
 
   private List<Object> action(int row) {

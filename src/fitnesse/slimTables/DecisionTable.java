@@ -166,7 +166,7 @@ public class DecisionTable extends SlimTable {
 
     private List<Object> callFunctionInRow(String functionName, int row) {
       int col = funcs.get(functionName);
-      String assignedSymbol = ifSymbolAssignment(row, col);
+      String assignedSymbol = ifSymbolAssignment(col, row);
       List<Object> instruction;
       if (assignedSymbol != null) {
         addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionTag(), col, row));
