@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import static fitnesse.slimTables.ComparatorUtil.approximatelyEqual;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
 import static util.ListUtility.list;
@@ -256,23 +257,6 @@ public abstract class SlimTable {
   protected String ignore(String value) {
     testSummary.ignores++;
     return table.ignore(value);
-  }
-
-  public static boolean approximatelyEqual(String standard, String candidate) {
-    try {
-      double candidateValue = Double.parseDouble(candidate);
-      double standardValue = Double.parseDouble(standard);
-      int point = standard.indexOf(".");
-      int precision = 0;
-      if (point != -1)
-        precision = standard.length() - point - 1;
-      double roundingFactor = 0.5;
-      while (precision-- > 0)
-        roundingFactor /= 10;
-      return Math.abs(candidateValue - standardValue) <= roundingFactor;
-    } catch (NumberFormatException e) {
-      return false;
-    }
   }
 
   public TestSummary getTestSummary() {
