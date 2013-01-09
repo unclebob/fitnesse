@@ -60,10 +60,6 @@ public abstract class SlimTable {
     parentTable.appendChildTable(row, childTable);
   }
 
-  public SlimTable getChild(int i) {
-    return children.get(i);
-  }
-
   protected void addExpectation(Expectation e) {
     testContext.addExpectation(e);
   }

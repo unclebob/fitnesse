@@ -107,7 +107,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
 
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = script.getChild(0).getTable().toString();
+    String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
@@ -134,7 +134,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = script.getChild(0).getTable().toString();
+    String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, [7] fail(expected [8])]]";
     assertEquals(expectedScript, scriptTable);
@@ -164,7 +164,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
 
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = script.getChild(0).getTable().toString();
+    String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, $V->[7], pass($V->[7])]]";
     assertEquals(expectedScript, scriptTable);
@@ -187,7 +187,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
 
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = script.getChild(0).getTable().toString();
+    String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving], [check, echo, 7, [7] fail(expected [@output])]]";
     assertEquals(expectedScript, scriptTable);
@@ -210,7 +210,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
 
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = script.getChild(0).getTable().toString();
+    String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
