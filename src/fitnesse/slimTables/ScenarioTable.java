@@ -160,6 +160,7 @@ public class ScenarioTable extends SlimTable {
   private List<Object> insertAndProcessScript(String script, SlimTable parentTable,
                                       int row) {
     try {
+      // TODO: retrieve table scanner from context
       TableScanner ts = new HtmlTableScanner(script);
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
         parentTable.getTestContext());

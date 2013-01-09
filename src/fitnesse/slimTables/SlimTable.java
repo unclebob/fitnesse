@@ -184,66 +184,79 @@ public abstract class SlimTable {
     return callAndAssignInstruction;
   }
 
+  // TODO: make Response object objects instead
   protected void failMessage(int col, int row, String failureMessage) {
     String contents = table.getCellContents(col, row);
     String failingContents = failMessage(contents, failureMessage);
     table.setCell(col, row, failingContents);
   }
 
+  // TODO: make Response object objects instead
   protected void fail(int col, int row, String value) {
     String failingContents = fail(value);
     table.setCell(col, row, failingContents);
   }
 
+  // TODO: make Response object objects instead
   protected void ignore(int col, int row, String value) {
     String content = ignore(value);
     table.setCell(col, row, content);
   }
 
+  // TODO: make Response object objects instead
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
     String passingContents = pass(contents);
     table.setCell(col, row, passingContents);
   }
 
+  // TODO: make Response object objects instead
   protected void pass(int col, int row, String passMessage) {
     String passingContents = pass(passMessage);
     table.setCell(col, row, passingContents);
   }
 
+  // TODO: make Response object objects instead
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
     String failureMessage = expected(actual, contents);
     table.setCell(col, tableRow, failureMessage);
   }
 
+  // TODO: make Response object objects instead
   public String expected(String actual, String expected) {
     return failMessage(actual, String.format("expected [%s]", expected));
   }
 
+  // TODO: make Response object objects instead
   protected String fail(String value) {
     testSummary.wrong = testSummary.getWrong() + 1;
     return table.fail(value);
   }
 
+  // TODO: make Response object objects instead
   protected String failMessage(String value, String message) {
     return String.format("[%s] %s", value, fail(message));
   }
 
+  // TODO: make Response object objects instead
   protected String pass(String value) {
     testSummary.right = testSummary.getRight() + 1;
     return passUncounted(value);
   }
 
+  // TODO: make Response object objects instead
   private String passUncounted(String value) {
     return table.pass(value);
   }
 
+  // TODO: make Response object objects instead
   protected String error(String value) {
     testSummary.exceptions = testSummary.getExceptions() + 1;
     return table.error(value);
   }
 
+  // TODO: make Response object objects instead
   protected String ignore(String value) {
     testSummary.ignores++;
     return table.ignore(value);
