@@ -4,9 +4,6 @@ import fitnesse.slim.StatementExecutorInterface;
 
 import static util.ListUtility.list;
 
-/**
- * TODO Document class.
- */
 public class MakeStatement implements Statement {
   public static final String INSTRUCTION = "make";
   private final String id;

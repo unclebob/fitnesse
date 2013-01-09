@@ -5,9 +5,6 @@ import fitnesse.slim.StatementExecutorInterface;
 
 import static util.ListUtility.list;
 
-/**
- * TODO Document class.
- */
 public class CallAndAssignStatement implements Statement {
   public static final String INSTRUCTION = "callAndAssign";
   private String id;
