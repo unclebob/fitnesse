@@ -18,6 +18,8 @@ import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
+  private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
+
   private String tableName;
   private int instructionNumber = 0;
 
@@ -29,8 +31,6 @@ public abstract class SlimTable {
 
   protected Table table;
   protected String id;
-
-  protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -311,9 +311,9 @@ public abstract class SlimTable {
     return false;
   }
 
-  protected String ifSymbolAssignment(int row, int col) {
+  protected String ifSymbolAssignment(int col, int row) {
     String expected = table.getCellContents(col, row);
-    Matcher matcher = symbolAssignmentPattern.matcher(expected);
+    Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(expected);
     return matcher.find() ? matcher.group(1) : null;
   }
 
