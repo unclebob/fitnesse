@@ -87,33 +87,34 @@ public class ScriptTable extends SlimTable {
   }
 
   private List<Object> action(int row) {
-    int lastCol = table.getColumnCountInRow(row) - 1;
-    String actionName = getActionNameStartingAt(0, lastCol, row);
-    String[] args = getArgumentsStartingAt(0 + 1, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
-    if (scenario != null) {
-      return scenario.call(args, this, row);
-    } else {
-      List<Object> instructions = invokeParameterizedScenarioIfPossible(row);
-      if (instructions.isEmpty()) {
-        addExpectation(new ScriptActionExpectation(getInstructionTag(), 0, row));
-        return list(callFunction("scriptTableActor", actionName, (Object[]) args));
-      }
-      return instructions;
+    List<Object> instructions = instructionsFromScenario(row);
+    if (instructions == null) {
+      int lastCol = table.getColumnCountInRow(row) - 1;
+      String actionName = getActionNameStartingAt(0, lastCol, row);
+      String[] args = getArgumentsStartingAt(1, lastCol, row);
+      addExpectation(new ScriptActionExpectation(getInstructionTag(), 0, row));
+      instructions = list(callFunction("scriptTableActor", actionName, (Object[]) args));
     }
+    return instructions;
   }
 
-  private List<Object> invokeParameterizedScenarioIfPossible(int row) {
-    if (table.getColumnCountInRow(row) == 1){
+  private List<Object> instructionsFromScenario(int row) {
+    int lastCol = table.getColumnCountInRow(row) - 1;
+    String actionName = getActionNameStartingAt(0, lastCol, row);
+    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
+    if (scenario != null) {
+      String[] args = getArgumentsStartingAt(1, lastCol, row);
+      return scenario.call(args, this, row);
+    } else if (lastCol == 0) {
       String firstNameCell = table.getCellContents(0, row);
-      for (ScenarioTable scenario : getScenariosWithMostArgumentsFirst()) {
-        String[] arguments = scenario.matchParameters(firstNameCell);
-        if (arguments != null) {
-          return scenario.call(arguments, this, row);
+      for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
+        String[] args = s.matchParameters(firstNameCell);
+        if (args != null) {
+          return s.call(args, this, row);
         }
       }
     }
-    return Collections.emptyList();
+    return null;
   }
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
