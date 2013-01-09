@@ -9,6 +9,8 @@ import static fitnesse.slimTables.SlimTable.approximatelyEqual;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class SlimTableTest {
@@ -152,10 +154,10 @@ public class SlimTableTest {
   public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "1");
-    table.setSymbol("y", "1");    
+    table.setSymbol("y", "1");
     assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
   }
-  
+
 
 
   private static class MockTable extends SlimTable {
@@ -167,7 +169,8 @@ public class SlimTableTest {
       return null;
     }
 
-    public void appendInstructions() {
+    public List<Object> getInstructions() {
+      return Collections.emptyList();
     }
 
     public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {

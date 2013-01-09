@@ -23,15 +23,15 @@ public class DecisionTable extends SlimTable {
     return instancePrefix;
   }
 
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String scenarioName = getScenarioName();
     ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     if (scenario != null) {
-      new ScenarioCaller().call(scenario);
+      return new ScenarioCaller().call(scenario);
     } else {
-      new FixtureCaller().call(getFixtureName());
+      return new FixtureCaller().call(getFixtureName());
     }
   }
 
@@ -93,15 +93,17 @@ public class DecisionTable extends SlimTable {
   }
 
   private class ScenarioCaller extends DecisionTableCaller {
-    public void call(ScenarioTable scenario) {
+    public ArrayList<Object> call(ScenarioTable scenario) {
       gatherFunctionsAndVariablesFromColumnHeader();
+      ArrayList<Object> instructions = new ArrayList<Object>();
       for (int row = 2; row < table.getRowCount(); row++)
-        callScenarioForRow(scenario, row);
+        instructions.addAll(callScenarioForRow(scenario, row));
+      return instructions;
     }
 
-    private void callScenarioForRow(ScenarioTable scenario, int row) {
+    private List<Object> callScenarioForRow(ScenarioTable scenario, int row) {
       checkRow(row);
-      scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
+      return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
 
     private Map<String, String> getArgumentsForRow(int row) {
@@ -117,49 +119,63 @@ public class DecisionTable extends SlimTable {
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-    public void call(String fixtureName) {
-      constructFixture(fixtureName);
-      dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), "table", tableAsList()));
+    public List<Object> call(String fixtureName) {
+      final List<Object> instructions = new ArrayList<Object>();
+      instructions.add(constructFixture(fixtureName));
+      final List<Object> callTable = callFunction(getTableName(), "table", tableAsList());
+      instructions.add(callTable);
+      dontReportExceptionsInTheseInstructions.add(getInstructionId(callTable));
       if (table.getRowCount() > 2)
-        invokeRows();
+        instructions.addAll(invokeRows());
+      return instructions;
     }
 
-    private void invokeRows() {
-      callUnreportedFunction("beginTable");
+    private List<Object> invokeRows() {
+      List<Object> instructions = new ArrayList<Object>();
+      instructions.add(callUnreportedFunction("beginTable"));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
-        invokeRow(row);
-      callUnreportedFunction("endTable");
+        instructions.addAll(invokeRow(row));
+      instructions.add(callUnreportedFunction("endTable"));
+      return instructions;
     }
 
-    private void invokeRow(int row) {
+    private List<Object> invokeRow(int row) {
+      List<Object> instructions = new ArrayList<Object>();
       checkRow(row);
-      callUnreportedFunction("reset");
-      setVariables(row);
-      callUnreportedFunction("execute");
-      callFunctions(row);
+      instructions.add(callUnreportedFunction("reset"));
+      instructions.addAll(setVariables(row));
+      instructions.add(callUnreportedFunction("execute"));
+      instructions.addAll(callFunctions(row));
+      return instructions;
     }
 
-    private void callUnreportedFunction(String functionName) {
-      dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), functionName));
+    private List<Object> callUnreportedFunction(String functionName) {
+      final List<Object> functionCall = callFunction(getTableName(), functionName);
+      dontReportExceptionsInTheseInstructions.add(getInstructionId(functionCall));
+      return functionCall;
     }
 
-    private void callFunctions(int row) {
+    private List<Object> callFunctions(int row) {
+      List<Object> instructions = new ArrayList<Object>();
       for (String functionName : funcsLeftToRight) {
-        callFunctionInRow(functionName, row);
+        instructions.add(callFunctionInRow(functionName, row));
       }
+      return instructions;
     }
 
-    private void callFunctionInRow(String functionName, int row) {
+    private List<Object> callFunctionInRow(String functionName, int row) {
       int col = funcs.get(functionName);
       String assignedSymbol = ifSymbolAssignment(row, col);
+      List<Object> instruction;
       if (assignedSymbol != null) {
         addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionTag(), col, row));
-        callAndAssign(assignedSymbol, functionName);
+        instruction = callAndAssign(assignedSymbol, functionName);
       } else {
         setFunctionCallExpectation(col, row);
-        callFunction(getTableName(), functionName);
+        instruction = callFunction(getTableName(), functionName);
       }
+      return instruction;
     }
 
     private void setFunctionCallExpectation(int col, int row) {
@@ -167,7 +183,8 @@ public class DecisionTable extends SlimTable {
       addExpectation(new ReturnedValueExpectation(getInstructionTag(), col, row));
     }
 
-    private void setVariables(int row) {
+    private List<Object> setVariables(int row) {
+      List<Object> instructions = new ArrayList<Object>();
       for (String var : varsLeftToRight) {
         int col = vars.get(var);
         String valueToSet = table.getUnescapedCellContents(col, row);
@@ -175,8 +192,9 @@ public class DecisionTable extends SlimTable {
         List<Object> setInstruction = prepareInstruction();
         addCall(setInstruction, getTableName(), "set" + " " + var);
         setInstruction.add(valueToSet);
-        addInstruction(setInstruction);
+        instructions.add(setInstruction);
       }
+      return instructions;
     }
 
     private void setVariableExpectation(int col, int row) {
