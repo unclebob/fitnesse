@@ -4,6 +4,7 @@ package fitnesse.slimTables;
 
 import static util.ListUtility.list;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,9 @@ public class ImportTable extends SlimTable {
     return "import";
   }
 
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
     int rows = table.getRowCount();
+    List<Object> instructions = new ArrayList<Object>(rows);
     if (rows < 2)
       throw new SlimTable.SyntaxError("Import tables must have at least two rows.");
 
@@ -28,11 +30,10 @@ public class ImportTable extends SlimTable {
       if (importString.length() > 0) {
         List<Object> importInstruction = prepareInstruction();
         importInstruction.addAll(list("import", importString));
-        addInstruction(importInstruction);
+        instructions.add(importInstruction);
       }
     }
-
-
+    return instructions;
   }
 
   public void evaluateReturnValues(Map<String, Object> returnValues) {

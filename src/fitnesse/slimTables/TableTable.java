@@ -3,6 +3,7 @@
 package fitnesse.slimTables;
 
 import static fitnesse.responders.run.slimResponder.SlimTestSystem.MESSAGE_ERROR;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,11 @@ public class TableTable extends SlimTable {
     return ("tableTable");
   }
 
-  public void appendInstructions() {
-    constructFixture();
-    doTableId = callFunction(getTableName(), "doTable", tableAsList());
+  public List<Object> getInstructions() {
+    List<Object> make = constructFixture();
+    List<Object> doTable = callFunction(getTableName(), "doTable", tableAsList());
+    doTableId = getInstructionId(doTable);
+    return list(make, doTable);
   }
 
   public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {

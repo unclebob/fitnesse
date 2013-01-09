@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import static util.ListUtility.list;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,13 +46,16 @@ public class QueryTable extends SlimTable {
     return c.evaluate();
   }
 
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
     if (table.getRowCount() < 2)
       throw new SlimTable.SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    constructFixture();
-    tableInstruction = callFunction(getTableName(), "table", tableAsList());
-    queryId = callFunction(getTableName(), "query");
+    List<Object> make = constructFixture();
+    List<Object> ti = callFunction(getTableName(), "table", tableAsList());
+    List<Object> qi = callFunction(getTableName(), "query");
+    tableInstruction = getInstructionId(ti);
+    queryId = getInstructionId(qi);
+    return list(make, ti, qi);
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
@@ -15,7 +17,8 @@ public class SlimErrorTable extends SlimTable {
     return "UnknownTableType";
   }
 
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
+    return Collections.emptyList();
   }
 
   public void evaluateExpectations(Map<String, Object> returnValues) {

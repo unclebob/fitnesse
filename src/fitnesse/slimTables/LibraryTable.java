@@ -1,5 +1,7 @@
 package fitnesse.slimTables;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
@@ -13,13 +15,15 @@ public class LibraryTable extends SlimTable {
   }
 
   @Override
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
+    List<Object> instructions = new ArrayList<Object>();
     for (int row = 1; row < table.getRowCount(); row++) {
       String disgracedClassName = Disgracer.disgraceClassName(table.getCellContents(0, row));
       if (disgracedClassName.length() > 0) {
-        constructInstance("library" + row, disgracedClassName, 0, row);
+        instructions.add(constructInstance("library" + row, disgracedClassName, 0, row));
       }
     }
+    return instructions;
   }
 
   @Override

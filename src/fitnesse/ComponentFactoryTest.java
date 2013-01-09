@@ -4,6 +4,7 @@ package fitnesse;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -162,29 +163,29 @@ public class ComponentFactoryTest extends RegexTestCase {
   public void testSlimTablesCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test");
     SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
-  
+
   public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test:");
     SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   private HtmlTable makeMockTable(String tableIdentifier) {
-    // Create just enough "table" to test if 
+    // Create just enough "table" to test if
     TableTag tableTag = new TableTag();
     TableRow tableRow = new TableRow();
     TableColumn tableColumn = new TableColumn();
@@ -230,7 +231,7 @@ public class ComponentFactoryTest extends RegexTestCase {
         provider.add(new Today());
     }
   }
-  
+
   public static class TestSlimTable extends SlimTable {
 
     public TestSlimTable(Table table, String id, SlimTestContext testContext) {
@@ -243,13 +244,14 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public void appendInstructions() {
+    public List<Object> getInstructions() {
+      return null;
     }
 
     @Override
     public void evaluateReturnValues(Map<String, Object> returnValues)
         throws Exception {
     }
-    
+
   }
 }

@@ -3,6 +3,7 @@
 package fitnesse.slimTables;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,8 +37,12 @@ public class ScenarioTable extends SlimTable {
     return instancePrefix;
   }
 
-  public void appendInstructions() {
+  public List<Object> getInstructions() {
     parseTable();
+
+    // Note: scenario's only add instructions when needed to,
+    // since they might need parameters.
+    return Collections.emptyList();
   }
 
   private void parseTable() {
@@ -136,31 +141,33 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public void call(Map<String, String> scenarioArguments,
+  public List<Object> call(Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) {
     String script = getTable().toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
-    insertAndProcessScript(script, parentTable, row);
+    return insertAndProcessScript(script, parentTable, row);
   }
 
-  public void call(String[] args, ScriptTable parentTable, int row) {
+  public List<Object> call(String[] args, ScriptTable parentTable, int row) {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
       scenarioArguments.put(inputs.get(i), args[i]);
 
-    call(scenarioArguments, parentTable, row);
+    return call(scenarioArguments, parentTable, row);
   }
 
-  private void insertAndProcessScript(String script, SlimTable parentTable,
+  private List<Object> insertAndProcessScript(String script, SlimTable parentTable,
                                       int row) {
     try {
+      ArrayList<Object> instructions = new ArrayList<Object>();
       TableScanner ts = new HtmlTableScanner(script);
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
         parentTable.getTestContext());
       parentTable.addChildTable(t, row);
-      t.appendInstructions(parentTable.instructions);
+      t.appendInstructions(instructions);
       parentTable.addExpectation(new ScenarioExpectation(t, row));
+      return instructions;
     } catch (Exception e) {
       throw new SlimError(e);
     }
@@ -186,6 +193,7 @@ public class ScenarioTable extends SlimTable {
     return parameterized;
   }
 
+///// scriptTable matcher logic:
   public String[] matchParameters(String invokingString) {
     String parameterizedName;
 
@@ -237,6 +245,7 @@ public class ScenarioTable extends SlimTable {
 
     return arguments;
   }
+//// till here
 
   private class ScenarioExpectation extends Expectation {
     private ScriptTable scriptTable;

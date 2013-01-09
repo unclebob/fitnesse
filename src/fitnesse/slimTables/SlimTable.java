@@ -29,7 +29,6 @@ public abstract class SlimTable {
 
   protected Table table;
   protected String id;
-  protected List<Object> instructions;
 
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
@@ -38,7 +37,6 @@ public abstract class SlimTable {
     this.table = table;
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
-    instructions = new ArrayList<Object>();
   }
 
   SlimTable(SlimTestContext testContext) {
@@ -83,15 +81,16 @@ public abstract class SlimTable {
 
   public void appendInstructions(List<Object> instructions) {
     try {
-      this.instructions = instructions;
-      appendInstructions();
+      for (Object instruction: getInstructions()) {
+        instructions.add(instruction);
+      }
     } catch (Throwable e) {
       String tableName = table.getCellContents(0, 0);
       table.setCell(0, 0, fail(String.format("%s: Bad table: <br/><pre>%s</pre>", tableName, Utils.getStackTrace(e))));
     }
   }
 
-  public abstract void appendInstructions();
+  public abstract List<Object> getInstructions();
 
   protected List<Object> prepareInstruction() {
     List<Object> instruction = new ArrayList<Object>();
@@ -112,10 +111,6 @@ public abstract class SlimTable {
     return tableName;
   }
 
-  protected void addInstruction(List<Object> instruction) {
-    instructions.add(instruction);
-  }
-
   public abstract void evaluateReturnValues(Map<String, Object> returnValues) throws Exception;
 
   public String getSymbol(String variableName) {
@@ -130,13 +125,13 @@ public abstract class SlimTable {
     return table;
   }
 
-  protected void constructFixture() {
+  protected List<Object> constructFixture() {
     String fixtureName = getFixtureName();
-    constructFixture(fixtureName);
+    return constructFixture(fixtureName);
   }
 
-  protected void constructFixture(String fixtureName) {
-    constructInstance(getTableName(), fixtureName, 0, 0);
+  protected List<Object> constructFixture(String fixtureName) {
+    return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
   protected String getFixtureName() {
@@ -152,7 +147,7 @@ public abstract class SlimTable {
     return tableHeader.split(":")[1];
   }
 
-  protected void constructInstance(String instanceName, String className, int classNameColumn, int row) {
+  protected List<Object> constructInstance(String instanceName, String className, int classNameColumn, int row) {
     Expectation expectation = new ConstructionExpectation(getInstructionTag(), classNameColumn, row);
     addExpectation(expectation);
     List<Object> makeInstruction = prepareInstruction();
@@ -161,7 +156,7 @@ public abstract class SlimTable {
 
     makeInstruction.add(className);
     addArgsToInstruction(makeInstruction, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row));
-    addInstruction(makeInstruction);
+    return makeInstruction;
   }
 
   protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
@@ -180,12 +175,15 @@ public abstract class SlimTable {
     instruction.addAll(callHeader);
   }
 
-  protected String callFunction(String instanceName, String functionName, Object... args) {
+  protected List<Object> callFunction(String instanceName, String functionName, Object... args) {
     List<Object> callInstruction = prepareInstruction();
     addCall(callInstruction, instanceName, functionName);
     addArgsToInstruction(callInstruction, args);
-    addInstruction(callInstruction);
-    return (String) callInstruction.get(0);
+    return callInstruction;
+  }
+
+  protected String getInstructionId(List<Object> instruction) {
+    return (String) instruction.get(0);
   }
 
   private void addArgsToInstruction(List<Object> instruction, Object... args) {
@@ -193,14 +191,13 @@ public abstract class SlimTable {
       instruction.add(arg);
   }
 
-  protected String callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
+  protected List<Object> callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
     List<Object> callAndAssignInstruction = prepareInstruction();
     String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
     List<String> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
     callAndAssignInstruction.addAll(callAndAssignHeader);
     addArgsToInstruction(callAndAssignInstruction, (Object[]) args);
-    addInstruction(callAndAssignInstruction);
-    return (String) callAndAssignInstruction.get(0);
+    return callAndAssignInstruction;
   }
 
   protected void failMessage(int col, int row, String failureMessage) {
@@ -320,13 +317,13 @@ public abstract class SlimTable {
     return matcher.find() ? matcher.group(1) : null;
   }
 
-  protected void callAndAssign(String symbolName, String functionName) {
+  protected List<Object> callAndAssign(String symbolName, String functionName) {
     List<Object> callAndAssignInstruction = prepareInstruction();
     callAndAssignInstruction.add("callAndAssign");
     callAndAssignInstruction.add(symbolName);
     callAndAssignInstruction.add(getTableName());
     callAndAssignInstruction.add(Disgracer.disgraceMethodName(functionName));
-    addInstruction(callAndAssignInstruction);
+    return callAndAssignInstruction;
   }
 
   public SlimTestContext getTestContext() {
