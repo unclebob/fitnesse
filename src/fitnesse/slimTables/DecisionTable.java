@@ -47,6 +47,10 @@ public class DecisionTable extends SlimTable {
     return Disgracer.disgraceClassName(nameBuffer.toString().trim());
   }
 
+  protected List<Object> callAndAssign(String symbolName, String functionName) {
+    return callAndAssign(symbolName, getTableName(), functionName);
+  }
+
   public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 

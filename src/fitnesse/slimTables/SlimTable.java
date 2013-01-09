@@ -305,15 +305,6 @@ public abstract class SlimTable {
     return matcher.find() ? matcher.group(1) : null;
   }
 
-  protected List<Object> callAndAssign(String symbolName, String functionName) {
-    List<Object> callAndAssignInstruction = prepareInstruction();
-    callAndAssignInstruction.add("callAndAssign");
-    callAndAssignInstruction.add(symbolName);
-    callAndAssignInstruction.add(getTableName());
-    callAndAssignInstruction.add(Disgracer.disgraceMethodName(functionName));
-    return callAndAssignInstruction;
-  }
-
   public SlimTestContext getTestContext() {
     return testContext;
   }
