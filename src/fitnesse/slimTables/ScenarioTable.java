@@ -16,6 +16,7 @@ import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimError;
+import fitnesse.slimTables.responses.Response;
 import util.StringUtil;
 
 
@@ -263,7 +264,7 @@ public class ScenarioTable extends SlimTable {
       parent.getTestSummary().add(scriptTable.getTestSummary());
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

@@ -19,6 +19,7 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 import fitnesse.responders.run.ExecutionResult;
+import fitnesse.slimTables.responses.Response;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
@@ -107,7 +108,7 @@ public class HtmlTable implements Table {
   /**
    * Scenario tables (mainly) are added on the next row. A bit of javascript allows for collapsing and
    * expanding.
-   * 
+   *
    * @see fitnesse.slimTables.Table#appendChildTable(int, fitnesse.slimTables.Table)
    */
   public void appendChildTable(int rowIndex, Table childTable) {
@@ -144,39 +145,23 @@ public class HtmlTable implements Table {
     NodeList rowNodes = tableNode.getChildren();
     int index = rowNodes.indexOf(existingRow.rowNode);
     Stack<Node> tempStack = new Stack<Node>();
-    
+
     while (rowNodes.size() - 1 > index) {
       tempStack.push(rowNodes.elementAt(tableNode.getChildren().size() - 1));
       rowNodes.remove(rowNodes.size() - 1);
     }
-    
+
     rowNodes.add(childRow.rowNode);
-    
+
     while (tempStack.size() > 0) {
       rowNodes.add(tempStack.pop());
     }
   }
 
-  
+
   public void setTestStatusOnRow(int rowIndex, ExecutionResult testStatus) {
     Row row = rows.get(rowIndex);
     row.setTestStatus(testStatus);
-  }
-
-  public String error(String s) {
-    return String.format("<span class=\"error\">%s</span>", s);
-  }
-
-  public String pass(String s) {
-    return String.format("<span class=\"pass\">%s</span>", s);
-  }
-
-  public String fail(String s) {
-    return String.format("<span class=\"fail\">%s</span>", s);
-  }
-
-  public String ignore(String s) {
-    return String.format("<span class=\"ignore\">%s</span>", s);
   }
 
   private Tag newTag(Class<? extends Tag> klass) {
@@ -361,7 +346,16 @@ public class HtmlTable implements Table {
       return columnNode;
     }
   }
+
+  @Override
+  public void setCell(int col, int row, Response response) {
+    setCell(col, row, response.toHtml());
+  }
+
+  @Override
+  public void appendToCell(int col, int row, Response response) {
+    appendToCell(col, row, response.toHtml());
+  }
 }
 
 
- 

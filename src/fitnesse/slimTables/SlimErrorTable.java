@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slimTables.responses.Response;
 
 public class SlimErrorTable extends SlimTable {
   public SlimErrorTable(Table table, String id, SlimTestContext testContext) {
@@ -23,7 +24,7 @@ public class SlimErrorTable extends SlimTable {
 
   public void evaluateExpectations(Map<String, Object> returnValues) {
     String tableType = table.getCellContents(0, 0);
-    String errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
+    Response errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
     table.setCell(0, 0, errorMessage);
   }
 

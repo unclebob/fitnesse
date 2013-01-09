@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slimTables.responses.Response;
 import util.ListUtility;
 
 public class QueryTable extends SlimTable {
@@ -43,7 +44,8 @@ public class QueryTable extends SlimTable {
     if (actual.equals(replaceSymbols(expected)))
       return expected;
     Comparator c = new Comparator(actual, expected);
-    return c.evaluate();
+    Response e = c.evaluate();
+    return e != null ? e.toString() : null;
   }
 
   public List<Object> getInstructions() throws SyntaxError {
@@ -154,6 +156,7 @@ public class QueryTable extends SlimTable {
       ignore(col, tableRow, actualValue);
     else {
       String message = matchMessage(actualValue, expectedValue);
+      // TODO: -AJM- why are we performing symbol expansion here?
       if (message != null)
         table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(message));
       else

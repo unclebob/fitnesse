@@ -34,6 +34,7 @@ import fitnesse.slimTables.SlimTableFactory;
 import fitnesse.slimTables.SyntaxError;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
+import fitnesse.slimTables.responses.FailResponse;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -353,7 +354,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       } catch (SyntaxError e) {
         String tableName = table.getTable().getCellContents(0, 0);
         // TODO: remove: raise TableFormatException or something like that.
-        table.getTable().setCell(0, 0, table.getTable().fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+        table.getTable().setCell(0, 0, new FailResponse(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
       }
     }
     return instructions;

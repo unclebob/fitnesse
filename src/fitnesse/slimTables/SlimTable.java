@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.slimTables.responses.ErrorResponse;
+import fitnesse.slimTables.responses.FailResponse;
+import fitnesse.slimTables.responses.IgnoreResponse;
+import fitnesse.slimTables.responses.PassResponse;
+import fitnesse.slimTables.responses.PlainResponse;
+import fitnesse.slimTables.responses.Response;
 import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
@@ -184,79 +190,79 @@ public abstract class SlimTable {
   // TODO: make Response object objects instead
   protected void failMessage(int col, int row, String failureMessage) {
     String contents = table.getCellContents(col, row);
-    String failingContents = failMessage(contents, failureMessage);
+    Response failingContents = failMessage(contents, failureMessage);
     table.setCell(col, row, failingContents);
   }
 
   // TODO: make Response object objects instead
   protected void fail(int col, int row, String value) {
-    String failingContents = fail(value);
+    Response failingContents = fail(value);
     table.setCell(col, row, failingContents);
   }
 
   // TODO: make Response object objects instead
   protected void ignore(int col, int row, String value) {
-    String content = ignore(value);
+    IgnoreResponse content = ignore(value);
     table.setCell(col, row, content);
   }
 
   // TODO: make Response object objects instead
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
-    String passingContents = pass(contents);
+    Response passingContents = pass(contents);
     table.setCell(col, row, passingContents);
   }
 
   // TODO: make Response object objects instead
   protected void pass(int col, int row, String passMessage) {
-    String passingContents = pass(passMessage);
+    Response passingContents = pass(passMessage);
     table.setCell(col, row, passingContents);
   }
 
   // TODO: make Response object objects instead
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
-    String failureMessage = expected(actual, contents);
+    Response failureMessage = expected(actual, contents);
     table.setCell(col, tableRow, failureMessage);
   }
 
   // TODO: make Response object objects instead
-  public String expected(String actual, String expected) {
+  public Response expected(String actual, String expected) {
     return failMessage(actual, String.format("expected [%s]", expected));
   }
 
   // TODO: make Response object objects instead
-  protected String fail(String value) {
+  protected Response fail(String value) {
     testSummary.wrong = testSummary.getWrong() + 1;
-    return table.fail(value);
+    return new FailResponse(value);
   }
 
   // TODO: make Response object objects instead
-  protected String failMessage(String value, String message) {
-    return String.format("[%s] %s", value, fail(message));
+  protected Response failMessage(String value, String message) {
+    return new PlainResponse(String.format("[%s] %s", value, fail(message)));
   }
 
   // TODO: make Response object objects instead
-  protected String pass(String value) {
+  protected Response pass(String value) {
     testSummary.right = testSummary.getRight() + 1;
     return passUncounted(value);
   }
 
   // TODO: make Response object objects instead
-  private String passUncounted(String value) {
-    return table.pass(value);
+  private Response passUncounted(String value) {
+    return new PassResponse(value);
   }
 
   // TODO: make Response object objects instead
-  protected String error(String value) {
+  protected ErrorResponse error(String value) {
     testSummary.exceptions = testSummary.getExceptions() + 1;
-    return table.error(value);
+    return new ErrorResponse(value);
   }
 
   // TODO: make Response object objects instead
-  protected String ignore(String value) {
+  protected IgnoreResponse ignore(String value) {
     testSummary.ignores++;
-    return table.ignore(value);
+    return new IgnoreResponse(value);
   }
 
   public TestSummary getTestSummary() {
@@ -264,7 +270,7 @@ public abstract class SlimTable {
   }
 
 
-  protected String makeExeptionMessage(String value) {
+  protected Response makeExeptionMessage(String value) {
     if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))
       return fail(value.substring(SlimTestSystem.MESSAGE_FAIL.length()));
     else
@@ -421,7 +427,7 @@ public abstract class SlimTable {
       String evaluationMessage;
       if (returnValue == null) {
         String originalContent = table.getCellContents(col, row);
-        evaluationMessage = originalContent + " " + ignore("Test not run");
+        evaluationMessage = originalContent + " " + ignore("Test not run").toHtml();
         returnValues.put(instructionTag, "Test not run");
       } else {
         String value;
@@ -438,14 +444,14 @@ public abstract class SlimTable {
       this.expected = expected;
       String evaluationMessage;
       if (isExceptionMessage(actual))
-        evaluationMessage = expected + " " + makeExeptionMessage(actual);
+        evaluationMessage = expected + " " + makeExeptionMessage(actual).toHtml();
       else
-        evaluationMessage = createEvaluationMessage(actual, expected);
+        evaluationMessage = createEvaluationMessage(actual, expected).toHtml();
       this.evaluationMessage = HtmlTable.colorize(evaluationMessage);
       return evaluationMessage;
     }
 
-    protected abstract String createEvaluationMessage(String actual, String expected);
+    protected abstract Response createEvaluationMessage(String actual, String expected);
 
     public int getCol() {
       return col;
@@ -547,8 +553,8 @@ public abstract class SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
-      return replaceSymbolsWithFullExpansion(expected);
+    protected Response createEvaluationMessage(String actual, String expected) {
+      return new PlainResponse(replaceSymbolsWithFullExpansion(expected));
     }
   }
 
@@ -557,7 +563,7 @@ public abstract class SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }
@@ -567,11 +573,11 @@ public abstract class SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
         return passUncounted(replaceSymbolsWithFullExpansion(expected));
       else
-        return "!style_error(Unknown construction message:) " + actual;
+        return new ErrorResponse("Unknown construction message", actual);
     }
   }
 
@@ -583,20 +589,21 @@ public abstract class SlimTable {
       this.symbolName = symbolName;
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    // TODO: make something useful for substitution
+    protected Response createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);
       if (isExceptionFailureMessage(actual)) {
-        return String.format("$%s<-[%s]", symbolName, actual);
+        return new PlainResponse(String.format("$%s<-[%s]", symbolName, actual));
       } else {
-        return String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual));
+        return new PlainResponse(String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual)));
       }
     }
   }
 
   public static interface ExpectationPassFailReporter {
-    String pass(String message);
+    Response pass(String message);
 
-    String fail(String message);
+    Response fail(String message);
   }
 
   class ReturnedValueExpectation extends Expectation implements ExpectationPassFailReporter {
@@ -604,8 +611,8 @@ public abstract class SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
-      String evaluationMessage;
+    protected Response createEvaluationMessage(String actual, String expected) {
+      Response evaluationMessage;
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
 
       if (actual == null)
@@ -615,7 +622,7 @@ public abstract class SlimTable {
       else if (replacedExpected.length() == 0)
         evaluationMessage = ignore(actual);
       else {
-        String expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
+        Response expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
         else if (isExceptionFailureMessage(actual)) {
@@ -638,17 +645,17 @@ public abstract class SlimTable {
     }
 
     @Override
-    public String pass(String message) {
+    public Response pass(String message) {
       return SlimTable.this.pass(message);
     }
 
     @Override
-    public String fail(String message) {
+    public Response fail(String message) {
       return SlimTable.this.fail(message);
     }
 
-    protected String failMessage(String value, String message) {
-      return String.format("[%s] %s", value, fail(message));
+    protected Response failMessage(String value, String message) {
+      return new PlainResponse(String.format("[%s] %s", value, fail(message)));
     }
   }
 
@@ -662,11 +669,11 @@ public abstract class SlimTable {
       return "is not";
     }
 
-    public String pass(String message) {
+    public Response pass(String message) {
       return super.fail(message);
     }
 
-    public String fail(String message) {
+    public Response fail(String message) {
       return super.pass(message);
     }
   }
@@ -693,12 +700,12 @@ public abstract class SlimTable {
 
     public Comparator(String actual, String expected) {
       this.passFailReporter = new ExpectationPassFailReporter() {
-        public String pass(String message) {
-          return message;
+        public Response pass(String message) {
+          return new PlainResponse(message);
         }
 
-        public String fail(String message) {
-          return message;
+        public Response fail(String message) {
+          return new PlainResponse(message);
         }
       };
       this.expression = Utils.unescapeHTML(replaceSymbols(expected));
@@ -713,12 +720,12 @@ public abstract class SlimTable {
       this.expected = expected;
     }
 
-    private String pass(String message) {
+    private Response pass(String message) {
       match = true;
       return passFailReporter.pass(message);
     }
 
-    private String fail(String message) {
+    private Response fail(String message) {
       match = false;
       return passFailReporter.fail(message);
     }
@@ -727,8 +734,8 @@ public abstract class SlimTable {
       return match;
     }
 
-    public String evaluate() {
-      String message = evaluateRegularExpressionIfPresent();
+    public Response evaluate() {
+      Response message = evaluateRegularExpressionIfPresent();
       if (message != null)
         return message;
 
@@ -743,9 +750,9 @@ public abstract class SlimTable {
         return null;
     }
 
-    private String evaluateRegularExpressionIfPresent() {
+    private Response evaluateRegularExpressionIfPresent() {
       Matcher regexMatcher = regexPattern.matcher(expression);
-      String message = null;
+      Response message = null;
       if (regexMatcher.matches()) {
         String pattern = regexMatcher.group(1);
         message = evaluateRegularExpression(pattern);
@@ -753,8 +760,8 @@ public abstract class SlimTable {
       return message;
     }
 
-    private String evaluateRegularExpression(String pattern) {
-      String message;
+    private Response evaluateRegularExpression(String pattern) {
+      Response message;
       Matcher patternMatcher = Pattern.compile(pattern).matcher(actual);
       if (patternMatcher.find()) {
         message = pass(String.format("/%s/ found in: %s", pattern, actual));
@@ -764,14 +771,14 @@ public abstract class SlimTable {
       return message;
     }
 
-    private String doRange(Matcher matcher) {
+    private Response doRange(Matcher matcher) {
       boolean closedLeft = matcher.group(2).equals("=");
       boolean closedRight = matcher.group(3).equals("=");
       boolean pass = (arg1 < v && v < arg2) || (closedLeft && arg1 == v) || (closedRight && arg2 == v);
       return rangeMessage(pass);
     }
 
-    private String rangeMessage(boolean pass) {
+    private Response rangeMessage(boolean pass) {
       String[] fragments = expected.replaceAll(" ", "").split("_");
       String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
       message = replaceSymbolsWithFullExpansion(message);
@@ -790,7 +797,7 @@ public abstract class SlimTable {
       return true;
     }
 
-    private String doSimpleComparison() {
+    private Response doSimpleComparison() {
       if (operation.equals("<") || operation.equals("!>="))
         return simpleComparisonMessage(v < arg1);
       else if (operation.equals(">") || operation.equals("!<="))
@@ -811,7 +818,7 @@ public abstract class SlimTable {
         return null;
     }
 
-    private String simpleComparisonMessage(boolean pass) {
+    private Response simpleComparisonMessage(boolean pass) {
       String message = String.format("%s%s", actual, expected.replaceAll(" ", ""));
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? pass(message) : fail(message);

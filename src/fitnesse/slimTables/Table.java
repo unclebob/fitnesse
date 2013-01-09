@@ -5,6 +5,7 @@ package fitnesse.slimTables;
 import java.util.List;
 
 import fitnesse.responders.run.ExecutionResult;
+import fitnesse.slimTables.responses.Response;
 
 public interface Table {
   String getCellContents(int columnIndex, int rowIndex);
@@ -25,14 +26,6 @@ public interface Table {
 
   void appendCellToRow(int row, String contents) throws Exception;
 
-  String error(String s);
-
-  String pass(String s);
-
-  String fail(String s);
-
-  String ignore(String s);
-
   String getUnescapedCellContents(int col, int row);
 
   String getCellResult(int col,int row);
@@ -42,4 +35,8 @@ public interface Table {
   void setTestStatusOnRow(int row, ExecutionResult testStatus);
 
   void setName(String tableName);
+
+  void setCell(int col, int row, Response response);
+
+  void appendToCell(int col, int row, Response response);
 }

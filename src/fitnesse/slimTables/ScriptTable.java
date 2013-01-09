@@ -7,6 +7,8 @@ import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.slimTables.responses.PlainResponse;
+import fitnesse.slimTables.responses.Response;
 import fitnesse.wikitext.Utils;
 
 import java.util.*;
@@ -241,17 +243,17 @@ public class ScriptTable extends SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       if (actual == null)
         return failMessage(expected, "Returned null value.");
       else if (actual.equals(VoidConverter.VOID_TAG) || actual.equals("null"))
-        return expected;
+        return new PlainResponse(expected);
       else if (actual.equals(BooleanConverter.FALSE))
         return fail(expected);
       else if (actual.equals(BooleanConverter.TRUE))
         return pass(expected);
       else
-        return expected;
+        return new PlainResponse(expected);
     }
   }
 
@@ -260,7 +262,7 @@ public class ScriptTable extends SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       return (actual != null && actual.equals(BooleanConverter.TRUE)) ?
         pass(expected) : fail(expected);
     }
@@ -271,7 +273,7 @@ public class ScriptTable extends SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       if (actual == null)
         return pass(expected);
       else
@@ -284,13 +286,13 @@ public class ScriptTable extends SlimTable {
       super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       try {
         table.appendCellToRow(getRow(), Utils.escapeHTML(actual));
       } catch (Throwable e) {
         return failMessage(actual, SlimTestSystem.exceptionToString(e));
       }
-      return expected;
+      return new PlainResponse(expected);
     }
   }
 
@@ -304,7 +306,7 @@ public class ScriptTable extends SlimTable {
       table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
     }
 
-    protected String createEvaluationMessage(String actual, String expected) {
+    protected Response createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }
