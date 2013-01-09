@@ -23,7 +23,7 @@ public class TableTable extends SlimTable {
   }
 
   public List<Object> getInstructions() {
-    List<Object> make = constructFixture();
+    List<Object> make = constructFixture(getFixtureName());
     List<Object> doTable = callFunction(getTableName(), "doTable", tableAsList());
     doTableId = getInstructionId(doTable);
     return list(make, doTable);

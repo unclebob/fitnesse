@@ -50,7 +50,7 @@ public class QueryTable extends SlimTable {
     if (table.getRowCount() < 2)
       throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    List<Object> make = constructFixture();
+    List<Object> make = constructFixture(getFixtureName());
     List<Object> ti = callFunction(getTableName(), "table", tableAsList());
     List<Object> qi = callFunction(getTableName(), "query");
     tableInstruction = getInstructionId(ti);

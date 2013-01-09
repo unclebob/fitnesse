@@ -114,11 +114,6 @@ public abstract class SlimTable {
     return table;
   }
 
-  protected List<Object> constructFixture() {
-    String fixtureName = getFixtureName();
-    return constructFixture(fixtureName);
-  }
-
   protected List<Object> constructFixture(String fixtureName) {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
