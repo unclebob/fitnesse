@@ -85,10 +85,12 @@ public class DecisionTable extends SlimTable {
       int columns = table.getColumnCountInRow(row);
       if (columns < columnHeaders)
         throw new SyntaxError(
-          String.format("Table has %d header column(s), but row %d only has %d column(s).",
-            columnHeaders, row, columns
-          )
-        );
+          String.format("Table has %d header column%s, but row %d only has %d column%s.",
+            columnHeaders, plural(columnHeaders), row, columns, plural(columns)));
+    }
+
+    private String plural(int n) {
+      return n == 1 ? "" : "s";
     }
   }
 
