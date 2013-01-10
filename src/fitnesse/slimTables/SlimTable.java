@@ -414,7 +414,7 @@ public abstract class SlimTable {
     private String instructionTag;
     private String actual;
     private String expected;
-    private String evaluationMessage;
+    private Response evaluationMessage;
 
     public Expectation(String instructionTag, int col, int row) {
       this.row = row;
@@ -424,10 +424,10 @@ public abstract class SlimTable {
 
     public void evaluateExpectation(Map<String, Object> returnValues) {
       Object returnValue = returnValues.get(instructionTag);
-      String evaluationMessage;
+      Response evaluationMessage;
       if (returnValue == null) {
         String originalContent = table.getCellContents(col, row);
-        evaluationMessage = originalContent + " " + ignore("Test not run").toHtml();
+        evaluationMessage = new PlainResponse(originalContent, ignore("Test not run"));
         returnValues.put(instructionTag, "Test not run");
       } else {
         String value;
@@ -439,15 +439,15 @@ public abstract class SlimTable {
         table.setCell(col, row, evaluationMessage);
     }
 
-    String evaluationMessage(String actual, String expected) {
+    Response evaluationMessage(String actual, String expected) {
       this.actual = actual;
       this.expected = expected;
-      String evaluationMessage;
+      Response evaluationMessage;
       if (isExceptionMessage(actual))
-        evaluationMessage = expected + " " + makeExeptionMessage(actual).toHtml();
+        evaluationMessage = new PlainResponse(expected, makeExeptionMessage(actual));
       else
-        evaluationMessage = createEvaluationMessage(actual, expected).toHtml();
-      this.evaluationMessage = HtmlTable.colorize(evaluationMessage);
+        evaluationMessage = createEvaluationMessage(actual, expected);
+      this.evaluationMessage = evaluationMessage;
       return evaluationMessage;
     }
 
@@ -474,7 +474,7 @@ public abstract class SlimTable {
     }
 
     public String getEvaluationMessage() {
-      return evaluationMessage == null ? "" : evaluationMessage;
+      return evaluationMessage == null ? "" : evaluationMessage.toString();
     }
   }
 
