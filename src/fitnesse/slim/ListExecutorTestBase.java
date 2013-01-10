@@ -28,7 +28,7 @@ public abstract class ListExecutorTestBase {
 
   protected abstract ListExecutor getListExecutor() throws Exception;
   protected abstract String getTestClassPath();
-  
+
   @Before
   public void setup() throws Exception {
     executor = getListExecutor();
@@ -56,7 +56,7 @@ public abstract class ListExecutorTestBase {
   @Test()
   public void invalidOperation() throws Exception {
     statements.add(list("inv1", "invalidOperation"));
-    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation.>>", "inv1");
+    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation>>", "inv1");
   }
 
   @Test(expected = SlimError.class)
@@ -252,7 +252,7 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id2", "call", "testSlim", "isSame", "$v"));
     statements.add(list("m2", "make", "chainedTestSlim", "$v"));
     statements.add(list("id3", "call", "chainedTestSlim", "isSame", "$v"));
-  
+
     respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "false"), list("m2", "OK"), list("id3", "true")));
   }
 
