@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SlimClient {
-  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3; 
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
   public static int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   private Socket client;
   private StreamReader reader;
@@ -37,11 +37,15 @@ public class SlimClient {
     this.hostName = hostName;
   }
 
-  public void connect() throws Exception {
+  public void connect() throws IOException {
     for (int tries = 0; tryConnect() == false; tries++) {
       if (tries > 100)
         throw new SlimError("Could not start Slim.");
-      Thread.sleep(50);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        throw new SlimError("Wait for connection interrupted.");
+      }
     }
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
