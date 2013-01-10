@@ -30,7 +30,7 @@
 		<dependency org="org.json" name="json" rev="20090211" conf="standalone->default,default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
 		<!-- scope: test -->
-		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
+		<dependency org="org.mockito" name="mockito-all" rev="1.9.5" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
 		<dependency org="org.mozilla" name="rhino" rev="1.7R4" conf="lesscss->default" />
 	</dependencies>

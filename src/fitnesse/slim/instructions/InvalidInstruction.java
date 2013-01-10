@@ -16,6 +16,6 @@ public class InvalidInstruction implements Instruction<InstructionExecutor> {
 
   @Override
   public Object execute(InstructionExecutor executor) {
-    return list(id, format("%smessage:<<INVALID_STATEMENT: %s.>>", SlimServer.EXCEPTION_TAG, operation));
+    return list(id, format("%smessage:<<INVALID_STATEMENT: %s>>", SlimServer.EXCEPTION_TAG, operation));
   }
 }
