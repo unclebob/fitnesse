@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.slimTables.ScenarioTable;
-import fitnesse.slimTables.SlimTable;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.SlimTable;
 
 import java.util.Map;
 

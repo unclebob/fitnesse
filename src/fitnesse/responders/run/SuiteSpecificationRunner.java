@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 import fitnesse.components.SuiteSpecificationMatchFinder;
 import fitnesse.components.TraversalListener;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 
 public class TableListComparerTest {
   private TableListComparer comparer;

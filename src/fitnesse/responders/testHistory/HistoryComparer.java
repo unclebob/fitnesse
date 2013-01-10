@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.xml.sax.SAXException;
 
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.slimTables.HtmlTableScanner;
+import fitnesse.testsystems.slim.HtmlTableScanner;
 
 public class HistoryComparer {
   // min for match is .8 content score + .2 topology bonus.

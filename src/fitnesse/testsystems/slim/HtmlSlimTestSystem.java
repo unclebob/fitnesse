@@ -2,11 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.Table;
-import fitnesse.slimTables.TableScanner;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.ParsedPage;

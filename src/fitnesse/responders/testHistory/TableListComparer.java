@@ -1,8 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import static fitnesse.responders.testHistory.HistoryComparer.MatchedPair;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 
 import java.util.ArrayList;
 import java.util.Collections;
