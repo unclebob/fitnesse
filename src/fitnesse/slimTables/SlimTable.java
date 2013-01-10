@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.responses.ErrorResponse;
 import fitnesse.slimTables.responses.FailResponse;
 import fitnesse.slimTables.responses.IgnoreResponse;
@@ -22,6 +20,8 @@ import fitnesse.slimTables.responses.PassResponse;
 import fitnesse.slimTables.responses.PlainResponse;
 import fitnesse.slimTables.responses.Response;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {

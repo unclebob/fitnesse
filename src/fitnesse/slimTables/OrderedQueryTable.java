@@ -1,6 +1,6 @@
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class OrderedQueryTable extends QueryTable {
   private int lastMatchedRow = -1;

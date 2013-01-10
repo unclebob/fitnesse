@@ -3,12 +3,12 @@
 package fitnesse.slimTables;
 
 import static util.ListUtility.list;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slimTables.responses.PlainResponse;
 import fitnesse.slimTables.responses.Response;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wikitext.Utils;
 
 import java.util.*;

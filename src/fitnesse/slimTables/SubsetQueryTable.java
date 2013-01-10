@@ -2,7 +2,7 @@ package fitnesse.slimTables;
 
 import java.util.List;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class SubsetQueryTable extends QueryTable {
 

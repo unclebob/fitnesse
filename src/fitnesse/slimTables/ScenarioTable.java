@@ -12,11 +12,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimError;
 import fitnesse.slimTables.responses.Response;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.SlimTestContext;
 import util.StringUtil;
 
 

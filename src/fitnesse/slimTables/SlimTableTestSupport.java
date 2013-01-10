@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.junit.Before;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;

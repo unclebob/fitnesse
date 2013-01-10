@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static fitnesse.responders.run.slimResponder.SlimTestSystem.MESSAGE_ERROR;
+import static fitnesse.testsystems.slim.SlimTestSystem.MESSAGE_ERROR;
 import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class TableTable extends SlimTable {
   private String doTableId;

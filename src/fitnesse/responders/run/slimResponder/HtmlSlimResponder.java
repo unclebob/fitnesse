@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.PageData;
 
 public class HtmlSlimResponder extends SlimResponder {

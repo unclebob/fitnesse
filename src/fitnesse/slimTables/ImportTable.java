@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class ImportTable extends SlimTable {
   public ImportTable(Table table, String id, SlimTestContext testContext) {

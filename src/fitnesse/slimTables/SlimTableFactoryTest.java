@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.testsystems.slim.MockSlimTestContext;
+
 import org.junit.Before;
 import org.junit.Test;
 

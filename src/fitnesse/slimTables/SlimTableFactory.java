@@ -4,8 +4,8 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slimTables.SlimTable.Disgracer;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class SlimTableFactory {
 

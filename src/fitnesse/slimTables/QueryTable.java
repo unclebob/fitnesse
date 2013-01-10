@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slimTables.responses.Response;
+import fitnesse.testsystems.slim.SlimTestContext;
 import util.ListUtility;
 
 public class QueryTable extends SlimTable {

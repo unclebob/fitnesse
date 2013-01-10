@@ -16,6 +16,7 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.*;
 
 /*
@@ -30,12 +31,12 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   private PageData pageData;
   private PageCrawler crawler;
   private FitNesseContext context;
-  
+
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     loadPage(request.getResource(), context);
-    
+
     SimpleResponse response = new SimpleResponse();
     HtmlPage html = context.pageFactory.newPage();
     html.setMainTemplate("render.vm");
@@ -52,13 +53,13 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     if (page != null)
       pageData = page.getData();
   }
-  
+
   public class SlimRenderer {
 
     public String render() {
       testSystem = getTestSystem(pageData);
       String html = null;
-  
+
       String classPath = new ClassPathBuilder().getClasspath(page);
       TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), context.pageFactory, false);
       System.out.println("test runner: " + descriptor.testRunner);
@@ -72,11 +73,11 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         html = "Could not execute tests: " + e.getMessage();
         e.printStackTrace();
       }
-      
+
       return html;
     }
   }
-  
+
   protected abstract SlimTestSystem getTestSystem(PageData pageData);
 
   public SecureOperation getSecureOperation() {

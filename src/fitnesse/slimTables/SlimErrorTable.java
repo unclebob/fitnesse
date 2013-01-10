@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slimTables.responses.Response;
+import fitnesse.testsystems.slim.SlimTestContext;
 
 public class SlimErrorTable extends SlimTable {
   public SlimErrorTable(Table table, String id, SlimTestContext testContext) {

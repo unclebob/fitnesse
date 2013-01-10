@@ -9,10 +9,10 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;

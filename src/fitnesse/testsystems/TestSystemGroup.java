@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {

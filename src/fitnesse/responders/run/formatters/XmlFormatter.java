@@ -4,12 +4,12 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.*;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
