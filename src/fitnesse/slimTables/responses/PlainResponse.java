@@ -2,17 +2,29 @@ package fitnesse.slimTables.responses;
 
 public class PlainResponse implements Response {
 
-  private final String s;
+  private final String contents;
+  private final Response response;
 
-  public PlainResponse(String s) {
-    this.s = s;
+  public PlainResponse(String content) {
+    this.contents = content;
+    this.response = null;
+  }
+  public PlainResponse(String originalContent, Response response) {
+    this.contents = originalContent;
+    this.response = response;
   }
   @Override
   public String toHtml() {
-    return s;
+    if (response != null) {
+      return contents + " " + response.toHtml();
+    }
+    return contents;
   }
 
   public String toString() {
-    return s;
+    if (response != null) {
+      return contents + " " + response.toString();
+    }
+    return contents;
   }
 }
