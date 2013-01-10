@@ -15,9 +15,9 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
-import fitnesse.responders.run.ExecutionResult;
 import fitnesse.slimTables.responses.PlainResponse;
 import fitnesse.slimTables.responses.Response;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {

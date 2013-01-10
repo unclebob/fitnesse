@@ -6,7 +6,7 @@ import fit.FitServer;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SocketDoner;
 import fitnesse.responders.run.SocketSeeker;
-import fitnesse.responders.run.TestSystemListener;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
 
 import java.io.IOException;

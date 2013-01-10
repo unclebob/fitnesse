@@ -3,7 +3,7 @@
 package fitnesse.runner;
 
 import junit.framework.TestCase;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class PageResultTest extends TestCase {
   public void testToString() throws Exception {

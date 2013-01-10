@@ -14,7 +14,11 @@ import java.util.Set;
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
-import fitnesse.responders.run.TestSystem.Descriptor;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemGroup;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 

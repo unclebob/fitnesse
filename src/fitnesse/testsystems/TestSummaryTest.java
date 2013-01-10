@@ -1,6 +1,6 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
-import static fitnesse.responders.run.ExecutionResult.getExecutionResult;
+import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 import org.junit.Test;
 import org.junit.Assert;

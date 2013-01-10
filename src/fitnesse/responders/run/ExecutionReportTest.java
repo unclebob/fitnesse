@@ -20,6 +20,7 @@ import org.w3c.dom.Text;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;

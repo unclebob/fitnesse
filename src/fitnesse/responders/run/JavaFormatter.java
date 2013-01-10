@@ -14,6 +14,9 @@ import java.util.Map;
 
 import util.TimeMeasurement;
 import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 

@@ -1,4 +1,5 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
+
 
 public enum ExecutionResult {
   ERROR,

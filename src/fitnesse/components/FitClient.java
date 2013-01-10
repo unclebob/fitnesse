@@ -9,8 +9,8 @@ import java.net.Socket;
 import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystemListener;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
 
 public class FitClient {
 

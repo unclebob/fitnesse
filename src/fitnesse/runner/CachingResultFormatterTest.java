@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import util.RegexTestCase;
 import util.StreamReader;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class CachingResultFormatterTest extends RegexTestCase {
   public void testAddResult() throws Exception {

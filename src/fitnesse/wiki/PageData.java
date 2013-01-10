@@ -2,11 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.responders.run.ExecutionLog;
+import fitnesse.testsystems.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.Paths;
 import util.Clock;
 import util.Maybe;
 import util.StringUtil;

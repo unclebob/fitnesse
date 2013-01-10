@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestSystem.Descriptor;
+import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;

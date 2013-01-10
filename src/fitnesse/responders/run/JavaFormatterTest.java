@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {

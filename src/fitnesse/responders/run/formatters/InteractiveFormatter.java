@@ -7,11 +7,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 

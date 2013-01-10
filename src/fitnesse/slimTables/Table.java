@@ -4,8 +4,8 @@ package fitnesse.slimTables;
 
 import java.util.List;
 
-import fitnesse.responders.run.ExecutionResult;
 import fitnesse.slimTables.responses.Response;
+import fitnesse.testsystems.ExecutionResult;
 
 public interface Table {
   String getCellContents(int columnIndex, int rowIndex);

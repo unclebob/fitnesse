@@ -1,6 +1,9 @@
 package fitnesse.junit;
 
 import fitnesse.responders.run.*;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import util.TimeMeasurement;
 import fitnesse.wiki.WikiPagePath;
 

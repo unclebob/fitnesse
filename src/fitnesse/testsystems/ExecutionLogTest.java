@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;

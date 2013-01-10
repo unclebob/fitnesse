@@ -1,12 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.FitTestSystem;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
@@ -43,7 +44,7 @@ public class TestSystemGroup {
   public void setManualStart(boolean manualStart) {
     this.manualStart = manualStart;
   }
-  
+
   public boolean isSuccessfullyStarted() {
     for (TestSystem testSystem : testSystems.values())
       if (testSystem.isSuccessfullyStarted() == false)
@@ -51,7 +52,7 @@ public class TestSystemGroup {
     return true;
   }
 
-  TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
+  public TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
       testSystem = makeTestSystem(descriptor);

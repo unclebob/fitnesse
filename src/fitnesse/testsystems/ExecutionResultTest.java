@@ -1,9 +1,10 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import static org.junit.Assert.assertEquals;
-import static fitnesse.responders.run.ExecutionResult.*;
+import static fitnesse.testsystems.ExecutionResult.*;
 
 import org.junit.Test;
+
 
 public class ExecutionResultTest {
 
