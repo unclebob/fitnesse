@@ -1,6 +1,10 @@
 package fitnesse.junit;
 
 import fitnesse.responders.run.*;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

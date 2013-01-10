@@ -8,12 +8,12 @@ import java.util.List;
 
 import util.RegexTestCase;
 import util.TimeMeasurement;
-import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystemListener;
-import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.fit.CommandRunningFitClient;
+import fitnesse.testsystems.fit.FitSocketReceiver;
+import fitnesse.testsystems.fit.SimpleSocketDoner;
 import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.SimpleSocketDoner;
 
 public class FitClientTest extends RegexTestCase implements TestSystemListener {
   private List<String> outputs = new ArrayList<String>();

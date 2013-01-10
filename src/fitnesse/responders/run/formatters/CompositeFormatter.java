@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.TimeMeasurement;
-import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class CompositeFormatter extends BaseFormatter {

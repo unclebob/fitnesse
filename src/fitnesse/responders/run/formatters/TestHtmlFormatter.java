@@ -10,8 +10,8 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.TagGroup;
 import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 

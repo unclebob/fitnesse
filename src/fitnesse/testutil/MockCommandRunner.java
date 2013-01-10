@@ -12,8 +12,7 @@ public class MockCommandRunner extends CommandRunner {
   }
 
   public MockCommandRunner(String command, int exitCode) {
-    super(command, "");
-    this.exitCode = exitCode;
+    super(command, "", exitCode);
   }
 
   public void run() {
@@ -43,7 +42,7 @@ public class MockCommandRunner extends CommandRunner {
   public void setExitCode(int i) {
     exitCode = i;
   }
-  
+
   public long getExecutionTime() {
     return -1;
   }

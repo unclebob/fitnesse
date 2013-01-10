@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.responders.run.TestSystem;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.WikiPage;
 import util.Wildcard;

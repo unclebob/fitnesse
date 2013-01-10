@@ -4,6 +4,10 @@ package fitnesse.responders.run;
 
 import java.io.IOException;
 
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+
 import util.TimeMeasurement;
 
 public interface ResultsListener {

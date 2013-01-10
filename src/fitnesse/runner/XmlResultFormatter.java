@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 import util.XmlUtil;
 import util.XmlWriter;
 import fitnesse.components.ContentBuffer;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class XmlResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;

@@ -16,6 +16,7 @@ import fitnesse.responders.run.TestExecutionReport.InstructionResult;
 import fitnesse.responders.run.TestExecutionReport.Row;
 import fitnesse.responders.run.TestExecutionReport.Table;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 

@@ -7,6 +7,8 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.formatters.XmlFormatter;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 
 public class SuiteXmlFormatter extends XmlFormatter {
 

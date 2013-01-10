@@ -6,7 +6,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 
 public abstract class BaseFormatter implements ResultsListener {

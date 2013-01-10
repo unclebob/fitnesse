@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import fitnesse.responders.run.ExecutionResult;
+import fitnesse.testsystems.ExecutionResult;
 
 public class PageHistory extends PageHistoryReader{
   private int failures = 0;

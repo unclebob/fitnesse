@@ -2,10 +2,10 @@ package fitnesse.responders.run.formatters;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class NullFormatter extends BaseFormatter {

@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
+import fitnesse.testsystems.TestSummary;
 import util.DateTimeUtil;
 import util.StringUtil;
 import util.TimeMeasurement;

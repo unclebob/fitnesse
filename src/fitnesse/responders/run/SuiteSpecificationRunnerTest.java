@@ -2,8 +2,8 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.junit.Assert.*;

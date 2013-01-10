@@ -10,7 +10,7 @@ import org.junit.Test;
 import util.TimeMeasurement;
 
 import fitnesse.http.ChunkedResponse;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 
 public class TestTextFormatterTest {

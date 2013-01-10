@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandRunner {
-  protected Process process;
-  protected String input = "";
+  private Process process;
+  private String input = "";
   protected List<Throwable> exceptions = new ArrayList<Throwable>();
-  protected OutputStream stdin;
-  protected InputStream stdout;
-  protected InputStream stderr;
+  private OutputStream stdin;
+  private InputStream stdout;
+  private InputStream stderr;
   protected StringBuffer outputBuffer = new StringBuffer();
   protected StringBuffer errorBuffer = new StringBuffer();
   protected int exitCode = -1;
@@ -38,6 +38,11 @@ public class CommandRunner {
     this.command = command;
     this.input = input;
     this.environmentVariables = environmentVariables;
+  }
+
+  protected CommandRunner(String command, String input, int exitCode) {
+    this(command, input);
+    this.exitCode = exitCode;
   }
 
   public void asynchronousStart() throws IOException {
@@ -201,5 +206,9 @@ public class CommandRunner {
     public void run() {
       readOutput(input, buffer);
     }
+  }
+
+  public int waitForCommandToFinish() throws InterruptedException {
+    return process.waitFor();
   }
 }
