@@ -1,10 +1,10 @@
-package fitnesse.testsystems.slim.responses;
+package fitnesse.testsystems.slim.results;
 
-public class IgnoreResponse implements Response {
+public class IgnoreResult implements Result {
 
   private final String s;
 
-  public IgnoreResponse(String s) {
+  public IgnoreResult(String s) {
     super();
     this.s = s;
   }

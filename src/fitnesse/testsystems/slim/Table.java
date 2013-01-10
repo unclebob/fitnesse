@@ -5,7 +5,7 @@ package fitnesse.testsystems.slim;
 import java.util.List;
 
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.slim.responses.Response;
+import fitnesse.testsystems.slim.results.Result;
 
 public interface Table {
   String getCellContents(int columnIndex, int rowIndex);
@@ -36,7 +36,7 @@ public interface Table {
 
   void setName(String tableName);
 
-  void setCell(int col, int row, Response response);
+  void setCell(int col, int row, Result response);
 
-  void appendToCell(int col, int row, Response response);
+  void appendToCell(int col, int row, Result response);
 }

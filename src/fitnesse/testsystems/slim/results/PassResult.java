@@ -1,10 +1,10 @@
-package fitnesse.testsystems.slim.responses;
+package fitnesse.testsystems.slim.results;
 
-public class PassResponse implements Response {
+public class PassResult implements Result {
 
   private final String s;
 
-  public PassResponse(String s) {
+  public PassResult(String s) {
     this.s = s;
   }
   @Override

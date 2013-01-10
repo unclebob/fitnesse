@@ -19,7 +19,7 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.testsystems.slim.responses.Response;
+import fitnesse.testsystems.slim.results.Result;
 import util.StringUtil;
 
 
@@ -267,7 +267,7 @@ public class ScenarioTable extends SlimTable {
       parent.getTestSummary().add(scriptTable.getTestSummary());
     }
 
-    protected Response createEvaluationMessage(String actual, String expected) {
+    protected Result createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

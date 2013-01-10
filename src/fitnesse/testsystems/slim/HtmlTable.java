@@ -16,8 +16,8 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.slim.responses.PlainResponse;
-import fitnesse.testsystems.slim.responses.Response;
+import fitnesse.testsystems.slim.results.PlainResult;
+import fitnesse.testsystems.slim.results.Result;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
@@ -273,7 +273,7 @@ public class HtmlTable implements Table {
 
   class Cell {
     private TableColumn columnNode;
-    private Response response;
+    private Result response;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
@@ -325,9 +325,9 @@ public class HtmlTable implements Table {
       return response != null ? response.toString() : getContent();
     }
 
-    public void setResponse(Response response) {
+    public void setResponse(Result response) {
       if (this.response != null) {
-        this.response = new PlainResponse(this.response, response);
+        this.response = new PlainResult(this.response, response);
       } else {
         this.response = response;
       }
@@ -339,18 +339,18 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void setCell(int col, int row, Response response) {
+  public void setCell(int col, int row, Result response) {
     setCell(col, row, response.toHtml());
     updateResponse(col, row, response);
   }
 
   @Override
-  public void appendToCell(int col, int row, Response response) {
+  public void appendToCell(int col, int row, Result response) {
     appendToCell(col, row, response.toHtml());
     updateResponse(col, row, response);
   }
 
-  private void updateResponse(int col, int row, Response response) {
+  private void updateResponse(int col, int row, Result response) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setResponse(response);
   }

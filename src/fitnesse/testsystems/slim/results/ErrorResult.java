@@ -1,15 +1,15 @@
-package fitnesse.testsystems.slim.responses;
+package fitnesse.testsystems.slim.results;
 
-public class ErrorResponse implements Response {
+public class ErrorResult implements Result {
 
   private final String s;
   private String cause;
 
-  public ErrorResponse(String s) {
+  public ErrorResult(String s) {
     this.s = s;
   }
 
-  public ErrorResponse(String cause, String actual) {
+  public ErrorResult(String cause, String actual) {
     s = actual;
     this.cause = cause;
   }

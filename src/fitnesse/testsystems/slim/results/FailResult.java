@@ -1,10 +1,10 @@
-package fitnesse.testsystems.slim.responses;
+package fitnesse.testsystems.slim.results;
 
-public class FailResponse implements Response {
+public class FailResult implements Result {
 
   private final String s;
 
-  public FailResponse(String s) {
+  public FailResult(String s) {
     this.s = s;
   }
 

@@ -28,7 +28,7 @@ import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.responses.FailResponse;
+import fitnesse.testsystems.slim.results.FailResult;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -352,7 +352,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       } catch (SyntaxError e) {
         String tableName = table.getTable().getCellContents(0, 0);
         // TODO: remove: raise TableFormatException or something like that.
-        table.getTable().setCell(0, 0, new FailResponse(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+        table.getTable().setCell(0, 0, new FailResult(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
       }
     }
     return instructions;
@@ -474,7 +474,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
-      String prefix = (isStopTestException) ? MESSAGE_FAIL : MESSAGE_ERROR;
+      String prefix = isStopTestException ? MESSAGE_FAIL : MESSAGE_ERROR;
       String exceptionMessage = exceptionMessageMatcher.group(1);
       instructionResults.put(resultKey, prefix + translateExceptionMessage(exceptionMessage));
     } else {

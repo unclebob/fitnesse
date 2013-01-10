@@ -1,6 +1,6 @@
-package fitnesse.testsystems.slim.responses;
+package fitnesse.testsystems.slim.results;
 
-public interface Response {
+public interface Result {
 
   /**
    * @return String representation of the response.

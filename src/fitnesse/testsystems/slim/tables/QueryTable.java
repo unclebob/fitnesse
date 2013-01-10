@@ -12,7 +12,7 @@ import java.util.Map;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.responses.Response;
+import fitnesse.testsystems.slim.results.Result;
 import util.ListUtility;
 
 public class QueryTable extends SlimTable {
@@ -45,7 +45,7 @@ public class QueryTable extends SlimTable {
     if (actual.equals(replaceSymbols(expected)))
       return expected;
     Comparator c = new Comparator(actual, expected);
-    Response e = c.evaluate();
+    Result e = c.evaluate();
     return e != null ? e.toString() : null;
   }
 
