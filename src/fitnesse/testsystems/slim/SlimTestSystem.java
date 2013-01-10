@@ -421,6 +421,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   protected void evaluateTables() {
+    // TODO: remove this line:
+    replaceExceptionsWithLinks();
     evaluateExpectations();
     for (SlimTable table : testTables)
       evaluateTable(table);

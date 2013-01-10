@@ -22,10 +22,9 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
 
   @Override
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
-    replaceExceptionsWithLinks();
     evaluateTables();
     String exceptionsString = exceptions.toHtml();
-    
+
     Table start = (startWithTable != null) ? startWithTable.getTable() : null;
     Table end = (stopBeforeTable != null) ? stopBeforeTable.getTable() : null;
     String testResultHtml = tableScanner.toHtml(start, end);
