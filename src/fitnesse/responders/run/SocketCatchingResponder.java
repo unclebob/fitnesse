@@ -7,9 +7,11 @@ import java.net.Socket;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.components.SocketDealer;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.testsystems.fit.SocketDoner;
 
 public class SocketCatchingResponder implements Responder, SocketDoner, ResponsePuppeteer {
   private int ticketNumber;

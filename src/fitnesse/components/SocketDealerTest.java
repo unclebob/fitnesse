@@ -1,13 +1,15 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.components;
 
 import java.net.Socket;
 import java.util.Collection;
 
 import junit.framework.TestCase;
+import fitnesse.testsystems.fit.SimpleSocketSeeker;
+import fitnesse.testsystems.fit.SocketDoner;
+import fitnesse.testsystems.fit.SocketSeeker;
 import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.SimpleSocketSeeker;
 
 public class SocketDealerTest extends TestCase {
   private SocketDealer dealer;

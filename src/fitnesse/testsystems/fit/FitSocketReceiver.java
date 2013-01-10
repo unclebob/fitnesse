@@ -1,13 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testutil;
+package fitnesse.testsystems.fit;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import fitnesse.components.SocketDealer;
 import fitnesse.http.Request;
-import fitnesse.responders.run.SocketDealer;
 
 public class FitSocketReceiver {
   public static int DEFAULT_SOCKET = 9123;

@@ -1,11 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems.fit;
 
 import fit.FitServer;
-import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.run.SocketDoner;
-import fitnesse.responders.run.SocketSeeker;
+import fitnesse.components.CommandRunner;
+import fitnesse.components.FitClient;
+import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
 
@@ -183,7 +183,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     public void run() {
       try {
         Thread.sleep(1000);  // next waitFor() can finish too quickly on Linux!
-        commandRunner.process.waitFor();
+        commandRunner.waitForCommandToFinish();
         synchronized (CommandRunningFitClient.this) {
           if (!connectionEstablished) {
             CommandRunningFitClient.this.notify();

@@ -4,11 +4,12 @@ package fitnesse.responders.run;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
+import fitnesse.components.SocketDealer;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.SimpleSocketSeeker;
 
 public class SocketCatchingResponderTest extends RegexTestCase {
   private SocketDealer dealer;
