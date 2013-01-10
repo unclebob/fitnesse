@@ -116,10 +116,4 @@ public class HtmlTagTest {
     tag.use("new");
     assertEquals("<aTag>new</aTag>" + endl, tag.html());
   }
-
-  @Test
-  public void comment() throws Exception {
-    HtmlComment comment = new HtmlComment("the comment");
-    assertEquals("<!--the comment-->" +endl, comment.html());
-  }
 }
