@@ -16,6 +16,7 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 import fitnesse.responders.run.ExecutionResult;
+import fitnesse.slimTables.responses.PlainResponse;
 import fitnesse.slimTables.responses.Response;
 import fitnesse.wikitext.Utils;
 
@@ -272,6 +273,7 @@ public class HtmlTable implements Table {
 
   class Cell {
     private TableColumn columnNode;
+    private Response response;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
@@ -319,6 +321,18 @@ public class HtmlTable implements Table {
       columnNode.setChildren(nodeList);
     }
 
+    public String getResponse() {
+      return response != null ? response.toString() : getContent();
+    }
+
+    public void setResponse(Response response) {
+      if (this.response != null) {
+        this.response = new PlainResponse(this.response, response);
+      } else {
+        this.response = response;
+      }
+    }
+
     public TableColumn getColumnNode() {
       return columnNode;
     }
@@ -327,11 +341,18 @@ public class HtmlTable implements Table {
   @Override
   public void setCell(int col, int row, Response response) {
     setCell(col, row, response.toHtml());
+    updateResponse(col, row, response);
   }
 
   @Override
   public void appendToCell(int col, int row, Response response) {
     appendToCell(col, row, response.toHtml());
+    updateResponse(col, row, response);
+  }
+
+  private void updateResponse(int col, int row, Response response) {
+    Cell cell = rows.get(row).getColumn(col);
+    cell.setResponse(response);
   }
 }
 
