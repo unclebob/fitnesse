@@ -21,7 +21,7 @@ public class ReturnedValueExpectationTest {
     Table t = ts.getTable(0);
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
     SlimTable.Expectation expectation = slimTable.new ReturnedValueExpectation("instructionId", 1, 2);
-    assertEquals(message, HtmlTable.colorize(expectation.evaluationMessage(value, expected)));
+    assertEquals(message, expectation.evaluationMessage(value, expected).toString());
     assertEquals(message, expectation.getEvaluationMessage());
     assertEquals(2, expectation.getRow());
     assertEquals(1, expectation.getCol());

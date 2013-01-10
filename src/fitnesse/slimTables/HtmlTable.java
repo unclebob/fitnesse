@@ -5,9 +5,6 @@ package fitnesse.slimTables;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -23,7 +20,6 @@ import fitnesse.slimTables.responses.Response;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
-  private static Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
 
@@ -73,7 +69,8 @@ public class HtmlTable implements Table {
   }
 
   public void setCell(int col, int row, String contents) {
-    rows.get(row).getColumn(col).setContent(contents);
+    Cell cell = rows.get(row).getColumn(col);
+    cell.setContent(contents);
   }
 
   public List<List<String>> asList() {
@@ -180,27 +177,6 @@ public class HtmlTable implements Table {
   }
 
 
-  // This terrible algorithm is an example of either my hatred, or my ignorance, of regular expressions.
-  public static String colorize(String content) {
-    while (true) {
-      int firstMatchEnd = content.indexOf("</span>");
-      if (firstMatchEnd != -1) {
-        firstMatchEnd += "</span>".length();
-        Matcher matcher = coloredCellPattern.matcher(content);
-        matcher.region(0, firstMatchEnd);
-        if (matcher.find()) {
-          String color = matcher.group(1);
-          String coloredString = matcher.group(2);
-          content = content.replace(matcher.group(), String.format("%s(%s)", color, coloredString));
-        } else
-          break;
-      } else {
-        break;
-      }
-    }
-    return content;
-  }
-
   class Row {
     private List<Cell> cells = new ArrayList<Cell>();
     private CompositeTag rowNode;
@@ -245,10 +221,11 @@ public class HtmlTable implements Table {
       return rowNode;
     }
 
-    public List<String> asList() {
+    private List<String> asList() {
       List<String> list = new ArrayList<String>();
       for (Cell cell : cells) {
-        list.add(colorize(cell.getContent()));
+        // was "colorized"
+        list.add(cell.getResponse());
       }
       return list;
     }

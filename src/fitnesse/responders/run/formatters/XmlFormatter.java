@@ -5,7 +5,6 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.*;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageData;
@@ -19,6 +18,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class XmlFormatter extends BaseFormatter {
   public interface WriterFactory {
@@ -36,23 +37,23 @@ public class XmlFormatter extends BaseFormatter {
     super(context, page);
     this.writerFactory = writerFactory;
   }
-  
+
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     currentTestStartTime = timeMeasurement.startedAt();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
-  
+
   @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     this.testSystem = testSystem;
   }
-  
+
   @Override
   public void testOutputChunk(String output) {
     appendHtmlToBuffer(output);
   }
-  
+
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(test, testSummary, timeMeasurement);
@@ -80,11 +81,11 @@ public class XmlFormatter extends BaseFormatter {
   protected TestExecutionReport.TestResult newTestResult() {
     return new TestExecutionReport.TestResult();
   }
-  
+
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
-  
+
   protected void setPage(WikiPage testPage) {
     this.page = testPage;
     testResponse.rootPath = testPage.getName();
@@ -100,7 +101,7 @@ public class XmlFormatter extends BaseFormatter {
   protected void setTotalRunTimeOnReport(TimeMeasurement totalTimeMeasurement) {
     testResponse.setTotalRunTimeInMillis(totalTimeMeasurement);
   }
-  
+
   protected void writeResults() throws IOException {
     writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
   }
@@ -193,11 +194,12 @@ public class XmlFormatter extends BaseFormatter {
       resultTable.add(resultRow);
       int cols = table.getColumnCountInRow(row);
       for (int col = 0; col < cols; col++) {
+        // TODO: -AJM- content is extracted from the HTML output. Yuck!
         String contents = table.getCellContents(col, row);
         if (isScenarioHtml(contents)) {
           addColorizedScenarioReference(resultRow, contents);
         } else {
-          String colorizedContents = HtmlTable.colorize(contents);
+          String colorizedContents = colorize(contents);
           resultRow.add(colorizedContents);
         }
       }
@@ -207,6 +209,29 @@ public class XmlFormatter extends BaseFormatter {
       String status = getTestStatus(contents);
       String tableName = getTableName(contents);
       resultRow.add(String.format("%s(scenario:%s)", status, tableName));
+    }
+
+    private static Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
+
+    // This terrible algorithm is an example of either my hatred, or my ignorance, of regular expressions.
+    public static String colorize(String content) {
+      while (true) {
+        int firstMatchEnd = content.indexOf("</span>");
+        if (firstMatchEnd != -1) {
+          firstMatchEnd += "</span>".length();
+          Matcher matcher = coloredCellPattern.matcher(content);
+          matcher.region(0, firstMatchEnd);
+          if (matcher.find()) {
+            String color = matcher.group(1);
+            String coloredString = matcher.group(2);
+            content = content.replace(matcher.group(), String.format("%s(%s)", color, coloredString));
+          } else
+            break;
+        } else {
+          break;
+        }
+      }
+      return content;
     }
 
     private String getTableName(String contents) {
@@ -265,6 +290,7 @@ public class XmlFormatter extends BaseFormatter {
       }
     }
 
+    // TODO: -AJM- Get rid of this bad example of coding
     private String expectationStatus(String message) {
       String status;
       if (message.matches(".*pass(.*)"))
