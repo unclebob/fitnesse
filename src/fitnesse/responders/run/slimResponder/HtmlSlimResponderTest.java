@@ -3,7 +3,6 @@
 package fitnesse.responders.run.slimResponder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.FitNesseContext;
@@ -14,7 +13,6 @@ import fitnesse.responders.run.slimResponder.SlimResponder;
 import fitnesse.slim.SlimClient;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
@@ -26,11 +24,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.parser.Collapsible;
-import fitnesse.wikitext.parser.Include;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -365,41 +358,6 @@ public class HtmlSlimResponderTest {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem
         .getScenarios().containsKey("myScenario"));
-  }
-
-  @Test
-  public void gettingPrecompiledScenarioWidgetsForChildLibraryPage()
-      throws Exception {
-    WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"),
-        "my suite content");
-    crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"),
-        "child library");
-    SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
-
-    ParsedPage scenarios = sys.getPreparsedScenarioLibrary();
-
-    Symbol includeParent = getCollapsibleSymbol(scenarios.getSyntaxTree());
-    assertNotNull(includeParent);
-    assertEquals("Precompiled Libraries",
-        ParserTestHelper.serializeContent(includeParent.childAt(0)));
-    Symbol childLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
-    assertTrue(ParserTestHelper.serializeContent(childLibraryInclude).contains(
-        "child library"));
-  }
-
-  private Symbol getIncludeSymbol(Symbol collapsibleSymbol) {
-    for (Symbol symbol : collapsibleSymbol.getChildren())
-      if (symbol.getType() instanceof Include)
-        return symbol;
-    return null;
-  }
-
-  private Symbol getCollapsibleSymbol(Symbol syntaxTree) throws Exception {
-    for (Symbol symbol : syntaxTree.getChildren()) {
-      if (symbol.getType() instanceof Collapsible)
-        return symbol;
-    }
-    return null;
   }
 
   private static class DummyListener implements TestSystemListener {
