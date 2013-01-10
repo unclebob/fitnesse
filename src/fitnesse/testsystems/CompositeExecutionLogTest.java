@@ -39,9 +39,9 @@ public class CompositeExecutionLogTest {
 
   @Test
   public void publish() throws Exception {
-    log.add("testSystem1", new ExecutionLog(testPage, runner, context.pageFactory));
-    log.add("testSystem2", new ExecutionLog(testPage, runner, context.pageFactory));
-    log.publish();
+    log.add("testSystem1", new ExecutionLog(testPage, runner));
+    log.add("testSystem2", new ExecutionLog(testPage, runner));
+    log.publish(context.pageFactory);
     WikiPage errorLogPage = root.getChildPage(ErrorLogName);
     assertNotNull(errorLogPage);
     WikiPage testErrorLog = errorLogPage.getChildPage("TestPage");

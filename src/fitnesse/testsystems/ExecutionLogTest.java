@@ -4,7 +4,6 @@ package fitnesse.testsystems;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
@@ -16,8 +15,6 @@ import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -29,14 +26,14 @@ public class ExecutionLogTest {
   private ExecutionLog log;
   private WikiPage root;
   private FitNesseContext context;
-  
+
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     testPage = root.addChildPage("TestPage");
     runner = new MockCommandRunner("some command", 123);
     context = FitNesseUtil.makeTestContext(root);
-    log = new ExecutionLog(testPage, runner, context.pageFactory);
+    log = new ExecutionLog(testPage, runner);
   }
 
 
@@ -44,27 +41,6 @@ public class ExecutionLogTest {
   public void testNoErrrorLogPageToBeginWith() throws Exception {
     assertFalse(root.hasChildPage(ErrorLogName));
   }
-
-  @Test
-    public void testPageIsCreated() throws Exception {
-    log.publish();
-    assertTrue(root.hasChildPage(ErrorLogName));
-    WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
-    assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
-  }
-
-  @Test
-    public void testErrorLogContentIsReplaced() throws Exception {
-    WikiPage errorLogPage = root.getPageCrawler().addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    PageData data = errorLogPage.getData();
-    data.setContent("old content");
-    errorLogPage.commit(data);
-
-    log.publish();
-    String content = errorLogPage.getData().getContent();
-    assertNotSubString("old content", content);
-  }
-
   @Test
     public void testBasicContent() throws Exception {
     String content = getGeneratedContent();
@@ -84,11 +60,7 @@ public class ExecutionLogTest {
   }
 
   private String getGeneratedContent() throws Exception {
-    log.publish();
-    WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
-    WikiPage errorLogPage = errorLogsParentPage.getChildPage(testPage.getName());
-    String content = errorLogPage.getData().getContent();
-    return content;
+    return log.buildLogContent(context.pageFactory);
   }
 
   @Test
@@ -131,7 +103,7 @@ public class ExecutionLogTest {
     public void testExecutionReport_Ok() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -149,7 +121,7 @@ public class ExecutionLogTest {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     mockCommandRunner.setOutput("I wrote something here");
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -166,7 +138,7 @@ public class ExecutionLogTest {
     public void testExecutionReport_Error() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     executionLog.addException(new RuntimeException("I messed up"));
     ExecutionStatus result;
 

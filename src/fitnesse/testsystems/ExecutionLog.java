@@ -13,7 +13,6 @@ import util.Clock;
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -34,15 +33,13 @@ public class ExecutionLog {
 
   private final WikiPage testPage;
   private final CommandRunner runner;
-  private final PageFactory pageFactory;
   private final List<String> reasons = new LinkedList<String>();
   private final List<Throwable> exceptions = new LinkedList<Throwable>();
 
-  public ExecutionLog(WikiPage testPage, CommandRunner client, PageFactory pageFactory) {
+  public ExecutionLog(WikiPage testPage, CommandRunner client) {
     this.testPage = testPage;
     runner = client;
-    this.pageFactory = pageFactory;
-    
+
     crawler = testPage.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     root = crawler.getRoot(testPage);
@@ -59,27 +56,18 @@ public class ExecutionLog {
       reasons.add(reason);
   }
 
-  public void publish() {
-    String content = buildLogContent();
-
-    WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
-    PageData data = errorLogPage.getData();
-    data.setContent(content);
-    errorLogPage.commit(data);
-  }
-
-  String buildLogContent() {
+  String buildLogContent(PageFactory pageFactory) {
     VelocityContext context = new VelocityContext();
-    
+
     context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
     context.put("testPage", "." + PathParser.render(crawler.getFullPath(testPage)));
     context.put("runner", runner);
     exceptions.addAll(runner.getExceptions());
     context.put("exceptions", exceptions);
-    
+
     return pageFactory.render(context, "executionLog.vm");
   }
-  
+
   int exceptionCount() {
     return exceptions.size();
   }

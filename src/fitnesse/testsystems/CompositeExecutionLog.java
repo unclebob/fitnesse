@@ -5,6 +5,7 @@ package fitnesse.testsystems;
 import java.util.HashMap;
 import java.util.Map;
 
+import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -30,33 +31,33 @@ public class CompositeExecutionLog {
     logs.put(testSystemName, executionLog);
   }
 
-  public void publish() {
-    String content = buildLogContent();
+  public void publish(PageFactory pageFactory) {
+    String content = buildLogContent(pageFactory);
 
     WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
-    
+
     if(root != null) {
       WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
       WikiPage wikiPage = crawler.getPage(root, wpp);
       if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();   
+        PageData pageData = wikiPage.getData();
         String tags = pageData.getAttribute(PageData.PropertySUITES);
         if(tags != null && tags !="" ){
           data.setAttribute(PageData.PropertySUITES,tags);
         }
       }
     }
-  
+
     data.setContent(content);
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent() {
+  private String buildLogContent(PageFactory pageFactory) {
     StringBuffer logContent = new StringBuffer();
     for (String testSystemName : logs.keySet()) {
       logContent.append(String.format("!3 !-%s-!\n", testSystemName));
-      logContent.append(logs.get(testSystemName).buildLogContent());
+      logContent.append(logs.get(testSystemName).buildLogContent(pageFactory));
     }
     return logContent.toString();
   }
@@ -64,14 +65,14 @@ public class CompositeExecutionLog {
   public String getErrorLogPageName() {
     return PathParser.render(errorLogPagePath);
   }
-  
+
   public int exceptionCount() {
     int count = 0;
     for (ExecutionLog log : logs.values())
       count += log.exceptionCount();
     return count;
   }
-  
+
   public boolean hasCapturedOutput() {
     for (ExecutionLog log : logs.values())
       if (log.hasCapturedOutput())

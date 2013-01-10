@@ -26,7 +26,7 @@ public class FitTestSystem extends TestSystem {
    String command = buildCommand(descriptor, classPath);
    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
    client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
-   return new ExecutionLog(page, client.commandRunner, context.pageFactory);
+   return new ExecutionLog(page, client.commandRunner);
  }
 
 
