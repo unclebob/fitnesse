@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
@@ -63,7 +64,7 @@ public class QueryTable extends SlimTable {
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     boolean isTableInstruction = resultKey.equals(tableInstruction);
-    boolean isNoMethodException = resultString.contains("NO_METHOD_IN_CLASS");
+    boolean isNoMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);
     return isTableInstruction && isNoMethodException;
   }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import fitnesse.slim.NameTranslator;
 import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimServer;
 
 import static java.lang.String.format;
 
@@ -69,7 +70,7 @@ public class InstructionFactory {
     try {
       return (String) words.get(word);
     } catch (Exception e) {
-      throw new SlimError(format("message:<<MALFORMED_INSTRUCTION %s.>>", wordsToString(words)));
+      throw new SlimError(format("message:<<%s %s.>>", SlimServer.MALFORMED_INSTRUCTION, wordsToString(words)));
     }
   }
 

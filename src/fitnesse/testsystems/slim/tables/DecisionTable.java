@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -57,7 +58,7 @@ public class DecisionTable extends SlimTable {
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     boolean shouldNotReport = dontReportExceptionsInTheseInstructions.contains(resultKey);
-    boolean isNoSuchMethodException = resultString.contains("NO_METHOD_IN_CLASS");
+    boolean isNoSuchMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);
     return shouldNotReport && isNoSuchMethodException;
   }
 

@@ -14,8 +14,16 @@ import java.net.Socket;
 import java.util.List;
 
 public class SlimServer implements SocketServer {
+  public static final String MALFORMED_INSTRUCTION = "MALFORMED_INSTRUCTION";
+  public static final String NO_CLASS = "NO_CLASS";
+  public static final String NO_INSTANCE = "NO_INSTANCE";
+  public static final String NO_CONVERTER_FOR_ARGUMENT_NUMBER = "NO_CONVERTER_FOR_ARGUMENT_NUMBER";
+  public static final String NO_CONSTRUCTOR = "NO_CONSTRUCTOR";
+  public static final String NO_METHOD_IN_CLASS = "NO_METHOD_IN_CLASS";
+  public static final String COULD_NOT_INVOKE_CONSTRUCTOR = "COULD_NOT_INVOKE_CONSTRUCTOR";
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
+
   private StreamReader reader;
   private BufferedWriter writer;
   private ListExecutor executor;

@@ -77,8 +77,8 @@ public class StatementExecutor implements StatementExecutorInterface {
 				return library.instance;
 			}
 		}
-		throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>",
-				instanceName));
+		throw new SlimError(String.format("message:<<%s %s.>>",
+				SlimServer.NO_INSTANCE, instanceName));
 	}
 
 	public <T> Converter<T> getConverter(Class<T> k) {
@@ -137,7 +137,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 	private String couldNotInvokeConstructorException(String className,
 			Object[] args) {
 		return exceptionToString(new SlimError(String.format(
-				"message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className,
+				"message:<<%s %s[%d]>>", SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR, className,
 				args.length)));
 	}
 
@@ -147,8 +147,8 @@ public class StatementExecutor implements StatementExecutorInterface {
 		Class<?> k = searchPathsForClass(className);
 		Constructor<?> constructor = getConstructor(k.getConstructors(), args);
 		if (constructor == null)
-			throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>",
-					className));
+			throw new SlimError(String.format("message:<<%s %s>>",
+					SlimServer.NO_CONSTRUCTOR, className));
 
 		Object newInstance = newInstance(args, constructor);
 		if (newInstance instanceof StatementExecutorConsumer) {
@@ -181,7 +181,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 			if (k != null)
 				return k;
 		}
-		throw new SlimError(String.format("message:<<NO_CLASS %s>>", className));
+		throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CLASS, className));
 	}
 
 	private Class<?> getClass(String className) {

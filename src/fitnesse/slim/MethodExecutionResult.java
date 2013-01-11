@@ -6,8 +6,6 @@ import fitnesse.slim.converters.ConverterRegistry;
 
 public class MethodExecutionResult {
   private static class NoMethod extends MethodExecutionResult {
-    static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
-
     private final int numberOfArgs;
     private final String methodName;
     private final Class<?> clazz;
@@ -26,7 +24,7 @@ public class MethodExecutionResult {
 
     @Override
     public Object returnValue() {
-      throw new SlimError(String.format(MESSAGE_NO_METHOD_IN_CLASS, methodName, numberOfArgs,
+      throw new SlimError(String.format("message:<<%s %s[%d] %s.>>", SlimServer.NO_METHOD_IN_CLASS, methodName, numberOfArgs,
           clazz.getName()));
     }
 
@@ -42,7 +40,7 @@ public class MethodExecutionResult {
     }
 
     public Object returnValue() {
-      throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
+      throw new SlimError(String.format("message:<<%s %s.>>", SlimServer.NO_INSTANCE, instanceName));
     }
 
     @Override
