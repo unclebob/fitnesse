@@ -2,8 +2,6 @@ package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -25,10 +23,6 @@ public class LibraryTable extends SlimTable {
       }
     }
     return instructions;
-  }
-
-  @Override
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
   @Override

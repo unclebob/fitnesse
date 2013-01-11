@@ -26,28 +26,33 @@ public class TableTable extends SlimTable {
   public List<Object> getInstructions() {
     List<Object> make = constructFixture(getFixtureName());
     List<Object> doTable = callFunction(getTableName(), "doTable", tableAsList());
+    addExpectation(new TableTableExpectation());
     doTableId = getInstructionId(doTable);
     return list(make, doTable);
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-    if (doTableId == null || returnValues.get(doTableId) == null) {
-      table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
-      return;
-    }
+  public class TableTableExpectation implements Expectation {
 
-    Object tableReturn = returnValues.get(doTableId);
-    if (tableReturn instanceof String) {
-      String value = (String) tableReturn;
-      if (isTestCaseErrorMessage(value)) {
+    @Override
+    public void evaluateExpectation(Map<String, Object> returnValues) {
+      if (doTableId == null || returnValues.get(doTableId) == null) {
         table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
-      } else if (isExceptionFailureMessage(value)) {
-        table.appendToCell(0, 0, error(value));
+        return;
       }
-      return;
-    }
 
-    resizeTableAndEvaluateRows(returnValues);
+      Object tableReturn = returnValues.get(doTableId);
+      if (tableReturn instanceof String) {
+        String value = (String) tableReturn;
+        if (isTestCaseErrorMessage(value)) {
+          table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
+        } else if (isExceptionFailureMessage(value)) {
+          table.appendToCell(0, 0, error(value));
+        }
+        return;
+      }
+
+      resizeTableAndEvaluateRows(returnValues);
+    }
   }
 
   private boolean isTestCaseErrorMessage(String value) {

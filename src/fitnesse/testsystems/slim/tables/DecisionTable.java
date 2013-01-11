@@ -53,9 +53,6 @@ public class DecisionTable extends SlimTable {
     return callAndAssign(symbolName, getTableName(), functionName);
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-  }
-
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     boolean shouldNotReport = dontReportExceptionsInTheseInstructions.contains(resultKey);
     boolean isNoSuchMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);

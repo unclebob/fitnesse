@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class SlimTableTest {
   @Test
@@ -130,9 +129,6 @@ public class SlimTableTest {
 
     public List<Object> getInstructions() {
       return Collections.emptyList();
-    }
-
-    public void evaluateReturnValues(Map<String, Object> returnValues) {
     }
   }
 }

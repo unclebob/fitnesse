@@ -59,6 +59,7 @@ public class QueryTable extends SlimTable {
     List<Object> qi = callFunction(getTableName(), "query");
     tableInstruction = getInstructionId(ti);
     queryId = getInstructionId(qi);
+    addExpectation(new QueryTableExpectation());
     return list(make, ti, qi);
   }
 
@@ -74,15 +75,19 @@ public class QueryTable extends SlimTable {
       fieldNames.add(table.getCellContents(col, 1));
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-    Object queryReturn = returnValues.get(queryId);
-    if (queryId == null || queryReturn == null) {
-      table.appendToCell(0, 0, error("query method did not return a list."));
-      return;
-    } else if (queryReturn instanceof String) {
-      appendQueryErrorMessage((String) queryReturn);
-    } else {
-      scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
+  public class QueryTableExpectation implements Expectation {
+
+    @Override
+    public void evaluateExpectation(Map<String, Object> returnValues) {
+      Object queryReturn = returnValues.get(queryId);
+      if (queryId == null || queryReturn == null) {
+        table.appendToCell(0, 0, error("query method did not return a list."));
+        return;
+      } else if (queryReturn instanceof String) {
+        appendQueryErrorMessage((String) queryReturn);
+      } else {
+        scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
+      }
     }
   }
 

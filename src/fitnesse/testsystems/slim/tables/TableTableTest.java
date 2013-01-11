@@ -59,7 +59,6 @@ public class TableTableTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    tt.evaluateReturnValues(pseudoResults);
     assertEquals(table, tt.getTable().toString());
   }
 
@@ -292,7 +291,6 @@ public class TableTableTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    tt.evaluateReturnValues(pseudoResults);
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
   }
 
@@ -313,7 +311,6 @@ public class TableTableTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    tt.evaluateReturnValues(pseudoResults);
     assertEquals("[[pass(Table:fixture)error(Exception: except), argument], [2, 4]]",
         tt.getTable().toString());
   }

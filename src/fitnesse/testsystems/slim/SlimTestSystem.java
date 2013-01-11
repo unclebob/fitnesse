@@ -441,7 +441,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private void evaluateTable(SlimTable table) {
     try {
-      table.evaluateReturnValues(instructionResults);
       testSummary.add(table.getTestSummary());
     } catch (Throwable e) {
       exceptions.addException("ABORT", exceptionToString(e));

@@ -129,9 +129,6 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-  }
-
   public String getName() {
     return name;
   }

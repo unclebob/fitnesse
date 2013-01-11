@@ -74,7 +74,6 @@ public abstract class QueryTableBaseTest {
     )
     );
     testContext.evaluateExpectations(pseudoResults);
-    qt.evaluateReturnValues(pseudoResults);
     org.junit.Assert.assertEquals(table, qt.getTable().toString());
   }
 
@@ -258,7 +257,6 @@ public abstract class QueryTableBaseTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    qt.evaluateReturnValues(pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -285,7 +283,6 @@ public abstract class QueryTableBaseTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    qt.evaluateReturnValues(pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -311,7 +308,6 @@ public abstract class QueryTableBaseTest {
       )
     );
     testContext.evaluateExpectations(pseudoResults);
-    qt.evaluateReturnValues(pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +

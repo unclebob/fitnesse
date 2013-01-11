@@ -6,8 +6,6 @@ import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -35,9 +33,6 @@ public class ImportTable extends SlimTable {
       }
     }
     return instructions;
-  }
-
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
 }

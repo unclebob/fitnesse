@@ -203,9 +203,6 @@ public class ScriptTable extends SlimTable {
     return constructInstance("scriptTableActor", className, classNameColumn, row);
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-  }
-
   class ArgumentExtractor {
     private int argumentColumn;
     private int endingCol;

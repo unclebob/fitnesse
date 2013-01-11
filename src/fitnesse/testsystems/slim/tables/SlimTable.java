@@ -104,8 +104,6 @@ public abstract class SlimTable {
     return tableName;
   }
 
-  public abstract void evaluateReturnValues(Map<String, Object> returnValues);
-
   public String getSymbol(String variableName) {
     return testContext.getSymbol(variableName);
   }

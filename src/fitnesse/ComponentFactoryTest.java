@@ -5,7 +5,6 @@ package fitnesse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.htmlparser.nodes.TextNode;
@@ -247,10 +246,5 @@ public class ComponentFactoryTest extends RegexTestCase {
     public List<Object> getInstructions() {
       return null;
     }
-
-    @Override
-    public void evaluateReturnValues(Map<String, Object> returnValues) {
-    }
-
   }
 }

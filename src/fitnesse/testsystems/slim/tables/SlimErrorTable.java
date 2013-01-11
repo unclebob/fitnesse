@@ -28,7 +28,4 @@ public class SlimErrorTable extends SlimTable {
     Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
     table.setCell(0, 0, errorMessage);
   }
-
-  public void evaluateReturnValues(Map<String, Object> returnValues) {
-  }
 }
