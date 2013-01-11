@@ -129,8 +129,7 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues)
-    throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
   public String getName() {

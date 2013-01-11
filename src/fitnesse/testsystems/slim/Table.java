@@ -22,9 +22,9 @@ public interface Table {
 
   void setCell(int col, int row, String contents);
 
-  int addRow(List<String> list) throws Exception;
+  int addRow(List<String> list);
 
-  void appendCellToRow(int row, String contents) throws Exception;
+  void appendCellToRow(int row, String contents);
 
   String getUnescapedCellContents(int col, int row);
 

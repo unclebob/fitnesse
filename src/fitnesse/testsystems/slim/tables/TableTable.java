@@ -30,7 +30,7 @@ public class TableTable extends SlimTable {
     return list(make, doTable);
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
     if (doTableId == null || returnValues.get(doTableId) == null) {
       table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
       return;
@@ -55,19 +55,19 @@ public class TableTable extends SlimTable {
   }
 
   @SuppressWarnings("unchecked")
-  private void resizeTableAndEvaluateRows(Map<String, Object> returnValues) throws Exception {
+  private void resizeTableAndEvaluateRows(Map<String, Object> returnValues) {
     List<List<Object>> tableResults = (List<List<Object>>) returnValues.get(doTableId);
     extendTable(table, tableResults);
     for (int row = 0; row < tableResults.size(); row++)
       evaluateRow(tableResults, row);
   }
 
-  private void extendTable(Table table, List<List<Object>> tableResults) throws Exception {
+  private void extendTable(Table table, List<List<Object>> tableResults) {
     addNewRows(table, tableResults);
     extendExistingRows(table, tableResults);
   }
 
-  private void addNewRows(Table table, List<List<Object>> tableResults) throws Exception {
+  private void addNewRows(Table table, List<List<Object>> tableResults) {
     while (table.getRowCount() - 1 < tableResults.size()) {
       List<String> l = new ArrayList<String>();
       for (Object s : tableResults.get(table.getRowCount() - 1))
@@ -76,12 +76,12 @@ public class TableTable extends SlimTable {
     }
   }
 
-  private void extendExistingRows(Table table, List<List<Object>> tableResults) throws Exception {
+  private void extendExistingRows(Table table, List<List<Object>> tableResults) {
     for (int row = 1; row < tableResults.size(); row++)
       extendRow(table, row, tableResults.get(row - 1));
   }
 
-  private void extendRow(Table table, int row, List<Object> cellList) throws Exception {
+  private void extendRow(Table table, int row, List<Object> cellList) {
     while (table.getColumnCountInRow(row) < cellList.size())
       table.appendCellToRow(row, (String) cellList.get(table.getColumnCountInRow(row)));
   }

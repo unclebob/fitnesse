@@ -28,8 +28,7 @@ public class LibraryTable extends SlimTable {
   }
 
   @Override
-  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
-
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
   @Override

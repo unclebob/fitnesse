@@ -12,7 +12,7 @@ public class SubsetQueryTable extends QueryTable {
   }
 
   @Override
-  protected void scanRowsForMatches(List<Object> queryResultList) throws Exception {
+  protected void scanRowsForMatches(List<Object> queryResultList) {
     queryResults = new QueryResults(queryResultList);
     int rows = table.getRowCount();
     for (int tableRow = 2; tableRow < rows; tableRow++)

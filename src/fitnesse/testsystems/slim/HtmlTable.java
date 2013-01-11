@@ -89,7 +89,7 @@ public class HtmlTable implements Table {
     return tableNode.toHtml();
   }
 
-  public int addRow(List<String> list) throws Exception {
+  public int addRow(List<String> list) {
     Row row = new Row();
     rows.add(row);
     tableNode.getChildren().add(row.getRowNode());
@@ -98,7 +98,7 @@ public class HtmlTable implements Table {
     return rows.size() - 1;
   }
 
-  public void appendCellToRow(int rowIndex, String contents) throws Exception {
+  public void appendCellToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
     row.appendCell(contents);
   }

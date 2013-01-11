@@ -73,7 +73,7 @@ public class QueryTable extends SlimTable {
       fieldNames.add(table.getCellContents(col, 1));
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
     Object queryReturn = returnValues.get(queryId);
     if (queryId == null || queryReturn == null) {
       table.appendToCell(0, 0, error("query method did not return a list."));
@@ -92,7 +92,7 @@ public class QueryTable extends SlimTable {
       table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
   }
 
-  protected void scanRowsForMatches(List<Object> queryResultList) throws Exception {
+  protected void scanRowsForMatches(List<Object> queryResultList) {
     queryResults = new QueryResults(queryResultList);
     int rows = table.getRowCount();
     for (int tableRow = 2; tableRow < rows; tableRow++)
@@ -100,7 +100,7 @@ public class QueryTable extends SlimTable {
     markSurplusRows();
   }
 
-  private void markSurplusRows() throws Exception {
+  private void markSurplusRows() {
     List<Integer> unmatchedRows = queryResults.getUnmatchedRows();
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
@@ -120,7 +120,7 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  protected void scanRowForMatch(int tableRow) throws Exception {
+  protected void scanRowForMatch(int tableRow) {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);

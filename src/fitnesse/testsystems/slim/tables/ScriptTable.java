@@ -203,7 +203,7 @@ public class ScriptTable extends SlimTable {
     return constructInstance("scriptTableActor", className, classNameColumn, row);
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
   class ArgumentExtractor {

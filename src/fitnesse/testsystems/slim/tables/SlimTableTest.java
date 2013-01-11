@@ -132,7 +132,7 @@ public class SlimTableTest {
       return Collections.emptyList();
     }
 
-    public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+    public void evaluateReturnValues(Map<String, Object> returnValues) {
     }
   }
 }

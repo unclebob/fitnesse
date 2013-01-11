@@ -11,7 +11,7 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   @Override
-  protected void scanRowForMatch(int tableRow) throws Exception {
+  protected void scanRowForMatch(int tableRow) {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);

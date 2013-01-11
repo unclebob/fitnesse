@@ -249,8 +249,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public void evaluateReturnValues(Map<String, Object> returnValues)
-        throws Exception {
+    public void evaluateReturnValues(Map<String, Object> returnValues) {
     }
 
   }
