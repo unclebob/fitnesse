@@ -239,7 +239,7 @@ public class ScriptTable extends SlimTable {
     }
   }
 
-  private class ScriptActionExpectation extends Expectation {
+  private class ScriptActionExpectation extends RowExpectation {
     private ScriptActionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -258,7 +258,7 @@ public class ScriptTable extends SlimTable {
     }
   }
 
-  private class EnsureActionExpectation extends Expectation {
+  private class EnsureActionExpectation extends RowExpectation {
     public EnsureActionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -269,7 +269,7 @@ public class ScriptTable extends SlimTable {
     }
   }
 
-  private class RejectActionExpectation extends Expectation {
+  private class RejectActionExpectation extends RowExpectation {
     public RejectActionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -282,7 +282,7 @@ public class ScriptTable extends SlimTable {
     }
   }
 
-  private class ShowActionExpectation extends Expectation {
+  private class ShowActionExpectation extends RowExpectation {
     public ShowActionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -297,7 +297,7 @@ public class ScriptTable extends SlimTable {
     }
   }
 
-  private class ArgumentExpectation extends Expectation {
+  private class ArgumentExpectation extends RowExpectation {
     private ArgumentExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }

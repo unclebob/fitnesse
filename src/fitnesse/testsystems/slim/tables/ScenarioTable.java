@@ -250,7 +250,7 @@ public class ScenarioTable extends SlimTable {
   }
 //// till here
 
-  private class ScenarioExpectation extends Expectation {
+  private class ScenarioExpectation extends RowExpectation {
     private ScriptTable scriptTable;
 
     private ScenarioExpectation(ScriptTable scriptTable, int row) {

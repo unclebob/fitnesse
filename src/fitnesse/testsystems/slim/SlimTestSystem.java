@@ -39,6 +39,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.FailResult;
+import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -63,7 +64,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
   protected List<SlimTable> allTables = new ArrayList<SlimTable>();
   protected List<Object> allInstructions = new ArrayList<Object>();
-  protected List<SlimTable.Expectation> allExpectations = new ArrayList<SlimTable.Expectation>();
+  protected List<Expectation> allExpectations = new ArrayList<Expectation>();
 
 
   private boolean started;
@@ -78,7 +79,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
+  protected List<Expectation> expectations = new ArrayList<Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private ParsedPage preparsedScenarioLibrary;
 
@@ -104,7 +105,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return scenarios.get(scenarioName);
   }
 
-  public void addExpectation(SlimTable.Expectation e) {
+  public void addExpectation(Expectation e) {
     expectations.add(e);
   }
 
@@ -420,7 +421,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   protected void evaluateExpectations() {
-    for (SlimTable.Expectation e : expectations) {
+    for (Expectation e : expectations) {
       try {
         e.evaluateExpectation(instructionResults);
       } catch (Throwable ex) {
@@ -518,7 +519,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return allInstructionResults;
   }
 
-  public List<SlimTable.Expectation> getExpectations() {
+  public List<Expectation> getExpectations() {
     return allExpectations;
   }
 

@@ -2,9 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
-import fitnesse.testsystems.slim.tables.SlimTable;
-
 import java.util.Map;
 
 public interface SlimTestContext {
@@ -16,7 +15,7 @@ public interface SlimTestContext {
 
   ScenarioTable getScenario(String scenarioName);
 
-  void addExpectation(SlimTable.Expectation e);
+  void addExpectation(Expectation e);
 
   Map<String, ScenarioTable> getScenarios();
 }

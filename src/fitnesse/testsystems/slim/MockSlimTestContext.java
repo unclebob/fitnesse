@@ -2,9 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
-import fitnesse.testsystems.slim.tables.SlimTable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Map;
 public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
+  private List<Expectation> expectations = new ArrayList<Expectation>();
 
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
@@ -31,7 +30,7 @@ public class MockSlimTestContext implements SlimTestContext {
     return scenarios.get(scenarioName);
   }
 
-  public void addExpectation(SlimTable.Expectation e) {
+  public void addExpectation(Expectation e) {
     expectations.add(e);
   }
 
@@ -40,7 +39,7 @@ public class MockSlimTestContext implements SlimTestContext {
   }
 
   public void evaluateExpectations(Map<String, Object> results) {
-    for (SlimTable.Expectation e : expectations)
+    for (Expectation e : expectations)
       e.evaluateExpectation(results);
   }
 }

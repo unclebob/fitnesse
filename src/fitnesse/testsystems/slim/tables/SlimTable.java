@@ -136,7 +136,7 @@ public abstract class SlimTable {
   }
 
   protected List<Object> constructInstance(String instanceName, String className, int classNameColumn, int row) {
-    Expectation expectation = new ConstructionExpectation(getInstructionTag(), classNameColumn, row);
+    RowExpectation expectation = new ConstructionExpectation(getInstructionTag(), classNameColumn, row);
     addExpectation(expectation);
     List<Object> makeInstruction = prepareInstruction();
     makeInstruction.add("make");
@@ -409,7 +409,8 @@ public abstract class SlimTable {
     }
   }
 
-  public abstract class Expectation {
+  /** Expectation base class for row based expectations. */
+  public abstract class RowExpectation implements Expectation {
     private int col;
     private int row;
     private String instructionTag;
@@ -417,12 +418,16 @@ public abstract class SlimTable {
     private String expected;
     private Result evaluationMessage;
 
-    public Expectation(String instructionTag, int col, int row) {
+    public RowExpectation(String instructionTag, int col, int row) {
       this.row = row;
       this.instructionTag = instructionTag;
       this.col = col;
     }
 
+    /* (non-Javadoc)
+     * @see fitnesse.testsystems.slim.tables.Expectation#evaluateExpectation(java.util.Map)
+     */
+    @Override
     public void evaluateExpectation(Map<String, Object> returnValues) {
       Object returnValue = returnValues.get(instructionTag);
       Result evaluationMessage;
@@ -549,7 +554,7 @@ public abstract class SlimTable {
     }
   }
 
-  class VoidReturnExpectation extends Expectation {
+  class VoidReturnExpectation extends RowExpectation {
     public VoidReturnExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -559,7 +564,7 @@ public abstract class SlimTable {
     }
   }
 
-  class SilentReturnExpectation extends Expectation {
+  class SilentReturnExpectation extends RowExpectation {
     public SilentReturnExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -569,7 +574,7 @@ public abstract class SlimTable {
     }
   }
 
-  class ConstructionExpectation extends Expectation {
+  class ConstructionExpectation extends RowExpectation {
     public ConstructionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -582,7 +587,7 @@ public abstract class SlimTable {
     }
   }
 
-  class SymbolAssignmentExpectation extends Expectation {
+  class SymbolAssignmentExpectation extends RowExpectation {
     private String symbolName;
 
     SymbolAssignmentExpectation(String symbolName, String instructionTag, int col, int row) {
@@ -607,7 +612,7 @@ public abstract class SlimTable {
     Result fail(String message);
   }
 
-  class ReturnedValueExpectation extends Expectation implements ExpectationPassFailReporter {
+  class ReturnedValueExpectation extends RowExpectation implements ExpectationPassFailReporter {
     public ReturnedValueExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }

@@ -9,6 +9,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -147,7 +148,7 @@ public class XmlFormatter extends BaseFormatter {
     private TestExecutionReport.TestResult testResult;
     private List<Object> instructions;
     private Map<String, Object> results;
-    private List<SlimTable.Expectation> expectations;
+    private List<Expectation> expectations;
     private List<SlimTable> slimTables;
 
     public SlimTestXmlFormatter(TestExecutionReport.TestResult testResult, SlimTestSystem slimSystem) {
@@ -272,22 +273,25 @@ public class XmlFormatter extends BaseFormatter {
 
       instructionResult.instruction = instruction.toString();
       instructionResult.slimResult = (result != null) ? result.toString() : "";
-      for (SlimTable.Expectation expectation : expectations) {
-        if (expectation.getInstructionTag().equals(id)) {
-          try {
-            TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
-            instructionResult.addExpectation(expectationResult);
-            expectationResult.instructionId = expectation.getInstructionTag();
-            expectationResult.col = Integer.toString(expectation.getCol());
-            expectationResult.row = Integer.toString(expectation.getRow());
-            expectationResult.type = expectation.getClass().getSimpleName();
-            expectationResult.actual = expectation.getActual();
-            expectationResult.expected = expectation.getExpected();
-            String message = expectation.getEvaluationMessage();
-            expectationResult.evaluationMessage = message;
-            expectationResult.status = expectationStatus(message);
-          } catch (Throwable e) {
-            e.printStackTrace();
+      for (Expectation expectation : expectations) {
+        if (expectation instanceof SlimTable.RowExpectation) {
+          SlimTable.RowExpectation rowExpectation = (SlimTable.RowExpectation) expectation;
+          if (rowExpectation.getInstructionTag().equals(id)) {
+            try {
+              TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
+              instructionResult.addExpectation(expectationResult);
+              expectationResult.instructionId = rowExpectation.getInstructionTag();
+              expectationResult.col = Integer.toString(rowExpectation.getCol());
+              expectationResult.row = Integer.toString(rowExpectation.getRow());
+              expectationResult.type = rowExpectation.getClass().getSimpleName();
+              expectationResult.actual = rowExpectation.getActual();
+              expectationResult.expected = rowExpectation.getExpected();
+              String message = rowExpectation.getEvaluationMessage();
+              expectationResult.evaluationMessage = message;
+              expectationResult.status = expectationStatus(message);
+            } catch (Throwable e) {
+              e.printStackTrace();
+            }
           }
         }
       }
