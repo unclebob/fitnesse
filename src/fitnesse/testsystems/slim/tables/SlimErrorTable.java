@@ -4,8 +4,6 @@ package fitnesse.testsystems.slim.tables;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
@@ -20,12 +18,29 @@ public class SlimErrorTable extends SlimTable {
   }
 
   public List<Object> getInstructions() {
+    addExpectation(new SlimErrorTableExpectation(getInstructionTag()));
     return Collections.emptyList();
   }
 
-  public void evaluateExpectations(Map<String, Object> returnValues) {
-    String tableType = table.getCellContents(0, 0);
-    Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
-    table.setCell(0, 0, errorMessage);
+  public class SlimErrorTableExpectation implements Expectation {
+
+    private final String instructionTag;
+
+    public SlimErrorTableExpectation(String instructionTag) {
+      this.instructionTag = instructionTag;
+    }
+
+    @Override
+    public void evaluateExpectation(Object returnValues) {
+      String tableType = table.getCellContents(0, 0);
+      Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
+      table.setCell(0, 0, errorMessage);
+    }
+
+    @Override
+    public String getInstructionTag() {
+      return instructionTag;
+    }
+
   }
 }
