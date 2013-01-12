@@ -89,6 +89,11 @@ public class QueryTable extends SlimTable {
         scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
       }
     }
+
+    @Override
+    public String getInstructionTag() {
+      return queryId;
+    }
   }
 
   private void appendQueryErrorMessage(String message) {

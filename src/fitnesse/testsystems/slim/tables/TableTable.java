@@ -51,7 +51,12 @@ public class TableTable extends SlimTable {
         return;
       }
 
-      resizeTableAndEvaluateRows(returnValues);
+      resizeTableAndEvaluateRows(tableReturn);
+    }
+
+    @Override
+    public String getInstructionTag() {
+      return doTableId;
     }
   }
 
@@ -60,8 +65,8 @@ public class TableTable extends SlimTable {
   }
 
   @SuppressWarnings("unchecked")
-  private void resizeTableAndEvaluateRows(Map<String, Object> returnValues) {
-    List<List<Object>> tableResults = (List<List<Object>>) returnValues.get(doTableId);
+  private void resizeTableAndEvaluateRows(Object returnValue) {
+    List<List<Object>> tableResults = (List<List<Object>>) returnValue;
     extendTable(table, tableResults);
     for (int row = 0; row < tableResults.size(); row++)
       evaluateRow(tableResults, row);
