@@ -408,9 +408,10 @@ public abstract class SlimTable {
 
   /** Expectation base class for row based expectations. */
   public abstract class RowExpectation implements Expectation {
-    private int col;
-    private int row;
-    private String instructionTag;
+    private final int col;
+    private final int row;
+    private final String instructionTag;
+    // Needed for Xml Formatter...
     private String actual;
     private String expected;
     private Result evaluationMessage;

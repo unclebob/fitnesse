@@ -85,7 +85,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "make", "scriptTableActor", "Bob")
       );
-    assertEquals(expectedInstructions, instructions);  }
+    assertEquals(expectedInstructions, instructions);
+  }
 
   @Test
   public void startStatementWithArguments() throws Exception {
