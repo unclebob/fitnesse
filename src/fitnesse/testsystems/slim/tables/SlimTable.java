@@ -432,7 +432,6 @@ public abstract class SlimTable {
       if (returnValue == null) {
         String originalContent = table.getCellContents(col, row);
         evaluationMessage = new PlainResult(originalContent, ignore("Test not run"));
-        returnValues.put(instructionTag, "Test not run");
       } else {
         String value;
         value = returnValue.toString();

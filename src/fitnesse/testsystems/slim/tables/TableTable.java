@@ -35,13 +35,11 @@ public class TableTable extends SlimTable {
 
     @Override
     public void evaluateExpectation(Map<String, Object> returnValues) {
-      if (doTableId == null || returnValues.get(doTableId) == null) {
-        table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
-        return;
-      }
-
       Object tableReturn = returnValues.get(doTableId);
-      if (tableReturn instanceof String) {
+      if (tableReturn == null) {
+        // Nothing to do. Message has been placed by ConstructionExpectation.
+        return;
+      } else if (tableReturn instanceof String) {
         String value = (String) tableReturn;
         if (isTestCaseErrorMessage(value)) {
           table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
