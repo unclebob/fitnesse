@@ -78,8 +78,7 @@ public class QueryTable extends SlimTable {
   public class QueryTableExpectation implements Expectation {
 
     @Override
-    public void evaluateExpectation(Map<String, Object> returnValues) {
-      Object queryReturn = returnValues.get(queryId);
+    public void evaluateExpectation(Object queryReturn) {
       if (queryId == null || queryReturn == null) {
         table.appendToCell(0, 0, error("query method did not return a list."));
         return;

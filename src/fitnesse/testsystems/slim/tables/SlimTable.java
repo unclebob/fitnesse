@@ -9,7 +9,6 @@ import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -426,8 +425,7 @@ public abstract class SlimTable {
      * @see fitnesse.testsystems.slim.tables.Expectation#evaluateExpectation(java.util.Map)
      */
     @Override
-    public void evaluateExpectation(Map<String, Object> returnValues) {
-      Object returnValue = returnValues.get(instructionTag);
+    public void evaluateExpectation(Object returnValue) {
       Result evaluationMessage;
       if (returnValue == null) {
         String originalContent = table.getCellContents(col, row);

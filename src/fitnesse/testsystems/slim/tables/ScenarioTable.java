@@ -255,7 +255,7 @@ public class ScenarioTable extends SlimTable {
       this.scriptTable = scriptTable;
     }
 
-    public void evaluateExpectation(Map<String, Object> returnValues) {
+    public void evaluateExpectation(Object returnValue) {
       TestSummary counts = scriptTable.getTestSummary();
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ExecutionResult.getExecutionResult(counts);

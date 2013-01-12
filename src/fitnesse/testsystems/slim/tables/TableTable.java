@@ -7,8 +7,6 @@ import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -34,8 +32,7 @@ public class TableTable extends SlimTable {
   public class TableTableExpectation implements Expectation {
 
     @Override
-    public void evaluateExpectation(Map<String, Object> returnValues) {
-      Object tableReturn = returnValues.get(doTableId);
+    public void evaluateExpectation(Object tableReturn) {
       if (tableReturn == null) {
         // Nothing to do. Message has been placed by ConstructionExpectation.
         return;

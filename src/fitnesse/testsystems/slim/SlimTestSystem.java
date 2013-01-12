@@ -423,7 +423,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected void evaluateExpectations() {
     for (Expectation e : expectations) {
       try {
-        e.evaluateExpectation(instructionResults);
+        Object returnValue = instructionResults.get(e.getInstructionTag());
+        e.evaluateExpectation(returnValue);
       } catch (Throwable ex) {
         exceptions.addException("ABORT", exceptionToString(ex));
         exceptionOccurred(ex);

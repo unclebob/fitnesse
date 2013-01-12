@@ -39,7 +39,9 @@ public class MockSlimTestContext implements SlimTestContext {
   }
 
   public void evaluateExpectations(Map<String, Object> results) {
-    for (Expectation e : expectations)
-      e.evaluateExpectation(results);
+    for (Expectation e : expectations) {
+      Object returnValue = results.get(e.getInstructionTag());
+      e.evaluateExpectation(returnValue);
+    }
   }
 }

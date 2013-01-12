@@ -299,7 +299,7 @@ public class ScriptTable extends SlimTable {
       super(instructionTag, col, row);
     }
 
-    public void evaluateExpectation(Map<String, Object> returnValues) {
+    public void evaluateExpectation(Object returnValue) {
       String originalContent = table.getCellContents(getCol(), getRow());
       table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
     }
