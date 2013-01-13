@@ -88,6 +88,7 @@ private void validateConnection() {
     int resultLength = getLengthToRead();
     String results = null;
     results = reader.read(resultLength);
+    // resultList is a list: [tag, resultValue]
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
   }

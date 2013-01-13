@@ -81,6 +81,8 @@ public class SlimServer implements SocketServer {
       return false;
     } else {
       List<Object> results = executeInstructions(instructions);
+      // TODO: -AJM- Move sendResultsToClient() call to processOneSetOfInstructions()
+      // Put I/O in one location.
       sendResultsToClient(results);
       return true;
     }
@@ -88,6 +90,9 @@ public class SlimServer implements SocketServer {
 
   private List<Object> executeInstructions(String instructions) {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
+    // TODO: -AJM- Statements to instructions, then execute those.
+    // Returns: List of InstructionResult (id, String/list<Object>)
+    // ListExecutor becomes InstructionExecutor?
     List<Object> results = executor.execute(statements);
     return results;
   }
