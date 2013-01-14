@@ -170,3 +170,10 @@ function initErrorMetadata(){
 	$("table span.fail, table span.error, table td.fail, table td.error").each(function(){ $(this).data("error-num", i); i++});
 	$("#error-nav-max").text(i - 1);
 }
+
+
+/** Backwards compatibility */
+function toggleCollapsable(id) { $('#' + id).toggle().parent('.collapse_rim').toggleClass('open'); }
+function expandAll() { $('.collapse_rim').each(function(i, e) { if (!$(e).hasClass('open')) { toggleCollapsable($(e).children().last().attr('id')) } }); }
+function collapseAll() { $('.collapse_rim').each(function(i, e) { if ($(e).hasClass('open')) { toggleCollapsable($(e).children().last().attr('id')) } }); }
+
