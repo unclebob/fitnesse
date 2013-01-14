@@ -18,29 +18,10 @@ public class SlimErrorTable extends SlimTable {
   }
 
   public List<Object> getInstructions() {
-    addExpectation(new SlimErrorTableExpectation(getInstructionTag()));
+	// No need for Expectations, this is just an errorous table. Put a notification in.
+    String tableType = table.getCellContents(0, 0);
+    Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
+    table.setCell(0, 0, errorMessage);
     return Collections.emptyList();
-  }
-
-  public class SlimErrorTableExpectation implements Expectation {
-
-    private final String instructionTag;
-
-    public SlimErrorTableExpectation(String instructionTag) {
-      this.instructionTag = instructionTag;
-    }
-
-    @Override
-    public void evaluateExpectation(Object returnValues) {
-      String tableType = table.getCellContents(0, 0);
-      Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
-      table.setCell(0, 0, errorMessage);
-    }
-
-    @Override
-    public String getInstructionTag() {
-      return instructionTag;
-    }
-
   }
 }
