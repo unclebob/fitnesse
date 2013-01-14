@@ -2,13 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.ParsedPage;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
+  private ParsedPage preparsedScenarioLibrary;
+
   public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
   }
@@ -20,7 +27,36 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     return new HtmlTableScanner(html);
   }
 
+  public ParsedPage getPreparsedScenarioLibrary() {
+    if (preparsedScenarioLibrary == null) {
+      preparsedScenarioLibrary = new ParsedPage(page.readOnlyData().getParsedPage(), getScenarioLibraryContent());
+    }
+    return preparsedScenarioLibrary;
+  }
+
+
+  private String getScenarioLibraryContent() {
+    StringBuilder content = new StringBuilder("!*> Precompiled Libraries\n\n");
+    content.append(includeUncleLibraries());
+    content.append("*!\n");
+    return content.toString();
+  }
+
+  private String includeUncleLibraries() {
+    String content = "";
+    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
+    Collections.reverse(uncles);
+    for (WikiPage uncle : uncles)
+      content += include(page.getPageCrawler().getFullPath(uncle));
+    return content;
+  }
+
+  private String include(WikiPagePath path) {
+    return "!include -c ." + path + "\n";
+  }
+
   @Override
+  // TODO: Get rid of this
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
     evaluateTables();
     String exceptionsString = exceptions.toHtml();

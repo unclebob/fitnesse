@@ -18,7 +18,6 @@ import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,13 +44,10 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.parser.ParsedPage;
 
-public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
+public abstract class SlimTestSystem extends TestSystem {
   public static final String MESSAGE_ERROR = "!error:";
   public static final String MESSAGE_FAIL = "!fail:";
   public static final SlimTable START_OF_TEST = null;
@@ -73,15 +69,13 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
   protected ExceptionList exceptions = new ExceptionList();
-  private Map<String, String> symbols = new HashMap<String, String>();
   protected TestSummary testSummary;
   private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
   private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
-  private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   protected List<Expectation> expectations = new ArrayList<Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  private ParsedPage preparsedScenarioLibrary;
+  private NestedSlimTestContext testContext;
 
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
@@ -89,24 +83,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     testSummary = new TestSummary(0, 0, 0, 0);
   }
 
-  public String getSymbol(String symbolName) {
-    return symbols.get(symbolName);
-  }
-
-  public void setSymbol(String symbolName, String value) {
-    symbols.put(symbolName, value);
-  }
-
-  public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-    scenarios.put(scenarioName, scenarioTable);
-  }
-
-  public ScenarioTable getScenario(String scenarioName) {
-    return scenarios.get(scenarioName);
-  }
-
-  public void addExpectation(Expectation e) {
-    expectations.add(e);
+  public SlimTestContext getTestContext() {
+    return testContext;
   }
 
   public boolean isSuccessfullyStarted() {
@@ -146,6 +124,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return new ExecutionLog(page, slimRunner);
   }
 
+  // TODO: move low level port handling out of TestSystem
   public int findFreePort() {
     int port;
     try {
@@ -179,6 +158,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
   }
 
+  public static void clearSlimPortOffset() {
+    slimSocketOffset.set(0);
+  }
+
   private int getSlimPortBase() {
     int base = 8085;
     try {
@@ -191,6 +174,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
     return base;
   }
+  // ^^^ Till here ^^^
 
   public void start() throws IOException {
     slimRunner.asynchronousStart();
@@ -272,8 +256,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void initializeTest() {
-    symbols.clear();
-    scenarios.clear();
+    testContext = new NestedSlimTestContext();
     testSummary.clear();
     allExpectations.clear();
     allInstructionResults.clear();
@@ -379,7 +362,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private void createSlimTable(List<SlimTable> allTables, Table table) {
     String tableId = "" + allTables.size();
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, this);
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, testContext);
     if (slimTable != null) {
       allTables.add(slimTable);
     }
@@ -499,14 +482,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
   }
 
-  public Map<String, ScenarioTable> getScenarios() {
-    return scenarios;
-  }
-
-  public static void clearSlimPortOffset() {
-    slimSocketOffset.set(0);
-  }
-
   public List<SlimTable> getTestTables() {
     return allTables;
   }
@@ -523,30 +498,38 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return allExpectations;
   }
 
-  public ParsedPage getPreparsedScenarioLibrary() {
-    if (preparsedScenarioLibrary == null) {
-      preparsedScenarioLibrary = new ParsedPage(page.readOnlyData().getParsedPage(), getScenarioLibraryContent());
+  private class NestedSlimTestContext implements SlimTestContext {
+    private Map<String, String> symbols = new HashMap<String, String>();
+    private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+
+    @Override
+    public String getSymbol(String symbolName) {
+      return symbols.get(symbolName);
     }
-    return preparsedScenarioLibrary;
-  }
 
-  private String getScenarioLibraryContent() {
-    StringBuilder content = new StringBuilder("!*> Precompiled Libraries\n\n");
-    content.append(includeUncleLibraries());
-    content.append("*!\n");
-    return content.toString();
-  }
+    @Override
+    public void setSymbol(String symbolName, String value) {
+      symbols.put(symbolName, value);
+    }
 
-  private String includeUncleLibraries() {
-    String content = "";
-    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
-    Collections.reverse(uncles);
-    for (WikiPage uncle : uncles)
-      content += include(page.getPageCrawler().getFullPath(uncle));
-    return content;
-  }
+    @Override
+    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+      scenarios.put(scenarioName, scenarioTable);
+    }
 
-  private String include(WikiPagePath path) {
-    return "!include -c ." + path + "\n";
+    @Override
+    public ScenarioTable getScenario(String scenarioName) {
+      return scenarios.get(scenarioName);
+    }
+
+    @Override
+    public Map<String, ScenarioTable> getScenarios() {
+      return scenarios;
+    }
+
+    @Override
+    public void addExpectation(Expectation e) {
+      expectations.add(e);
+    }
   }
 }
