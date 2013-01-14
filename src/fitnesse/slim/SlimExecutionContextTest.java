@@ -1,17 +1,25 @@
 package fitnesse.slim;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 public class SlimExecutionContextTest {
+  private StatementExecutor executor;
+
+  @Before
+  public void setUp() {
+    executor = mock(StatementExecutor.class);
+  }
 
   @Test
   public void shouldAddLibrary() {
     Library library = new Library("library", new Object());
 
-    SlimExecutionContext context = new SlimExecutionContext();
+    SlimExecutionContext context = new SlimExecutionContext(executor);
     context.addLibrary(library);
 
     assertEquals(1, context.getLibraries().size());
@@ -20,7 +28,7 @@ public class SlimExecutionContextTest {
 
   @Test
   public void shouldReplaceSymbols() {
-    SlimExecutionContext context = new SlimExecutionContext();
+    SlimExecutionContext context = new SlimExecutionContext(executor);
     context.setVariable("first", "var1");
     context.setVariable("second", "var2");
 

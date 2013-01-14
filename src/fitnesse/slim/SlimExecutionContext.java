@@ -1,11 +1,9 @@
 package fitnesse.slim;
 
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import fitnesse.slim.converters.MapEditor;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 public class SlimExecutionContext {
@@ -13,9 +11,10 @@ public class SlimExecutionContext {
   private List<Library> libraries = new ArrayList<Library>();
   private VariableStore variables = new VariableStore();
   private List<String> paths = new ArrayList<String>();
+  private StatementExecutor executor;
 
-  public SlimExecutionContext() {
-    PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
+  public SlimExecutionContext(StatementExecutor executor) {
+    this.executor = executor;
   }
 
   public List<Library> getLibraries() {
@@ -23,12 +22,15 @@ public class SlimExecutionContext {
   }
 
   public void addLibrary(Library library) {
-    this.libraries.add(library);
+    libraries.add(library);
+  }
+
+  public void setVariable(String name, MethodExecutionResult value) {
+    variables.setSymbol(name, value);
   }
 
   public void setVariable(String name, Object value) {
-    variables.setSymbol(name,
-        new MethodExecutionResult(value, Object.class));
+    setVariable(name, new MethodExecutionResult(value, Object.class));
   }
 
   public void create(String instanceName, String className, Object[] args)
@@ -46,7 +48,9 @@ public class SlimExecutionContext {
   }
 
   public void addPath(String path) {
-    paths.add(path);
+    if (!paths.contains(path)) {
+      paths.add(path);
+    }
   }
 
   public Object getInstance(String instanceName) {
@@ -60,7 +64,7 @@ public class SlimExecutionContext {
         return library.instance;
       }
     }
-    throw new SlimError(String.format("message:<<%s %s.>>",
+    throw new SlimError(String.format("message:<<%s %s>>",
         SlimServer.NO_INSTANCE, instanceName));
   }
 
@@ -104,11 +108,9 @@ public class SlimExecutionContext {
 
     Object newInstance = newInstance(args, constructor);
     // TODO Remove circular reference in the StatementExecutorConsumer (SlimHelperLibrary).
-    /*
     if (newInstance instanceof StatementExecutorConsumer) {
       ((StatementExecutorConsumer) newInstance).setStatementExecutor(executor);
     }
-    */
     return newInstance;
   }
 

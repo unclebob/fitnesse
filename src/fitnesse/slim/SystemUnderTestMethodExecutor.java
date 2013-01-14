@@ -11,9 +11,11 @@ public class SystemUnderTestMethodExecutor extends MethodExecutor {
   }
 
   public MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable {
-    Object instance = context.getInstance(instanceName);
-    if (instance == null) {
-      return MethodExecutionResult.noInstance(instanceName);
+    Object instance;
+    try {
+      instance = context.getInstance(instanceName);
+    } catch (SlimError e) {
+      return MethodExecutionResult.noInstance(instanceName + "." + methodName);
     }
     Field field = findSystemUnderTest(instance.getClass());
     if (field != null) {
