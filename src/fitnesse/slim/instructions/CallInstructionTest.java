@@ -23,7 +23,7 @@ public class CallInstructionTest {
   private NameTranslator nameTranslator;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     executor = mock(CallInstruction.CallExecutor.class);
     nameTranslator = mock(NameTranslator.class);
 
@@ -40,7 +40,7 @@ public class CallInstructionTest {
   }
 
   @Test
-  public void shouldDelegateExecutionToExecutor() {
+  public void shouldDelegateExecutionToExecutor() throws Exception {
     CallInstruction instruction = new CallInstruction(ID, "instance", "method", new Object[] {"arg1", "arg2"},
         nameTranslator);
     instruction.execute(executor);

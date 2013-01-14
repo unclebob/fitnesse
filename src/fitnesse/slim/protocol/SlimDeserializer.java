@@ -1,11 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim.instructions;
+package fitnesse.slim.protocol;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import fitnesse.slim.SlimError;
 
 /**
  * Uses Slim Serialization.  See SlimSerializer for details.  Will deserialize lists of lists recursively.
@@ -130,17 +128,5 @@ public class SlimDeserializer {
 
     checkForColon("Length");
     return length;
-  }
-
-  public class SyntaxError extends SlimError {
-    private static final long serialVersionUID = 1L;
-
-    public SyntaxError(String s) {
-      super(s);
-    }
-
-    public SyntaxError(Throwable e) {
-      super(e);
-    }
   }
 }

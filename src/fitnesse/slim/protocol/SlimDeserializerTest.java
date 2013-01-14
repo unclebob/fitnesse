@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim.instructions;
+package fitnesse.slim.protocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +23,22 @@ public class SlimDeserializerTest {
     Assert.assertEquals(list, deserialized);
   }
 
-  @Test(expected = SlimDeserializer.SyntaxError.class)
+  @Test(expected = SyntaxError.class)
   public void cantDeserializeNullString() throws Exception {
     SlimDeserializer.deserialize(null);
   }
 
-  @Test(expected = SlimDeserializer.SyntaxError.class)
+  @Test(expected = SyntaxError.class)
   public void cantDeserializeEmptyString() throws Exception {
     SlimDeserializer.deserialize("");
   }
 
-  @Test(expected = SlimDeserializer.SyntaxError.class)
+  @Test(expected = SyntaxError.class)
   public void cantDeserializeStringThatDoesntStartWithBracket() throws Exception {
     SlimDeserializer.deserialize("hello");
   }
 
-  @Test(expected = SlimDeserializer.SyntaxError.class)
+  @Test(expected = SyntaxError.class)
   public void cantDeserializeStringThatDoesntEndWithBracket() throws Exception {
     SlimDeserializer.deserialize("[000000:");
   }

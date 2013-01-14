@@ -19,14 +19,14 @@ public class ImportInstructionTest {
   private ImportInstruction.ImportExecutor executor;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     executor = mock(ImportInstruction.ImportExecutor.class);
 
     when(executor.addPath(anyString())).thenReturn(RESULT);
   }
 
   @Test
-  public void shouldDelegateCallToExecutor() {
+  public void shouldDelegateCallToExecutor() throws Exception {
     ImportInstruction instruction = new ImportInstruction(ID, "path");
 
     instruction.execute(executor);

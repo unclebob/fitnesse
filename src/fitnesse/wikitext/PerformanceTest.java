@@ -3,9 +3,9 @@ package fitnesse.wikitext;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.slim.instructions.SlimDeserializer;
+import fitnesse.slim.protocol.SlimDeserializer;
 
-import fitnesse.slim.instructions.SlimSerializer;
+import fitnesse.slim.protocol.SlimSerializer;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;

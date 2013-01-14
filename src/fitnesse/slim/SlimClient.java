@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.instructions.SlimDeserializer;
-import fitnesse.slim.instructions.SlimSerializer;
+import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimSerializer;
 import util.ListUtility;
 import util.StreamReader;
 

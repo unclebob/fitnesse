@@ -20,14 +20,14 @@ public class MakeInstructionTest {
   private MakeInstruction.MakeExecutor executor;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     executor = mock(MakeInstruction.MakeExecutor.class);
 
     when(executor.create(anyString(), anyString(), anyVararg())).thenReturn(RESULT);
   }
 
   @Test
-  public void shouldDelegateCallToExecutor() {
+  public void shouldDelegateCallToExecutor() throws Exception {
     MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[] {"arg1", "arg2"});
 
     instruction.execute(executor);
@@ -45,5 +45,4 @@ public class MakeInstructionTest {
     assertEquals(ID, result.get(0));
     assertEquals(RESULT, result.get(1));
   }
-
 }

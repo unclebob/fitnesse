@@ -1,28 +1,26 @@
 package fitnesse.slim.instructions;
 
-import static util.ListUtility.list;
+import fitnesse.slim.SlimException;
 
-public class MakeInstruction implements Instruction<MakeInstruction.MakeExecutor> {
+public class MakeInstruction extends Instruction<MakeInstruction.MakeExecutor> {
   public static final String INSTRUCTION = "make";
-  private final String id;
   private final String instanceName;
   private final String className;
   private final Object[] args;
 
   public MakeInstruction(String id, String instanceName, String className, Object[] args) {
-    this.id = id;
+    super(id);
     this.instanceName = instanceName;
     this.className = className;
     this.args = args;
   }
 
   @Override
-  public Object execute(MakeExecutor executor) {
-    Object instance = executor.create(instanceName, className, args);
-    return list(id, instance);
+  protected Object executeInternal(MakeExecutor executor) throws SlimException {
+    return executor.create(instanceName, className, args);
   }
 
   public static interface MakeExecutor extends InstructionExecutor {
-    Object create(String instanceName, String className, Object... constructorArgs);
+    Object create(String instanceName, String className, Object... constructorArgs) throws SlimException;
   }
 }

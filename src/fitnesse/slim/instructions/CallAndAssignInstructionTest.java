@@ -22,7 +22,7 @@ public class CallAndAssignInstructionTest {
   private NameTranslator nameTranslator;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     executor = mock(CallAndAssignInstruction.CallAndAssignExecutor.class);
     nameTranslator = mock(NameTranslator.class);
 
@@ -39,7 +39,7 @@ public class CallAndAssignInstructionTest {
   }
 
   @Test
-  public void shouldCallExecutorOnExecution() {
+  public void shouldCallExecutorOnExecution() throws Exception {
     CallAndAssignInstruction instruction = new CallAndAssignInstruction("id_1", "symbol", "instance", "method",
         new Object[] {"arg1", "arg2"}, nameTranslator);
 

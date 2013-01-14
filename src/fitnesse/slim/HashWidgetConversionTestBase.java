@@ -25,7 +25,7 @@ public abstract class HashWidgetConversionTestBase {
 
   protected abstract StatementExecutorInterface createStatementExecutor() throws Exception;
   
-  protected void createMapReceptorInstance() {
+  protected void createMapReceptorInstance() throws Exception {
     Object created = statementExecutor.create(MY_INSTANCE, mapReceptorClassName(), new Object[] {});
     assertEquals("OK", created);
   }
@@ -34,7 +34,7 @@ public abstract class HashWidgetConversionTestBase {
 
   protected abstract String mapConstructorClassName();
 
-  private void assertConvertsTo(String string, List<Object> list) {
+  private void assertConvertsTo(String string, List<Object> list) throws Exception  {
     assertEquals("true", statementExecutor.call(MY_INSTANCE, "setMap", string));
     assertEquals(list, statementExecutor.call(MY_INSTANCE, "query", new Object[] {}));
     Object created = statementExecutor.create(OTHER_INSTANCE, mapConstructorClassName(), new Object[] {string});

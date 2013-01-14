@@ -88,7 +88,7 @@ public abstract class SlimInstanceCreationTestBase {
   }
 
   @Test
-  public void canAddPath() {
+  public void canAddPath() throws Exception {
     caller.addPath(getTestClassPath());
     Object response = caller.create("x", testClass, new Object[0]);
     assertEquals("OK", response);
@@ -97,7 +97,7 @@ public abstract class SlimInstanceCreationTestBase {
   }
 
   @Test
-  public void cantCreateInstanceWithoutPath() {
+  public void cantCreateInstanceWithoutPath() throws Exception {
     String result = (String) caller.create("x", testClass, new Object[0]);
     assertException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR " + testClass + "[0]>>", result);
   }

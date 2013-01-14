@@ -78,7 +78,7 @@ public abstract class StatementExecutorTestBase {
   public abstract void init() throws Exception;
 
   @Test
-  public void shouldCallMethodOnGivenInstanceBeforeTryingToInvokeOnSystemUnderTest() {
+  public void shouldCallMethodOnGivenInstanceBeforeTryingToInvokeOnSystemUnderTest() throws Exception {
     MyAnnotatedSystemUnderTestFixture myInstance = createAnnotatedFixture();
     Object result = statementExecutor.call(INSTANCE_NAME, echoMethodName());
     assertEquals(voidMessage(), result);
@@ -87,7 +87,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() {
+  public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() throws Exception {
     MyAnnotatedSystemUnderTestFixture myFixture = createAnnotatedFixture();
     executeStatementAndVerifyResultIsVoid();
     assertFalse(myFixture.echoCalled());
@@ -95,7 +95,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldCallMethodOnFieldNamed_systemUnderTest_WhenFixtureDoesNotHaveMethod() {
+  public void shouldCallMethodOnFieldNamed_systemUnderTest_WhenFixtureDoesNotHaveMethod() throws Exception {
     FixtureWithNamedSystemUnderTestBase myFixture = createNamedFixture();
     executeStatementAndVerifyResultIsVoid();
     assertFalse(myFixture.echoCalled());
@@ -103,7 +103,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest() {
+  public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest() throws Exception {
     createAnnotatedFixture();
     String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
     String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
@@ -112,7 +112,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldPreferMethodOnFixtureOverMethodOnSystemUnderTest() {
+  public void shouldPreferMethodOnFixtureOverMethodOnSystemUnderTest() throws Exception {
     FixtureWithNamedSystemUnderTestBase instance = createNamedFixture();
     statementExecutor.call(INSTANCE_NAME, echoMethodName());
     assertFalse(instance.getSystemUnderTest().echoCalled());
@@ -120,7 +120,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldPreferMethodOnFixtureOverMethodOnLibrary() {
+  public void shouldPreferMethodOnFixtureOverMethodOnLibrary() throws Exception {
     SimpleFixture instance = createSimpleFixture();
     EchoSupport echoLibrary = createEchoLibrary();
     statementExecutor.call(INSTANCE_NAME, echoMethodName());
@@ -129,7 +129,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldPreferMethodOnSystemUnderTestOverMethodOnLibrary() {
+  public void shouldPreferMethodOnSystemUnderTestOverMethodOnLibrary() throws Exception {
     FixtureWithNamedSystemUnderTestBase instance = createNamedFixture();
     EchoSupport echoLibrary = createEchoLibrary();
     statementExecutor.call(INSTANCE_NAME, "speak");
@@ -138,7 +138,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldPreferMethodsOnLibrariesCreatedLaterOverMethodsOnLibrariesCreatedEarlier() {
+  public void shouldPreferMethodsOnLibrariesCreatedLaterOverMethodsOnLibrariesCreatedEarlier() throws Exception {
     createSimpleFixture();
     EchoSupport echoLibrary1 = createEchoLibrary();
     EchoSupport echoLibrary2 = createEchoLibrary();
@@ -150,7 +150,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture_WithSystemUnderTestInFixture() {
+  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture_WithSystemUnderTestInFixture() throws Exception {
     createNamedFixture();
     FileSupport library = createFileSupportLibrary();
     assertNotNull(library);
@@ -160,7 +160,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture() {
+  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture() throws Exception {
     createFixtureInstance(echoLibraryName());
     FileSupport library = createFileSupportLibrary();
     assertNotNull(library);
@@ -169,28 +169,28 @@ public abstract class StatementExecutorTestBase {
     assertTrue(library.deleteCalled());
   }
 
-  protected MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() {
+  protected MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() throws Exception {
     createFixtureInstance(annotatedFixtureName());
     return (MyAnnotatedSystemUnderTestFixture) getVerifiedInstance();
   }
 
   protected abstract String annotatedFixtureName();
 
-  protected FixtureWithNamedSystemUnderTestBase createNamedFixture() {
+  protected FixtureWithNamedSystemUnderTestBase createNamedFixture() throws Exception {
     createFixtureInstance(namedFixtureName());
     return (FixtureWithNamedSystemUnderTestBase) getVerifiedInstance();
   }
 
   protected abstract String namedFixtureName();
 
-  protected SimpleFixture createSimpleFixture() {
+  protected SimpleFixture createSimpleFixture() throws Exception {
     createFixtureInstance(simpleFixtureName());
     return (SimpleFixture) getVerifiedInstance();
   }
 
   protected abstract String simpleFixtureName();
 
-  protected EchoSupport createEchoLibrary() {
+  protected EchoSupport createEchoLibrary() throws Exception {
     String instanceName = "library" + library++;
     statementExecutor.create(instanceName, echoLibraryName(), new Object[] {});
     return (EchoSupport) statementExecutor.getInstance(instanceName);
@@ -198,7 +198,7 @@ public abstract class StatementExecutorTestBase {
 
   protected abstract String echoLibraryName();
 
-  protected FileSupport createFileSupportLibrary() {
+  protected FileSupport createFileSupportLibrary() throws Exception {
     String instanceName = "library" + library++;
     statementExecutor.create(instanceName, fileSupportName(), new Object[] {});
     return (FileSupport) statementExecutor.getInstance(instanceName);
@@ -206,7 +206,7 @@ public abstract class StatementExecutorTestBase {
 
   protected abstract String fileSupportName();
 
-  protected void createFixtureInstance(String fixtureClass) {
+  protected void createFixtureInstance(String fixtureClass) throws Exception {
     Object created = statementExecutor.create(INSTANCE_NAME, fixtureClass, new Object[] {});
     assertEquals("OK", created);
   }
@@ -217,7 +217,7 @@ public abstract class StatementExecutorTestBase {
     return myInstance;
   }
 
-  protected void executeStatementAndVerifyResultIsVoid() {
+  protected void executeStatementAndVerifyResultIsVoid() throws Exception {
     Object result = statementExecutor.call(INSTANCE_NAME, "speak");
     assertEquals(voidMessage(), result);
   }
