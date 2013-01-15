@@ -62,7 +62,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
       String classPath = new ClassPathBuilder().getClasspath(page);
       TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), context.pageFactory, false);
-      System.out.println("test runner: " + descriptor.testRunner);
+      System.out.println("test runner: " + descriptor.getTestRunner());
       try {
         testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();

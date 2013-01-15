@@ -108,7 +108,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     synchronized (this) {
       if (!isStopped) {
         testSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
-        resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
+        resultsListener.testSystemStarted(testSystem, descriptor.getTestSystem(), descriptor.getTestRunner());
       }
     }
     if (testSystem != null) {

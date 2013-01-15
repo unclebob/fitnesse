@@ -59,14 +59,14 @@ public class TestSystemGroup {
       testSystem.setFastTest(fastTest);
       testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
-      log.add(descriptor.testSystemName, testSystem.getExecutionLog(classPath, descriptor));
+      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog(classPath, descriptor));
       testSystem.start();
     }
     return testSystem;
   }
 
   private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) {
-    if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
+    if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.getTestSystemName())))
       return new HtmlSlimTestSystem(page, testSystemListener);
     else
       return new FitTestSystem(context, page, testSystemListener);

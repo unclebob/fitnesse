@@ -40,35 +40,10 @@ public abstract class TestSystem implements TestSystemListener {
   protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException;
 
   protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) {
-    String commandPattern = descriptor.commandPattern;
+    String commandPattern = descriptor.getCommandPattern();
     String command = replace(commandPattern, "%p", classPath);
-    command = replace(command, "%m", descriptor.testRunner);
+    command = replace(command, "%m", descriptor.getTestRunner());
     return command;
-  }
-
-  private static String getRemoteDebugCommandPattern(ReadOnlyPageData pageData) {
-    String testRunner = pageData.getVariable("REMOTE_DEBUG_COMMAND");
-    if (testRunner == null) {
-      testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
-      if (testRunner == null || testRunner.toLowerCase().contains("java")) {
-        testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
-      }
-    }
-    return testRunner;
-  }
-
-  private static String getNormalCommandPattern(ReadOnlyPageData pageData) {
-    String testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
-    if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
-    return testRunner;
-  }
-
-  private static String getCommandPattern(ReadOnlyPageData pageData, boolean isRemoteDebug) {
-    if (isRemoteDebug)
-      return getRemoteDebugCommandPattern(pageData);
-    else
-      return getNormalCommandPattern(pageData);
   }
 
   // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
@@ -86,26 +61,6 @@ public abstract class TestSystem implements TestSystemListener {
 
   public void setManualStart(boolean manualStart) {
     this.manualStart = manualStart;
-  }
-
-  public static String getTestSystemName(PageData data) {
-    String testSystemName = getTestSystem(data);
-    String testRunner = getTestRunnerNormal(data);
-    return String.format("%s:%s", testSystemName, testRunner);
-  }
-
-  private static String getTestSystem(ReadOnlyPageData data) {
-    String testSystemName = data.getVariable("TEST_SYSTEM");
-    if (testSystemName == null)
-      return "fit";
-    return testSystemName;
-  }
-
-  public static String getPathSeparator(ReadOnlyPageData pageData) {
-    String separator = pageData.getVariable(PageData.PATH_SEPARATOR);
-    if (separator == null)
-      separator = (String) System.getProperties().get("path.separator");
-    return separator;
   }
 
   public static String getTestSystemType(String testSystemName) {
@@ -129,40 +84,6 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void start() throws IOException;
 
-  private static String getTestRunner(ReadOnlyPageData pageData, boolean isRemoteDebug) {
-    if (isRemoteDebug)
-      return getTestRunnerDebug(pageData);
-    else
-      return getTestRunnerNormal(pageData);
-  }
-
-
-  private static String getTestRunnerDebug(ReadOnlyPageData data) {
-    String program = data.getVariable("REMOTE_DEBUG_RUNNER");
-    if (program == null) {
-      program = getTestRunnerNormal(data);
-      if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
-        program = program.toLowerCase().replace(DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
-          DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
-    }
-    return program;
-  }
-
-  public static String getTestRunnerNormal(ReadOnlyPageData data) {
-    String program = data.getVariable(PageData.TEST_RUNNER);
-    if (program == null)
-      program = defaultTestRunner(data);
-    return program;
-  }
-
-  static String defaultTestRunner(ReadOnlyPageData data) {
-    String testSystemType = getTestSystemType(getTestSystem(data));
-    if ("slim".equalsIgnoreCase(testSystemType))
-      return "fitnesse.slim.SlimService";
-    else
-      return "fit.FitServer";
-  }
-
   public abstract void bye() throws IOException, InterruptedException;
 
   public abstract boolean isSuccessfullyStarted();
@@ -172,11 +93,7 @@ public abstract class TestSystem implements TestSystemListener {
   public abstract String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException;
 
   public static Descriptor getDescriptor(ReadOnlyPageData data, PageFactory pageFactory, boolean isRemoteDebug) {
-    String testSystemName = getTestSystem(data);
-    String testRunner = getTestRunner(data, isRemoteDebug);
-    String commandPattern = getCommandPattern(data, isRemoteDebug);
-    String pathSeparator = getPathSeparator(data);
-    return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator, pageFactory);
+    return new Descriptor(data, pageFactory, isRemoteDebug);
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
@@ -189,23 +106,100 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public static class Descriptor {
-    public final String testSystemName;
-    public final String testRunner;
-    public final String commandPattern;
-    public final String pathSeparator;
     public final PageFactory pageFactory;
+    public final ReadOnlyPageData data;
+    public final boolean remoteDebug;
 
-    Descriptor(String testSystemName, String testRunner, String commandPattern, String pathSeparator, PageFactory pageFactory) {
-      this.testSystemName = testSystemName;
-      this.testRunner = testRunner;
-      this.commandPattern = commandPattern;
-      this.pathSeparator = pathSeparator;
+    public Descriptor(ReadOnlyPageData data, PageFactory pageFactory,
+        boolean remoteDebug) {
+      this.data = data;
       this.pageFactory = pageFactory;
+      this.remoteDebug = remoteDebug;
     }
+
+    public String getTestSystem() {
+      String testSystemName = data.getVariable("TEST_SYSTEM");
+      if (testSystemName == null)
+        return "fit";
+      return testSystemName;
+    }
+
+    public String getTestSystemName() {
+      String testSystemName = getTestSystem();
+      String testRunner = getTestRunnerNormal();
+      return String.format("%s:%s", testSystemName, testRunner);
+    }
+
+    private String getTestRunnerDebug() {
+      String program = data.getVariable("REMOTE_DEBUG_RUNNER");
+      if (program == null) {
+        program = getTestRunnerNormal();
+        if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
+          program = program.toLowerCase().replace(DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
+            DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
+      }
+      return program;
+    }
+
+    public String getTestRunnerNormal() {
+      String program = data.getVariable(PageData.TEST_RUNNER);
+      if (program == null)
+        program = defaultTestRunner();
+      return program;
+    }
+
+    String defaultTestRunner() {
+      String testSystemType = getTestSystemType(getTestSystem());
+      if ("slim".equalsIgnoreCase(testSystemType))
+        return "fitnesse.slim.SlimService";
+      else
+        return "fit.FitServer";
+    }
+
+
+    public String getTestRunner() {
+      if (remoteDebug)
+        return getTestRunnerDebug();
+      else
+        return getTestRunnerNormal();
+    }
+
+    private String getRemoteDebugCommandPattern() {
+      String testRunner = data.getVariable("REMOTE_DEBUG_COMMAND");
+      if (testRunner == null) {
+        testRunner = data.getVariable(PageData.COMMAND_PATTERN);
+        if (testRunner == null || testRunner.toLowerCase().contains("java")) {
+          testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
+        }
+      }
+      return testRunner;
+    }
+
+    private String getNormalCommandPattern() {
+      String testRunner = data.getVariable(PageData.COMMAND_PATTERN);
+      if (testRunner == null)
+        testRunner = DEFAULT_COMMAND_PATTERN;
+      return testRunner;
+    }
+
+    public String getCommandPattern() {
+      if (remoteDebug)
+        return getRemoteDebugCommandPattern();
+      else
+        return getNormalCommandPattern();
+    }
+
+    public String getPathSeparator() {
+      String separator = data.getVariable(PageData.PATH_SEPARATOR);
+      if (separator == null)
+        separator = (String) System.getProperties().get("path.separator");
+      return separator;
+    }
+
 
     @Override
     public int hashCode() {
-      return testSystemName.hashCode() ^ testRunner.hashCode() ^ commandPattern.hashCode() ^ pathSeparator.hashCode();
+      return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode() ^ getPathSeparator().hashCode();
     }
 
     @Override
@@ -214,10 +208,10 @@ public abstract class TestSystem implements TestSystemListener {
       if (getClass() != obj.getClass()) return false;
 
       Descriptor descriptor = (Descriptor) obj;
-      return descriptor.testSystemName.equals(testSystemName) &&
-        descriptor.testRunner.equals(testRunner) &&
-        descriptor.commandPattern.equals(commandPattern) &&
-        descriptor.pathSeparator.equals(pathSeparator);
+      return descriptor.getTestSystemName().equals(getTestSystemName()) &&
+        descriptor.getTestRunner().equals(getTestRunner()) &&
+        descriptor.getCommandPattern().equals(getCommandPattern()) &&
+        descriptor.getPathSeparator().equals(getPathSeparator());
     }
   }
 }

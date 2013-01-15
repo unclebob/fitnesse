@@ -24,7 +24,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   }
 
   public String getPathSeparator(WikiPage page) {
-    return TestSystem.getPathSeparator(page.getData());
+    return TestSystem.getDescriptor(page.getData(), null, false).getPathSeparator();
   }
 
   public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) {
