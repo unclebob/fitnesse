@@ -8,6 +8,7 @@ import static java.lang.Character.toUpperCase;
 import static util.ListUtility.list;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ public abstract class SlimTable {
   private String tableName;
   private int instructionNumber = 0;
 
-  private List<SlimTable> children = new ArrayList<SlimTable>();
+  private List<SlimTable> children = new LinkedList<SlimTable>();
   private SlimTable parent = null;
 
   private SlimTestContext testContext;
