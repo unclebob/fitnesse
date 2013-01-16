@@ -30,7 +30,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
 
     if (context == null) {
-      this.context = new SlimExecutionContext(this);
+      this.context = new SlimExecutionContext();
     } else {
       this.context = context;
     }
@@ -73,6 +73,11 @@ public class StatementExecutor implements StatementExecutorInterface {
   public Object create(String instanceName, String className, Object[] args) {
     try {
       context.create(instanceName, className, args);
+      // TODO Hack for supporting SlimHelperLibrary, please remove.
+      Object newInstance = context.getInstance(instanceName);
+      if (newInstance instanceof StatementExecutorConsumer) {
+        ((StatementExecutorConsumer) newInstance).setStatementExecutor(this);
+      }
       return "OK";
     } catch (SlimError e) {
       return couldNotInvokeConstructorException(className, args);
