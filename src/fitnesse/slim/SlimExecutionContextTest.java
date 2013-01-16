@@ -8,18 +8,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class SlimExecutionContextTest {
-  private StatementExecutor executor;
-
-  @Before
-  public void setUp() {
-    executor = mock(StatementExecutor.class);
-  }
 
   @Test
   public void shouldAddLibrary() {
     Library library = new Library("library", new Object());
 
-    SlimExecutionContext context = new SlimExecutionContext(executor);
+    SlimExecutionContext context = new SlimExecutionContext();
     context.addLibrary(library);
 
     assertEquals(1, context.getLibraries().size());
@@ -28,7 +22,7 @@ public class SlimExecutionContextTest {
 
   @Test
   public void shouldReplaceSymbols() {
-    SlimExecutionContext context = new SlimExecutionContext(executor);
+    SlimExecutionContext context = new SlimExecutionContext();
     context.setVariable("first", "var1");
     context.setVariable("second", "var2");
 
