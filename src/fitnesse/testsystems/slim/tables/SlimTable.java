@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
@@ -35,7 +34,6 @@ public abstract class SlimTable {
   private SlimTable parent = null;
 
   private SlimTestContext testContext;
-  private TestSummary testSummary = new TestSummary();
 
   protected Table table;
   protected String id;
@@ -232,7 +230,7 @@ public abstract class SlimTable {
 
   // TODO: make Response object objects instead
   protected Result fail(String value) {
-    testSummary.wrong = testSummary.getWrong() + 1;
+    testContext.incrementFailedTestsCount();
     return new FailResult(value);
   }
 
@@ -243,7 +241,7 @@ public abstract class SlimTable {
 
   // TODO: make Response object objects instead
   protected Result pass(String value) {
-    testSummary.right = testSummary.getRight() + 1;
+    testContext.incrementPassedTestsCount();
     return passUncounted(value);
   }
 
@@ -254,20 +252,15 @@ public abstract class SlimTable {
 
   // TODO: make Response object objects instead
   protected ErrorResult error(String value) {
-    testSummary.exceptions = testSummary.getExceptions() + 1;
+    testContext.incrementErroredTestsCount();
     return new ErrorResult(value);
   }
 
   // TODO: make Response object objects instead
   protected IgnoreResult ignore(String value) {
-    testSummary.ignores++;
+    testContext.incrementIgnoredTestsCount();
     return new IgnoreResult(value);
   }
-
-  public TestSummary getTestSummary() {
-    return testSummary;
-  }
-
 
   protected Result makeExeptionMessage(String value) {
     if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))

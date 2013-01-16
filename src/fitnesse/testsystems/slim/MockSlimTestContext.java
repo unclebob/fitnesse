@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   private List<Expectation> expectations = new ArrayList<Expectation>();
+  private TestSummary testSummary = new TestSummary();
 
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
@@ -43,5 +45,33 @@ public class MockSlimTestContext implements SlimTestContext {
       Object returnValue = results.get(e.getInstructionTag());
       e.evaluateExpectation(returnValue);
     }
+  }
+
+  @Override
+  public void incrementPassedTestsCount() {
+    testSummary.right++;
+  }
+
+  @Override
+  public void incrementFailedTestsCount() {
+    testSummary.wrong++;
+  }
+
+  @Override
+  public void incrementErroredTestsCount() {
+    testSummary.exceptions++;
+  }
+
+  @Override
+  public void incrementIgnoredTestsCount() {
+    testSummary.ignores++;
+  }
+
+  public TestSummary getTestSummary() {
+    return testSummary;
+  }
+
+  public void clearTestSummary() {
+    testSummary = new TestSummary();
   }
 }

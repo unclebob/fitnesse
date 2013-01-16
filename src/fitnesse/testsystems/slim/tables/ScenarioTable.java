@@ -163,7 +163,7 @@ public class ScenarioTable extends SlimTable {
       // TODO: retrieve table scanner from context
       TableScanner ts = new HtmlTableScanner(script);
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
-        parentTable.getTestContext());
+        new ScenarioTestContext(parentTable.getTestContext()));
       parentTable.addChildTable(t, row);
       List<Object> instructions = t.getInstructions();
       parentTable.addExpectation(new ScenarioExpectation(t, row));
@@ -256,15 +256,82 @@ public class ScenarioTable extends SlimTable {
     }
 
     public void evaluateExpectation(Object returnValue) {
-      TestSummary counts = scriptTable.getTestSummary();
       SlimTable parent = scriptTable.getParent();
-      ExecutionResult testStatus = ExecutionResult.getExecutionResult(counts);
+      ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
       parent.getTable().setTestStatusOnRow(getRow(), testStatus);
-      parent.getTestSummary().add(scriptTable.getTestSummary());
     }
 
     protected Result createEvaluationMessage(String actual, String expected) {
       return null;
+    }
+  }
+
+
+  final class ScenarioTestContext implements SlimTestContext {
+
+    private final SlimTestContext testContext;
+    private final TestSummary testSummary = new TestSummary();
+
+    public ScenarioTestContext(SlimTestContext testContext) {
+      this.testContext = testContext;
+    }
+
+    @Override
+    public String getSymbol(String symbolName) {
+      return testContext.getSymbol(symbolName);
+    }
+
+    @Override
+    public void setSymbol(String symbolName, String value) {
+      testContext.setSymbol(symbolName, value);
+    }
+
+    @Override
+    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+      testContext.addScenario(scenarioName, scenarioTable);
+    }
+
+    @Override
+    public ScenarioTable getScenario(String scenarioName) {
+      return testContext.getScenario(scenarioName);
+    }
+
+    @Override
+    public void addExpectation(Expectation expectation) {
+      testContext.addExpectation(expectation);
+    }
+
+    @Override
+    public Map<String, ScenarioTable> getScenarios() {
+      return testContext.getScenarios();
+    }
+
+    @Override
+    public void incrementPassedTestsCount() {
+      testContext.incrementPassedTestsCount();
+      testSummary.right++;
+    }
+
+    @Override
+    public void incrementFailedTestsCount() {
+      testContext.incrementFailedTestsCount();
+      testSummary.wrong++;
+    }
+
+    @Override
+    public void incrementErroredTestsCount() {
+      testContext.incrementErroredTestsCount();
+      testSummary.exceptions++;
+    }
+
+    @Override
+    public void incrementIgnoredTestsCount() {
+      testContext.incrementIgnoredTestsCount();
+      testSummary.ignores++;
+    }
+
+    ExecutionResult getExecutionResult() {
+      return ExecutionResult.getExecutionResult(testSummary);
     }
   }
 }

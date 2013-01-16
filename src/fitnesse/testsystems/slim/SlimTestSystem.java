@@ -416,20 +416,9 @@ public abstract class SlimTestSystem extends TestSystem {
   }
 
   protected void evaluateTables() {
-    // TODO: remove this line:
+    // TODO: Do one run over all instructions: get result, error?, evaluate expectations
     replaceExceptionsWithLinks();
     evaluateExpectations();
-    for (SlimTable table : testTables)
-      evaluateTable(table);
-  }
-
-  private void evaluateTable(SlimTable table) {
-    try {
-      testSummary.add(table.getTestSummary());
-    } catch (Throwable e) {
-      exceptions.addException("ABORT", exceptionToString(e));
-      exceptionOccurred(e);
-    }
   }
 
   protected void replaceExceptionsWithLinks() {
@@ -530,6 +519,26 @@ public abstract class SlimTestSystem extends TestSystem {
     @Override
     public void addExpectation(Expectation e) {
       expectations.add(e);
+    }
+
+    @Override
+    public void incrementPassedTestsCount() {
+      testSummary.right++;
+    }
+
+    @Override
+    public void incrementFailedTestsCount() {
+      testSummary.wrong = testSummary.getWrong() + 1;
+    }
+
+    @Override
+    public void incrementErroredTestsCount() {
+      testSummary.exceptions = testSummary.getExceptions() + 1;
+    }
+
+    @Override
+    public void incrementIgnoredTestsCount() {
+      testSummary.ignores++;
     }
   }
 }

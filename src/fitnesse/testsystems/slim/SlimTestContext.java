@@ -18,4 +18,12 @@ public interface SlimTestContext {
   void addExpectation(Expectation e);
 
   Map<String, ScenarioTable> getScenarios();
+
+  void incrementPassedTestsCount();
+
+  void incrementFailedTestsCount();
+
+  void incrementErroredTestsCount();
+
+  void incrementIgnoredTestsCount();
 }
