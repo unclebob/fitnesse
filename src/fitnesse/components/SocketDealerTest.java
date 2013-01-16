@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testsystems.fit.SocketDoner;
 import fitnesse.testsystems.fit.SocketSeeker;
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 
 public class SocketDealerTest extends TestCase {
   private SocketDealer dealer;

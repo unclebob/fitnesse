@@ -25,7 +25,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

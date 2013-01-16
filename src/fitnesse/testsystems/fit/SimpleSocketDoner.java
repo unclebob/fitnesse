@@ -5,7 +5,7 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.net.Socket;
 
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 
 public class SimpleSocketDoner implements SocketDoner {
   public Socket socket;

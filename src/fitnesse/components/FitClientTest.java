@@ -13,7 +13,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.fit.CommandRunningFitClient;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testsystems.fit.SimpleSocketDoner;
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 
 public class FitClientTest extends RegexTestCase implements TestSystemListener {
   private List<String> outputs = new ArrayList<String>();
