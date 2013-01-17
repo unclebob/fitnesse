@@ -84,8 +84,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     List<WikiPage> testPages = suiteTestFinder.makePageList();
 
     if (shouldIncludePaths) {
-      MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null);
-      String classpath = runner.buildClassPath();
+      String classpath = new ClassPathBuilder().buildClassPath(testPages);
       client.send(classpath);
     }
 

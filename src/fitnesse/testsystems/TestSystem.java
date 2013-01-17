@@ -111,17 +111,28 @@ public abstract class TestSystem implements TestSystemListener {
     private final ReadOnlyPageData data;
     private final PageFactory pageFactory;
     private final boolean remoteDebug;
+    private final String classPath;
 
     public Descriptor(WikiPage page, PageFactory pageFactory,
         boolean remoteDebug) {
+       this(page, pageFactory, remoteDebug,
+               new ClassPathBuilder().getClasspath(page.getData().getWikiPage()));
+    }
+
+    public Descriptor(Descriptor descriptor) {
+      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug, descriptor.classPath);
+    }
+
+    public Descriptor(Descriptor descriptor, String classPath) {
+      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug, classPath);
+    }
+
+    public Descriptor(WikiPage page, PageFactory pageFactory, boolean remoteDebug, String classPath) {
       this.page = page;
       this.data = page.readOnlyData();
       this.pageFactory = pageFactory;
       this.remoteDebug = remoteDebug;
-    }
-
-    public Descriptor(Descriptor descriptor) {
-      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug);
+      this.classPath = classPath;
     }
 
     public String getTestSystem() {
@@ -196,15 +207,8 @@ public abstract class TestSystem implements TestSystemListener {
         return getNormalCommandPattern();
     }
 
-    public String getPathSeparator() {
-      String separator = data.getVariable(PageData.PATH_SEPARATOR);
-      if (separator == null)
-        separator = (String) System.getProperties().get("path.separator");
-      return separator;
-    }
-
     public String getClassPath() {
-      return new ClassPathBuilder().getClasspath(data.getWikiPage());
+      return classPath;
     }
 
     protected ReadOnlyPageData getPageData() {
@@ -213,7 +217,7 @@ public abstract class TestSystem implements TestSystemListener {
 
     @Override
     public int hashCode() {
-      return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode() ^ getPathSeparator().hashCode();
+      return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode();
     }
 
     @Override
@@ -224,8 +228,7 @@ public abstract class TestSystem implements TestSystemListener {
       Descriptor descriptor = (Descriptor) obj;
       return descriptor.getTestSystemName().equals(getTestSystemName()) &&
         descriptor.getTestRunner().equals(getTestRunner()) &&
-        descriptor.getCommandPattern().equals(getCommandPattern()) &&
-        descriptor.getPathSeparator().equals(getPathSeparator());
+        descriptor.getCommandPattern().equals(getCommandPattern());
     }
   }
 }

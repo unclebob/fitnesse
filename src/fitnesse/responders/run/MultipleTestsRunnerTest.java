@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testutil.FitNesseUtil;
@@ -47,16 +48,14 @@ public class MultipleTestsRunnerTest {
     testPages = new LinkedList<WikiPage>();
     testPage = addTestPage(suite, "TestOne", "My test");
  }
-  
+
   @Test
   public void testBuildClassPath() throws Exception {
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    
-    String classpath = runner.buildClassPath();
+    String classpath = new ClassPathBuilder().buildClassPath(testPages);
     assertSubString("classes", classpath);
     assertSubString("dummy.jar", classpath);
   }
-  
+
   @Test
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);

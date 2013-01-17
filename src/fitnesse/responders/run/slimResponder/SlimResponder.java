@@ -67,8 +67,8 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     public String render() {
       String html = null;
 
+      System.out.println("ClassPath can be " + new ClassPathBuilder().getClasspath(page));
       TestSystem.Descriptor descriptor = getDescriptor();
-      System.out.println("test runner: " + descriptor.getTestRunner());
       try {
         testSystem = getTestSystem();
         testSystem.getExecutionLog();
@@ -77,7 +77,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
       } catch (IOException e) {
-        html = "Could not execute tests: " + e.getMessage();
         e.printStackTrace();
       }
 

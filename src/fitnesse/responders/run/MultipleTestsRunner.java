@@ -107,7 +107,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     TestSystem testSystem = null;
     synchronized (this) {
       if (!isStopped) {
-        testSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
+        testSystem = testSystemGroup.startTestSystem(descriptor,
+                new ClassPathBuilder().buildClassPath(testPagesToRun));
         resultsListener.testSystemStarted(testSystem, descriptor.getTestSystem(), descriptor.getTestRunner());
       }
     }
@@ -190,24 +191,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
     resultsListener.announceNumberTestsToRun(tests);
     totalTestTime = new TimeMeasurement().start();
-  }
-
-  public String buildClassPath() {
-    final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
-    final String pathSeparator = classPathBuilder.getPathSeparator(page);
-    List<String> classPathElements = new ArrayList<String>();
-    Set<WikiPage> visitedPages = new HashSet<WikiPage>();
-
-    for (WikiPage testPage : testPagesToRun) {
-      addClassPathElements(testPage, classPathElements, visitedPages);
-    }
-
-    return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
-  }
-
-  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) {
-    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
-    classPathElements.addAll(pathElements);
   }
 
   public void acceptOutputFirst(String output) throws IOException {

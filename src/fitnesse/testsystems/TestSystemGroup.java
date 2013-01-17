@@ -56,10 +56,12 @@ public class TestSystemGroup {
   public TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
-      testSystem = makeTestSystem(descriptor);
+      testSystem = makeTestSystem(new TestSystem.Descriptor(descriptor, classPath));
       testSystem.setFastTest(fastTest);
       testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
+
+      // TODO: Need to pass classPath to test system.
       log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
       testSystem.start();
     }
