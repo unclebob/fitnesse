@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.components.CommandRunner;
+import fitnesse.responders.PageFactory;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
@@ -54,7 +55,6 @@ public abstract class SlimTestSystem extends TestSystem {
   public static final SlimTable END_OF_TEST = null;
 
   private CommandRunner slimRunner;
-  private String slimCommand;
   private SlimClient slimClient;
 
   protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
@@ -70,16 +70,16 @@ public abstract class SlimTestSystem extends TestSystem {
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
   protected ExceptionList exceptions = new ExceptionList();
   protected TestSummary testSummary;
-  private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
-  private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   protected List<Expectation> expectations = new ArrayList<Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private NestedSlimTestContext testContext;
+  private final SlimDescriptor descriptor;
 
 
-  public SlimTestSystem(WikiPage page, TestSystemListener listener) {
+  public SlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
     super(page, listener);
+    this.descriptor = new SlimDescriptor(descriptor);
     testSummary = new TestSummary(0, 0, 0, 0);
   }
 
@@ -98,103 +98,43 @@ public abstract class SlimTestSystem extends TestSystem {
       slimClient.close();
   }
 
-  String getSlimFlags() {
-    String slimFlags = page.readOnlyData().getVariable("SLIM_FLAGS");
-    if (slimFlags == null)
-      slimFlags = "";
-    return slimFlags;
-  }
-
-  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException {
-    String slimFlags = getSlimFlags();
-    slimSocket = getNextSlimSocket();
-    String slimArguments = String.format("%s %d", slimFlags, slimSocket);
-    String slimCommandPrefix = buildCommand(descriptor, classPath);
-    slimCommand = String.format("%s %s", slimCommandPrefix, slimArguments);
+  protected ExecutionLog createExecutionLog() throws SocketException {
+    final String classPath = descriptor.getClassPath();
+    final String slimArguments = buildArguments();
     if (fastTest) {
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
     }
     else if (manualStart) {
-      slimSocket = getSlimPortBase();
       slimRunner = new MockCommandRunner();
     } else {
-      slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
+      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
     return new ExecutionLog(page, slimRunner);
   }
 
-  // TODO: move low level port handling out of TestSystem
-  public int findFreePort() {
-    int port;
-    try {
-      ServerSocket socket = new ServerSocket(0);
-      port = socket.getLocalPort();
-      socket.close();
-    } catch (Exception e) {
-      port = -1;
-    }
-    return port;
+  public String buildCommand() {
+    String slimArguments = buildArguments();
+    String slimCommandPrefix = super.buildCommand(descriptor);
+    return String.format("%s %s", slimCommandPrefix, slimArguments);
   }
 
-  public int getNextSlimSocket() {
-    int base;
-
-    if (System.getProperty("slim.port") != null) {
-      base = Integer.parseInt(System.getProperty("slim.port"));
-    } else {
-      base = getSlimPortBase();
-    }
-
-    if (base == 0) {
-      return findFreePort();
-    }
-
-    synchronized (slimSocketOffset) {
-      int offset = slimSocketOffset.get();
-      offset = (offset + 1) % 10;
-      slimSocketOffset.set(offset);
-      return offset + base;
-    }
+  private String buildArguments() {
+    int slimSocket = descriptor.getSlimPort();
+    String slimFlags = descriptor.getSlimFlags();
+    return String.format("%s %d", slimFlags, slimSocket);
   }
-
-  public static void clearSlimPortOffset() {
-    slimSocketOffset.set(0);
-  }
-
-  private int getSlimPortBase() {
-    int base = 8085;
-    try {
-      String slimPort = page.readOnlyData().getVariable("SLIM_PORT");
-      if (slimPort != null) {
-        int slimPortInt = Integer.parseInt(slimPort);
-        base = slimPortInt;
-      }
-    } catch (Exception e) {
-    }
-    return base;
-  }
-  // ^^^ Till here ^^^
 
   public void start() throws IOException {
     slimRunner.asynchronousStart();
 
-    slimClient = new SlimClient(determineSlimHost(), slimSocket);
+    slimClient = new SlimClient(descriptor.determineSlimHost(), descriptor.getSlimPort());
     try {
       waitForConnection();
       started = true;
     } catch (SlimError e) {
       testSystemListener.exceptionOccurred(e);
     }
-  }
-
-  String determineSlimHost() {
-    String slimHost = page.readOnlyData().getVariable("SLIM_HOST");
-    return slimHost == null ? "localhost" : slimHost;
-  }
-
-  public String getCommandLine() {
-    return slimCommand;
   }
 
   public void bye() throws IOException {
@@ -485,6 +425,90 @@ public abstract class SlimTestSystem extends TestSystem {
 
   public List<Expectation> getExpectations() {
     return allExpectations;
+  }
+
+  public static class SlimDescriptor extends Descriptor {
+
+    private static AtomicInteger slimPortOffset = new AtomicInteger(0);
+    private final int slimPort;
+
+    public SlimDescriptor(WikiPage page, PageFactory pageFactory, boolean remoteDebug) {
+      super(page, pageFactory, remoteDebug);
+      slimPort = getNextSlimPort();
+    }
+
+    public SlimDescriptor(Descriptor descriptor) {
+      super(descriptor);
+      slimPort = getNextSlimPort();
+    }
+
+    public int getSlimPort() {
+      return slimPort;
+    }
+
+    private int findFreePort() {
+      int port;
+      try {
+        ServerSocket socket = new ServerSocket(0);
+        port = socket.getLocalPort();
+        socket.close();
+      } catch (Exception e) {
+        port = -1;
+      }
+      return port;
+    }
+
+    private int getNextSlimPort() {
+      int base;
+
+      if (System.getProperty("slim.port") != null) {
+        base = Integer.parseInt(System.getProperty("slim.port"));
+      } else {
+        base = getSlimPortBase();
+      }
+
+      if (base == 0) {
+        return findFreePort();
+      }
+
+      synchronized (slimPortOffset) {
+        int offset = slimPortOffset.get();
+        offset = (offset + 1) % 10;
+        slimPortOffset.set(offset);
+        return offset + base;
+      }
+    }
+
+    public static void clearSlimPortOffset() {
+      slimPortOffset.set(0);
+    }
+
+    private int getSlimPortBase() {
+      int base = 8085;
+      try {
+        String slimPort = getPageData().getVariable("SLIM_PORT");
+        if (slimPort != null) {
+          int slimPortInt = Integer.parseInt(slimPort);
+          base = slimPortInt;
+        }
+      } catch (Exception e) {
+      }
+      return base;
+    }
+
+    String determineSlimHost() {
+      String slimHost = getPageData().getVariable("SLIM_HOST");
+      return slimHost == null ? "localhost" : slimHost;
+    }
+
+    String getSlimFlags() {
+      String slimFlags = getPageData().getVariable("SLIM_FLAGS");
+      if (slimFlags == null)
+        slimFlags = "";
+      return slimFlags;
+    }
+
+
   }
 
   private class NestedSlimTestContext implements SlimTestContext {

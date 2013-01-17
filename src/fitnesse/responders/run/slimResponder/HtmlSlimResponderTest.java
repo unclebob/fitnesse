@@ -69,7 +69,7 @@ public class HtmlSlimResponderTest {
     // system
     testPage = crawler.addPage(root, PathParser.parse("TestPage"),
         "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
-    SlimTestSystem.clearSlimPortOffset();
+    SlimTestSystem.SlimDescriptor.clearSlimPortOffset();
   }
 
   protected SlimResponder getSlimResponder() {

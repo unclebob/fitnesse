@@ -7,6 +7,7 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.Map;
 
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -32,16 +33,16 @@ public abstract class TestSystem implements TestSystemListener {
     this.testSystemListener = testSystemListener;
   }
 
-  public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) throws SocketException {
-    log = createExecutionLog(classPath, descriptor);
+  public ExecutionLog getExecutionLog() throws SocketException {
+    log = createExecutionLog();
     return log;
   }
 
-  protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException;
+  protected abstract ExecutionLog createExecutionLog() throws SocketException;
 
-  protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) {
+  protected String buildCommand(TestSystem.Descriptor descriptor) {
     String commandPattern = descriptor.getCommandPattern();
-    String command = replace(commandPattern, "%p", classPath);
+    String command = replace(commandPattern, "%p", descriptor.getClassPath());
     command = replace(command, "%m", descriptor.getTestRunner());
     return command;
   }
@@ -92,8 +93,8 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException;
 
-  public static Descriptor getDescriptor(ReadOnlyPageData data, PageFactory pageFactory, boolean isRemoteDebug) {
-    return new Descriptor(data, pageFactory, isRemoteDebug);
+  public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
+    return new Descriptor(page, pageFactory, isRemoteDebug);
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
@@ -106,15 +107,21 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public static class Descriptor {
-    public final PageFactory pageFactory;
-    public final ReadOnlyPageData data;
-    public final boolean remoteDebug;
+    private final WikiPage page;
+    private final ReadOnlyPageData data;
+    private final PageFactory pageFactory;
+    private final boolean remoteDebug;
 
-    public Descriptor(ReadOnlyPageData data, PageFactory pageFactory,
+    public Descriptor(WikiPage page, PageFactory pageFactory,
         boolean remoteDebug) {
-      this.data = data;
+      this.page = page;
+      this.data = page.readOnlyData();
       this.pageFactory = pageFactory;
       this.remoteDebug = remoteDebug;
+    }
+
+    public Descriptor(Descriptor descriptor) {
+      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug);
     }
 
     public String getTestSystem() {
@@ -196,6 +203,13 @@ public abstract class TestSystem implements TestSystemListener {
       return separator;
     }
 
+    public String getClassPath() {
+      return new ClassPathBuilder().getClasspath(data.getWikiPage());
+    }
+
+    protected ReadOnlyPageData getPageData() {
+      return data;
+    }
 
     @Override
     public int hashCode() {

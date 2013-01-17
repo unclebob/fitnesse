@@ -15,15 +15,18 @@ import java.util.Map;
 public class FitTestSystem extends TestSystem {
  private CommandRunningFitClient client;
  private FitNesseContext context;
+  private final Descriptor descriptor;
 
- public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
+  public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
+                      TestSystemListener listener) {
    super(page, listener);
+   this.descriptor = descriptor;
    this.context = context;
  }
 
- protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) {
-   String command = buildCommand(descriptor, classPath);
-   Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
+ protected ExecutionLog createExecutionLog() {
+   String command = buildCommand(descriptor);
+   Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
    client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
    return new ExecutionLog(page, client.commandRunner);
  }

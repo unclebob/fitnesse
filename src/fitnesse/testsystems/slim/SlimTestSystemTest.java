@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -25,44 +26,43 @@ public class SlimTestSystemTest {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
     // Enforce the test runner here, to make sure we're talking to the right system
-    SlimTestSystem.clearSlimPortOffset();
+    SlimTestSystem.SlimDescriptor.clearSlimPortOffset();
   }
 
   @Test
   public void portRotates() throws Exception {
-    SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
-    for (int i = 1; i < 15; i++)
-      assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
+    for (int i = 1; i < 15; i++) {
+      SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(root, null, false));
+      assertEquals(8085 + (i % 10), descriptor.getSlimPort());
+    }
   }
 
   @Test
   public void portStartsAtSlimPortVariable() throws Exception {
     WikiPage pageWithSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
-    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimPortDefined, dummyListener);
-    for (int i = 1; i < 15; i++)
-      assertEquals(9000 + (i % 10), sys.getNextSlimSocket());
+    for (int i = 1; i < 15; i++) {
+      SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithSlimPortDefined, null, false));
+      assertEquals(9000 + (i % 10), descriptor.getSlimPort());
+    }
   }
 
   @Test
   public void badSlimPortVariableDefaults() throws Exception {
     WikiPage pageWithBadSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
-    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithBadSlimPortDefined, dummyListener);
     for (int i = 1; i < 15; i++)
-      assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
+      assertEquals(8085 + (i % 10), new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithBadSlimPortDefined, null, false)).getSlimPort());
   }
 
   @Test
   public void slimHostDefaultsTolocalhost() throws Exception {
     WikiPage pageWithoutSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
-    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithoutSlimHostVariable, dummyListener);
-    assertEquals("localhost", sys.determineSlimHost());
+    assertEquals("localhost", new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithoutSlimHostVariable, null, false)).determineSlimHost());
   }
 
   @Test
   public void slimHostVariableSetsTheHost() throws Exception {
     WikiPage pageWithSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
-    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimHostVariable, dummyListener);
-    assertEquals("somehost", sys.determineSlimHost());
+    assertEquals("somehost", new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithSlimHostVariable, null, false)).determineSlimHost());
   }
 
   @Test
@@ -86,7 +86,8 @@ public class SlimTestSystemTest {
     final int slimServerPort = 10258;
     ServerSocket slimSocket = new ServerSocket(slimServerPort);
     try {
-      SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
+      TestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(root, null, false);
+      SlimTestSystem sys = new HtmlSlimTestSystem(root, descriptor, dummyListener);
       String slimArguments = String.format("%s %d", "", slimServerPort);
       sys.createSlimService(slimArguments);
     } finally {

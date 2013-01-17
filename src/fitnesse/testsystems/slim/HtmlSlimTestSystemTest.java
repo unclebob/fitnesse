@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.testsystems.TestSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,14 +30,15 @@ public class HtmlSlimTestSystemTest {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
     // Enforce the test runner here, to make sure we're talking to the right system
-    HtmlSlimTestSystem.clearSlimPortOffset();
+    HtmlSlimTestSystem.SlimDescriptor.clearSlimPortOffset();
   }
 
   @Test
   public void gettingPrecompiledScenarioWidgetsForChildLibraryPage() throws Exception {
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
     crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"), "child library");
-    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+    SlimTestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(suitePage, null, false);
+    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, descriptor, dummyListener);
 
     ParsedPage scenarios = sys.getPreparsedScenarioLibrary();
 
@@ -51,7 +53,8 @@ public class HtmlSlimTestSystemTest {
   public void gettingPrecompiledScenarioWidgetsForUncleLibraryPage() throws Exception {
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("ParentPage.MySuite"), "my suite content");
     crawler.addPage(root, PathParser.parse("ScenarioLibrary"), "uncle library");
-    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+    TestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(suitePage, null, false);
+    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, descriptor, dummyListener);
 
     ParsedPage scenarios = sys.getPreparsedScenarioLibrary();
 
@@ -66,7 +69,8 @@ public class HtmlSlimTestSystemTest {
   @Test
   public void precompiledScenarioWidgetsAreCreatedOnlyOnce() throws Exception {
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
-    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+    TestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(suitePage, null, false);
+    HtmlSlimTestSystem sys = new HtmlSlimTestSystem(suitePage, descriptor, dummyListener);
 
     assertSame(sys.getPreparsedScenarioLibrary(), sys.getPreparsedScenarioLibrary());
   }

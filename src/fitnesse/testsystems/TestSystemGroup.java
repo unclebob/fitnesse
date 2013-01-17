@@ -9,6 +9,7 @@ import java.util.Map;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
@@ -59,7 +60,7 @@ public class TestSystemGroup {
       testSystem.setFastTest(fastTest);
       testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
-      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog(classPath, descriptor));
+      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
       testSystem.start();
     }
     return testSystem;
@@ -67,9 +68,9 @@ public class TestSystemGroup {
 
   private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) {
     if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.getTestSystemName())))
-      return new HtmlSlimTestSystem(page, testSystemListener);
+      return new HtmlSlimTestSystem(page, descriptor, testSystemListener);
     else
-      return new FitTestSystem(context, page, testSystemListener);
+      return new FitTestSystem(context, page, descriptor, testSystemListener);
   }
 
 }

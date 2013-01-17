@@ -16,8 +16,8 @@ import fitnesse.wikitext.parser.ParsedPage;
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private ParsedPage preparsedScenarioLibrary;
 
-  public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
-    super(page, listener);
+  public HtmlSlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
+    super(page, descriptor, listener);
   }
 
   protected TableScanner scanTheTables(ReadOnlyPageData pageData) {

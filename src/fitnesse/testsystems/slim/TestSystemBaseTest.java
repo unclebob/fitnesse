@@ -27,28 +27,28 @@ public class TestSystemBaseTest {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"),
       "!define TEST_SYSTEM {system}\n" +
         "!define TEST_RUNNER {runner}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage.getData(), null, false).getTestSystemName();
+    String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("system:runner", testSystemName);
   }
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "");
-    String testSystemName = TestSystem.getDescriptor(testPage.getData(), null, false).getTestSystemName();
+    String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("fit:fit.FitServer", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsSlim() throws Exception {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage.getData(), null, false).getTestSystemName();
+    String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("slim:fitnesse.slim.SlimService", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsUnknownDefaultsToFit() throws Exception {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage.getData(), null, false).getTestSystemName();
+    String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }
 

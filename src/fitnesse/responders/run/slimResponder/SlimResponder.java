@@ -54,17 +54,24 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       pageData = page.getData();
   }
 
+  public FitNesseContext getContext() {
+    return context;
+  }
+
+  public WikiPage getPage() {
+    return page;
+  }
+
   public class SlimRenderer {
 
     public String render() {
-      testSystem = getTestSystem(pageData);
       String html = null;
 
-      String classPath = new ClassPathBuilder().getClasspath(page);
-      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), context.pageFactory, false);
+      TestSystem.Descriptor descriptor = getDescriptor();
       System.out.println("test runner: " + descriptor.getTestRunner());
       try {
-        testSystem.getExecutionLog(classPath, descriptor);
+        testSystem = getTestSystem();
+        testSystem.getExecutionLog();
         testSystem.start();
         testSystem.setFastTest(fastTest);
         html = testSystem.runTestsAndGenerateHtml(pageData);
@@ -78,7 +85,11 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     }
   }
 
-  protected abstract SlimTestSystem getTestSystem(PageData pageData);
+  protected TestSystem.Descriptor getDescriptor() {
+    return TestSystem.getDescriptor(page, context.pageFactory, false);
+  }
+
+  protected abstract SlimTestSystem getTestSystem();
 
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
@@ -112,7 +123,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   public String getCommandLine() {
-    return testSystem.getCommandLine();
+    return testSystem.buildCommand();
   }
 }
 
