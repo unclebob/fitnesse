@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import util.ListUtility;
 
 public class SlimSerializerTest {
   private List<Object> list;
@@ -47,7 +48,7 @@ public class SlimSerializerTest {
 
   @Test
   public void serializeListWithNonString() throws Exception {
-    String s = SlimSerializer.serialize(list(1));
+    String s = SlimSerializer.serialize(ListUtility.<Object>list(1));
     list = SlimDeserializer.deserialize(s);
     assertEquals("1", list.get(0));
   }

@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.slim.SlimError;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.HtmlTableScanner;
@@ -41,7 +42,7 @@ public class ScenarioTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Object> getInstructions() throws SyntaxError {
+  public List<Instruction> getInstructions() throws SyntaxError {
     parseTable();
 
     // Note: scenario's only add instructions when needed to,
@@ -141,14 +142,14 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public List<Object> call(Map<String, String> scenarioArguments,
+  public List<Instruction> call(Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws SyntaxError {
     String script = getTable().toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
     return insertAndProcessScript(script, parentTable, row);
   }
 
-  public List<Object> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
+  public List<Instruction> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
@@ -157,7 +158,7 @@ public class ScenarioTable extends SlimTable {
     return call(scenarioArguments, parentTable, row);
   }
 
-  private List<Object> insertAndProcessScript(String script, SlimTable parentTable,
+  private List<Instruction> insertAndProcessScript(String script, SlimTable parentTable,
                                       int row) {
     try {
       // TODO: retrieve table scanner from context
@@ -165,7 +166,7 @@ public class ScenarioTable extends SlimTable {
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
         new ScenarioTestContext(parentTable.getTestContext()));
       parentTable.addChildTable(t, row);
-      List<Object> instructions = t.getInstructions();
+      List<Instruction> instructions = t.getInstructions();
       parentTable.addExpectation(new ScenarioExpectation(t, row));
       return instructions;
     } catch (Exception e) {

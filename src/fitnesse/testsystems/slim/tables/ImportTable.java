@@ -6,6 +6,9 @@ import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -18,17 +21,16 @@ public class ImportTable extends SlimTable {
     return "import";
   }
 
-  public List<Object> getInstructions() throws SyntaxError {
+  public List<Instruction> getInstructions() throws SyntaxError {
     int rows = table.getRowCount();
-    List<Object> instructions = new ArrayList<Object>(rows);
+    List<Instruction> instructions = new ArrayList<Instruction>(rows);
     if (rows < 2)
       throw new SyntaxError("Import tables must have at least two rows.");
 
     for (int row = 1; row < rows; row++) {
       String importString = table.getCellContents(0, row);
       if (importString.length() > 0) {
-        List<Object> importInstruction = prepareInstruction();
-        importInstruction.addAll(list("import", importString));
+        Instruction importInstruction = new ImportInstruction(makeInstructionTag(), importString);
         instructions.add(importInstruction);
       }
     }

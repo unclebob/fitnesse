@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -25,7 +27,7 @@ public class DecisionTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Object> getInstructions() throws SyntaxError {
+  public List<Instruction> getInstructions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String scenarioName = getScenarioName();
@@ -49,7 +51,7 @@ public class DecisionTable extends SlimTable {
     return Disgracer.disgraceClassName(nameBuffer.toString().trim());
   }
 
-  protected List<Object> callAndAssign(String symbolName, String functionName) {
+  protected Instruction callAndAssign(String symbolName, String functionName) {
     return callAndAssign(symbolName, getTableName(), functionName);
   }
 
@@ -98,15 +100,15 @@ public class DecisionTable extends SlimTable {
   }
 
   private class ScenarioCaller extends DecisionTableCaller {
-    public ArrayList<Object> call(ScenarioTable scenario) throws SyntaxError {
+    public ArrayList<Instruction> call(ScenarioTable scenario) throws SyntaxError {
       gatherFunctionsAndVariablesFromColumnHeader();
-      ArrayList<Object> instructions = new ArrayList<Object>();
+      ArrayList<Instruction> instructions = new ArrayList<Instruction>();
       for (int row = 2; row < table.getRowCount(); row++)
         instructions.addAll(callScenarioForRow(scenario, row));
       return instructions;
     }
 
-    private List<Object> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
+    private List<Instruction> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
       checkRow(row);
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
@@ -124,10 +126,10 @@ public class DecisionTable extends SlimTable {
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-    public List<Object> call(String fixtureName) throws SyntaxError {
-      final List<Object> instructions = new ArrayList<Object>();
+    public List<Instruction> call(String fixtureName) throws SyntaxError {
+      final List<Instruction> instructions = new ArrayList<Instruction>();
       instructions.add(constructFixture(fixtureName));
-      final List<Object> callTable = callFunction(getTableName(), "table", tableAsList());
+      final Instruction callTable = callFunction(getTableName(), "table", tableAsList());
       instructions.add(callTable);
       dontReportExceptionsInTheseInstructions.add(getInstructionId(callTable));
       if (table.getRowCount() > 2)
@@ -135,8 +137,8 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> invokeRows() throws SyntaxError {
-      List<Object> instructions = new ArrayList<Object>();
+    private List<Instruction> invokeRows() throws SyntaxError {
+      List<Instruction> instructions = new ArrayList<Instruction>();
       instructions.add(callUnreportedFunction("beginTable"));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
@@ -145,8 +147,8 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> invokeRow(int row) throws SyntaxError {
-      List<Object> instructions = new ArrayList<Object>();
+    private List<Instruction> invokeRow(int row) throws SyntaxError {
+      List<Instruction> instructions = new ArrayList<Instruction>();
       checkRow(row);
       instructions.add(callUnreportedFunction("reset"));
       instructions.addAll(setVariables(row));
@@ -155,24 +157,24 @@ public class DecisionTable extends SlimTable {
       return instructions;
     }
 
-    private List<Object> callUnreportedFunction(String functionName) {
-      final List<Object> functionCall = callFunction(getTableName(), functionName);
+    private Instruction callUnreportedFunction(String functionName) {
+      final Instruction functionCall = callFunction(getTableName(), functionName);
       dontReportExceptionsInTheseInstructions.add(getInstructionId(functionCall));
       return functionCall;
     }
 
-    private List<Object> callFunctions(int row) {
-      List<Object> instructions = new ArrayList<Object>();
+    private List<Instruction> callFunctions(int row) {
+      List<Instruction> instructions = new ArrayList<Instruction>();
       for (String functionName : funcsLeftToRight) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
     }
 
-    private List<Object> callFunctionInRow(String functionName, int row) {
+    private Instruction callFunctionInRow(String functionName, int row) {
       int col = funcs.get(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
-      List<Object> instruction;
+      Instruction instruction;
       if (assignedSymbol != null) {
         addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionTag(), col, row));
         instruction = callAndAssign(assignedSymbol, functionName);
@@ -188,22 +190,20 @@ public class DecisionTable extends SlimTable {
       addExpectation(new ReturnedValueExpectation(getInstructionTag(), col, row));
     }
 
-    private List<Object> setVariables(int row) {
-      List<Object> instructions = new ArrayList<Object>();
+    private List<Instruction> setVariables(int row) {
+      List<Instruction> instructions = new ArrayList<Instruction>();
       for (String var : varsLeftToRight) {
         int col = vars.get(var);
         String valueToSet = table.getUnescapedCellContents(col, row);
-        setVariableExpectation(col, row);
-        List<Object> setInstruction = prepareInstruction();
-        addCall(setInstruction, getTableName(), "set" + " " + var);
-        setInstruction.add(valueToSet);
+        Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
+        setVariableExpectation(setInstruction.getId(), col, row);
         instructions.add(setInstruction);
       }
       return instructions;
     }
 
-    private void setVariableExpectation(int col, int row) {
-      addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
+    private void setVariableExpectation(String id, int col, int row) {
+      addExpectation(new VoidReturnExpectation(id, col, row));
     }
   }
 }

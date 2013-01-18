@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import util.ListUtility;
@@ -11,9 +12,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static util.ListUtility.list;
 
 public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
@@ -80,10 +84,10 @@ private void validateConnection() {
     return slimServerVersionMessage.startsWith("Slim -- V");
   }
 
-  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException {
+  public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
     if (statements.size() == 0)
       return new HashMap<String, Object>();
-    String instructions = SlimSerializer.serialize(statements);
+    String instructions = SlimSerializer.serialize(toList(statements));
     writeString(instructions);
     int resultLength = getLengthToRead();
     String results = null;
@@ -93,7 +97,57 @@ private void validateConnection() {
     return resultToMap(resultList);
   }
 
-private int getLengthToRead() throws IOException  {
+  private interface ToListExecutor extends MakeInstruction.MakeExecutor, ImportInstruction.ImportExecutor, CallInstruction.CallExecutor, CallAndAssignInstruction.CallAndAssignExecutor {
+
+  }
+
+  private List<Object> toList(List<Instruction> instructions) {
+    final List<Object> statementsAsList = new ArrayList<Object>(instructions.size());
+    for (final Instruction instruction: instructions) {
+      ToListExecutor executor = new ToListExecutor() {
+        @Override
+        public Object addPath(String path) throws SlimException {
+          statementsAsList.add(list(instruction.getId(), ImportInstruction.INSTRUCTION, path));
+          return null;
+        }
+
+        @Override
+        public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
+          List<Object> list = ListUtility.<Object>list(instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName);
+          addArguments(list, arguments);
+          statementsAsList.add(list);
+          return null;
+        }
+
+        @Override
+        public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
+          List<Object> list = ListUtility.<Object>list(instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName);
+          addArguments(list, arguments);
+          statementsAsList.add(list);
+          return null;
+        }
+
+        @Override
+        public Object create(String instanceName, String className, Object... constructorArgs) throws SlimException {
+          List<Object> list = ListUtility.<Object>list(instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
+          addArguments(list, constructorArgs);
+          statementsAsList.add(list);
+          return null;
+        }
+      };
+
+      instruction.execute(executor);
+    }
+    return statementsAsList;  //To change body of created methods use File | Settings | File Templates.
+  }
+
+  private static void addArguments(List<Object> list, Object[] arguments) {
+    for (Object arg: arguments) {
+      list.add(arg);
+    }
+  }
+
+  private int getLengthToRead() throws IOException  {
 	String resultLength = reader.read(6);
     reader.read(1);
     int length = 0;
@@ -104,7 +158,7 @@ private int getLengthToRead() throws IOException  {
     	throw new RuntimeException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
     }
 	return length;
-}
+  }
 
   private void writeString(String string) throws IOException {
     String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
@@ -116,7 +170,7 @@ private int getLengthToRead() throws IOException  {
     writeString("bye");
   }
 
-  public static Map<String, Object> resultToMap(List<Object> slimResults) {
+  public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
       List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);

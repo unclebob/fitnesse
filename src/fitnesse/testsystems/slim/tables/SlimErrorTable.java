@@ -4,6 +4,8 @@ package fitnesse.testsystems.slim.tables;
 
 import java.util.Collections;
 import java.util.List;
+
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
@@ -17,7 +19,7 @@ public class SlimErrorTable extends SlimTable {
     return "UnknownTableType";
   }
 
-  public List<Object> getInstructions() {
+  public List<Instruction> getInstructions() {
 	// No need for Expectations, this is just an errorous table. Put a notification in.
     String tableType = table.getCellContents(0, 0);
     Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));

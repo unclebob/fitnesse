@@ -7,10 +7,13 @@ import static util.ListUtility.list;
 
 import java.util.List;
 
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.Instruction;
 import org.junit.Test;
 
 public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
   private final String importTableHeader = "|Import|\n";
+
   private void buildInstructionsFor(String scriptStatements) throws Exception {
     makeSlimTableAndBuildInstructions(importTableHeader + scriptStatements);
   }
@@ -27,10 +30,10 @@ public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
       "|fitnesse.slim.test|\n" +
         "|x.y.z|\n"
     );
-    List<Object> expectedInstructions =
+    List<? extends Instruction> expectedInstructions =
       list(
-        list("import_id_0", "import", "fitnesse.slim.test"),
-        list("import_id_1", "import", "x.y.z")
+              new ImportInstruction("import_id_0", "fitnesse.slim.test"),
+              new ImportInstruction("import_id_1", "x.y.z")
       );
     assertEquals(expectedInstructions, instructions);
   }

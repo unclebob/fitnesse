@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
 import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;
@@ -127,7 +128,7 @@ public class SlimTableTest {
       return null;
     }
 
-    public List<Object> getInstructions() {
+    public List<Instruction> getInstructions() {
       return Collections.emptyList();
     }
   }

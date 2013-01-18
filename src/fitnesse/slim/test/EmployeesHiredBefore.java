@@ -1,5 +1,7 @@
 package fitnesse.slim.test;
 
+import util.ListUtility;
+
 import static util.ListUtility.list;
 
 import java.util.Date;
@@ -17,7 +19,7 @@ public class EmployeesHiredBefore {
   public List<Object> query() {
 
     return
-      list(
+      ListUtility.<Object>list(
         list(
           list("employee number", "1429"),
           list("first name", "Bob"),

@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionExecutor;
+import fitnesse.slim.instructions.MakeInstruction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +24,7 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.Utils;
+import util.ListUtility;
 
 import static util.ListUtility.*;
 
@@ -65,25 +70,26 @@ public abstract class QueryTableBaseTest {
     return constructor.newInstance(t, "id", testContext);
   }
 
+  @SuppressWarnings("unchecked")
   protected void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(list(
       list("queryTable_id_0", "OK"),
       list("queryTable_id_1", "blah"),
       list("queryTable_id_2", queryResults)
-    )
-    );
+    ));
     testContext.evaluateExpectations(pseudoResults);
     org.junit.Assert.assertEquals(table, qt.getTable().toString());
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void instructionsForQueryTable() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader);
-    List<Object> expectedInstructions = list(
-      list("queryTable_id_0", "make", "queryTable_id", "fixture", "argument"),
-      list("queryTable_id_1", "call", "queryTable_id", "table", list(list("n", "2n"))),
-      list("queryTable_id_2", "call", "queryTable_id", "query")
+    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+            new MakeInstruction("queryTable_id_0", "queryTable_id", "fixture", new Object[]{"argument"}),
+            new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{list(list("n", "2n"))}),
+            new CallInstruction("queryTable_id_2", "queryTable_id", "query")
     );
     org.junit.Assert.assertEquals(expectedInstructions, instructions);
   }
@@ -101,9 +107,9 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowThatMatches() throws Exception {
     assertQueryResults("|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -115,9 +121,9 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowFirstCellMatchesSecondCellBlank() throws Exception {
     assertQueryResults("|2||\n",
-      list(
-        list(list("n", "2"), list("2n", "4"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -129,9 +135,9 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowThatFails() throws Exception {
     assertQueryResults("|2|4|\n",
-      list(
-        list(list("n", "3"), list("2n", "5"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "3"), list("2n", "5"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -144,9 +150,9 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowWithPartialMatch() throws Exception {
     assertQueryResults("|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "5"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "5"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -160,10 +166,10 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|2|4|\n" +
         "|3|6|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -178,10 +184,10 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|3|6|\n" +
         "|99|99|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -197,10 +203,10 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|99|99|\n" +
         "|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -215,9 +221,9 @@ public abstract class QueryTableBaseTest {
   public void fieldInMatchingRowDoesntExist() throws Exception {
     assertQueryResults(
       "|3|4|\n",
-      list(
-        list(list("n", "3"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "3"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -230,9 +236,9 @@ public abstract class QueryTableBaseTest {
   public void fieldInSurplusRowDoesntExist() throws Exception {
     assertQueryResults(
       "",
-      list(
-        list(list("n", "3"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "3"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -320,9 +326,9 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowThatMatchesExpression() throws Exception {
     assertQueryResults("|<5|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +

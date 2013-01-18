@@ -7,6 +7,8 @@ import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -21,9 +23,9 @@ public class TableTable extends SlimTable {
     return ("tableTable");
   }
 
-  public List<Object> getInstructions() {
-    List<Object> make = constructFixture(getFixtureName());
-    List<Object> doTable = callFunction(getTableName(), "doTable", tableAsList());
+  public List<Instruction> getInstructions() {
+    Instruction make = constructFixture(getFixtureName());
+    Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
     addExpectation(new TableTableExpectation());
     doTableId = getInstructionId(doTable);
     return list(make, doTable);

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
@@ -50,13 +51,13 @@ public class QueryTable extends SlimTable {
     return e != null ? e.toString() : null;
   }
 
-  public List<Object> getInstructions() throws SyntaxError {
+  public List<Instruction> getInstructions() throws SyntaxError {
     if (table.getRowCount() < 2)
       throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    List<Object> make = constructFixture(getFixtureName());
-    List<Object> ti = callFunction(getTableName(), "table", tableAsList());
-    List<Object> qi = callFunction(getTableName(), "query");
+    Instruction make = constructFixture(getFixtureName());
+    Instruction ti = callFunction(getTableName(), "table", tableAsList());
+    Instruction qi = callFunction(getTableName(), "query");
     tableInstruction = getInstructionId(ti);
     queryId = getInstructionId(qi);
     addExpectation(new QueryTableExpectation());

@@ -5,6 +5,7 @@ import static util.ListUtility.list;
 
 import java.util.List;
 
+import fitnesse.slim.instructions.MakeInstruction;
 import org.junit.Test;
 
 public class LibraryTableTest extends SlimTableTestSupport<LibraryTable> {
@@ -23,8 +24,8 @@ public class LibraryTableTest extends SlimTableTestSupport<LibraryTable> {
   @Test
   public void correctInstructionsForLibraryTableForOneLibrary() throws Exception {
     buildInstructionsFor("|echo support|\n");
-    List<Object> expectedInstructions = list(
-        list("library_id_0", "make", "library1", "EchoSupport")
+    List<MakeInstruction> expectedInstructions = list(
+            new MakeInstruction("library_id_0", "library1", "EchoSupport")
     );
     assertEquals(expectedInstructions, instructions);
   }
@@ -32,9 +33,9 @@ public class LibraryTableTest extends SlimTableTestSupport<LibraryTable> {
   @Test
   public void correctInstructionsForLibraryTableForMultipleLibraries() throws Exception {
     buildInstructionsFor("|echo support|\n|file support|\n");
-    List<Object> expectedInstructions = list(
-        list("library_id_0", "make", "library1", "EchoSupport"),
-        list("library_id_1", "make", "library2", "FileSupport")
+    List<MakeInstruction> expectedInstructions = list(
+            new MakeInstruction("library_id_0", "library1", "EchoSupport"),
+            new MakeInstruction("library_id_1", "library2", "FileSupport")
     );
     assertEquals(expectedInstructions, instructions);
   }

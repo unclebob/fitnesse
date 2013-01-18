@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.instructions.CallAndAssignInstruction;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
@@ -81,13 +85,10 @@ public abstract class SlimTable {
 
   protected abstract String getTableType();
 
-  public abstract List<Object> getInstructions() throws SyntaxError;
+  public abstract List<Instruction> getInstructions() throws SyntaxError;
 
-  protected List<Object> prepareInstruction() {
-    List<Object> instruction = new ArrayList<Object>();
-    instruction.add(makeInstructionTag(instructionNumber));
-    instructionNumber++;
-    return instruction;
+  protected String makeInstructionTag() {
+    return makeInstructionTag(instructionNumber++);
   }
 
   protected String makeInstructionTag(int instructionNumber) {
@@ -114,7 +115,7 @@ public abstract class SlimTable {
     return table;
   }
 
-  protected List<Object> constructFixture(String fixtureName) {
+  protected Instruction constructFixture(String fixtureName) {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
@@ -131,16 +132,10 @@ public abstract class SlimTable {
     return tableHeader.split(":")[1];
   }
 
-  protected List<Object> constructInstance(String instanceName, String className, int classNameColumn, int row) {
+  protected Instruction constructInstance(String instanceName, String className, int classNameColumn, int row) {
     RowExpectation expectation = new ConstructionExpectation(getInstructionTag(), classNameColumn, row);
     addExpectation(expectation);
-    List<Object> makeInstruction = prepareInstruction();
-    makeInstruction.add("make");
-    makeInstruction.add(instanceName);
-
-    makeInstruction.add(className);
-    addArgsToInstruction(makeInstruction, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row));
-    return makeInstruction;
+    return new MakeInstruction(makeInstructionTag(), instanceName, className, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row));
   }
 
   protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
@@ -153,35 +148,16 @@ public abstract class SlimTable {
     return arguments.toArray(new String[arguments.size()]);
   }
 
-  protected void addCall(List<Object> instruction, String instanceName, String functionName) {
-    String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
-    List<String> callHeader = list("call", instanceName, disgracedFunctionName);
-    instruction.addAll(callHeader);
+  protected Instruction callFunction(String instanceName, String functionName, Object... args) {
+    return new CallInstruction(makeInstructionTag(), instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
-  protected List<Object> callFunction(String instanceName, String functionName, Object... args) {
-    List<Object> callInstruction = prepareInstruction();
-    addCall(callInstruction, instanceName, functionName);
-    addArgsToInstruction(callInstruction, args);
-    return callInstruction;
+  protected String getInstructionId(Instruction instruction) {
+    return instruction.getId();
   }
 
-  protected String getInstructionId(List<Object> instruction) {
-    return (String) instruction.get(0);
-  }
-
-  private void addArgsToInstruction(List<Object> instruction, Object... args) {
-    for (Object arg : args)
-      instruction.add(arg);
-  }
-
-  protected List<Object> callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
-    List<Object> callAndAssignInstruction = prepareInstruction();
-    String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
-    List<String> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
-    callAndAssignInstruction.addAll(callAndAssignHeader);
-    addArgsToInstruction(callAndAssignInstruction, (Object[]) args);
-    return callAndAssignInstruction;
+  protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
+    return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
   // TODO: make Response object objects instead

@@ -34,6 +34,7 @@ import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slim.JavaSlimFactory;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -59,7 +60,7 @@ public abstract class SlimTestSystem extends TestSystem {
 
   protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
   protected List<SlimTable> allTables = new ArrayList<SlimTable>();
-  protected List<Object> allInstructions = new ArrayList<Object>();
+  protected List<Instruction> allInstructions = new ArrayList<Instruction>();
   protected List<Expectation> allExpectations = new ArrayList<Expectation>();
 
 
@@ -263,7 +264,7 @@ public abstract class SlimTestSystem extends TestSystem {
     expectations.clear();
 
     testTables = tables;
-    List<Object> instructions = createInstructions(tables);
+    List<Instruction> instructions = createInstructions(tables);
     if (!exceptions.stopTestCalled()) {
       instructionResults = slimClient.invokeAndGetResponse(instructions);
     }
@@ -278,8 +279,8 @@ public abstract class SlimTestSystem extends TestSystem {
     return html;
   }
 
-  private List<Object> createInstructions(List<SlimTable> tables) {
-    List<Object> instructions = new ArrayList<Object>();
+  private List<Instruction> createInstructions(List<SlimTable> tables) {
+    List<Instruction> instructions = new ArrayList<Instruction>();
     for (SlimTable table : tables) {
       try {
         instructions.addAll(table.getInstructions());
@@ -415,7 +416,7 @@ public abstract class SlimTestSystem extends TestSystem {
     return allTables;
   }
 
-  public List<Object> getInstructions() {
+  public List<Instruction> getInstructions() {
     return allInstructions;
   }
 

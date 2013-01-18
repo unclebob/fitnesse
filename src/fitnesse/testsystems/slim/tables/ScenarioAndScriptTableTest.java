@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -52,9 +53,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         "!|script|\n" +
         "|myScenario|7|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "7")
+              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -68,9 +69,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         "!|script|\n" +
         "|f|1||2|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "1", "2")
+              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"1", "2"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -85,10 +86,10 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         "|login|bob|password|xyzzy|pin|7734|\n" +
         "|login|bill|password|yabba|pin|8892|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
-        list("scriptTable_id_1/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
+              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
+              new CallInstruction("scriptTable_id_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -234,9 +235,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         "!|script|\n" +
         "|Login user Bob with password xyzzy|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -250,9 +251,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         "!|script|\n" +
         "|Login user Bob with password xyzzy|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -275,9 +276,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     instructions.addAll(st1.getInstructions());
     instructions.addAll(st2.getInstructions());
     instructions.addAll(script.getInstructions());
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -300,9 +301,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     instructions.addAll(st1.getInstructions());
     instructions.addAll(st2.getInstructions());
     instructions.addAll(script.getInstructions());
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
+              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -326,9 +327,9 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     instructions.addAll(st1.getInstructions());
     instructions.addAll(st2.getInstructions());
     instructions.addAll(script.getInstructions());
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
+              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
       );
     assertEquals(expectedInstructions, instructions);
   }

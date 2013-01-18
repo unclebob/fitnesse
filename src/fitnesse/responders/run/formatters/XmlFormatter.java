@@ -4,6 +4,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.*;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -146,7 +147,7 @@ public class XmlFormatter extends BaseFormatter {
 
   private static class SlimTestXmlFormatter {
     private TestExecutionReport.TestResult testResult;
-    private List<Object> instructions;
+    private List<Instruction> instructions;
     private Map<String, Object> results;
     private List<Expectation> expectations;
     private List<SlimTable> slimTables;
@@ -257,18 +258,17 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     private void addInstructionResults() {
-      for (Object instruction : instructions) {
+      for (Instruction instruction : instructions) {
         addInstructionResult(instruction);
       }
     }
 
     @SuppressWarnings("unchecked")
-    private void addInstructionResult(Object instruction) {
+    private void addInstructionResult(Instruction instruction) {
       TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
       testResult.instructions.add(instructionResult);
 
-      List<Object> instructionList = (List<Object>) instruction;
-      String id = (String) (instructionList.get(0));
+      String id = instruction.getId();
       Object result = results.get(id);
 
       instructionResult.instruction = instruction.toString();

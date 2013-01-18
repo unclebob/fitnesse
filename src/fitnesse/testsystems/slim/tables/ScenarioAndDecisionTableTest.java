@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.instructions.CallInstruction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,9 +83,9 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         "|input|\n" +
         "|7|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("decisionTable_did_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "7")
+              new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -100,10 +101,10 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         "|bob|xyzzy|7734|\n" +
         "|bill|yabba|8892|\n"
     );
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("decisionTable_did_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
-        list("decisionTable_did_1/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
+              new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
+              new CallInstruction("decisionTable_did_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
       );
     assertEquals(expectedInstructions, instructions);
   }

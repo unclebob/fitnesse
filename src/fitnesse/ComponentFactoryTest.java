@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Properties;
 
+import fitnesse.slim.instructions.Instruction;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
@@ -243,7 +244,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public List<Object> getInstructions() {
+    public List<Instruction> getInstructions() {
       return null;
     }
   }

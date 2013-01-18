@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionExecutor;
+import fitnesse.slim.instructions.MakeInstruction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +24,7 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import util.ListUtility;
 
 public class TableTableTest {
   private WikiPage root;
@@ -65,9 +70,9 @@ public class TableTableTest {
   @Test
   public void instructionsForEmptyTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader);
-    List<Object> expectedInstructions = list(
-      list("tableTable_id_0", "make", "tableTable_id", "fixture", "argument"),
-      list("tableTable_id_1", "call", "tableTable_id", "doTable", list())
+    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+            new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
+            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list()})
     );
     assertEquals(expectedInstructions, instructions);
   }
@@ -75,9 +80,9 @@ public class TableTableTest {
   @Test
   public void instructionsForTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|a|b|\n|x|y|\n");
-    List<Object> expectedInstructions = list(
-      list("tableTable_id_0", "make", "tableTable_id", "fixture", "argument"),
-      list("tableTable_id_1", "call", "tableTable_id", "doTable", list(list("a", "b"), list("x", "y")))
+    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+            new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
+            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list(list("a", "b"), list("x", "y"))})
     );
     assertEquals(expectedInstructions, instructions);
   }
@@ -85,9 +90,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesUnchanged() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("pass", "pass")
-      ),
+            ListUtility.<Object>list(
+                    list("pass", "pass")
+            ),
       "[[pass(Table:fixture), argument], [pass(2), pass(4)]]"
     );
   }
@@ -95,9 +100,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesChanged() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("pass:x", "pass:y")
-      ),
+            ListUtility.<Object>list(
+                    list("pass:x", "pass:y")
+            ),
       "[[pass(Table:fixture), argument], [pass(x), pass(y)]]"
     );
   }
@@ -105,9 +110,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesWithManyColons() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("pass:x:z", "pass:http://me")
-      ),
+            ListUtility.<Object>list(
+                    list("pass:x:z", "pass:http://me")
+            ),
       "[[pass(Table:fixture), argument], [pass(x:z), pass(http://me)]]"
     );
   }
@@ -115,9 +120,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatImplicitlyFails() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("bad", "boy")
-      ),
+            ListUtility.<Object>list(
+                    list("bad", "boy")
+            ),
       "[[pass(Table:fixture), argument], [fail(bad), fail(boy)]]"
     );
   }
@@ -125,9 +130,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatImplicitlyFailsWithColon() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("x:bad", "x:boy")
-      ),
+            ListUtility.<Object>list(
+                    list("x:bad", "x:boy")
+            ),
       "[[pass(Table:fixture), argument], [fail(x:bad), fail(x:boy)]]"
     );
   }
@@ -135,9 +140,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyFails() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("fail:bad", "fail:boy")
-      ),
+            ListUtility.<Object>list(
+                    list("fail:bad", "fail:boy")
+            ),
       "[[pass(Table:fixture), argument], [fail(bad), fail(boy)]]"
     );
   }
@@ -145,9 +150,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyFailsNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("fail", "fail")
-      ),
+            ListUtility.<Object>list(
+                    list("fail", "fail")
+            ),
       "[[pass(Table:fixture), argument], [fail(2), fail(4)]]"
     );
   }
@@ -155,9 +160,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyIgnoresNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("ignore", "ignore")
-      ),
+            ListUtility.<Object>list(
+                    list("ignore", "ignore")
+            ),
       "[[pass(Table:fixture), argument], [ignore(2), ignore(4)]]"
     );
   }
@@ -165,9 +170,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyIgnoresWithChange() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("ignore:x", "ignore:y")
-      ),
+            ListUtility.<Object>list(
+                    list("ignore:x", "ignore:y")
+            ),
       "[[pass(Table:fixture), argument], [ignore(x), ignore(y)]]"
     );
   }
@@ -175,9 +180,9 @@ public class TableTableTest {
   @Test
   public void oneRowThatReports() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("report:x", "report:y")
-      ),
+            ListUtility.<Object>list(
+                    list("report:x", "report:y")
+            ),
       "[[pass(Table:fixture), argument], [x, y]]"
     );
   }
@@ -185,9 +190,9 @@ public class TableTableTest {
   @Test
   public void noChange() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("no change", "no change")
-      ),
+            ListUtility.<Object>list(
+                    list("no change", "no change")
+            ),
       "[[pass(Table:fixture), argument], [2, 4]]"
     );
   }
@@ -195,9 +200,9 @@ public class TableTableTest {
   @Test
   public void blankNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "")
-      ),
+            ListUtility.<Object>list(
+                    list("", "")
+            ),
       "[[pass(Table:fixture), argument], [2, 4]]"
     );
   }
@@ -205,9 +210,9 @@ public class TableTableTest {
   @Test
   public void error() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("error:myError", "error:anError")
-      ),
+            ListUtility.<Object>list(
+                    list("error:myError", "error:anError")
+            ),
       "[[pass(Table:fixture), argument], [error(myError), error(anError)]]"
     );
   }
@@ -215,10 +220,10 @@ public class TableTableTest {
   @Test
   public void surplusErrors() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "", "error:surplus A"),
-        list("error:surplus B", "error:surplus C")
-      ),
+            ListUtility.<Object>list(
+                    list("", "", "error:surplus A"),
+                    list("error:surplus B", "error:surplus C")
+            ),
       "[[pass(Table:fixture), argument], [2, 4, error(surplus A)], [error(surplus B), error(surplus C)]]"
     );
   }
@@ -226,10 +231,10 @@ public class TableTableTest {
   @Test
   public void surplusFailures() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "", "fail:surplus A"),
-        list("fail:surplus B", "fail:surplus C")
-      ),
+            ListUtility.<Object>list(
+                    list("", "", "fail:surplus A"),
+                    list("fail:surplus B", "fail:surplus C")
+            ),
       "[[pass(Table:fixture), argument], [2, 4, fail(surplus A)], [fail(surplus B), fail(surplus C)]]"
     );
   }
@@ -237,10 +242,10 @@ public class TableTableTest {
   @Test
   public void surplusImplicitFailures() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "", "fail"),
-        list("fail", "fail")
-      ),
+            ListUtility.<Object>list(
+                    list("", "", "fail"),
+                    list("fail", "fail")
+            ),
       "[[pass(Table:fixture), argument], [2, 4, fail(fail)], [fail(fail), fail(fail)]]"
     );
   }
@@ -248,10 +253,10 @@ public class TableTableTest {
   @Test
   public void surplusImplicitPasses() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "", "pass"),
-        list("pass", "pass")
-      ),
+            ListUtility.<Object>list(
+                    list("", "", "pass"),
+                    list("pass", "pass")
+            ),
       "[[pass(Table:fixture), argument], [2, 4, pass(pass)], [pass(pass), pass(pass)]]"
     );
   }
@@ -259,10 +264,10 @@ public class TableTableTest {
   @Test
   public void surplusExplicitPasses() throws Exception {
     assertTableResults("|2|4|\n",
-      list(
-        list("", "", "pass:x"),
-        list("pass:y", "pass:z")
-      ),
+            ListUtility.<Object>list(
+                    list("", "", "pass:x"),
+                    list("pass:y", "pass:z")
+            ),
       "[[pass(Table:fixture), argument], [2, 4, pass(x)], [pass(y), pass(z)]]"
     );
   }
@@ -270,10 +275,10 @@ public class TableTableTest {
   @Test
   public void emptyTableWithResults() throws Exception {
     assertTableResults("",
-      list(
-        list("", "pass:x"),
-        list("pass:y", "pass:z")
-      ),
+            ListUtility.<Object>list(
+                    list("", "pass:x"),
+                    list("pass:y", "pass:z")
+            ),
       "[[pass(Table:fixture), argument], [, pass(x)], [pass(y), pass(z)]]"
     );
   }

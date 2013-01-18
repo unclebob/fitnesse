@@ -5,6 +5,10 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.slim.instructions.CallAndAssignInstruction;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -16,11 +20,14 @@ import fitnesse.wikitext.Utils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import util.ListUtility;
+
 import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScriptTableTest {
   private WikiPage root;
@@ -49,9 +56,9 @@ public class ScriptTableTest {
     return new ScriptTable(t, "id", testContext);
   }
 
-  private void assertScriptResults(String scriptStatements, List<Object> scriptResults, String table) throws Exception {
+  private void assertScriptResults(String scriptStatements, List<List<?>> scriptResults, String table) throws Exception {
     buildInstructionsFor(scriptStatements);
-    List<Object> resultList = list(list("scriptTable_id_0", "OK"));
+    List<List<?>> resultList = ListUtility.<List<?>>list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
     testContext.evaluateExpectations(pseudoResults);
@@ -65,15 +72,16 @@ public class ScriptTableTest {
   @Test
   public void instructionsForScriptTable() throws Exception {
     buildInstructionsFor("||\n");
-    assertEquals(0, instructions.size());
+    assertEquals(1, instructions.size());
+    assertEquals(Instruction.NOOP_INSTRUCTION, instructions.get(0));
   }
 
   @Test
   public void startStatement() throws Exception {
     buildInstructionsFor("|start|Bob|\n");
-    List<Object> expectedInstructions =
+    List<MakeInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "make", "scriptTableActor", "Bob")
+              new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -81,9 +89,9 @@ public class ScriptTableTest {
   @Test
   public void scriptWithActor() throws Exception {
     buildInstructionsForWholeTable("|script|Bob|\n");
-    List<Object> expectedInstructions =
+    List<MakeInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "make", "scriptTableActor", "Bob")
+              new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -91,9 +99,9 @@ public class ScriptTableTest {
   @Test
   public void startStatementWithArguments() throws Exception {
     buildInstructionsFor("|start|Bob martin|x|y|\n");
-    List<Object> expectedInstructions =
+    List<MakeInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "make", "scriptTableActor", "BobMartin", "x", "y")
+              new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -101,9 +109,9 @@ public class ScriptTableTest {
   @Test
   public void scriptStatementWithArguments() throws Exception {
     buildInstructionsForWholeTable("|script|Bob martin|x|y|\n");
-    List<Object> expectedInstructions =
+    List<MakeInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "make", "scriptTableActor", "BobMartin", "x", "y")
+              new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -111,9 +119,9 @@ public class ScriptTableTest {
   @Test
   public void simpleFunctionCall() throws Exception {
     buildInstructionsFor("|function|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -121,9 +129,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithOneArgument() throws Exception {
     buildInstructionsFor("|function|arg|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -131,9 +139,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithOneArgumentAndTrailingName() throws Exception {
     buildInstructionsFor("|function|arg|trail|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "functionTrail", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -141,9 +149,9 @@ public class ScriptTableTest {
   @Test
   public void complexFunctionCallWithManyArguments() throws Exception {
     buildInstructionsFor("|eat|3|meals with|12|grams protein|3|grams fat |\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "eatMealsWithGramsProteinGramsFat", "3", "12", "3")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "eatMealsWithGramsProteinGramsFat", new Object[]{"3", "12", "3"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -151,9 +159,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithSequentialArgumentProcessingAndOneArgument() throws Exception {
     buildInstructionsFor("|function;|arg0|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg0")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -161,9 +169,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithSequentialArgumentProcessingAndMultipleArguments() throws Exception {
     buildInstructionsFor("|function;|arg0|arg1|arg2|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg0", "arg1", "arg2")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0", "arg1", "arg2"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -171,9 +179,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithSequentialArgumentProcessingEmbedded() throws Exception {
     buildInstructionsFor("|set name|Marisa|department and title;|QA|Tester|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "setNameDepartmentAndTitle", "Marisa", "QA", "Tester")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentAndTitle", new Object[]{"Marisa", "QA", "Tester"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -181,9 +189,9 @@ public class ScriptTableTest {
   @Test
   public void functionCallWithSequentialArgumentProcessingEmbedded2() throws Exception {
     buildInstructionsFor("|set name|Marisa|department|QA|title and length of employment;|Tester|2 years|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", "Marisa", "QA", "Tester", "2 years")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", new Object[]{"Marisa", "QA", "Tester", "2 years"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -191,9 +199,9 @@ public class ScriptTableTest {
   @Test
   public void checkWithFunction() throws Exception {
     buildInstructionsFor("|check|function|arg|result|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -201,9 +209,9 @@ public class ScriptTableTest {
   @Test
   public void checkNotWithFunction() throws Exception {
     buildInstructionsFor("|check not|function|arg|result|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -211,9 +219,9 @@ public class ScriptTableTest {
   @Test
   public void checkWithFunctionAndTrailingName() throws Exception {
     buildInstructionsFor("|check|function|arg|trail|result|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "functionTrail", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -221,9 +229,9 @@ public class ScriptTableTest {
   @Test
   public void rejectWithFunctionCall() throws Exception {
     buildInstructionsFor("|reject|function|arg|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -231,9 +239,9 @@ public class ScriptTableTest {
   @Test
   public void ensureWithFunctionCall() throws Exception {
     buildInstructionsFor("|ensure|function|arg|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -241,9 +249,9 @@ public class ScriptTableTest {
   @Test
   public void showWithFunctionCall() throws Exception {
     buildInstructionsFor("|show|function|arg|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -251,9 +259,9 @@ public class ScriptTableTest {
   @Test
   public void setSymbol() throws Exception {
     buildInstructionsFor("|$V=|function|arg|\n");
-    List<Object> expectedInstructions =
+    List<CallAndAssignInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "callAndAssign", "V", "scriptTableActor", "function", "arg")
+              new CallAndAssignInstruction("scriptTable_id_0", "V", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -261,9 +269,9 @@ public class ScriptTableTest {
   @Test
   public void useSymbol() throws Exception {
     buildInstructionsFor("|function|$V|\n");
-    List<Object> expectedInstructions =
+    List<CallInstruction> expectedInstructions =
       list(
-        list("scriptTable_id_0", "call", "scriptTableActor", "function", "$V")
+              new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"$V"})
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -271,37 +279,37 @@ public class ScriptTableTest {
   @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n");
-    List<Object> expectedInstructions = list();
+    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
     assertEquals(expectedInstructions, instructions);
   }
 
   @Test
   public void initialBlankCellDoesNothing() throws Exception {
     buildInstructionsFor("||blah|blah|\n");
-    List<Object> expectedInstructions = list();
+    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
     assertEquals(expectedInstructions, instructions);
   }
 
   @Test
   public void initialHashDoesNothing() throws Exception {
     buildInstructionsFor("|!-#comment-!|blah|blah|\n");
-    List<Object> expectedInstructions = list();
+    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
     assertEquals(expectedInstructions, instructions);
   }
 
   @Test
   public void initialStarDoesNothing() throws Exception {
     buildInstructionsFor("|*comment|blah|blah|\n");
-    List<Object> expectedInstructions = list();
+    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
     assertEquals(expectedInstructions, instructions);
   }
 
   @Test
   public void voidActionHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-      list(
-        list("scriptTable_id_0", VoidConverter.VOID_TAG)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", VoidConverter.VOID_TAG)
+            ),
       "[[Script], [func]]"
     );
   }
@@ -309,9 +317,9 @@ public class ScriptTableTest {
   @Test
   public void actionReturningNullHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-      list(
-        list("scriptTable_id_0", "null")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "null")
+            ),
       "[[Script], [func]]"
     );
   }
@@ -319,9 +327,9 @@ public class ScriptTableTest {
   @Test
   public void trueActionPasses() throws Exception {
     assertScriptResults("|func|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.TRUE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            ),
       "[[Script], [pass(func)]]"
     );
   }
@@ -329,9 +337,9 @@ public class ScriptTableTest {
   @Test
   public void falseActionFails() throws Exception {
     assertScriptResults("|func|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.FALSE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            ),
       "[[Script], [fail(func)]]"
     );
   }
@@ -339,9 +347,9 @@ public class ScriptTableTest {
   @Test
   public void checkPasses() throws Exception {
     assertScriptResults("|check|func|3|\n",
-      list(
-        list("scriptTable_id_0", "3")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "3")
+            ),
       "[[Script], [check, func, pass(3)]]"
     );
   }
@@ -349,9 +357,9 @@ public class ScriptTableTest {
   @Test
   public void checkNotFails() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-      list(
-        list("scriptTable_id_0", "3")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "3")
+            ),
       "[[Script], [check not, func, fail(3)]]"
     );
   }
@@ -359,9 +367,9 @@ public class ScriptTableTest {
   @Test
   public void checkFails() throws Exception {
     assertScriptResults("|check|func|3|\n",
-      list(
-        list("scriptTable_id_0", "4")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "4")
+            ),
       "[[Script], [check, func, [4] fail(expected [3])]]"
     );
   }
@@ -369,9 +377,9 @@ public class ScriptTableTest {
   @Test
   public void checkNotPasses() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-      list(
-        list("scriptTable_id_0", "4")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "4")
+            ),
       "[[Script], [check not, func, [4] pass(is not [3])]]"
     );
   }
@@ -379,9 +387,9 @@ public class ScriptTableTest {
   @Test
   public void ensurePasses() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.TRUE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            ),
       "[[Script], [pass(ensure), func, 3]]"
     );
   }
@@ -389,9 +397,9 @@ public class ScriptTableTest {
   @Test
   public void ensureFails() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.FALSE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            ),
       "[[Script], [fail(ensure), func, 3]]"
     );
   }
@@ -399,9 +407,9 @@ public class ScriptTableTest {
   @Test
   public void rejectPasses() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.FALSE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            ),
       "[[Script], [pass(reject), func, 3]]"
     );
   }
@@ -409,9 +417,9 @@ public class ScriptTableTest {
   @Test
   public void rejectFails() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-      list(
-        list("scriptTable_id_0", BooleanConverter.TRUE)
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            ),
       "[[Script], [fail(reject), func, 3]]"
     );
   }
@@ -419,9 +427,9 @@ public class ScriptTableTest {
   @Test
   public void show() throws Exception {
     assertScriptResults("|show|func|3|\n",
-      list(
-        list("scriptTable_id_0", "kawabunga")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "kawabunga")
+            ),
       "[[Script], [show, func, 3, kawabunga]]"
     );
   }
@@ -431,10 +439,10 @@ public class ScriptTableTest {
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V|$V|\n",
-      list(
-        list("scriptTable_id_0", "3"),
-        list("scriptTable_id_1", "3")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "3"),
+                    list("scriptTable_id_1", "3")
+            ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]"
     );
   }
@@ -444,10 +452,10 @@ public class ScriptTableTest {
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V $V|$V|\n",
-      list(
-        list("scriptTable_id_0", "3"),
-        list("scriptTable_id_1", "3")
-      ),
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "3"),
+                    list("scriptTable_id_1", "3")
+            ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3] $V->[3], pass($V->[3])]]"
     );
   }

@@ -3,6 +3,7 @@ package fitnesse.testsystems.slim.tables;
 import static util.ListUtility.list;
 
 import org.junit.Test;
+import util.ListUtility;
 
 public class OrderedQueryTableTest extends QueryTableBaseTest {
   @Override
@@ -20,10 +21,10 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
     assertQueryResults(
       "|3|6|\n" +
         "|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -39,11 +40,11 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
       "|3|6|\n" +
         "|7|5|\n" +
         "|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "7"), list("2n", "5")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "7"), list("2n", "5")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -60,10 +61,10 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
       "|3|6|\n" +
         "|7|5|\n" +
         "|2|4|\n",
-      list(
-        list(list("n", "2"), list("2n", "4")),
-        list(list("n", "3"), list("2n", "6"))
-      ),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
