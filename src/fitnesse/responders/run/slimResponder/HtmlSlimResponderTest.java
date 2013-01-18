@@ -357,7 +357,7 @@ public class HtmlSlimResponderTest {
   public void scenarioTableIsRegistered() throws Exception {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem.getTestContext()
-        .getScenarios().containsKey("myScenario"));
+        .getScenarios().iterator().next().getScenarioName().equals("myScenario"));
   }
 
   private static class DummyListener implements TestSystemListener {

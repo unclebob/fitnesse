@@ -5,10 +5,8 @@ package fitnesse.testsystems.slim;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
@@ -36,8 +34,8 @@ public class MockSlimTestContext implements SlimTestContext {
     expectations.add(e);
   }
 
-  public Map<String, ScenarioTable> getScenarios() {
-    return scenarios;
+  public Collection<ScenarioTable> getScenarios() {
+    return scenarios.values();
   }
 
   public void evaluateExpectations(Map<String, Object> results) {

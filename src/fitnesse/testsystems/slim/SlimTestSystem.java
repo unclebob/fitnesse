@@ -17,12 +17,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -537,8 +532,8 @@ public abstract class SlimTestSystem extends TestSystem {
     }
 
     @Override
-    public Map<String, ScenarioTable> getScenarios() {
-      return scenarios;
+    public Collection<ScenarioTable> getScenarios() {
+      return scenarios.values();
     }
 
     @Override

@@ -2,13 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,7 +86,7 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  private String getScenarioName() {
+  public String getScenarioName() {
     if (parameterized) {
       String parameterizedName = table.getCellContents(1, 0);
 
@@ -303,7 +297,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     @Override
-    public Map<String, ScenarioTable> getScenarios() {
+    public Collection<ScenarioTable> getScenarios() {
       return testContext.getScenarios();
     }
 

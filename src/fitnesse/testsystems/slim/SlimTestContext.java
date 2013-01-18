@@ -4,7 +4,10 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
+
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public interface SlimTestContext {
   String getSymbol(String symbolName);
@@ -15,9 +18,10 @@ public interface SlimTestContext {
 
   ScenarioTable getScenario(String scenarioName);
 
+  @Deprecated
   void addExpectation(Expectation e);
 
-  Map<String, ScenarioTable> getScenarios();
+  Collection<ScenarioTable> getScenarios();
 
   void incrementPassedTestsCount();
 
