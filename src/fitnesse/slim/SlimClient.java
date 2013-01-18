@@ -138,7 +138,7 @@ private void validateConnection() {
 
       instruction.execute(executor);
     }
-    return statementsAsList;  //To change body of created methods use File | Settings | File Templates.
+    return statementsAsList;
   }
 
   private static void addArguments(List<Object> list, Object[] arguments) {
