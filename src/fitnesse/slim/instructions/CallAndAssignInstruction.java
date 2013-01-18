@@ -3,6 +3,8 @@ package fitnesse.slim.instructions;
 import fitnesse.slim.NameTranslator;
 import fitnesse.slim.SlimException;
 
+import java.util.Arrays;
+
 public class CallAndAssignInstruction
     extends Instruction<CallAndAssignInstruction.CallAndAssignExecutor> {
   public static final String INSTRUCTION = "callAndAssign";
@@ -10,6 +12,18 @@ public class CallAndAssignInstruction
   private String instanceName;
   private String methodName;
   private Object[] args;
+
+  public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName) {
+    this(id, symbolName, instanceName, methodName, new Object[]{});
+  }
+
+  public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName, Object[] args) {
+    super(id);
+    this.symbolName = symbolName;
+    this.instanceName = instanceName;
+    this.methodName = methodName;
+    this.args = args;
+  }
 
   public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName, Object[] args,
       NameTranslator methodNameTranslator) {
@@ -28,5 +42,31 @@ public class CallAndAssignInstruction
   public static interface CallAndAssignExecutor extends InstructionExecutor {
     Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments)
         throws SlimException;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    CallAndAssignInstruction that = (CallAndAssignInstruction) o;
+
+    if (!Arrays.equals(args, that.args)) return false;
+    if (!instanceName.equals(that.instanceName)) return false;
+    if (!methodName.equals(that.methodName)) return false;
+    if (!symbolName.equals(that.symbolName)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + symbolName.hashCode();
+    result = 31 * result + instanceName.hashCode();
+    result = 31 * result + methodName.hashCode();
+    result = 31 * result + Arrays.hashCode(args);
+    return result;
   }
 }
