@@ -113,7 +113,7 @@ private void validateConnection() {
 
         @Override
         public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
-          List<Object> list = ListUtility.<Object>list(instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName);
+          List<Object> list = ListUtility.list((Object) instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName);
           addArguments(list, arguments);
           statementsAsList.add(list);
           return null;
@@ -121,7 +121,7 @@ private void validateConnection() {
 
         @Override
         public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
-          List<Object> list = ListUtility.<Object>list(instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName);
+          List<Object> list = ListUtility.list((Object) instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName);
           addArguments(list, arguments);
           statementsAsList.add(list);
           return null;
@@ -129,7 +129,7 @@ private void validateConnection() {
 
         @Override
         public Object create(String instanceName, String className, Object... constructorArgs) throws SlimException {
-          List<Object> list = ListUtility.<Object>list(instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
+          List<Object> list = ListUtility.list((Object) instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
           addArguments(list, constructorArgs);
           statementsAsList.add(list);
           return null;

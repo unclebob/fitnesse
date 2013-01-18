@@ -40,7 +40,7 @@ public abstract class ListExecutorTestBase {
     expectedResults.add(list("m1", "OK"));
   }
 
-  protected void respondsWith(List<List<Object>> expected) {
+  protected void respondsWith(List<?> expected) {
     expectedResults.addAll(expected);
     List<Object> result = executor.execute(statements);
     Map<String, Object> expectedMap = SlimClient.resultToMap(expectedResults);
@@ -51,7 +51,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void checkSetup()
   {
-    respondsWith(ListUtility.<List<Object>>list());
+    respondsWith(ListUtility.list());
   }
 
   @Test()
