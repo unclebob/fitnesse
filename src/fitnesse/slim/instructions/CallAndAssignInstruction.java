@@ -45,6 +45,19 @@ public class CallAndAssignInstruction
   }
 
   @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer();
+    sb.append("{id='").append(getId()).append('\'');
+    sb.append(", instruction='").append(INSTRUCTION).append('\'');
+    sb.append(", symbolName='").append(symbolName).append('\'');
+    sb.append(", instanceName='").append(instanceName).append('\'');
+    sb.append(", methodName='").append(methodName).append('\'');
+    sb.append(", args=").append(args == null ? "null" : Arrays.asList(args).toString());
+    sb.append('}');
+    return sb.toString();
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

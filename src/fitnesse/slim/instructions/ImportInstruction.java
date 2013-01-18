@@ -21,6 +21,16 @@ public class ImportInstruction extends Instruction<ImportInstruction.ImportExecu
   }
 
   @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer();
+    sb.append("{id='").append(getId()).append('\'');
+    sb.append(", instruction='").append(INSTRUCTION).append('\'');
+    sb.append(", path='").append(path).append('\'');
+    sb.append('}');
+    return sb.toString();
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

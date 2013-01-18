@@ -33,8 +33,8 @@ public class MakeInstruction extends Instruction<MakeInstruction.MakeExecutor> {
   @Override
   public String toString() {
     final StringBuffer sb = new StringBuffer();
-    sb.append("MakeInstruction");
     sb.append("{id='").append(getId()).append('\'');
+    sb.append(", instruction='").append(INSTRUCTION).append('\'');
     sb.append(", instanceName='").append(instanceName).append('\'');
     sb.append(", className='").append(className).append('\'');
     sb.append(", args=").append(args == null ? "null" : Arrays.asList(args).toString());

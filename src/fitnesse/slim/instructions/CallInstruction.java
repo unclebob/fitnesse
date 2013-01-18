@@ -42,8 +42,8 @@ public class CallInstruction extends Instruction<CallInstruction.CallExecutor> {
   @Override
   public String toString() {
     final StringBuffer sb = new StringBuffer();
-    sb.append("CallInstruction");
     sb.append("{id='").append(getId()).append('\'');
+    sb.append(", instruction='").append(INSTRUCTION).append('\'');
     sb.append(", instanceName='").append(instanceName).append('\'');
     sb.append(", methodName='").append(methodName).append('\'');
     sb.append(", args=").append(args == null ? "null" : Arrays.asList(args).toString());
