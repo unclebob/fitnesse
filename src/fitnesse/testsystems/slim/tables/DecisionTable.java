@@ -196,14 +196,10 @@ public class DecisionTable extends SlimTable {
         int col = vars.get(var);
         String valueToSet = table.getUnescapedCellContents(col, row);
         Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
-        setVariableExpectation(setInstruction.getId(), col, row);
+        addExpectation(new VoidReturnExpectation(setInstruction.getId(), col, row));
         instructions.add(setInstruction);
       }
       return instructions;
-    }
-
-    private void setVariableExpectation(String id, int col, int row) {
-      addExpectation(new VoidReturnExpectation(id, col, row));
     }
   }
 }
