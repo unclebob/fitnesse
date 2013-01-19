@@ -6,5 +6,6 @@ public interface Expectation {
   // TODO: put an InstructionResult here or something like that.
   void evaluateExpectation(Object returnValues);
 
+  @Deprecated
   String getInstructionTag();
 }

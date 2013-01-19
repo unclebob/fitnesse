@@ -44,6 +44,7 @@ import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
+// TODO: -AJM- Create a SLIM listener that
 public abstract class SlimTestSystem extends TestSystem {
   public static final String MESSAGE_ERROR = "!error:";
   public static final String MESSAGE_FAIL = "!fail:";
