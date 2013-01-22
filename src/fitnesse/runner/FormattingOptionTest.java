@@ -21,7 +21,7 @@ public class FormattingOptionTest extends RegexTestCase {
   private PageResult result1;
   private PageResult result2;
   private TestSummary finalSummary;
-  private int port = FitNesseUtil.port;
+  private int port = FitNesseUtil.PORT;
 
   public void setUp() throws Exception {
     output = new ByteArrayOutputStream();

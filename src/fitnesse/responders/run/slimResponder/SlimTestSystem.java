@@ -27,6 +27,7 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
+import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slimTables.ScenarioTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.SlimTableFactory;
@@ -223,7 +224,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private boolean tryCreateSlimService(String args) throws SocketException {
     try {
-      SlimService.main(args.trim().split(" "));
+      SlimService.parseCommandLine(args.trim().split(" "));
+      SlimService.startWithFactoryAsync(new JavaSlimFactory());
       return true;
     } catch (SocketException e) {
       throw e;
@@ -474,6 +476,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private String exceptionResult(String resultKey) {
+    // TODO: -AJM- HTML formatting should not be done here, but in HtmlTable
     return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
   }
 

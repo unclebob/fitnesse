@@ -41,7 +41,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
         "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = virtualPage.getData();
     data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:"
-        + FitNesseUtil.port + "/PageOne");
+        + FitNesseUtil.PORT + "/PageOne");
     virtualPage.commit(data);
     foundPages.clear();
   }

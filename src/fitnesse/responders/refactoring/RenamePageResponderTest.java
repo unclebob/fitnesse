@@ -7,6 +7,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -140,6 +141,6 @@ public class RenamePageResponderTest extends ResponderTestCase {
     request.addInput("newName", toName);
     if (renameReferences)
       request.addInput("refactorReferences", "on");
-    return responder.makeResponse(new FitNesseContext(root), request);
+    return responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 }

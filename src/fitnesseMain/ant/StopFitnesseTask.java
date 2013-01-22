@@ -7,6 +7,7 @@ import org.apache.tools.ant.Task;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 
 /**
  * Task to stop fitnesse.
@@ -25,8 +26,7 @@ public class StopFitnesseTask extends Task {
 
   @Override
   public void execute() throws BuildException {
-    FitNesseContext context = new FitNesseContext();
-    context.port = fitnessePort;
+    FitNesseContext context = FitNesseUtil.makeTestContext(null, null, null, fitnessePort);
     try {
       new FitNesse(context).stop();
       log("Sucessfully stoped Fitnesse on port " + fitnessePort);

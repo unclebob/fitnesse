@@ -116,6 +116,17 @@ public abstract class InteractiveFormatter extends BaseFormatter {
       writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
     }
   }
+  
+  protected void maybeMakeErrorNavigatorVisible(){
+    if(exceptionsOrErrorsExist()){
+      writeData(makeErrorNavigatorVisible());
+      writeData(initErroMetadata());
+    }
+  }
+
+  private boolean exceptionsOrErrorsExist() {
+	return (assertionCounts.getExceptions() + assertionCounts.getWrong()) > 0;
+  }
 
   public String executionStatus(CompositeExecutionLog log) {
     String errorLogPageName = log.getErrorLogPageName();
@@ -127,7 +138,17 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
     return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
   }
+
+  private String makeErrorNavigatorVisible() {
+    HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "error-nav-hidden");
+    return toggler.html();
+  }
   
+  private String initErroMetadata() {
+    HtmlTag init = HtmlUtil.makeInitErrorMetadataScript();
+    return init.html();
+  }
+
   public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
     HtmlTag status = HtmlUtil.makeLink(linkHref, executionStatus.getMessage());
     status.addAttribute("class", executionStatus.getStyle());

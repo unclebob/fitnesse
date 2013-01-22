@@ -37,7 +37,7 @@ public class ImportAndViewResponderTest extends TestCase {
   }
 
   private Response getResponse() throws Exception {
-    FitNesseContext context = new FitNesseContext(testData.localRoot);
+    FitNesseContext context = FitNesseUtil.makeTestContext(testData.localRoot);
     MockRequest request = new MockRequest();
     request.setResource("PageTwo");
     return responder.makeResponse(context, request);
@@ -47,7 +47,7 @@ public class ImportAndViewResponderTest extends TestCase {
     PageData data = testData.pageTwo.getData();
     WikiPageProperties props = data.getProperties();
 
-    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
     importProps.addTo(props);
     testData.pageTwo.commit(data);
 

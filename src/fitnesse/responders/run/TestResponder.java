@@ -66,7 +66,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     closeHtmlResponse(exitCode);
   }
 
-  public void doExecuteTests() throws Exception {
+  public void doExecuteTests() {
     sendPreTestNotification();
 
     performExecution();
@@ -87,6 +87,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
+    htmlPage.setErrorNavTemplate("errorNavigator");
+    htmlPage.put("errorNavOnDocumentReady", false);
 
     WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
 
@@ -100,7 +102,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public class TestExecutor {
-    public void execute() throws Exception {
+    public void execute() {
         doExecuteTests();
     }
   }
@@ -170,13 +172,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     formatters.add(new PageInProgressFormatter(context, page));
   }
 
-  protected void sendPreTestNotification() throws Exception {
+  protected void sendPreTestNotification() {
     for (TestEventListener eventListener : eventListeners) {
       eventListener.notifyPreTest(this, data);
     }
   }
 
-  protected void performExecution() throws Exception {
+  protected void performExecution() {
     List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
     MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
@@ -188,7 +190,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     runner.executeTestPages();
   }
 
-  private boolean isEmpty(WikiPage page) throws Exception {
+  private boolean isEmpty(WikiPage page) {
     return page.getData().getContent().length() == 0;
   }
 
@@ -223,7 +225,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     isClosed = true;
   }
 
-  void closeHtmlResponse(int exitCode) throws Exception {
+  void closeHtmlResponse(int exitCode) {
     if (!isClosed()) {
       setClosed();
       response.closeChunks();
@@ -233,7 +235,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
   }
 
-  void closeHtmlResponse() throws Exception {
+  void closeHtmlResponse() {
     if (!isClosed()) {
       setClosed();
       response.closeChunks();

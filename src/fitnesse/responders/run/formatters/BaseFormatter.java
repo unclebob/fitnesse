@@ -2,10 +2,12 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
-import fitnesse.FitNesseContext;
-import fitnesse.responders.run.*;
-import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
+import fitnesse.FitNesseContext;
+import fitnesse.responders.run.ResultsListener;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.WikiPage;
 
 public abstract class BaseFormatter implements ResultsListener {
 
@@ -28,7 +30,7 @@ public abstract class BaseFormatter implements ResultsListener {
   protected WikiPage getPage() {
     return page;
   }
-  
+
   @Override
   public void errorOccured() {
     try {
@@ -37,12 +39,12 @@ public abstract class BaseFormatter implements ResultsListener {
       e.printStackTrace();
     }
   }
-  
+
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     finalErrorCount = failCount;
   }
-  
+
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
@@ -58,12 +60,12 @@ public abstract class BaseFormatter implements ResultsListener {
     }
   }
 
-  public void addMessageForBlankHtml() throws Exception {
+  public void addMessageForBlankHtml() {
   }
 
   public int getErrorCount() {
     return 0;
   }
-  
+
 }
 

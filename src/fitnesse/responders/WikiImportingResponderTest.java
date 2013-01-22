@@ -5,8 +5,6 @@ package fitnesse.responders;
 import java.io.IOException;
 
 import util.RegexTestCase;
-import fitnesse.FitNesseContext;
-import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
@@ -31,7 +29,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     testData.createLocalRoot();
 
     FitNesseUtil.startFitnesse(testData.remoteRoot);
-    baseUrl = "http://localhost:" + FitNesseUtil.port + "/";
+    baseUrl = "http://localhost:" + FitNesseUtil.PORT + "/";
 
     createResponder();
   }
@@ -136,7 +134,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     String content = sender.sentData();
 
     System.out.println(content);
-    
+
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
 
@@ -178,7 +176,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
   }
 
   private ChunkedResponse getResponse(MockRequest request) {
-    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
     response.turnOffChunking();
     return response;
   }
@@ -194,7 +192,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
   public void testMakeResponseImportingNonRootPage() throws Exception {
     MockRequest request = makeRequest(baseUrl + "PageOne");
 
-    Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
@@ -224,65 +222,12 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
   }
 
-  public void testUnauthorizedResponse() throws Exception {
-    makeSecurePage(testData.remoteRoot);
-
-    Response response = makeSampleResponse(baseUrl);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    String content = sender.sentData();
-    checkRemoteLoginForm(content);
-  }
-
-  private void makeSecurePage(WikiPage page) throws Exception {
-    PageData data = page.getData();
-    data.setAttribute(PageData.PropertySECURE_READ);
-    page.commit(data);
-    FitNesseUtil.context.authenticator = new OneUserAuthenticator("joe", "blow");
-  }
-
-  private void checkRemoteLoginForm(String content) {
-    assertHasRegexp("The wiki at .* requires authentication.", content);
-    assertSubString("<form", content);
-    assertHasRegexp("<input[^>]*name=\"remoteUsername\"", content);
-    assertHasRegexp("<input[^>]*name=\"remotePassword\"", content);
-  }
-
-  public void testUnauthorizedResponseFromNonRoot() throws Exception {
-    WikiPage childPage = testData.remoteRoot.getChildPage("PageOne");
-    makeSecurePage(childPage);
-
-    Response response = makeSampleResponse(baseUrl);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    String content = sender.sentData();
-    assertSubString("The wiki at " + baseUrl + "PageOne requires authentication.", content);
-    assertSubString("<form", content);
-  }
-
-  public void testImportingFromSecurePageWithCredentials() throws Exception {
-    makeSecurePage(testData.remoteRoot);
-
-    MockRequest request = makeRequest(baseUrl);
-    request.addInput("remoteUsername", "joe");
-    request.addInput("remotePassword", "blow");
-    Response response = getResponse(request);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    String content = sender.sentData();
-
-    assertNotSubString("requires authentication", content);
-    assertSubString("3 pages were imported.", content);
-
-    assertEquals("joe", WikiImporter.remoteUsername);
-    assertEquals("blow", WikiImporter.remotePassword);
-  }
 
   public void testListOfOrphanedPages() throws Exception {
     WikiImporter importer = new WikiImporter();
 
     responder.setImporter(importer);
-    
+
     MockRequest request = makeRequest(baseUrl);
     String content = simulateWebRequest(request);
 
@@ -315,9 +260,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testAutoUpdateSettingDisplayed() throws Exception {
     WikiImporter importer = new MockWikiImporter();
-    
+
     responder.setImporter(importer);
-    
+
     MockRequest request = makeRequest(baseUrl);
     request.addInput("autoUpdate", true);
     String content = simulateWebRequest(request);
@@ -326,7 +271,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
     request = makeRequest(baseUrl);
     content = simulateWebRequest(request);
-    
+
     assertSubString("Automatic Update turned OFF", content);
   }
 }

@@ -112,6 +112,17 @@ public class HtmlUtil {
     return scriptTag;
   }
   
+  public static HtmlTag makeToggleClassScript(String idElement, String classToToggle) {
+    HtmlTag scriptTag = new HtmlTag("script");
+    scriptTag.add("$(\"#" + idElement + "\").toggleClass(\"" + classToToggle + "\");");
+    return scriptTag;
+  }
+  
+  public static HtmlTag makeInitErrorMetadataScript() {
+    HtmlTag scriptTag = new HtmlTag("script");
+    scriptTag.add("initErrorMetadata();");
+    return scriptTag;
+  }
   
   public static HtmlTag makeSilentLink(String href, HtmlElement content) {
     HtmlTag link = new HtmlTag("a");

@@ -4,9 +4,10 @@ package fitnesse.fixtures;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.authentication.Authenticator;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.responders.ResponderFactory;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 
 public class FitnesseFixtureContext {
@@ -14,8 +15,8 @@ public class FitnesseFixtureContext {
   public static WikiPage page;
   public static Response response;
   public static MockResponseSender sender;
-  public static ResponderFactory responderFactory;
-  public static String baseDir = "temp";
+  public static String baseDir = FitNesseUtil.base;
+  public static Authenticator authenticator;
   public static FitNesseContext context;
   public static FitNesse fitnesse;
 }

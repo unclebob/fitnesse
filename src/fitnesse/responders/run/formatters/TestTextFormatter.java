@@ -1,5 +1,9 @@
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+
+import util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestPage;
@@ -8,11 +12,6 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
-import util.TimeMeasurement;
-
 public class TestTextFormatter extends BaseFormatter {
   private ChunkedResponse response;
 
@@ -20,7 +19,7 @@ public class TestTextFormatter extends BaseFormatter {
     this.response = response;
   }
 
-  public void writeHead(String pageType) throws Exception {
+  public void writeHead(String pageType) {
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {

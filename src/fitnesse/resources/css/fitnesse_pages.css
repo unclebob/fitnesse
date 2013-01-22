@@ -3,27 +3,48 @@ fieldset {
 	padding: 0;
 	margin: 0;
 }
+label {
+    display: inline-block;
+    padding-right: 16px;
+    text-align: right;
+    width: 124px;
+}
 label input {
     margin-right: 8px;
 }
-textarea {
-	font-family: monospace;
-	clear: both;
-}
-textarea.no_wrap {
-	overflow: scroll;
-}
 .validationerror {
     color: maroon;
-    margin: 0 0 0 7.78em;
+    margin: -6px 0 8px 140px;
     font-size: 0.9em
+}
+.buttons {
+    margin-left: 145px; /* 140 + input field padding/border/margin */
+}
+
+/** Wiki pages (wiki, test, suite, report) **/
+.wikiPage td,
+.testPage td,
+.suitePage td,
+.testExecutionReport td,
+.compareHistory td {
+  white-space: pre-line;
 }
 
 /** Edit page **/
-.editPage label {
-	width: 7em;
-	float: left;
-	clear: both;
+.editPage {
+    overflow: hidden;
+}
+
+.editPage article {
+    margin: 0;
+}
+
+.editPage #editor {
+    margin: 8px 0 0 0;
+}
+
+.editPage #editor label {
+	width: auto;
 }
 .editPage .edit_options label {
 	width: auto;
@@ -41,13 +62,23 @@ textarea.no_wrap {
 	display: inline;
 	float: none;
 }
-.editPage textarea {
+.editPage textarea, .editPage iframe {
 	display: block;
 	width: 100%;
 	height: 32em;
+    font-family: monospace;
+}
+.editPage textarea.no_wrap {
+    overflow: scroll;
 }
 .editPage .edit_options {
 	float: right;
+}
+.editPage #save_buttons {
+    bottom: 0;
+    margin-top: 16px;
+    margin-bottom: 7px; /* buttons have 9px bottom padding */
+    position: fixed;
 }
 
 /** Properties page / Search form / Directory page**/
@@ -57,17 +88,9 @@ textarea.no_wrap {
 	padding-bottom: 1em;
 	border-bottom: 1px solid #984D00;
 }
-.propertiesPage input[type="submit"],
-.directoryPage  input[type="submit"] {
-    display: inline-block;
-    margin-left: 145px; /* 140 + input field padding/border/margin */
-}
-
-.propertiesPage label,
-.searchForm label,
-.directoryPage label {
-	display: inline-block;
-	width: 140px;
+.propertiesPage .properties,
+.searchForm .properties {
+    margin-left: 145px;
 }
 .propertiesPage .properties fieldset,
 .searchForm .properties fieldset {
@@ -78,10 +101,12 @@ textarea.no_wrap {
 .propertiesPage .properties label,
 .searchForm .properties label {
 	display: block;
+    text-align: left;
 }
 legend {
 	font-weight: bold;
 	margin-bottom: 0.5em;
+	padding: 0;
 }
 label input {
 	margin-right: 0.5em;
@@ -118,6 +143,9 @@ label.checkbox {
 }
 
 /** Test history **/
+.testHistory td {
+    white-space: pre;
+}
 .testHistory td a {
 	text-decoration: none;
 }
@@ -137,6 +165,8 @@ tr.scenario-detail {
 }
 #test-summary, #progressBar {
 	padding: 0.5em;
+    padding-left: 1.5em;
+    background-position: 0 0.3em;
 }
 #test-summaries ul {
 	list-style: none;
@@ -144,6 +174,22 @@ tr.scenario-detail {
 }
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
+}
+#test-summaries .pass {
+  padding: 0px 0px 0px 20px;
+}
+#test-summary.pass,
+#test-summaries .pass {
+  background-image: url("../images/checkmark.png");
+  background-repeat: no-repeat;
+}
+#test-summaries .fail {
+  padding: 0px 0px 0px 20px;
+}
+#test-summary.fail,
+#test-summaries .fail {
+  background-image: url("../images/wrong.png");
+  background-repeat: no-repeat;
 }
 #test-action .stop {
 	background-color: red;
@@ -157,6 +203,40 @@ tr.scenario-detail {
 	display: inline;
 }
 
+/** Suite overview */
+.overview_results table {
+    border: none;
+}
+.overview_bar {
+    border: 1px solid black;
+    height: 1.4em;
+    margin: 0 -0.5px;
+}
+.overview_part {
+    float: left;
+    height: 1.4em;
+    margin: 0;
+    padding: 0;
+}
+.unrun {
+    background-color: #FFF3B4;
+}
+
+.passed_tests, .unrun_tests, .failed_tests {
+    background-repeat: no-repeat;
+    margin: 0 4px;
+    padding-left: 22px;
+}
+.passed_tests {
+    background-image: url("../images/checkmark.png");
+}
+.unrun_tests {
+    background-image: url("../images/exception.png");
+}
+.failed_tests {
+    background-image: url("../images/wrong.png");
+}
+
 /** Virtual and import pages */
 .virtual header {
 	background-image: url("../images/virtualPage.jpg");
@@ -168,3 +248,18 @@ tr.scenario-detail {
 	background-position: center top;
 	background-repeat: no-repeat;
 }
+
+/** Test Execution report, backwards compatibility */
+.collapse_rim {
+  background: #F9F9F9;
+  border: 1px dotted #909090;
+}
+.collapse_rim > a {
+  padding-left: 16px;
+  background: url(../images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
+}
+.collapse_rim.open > a {
+  background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
+}
+
+   

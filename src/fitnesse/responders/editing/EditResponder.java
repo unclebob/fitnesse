@@ -36,7 +36,7 @@ public class EditResponder implements SecureResponder {
   protected WikiPage root;
   protected PageData pageData;
   protected Request request;
-  
+
   public EditResponder() {
   }
 
@@ -85,13 +85,13 @@ public class EditResponder implements SecureResponder {
 
   private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
     HtmlPage html = context.pageFactory.newPage();
-    String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
-    html.setTitle(title + resource + ":");
-    
+    String title = firstTimeForNewPage ? "Page doesn't exist. Edit: " : "Edit: ";
+    html.setTitle(title + resource);
+
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.setMainTemplate("editPage");
     makeEditForm(html, resource, firstTimeForNewPage, context.defaultNewPageContent);
-    
+
     return html.html();
   }
 
@@ -99,7 +99,7 @@ public class EditResponder implements SecureResponder {
     html.put("resource", resource);
     html.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
     html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
-    
+
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
       String redirectUrl = request.getHeader("Referer").toString();
       int questionMarkIndex = redirectUrl.indexOf("?");
@@ -113,7 +113,7 @@ public class EditResponder implements SecureResponder {
     html.put(TEMPLATE_MAP, TemplateUtil.getTemplateMap(page));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-    
+
   }
 
   public SecureOperation getSecureOperation() {

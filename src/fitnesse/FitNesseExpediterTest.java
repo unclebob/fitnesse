@@ -8,7 +8,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
@@ -32,7 +31,6 @@ public class FitNesseExpediterTest extends RegexTestCase {
     root.addChildPage("FrontPage");
     socket = new MockSocket();
     context = FitNesseUtil.makeTestContext(root);
-    context.responderFactory = new ResponderFactory(".");
     expediter = new FitNesseExpediter(socket, context);
   }
 
@@ -40,7 +38,8 @@ public class FitNesseExpediterTest extends RegexTestCase {
   }
 
   public void testAuthenticationGetsCalled() throws Exception {
-    context.authenticator = new StoneWallAuthenticator();
+    context = FitNesseUtil.makeTestContext(context, new StoneWallAuthenticator());
+    expediter = new FitNesseExpediter(socket, context);
     MockRequest request = new MockRequest();
     Response response = expediter.createGoodResponse(request);
     assertEquals(401, response.getStatus());

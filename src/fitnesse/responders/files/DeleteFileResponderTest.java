@@ -9,24 +9,24 @@ import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 
 public class DeleteFileResponderTest extends RegexTestCase {
   public MockRequest request;
   private FitNesseContext context;
 
   public void setUp() {
-    FileUtil.makeDir("testdir");
+    FileUtil.makeDir(FitNesseUtil.base);
     request = new MockRequest();
-    context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+    context = FitNesseUtil.makeTestContext();
   }
 
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("testdir");
+    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 
   public void testDelete() throws Exception {
-    File file = new File("testdir/testfile");
+    File file = new File(FitNesseUtil.base + "/testfile");
     assertTrue(file.createNewFile());
     DeleteFileResponder responder = new DeleteFileResponder();
     request.addInput("filename", "testfile");
@@ -38,7 +38,7 @@ public class DeleteFileResponderTest extends RegexTestCase {
   }
 
   public void testDeleteDirectory() throws Exception {
-    File dir = new File("testdir/dir");
+    File dir = new File(FitNesseUtil.base + "/dir");
     assertTrue(dir.mkdir());
     File file = new File(dir, "testChildFile");
     assertTrue(file.createNewFile());

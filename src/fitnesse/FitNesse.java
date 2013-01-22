@@ -13,10 +13,14 @@ import java.lang.reflect.Method;
 import java.net.BindException;
 
 public class FitNesse {
-  private FitNesseContext context;
-  private SocketService theService;
-  private Updater updater;
   public static final FitNesseVersion VERSION = new FitNesseVersion();
+
+  public static FitNesse FITNESSE_INSTANCE;
+
+  private SocketService theService;
+  private final Updater updater;
+
+  private final FitNesseContext context;
 
   public static void main(String[] args) throws Exception {
     System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
@@ -53,16 +57,17 @@ public class FitNesse {
   // TODO MdM. This boolean agument is annoying... please fix.
   public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
     this.updater = updater;
+    FITNESSE_INSTANCE = this;
     this.context = context;
-    context.fitnesse = this;
-    FitNesseContext.globalContext = context;
     if (makeDirs)
       establishRequiredDirectories();
   }
 
   public boolean start() {
     try {
-      if (context.port>0) theService = new SocketService(context.port, new FitNesseServer(context));
+      if (context.port > 0) {
+        theService = new SocketService(context.port, new FitNesseServer(context));
+      }
       return true;
     } catch (BindException e) {
       printBadPortMessage(context.port);
@@ -80,8 +85,8 @@ public class FitNesse {
   }
 
   private void establishRequiredDirectories() {
-    establishDirectory(context.rootPagePath);
-    establishDirectory(context.rootPagePath + "/files");
+    establishDirectory(context.getRootPagePath());
+    establishDirectory(context.getRootPagePath() + "/files");
   }
 
   public void applyUpdates() throws IOException{
@@ -99,7 +104,7 @@ public class FitNesse {
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
-    Request request = new MockRequestBuilder(command).build();
+    Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);

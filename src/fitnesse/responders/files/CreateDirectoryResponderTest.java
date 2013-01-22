@@ -9,20 +9,22 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 
 public class CreateDirectoryResponderTest extends TestCase {
+  private FitNesseContext context;
+
   public void setUp() throws Exception {
-    FileUtil.makeDir("testdir");
-    FileUtil.makeDir("testdir/files");
+    context = FitNesseUtil.makeTestContext(null);
+    FileUtil.makeDir(context.getRootPagePath());
+    FileUtil.makeDir(context.getRootPagePath() + "/files");
   }
 
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("testdir");
+    FileUtil.deleteFileSystemDirectory(context.getRootPagePath());
   }
 
   public void testMakeResponse() throws Exception {
-    FitNesseContext context = new FitNesseContext();
-    context.rootPagePath = "testdir";
     CreateDirectoryResponder responder = new CreateDirectoryResponder();
     MockRequest request = new MockRequest();
     request.addInput("dirname", "subdir");
@@ -30,7 +32,7 @@ public class CreateDirectoryResponderTest extends TestCase {
 
     Response response = responder.makeResponse(context, request);
 
-    File file = new File("testdir/subdir");
+    File file = new File(context.getRootPagePath() + "/subdir");
     assertTrue(file.exists());
     assertTrue(file.isDirectory());
 

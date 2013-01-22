@@ -34,7 +34,7 @@ public class ProxyPageTest extends TestCase {
 
     proxy = new ProxyPage(original);
     proxy.setTransientValues("localhost", Clock.currentTimeInMillis());
-    proxy.setHostPort(FitNesseUtil.port);
+    proxy.setHostPort(FitNesseUtil.PORT);
   }
 
   public void tearDown() throws Exception {

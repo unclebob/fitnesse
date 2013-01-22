@@ -13,6 +13,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualCouplingExtensionTest;
 import fitnesse.wiki.WikiImportProperty;
@@ -30,6 +31,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
+    PageVersionPruner.daysTillVersionsExpire = 14;
   }
 
   public void testResponse() throws Exception {
@@ -38,7 +40,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Wiki Page tags");
     page.commit(data);
-    
+
     final MockRequest request = new MockRequest();
     request.setResource("ChildPage");
 
@@ -133,7 +135,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
     crawler.addPage(targetPage, PathParser.parse("ChildPage"));
     final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
+    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
 
     FitNesseUtil.startFitnesse(root);
     SimpleResponse response = null;
@@ -157,7 +159,7 @@ public class WikiPageResponderTest extends RegexTestCase {
 
     assertSubString("<body class=\"imported\">", content);
   }
-  
+
   public void testImportedPageIndicationNotOnRoot() throws Exception {
     final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();

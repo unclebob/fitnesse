@@ -31,7 +31,7 @@ public class MergeResponderTest extends RegexTestCase {
 
   public void testHtml() throws Exception {
     Responder responder = new MergeResponder(request);
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(source), new MockRequest());
     assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
     assertHasRegexp("this is SimplePage", response.getContent());
     assertHasRegexp("name=\\\"oldContent\\\"", response.getContent());
@@ -43,7 +43,7 @@ public class MergeResponderTest extends RegexTestCase {
     request.addInput("PageType", "Test");
     request.addInput("Search", "On");
     Responder responder = new MergeResponder(request);
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(source), new MockRequest());
 
     assertHasRegexp("type=\"hidden\"", response.getContent());
     assertHasRegexp("name=\"Edit\"", response.getContent());

@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
@@ -22,7 +23,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     root = InMemoryPage.makeRoot("RooT");
     page = new TestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext();
 
     formatter = new TestHtmlFormatter(context, page.getSourcePage()) {
       @Override

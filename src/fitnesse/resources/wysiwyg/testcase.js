@@ -4,6 +4,9 @@ $(function() {
     var instance = new Wysiwyg(document.getElementById("textarea"), options);
     var contentDocument = instance.contentDocument;
 
+    // Ensure the wysiwyg editor is visible
+    $('#editor-wysiwyg-1').click();
+    
     var d = document;
     var wysiwygHtml = d.getElementById("wysiwyg-html");
     var showWysiwygHtml = d.getElementById("show-wysiwyg-html");
@@ -51,7 +54,7 @@ $(function() {
             this.assertEqual(anonymous.innerHTML, generatedHtml, "wikitextToFragment");
         }
         if (!withoutDomToWikitext) {
-            this.assertEqual(wikitext, instance.domToWikitext(anonymous, options), "domToWikitext");
+            this.assertEqual(wikitext + "\n", instance.domToWikitext(anonymous, options), "domToWikitext");
         }
     }
 
@@ -163,10 +166,9 @@ $(function() {
         unit.add("code block", function() {
             var dom = fragment(
                 element("p", "`abc`"),
-                element("pre", { "class": "wiki" }, "{{{code-block"));
+                element("p", element("pre", br(), "{{{code-block", br())));
             var wikitext = [
                 "`abc`",
-                "",
                 "",
                 "{{{",
                 "{{{code-block",
@@ -175,7 +177,7 @@ $(function() {
         });
         unit.add("code block nest", function() {
             var dom = fragment(
-                element("pre", { "class": "wiki" }, "#!python\n= level 1\n{{{\n= level 2\n}}}\n= level 1"));
+                element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), " = level 1}}}"));
             var wikitext = [
                 "{{{",
                 "#!python",
@@ -185,6 +187,25 @@ $(function() {
                 "}}}",
                 "= level 1",
                 "}}}" ].join("\n");
+            generateFragment.call(this, dom, wikitext);
+            generateWikitext.call(this, dom, [
+                "{{{",
+                "#!python",
+                "= level 1",
+                "{{{",
+                "= level 2",
+                "}}}= level 1}}}" ].join("\n"));
+        });
+
+        unit.add("code block with empty lines", function() {
+            var dom = fragment(
+                element("p", "test:",
+                    element("pre", br(), "first line", br(), br(), "  second line ")));
+            var wikitext = [
+                "test:{{{",
+                "first line",
+                "",
+                "  second line }}}" ].join("\n");
             generate.call(this, dom, wikitext);
         });
 
@@ -329,10 +350,11 @@ $(function() {
         });
         unit.add("code", function() {
             var dom = element("p", "`monospace`",
-                ", ", element("tt", {'class': 'inlinecode'}, "mono`s`pace"),
-                ", ", "`mono", element("tt", {'class': 'inlinecode'}, "s"), "pace`");
+                ", ", element("pre", "mono`s`pace"),
+                ", ", "`mono", element("pre", "s"), "pace`");
             var wikitext = "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`";
-            generate.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
+            generateFragment.call(this, dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
+            generateWikitext.call(this, dom, "`monospace`,{{{mono`s`pace}}}, `mono{{{s}}}pace`");
         });
         unit.add("escaped !-..-!", function() {
             var dom = element("p", "`monospace`",
@@ -531,6 +553,16 @@ $(function() {
                 "!6 Heading 6 " ].join("\n"));
         });
 
+        unit.add("header with link", function() {
+            var dom = fragment(
+                element("h3",
+                    a("http://encyclopedia.thefreedictionary.com/XUnit", "xUnit"),
+                    ": Building the ", element("i", "Code Right")));
+            generateFragment.call(this, dom, [
+                "!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''",
+                ].join("\n"));
+        });
+
         unit.add("list", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -576,7 +608,8 @@ $(function() {
                 "            * Subitem 2",
                 "            * Subitem 3",
                 "    * item 2",
-                "Paragraph" ].join("\n"));
+                "Paragraph",
+                "" ].join("\n"));
             generate.call(this, dom, [
                 " * foo bar",
                 "   * Subitem 1",
@@ -607,6 +640,18 @@ $(function() {
                 " * Item 2",
                 "",
                 "And numbered lists can also be given an explicit number" ].join("\n"));
+        });
+
+        unit.add("ordered list", function() {
+            var dom = fragment(
+                element("ol",
+                    element("li", "foo bar"),
+                    element("ol", element("li", "Subitem")),
+                    element("li", "item 2")));
+            generate.call(this, dom, [
+                " 1 foo bar",
+                "   1 Subitem",
+                " 1 item 2" ].join("\n"));
         });
 
         unit.add("list at beginning of line", function() {
@@ -640,16 +685,20 @@ $(function() {
                 element("p", "Paragraph"),
                 element("ul",
                     element("li",
-                        "item 1",
-                        element("pre", { "class": "wiki" }, "code")),
-                    element("ul",
-                        element("li",
-                            "item 1.1",
-                            element("pre", { "class": "wiki" }, "code"),
-                            element("pre", { "class": "wiki" }, "code"))),
+                        "item 1")),
+                element("p",
+                    element("pre", br(), "code", br())),
+                element("ul",
                     element("li",
-                        "item 2",
-                        element("pre", { "class": "wiki" }, "code"))));
+                        "item 1.1")),
+                element("p",
+                    element("pre", br(), "code", br()),
+                    element("pre", br(), "code", br())),
+                element("ul",
+                    element("li",
+                        "item 2")),
+                element("p",
+                    element("pre", br(), "code", br())));
             generateFragment.call(this, dom, [
                 "Paragraph",
                 " * item 1",
@@ -671,17 +720,21 @@ $(function() {
                 "Paragraph",
                 "",
                 " * item 1",
+                "",
                 "{{{",
                 "code",
                 "}}}",
-                "   * item 1.1",
+                "",
+                " * item 1.1",
+                "",
                 "{{{",
                 "code",
-                "}}}",
-                "{{{",
+                "}}}{{{",
                 "code",
                 "}}}",
+                "",
                 " * item 2",
+                "",
                 "{{{",
                 "code",
                 "}}}" ].join("\n"));
@@ -719,6 +772,7 @@ $(function() {
                 element("p", { 'class': 'comment' }, "# second comment"),
                 element("p", " #Not a comment"),
                 element("p", { 'class': 'comment' }, "# third comment"),
+                element("p", { 'class': 'comment' }, "# | table comment |"),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -727,6 +781,7 @@ $(function() {
                 "",
                 " #Not a comment",
                 "# third comment",
+                "# | table comment |",
                 "Paragraph" ].join("\n"));
             generateWikitext.call(this, dom, [
                 "Paragraph",
@@ -738,6 +793,8 @@ $(function() {
                 "#Not a comment",
                 "",
                 "# third comment",
+                "",
+                "# | table comment |",
                 "",
                 "Paragraph" ].join("\n"));
         });
@@ -772,6 +829,46 @@ $(function() {
                 "!| table | !-escaped-! |",
                 "| ''not italic'' | '''not bold''' |" ].join("\n"));
         });
+
+        unit.add("table, hidden top row", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr", { "class": "hidden" }, element("td", " table "), element("td", " ", element("tt", {'class': 'escape'}, "escaped"), " ")),
+                        element("tr", element("td", " ", element("i", "italic"), " "), element("td", " ", element("b", "bold"), " ")))));
+            generate.call(this, dom, [
+                "-| table | !-escaped-! |",
+                "| ''italic'' | '''bold''' |" ].join("\n"));
+        });
+
+        unit.add("escaped table, hidden top row", function() {
+            var dom = fragment(
+                element("table", { "class": "escaped" },
+                    element("tbody",
+                        element("tr", { "class": "hidden" }, element("td", " table "), element("td", " ", element("tt", {'class': 'escape'}, "escaped"), " ")),
+                        element("tr", element("td", " ''not italic'' "), element("td", " '''not bold''' ")))));
+            generate.call(this, dom, [
+                "-!| table | !-escaped-! |",
+                "| ''not italic'' | '''not bold''' |" ].join("\n"));
+        });
+
+        unit.add("escaped text + table", function() {
+            var dom = fragment(
+                element("p", element("tt", { "class": "escape"}, " escaped text", br()), "| table |"),
+                element("table",
+                    element("tbody",
+                        element("tr", element("td", " table text ")))));
+            generateFragment.call(this, dom, [
+                "!- escaped text",
+                "-!| table |",
+                "| table text |" ].join("\n"));
+            generateFragment.call(this, dom, [
+                "!- escaped text",
+                "-!| table |",
+                "",
+                "| table text |" ].join("\n"));
+        });
+
 
         unit.add("table 2", function() {
              var dom = fragment(
@@ -962,10 +1059,11 @@ $(function() {
                 "quote continued",
                 "",
                 " * item 1 continued",
-                "   1. item 1.1",
+                "   1 item 1.1",
                 "",
                 "!define def {dt dd}",
-                "| cell 1 | cell 2 |" ].join("\n"), wikitext);
+                "| cell 1 | cell 2 |",
+                "" ].join("\n"), wikitext);
         });
 
         unit.add("selectRange", function() {
@@ -1152,6 +1250,29 @@ $(function() {
                 "*!"].join("\n"));
         });
 
+        unit.add("Collapsible area with header", function() {
+            var dom = fragment(
+                element("div", { "class": "collapsable" },
+                    element("p", "title"),
+                    element("p", br()),
+                    element("h2", "Header"),
+                    element("p", "More text")
+                ),
+                element("p", br()));
+            generateFragment.call(this, dom, [
+                "!*** title",
+                "!2 Header",
+                "More text",
+                "*!"].join("\n"));
+            generateWikitext.call(this, dom, [
+                "!*** title",
+                "",
+                "!2 Header",
+                "More text",
+                "",
+                "*!"].join("\n"));
+        });
+
         unit.add("Collapsible area with list", function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },
@@ -1181,6 +1302,51 @@ $(function() {
                 "More text",
                 "",
                 "*!"].join("\n"));
+        });
+
+        unit.add("table with escaped content", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr",
+                            element("td", "sql")
+                        ), element("tr",
+                            element("td",
+                                element("tt", { "class": "escape" }, " SELECT *", br(), "     FROM bar", br()), br()
+                            )
+                        )
+                    )
+                ));
+            generateFragment.call(this, dom, [
+                "|sql|",
+                "|!- SELECT *",
+                "     FROM bar",
+                "-!|",
+                ""].join("\n"));
+            generateWikitext.call(this, dom, "| sql |\n| !- SELECT *\n     FROM bar\n-! |");
+        });
+
+        unit.add("table with preformatted, escaped content", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr",
+                            element("td", "sql")
+                        ), element("tr",
+                            element("td",
+                                element("pre",
+                                    element("tt", { "class": "escape" }, " SELECT *", br(), "     FROM bar", br())
+                                )
+                            )
+                        )
+                    )
+                ));
+            generateFragment.call(this, dom, [
+                "|sql|",
+                "|{{{!- SELECT *",
+                "     FROM bar",
+                "-!}}}|",
+                ""].join("\n"));
         });
 
         unit.run();

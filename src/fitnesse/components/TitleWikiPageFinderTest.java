@@ -38,7 +38,7 @@ public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
     crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
     pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = pageTwo.getData();
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port + "/PageOne");
+    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.PORT + "/PageOne");
     pageTwo.commit(data);
     hits.clear();
   }

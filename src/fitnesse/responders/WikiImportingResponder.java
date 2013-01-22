@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -38,10 +35,10 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     HtmlPage htmlPage = makeHtml();
 
     htmlPage.render(response.getWriter());
-    
+
     response.closeAll();
   }
-  
+
   @Override
   public void traverse(TraversalListener<Object> traversalListener) {
     this.traversalListener = traversalListener;
@@ -49,7 +46,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
       if (isNonRoot) {
         importer.importRemotePageContent(page);
       }
-      
+
       importer.importWiki(page);
 
       if (!isUpdate) {
@@ -60,10 +57,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         page.commit(data);
       }
     }
-    catch (MalformedURLException e) {
-      traversalListener.process(new ImportError("ERROR", e.getMessage(), e));
-    }
-    catch (FileNotFoundException e) {
+    catch (WikiImporter.WikiImporterException e) {
       traversalListener.process(new ImportError("ERROR", "The remote resource, " + importer.remoteUrl() + ", was not found."));
     }
     catch (WikiImporter.AuthenticationRequiredException e) {
@@ -154,7 +148,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private String message;
     private String type;
     private Exception exception;
-    
+
     public ImportError(String type, String message) {
       this(type, message, null);
     }
@@ -169,11 +163,11 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     public String getType() {
       return type;
     }
-    
+
     public String getMessage() {
       return message;
     }
-    
+
     public Exception getException() {
       return exception;
     }

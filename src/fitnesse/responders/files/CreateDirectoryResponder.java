@@ -18,7 +18,7 @@ public class CreateDirectoryResponder implements SecureResponder {
 
     String resource = request.getResource();
     String dirname = (String) request.getInput("dirname");
-    String pathname = context.rootPagePath + "/" + resource + dirname;
+    String pathname = context.getRootPagePath() + "/" + resource + dirname;
     File file = new File(pathname);
     if (!file.exists())
       file.mkdir();

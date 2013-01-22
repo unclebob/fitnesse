@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import static fitnesse.fixtures.FitnesseFixtureContext.authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 
 public class AuthenticatorSetup
@@ -10,7 +11,7 @@ public class AuthenticatorSetup
   private String password;
 
   public String status() {
-    FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
+    authenticator = new OneUserAuthenticator(username, password);
     return "ok";
   }
 

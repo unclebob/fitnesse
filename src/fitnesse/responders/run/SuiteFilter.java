@@ -16,37 +16,63 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SuiteFilter {
+  private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
+  private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
+  private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
+  private static final String OR_FILTER_ARG_2 = "suiteFilter";
   final private SuiteTagMatcher notMatchTags;
   final private SuiteTagMatcher matchTags;
+  final private boolean andStrategy;
   final private String startWithTest;
   
-  public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null) {
+  public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
   
-  public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null);
+  public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
 
-  SuiteFilter(String matchingTags, String mustNotMatchTags, String startWithTest) {
+  SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
-    
-    matchTags = new SuiteTagMatcher(matchingTags, true);
+    if(andTags != null){
+      matchTags = new SuiteTagMatcher(andTags, true);
+      andStrategy = true;
+    } else {
+      matchTags = new SuiteTagMatcher(orTags, true);
+      andStrategy = false;
+    }
     notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false);
   }
 
   public SuiteFilter(Request request, String suitePath) {
-    this(getSuiteTagFilter(request), 
+    this(getOrTagFilter(request), 
         getNotSuiteFilter(request),
+        getAndTagFilters(request),
         getSuiteFirstTest(request, suitePath));
   }
   
-  private static String getSuiteTagFilter(Request request) {
-    return request != null ? (String) request.getInput("suiteFilter") : null;
+  private static String getOrTagFilter(Request request) {
+    return request != null ? getOrFilterString(request) : null;
+  }
+
+  private static String getOrFilterString(Request request) {
+    //request already confirmed not-null
+    String orFilterString = null;
+    if(request.getInput(OR_FILTER_ARG_1) != null){
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+    } else {
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+    }
+    return orFilterString;
   }
 
   private static String getNotSuiteFilter(Request request) {
-    return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
+    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+  }
+  
+  private static String getAndTagFilters(Request request) {
+    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
   }
 
 
@@ -96,7 +122,7 @@ public class SuiteFilter {
     
     PageData pageData = suitePage.getData();
     if (pageData.hasAttribute("Suite") && matchTags.isFiltering() && matchTags.matches(suitePage)) {
-      return new SuiteFilter(null, notMatchTags.tagString, startWithTest).getFilterForTestsInSuite(suitePage);
+      return new SuiteFilter(null, notMatchTags.tagString, null, startWithTest).getFilterForTestsInSuite(suitePage);
     }
     
     if (notMatchTags.matches(suitePage)) {
@@ -112,7 +138,11 @@ public class SuiteFilter {
     List<String> criterias = new LinkedList<String>();
     
     if (matchTags.isFiltering()) {
-      criterias.add("matches '" + matchTags.tagString + "'");
+      if(andStrategy){
+        criterias.add("matches all of '" + matchTags.tagString + "'");
+      } else {
+        criterias.add("matches '" + matchTags.tagString + "'");
+      }
     }
 
     if (notMatchTags.isFiltering()) {
@@ -167,6 +197,24 @@ public class SuiteFilter {
 
     private boolean testTagsMatchQueryTags(String testTagString) {
       String testTags[] = testTagString.trim().split(LIST_SEPARATOR);
+      if(andStrategy){
+        return checkIfAllQueryTagsExist(testTags);
+      } else {
+        return checkIfAnyTestTagMatchesAnyQueryTag(testTags);
+      }
+    }
+
+    private boolean checkIfAllQueryTagsExist(String[] testTags) {
+      List<String> testTagList = Arrays.asList(testTags);
+      for (String queryTag : tags) {
+        if (!testTagList.contains(queryTag)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    private boolean checkIfAnyTestTagMatchesAnyQueryTag(String[] testTags) {
       for (String testTag : testTags) {
         for (String queryTag : tags) {
           if (testTag.equalsIgnoreCase(queryTag)) {

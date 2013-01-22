@@ -2,7 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.responders.run.formatters.*;
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.responders.run.formatters.CachingSuiteXmlFormatter;
+import fitnesse.responders.run.formatters.PageHistoryFormatter;
+import fitnesse.responders.run.formatters.SuiteHistoryFormatter;
+import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 
 public class SuiteResponder extends TestResponder {
   private boolean includeHtml;
@@ -44,7 +48,7 @@ public class SuiteResponder extends TestResponder {
     formatters.add(new SuiteHistoryFormatter(context, page, source));
   }
 
-  protected void performExecution() throws Exception {
+  protected void performExecution() {
     SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);

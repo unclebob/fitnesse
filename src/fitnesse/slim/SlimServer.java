@@ -29,10 +29,10 @@ public class SlimServer implements SocketServer {
     try {
       tryProcessInstructions(s);
     } catch (Throwable e) {
+      e.printStackTrace();
     } finally {
       slimFactory.stop();
       close();
-      closeEnclosingServiceInSeperateThread();
     }
   }
 
@@ -95,17 +95,5 @@ public class SlimServer implements SocketServer {
     } catch (Exception e) {
 
     }
-  }
-
-  private void closeEnclosingServiceInSeperateThread() {
-    new Thread(new Runnable() {
-      public void run() {
-        try {
-          SlimService.instance.close();
-        } catch (Exception e) {
-        }
-      }
-    }
-    ).start();
   }
 }

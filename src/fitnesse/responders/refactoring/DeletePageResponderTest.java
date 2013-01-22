@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.List;
-
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.util.List;
 
 public class DeletePageResponderTest extends ResponderTestCase {
   private final String level1Name = "LevelOne";
@@ -29,7 +29,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     request.setResource(this.qualifiedLevel2Name);
     request.addInput("deletePage", "");
 
-    SimpleResponse response = (SimpleResponse) this.responder.makeResponse(new FitNesseContext(this.root), request);
+    SimpleResponse response = (SimpleResponse) this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), request);
     String content = response.getContent();
     assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
   }
@@ -42,7 +42,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     request.setResource(this.level1Name);
     request.addInput("confirmed", "yes");
 
-    SimpleResponse response = (SimpleResponse) this.responder.makeResponse(new FitNesseContext(this.root), request);
+    SimpleResponse response = (SimpleResponse) this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), request);
     String page = response.getContent();
     assertNotSubString("Are you sure you want to delete", page);
     assertEquals(303, response.getStatus());
@@ -57,7 +57,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     this.crawler.addPage(this.root, PathParser.parse("FrontPage"), "Content");
     this.request.setResource("FrontPage");
     this.request.addInput("confirmed", "yes");
-    Response response = this.responder.makeResponse(new FitNesseContext(this.root), this.request);
+    Response response = this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), this.request);
     assertEquals(303, response.getStatus());
     assertEquals("FrontPage", response.getHeader("Location"));
   }

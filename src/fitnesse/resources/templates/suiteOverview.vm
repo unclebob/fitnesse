@@ -37,20 +37,22 @@
 		  </div>
 		  <a class="button" href="$viewLocation">Cancel</a>
 	  </div>
-	  <div>
-	  <h2>Detailed Results</h2> 	  
-	  <span class="meta $branch.getCssClass()">$branch.getName()</span>	  	  
-	  <span> 
-	  	(<a href="javascript:expandAll();">Expand</a> |
-	  	<a href="javascript:collapseAll();">Collapse</a>)
-	  </span>
-	  
 	  
 	  <div>
-	  	#parse("suiteOverviewNode.vm")
-	  </div>
+    	  <h2>Detailed Results</h2> 	  
+    	  <span class="$branch.getCssClass()">$branch.getName()</span>	  	  
+    	  <span> 
+    	  	(<a href="javascript:expandAll();">Expand</a> |
+    	  	<a href="javascript:collapseAll();">Collapse</a>)
+    	  </span>
+    	  
+    	  
+    	  <ul>
+    	  	#parse("suiteOverviewNode.vm")
+    	  </ul>
 	  </div>
 	#else
+        <ul>
 		#parse("suiteOverviewNode.vm")
 	#end
 #else

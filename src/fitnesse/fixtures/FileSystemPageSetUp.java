@@ -3,12 +3,10 @@
 package fitnesse.fixtures;
 
 import fit.Fixture;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.FileSystemPage;
 
 public class FileSystemPageSetUp extends Fixture {
   public FileSystemPageSetUp() throws Exception {
     FitnesseFixtureContext.root = new FileSystemPage(FitnesseFixtureContext.baseDir, "RooT");
-    FitnesseFixtureContext.responderFactory = new ResponderFactory(FitnesseFixtureContext.baseDir);
   }
 }

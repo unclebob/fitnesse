@@ -4,7 +4,6 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
-import fitnesse.wiki.WikiPageUtil;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
@@ -14,6 +13,7 @@ import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 
 public abstract class TestHtmlFormatter extends InteractiveFormatter {
   protected TimeMeasurement latestTestTime;
@@ -23,7 +23,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   //special constructor for TestRunner.  Used only for formatting.
-  //todo this is nasty coupling. 
+  //todo this is nasty coupling.
   public TestHtmlFormatter(FitNesseContext context) {
     super(context, null);
   }
@@ -42,7 +42,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
-    
+
     processTestResults(getRelativeName(testPage), testSummary);
   }
 
@@ -60,6 +60,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     super.allTestingComplete(totalTimeMeasurement);
     removeStopTestLink();
     publishAndAddLog();
+    maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
     close();
   }
@@ -86,7 +87,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void addMessageForBlankHtml() throws Exception {
+  public void addMessageForBlankHtml() {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");
     h2.add("Oops!  Did you forget to add to some content to this ?");

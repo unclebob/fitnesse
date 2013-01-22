@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestSuiteFilter||09:10:00 Mon, Dec 03, 2012|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LastLibraryPreceedsEarlierLibraryTest||10:30:54 Tue, Nov 27, 2012|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestFixtureInteraction||13:27:39 Tue, Nov 06, 2012|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestScenarioTableResults||13:07:25 Tue, Nov 06, 2012|
 |FitNesse.UserGuide.ExecutingTestsOutsideTheUserInterface||10:18:24 Tue, Jun 05, 2012|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp||17:32:46 Sun, Jan 17, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryFailCountIsSumOfFailuresAndExceptions||17:31:55 Sun, Jan 17, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.OneLibraryTest||17:31:14 Sun, Jan 17, 2010|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite.LibraryInSetUpTest||17:30:49 Sun, Jan 17, 2010|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite.LibraryInSetUpAndPageTest||17:30:26 Sun, Jan 17, 2010|

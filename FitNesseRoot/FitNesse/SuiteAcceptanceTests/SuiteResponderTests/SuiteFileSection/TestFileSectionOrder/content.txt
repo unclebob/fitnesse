@@ -26,6 +26,7 @@ Verify that it's present through the file system
 |bDir|
 |cDir|
 |dDir|
+| testResults |
 
 Now request the directory through fitnesse
 |Response Requester|

@@ -5,6 +5,7 @@ package fitnesse.authentication;
 import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -23,8 +24,7 @@ public class SecureOperationTest extends TestCase {
 
   protected void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    context = new FitNesseContext();
-    context.root = root;
+    context = FitNesseUtil.makeTestContext(root);
     sro = new SecureReadOperation();
     request = new MockRequest();
     crawler = root.getPageCrawler();

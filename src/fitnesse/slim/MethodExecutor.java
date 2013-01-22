@@ -1,6 +1,5 @@
 package fitnesse.slim;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 import java.lang.reflect.InvocationTargetException;

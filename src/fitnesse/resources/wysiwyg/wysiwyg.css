@@ -1,6 +1,5 @@
 iframe.wysiwyg {
     border: 1px solid #d7d7d7;
-    clear: both;
     display: block;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -8,13 +7,17 @@ iframe.wysiwyg {
 div.trac-resizable {
     clear: both;
 }
+textarea#pageContent {
+    padding: 4px 0;
+    border: 1px solid #d7d7d7;
+}
+
 iframe.wysiwyg:focus {
     border: 1px solid #886;
 }
 .editor-toggle {
     float: right;
     font-size: 80%;
-    margin-top: 4px;
 }
 .editor-toggle label {
 	float: none;
@@ -40,6 +43,15 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar ul#wm-style a {
 	border-radius: 2px;
 	padding: 0;
+}
+.wysiwyg-toolbar ul#wm-style .wysiwyg-menu a {
+    background-image: none;
+    width: auto;
+    height: auto;
+    border: none;
+    background: white; /* Old browsers */
+    background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
+    background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
 }
 .wysiwyg-toolbar li {
     display: block;
@@ -149,11 +161,13 @@ iframe.wysiwyg:focus {
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
-    padding: 1px 2px;
+    padding: 2px 4px;
     background-color: #fff;
     -moz-opacity: 0.90;
     opacity: 0.90;
+    position: absolute;
 }
+
 .wysiwyg-menu p,
 .wysiwyg-menu h1,
 .wysiwyg-menu h2,
@@ -163,7 +177,8 @@ iframe.wysiwyg:focus {
 .wysiwyg-menu h6,
 .wysiwyg-menu pre.wiki,
 .wysiwyg-menu blockquote.citation {
-    margin: 0px;
+    margin: 4px 0 0;
+    border: none;
 }
 .wysiwyg-menu ul, .wysiwyg-menu li {
     list-style-type: none;

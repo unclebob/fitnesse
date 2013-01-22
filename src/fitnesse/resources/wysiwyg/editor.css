@@ -1,7 +1,7 @@
+/* Styles in editor that differ from the "live" layout **/
 body {
  background-color: white;
  margin: 0;
- padding: 0;
 }
 
 p, table {
@@ -48,6 +48,12 @@ div.collapsable>p:first-child {
 /* like .meta */
  color: #BF8660;
  font-style: italic;
+}
+
+tr.hidden {
+ display: table-row;
+ background-color: #eee;
+ color: #666;
 }
 
 tt:before,

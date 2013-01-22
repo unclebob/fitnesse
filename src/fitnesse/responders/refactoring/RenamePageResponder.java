@@ -32,7 +32,7 @@ public class RenamePageResponder extends PageMovementResponder {
   }
 
   @Override
-  protected void execute() {
+  protected void execute() throws RefactorException {
     WikiPage parentOfPageToRename = oldRefactoredPage.getParent();
 
     movePage(oldRefactoredPage, parentOfPageToRename, newName);

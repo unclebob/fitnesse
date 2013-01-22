@@ -17,31 +17,38 @@ One of the benefits you'll have from the new layout is that the page L&F is easi
  * ''fitnesse_straight'' - the default style
  * ''fitnesse_mint'' - a classy style
  * ''fitnesse_topnav'' - a minimalistic style
+ * ''bootstrap'' - uses [[Twitter Bootstrap][http://twitter.github.com/bootstrap]] as a basis for it's styling
 
 For all styles the HTML remains the same. The default style can be configured through ''plugins.properties'', !-FitNesse-!'s settings file (this is where you also configure custom symbols). Add the line
+
+
 {{{
 Theme=fitnesse_mint
 }}}
 (re)start !-FitNesse-! and the style completely changed.
 
-Apart from the layout style, fitnesse loads a few stylesheets by default: ''fitnesse_pages.css'' and ''fitnesse_wiki.css''. Both files serve the boilerplate for pages (like the properties page) and the wiki text. 
+Apart from the layout style, fitnesse loads a few stylesheets by default: ''fitnesse_pages.css'' and ''fitnesse_wiki.css''. Both files serve the boilerplate for pages (like the properties page) and the wiki text.
 
 !2 Rolling your own
-[[FitNesse][FitNesse]] still has the ability to support custom user styling. In [[!-FitNesseRoot/files/fitnesse-!][/files/fitnesse]] you can place your own files. Stylesheets go in a ''css'' directory, Javascript under ''javascript'' and images are filed under ''images'' (note: those directories are not present by default, you'll have to create them by hand).
+FitNesse still has the ability to support custom user styling. In [[!-FitNesseRoot/files/fitnesse-!][/files/fitnesse]] you can place your own files. Stylesheets go in a ''css'' directory, Javascript under ''javascript'' and images are filed under ''images'' (note: those directories are not present by default, you'll have to create them by hand).
 
 Now say you want to create your own style, named ''my-style''. You'll need to create a stylesheet ''!-FitNesseRoot/files/fitnesse/css/my-style.css-!'' and an optional Javascript file ''!-FitNesseRoot/files/fitnesse/javascript/my-style.js-!''.
 
 The stylesheet can contain just your own styling or a combination of existing styles with your own additions on top of it.
 
 To reuse one of the existing styles as an entry point, create a custom css file and import the base style you like to use, e.g.:
-{{{ 
+
+
+{{{
 @import url(fitnesse_straight.css); 
 }}}
 Now you can simply add custom elements to it.
 
 !2 Packaging themes
 It's also possible to distribute themes in jar files (for example if you want to support a corporate theme for all your !-FitNesse-! projects). For that, package the css and javascript in a jar file, like this:
+
  * fitnesse/resources/css/my-style.css
  * fitnesse/resources/javascript/my-style.js
  * fitnesse/resources/images/some-image.png
+
 Add the jar file to your classpath and define the style (''my-style'') in your ''plugins.properties''.

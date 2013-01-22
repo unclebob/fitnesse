@@ -5,7 +5,7 @@ import java.util.Date;
 
 import fitnesse.responders.run.TestSummary;
 
-public class TestResultRecord extends TestSummary{
+public class TestResultRecord extends TestSummary {
   private File file;
   private Date date;
 
@@ -21,5 +21,9 @@ public class TestResultRecord extends TestSummary{
 
   public File getFile() {
     return file;
+  }
+
+  public String getWikiPageName() {
+    return file.getParentFile().getName();
   }
 }

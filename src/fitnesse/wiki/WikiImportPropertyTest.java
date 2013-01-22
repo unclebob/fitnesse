@@ -105,7 +105,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     MockRequest request = new MockRequest();
     request.setResource(name);
     Responder responder = new WikiPageResponder();
-    return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   public void testVirtualPageIndication() throws Exception {
@@ -114,7 +114,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
     crawler.addPage(targetPage, PathParser.parse("ChildPage"));
     WikiPage linkPage = (BaseWikiPage) crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
+    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
 
     FitNesseUtil.startFitnesse(root);
     SimpleResponse response = null;

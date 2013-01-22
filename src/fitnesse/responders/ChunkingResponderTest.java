@@ -8,6 +8,7 @@ import org.junit.Test;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -27,8 +28,7 @@ public class ChunkingResponderTest {
 
  @Before
  public void setUp() throws Exception {
-    context = new FitNesseContext();
-    context.root = root;
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   @Test

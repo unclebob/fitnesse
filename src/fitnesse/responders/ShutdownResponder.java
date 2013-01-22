@@ -24,12 +24,10 @@ public class ShutdownResponder implements SecureResponder {
     html.setMainTemplate("shutdownPage.vm");
     response.setContent(html.html());
 
-    final FitNesse fitnesseInstance = context.fitnesse;
-
     Thread shutdownThread = new Thread() {
       public void run() {
         try {
-          fitnesseInstance.stop();
+          FitNesse.FITNESSE_INSTANCE.stop();
         }
         catch (Exception e) {
           e.printStackTrace();

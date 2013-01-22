@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import util.Maybe;
@@ -43,6 +44,9 @@ public class ParsingPage {
     public SourcePage getNamedPage() { return namedPage; }
 
     public Maybe<String> getSpecialVariableValue(String key) {
+      // Make this fail safe for unit tests
+      final FitNesse fitnesse = FitNesse.FITNESSE_INSTANCE;
+      final FitNesseContext context = fitnesse != null ? fitnesse.getContext() : null;
         String value;
         if (key.equals("RUNNING_PAGE_NAME"))
             value = page.getName();
@@ -53,9 +57,9 @@ public class ParsingPage {
         else if (key.equals("PAGE_PATH"))
             value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(FitNesseContext.globalContext.port);
+          value = Integer.toString(context != null ? context.port : -1);
         else if (key.equals("FITNESSE_ROOTPATH"))
-          value = FitNesseContext.globalContext.rootPath;
+          value = context != null ? context.rootPath : "";
         else if (key.equals("FITNESSE_VERSION"))
           value = new FitNesseVersion().toString();
         else

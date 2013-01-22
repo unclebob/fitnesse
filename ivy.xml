@@ -11,13 +11,15 @@
 		<conf name="default" visibility="public" />
 		<conf name="standalone" visibility="public" description="include in fitnesse-standalone build" />
 		<conf name="test" visibility="public" extends="default" />
+		<conf name="lesscss" visibility="private" />
 	</configurations>
+        <!-- for publication to maven repos -->
 	<publications xmlns:e="urn:ant.apache.org:ivy-extras">
 		<artifact name="fitnesse" type="jar" ext="jar" />
 		<artifact name="fitnesse" type="pom" ext="pom" />
 		<artifact name="fitnesse" type="source" ext="jar" e:classifier="sources" />
 		<artifact name="fitnesse" type="javadoc" ext="jar" e:classifier="javadoc" />
-		<artifact name="fitnesse-standalone" type="jar" ext="jar" />
+		<artifact name="fitnesse" type="jar" ext="jar" e:classifier="standalone" />
 	</publications>
  
 	<dependencies>
@@ -30,5 +32,6 @@
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
+		<dependency org="org.mozilla" name="rhino" rev="1.7R4" conf="lesscss->default" />
 	</dependencies>
 </ivy-module>

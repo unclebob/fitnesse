@@ -50,7 +50,7 @@ public class WikiPageActions {
   }
 
   public boolean isWithVersions() {
-    return hasAction("Versions");
+    return hasAction("Versions") && PageVersionPruner.daysTillVersionsExpire > 0;
   }
 
   public boolean isWithRecentChanges() {

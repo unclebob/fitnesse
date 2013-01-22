@@ -5,7 +5,7 @@
  <a class="button" href="?responder=purgeHistory&days=7">Purge &gt; 7 days</a>
  <a class="button" href="?responder=purgeHistory&days=0">Purge all</a>
  <a class="button" href="$viewLocation">Cancel</a>
-</buttons>
+</div>
 
 <table>
  <tr>

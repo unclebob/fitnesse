@@ -148,6 +148,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     latestTestTime = totalTimeMeasurement;
     removeStopTestLink();
     publishAndAddLog();
+    maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
     close();
 

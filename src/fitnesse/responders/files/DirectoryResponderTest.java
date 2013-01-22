@@ -9,6 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
 
 public class DirectoryResponderTest extends RegexTestCase {
   MockRequest request;
@@ -18,7 +19,6 @@ public class DirectoryResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
-    context.rootPagePath = SampleFileUtility.base;
     SampleFileUtility.makeSampleFiles();
   }
 
@@ -28,7 +28,7 @@ public class DirectoryResponderTest extends RegexTestCase {
 
   public void testDirectotyListing() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("testDir", response.getContent());
     assertHasRegexp("testFile2", response.getContent());
@@ -38,7 +38,7 @@ public class DirectoryResponderTest extends RegexTestCase {
 
   public void testButtons() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
     response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertHasRegexp("Upload", response.getContent());
@@ -47,14 +47,14 @@ public class DirectoryResponderTest extends RegexTestCase {
 
   public void testHtml() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("/files/", response.getContent());
   }
 
   public void testRedirectForDirectory() throws Exception {
     request.setResource("files/testDir");
-    Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
     Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));

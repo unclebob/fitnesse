@@ -59,20 +59,6 @@ window.onbeforeunload = function () {
 $(document).ready(function() {
 
 	/**
-	 * Change a.button to a real button (so it looks the same), retaining link behaviour
-	 */
-	$('a.button').replaceWith(function () {
-		var self = $(this);
-		var button = $('<button/>');
-		button.text(self.text());
-		button.click(function () {
-			window.location = self.attr('href');
-			return false;
-		});
-		return button;
-	});
-	
-	/**
 	 * Field validations
 	 */
 	function validateField(re, msg) {
@@ -90,18 +76,104 @@ $(document).ready(function() {
 			}
 		}
 	}
-	
+
 	$('input.wikiword').keyup(function () {
-		validateField.apply(this, 
+		validateField.apply(this,
 				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
 		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
 	});
-	
+
 	$('input.wikipath').keyup(function () {
-		validateField.apply(this, 
+		validateField.apply(this,
 				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
 	});
-	
+
+	function getMaxErrorNavIndex(){
+		return parseInt($("#error-nav-max").text());
+	}
+
+	function getCurrentErrorNavIndex(){
+		return parseInt($("#error-nav-text").val());
+	}
+
+	function setCurrentErrorNavIndex(index){
+		$("#error-nav-text").val(index);
+	}
+
+	function incrementErrorNavIndex(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === getMaxErrorNavIndex()){
+			currentErrorNavIndex = 1;
+		} else {
+			currentErrorNavIndex += 1;
+		}
+		setCurrentErrorNavIndex(currentErrorNavIndex);
+	}
+
+	function decrementErrorNavIndex(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === 1){
+			currentErrorNavIndex = getMaxErrorNavIndex();
+		} else {
+			currentErrorNavIndex -= 1;
+		}
+		setCurrentErrorNavIndex(currentErrorNavIndex);
+	}
+
+    function unfoldErrors(element) {
+        element.parents('.scenario-detail').show().prev().removeClass('closed');
+        element.parents('.collapsible').removeClass('closed invisible');
+        element.parents('tr.hidden').removeClass('hidden');
+    }
+    
+	function navigateToCurrentError(){
+		var currentErrorNavIndex = getCurrentErrorNavIndex();
+		$("span.fail, span.error, td.fail, td.error")
+            .removeClass("selected-error")
+		    .filter(function() {
+                return $(this).data("error-num") == currentErrorNavIndex
+            }).each(function(){
+				unfoldErrors($(this)); 
+				$(this).addClass("selected-error");
+				$('html, body').animate({
+     				scrollTop: $(this).offset().top - 200
+ 				}, 500);
+			});
+	}
+
+	$("#error-nav-prev").click(function(){
+		decrementErrorNavIndex();
+		navigateToCurrentError();
+	});
+
+	$("#error-nav-next").click(function(){
+		incrementErrorNavIndex();
+		navigateToCurrentError();
+	});
+
+	$("#error-nav-text").change(function(){
+		if(getCurrentErrorNavIndex() > 0 && getCurrentErrorNavIndex() <= getMaxErrorNavIndex()){
+			navigateToCurrentError();
+		}
+	});
+
+
+    /**
+     * Open scenario's and collapsed sections which contain failed or errorous tests
+     */
+    unfoldErrors($('.fail,.error'));
 });
+
+function initErrorMetadata(){
+	var i = 1;
+	$("table span.fail, table span.error, table td.fail, table td.error").each(function(){ $(this).data("error-num", i); i++});
+	$("#error-nav-max").text(i - 1);
+}
+
+
+/** Backwards compatibility */
+function toggleCollapsable(id) { $('#' + id).toggle().parent('.collapse_rim').toggleClass('open'); }
+function expandAll() { $('.collapse_rim').each(function(i, e) { if (!$(e).hasClass('open')) { toggleCollapsable($(e).children().last().attr('id')) } }); }
+function collapseAll() { $('.collapse_rim').each(function(i, e) { if ($(e).hasClass('open')) { toggleCollapsable($(e).children().last().attr('id')) } }); }
 

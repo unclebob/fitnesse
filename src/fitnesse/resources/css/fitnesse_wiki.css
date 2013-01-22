@@ -79,15 +79,30 @@ article .centered {
   border-left: 1px solid #BF8660;
 }
 
+table.plain_text_table {
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  border-left: 2px solid #e5e5e5;
+  margin-left: 1em;
+}
+table.plain_text_table td,
+table.plain_text_table th {
+  border: none;
+}
+
 /** !style_* */
 .error {
   background-color: #ffffaa;
+  padding: 0px 0px 0px 20px;
+  background-image: url("../images/exception.png");
+  background-repeat: no-repeat;
 }
 .pass {
-  background-color: lightgreen;
+  background-color: #AAFFAA;
 }
 .fail {
-  background-color: red;
+  background-color: #FFAAAA;
 }
 .ignore {
   background-color: lightgray;

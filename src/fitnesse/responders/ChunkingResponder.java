@@ -30,8 +30,8 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     this.root = context.root;
     String format = (String) request.getInput("format");
     response = new ChunkedResponse(format, this);
-    
-    if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
+
+    if (dontChunk || request.hasInput("nochunk"))
       response.turnOffChunking();
     getRequestedPage(request);
     if (page == null && shouldRespondWith404())
