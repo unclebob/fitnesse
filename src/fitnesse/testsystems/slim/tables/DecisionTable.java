@@ -2,18 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+
+import java.util.*;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
@@ -27,7 +22,7 @@ public class DecisionTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Instruction> getInstructions() throws SyntaxError {
+  public List<Assertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String scenarioName = getScenarioName();
@@ -100,15 +95,15 @@ public class DecisionTable extends SlimTable {
   }
 
   private class ScenarioCaller extends DecisionTableCaller {
-    public ArrayList<Instruction> call(ScenarioTable scenario) throws SyntaxError {
+    public ArrayList<Assertion> call(ScenarioTable scenario) throws SyntaxError {
       gatherFunctionsAndVariablesFromColumnHeader();
-      ArrayList<Instruction> instructions = new ArrayList<Instruction>();
+      ArrayList<Assertion> assertions = new ArrayList<Assertion>();
       for (int row = 2; row < table.getRowCount(); row++)
-        instructions.addAll(callScenarioForRow(scenario, row));
-      return instructions;
+        assertions.addAll(callScenarioForRow(scenario, row));
+      return assertions;
     }
 
-    private List<Instruction> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
+    private List<Assertion> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
       checkRow(row);
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
@@ -126,80 +121,77 @@ public class DecisionTable extends SlimTable {
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-    public List<Instruction> call(String fixtureName) throws SyntaxError {
-      final List<Instruction> instructions = new ArrayList<Instruction>();
-      instructions.add(constructFixture(fixtureName));
+    public List<Assertion> call(String fixtureName) throws SyntaxError {
+      final List<Assertion> assertions = new ArrayList<Assertion>();
+      assertions.add(constructFixture(fixtureName));
       final Instruction callTable = callFunction(getTableName(), "table", tableAsList());
-      instructions.add(callTable);
-      dontReportExceptionsInTheseInstructions.add(getInstructionId(callTable));
+      assertions.add(makeAssertion(callTable, Expectation.NOOP_EXPECTATION));
+      dontReportExceptionsInTheseInstructions.add(callTable.getId());
       if (table.getRowCount() > 2)
-        instructions.addAll(invokeRows());
-      return instructions;
+        assertions.addAll(invokeRows());
+      return assertions;
     }
 
-    private List<Instruction> invokeRows() throws SyntaxError {
-      List<Instruction> instructions = new ArrayList<Instruction>();
-      instructions.add(callUnreportedFunction("beginTable"));
+    private List<Assertion> invokeRows() throws SyntaxError {
+      List<Assertion> assertions = new ArrayList<Assertion>();
+      assertions.add(callUnreportedFunction("beginTable"));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
-        instructions.addAll(invokeRow(row));
-      instructions.add(callUnreportedFunction("endTable"));
-      return instructions;
+        assertions.addAll(invokeRow(row));
+      assertions.add(callUnreportedFunction("endTable"));
+      return assertions;
     }
 
-    private List<Instruction> invokeRow(int row) throws SyntaxError {
-      List<Instruction> instructions = new ArrayList<Instruction>();
+    private List<Assertion> invokeRow(int row) throws SyntaxError {
+      List<Assertion> assertions = new ArrayList<Assertion>();
       checkRow(row);
-      instructions.add(callUnreportedFunction("reset"));
-      instructions.addAll(setVariables(row));
-      instructions.add(callUnreportedFunction("execute"));
-      instructions.addAll(callFunctions(row));
-      return instructions;
+      assertions.add(callUnreportedFunction("reset"));
+      assertions.addAll(setVariables(row));
+      assertions.add(callUnreportedFunction("execute"));
+      assertions.addAll(callFunctions(row));
+      return assertions;
     }
 
-    private Instruction callUnreportedFunction(String functionName) {
+    private Assertion callUnreportedFunction(String functionName) {
       final Instruction functionCall = callFunction(getTableName(), functionName);
-      dontReportExceptionsInTheseInstructions.add(getInstructionId(functionCall));
-      return functionCall;
+      dontReportExceptionsInTheseInstructions.add(functionCall.getId());
+      return makeAssertion(functionCall, Expectation.NOOP_EXPECTATION);
     }
 
-    private List<Instruction> callFunctions(int row) {
-      List<Instruction> instructions = new ArrayList<Instruction>();
+    private List<Assertion> callFunctions(int row) {
+      List<Assertion> instructions = new ArrayList<Assertion>();
       for (String functionName : funcsLeftToRight) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
     }
 
-    private Instruction callFunctionInRow(String functionName, int row) {
+    private Assertion callFunctionInRow(String functionName, int row) {
       int col = funcs.get(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
-      Instruction instruction;
+      Assertion assertion;
       if (assignedSymbol != null) {
-        addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionTag(), col, row));
-        instruction = callAndAssign(assignedSymbol, functionName);
+        assertion = makeAssertion(callAndAssign(assignedSymbol, functionName),
+                new SymbolAssignmentExpectation(assignedSymbol, col, row));
       } else {
-        setFunctionCallExpectation(col, row);
-        instruction = callFunction(getTableName(), functionName);
+        // TODO: -AJM- Why this call?
+        table.getCellContents(col, row);
+        assertion = makeAssertion(callFunction(getTableName(), functionName),
+                new ReturnedValueExpectation(col, row));
       }
-      return instruction;
+      return assertion;
     }
 
-    private void setFunctionCallExpectation(int col, int row) {
-      table.getCellContents(col, row);
-      addExpectation(new ReturnedValueExpectation(getInstructionTag(), col, row));
-    }
-
-    private List<Instruction> setVariables(int row) {
-      List<Instruction> instructions = new ArrayList<Instruction>();
+    private List<Assertion> setVariables(int row) {
+      List<Assertion> assertions = new ArrayList<Assertion>();
       for (String var : varsLeftToRight) {
         int col = vars.get(var);
         String valueToSet = table.getUnescapedCellContents(col, row);
         Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
-        addExpectation(new VoidReturnExpectation(setInstruction.getId(), col, row));
-        instructions.add(setInstruction);
+        assertions.add(makeAssertion(setInstruction,
+                new VoidReturnExpectation(col, row)));
       }
-      return instructions;
+      return assertions;
     }
   }
 }

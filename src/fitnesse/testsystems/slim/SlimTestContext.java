@@ -2,12 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 public interface SlimTestContext {
   String getSymbol(String symbolName);
@@ -17,9 +14,6 @@ public interface SlimTestContext {
   void addScenario(String scenarioName, ScenarioTable scenarioTable);
 
   ScenarioTable getScenario(String scenarioName);
-
-  @Deprecated
-  void addExpectation(Expectation e);
 
   Collection<ScenarioTable> getScenarios();
 

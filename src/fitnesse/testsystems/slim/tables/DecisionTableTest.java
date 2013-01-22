@@ -12,19 +12,19 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.ListUtility.list;
+
 public class DecisionTableTest {
   private WikiPage root;
-  private List<Instruction> instructions;
   private final String simpleDecisionTable =
     "|DT:fixture|argument|\n" +
       "|var|func?|\n" +
@@ -32,18 +32,24 @@ public class DecisionTableTest {
       "|7|9|\n";
   private DecisionTable decisionTable;
   private MockSlimTestContext testContext;
+  private List<Assertion> assertions;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Instruction>();
+    assertions = new ArrayList<Assertion>();
     testContext = new MockSlimTestContext();
   }
 
+
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
     decisionTable = makeDecisionTable(tableText);
-    instructions.addAll(decisionTable.getInstructions());
+    assertions.addAll(decisionTable.getAssertions());
     return decisionTable;
+  }
+
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
   }
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
@@ -88,21 +94,20 @@ public class DecisionTableTest {
             new MakeInstruction("decisionTable_id_0", "decisionTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("decisionTable_id_1", "decisionTable_id", "table", new Object[]{list()})
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("decisionTable_id_0", "OK"),
         list("decisionTable_id_1", "OK")
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = decisionTable.getTable().toString();
     String expectedColorizedTable =
       "[[pass(fixture), argument]]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
-
 
   @Test
   public void canBuildInstructionsForSimpleDecisionTable() throws Exception {
@@ -123,7 +128,7 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   private String id(int n) {
@@ -152,7 +157,7 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
 
@@ -186,7 +191,7 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "ff"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
 
@@ -214,7 +219,7 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions.toString(), instructions.toString());
+    assertEquals(expectedInstructions.toString(), instructions().toString());
   }
 
   @Test
@@ -237,7 +242,7 @@ public class DecisionTableTest {
         list(id(n++), VoidConverter.VOID_TAG) //endTable
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -270,7 +275,7 @@ public class DecisionTableTest {
         list(id(n++), VoidConverter.VOID_TAG) //endTable
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -292,7 +297,7 @@ public class DecisionTableTest {
     );
 
     Instruction makeInstruction = new MakeInstruction("decisionTable_id_0", "decisionTable_id", "SlimTest");
-    assertEquals(makeInstruction, instructions.get(0));
+    assertEquals(makeInstruction, instructions().get(0));
   }
 
   @Test
@@ -304,7 +309,7 @@ public class DecisionTableTest {
     );
     CallInstruction setInstruction = new CallInstruction("decisionTable_id_4", "decisionTable_id", "setMyVar", new Object[]{"8"});
     CallInstruction callInstruction = new CallInstruction("decisionTable_id_6", "decisionTable_id", "myFunc");
-    assertEquals(setInstruction, instructions.get(4));
-    assertEquals(callInstruction, instructions.get(6));
+    assertEquals(setInstruction, instructions().get(4));
+    assertEquals(callInstruction, instructions().get(6));
   }
 }

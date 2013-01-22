@@ -1,11 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryTable extends SlimTable {
 
@@ -16,8 +15,8 @@ public class LibraryTable extends SlimTable {
   }
 
   @Override
-  public List<Instruction> getInstructions() {
-    List<Instruction> instructions = new ArrayList<Instruction>();
+  public List<Assertion> getAssertions() {
+    List<Assertion> instructions = new ArrayList<Assertion>();
     for (int row = 1; row < table.getRowCount(); row++) {
       String disgracedClassName = Disgracer.disgraceClassName(table.getCellContents(0, row));
       if (disgracedClassName.length() > 0) {

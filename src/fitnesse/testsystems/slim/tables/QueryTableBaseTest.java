@@ -1,36 +1,31 @@
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.slim.SlimClient;
+import fitnesse.slim.converters.VoidConverter;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionExecutor;
+import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.slim.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.Utils;
+import org.junit.Before;
+import org.junit.Test;
+import util.ListUtility;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.InstructionExecutor;
-import fitnesse.slim.instructions.MakeInstruction;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.slim.SlimClient;
-import fitnesse.slim.converters.VoidConverter;
-import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.Utils;
-import util.ListUtility;
-
-import static util.ListUtility.*;
+import static util.ListUtility.list;
 
 public abstract class QueryTableBaseTest {
   private WikiPage root;
-  private List<Object> instructions;
+  private List<Assertion> assertions;
   private String queryTableHeader;
   public QueryTable qt;
   private MockSlimTestContext testContext;
@@ -39,7 +34,7 @@ public abstract class QueryTableBaseTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    assertions = new ArrayList<Assertion>();
     queryTableHeader =
       "|" + tableType() + ":fixture|argument|\n" +
         "|n|2n|\n";
@@ -52,7 +47,7 @@ public abstract class QueryTableBaseTest {
 
   private QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
     qt = makeQueryTable(pageContents);
-    instructions.addAll(qt.getInstructions());
+    assertions.addAll(qt.getAssertions());
     return qt;
   }
 
@@ -78,7 +73,7 @@ public abstract class QueryTableBaseTest {
       list("queryTable_id_1", "blah"),
       list("queryTable_id_2", queryResults)
     ));
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(table, qt.getTable().toString());
   }
 
@@ -91,7 +86,11 @@ public abstract class QueryTableBaseTest {
             new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{list(list("n", "2n"))}),
             new CallInstruction("queryTable_id_2", "queryTable_id", "query")
     );
-    org.junit.Assert.assertEquals(expectedInstructions, instructions);
+    org.junit.Assert.assertEquals(expectedInstructions, instructions());
+  }
+
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
   }
 
   @Test
@@ -262,7 +261,7 @@ public abstract class QueryTableBaseTest {
         )
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -288,7 +287,7 @@ public abstract class QueryTableBaseTest {
         )
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -313,7 +312,7 @@ public abstract class QueryTableBaseTest {
         )
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +

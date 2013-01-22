@@ -4,6 +4,7 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -11,25 +12,26 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
+
 public class ScenarioAndScriptTableTest extends MockSlimTestContext {
   private WikiPage root;
-  private List<Object> instructions;
+  private List<Assertion> assertions;
   private ScenarioTable st;
   private ScriptTable script;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    assertions = new ArrayList<Assertion>();
     clearTestSummary();
   }
 
@@ -40,8 +42,12 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     script = new ScriptTable(t, "id", this);
-    instructions.addAll(st.getInstructions());
-    instructions.addAll(script.getInstructions());
+    assertions.addAll(st.getAssertions());
+    assertions.addAll(script.getAssertions());
+  }
+
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
   }
 
   @Test
@@ -57,7 +63,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -73,7 +79,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"1", "2"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -91,7 +97,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
               new CallInstruction("scriptTable_id_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
 
@@ -110,7 +116,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       )
     );
 
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -137,7 +143,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
         list("scriptTable_id_0/scriptTable_s_id_0", "7")
       )
     );
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -167,7 +173,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       )
     );
 
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -190,7 +196,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       )
     );
 
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -213,7 +219,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       )
     );
 
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -239,7 +245,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -255,7 +261,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -273,14 +279,14 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    instructions.addAll(st1.getInstructions());
-    instructions.addAll(st2.getInstructions());
-    instructions.addAll(script.getInstructions());
+    assertions.addAll(st1.getAssertions());
+    assertions.addAll(st2.getAssertions());
+    assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -298,14 +304,14 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    instructions.addAll(st1.getInstructions());
-    instructions.addAll(st2.getInstructions());
-    instructions.addAll(script.getInstructions());
+    assertions.addAll(st1.getAssertions());
+    assertions.addAll(st2.getAssertions());
+    assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
 
@@ -324,14 +330,14 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
     script = new ScriptTable(ts.getTable(2), "id", this);
-    instructions.addAll(st1.getInstructions());
-    instructions.addAll(st2.getInstructions());
-    instructions.addAll(script.getInstructions());
+    assertions.addAll(st1.getAssertions());
+    assertions.addAll(st2.getAssertions());
+    assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
 }

@@ -3,13 +3,15 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.*;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestPage;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageData;
@@ -147,16 +149,14 @@ public class XmlFormatter extends BaseFormatter {
 
   private static class SlimTestXmlFormatter {
     private TestExecutionReport.TestResult testResult;
-    private List<Instruction> instructions;
+    private List<Assertion> assertions;
     private Map<String, Object> results;
-    private List<Expectation> expectations;
     private List<SlimTable> slimTables;
 
     public SlimTestXmlFormatter(TestExecutionReport.TestResult testResult, SlimTestSystem slimSystem) {
       this.testResult = testResult;
-      instructions = slimSystem.getInstructions();
+      assertions = slimSystem.getAssertions();
       results = slimSystem.getInstructionResults();
-      expectations = slimSystem.getExpectations();
       slimTables = slimSystem.getTestTables();
     }
 
@@ -258,40 +258,40 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     private void addInstructionResults() {
-      for (Instruction instruction : instructions) {
-        addInstructionResult(instruction);
+      for (Assertion assertion : assertions) {
+        addInstructionResult(assertion);
       }
     }
 
     @SuppressWarnings("unchecked")
-    private void addInstructionResult(Instruction instruction) {
-      TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-      testResult.instructions.add(instructionResult);
+    private void addInstructionResult(Assertion assertion) {
+      Instruction instruction = assertion.getInstruction();
+      Expectation expectation = assertion.getExpectation();
+      if (instruction != Instruction.NOOP_INSTRUCTION) {
+        TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
+        testResult.instructions.add(instructionResult);
 
-      String id = instruction.getId();
-      Object result = results.get(id);
+        String id = instruction.getId();
+        Object result = results.get(id);
 
-      instructionResult.instruction = instruction.toString();
-      instructionResult.slimResult = (result != null) ? result.toString() : "";
-      for (Expectation expectation : expectations) {
+        instructionResult.instruction = instruction.toString();
+        instructionResult.slimResult = (result != null) ? result.toString() : "";
         if (expectation instanceof SlimTable.RowExpectation) {
           SlimTable.RowExpectation rowExpectation = (SlimTable.RowExpectation) expectation;
-          if (rowExpectation.getInstructionTag().equals(id)) {
-            try {
-              TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
-              instructionResult.addExpectation(expectationResult);
-              expectationResult.instructionId = rowExpectation.getInstructionTag();
-              expectationResult.col = Integer.toString(rowExpectation.getCol());
-              expectationResult.row = Integer.toString(rowExpectation.getRow());
-              expectationResult.type = rowExpectation.getClass().getSimpleName();
-              expectationResult.actual = rowExpectation.getActual();
-              expectationResult.expected = rowExpectation.getExpected();
-              String message = rowExpectation.getEvaluationMessage();
-              expectationResult.evaluationMessage = message;
-              expectationResult.status = expectationStatus(message);
-            } catch (Throwable e) {
-              e.printStackTrace();
-            }
+          try {
+            TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
+            instructionResult.addExpectation(expectationResult);
+            expectationResult.instructionId = id;
+            expectationResult.col = Integer.toString(rowExpectation.getCol());
+            expectationResult.row = Integer.toString(rowExpectation.getRow());
+            expectationResult.type = rowExpectation.getClass().getSimpleName();
+            expectationResult.actual = rowExpectation.getActual();
+            expectationResult.expected = rowExpectation.getExpected();
+            String message = rowExpectation.getEvaluationMessage();
+            expectationResult.evaluationMessage = message;
+            expectationResult.status = expectationStatus(message);
+          } catch (Throwable e) {
+            e.printStackTrace();
           }
         }
       }

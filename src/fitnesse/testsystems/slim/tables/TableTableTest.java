@@ -2,21 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import fitnesse.slim.SlimClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.InstructionExecutor;
 import fitnesse.slim.instructions.MakeInstruction;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.slim.SlimClient;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -24,11 +14,20 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import org.junit.Before;
+import org.junit.Test;
 import util.ListUtility;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public class TableTableTest {
   private WikiPage root;
-  private List<Object> instructions;
+  private List<Assertion> assertions;
   private final String tableTableHeader =
     "|Table:fixture|argument|\n";
 
@@ -38,12 +37,12 @@ public class TableTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    assertions = new ArrayList<Assertion>();
   }
 
   private TableTable makeTableTableAndBuildInstructions(String pageContents) throws Exception {
     tt = makeTableTable(pageContents);
-    instructions.addAll(tt.getInstructions());
+    assertions.addAll(tt.getAssertions());
     return tt;
   }
 
@@ -63,8 +62,12 @@ public class TableTableTest {
         list("tableTable_id_1", tableResults)
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, tt.getTable().toString());
+  }
+
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
   }
 
   @Test
@@ -74,7 +77,7 @@ public class TableTableTest {
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list()})
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -84,7 +87,7 @@ public class TableTableTest {
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list(list("a", "b"), list("x", "y"))})
     );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -295,14 +298,14 @@ public class TableTableTest {
       ))
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
   }
 
   @Test
   public void tableMethodReturnsNull() throws Exception {
     assertTableResults("|2|4|\n", null,
-        "[[pass(Table:fixture), argument ignore(Test not run)], [2, 4]]"
+        "[[pass(Table:fixture), ignore(No results from table)], [2, 4]]"
       );
   }
 
@@ -315,7 +318,7 @@ public class TableTableTest {
         list("tableTable_id_1", "Exception: except")
       )
     );
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[pass(Table:fixture)error(Exception: except), argument], [2, 4]]",
         tt.getTable().toString());
   }

@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static util.ListUtility.list;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.ErrorResult;
+import fitnesse.testsystems.slim.results.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImportTable extends SlimTable {
   public ImportTable(Table table, String id, SlimTestContext testContext) {
@@ -21,9 +21,9 @@ public class ImportTable extends SlimTable {
     return "import";
   }
 
-  public List<Instruction> getInstructions() throws SyntaxError {
+  public List<Assertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
-    List<Instruction> instructions = new ArrayList<Instruction>(rows);
+    List<Assertion> instructions = new ArrayList<Assertion>(rows);
     if (rows < 2)
       throw new SyntaxError("Import tables must have at least two rows.");
 
@@ -31,10 +31,24 @@ public class ImportTable extends SlimTable {
       String importString = table.getCellContents(0, row);
       if (importString.length() > 0) {
         Instruction importInstruction = new ImportInstruction(makeInstructionTag(), importString);
-        instructions.add(importInstruction);
+        instructions.add(makeAssertion(importInstruction, new ImportExpectation(0, row)));
       }
     }
     return instructions;
   }
 
+  public class ImportExpectation extends RowExpectation {
+
+    public ImportExpectation(int col, int row) {
+      super(col, row);
+    }
+
+    @Override
+    protected Result createEvaluationMessage(String actual, String expected) {
+      if ("OK".equalsIgnoreCase(actual))
+        return passUncounted(expected);
+      else
+        return new ErrorResult("Unknown import message", actual);
+    }
+  }
 }

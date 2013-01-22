@@ -1,21 +1,17 @@
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.slim.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import org.junit.Before;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Before;
-
-import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
 
 /**
  * Test support class for testing slim tables. Class provides
@@ -27,7 +23,7 @@ import fitnesse.wiki.WikiPageUtil;
 public abstract class SlimTableTestSupport<T extends SlimTable> {
 
   private WikiPage root;
-  protected List<Object> instructions;
+  protected List<Instruction> instructions;
   protected T tableUnderTest;
 
   @SuppressWarnings("unchecked")
@@ -57,12 +53,12 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    instructions = new ArrayList<Instruction>();
   }
 
   protected T makeSlimTableAndBuildInstructions(String pageContents) throws Exception {
     tableUnderTest = createSlimTable(pageContents);
-    instructions.addAll(tableUnderTest.getInstructions());
+    instructions.addAll(Assertion.getInstructions(tableUnderTest.getAssertions()));
     return tableUnderTest;
   }
 }

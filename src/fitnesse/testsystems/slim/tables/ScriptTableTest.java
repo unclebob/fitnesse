@@ -17,21 +17,20 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.Utils;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
 
-import static util.ListUtility.list;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public class ScriptTableTest {
   private WikiPage root;
-  private List<Object> instructions;
+  private List<Assertion> assertions;
   private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
   private MockSlimTestContext testContext;
@@ -39,12 +38,12 @@ public class ScriptTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    assertions = new ArrayList<Assertion>();
   }
 
   private ScriptTable buildInstructionsForWholeTable(String pageContents) throws Exception {
     st = makeScriptTable(pageContents);
-    instructions.addAll(st.getInstructions());
+    assertions.addAll(st.getAssertions());
     return st;
   }
 
@@ -61,7 +60,7 @@ public class ScriptTableTest {
     List<List<?>> resultList = ListUtility.<List<?>>list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
-    testContext.evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
   }
 
@@ -69,11 +68,14 @@ public class ScriptTableTest {
     buildInstructionsForWholeTable(scriptTableHeader + scriptStatements);
   }
 
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
+  }
+
   @Test
   public void instructionsForScriptTable() throws Exception {
     buildInstructionsFor("||\n");
-    assertEquals(1, instructions.size());
-    assertEquals(Instruction.NOOP_INSTRUCTION, instructions.get(0));
+    assertEquals(0, assertions.size());
   }
 
   @Test
@@ -83,7 +85,7 @@ public class ScriptTableTest {
       list(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -93,7 +95,7 @@ public class ScriptTableTest {
       list(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -103,7 +105,7 @@ public class ScriptTableTest {
       list(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -113,7 +115,7 @@ public class ScriptTableTest {
       list(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -123,7 +125,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function")
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -133,7 +135,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -143,7 +145,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -153,7 +155,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "eatMealsWithGramsProteinGramsFat", new Object[]{"3", "12", "3"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -163,7 +165,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -173,7 +175,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0", "arg1", "arg2"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -183,7 +185,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentAndTitle", new Object[]{"Marisa", "QA", "Tester"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -193,7 +195,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", new Object[]{"Marisa", "QA", "Tester", "2 years"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -203,7 +205,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -213,7 +215,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -223,7 +225,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -233,7 +235,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -243,7 +245,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -253,7 +255,7 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -263,7 +265,7 @@ public class ScriptTableTest {
       list(
               new CallAndAssignInstruction("scriptTable_id_0", "V", "scriptTableActor", "function", new Object[]{"arg"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -273,35 +275,35 @@ public class ScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"$V"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n");
-    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
-    assertEquals(expectedInstructions, instructions);
+    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialBlankCellDoesNothing() throws Exception {
     buildInstructionsFor("||blah|blah|\n");
-    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
-    assertEquals(expectedInstructions, instructions);
+    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialHashDoesNothing() throws Exception {
     buildInstructionsFor("|!-#comment-!|blah|blah|\n");
-    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
-    assertEquals(expectedInstructions, instructions);
+    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialStarDoesNothing() throws Exception {
     buildInstructionsFor("|*comment|blah|blah|\n");
-    List<Instruction> expectedInstructions = list(Instruction.NOOP_INSTRUCTION);
-    assertEquals(expectedInstructions, instructions);
+    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test

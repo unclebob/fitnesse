@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
@@ -16,6 +12,10 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.testsystems.slim.results.Result;
 import util.StringUtil;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ScenarioTable extends SlimTable {
@@ -36,7 +36,8 @@ public class ScenarioTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Instruction> getInstructions() throws SyntaxError {
+  @Override
+  public List<Assertion> getAssertions() throws SyntaxError {
     parseTable();
 
     // Note: scenario's only add instructions when needed to,
@@ -136,14 +137,14 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public List<Instruction> call(Map<String, String> scenarioArguments,
+  public List<Assertion> call(Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws SyntaxError {
     String script = getTable().toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
     return insertAndProcessScript(script, parentTable, row);
   }
 
-  public List<Instruction> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
+  public List<Assertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
@@ -152,7 +153,7 @@ public class ScenarioTable extends SlimTable {
     return call(scenarioArguments, parentTable, row);
   }
 
-  private List<Instruction> insertAndProcessScript(String script, SlimTable parentTable,
+  private List<Assertion> insertAndProcessScript(String script, SlimTable parentTable,
                                       int row) {
     try {
       // TODO: retrieve table scanner from context
@@ -160,9 +161,10 @@ public class ScenarioTable extends SlimTable {
       ScriptTable t = new ScriptTable(ts.getTable(0), id,
         new ScenarioTestContext(parentTable.getTestContext()));
       parentTable.addChildTable(t, row);
-      List<Instruction> instructions = t.getInstructions();
-      parentTable.addExpectation(new ScenarioExpectation(t, row));
-      return instructions;
+      List<Assertion> assertions = t.getAssertions();
+      //parentTable.addExpectation(new ScenarioExpectation(t, row));
+      assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
+      return assertions;
     } catch (Exception e) {
       throw new SlimError(e);
     }
@@ -246,7 +248,7 @@ public class ScenarioTable extends SlimTable {
     private ScriptTable scriptTable;
 
     private ScenarioExpectation(ScriptTable scriptTable, int row) {
-      super("", -1, row); // We don't care about anything but the row.
+      super(-1, row); // We don't care about anything but the row.
       this.scriptTable = scriptTable;
     }
 
@@ -289,11 +291,6 @@ public class ScenarioTable extends SlimTable {
     @Override
     public ScenarioTable getScenario(String scenarioName) {
       return testContext.getScenario(scenarioName);
-    }
-
-    @Override
-    public void addExpectation(Expectation expectation) {
-      testContext.addExpectation(expectation);
     }
 
     @Override

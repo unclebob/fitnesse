@@ -2,20 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static util.ListUtility.list;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.slim.SlimServer;
-import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
 import util.ListUtility;
+
+import java.util.*;
+
+import static util.ListUtility.list;
 
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
@@ -51,16 +46,19 @@ public class QueryTable extends SlimTable {
     return e != null ? e.toString() : null;
   }
 
-  public List<Instruction> getInstructions() throws SyntaxError {
+  @Override
+  public List<Assertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() < 2)
       throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    Instruction make = constructFixture(getFixtureName());
-    Instruction ti = callFunction(getTableName(), "table", tableAsList());
-    Instruction qi = callFunction(getTableName(), "query");
-    tableInstruction = getInstructionId(ti);
-    queryId = getInstructionId(qi);
-    addExpectation(new QueryTableExpectation());
+    Assertion make = constructFixture(getFixtureName());
+    Assertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
+            Expectation.NOOP_EXPECTATION);
+    Assertion qi = makeAssertion(callFunction(getTableName(), "query"),
+            new QueryTableExpectation());
+    tableInstruction = ti.getInstruction().getId();
+    queryId = qi.getInstruction().getId();
+    //addExpectation(new QueryTableExpectation());
     return list(make, ti, qi);
   }
 
@@ -88,11 +86,6 @@ public class QueryTable extends SlimTable {
       } else {
         scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
       }
-    }
-
-    @Override
-    public String getInstructionTag() {
-      return queryId;
     }
   }
 

@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static fitnesse.testsystems.slim.SlimTestSystem.MESSAGE_ERROR;
-import static util.ListUtility.list;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
+import static fitnesse.testsystems.slim.SlimTestSystem.MESSAGE_ERROR;
+import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
   private String doTableId;
@@ -23,12 +23,11 @@ public class TableTable extends SlimTable {
     return ("tableTable");
   }
 
-  public List<Instruction> getInstructions() {
-    Instruction make = constructFixture(getFixtureName());
+  public List<Assertion> getAssertions() {
+    Assertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
-    addExpectation(new TableTableExpectation());
-    doTableId = getInstructionId(doTable);
-    return list(make, doTable);
+    doTableId = doTable.getId();
+    return list(make, makeAssertion(doTable, new TableTableExpectation()));
   }
 
   public class TableTableExpectation implements Expectation {
@@ -36,7 +35,7 @@ public class TableTable extends SlimTable {
     @Override
     public void evaluateExpectation(Object tableReturn) {
       if (tableReturn == null) {
-        // Nothing to do. Message has been placed by ConstructionExpectation.
+        table.appendToCell(table.getColumnCountInRow(0) -1, 0, ignore("No results from table"));
         return;
       } else if (tableReturn instanceof String) {
         String value = (String) tableReturn;
@@ -49,11 +48,6 @@ public class TableTable extends SlimTable {
       }
 
       resizeTableAndEvaluateRows(tableReturn);
-    }
-
-    @Override
-    public String getInstructionTag() {
-      return doTableId;
     }
   }
 

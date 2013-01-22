@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.MockSlimTestContext;
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
+
+import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
+import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;
+import static org.junit.Assert.assertEquals;
 
 public class SlimTableTest {
   @Test
@@ -128,7 +128,7 @@ public class SlimTableTest {
       return null;
     }
 
-    public List<Instruction> getInstructions() {
+    public List<Assertion> getAssertions() {
       return Collections.emptyList();
     }
   }

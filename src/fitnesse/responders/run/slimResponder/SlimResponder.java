@@ -2,13 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import java.io.IOException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -18,6 +15,8 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.*;
+
+import java.io.IOException;
 
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
@@ -67,7 +66,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     public String render() {
       String html = null;
 
-      System.out.println("ClassPath can be " + new ClassPathBuilder().getClasspath(page));
       TestSystem.Descriptor descriptor = getDescriptor();
       try {
         testSystem = getTestSystem();

@@ -3,15 +3,15 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.tables.Expectation;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  private List<Expectation> expectations = new ArrayList<Expectation>();
   private TestSummary testSummary = new TestSummary();
 
   public String getSymbol(String symbolName) {
@@ -30,19 +30,8 @@ public class MockSlimTestContext implements SlimTestContext {
     return scenarios.get(scenarioName);
   }
 
-  public void addExpectation(Expectation e) {
-    expectations.add(e);
-  }
-
   public Collection<ScenarioTable> getScenarios() {
     return scenarios.values();
-  }
-
-  public void evaluateExpectations(Map<String, Object> results) {
-    for (Expectation e : expectations) {
-      Object returnValue = results.get(e.getInstructionTag());
-      e.evaluateExpectation(returnValue);
-    }
   }
 
   @Override

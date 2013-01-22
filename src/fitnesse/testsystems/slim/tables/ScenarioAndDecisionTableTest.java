@@ -2,17 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import fitnesse.slim.instructions.CallInstruction;
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -20,17 +12,30 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
   private WikiPage root;
-  private List<Object> instructions;
+  private List<Assertion> assertions;
   private ScenarioTable st;
   private DecisionTable dt;
+
+  private List<Instruction> instructions() {
+    return Assertion.getInstructions(assertions);
+  }
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    assertions = new ArrayList<Assertion>();
     clearTestSummary();
   }
 
@@ -41,8 +46,8 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     dt = new DecisionTable(t, "did", this);
-    instructions.addAll(st.getInstructions());
-    instructions.addAll(dt.getInstructions());
+    assertions.addAll(st.getAssertions());
+    assertions.addAll(dt.getAssertions());
   }
 
   @Test
@@ -60,7 +65,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         list("decisionTable_did_0/scriptTable_s_id_0", "7")
       )
     );
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -87,7 +92,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       list(
               new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -106,7 +111,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
               new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
               new CallInstruction("decisionTable_did_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
       );
-    assertEquals(expectedInstructions, instructions);
+    assertEquals(expectedInstructions, instructions());
   }
 
   @Test
@@ -124,7 +129,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         list("decisionTable_did_0/scriptTable_s_id_0", "7")
       )
     );
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -152,7 +157,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         list("decisionTable_did_0/scriptTable_s_id_0", "7")
       )
     );
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -192,7 +197,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         list("decisionTable_did_0/scriptTable_s_id_0", "7")
       )
     );
-    evaluateExpectations(pseudoResults);
+    Assertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =

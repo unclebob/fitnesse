@@ -2,19 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-import java.util.Properties;
-
-import fitnesse.slim.instructions.Instruction;
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.TableColumn;
-import org.htmlparser.tags.TableRow;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
-
-import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.ResponderFactory;
@@ -26,22 +13,24 @@ import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.parser.ParseSpecification;
-import fitnesse.wikitext.parser.ScanString;
-import fitnesse.wikitext.parser.SymbolMatch;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolStream;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.Today;
+import fitnesse.wikitext.parser.*;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableRow;
+import org.htmlparser.tags.TableTag;
+import org.htmlparser.util.NodeList;
+import util.RegexTestCase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.Properties;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -244,7 +233,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public List<Instruction> getInstructions() {
+    public List<Assertion> getAssertions() {
       return null;
     }
   }
