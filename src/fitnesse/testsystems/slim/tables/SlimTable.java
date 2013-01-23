@@ -86,10 +86,6 @@ public abstract class SlimTable {
     return String.format("%s_%d", tableName, instructionNumber);
   }
 
-  protected String getInstructionTag() {
-    return makeInstructionTag(instructionNumber);
-  }
-
   public String getTableName() {
     return tableName;
   }
@@ -125,7 +121,6 @@ public abstract class SlimTable {
 
   protected Assertion constructInstance(String instanceName, String className, int classNameColumn, int row) {
     RowExpectation expectation = new ConstructionExpectation(classNameColumn, row);
-    //addExpectation(expectation);
     return makeAssertion(new MakeInstruction(makeInstructionTag(), instanceName, className, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row)),
             expectation);
   }
@@ -139,7 +134,6 @@ public abstract class SlimTable {
     List<String> arguments = new ArrayList<String>();
     for (int col = startingColumn; col < columnCount; col++) {
       arguments.add(table.getUnescapedCellContents(col, row));
-      //addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
     }
     return arguments.toArray(new String[arguments.size()]);
   }
@@ -191,45 +185,39 @@ public abstract class SlimTable {
     table.setCell(col, tableRow, failureMessage);
   }
 
-  // TODO: make Response object objects instead
   public Result expected(String actual, String expected) {
     return failMessage(actual, String.format("expected [%s]", expected));
   }
 
-  // TODO: make Response object objects instead
   protected Result fail(String value) {
     testContext.incrementFailedTestsCount();
     return new FailResult(value);
   }
 
-  // TODO: make Response object objects instead
   protected Result failMessage(String value, String message) {
     return new PlainResult(String.format("[%s] %s", value, fail(message)));
   }
 
-  // TODO: make Response object objects instead
   protected Result pass(String value) {
     testContext.incrementPassedTestsCount();
     return passUncounted(value);
   }
 
-  // TODO: make Response object objects instead
   protected Result passUncounted(String value) {
     return new PassResult(value);
   }
 
-  // TODO: make Response object objects instead
   protected ErrorResult error(String value) {
     testContext.incrementErroredTestsCount();
     return new ErrorResult(value);
   }
 
-  // TODO: make Response object objects instead
   protected IgnoreResult ignore(String value) {
     testContext.incrementIgnoredTestsCount();
     return new IgnoreResult(value);
   }
 
+  @Deprecated
   protected Result makeExeptionMessage(String value) {
     if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))
       return fail(value.substring(SlimTestSystem.MESSAGE_FAIL.length()));
@@ -241,6 +229,7 @@ public abstract class SlimTable {
     return value != null && (value.startsWith(SlimTestSystem.MESSAGE_FAIL) || value.startsWith(SlimTestSystem.MESSAGE_ERROR));
   }
 
+  @Deprecated
   protected boolean isExceptionFailureMessage(String value) {
     return value.startsWith("Exception: ");
   }
@@ -374,8 +363,8 @@ public abstract class SlimTable {
     private final int row;
     // Needed for Xml Formatter...
     private String actual;
-    private String expected;
     private Result evaluationMessage;
+    private String expected;
 
     public RowExpectation(int col, int row) {
       this.row = row;
@@ -430,7 +419,7 @@ public abstract class SlimTable {
 
     // Used only by XmlFormatter.SlimTestXmlFormatter
     public String getExpected() {
-      return expected;
+      return expected; //table.getCellContents(col, row);
     }
 
     // Used only by XmlFormatter.SlimTestXmlFormatter
@@ -561,6 +550,7 @@ public abstract class SlimTable {
     }
   }
 
+  @Deprecated
   public static interface ExpectationPassFailReporter {
     Result pass(String message);
 
