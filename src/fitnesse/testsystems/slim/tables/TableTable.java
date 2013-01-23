@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.ExceptionResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +38,10 @@ public class TableTable extends SlimTable {
       if (tableReturn == null) {
         table.appendToCell(table.getColumnCountInRow(0) -1, 0, ignore("No results from table"));
         return;
+      } else if (isExceptionMessage(tableReturn)) {
+        table.appendToCell(0, 0, ((ExceptionResult) tableReturn).toHtml());
       } else if (tableReturn instanceof String) {
-        String value = (String) tableReturn;
-        if (isTestCaseErrorMessage(value)) {
-          table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
-        } else if (isExceptionFailureMessage(value)) {
-          table.appendToCell(0, 0, error(value));
-        }
+        table.appendToCell(0, 0, error((String) tableReturn));
         return;
       }
 

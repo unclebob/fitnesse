@@ -225,8 +225,8 @@ public abstract class SlimTable {
       return error(value.substring(SlimTestSystem.MESSAGE_ERROR.length()));
   }
 
-  protected boolean isExceptionMessage(String value) {
-    return value != null && (value.startsWith(SlimTestSystem.MESSAGE_FAIL) || value.startsWith(SlimTestSystem.MESSAGE_ERROR));
+  protected boolean isExceptionMessage(Object value) {
+    return value instanceof ExceptionResult;
   }
 
   @Deprecated
@@ -376,10 +376,12 @@ public abstract class SlimTable {
      */
     @Override
     public void evaluateExpectation(Object returnValue) {
-      Result evaluationMessage;
+      Result evaluationMessage = null;
       if (returnValue == null) {
         String originalContent = table.getCellContents(col, row);
         evaluationMessage = new PlainResult(originalContent, ignore("Test not run"));
+      } else if (isExceptionMessage(returnValue)) {
+        table.appendToCell(col, row, ((ExceptionResult) returnValue).toHtml());
       } else {
         String value;
         value = returnValue.toString();

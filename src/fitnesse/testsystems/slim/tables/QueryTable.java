@@ -5,8 +5,8 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.Result;
-import util.ListUtility;
 
 import java.util.*;
 
@@ -81,17 +81,17 @@ public class QueryTable extends SlimTable {
       if (queryId == null || queryReturn == null) {
         table.appendToCell(0, 0, error("query method did not return a list."));
         return;
-      } else if (queryReturn instanceof String) {
-        appendQueryErrorMessage((String) queryReturn);
+      } else if (queryReturn instanceof List) {
+        scanRowsForMatches((List<Object>) queryReturn);
       } else {
-        scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
+        appendQueryErrorMessage(queryReturn);
       }
     }
   }
 
-  private void appendQueryErrorMessage(String message) {
+  private void appendQueryErrorMessage(Object message) {
     if (isExceptionMessage(message))
-      table.appendToCell(0, 0, makeExeptionMessage(message));
+      table.appendToCell(0, 0, ((ExceptionResult)message).toHtml());
     else
       table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
   }

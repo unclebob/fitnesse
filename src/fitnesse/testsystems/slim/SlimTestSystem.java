@@ -9,6 +9,7 @@ import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.FailResult;
 import fitnesse.testsystems.slim.tables.*;
 import fitnesse.testutil.MockCommandRunner;
@@ -22,12 +23,9 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static fitnesse.slim.SlimServer.*;
 
-// TODO: -AJM- Create a SLIM listener that
 public abstract class SlimTestSystem extends TestSystem {
   public static final String MESSAGE_ERROR = "!error:";
   public static final String MESSAGE_FAIL = "!fail:";
@@ -37,6 +35,7 @@ public abstract class SlimTestSystem extends TestSystem {
   private CommandRunner slimRunner;
   private SlimClient slimClient;
 
+  // TODO: get rid of those. Expose via Listener interface
   protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
   protected List<SlimTable> allTables = new ArrayList<SlimTable>();
   protected List<Assertion> allAssertions = new ArrayList<Assertion>();
@@ -49,7 +48,6 @@ public abstract class SlimTestSystem extends TestSystem {
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
   protected ExceptionList exceptions = new ExceptionList();
   protected TestSummary testSummary;
-  protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private NestedSlimTestContext testContext;
   private final SlimDescriptor descriptor;
@@ -346,27 +344,14 @@ public abstract class SlimTestSystem extends TestSystem {
     return true;
   }
 
-  private String processException(String resultKey, String resultString) {
+  private ExceptionResult processException(String resultKey, String resultString) {
     testSummary.exceptions++;
     boolean isStopTestException = resultString.contains(EXCEPTION_STOP_TEST_TAG);
     if (isStopTestException) {
       exceptions.setStopTestCalled();
     }
 
-    Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
-    if (exceptionMessageMatcher.find()) {
-      String prefix = isStopTestException ? MESSAGE_FAIL : MESSAGE_ERROR;
-      String exceptionMessage = exceptionMessageMatcher.group(1);
-      return prefix + translateExceptionMessage(exceptionMessage);
-    } else {
-      exceptions.addException(resultKey, resultString);
-      return exceptionResult(resultKey);
-    }
-  }
-
-  private String exceptionResult(String resultKey) {
-    // TODO: -AJM- HTML formatting should not be done here, but in HtmlTable
-    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
+    return new ExceptionResult(resultKey, resultString);
   }
 
   public List<SlimTable> getTestTables() {
