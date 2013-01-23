@@ -2,14 +2,9 @@
 //Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.slimResponder.HtmlSlimResponder;
-import fitnesse.responders.run.slimResponder.SlimResponder;
 import fitnesse.slim.SlimClient;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
@@ -18,14 +13,13 @@ import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HtmlSlimResponderTest {
   private WikiPage root;
@@ -247,8 +241,8 @@ public class HtmlSlimResponderTest {
         + "| should fail1| true           |\n" + "\n\n"
         + "!|DT:fitnesse.slim.test.ThrowException|\n" + "|throwNormal?|\n"
         + "| should fail2|\n");
-    assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
-    assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
+    assertTestResultsContain("<td>first <span class=\"error\">Exception: <a href");
+    assertTestResultsContain("<td>second <span class=\"fail\">Exception: <a href");
     assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
     assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
   }

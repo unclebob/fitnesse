@@ -125,7 +125,7 @@ public class DecisionTable extends SlimTable {
       final List<Assertion> assertions = new ArrayList<Assertion>();
       assertions.add(constructFixture(fixtureName));
       final Instruction callTable = callFunction(getTableName(), "table", tableAsList());
-      assertions.add(makeAssertion(callTable, Expectation.NOOP_EXPECTATION));
+      assertions.add(makeAssertion(callTable, new SilentReturnExpectation(0, 0)));
       dontReportExceptionsInTheseInstructions.add(callTable.getId());
       if (table.getRowCount() > 2)
         assertions.addAll(invokeRows());
@@ -134,28 +134,28 @@ public class DecisionTable extends SlimTable {
 
     private List<Assertion> invokeRows() throws SyntaxError {
       List<Assertion> assertions = new ArrayList<Assertion>();
-      assertions.add(callUnreportedFunction("beginTable"));
+      assertions.add(callUnreportedFunction("beginTable", 0));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
         assertions.addAll(invokeRow(row));
-      assertions.add(callUnreportedFunction("endTable"));
+      assertions.add(callUnreportedFunction("endTable", 0));
       return assertions;
     }
 
     private List<Assertion> invokeRow(int row) throws SyntaxError {
       List<Assertion> assertions = new ArrayList<Assertion>();
       checkRow(row);
-      assertions.add(callUnreportedFunction("reset"));
+      assertions.add(callUnreportedFunction("reset", row));
       assertions.addAll(setVariables(row));
-      assertions.add(callUnreportedFunction("execute"));
+      assertions.add(callUnreportedFunction("execute", row));
       assertions.addAll(callFunctions(row));
       return assertions;
     }
 
-    private Assertion callUnreportedFunction(String functionName) {
+    private Assertion callUnreportedFunction(String functionName, int row) {
       final Instruction functionCall = callFunction(getTableName(), functionName);
       dontReportExceptionsInTheseInstructions.add(functionCall.getId());
-      return makeAssertion(functionCall, Expectation.NOOP_EXPECTATION);
+      return makeAssertion(functionCall, new SilentReturnExpectation(0, row));
     }
 
     private List<Assertion> callFunctions(int row) {

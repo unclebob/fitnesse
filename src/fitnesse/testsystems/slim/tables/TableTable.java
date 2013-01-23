@@ -10,7 +10,6 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fitnesse.testsystems.slim.SlimTestSystem.MESSAGE_ERROR;
 import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
@@ -35,22 +34,16 @@ public class TableTable extends SlimTable {
 
     @Override
     public void evaluateExpectation(Object tableReturn) {
-      if (tableReturn == null) {
-        table.appendToCell(table.getColumnCountInRow(0) -1, 0, ignore("No results from table"));
-        return;
+      if (tableReturn == null || "null".equals(tableReturn)) {
+        table.appendToCell(table.getColumnCountInRow(0) - 1, 0, ignore("No results from table"));
       } else if (isExceptionMessage(tableReturn)) {
         table.appendToCell(0, 0, ((ExceptionResult) tableReturn).toHtml());
       } else if (tableReturn instanceof String) {
         table.appendToCell(0, 0, error((String) tableReturn));
-        return;
+      } else {
+        resizeTableAndEvaluateRows(tableReturn);
       }
-
-      resizeTableAndEvaluateRows(tableReturn);
     }
-  }
-
-  private boolean isTestCaseErrorMessage(String value) {
-    return value.startsWith(MESSAGE_ERROR);
   }
 
   @SuppressWarnings("unchecked")

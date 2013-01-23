@@ -20,7 +20,7 @@ public class ExceptionResult implements Result {
 
   @Override
   public String toHtml() {
-    return String.format("<span class=\"%s\">%s</span>", htmlClass(), processException());
+    return String.format(" <span class=\"%s\">%s</span>", htmlClass(), processException());
   }
 
   private String htmlClass() {

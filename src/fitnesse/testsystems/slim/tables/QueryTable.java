@@ -53,7 +53,7 @@ public class QueryTable extends SlimTable {
     assignColumns();
     Assertion make = constructFixture(getFixtureName());
     Assertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
-            Expectation.NOOP_EXPECTATION);
+            new SilentReturnExpectation(0, 0));
     Assertion qi = makeAssertion(callFunction(getTableName(), "query"),
             new QueryTableExpectation());
     tableInstruction = ti.getInstruction().getId();
