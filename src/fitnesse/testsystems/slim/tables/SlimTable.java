@@ -34,7 +34,7 @@ public abstract class SlimTable {
 
   private SlimTestContext testContext;
 
-  protected Table table;
+  protected final Table table;
   protected String id;
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
@@ -42,10 +42,6 @@ public abstract class SlimTable {
     this.table = table;
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
-  }
-
-  SlimTable(SlimTestContext testContext) {
-    this.testContext = testContext;
   }
 
   public SlimTable getParent() {
