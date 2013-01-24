@@ -57,7 +57,7 @@ public abstract class SlimTable {
 
     Table parentTable = getTable();
     Table childTable = slimtable.getTable();
-    childTable.setName(slimtable.tableName);
+    //childTable.setName(slimtable.tableName);
     parentTable.appendChildTable(row, childTable);
   }
 

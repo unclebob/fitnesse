@@ -34,8 +34,6 @@ public interface Table {
 
   void setTestStatusOnRow(int row, ExecutionResult testStatus);
 
-  void setName(String tableName);
-
   void setCell(int col, int row, Result response);
 
   void appendToCell(int col, int row, Result response);

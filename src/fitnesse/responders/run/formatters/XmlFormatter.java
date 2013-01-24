@@ -212,7 +212,8 @@ public class XmlFormatter extends BaseFormatter {
 
     private void addColorizedScenarioReference(TestExecutionReport.Row resultRow, String contents) {
       String status = getTestStatus(contents);
-      String tableName = getTableName(contents);
+      String tableName = ""; //getTableName(contents);
+      // Use instruction instanceName here:
       resultRow.add(String.format("%s(scenario:%s)", status, tableName));
     }
 
@@ -237,10 +238,6 @@ public class XmlFormatter extends BaseFormatter {
         }
       }
       return content;
-    }
-
-    private String getTableName(String contents) {
-      return getStringBetween(contents, "table_name=\"", "\"");
     }
 
     private static String getTestStatus(String contents) {

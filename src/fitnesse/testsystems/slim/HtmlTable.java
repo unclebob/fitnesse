@@ -39,10 +39,6 @@ public class HtmlTable implements Table {
     return tableNode;
   }
 
-  public void setName(String tableName) {
-    tableNode.setAttribute("table_name", tableName);
-  }
-
   public String getCellContents(int columnIndex, int rowIndex) {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
