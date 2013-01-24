@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class HtmlTableScanner implements TableScanner {
-  private List<Table> tables = new ArrayList<Table>();
+public class HtmlTableScanner implements TableScanner<HtmlTable> {
+  private List<HtmlTable> tables = new ArrayList<HtmlTable>();
   private NodeList htmlTree;
 
   public HtmlTableScanner(String page) {
@@ -57,11 +57,11 @@ public class HtmlTableScanner implements TableScanner {
     return tables.size();
   }
 
-  public Table getTable(int i) {
+  public HtmlTable getTable(int i) {
     return tables.get(i);
   }
 
-  public Iterator<Table> iterator() {
+  public Iterator<HtmlTable> iterator() {
     return tables.iterator();
   }
 
@@ -83,7 +83,7 @@ public class HtmlTableScanner implements TableScanner {
     return b.toString();
   }
 
-  public String toHtml(Table startTable, Table endBeforeTable) {
+  public String toHtml(HtmlTable startTable, HtmlTable endBeforeTable) {
     String allHtml = htmlTree.toHtml();
     
     int startIndex = 0;

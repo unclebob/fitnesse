@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageCrawlerImpl;
@@ -13,14 +10,24 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.ParsedPage;
 
+import java.util.Collections;
+import java.util.List;
+
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private ParsedPage preparsedScenarioLibrary;
+  private HtmlTableScanner tableScanner;
 
   public HtmlSlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
     super(page, descriptor, listener);
   }
 
-  protected TableScanner scanTheTables(ReadOnlyPageData pageData) {
+  @Override
+  protected List<SlimTable> createSlimTables(ReadOnlyPageData pageData) {
+    tableScanner = scanTheTables(pageData);
+    return createSlimTables(tableScanner);
+  }
+
+  protected HtmlTableScanner scanTheTables(ReadOnlyPageData pageData) {
     ParsedPage parsedPage = pageData.getParsedPage();
     parsedPage.addToFront(getPreparsedScenarioLibrary());
     String html = parsedPage.toHtml();
@@ -61,8 +68,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     evaluateTables();
     String exceptionsString = exceptions.toHtml();
 
-    Table start = (startWithTable != null) ? startWithTable.getTable() : null;
-    Table end = (stopBeforeTable != null) ? stopBeforeTable.getTable() : null;
+    HtmlTable start = (startWithTable != null) ? (HtmlTable) startWithTable.getTable() : null;
+    HtmlTable end = (stopBeforeTable != null) ? (HtmlTable) stopBeforeTable.getTable() : null;
     String testResultHtml = tableScanner.toHtml(start, end);
     return exceptionsString + testResultHtml;
   }

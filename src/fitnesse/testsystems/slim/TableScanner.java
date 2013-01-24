@@ -4,16 +4,10 @@ package fitnesse.testsystems.slim;
 
 import java.util.Iterator;
 
-public interface TableScanner extends Iterable<Table> {
+public interface TableScanner<T extends Table> extends Iterable<T> {
   public int getTableCount();
 
-  public Table getTable(int i);
+  public T getTable(int i);
 
-  public Iterator<Table> iterator();
-
-  public String toWikiText();
-
-  public String toHtml(Table startAfterTable, Table endWithTable);
-  
-  public String toHtml();
+  public Iterator<T> iterator();
 }

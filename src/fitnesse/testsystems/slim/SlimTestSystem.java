@@ -43,7 +43,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
   private boolean started;
   protected ReadOnlyPageData testResults;
-  protected TableScanner tableScanner;
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
   protected ExceptionList exceptions = new ExceptionList();
@@ -207,11 +206,11 @@ public abstract class SlimTestSystem extends TestSystem {
     return expectedVersionNumber;
   }
 
+  protected abstract List<SlimTable> createSlimTables(ReadOnlyPageData pageData);
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
   String processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
-    tableScanner = scanTheTables(pageData);
-    allTables = createSlimTables(tableScanner);
+    allTables = createSlimTables(pageData);
     testResults = pageData;
 
     boolean runAllTablesAtOnce = false;
@@ -233,7 +232,7 @@ public abstract class SlimTestSystem extends TestSystem {
     return htmlResults.toString();
   }
 
-  protected abstract TableScanner scanTheTables(ReadOnlyPageData pageData);
+  protected abstract <T extends Table> TableScanner<T> scanTheTables(ReadOnlyPageData pageData);
 
   private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
 
@@ -267,7 +266,7 @@ public abstract class SlimTestSystem extends TestSystem {
     return assertions;
   }
 
-  private List<SlimTable> createSlimTables(TableScanner tableScanner) {
+  protected List<SlimTable> createSlimTables(TableScanner<? extends Table> tableScanner) {
     List<SlimTable> allTables = new LinkedList<SlimTable>();
     for (Table table : tableScanner)
       createSlimTable(allTables, table);

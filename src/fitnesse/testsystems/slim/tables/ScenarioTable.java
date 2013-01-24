@@ -6,10 +6,7 @@ import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.TableScanner;
+import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.results.Result;
 import util.StringUtil;
 
@@ -139,7 +136,8 @@ public class ScenarioTable extends SlimTable {
 
   public List<Assertion> call(Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws SyntaxError {
-    String script = getTable().toHtml();
+    // FixMe: -AJM- Bad: generating HTML in a generic table type!
+    String script = ((HtmlTable) getTable()).toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
     return insertAndProcessScript(script, parentTable, row);
   }
