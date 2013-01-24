@@ -88,7 +88,7 @@ public class HtmlSlimResponderTest {
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
-    assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span></td>");
+    assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span> <span class=\"error\">The instance decisionTable_0.table. does not exist</span></td>");
   }
 
   @Test
@@ -152,7 +152,7 @@ public class HtmlSlimResponderTest {
   public void tableFixtureHasNoDoTableFunction() throws Exception {
     getResultsForPageContents("!|Table:fitnesse.slim.test.TestSlim|\n"
         + "|a|b|\n");
-    assertTestResultsContain("Table fixture has no valid doTable method");
+    assertTestResultsContain("Method doTable[1] not found in fitnesse.slim.test.TestSlim.");
   }
 
   @Test
@@ -237,7 +237,8 @@ public class HtmlSlimResponderTest {
   @Test
   public void tableWithStopTestExceptionThrown() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n"
-        + "|throwNormal?| throwStopping? |\n" + "| first | second  |\n"
+        + "|throwNormal?| throwStopping? |\n"
+        + "| first | second  |\n"
         + "| should fail1| true           |\n" + "\n\n"
         + "!|DT:fitnesse.slim.test.ThrowException|\n" + "|throwNormal?|\n"
         + "| should fail2|\n");

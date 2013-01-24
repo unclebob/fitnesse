@@ -350,6 +350,7 @@ public abstract class SlimTestSystem extends TestSystem {
     if (isStopTestException) {
       exceptions.setStopTestCalled();
     }
+    exceptions.addException(resultKey, resultString);
 
     return new ExceptionResult(resultKey, resultString);
   }

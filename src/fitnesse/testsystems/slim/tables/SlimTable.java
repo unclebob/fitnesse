@@ -503,13 +503,20 @@ public abstract class SlimTable {
     }
   }
 
-  class SilentReturnExpectation extends RowExpectation {
+  class SilentReturnExpectation implements Expectation {
+    private final int col;
+    private final int row;
+
     public SilentReturnExpectation(int col, int row) {
-      super(col, row);
+      this.col = col;
+      this.row = row;
     }
 
-    protected Result createEvaluationMessage(String actual, String expected) {
-      return null;
+    @Override
+    public void evaluateExpectation(Object returnValue) {
+      if (returnValue instanceof ExceptionResult) {
+        table.appendContent(col, row, (ExceptionResult) returnValue);
+      }
     }
   }
 
