@@ -22,7 +22,7 @@ public class EditResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new EditResponder();
@@ -34,10 +34,8 @@ public class EditResponderTest extends RegexTestCase {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Edit Page tags");
     page.commit(data);
-    
-    request.setResource("ChildPage");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = makeResponse();
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -54,6 +52,11 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
     assertSubString("<h5> Edit Page tags</h5>", body);
+  }
+
+  private SimpleResponse makeResponse() {
+    request.setResource("ChildPage");
+    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
@@ -96,10 +99,8 @@ public class EditResponderTest extends RegexTestCase {
     crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
     crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
     crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
-    
-    request.setResource("ChildPage");
-    
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    SimpleResponse response = makeResponse();
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();

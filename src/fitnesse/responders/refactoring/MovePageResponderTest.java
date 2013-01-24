@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.List;
-
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
@@ -13,6 +10,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.util.List;
 
 public class MovePageResponderTest extends ResponderTestCase {
   private WikiPage pageOne;
@@ -36,11 +35,26 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPage parent = crawler.addPage(root, PathParser.parse("TheParent"));
     WikiPage child = crawler.addPage(parent, PathParser.parse("TheChild"));
     WikiPage grandChild = crawler.addPage(child, PathParser.parse("TheGrandChild"));
-    assertTrue(moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(parent), crawler.getFullPath(child)));
-    assertTrue(moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(parent), crawler.getFullPath(grandChild)));
-    assertFalse(moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(child), crawler.getFullPath(parent)));
-    assertFalse(moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(grandChild), crawler.getFullPath(parent)));
-    assertTrue(moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(parent), crawler.getFullPath(parent)));
+
+    assertIsAncestor(parent, child);
+    assertIsAncestor(parent, grandChild);
+    assertIsAncestor(parent, parent);
+
+    assertIsNotAncestor(child, parent);
+    assertIsNotAncestor(grandChild, parent);
+  }
+
+  private void assertIsNotAncestor(WikiPage supposedAncestor, WikiPage supposedDescendent) {
+    assertFalse(isAncestor(supposedAncestor, supposedDescendent));
+  }
+
+  private void assertIsAncestor(WikiPage expectedAncestor, WikiPage expectedDescendent) {
+    assertTrue(isAncestor(expectedAncestor, expectedDescendent));
+  }
+
+  private boolean isAncestor(WikiPage ancestor, WikiPage descendent) {
+    return moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(ancestor),
+      crawler.getFullPath(descendent));
   }
 
   public void testMovePage() throws Exception {
