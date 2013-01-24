@@ -2,23 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import org.htmlparser.Node;
-import org.htmlparser.Tag;
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.tags.TableColumn;
-import org.htmlparser.tags.TableHeader;
-import org.htmlparser.tags.TableRow;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
-
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.PlainResult;
 import fitnesse.testsystems.slim.results.Result;
 import fitnesse.wikitext.Utils;
+import org.htmlparser.Node;
+import org.htmlparser.Tag;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.*;
+import org.htmlparser.util.NodeList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class HtmlTable implements Table {
   private List<Row> rows = new ArrayList<Row>();
@@ -85,6 +81,11 @@ public class HtmlTable implements Table {
     return tableNode.toHtml();
   }
 
+  @Override
+  public void updateContent(int row, Result result) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
   public int addRow(List<String> list) {
     Row row = new Row();
     rows.add(row);
@@ -94,7 +95,7 @@ public class HtmlTable implements Table {
     return rows.size() - 1;
   }
 
-  public void appendCellToRow(int rowIndex, String contents) {
+  public void appendContent(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
     row.appendCell(contents);
   }
@@ -341,7 +342,7 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void appendToCell(int col, int row, Result response) {
+  public void appendContent(int col, int row, Result response) {
     appendToCell(col, row, response.toHtml());
     updateResponse(col, row, response);
   }

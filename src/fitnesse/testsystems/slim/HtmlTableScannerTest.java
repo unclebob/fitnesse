@@ -124,7 +124,7 @@ public class HtmlTableScannerTest {
   public void canAppendCellToRow() throws Exception {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    t.appendCellToRow(0, "ray");
+    t.appendContent(0, "ray");
     assertEquals("ray", t.getCellContents(1, 0));
   }
 

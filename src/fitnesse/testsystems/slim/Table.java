@@ -2,39 +2,43 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.List;
-
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.Result;
 
-public interface Table {
-  String getCellContents(int columnIndex, int rowIndex);
+import java.util.List;
 
+public interface Table {
+  String getCellContents(int col, int row);
+  // FixMe: -AJM- Can I remove this without functional change???
+  String getUnescapedCellContents(int col, int row);
+
+
+  @Deprecated
   void appendToCell(int col, int row, String message);
 
   int getRowCount();
 
-  int getColumnCountInRow(int rowIndex);
+  int getColumnCountInRow(int row);
 
-  String toString();
-
-  String toHtml();
-
+  @Deprecated
   void setCell(int col, int row, String contents);
 
   int addRow(List<String> list);
 
-  void appendCellToRow(int row, String contents);
-
-  String getUnescapedCellContents(int col, int row);
+  void appendContent(int row, String contents);
 
   String getCellResult(int col,int row);
 
   void appendChildTable(int row, Table table);
 
+  @Deprecated
   void setTestStatusOnRow(int row, ExecutionResult testStatus);
+  // FoxMe: setTestStatusOnRow becomes updateContent
+  void updateContent(int row, Result result);
 
+  @Deprecated
   void setCell(int col, int row, Result response);
 
-  void appendToCell(int col, int row, Result response);
+  @Deprecated
+  void appendContent(int col, int row, Result response);
 }

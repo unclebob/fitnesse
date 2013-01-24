@@ -304,7 +304,7 @@ public class ScriptTable extends SlimTable {
 
     protected Result createEvaluationMessage(String actual, String expected) {
       try {
-        table.appendCellToRow(getRow(), Utils.escapeHTML(actual));
+        table.appendContent(getRow(), Utils.escapeHTML(actual));
       } catch (Throwable e) {
         return failMessage(actual, SlimTestSystem.exceptionToString(e));
       }

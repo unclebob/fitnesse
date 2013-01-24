@@ -79,7 +79,7 @@ public class QueryTable extends SlimTable {
     @Override
     public void evaluateExpectation(Object queryReturn) {
       if (queryId == null || queryReturn == null) {
-        table.appendToCell(0, 0, error("query method did not return a list."));
+        table.appendContent(0, 0, error("query method did not return a list."));
         return;
       } else if (queryReturn instanceof List) {
         scanRowsForMatches((List<Object>) queryReturn);
@@ -93,7 +93,7 @@ public class QueryTable extends SlimTable {
     if (isExceptionMessage(message))
       table.appendToCell(0, 0, ((ExceptionResult)message).toHtml());
     else
-      table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
+      table.appendContent(0, 0, error(String.format("The query method returned: %s", message)));
   }
 
   protected void scanRowsForMatches(List<Object> queryResultList) {

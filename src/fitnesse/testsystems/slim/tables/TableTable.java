@@ -35,11 +35,11 @@ public class TableTable extends SlimTable {
     @Override
     public void evaluateExpectation(Object tableReturn) {
       if (tableReturn == null || "null".equals(tableReturn)) {
-        table.appendToCell(table.getColumnCountInRow(0) - 1, 0, ignore("No results from table"));
+        table.appendContent(table.getColumnCountInRow(0) - 1, 0, ignore("No results from table"));
       } else if (isExceptionMessage(tableReturn)) {
-        table.appendToCell(0, 0, ((ExceptionResult) tableReturn).toHtml());
+        table.appendContent(0, 0, (ExceptionResult) tableReturn);
       } else if (tableReturn instanceof String) {
-        table.appendToCell(0, 0, error((String) tableReturn));
+        table.appendContent(0, 0, error((String) tableReturn));
       } else {
         resizeTableAndEvaluateRows(tableReturn);
       }
@@ -75,7 +75,7 @@ public class TableTable extends SlimTable {
 
   private void extendRow(Table table, int row, List<Object> cellList) {
     while (table.getColumnCountInRow(row) < cellList.size())
-      table.appendCellToRow(row, (String) cellList.get(table.getColumnCountInRow(row)));
+      table.appendContent(row, (String) cellList.get(table.getColumnCountInRow(row)));
   }
 
   private void evaluateRow(List<List<Object>> tableResults, int resultRow) {
