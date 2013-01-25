@@ -360,11 +360,12 @@ public abstract class SlimTable {
     // Needed for Xml Formatter...
     private String actual;
     private Result evaluationMessage;
-    private String expected;
+    private final String originalContent;
 
     public RowExpectation(int col, int row) {
       this.row = row;
       this.col = col;
+      originalContent = col >= 0 ? table.getCellContents(col, row) : null;
     }
 
     /* (non-Javadoc)
@@ -374,14 +375,12 @@ public abstract class SlimTable {
     public void evaluateExpectation(Object returnValue) {
       Result evaluationMessage = null;
       if (returnValue == null) {
-        String originalContent = table.getCellContents(col, row);
         evaluationMessage = new PlainResult(originalContent, ignore("Test not run"));
       } else if (isExceptionMessage(returnValue)) {
         table.appendContent(col, row, (ExceptionResult) returnValue);
       } else {
         String value;
         value = returnValue.toString();
-        String originalContent = table.getCellContents(col, row);
         evaluationMessage = evaluationMessage(value, originalContent);
       }
       if (evaluationMessage != null)
@@ -390,7 +389,6 @@ public abstract class SlimTable {
 
     Result evaluationMessage(String actual, String expected) {
       this.actual = actual;
-      this.expected = expected;
       Result evaluationMessage;
       if (isExceptionMessage(actual))
         evaluationMessage = new PlainResult(expected, makeExeptionMessage(actual));
@@ -417,7 +415,7 @@ public abstract class SlimTable {
 
     // Used only by XmlFormatter.SlimTestXmlFormatter
     public String getExpected() {
-      return expected; //table.getCellContents(col, row);
+      return originalContent; //table.getCellContents(col, row);
     }
 
     // Used only by XmlFormatter.SlimTestXmlFormatter
@@ -488,6 +486,7 @@ public abstract class SlimTable {
       super(s);
     }
 
+    @Override
     protected String formatSymbolValue(String name, String value) {
       return String.format("$%s->[%s]", name, Utils.escapeHTML(value));
     }

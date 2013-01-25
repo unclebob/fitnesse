@@ -24,11 +24,11 @@ public class ReturnedValueExpectationTest {
     TableScanner ts = new HtmlTableScanner("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
-    SlimTable.RowExpectation expectation = slimTable.new ReturnedValueExpectation(1, 2);
+    SlimTable.RowExpectation expectation = slimTable.new ReturnedValueExpectation(0, 0);
     assertEquals(message, expectation.evaluationMessage(value, expected).toString());
     assertEquals(message, expectation.getEvaluationMessage());
-    assertEquals(2, expectation.getRow());
-    assertEquals(1, expectation.getCol());
+    assertEquals(0, expectation.getRow());
+    assertEquals(0, expectation.getCol());
   }
 
   @Test

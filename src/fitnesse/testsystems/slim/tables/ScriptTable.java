@@ -313,13 +313,13 @@ public class ScriptTable extends SlimTable {
   }
 
   private class ArgumentExpectation extends RowExpectation {
+
     private ArgumentExpectation(int col, int row) {
       super(col, row);
     }
 
     public void evaluateExpectation(Object returnValue) {
-      String originalContent = table.getCellContents(getCol(), getRow());
-      table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
+      table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(getExpected()));
     }
 
     protected Result createEvaluationMessage(String actual, String expected) {
