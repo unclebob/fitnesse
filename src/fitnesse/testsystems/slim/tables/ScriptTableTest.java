@@ -22,6 +22,7 @@ import org.junit.Test;
 import util.ListUtility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -281,28 +282,28 @@ public class ScriptTableTest {
   @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n");
-    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    List<Instruction> expectedInstructions = Collections.emptyList();
     assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialBlankCellDoesNothing() throws Exception {
     buildInstructionsFor("||blah|blah|\n");
-    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    List<Instruction> expectedInstructions = Collections.emptyList();
     assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialHashDoesNothing() throws Exception {
     buildInstructionsFor("|!-#comment-!|blah|blah|\n");
-    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    List<Instruction> expectedInstructions = Collections.emptyList();
     assertEquals(expectedInstructions, instructions());
   }
 
   @Test
   public void initialStarDoesNothing() throws Exception {
     buildInstructionsFor("|*comment|blah|blah|\n");
-    List<Instruction> expectedInstructions = ListUtility.<Instruction>list();
+    List<Instruction> expectedInstructions = Collections.emptyList();
     assertEquals(expectedInstructions, instructions());
   }
 
