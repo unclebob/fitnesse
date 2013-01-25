@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.*;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.Result;
 import util.StringUtil;
 
@@ -134,12 +134,30 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public List<Assertion> call(Map<String, String> scenarioArguments,
+  public List<Assertion> call(final Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws SyntaxError {
-    // FixMe: -AJM- Bad: generating HTML in a generic table type!
-    String script = ((HtmlTable) getTable()).toHtml();
-    script = replaceArgsInScriptTable(script, scenarioArguments);
-    return insertAndProcessScript(script, parentTable, row);
+    Table newTable = getTable().asTemplate(new Table.CellContentSubstitution() {
+      @Override
+      public String substitute(int col, int row, String content) throws SyntaxError {
+        for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
+          String arg = scenarioArgument.getKey();
+          if (getInputs().contains(arg)) {
+            String argument = scenarioArguments.get(arg);
+            content = StringUtil.replaceAll(content, "@" + arg, argument);
+            content = StringUtil.replaceAll(content, "@{" + arg + "}", argument);
+          } else {
+            throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
+          }
+        }
+        return content;
+      }
+    });
+    ScriptTable t = new ScriptTable(newTable, id,
+            new ScenarioTestContext(parentTable.getTestContext()));
+    parentTable.addChildTable(t, row);
+    List<Assertion> assertions = t.getAssertions();
+    assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
+    return assertions;
   }
 
   public List<Assertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
@@ -149,39 +167,6 @@ public class ScenarioTable extends SlimTable {
       scenarioArguments.put(inputs.get(i), args[i]);
 
     return call(scenarioArguments, parentTable, row);
-  }
-
-  private List<Assertion> insertAndProcessScript(String script, SlimTable parentTable,
-                                      int row) {
-    try {
-      // TODO: retrieve table scanner from context
-      TableScanner ts = new HtmlTableScanner(script);
-      ScriptTable t = new ScriptTable(ts.getTable(0), id,
-        new ScenarioTestContext(parentTable.getTestContext()));
-      parentTable.addChildTable(t, row);
-      List<Assertion> assertions = t.getAssertions();
-      //parentTable.addExpectation(new ScenarioExpectation(t, row));
-      assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
-      return assertions;
-    } catch (Exception e) {
-      throw new SlimError(e);
-    }
-  }
-
-  private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) throws SyntaxError {
-    for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
-      String arg = scenarioArgument.getKey();
-      if (getInputs().contains(arg)) {
-        String argument = scenarioArguments.get(arg);
-        script = StringUtil.replaceAll(script, "@" + arg, argument);
-        script = StringUtil.replaceAll(script, "@{" + arg + "}", argument);
-      } else {
-        throw new SyntaxError(String.format(
-          "The argument %s is not an input to the scenario.", arg));
-      }
-    }
-
-    return script;
   }
 
   public boolean isParameterized() {
@@ -242,7 +227,7 @@ public class ScenarioTable extends SlimTable {
   }
 //// till here
 
-  private class ScenarioExpectation extends RowExpectation {
+  private final class ScenarioExpectation extends RowExpectation {
     private ScriptTable scriptTable;
 
     private ScenarioExpectation(ScriptTable scriptTable, int row) {
@@ -261,7 +246,8 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-
+  // This context is mainly used to determine if the scenario table evaluated successfully
+  // This determines the execution result for the "calling" table row.
   final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;

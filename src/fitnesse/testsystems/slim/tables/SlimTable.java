@@ -48,7 +48,7 @@ public abstract class SlimTable {
     return parent;
   }
 
-  public void addChildTable(SlimTable slimtable, int row) throws Exception {
+  public void addChildTable(SlimTable slimtable, int row) {
     slimtable.id = id + "." + children.size();
     slimtable.tableName = makeInstructionTag(instructionNumber) + "/" + slimtable.tableName;
     instructionNumber++;

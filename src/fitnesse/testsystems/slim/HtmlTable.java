@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.PlainResult;
 import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
@@ -350,6 +351,14 @@ public class HtmlTable implements Table {
   private void updateResponse(int col, int row, Result response) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setResponse(response);
+  }
+
+  @Override
+  public HtmlTable asTemplate(CellContentSubstitution substitution) throws SyntaxError {
+    String script = this.toHtml();
+    // Quick 'n' Dirty
+    script = substitution.substitute(0, 0, script);
+    return new HtmlTableScanner(script).getTable(0);
   }
 }
 

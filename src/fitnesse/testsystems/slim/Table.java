@@ -4,6 +4,7 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 
 import java.util.List;
 
@@ -21,15 +22,15 @@ public interface Table {
   int getColumnCountInRow(int row);
 
   @Deprecated
-  void setCell(int col, int row, String contents);
+  void setCell(int col, int row, String content);
 
   int addRow(List<String> list);
 
-  void appendContent(int row, String contents);
+  void appendContent(int row, String content);
 
   String getCellResult(int col,int row);
 
-  void appendChildTable(int row, Table table);
+  void appendChildTable(int row, Table tableTemplate);
 
   @Deprecated
   void setTestStatusOnRow(int row, ExecutionResult testStatus);
@@ -41,4 +42,10 @@ public interface Table {
 
   @Deprecated
   void appendContent(int col, int row, Result response);
+
+  public Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
+
+  interface CellContentSubstitution {
+    String substitute(int col, int row, String content) throws SyntaxError;
+  }
 }
