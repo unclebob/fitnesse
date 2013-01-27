@@ -2,6 +2,8 @@ package fitnesse.wikitext.test;
 
 import org.junit.Test;
 
+import fitnesse.wiki.WikiPage;
+
 public class ImageTest {
     @Test
     public void scansImages() {
@@ -23,5 +25,22 @@ public class ImageTest {
         ParserTestHelper.assertTranslatesTo("!img http://name", "<img src=\"http://name\"/>");
         ParserTestHelper.assertTranslatesTo("!img-l name", "<img src=\"name\" class=\"left\"/>");
         ParserTestHelper.assertTranslatesTo("!img-r name", "<img src=\"name\" class=\"right\"/>");
+    }
+
+    @Test
+    public void imageWithWidth() throws Exception {
+        ParserTestHelper.assertParses("!img-w640 name", "SymbolList[Link[SymbolList[Text]]]");
+        TestRoot root = new TestRoot();
+        WikiPage testPage = root.makePage("ImagePage", "!img-w640 name");
+        ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"640\"/>");
+    }
+
+    @Test
+    public void imageWidthHandleMistyped() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage testPage = root.makePage("ImagePage", "!img-w name");
+        ParserTestHelper.assertTranslatesTo(testPage, "!img-w name");
+        testPage = root.makePage("ImagePage", "!img-wNNN name");
+        ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"NNN\"/>");
     }
 }

@@ -6,6 +6,7 @@ import util.Maybe;
 public class Link extends SymbolType implements Rule, Translation {
     public static final Link symbolType = new Link();
     public static final String ImageProperty = "image";
+    public static final String WidthProperty = "width";
     public static final String Left = "left";
     public static final String Right = "right";
 
@@ -37,6 +38,8 @@ public class Link extends SymbolType implements Rule, Translation {
             tag.addAttribute("src", reference.makeUrl(prefix));
             String imageClass = link.getProperty(Link.ImageProperty);
             if (imageClass.length() > 0) tag.addAttribute("class", imageClass);
+            String width = link.getProperty(Link.WidthProperty);
+            if (width.length() > 0) tag.addAttribute("width", width);
         }
         else {
             tag = new HtmlTag("a", body);
