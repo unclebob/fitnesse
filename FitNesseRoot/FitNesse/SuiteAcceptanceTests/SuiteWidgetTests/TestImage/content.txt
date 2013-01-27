@@ -7,8 +7,10 @@
 |line|!-!img name-!|
 |line|!-!img-l name-!|
 |line|!-!img-r name-!|
-|line|!-!img-w512 name-!|
+|line|!-!img -w 512 name-!|
 |line|!-Image should be inline !img name with the text-!|
+|line|!-!img-l -w 200 name-!|
+|line|!-!img-r -w 150 name-!|
 |page|!-ImagePage-!|
 #
  * Then request that page
@@ -30,3 +32,5 @@
 |line|3|!-&lt;img src="name" class="right"/>-!|
 |line|4|!-&lt;img src="name" width="512"/>-!|
 |line|5|!-Image should be inline &lt;img src="name"/> with the text-!|
+|line|6|!-&lt;img src="name" class="left" width="200"/>-!|
+|line|7|!-&lt;img src="name" class="right" width="150"/>-!|

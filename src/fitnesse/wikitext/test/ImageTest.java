@@ -29,22 +29,22 @@ public class ImageTest {
 
     @Test
     public void imageWithWidth() throws Exception {
-        ParserTestHelper.assertParses("!img-w640 name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img -w 640 name", "SymbolList[Link[SymbolList[Text]]]");
         TestRoot root = new TestRoot();
-        WikiPage testPage = root.makePage("ImagePage", "!img-w640 name");
+        WikiPage testPage = root.makePage("ImagePage", "!img -w 640 name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"640\"/>");
     }
 
     @Test
     public void imageWidthHandleMistyped() throws Exception {
         TestRoot root = new TestRoot();
-        WikiPage testPage = root.makePage("ImagePage", "!img-w name");
-        ParserTestHelper.assertTranslatesTo(testPage, "!img-w name");
-        testPage = root.makePage("ImagePage", "!img-wNNN name");
-        ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"NNN\"/>");
-        testPage = root.makePage("ImagePage", "!img-wN");
-        ParserTestHelper.assertTranslatesTo(testPage, "!img-wN");
-        testPage = root.makePage("ImagePage", "'''!img-wN'''");
-        ParserTestHelper.assertTranslatesTo(testPage, "<b>!img-wN</b>");
+        WikiPage testPage = root.makePage("ImagePage", "!img -w name");
+        ParserTestHelper.assertTranslatesTo(testPage, "!img -w name");
+        testPage = root.makePage("ImagePage", "!img -w nnn name");
+        ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"nnn\"/>");
+        testPage = root.makePage("ImagePage", "!img -w N");
+        ParserTestHelper.assertTranslatesTo(testPage, "!img -w N");
+        testPage = root.makePage("ImagePage", "'''!img -w N'''");
+        ParserTestHelper.assertTranslatesTo(testPage, "<b>!img -w N</b>");
     }
 }
