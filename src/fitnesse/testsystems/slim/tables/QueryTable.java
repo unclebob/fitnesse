@@ -15,7 +15,6 @@ import static util.ListUtility.list;
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
   private String queryId;
-  protected QueryResults queryResults;
   private String tableInstruction;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
@@ -97,14 +96,14 @@ public class QueryTable extends SlimTable {
   }
 
   protected void scanRowsForMatches(List<Object> queryResultList) {
-    queryResults = new QueryResults(queryResultList);
+    final QueryResults queryResults = new QueryResults(queryResultList);
     int rows = table.getRowCount();
     for (int tableRow = 2; tableRow < rows; tableRow++)
-      scanRowForMatch(tableRow);
-    markSurplusRows();
+      scanRowForMatch(tableRow, queryResults);
+    markSurplusRows(queryResults);
   }
 
-  private void markSurplusRows() {
+  private void markSurplusRows(final QueryResults queryResults) {
     List<Integer> unmatchedRows = queryResults.getUnmatchedRows();
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
@@ -124,13 +123,13 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  protected void scanRowForMatch(int tableRow) {
+  protected void scanRowForMatch(int tableRow, QueryResults queryResults) {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
       failMessage(0, tableRow, "missing");
     } else {
-      markFieldsInMatchedRow(tableRow, matchedRow);
+      markFieldsInMatchedRow(tableRow, matchedRow, queryResults);
     }
   }
 
@@ -142,14 +141,14 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  protected void markFieldsInMatchedRow(int tableRow, int matchedRow) {
+  protected void markFieldsInMatchedRow(int tableRow, int matchedRow, QueryResults queryResults) {
     int columns = table.getColumnCountInRow(tableRow);
     for (int col = 0; col < columns; col++) {
-      markField(tableRow, matchedRow, col);
+      markField(tableRow, matchedRow, col, queryResults);
     }
   }
 
-  protected void markField(int tableRow, int matchedRow, int col) {
+  protected void markField(int tableRow, int matchedRow, int col, QueryResults queryResults) {
     if (col >= fieldNames.size())
       return; // ignore strange table geometry.
     String fieldName = fieldNames.get(col);

@@ -11,24 +11,25 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   @Override
-  protected void scanRowForMatch(int tableRow) {
+  protected void scanRowForMatch(int tableRow, QueryResults queryResults) {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
       failMessage(0, tableRow, "missing");
     } else {
       int columns = table.getColumnCountInRow(tableRow);
-      markColumns(tableRow, matchedRow, columns);
+      markColumns(tableRow, matchedRow, columns, queryResults);
       lastMatchedRow = matchedRow;
     }
   }
 
-  private void markColumns(int tableRow, int matchedRow, int columns) {
+  private void markColumns(int tableRow, int matchedRow, int columns, QueryResults queryResults) {
     for (int col = 0; col < columns; col++) {
-      markField(tableRow, matchedRow, col);
+      markField(tableRow, matchedRow, col, queryResults);
     }
   }
 
+  @Override
   protected void markMatch(int tableRow, int matchedRow, int col) {
     if (col == 0 && matchedRow <= lastMatchedRow) {
       failMessage(0, tableRow, "out of order: row " + (matchedRow+1));
