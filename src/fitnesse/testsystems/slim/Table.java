@@ -3,7 +3,9 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
 import java.util.List;
@@ -21,21 +23,24 @@ public interface Table {
 
   int getColumnCountInRow(int row);
 
-  @Deprecated
-  void setCell(int col, int row, String content);
+  void substitute(int col, int row, String content);
 
   int addRow(List<String> list);
 
+  @Deprecated
   void appendContent(int row, String content);
 
+  @Deprecated
   String getCellResult(int col,int row);
 
-  void appendChildTable(int row, Table tableTemplate);
+  void appendChildTable(int row, Table table);
 
   @Deprecated
   void setTestStatusOnRow(int row, ExecutionResult testStatus);
   // FoxMe: setTestStatusOnRow becomes updateContent
-  void updateContent(int row, Result result);
+  void updateContent(int row, TestResult result);
+
+  void updateContent(int col, int row, ExceptionResult exceptionResult);
 
   @Deprecated
   void setCell(int col, int row, Result response);

@@ -9,6 +9,7 @@ import java.util.Map;
 public class Assertion {
   private final Instruction instruction;
   private final Expectation expectation;
+  private String actual;
 
   Assertion(Instruction instruction, Expectation expectation) {
     this.instruction = instruction;
@@ -23,6 +24,10 @@ public class Assertion {
     return expectation;
   }
 
+  public void updateWithActualResult(String actual) {
+    this.actual = actual;
+  }
+  
   /**
    * Get Instructions from the assertions; NOOP's are filtered out.
    * @param assertions

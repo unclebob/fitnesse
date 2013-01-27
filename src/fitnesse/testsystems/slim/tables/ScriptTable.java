@@ -324,7 +324,7 @@ public class ScriptTable extends SlimTable {
 
     @Override
     public void evaluateExpectation(Object returnValue) {
-      table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(getExpected()));
+      table.substitute(getCol(), getRow(), replaceSymbolsWithFullExpansion(getExpected()));
     }
 
     @Override

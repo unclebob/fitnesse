@@ -86,14 +86,17 @@ public class QueryTable extends SlimTable {
         appendQueryErrorMessage(queryReturn);
       }
     }
+
+    @Override
+    public void handleException(ExceptionResult exceptionResult) {
+      table.appendContent(0, 0, exceptionResult);
+    }
+
+    private void appendQueryErrorMessage(Object message) {
+      table.appendContent(0, 0, error(String.format("The query method returned: %s", message)));
+    }
   }
 
-  private void appendQueryErrorMessage(Object message) {
-    if (isExceptionMessage(message))
-      table.appendToCell(0, 0, ((ExceptionResult)message).toHtml());
-    else
-      table.appendContent(0, 0, error(String.format("The query method returned: %s", message)));
-  }
 
   protected void scanRowsForMatches(List<Object> queryResultList) {
     final QueryResults queryResults = new QueryResults(queryResultList);
@@ -137,7 +140,7 @@ public class QueryTable extends SlimTable {
     int columns = table.getColumnCountInRow(tableRow);
     for (int col = 0; col < columns; col++) {
       String contents = table.getCellContents(col, tableRow);
-      table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(contents));
+      table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
     }
   }
 
@@ -162,9 +165,9 @@ public class QueryTable extends SlimTable {
       String message = matchMessage(actualValue, expectedValue);
       // TODO: -AJM- why are we performing symbol expansion here?
       if (message != null)
-        table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(message));
+        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(message));
       else
-        table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
+        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
       if (matches(actualValue, expectedValue))
         markMatch(tableRow, matchedRow, col);
       else

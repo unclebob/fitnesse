@@ -3,8 +3,10 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.PlainResult;
 import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
@@ -62,7 +64,7 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumnCount();
   }
 
-  public void setCell(int col, int row, String contents) {
+  public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setContent(contents);
   }
@@ -80,11 +82,6 @@ public class HtmlTable implements Table {
 
   public String toHtml() {
     return tableNode.toHtml();
-  }
-
-  @Override
-  public void updateContent(int row, Result result) {
-    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public int addRow(List<String> list) {
@@ -158,6 +155,16 @@ public class HtmlTable implements Table {
   public void setTestStatusOnRow(int rowIndex, ExecutionResult testStatus) {
     Row row = rows.get(rowIndex);
     row.setTestStatus(testStatus);
+  }
+
+  @Override
+  public void updateContent(int row, TestResult result) {
+    throw new RuntimeException("Needs implementing!");
+  }
+
+  @Override
+  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
+    appendContent(col, row, exceptionResult);
   }
 
   private Tag newTag(Class<? extends Tag> klass) {
@@ -338,7 +345,7 @@ public class HtmlTable implements Table {
 
   @Override
   public void setCell(int col, int row, Result response) {
-    setCell(col, row, response.toHtml());
+    substitute(col, row, response.toHtml());
     updateResponse(col, row, response);
   }
 

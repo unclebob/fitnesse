@@ -38,13 +38,16 @@ public class TableTable extends SlimTable {
     public void evaluateExpectation(Object tableReturn) {
       if (tableReturn == null || "null".equals(tableReturn)) {
         table.appendContent(table.getColumnCountInRow(0) - 1, 0, ignore("No results from table"));
-      } else if (isExceptionMessage(tableReturn)) {
-        table.appendContent(0, 0, (ExceptionResult) tableReturn);
       } else if (tableReturn instanceof String) {
         table.appendContent(0, 0, error((String) tableReturn));
       } else {
         resizeTableAndEvaluateRows(tableReturn);
       }
+    }
+
+    @Override
+    public void handleException(ExceptionResult exceptionResult) {
+      table.appendContent(0, 0, exceptionResult);
     }
   }
 
@@ -85,7 +88,7 @@ public class TableTable extends SlimTable {
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
       String contents = table.getCellContents(col, tableRow);
-      table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(contents));
+      table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
       String result = (String) rowList.get(col);
       colorCell(col, tableRow, result);
     }

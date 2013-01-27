@@ -324,10 +324,12 @@ public abstract class SlimTestSystem extends TestSystem {
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
           String key = a.getInstruction().getId();
           if (shouldReportException(key, (String) returnValue)) {
-            returnValue = processException(key, (String) returnValue);
+            ExceptionResult exceptionResult = processException(key, (String) returnValue);
+            a.getExpectation().handleException(exceptionResult);
           }
+        } else {
+          a.getExpectation().evaluateExpectation(returnValue);
         }
-        a.getExpectation().evaluateExpectation(returnValue);
       } catch (Throwable ex) {
         exceptions.addException("ABORT", exceptionToString(ex));
         exceptionOccurred(ex);

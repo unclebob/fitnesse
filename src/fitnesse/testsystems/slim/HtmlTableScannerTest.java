@@ -116,7 +116,7 @@ public class HtmlTableScannerTest {
   public void canSetCellContents() throws Exception {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    t.setCell(0, 0, "Wow");
+    t.substitute(0, 0, "Wow");
     assertEquals("Wow", t.getCellContents(0, 0));
   }
 

@@ -7,7 +7,6 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.*;
 import fitnesse.wikitext.Utils;
@@ -213,23 +212,6 @@ public abstract class SlimTable {
     return new IgnoreResult(value);
   }
 
-  @Deprecated
-  protected Result makeExeptionMessage(String value) {
-    if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))
-      return fail(value.substring(SlimTestSystem.MESSAGE_FAIL.length()));
-    else
-      return error(value.substring(SlimTestSystem.MESSAGE_ERROR.length()));
-  }
-
-  protected boolean isExceptionMessage(Object value) {
-    return value instanceof ExceptionResult;
-  }
-
-  @Deprecated
-  protected boolean isExceptionFailureMessage(String value) {
-    return value.startsWith("Exception: ");
-  }
-
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     return false;
   }
@@ -381,8 +363,6 @@ public abstract class SlimTable {
       Result evaluationMessage = null;
       if (returnValue == null) {
         evaluationMessage = new PlainResult(originalContent, ignore("Test not run"));
-      } else if (isExceptionMessage(returnValue)) {
-        table.appendContent(col, row, (ExceptionResult) returnValue);
       } else {
         String value;
         value = returnValue.toString();
@@ -394,16 +374,16 @@ public abstract class SlimTable {
 
     Result evaluationMessage(String actual, String expected) {
       this.actual = actual;
-      Result evaluationMessage;
-      if (isExceptionMessage(actual))
-        evaluationMessage = new PlainResult(expected, makeExeptionMessage(actual));
-      else
-        evaluationMessage = createEvaluationMessage(actual, expected);
-      this.evaluationMessage = evaluationMessage;
+      evaluationMessage = createEvaluationMessage(actual, expected);
       return evaluationMessage;
     }
 
     protected abstract Result createEvaluationMessage(String actual, String expected);
+
+    @Override
+    public void handleException(ExceptionResult exceptionResult) {
+      table.updateContent(col, row, exceptionResult);
+    }
 
     public int getCol() {
       return col;
@@ -519,9 +499,11 @@ public abstract class SlimTable {
 
     @Override
     public void evaluateExpectation(Object returnValue) {
-      if (returnValue instanceof ExceptionResult) {
-        table.appendContent(col, row, (ExceptionResult) returnValue);
-      }
+    }
+
+    @Override
+    public void handleException(ExceptionResult exceptionResult) {
+      table.appendContent(col, row, exceptionResult);
     }
   }
 
@@ -551,11 +533,7 @@ public abstract class SlimTable {
     @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);
-      if (isExceptionFailureMessage(actual)) {
-        return new PlainResult(String.format("$%s<-[%s]", symbolName, actual));
-      } else {
-        return new PlainResult(String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual)));
-      }
+      return new PlainResult(String.format("$%s<-[%s]", symbolName, Utils.escapeHTML(actual)));
     }
   }
 
@@ -586,9 +564,7 @@ public abstract class SlimTable {
         Result expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else if (isExceptionFailureMessage(actual)) {
-          evaluationMessage = error(actual);
-        } else
+        else
           evaluationMessage = failMessage(actual,
             String.format("%s [%s]", expectationAdjective(), replaceSymbolsWithFullExpansion(expected))
           );
