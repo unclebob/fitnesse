@@ -7,6 +7,7 @@ public class Link extends SymbolType implements Rule, Translation {
     public static final Link symbolType = new Link();
     public static final String ImageProperty = "image";
     public static final String WidthProperty = "width";
+    public static final String StyleProperty = "style";
     public static final String Left = "left";
     public static final String Right = "right";
 
@@ -40,6 +41,8 @@ public class Link extends SymbolType implements Rule, Translation {
             if (imageClass.length() > 0) tag.addAttribute("class", imageClass);
             String width = link.getProperty(Link.WidthProperty);
             if (width.length() > 0) tag.addAttribute("width", width);
+            String style = link.getProperty(Link.StyleProperty);
+            if (style.length() > 0) tag.addAttribute("style", style);
         }
         else {
             tag = new HtmlTag("a", body);
