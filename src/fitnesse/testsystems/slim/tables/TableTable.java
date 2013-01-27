@@ -6,6 +6,8 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.PlainResult;
+import fitnesse.testsystems.slim.results.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,45 +85,46 @@ public class TableTable extends SlimTable {
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
       String contents = table.getCellContents(col, tableRow);
-      String replacedContents = replaceSymbolsWithFullExpansion(contents);
-      table.setCell(col, tableRow, replacedContents);
+      table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(contents));
       String result = (String) rowList.get(col);
       colorCell(col, tableRow, result);
     }
   }
 
-  private void colorCell(int col, int row, String result) {
-    if (result.equalsIgnoreCase("no change") || result.length() == 0)
+  private void colorCell(int col, int row, String message) {
+    Result result;
+    if (message.equalsIgnoreCase("no change") || message.length() == 0)
       return; // do nothing
-    else if (result.equalsIgnoreCase("pass"))
+    else if (message.equalsIgnoreCase("pass"))
       pass(col, row);
-    else if (result.equalsIgnoreCase("fail"))
+    else if (message.equalsIgnoreCase("fail"))
       fail(col, row, table.getCellContents(col, row));
-    else if (result.equalsIgnoreCase("ignore"))
+    else if (message.equalsIgnoreCase("ignore"))
       ignore(col, row, table.getCellContents(col, row));
-    else if (!colorCellWithMessage(col, row, result))
-      fail(col, row, result);
+    else if ((result = resultFromMessage(message)) != null)
+      table.setCell(col, row, result);
+    else
+      fail(col, row, message);
   }
 
-  private boolean colorCellWithMessage(int col, int row, String contents) {
+  private Result resultFromMessage(String contents) {
     int colon = contents.indexOf(":");
     if (colon == -1)
-      return false;
+      return null;
     String code = contents.substring(0, colon);
     String message = contents.substring(colon + 1);
 
     if (code.equalsIgnoreCase("error"))
-      table.setCell(col, row, error(message));
+      return error(message);
     else if (code.equalsIgnoreCase("fail"))
-      table.setCell(col, row, fail(message));
+      return fail(message);
     else if (code.equalsIgnoreCase("pass"))
-      table.setCell(col, row, pass(message));
+      return pass(message);
     else if (code.equalsIgnoreCase("ignore"))
-      table.setCell(col, row, ignore(message));
+      return ignore(message);
     else if (code.equalsIgnoreCase("report"))
-      table.setCell(col, row, message);
+      return new PlainResult(message);
     else
-      return false;
-    return true;
+      return null;
   }
 }
