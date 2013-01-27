@@ -497,6 +497,7 @@ public abstract class SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       return new PlainResult(replaceSymbolsWithFullExpansion(expected));
     }
@@ -524,6 +525,7 @@ public abstract class SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
         return passUncounted(replaceSymbolsWithFullExpansion(expected));
@@ -541,6 +543,7 @@ public abstract class SlimTable {
     }
 
     // TODO: make something useful for substitution
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);
       if (isExceptionFailureMessage(actual)) {
@@ -563,8 +566,10 @@ public abstract class SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       Result evaluationMessage;
+      // FixMe: Unescape HTML? Ugh!
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
 
       if (actual == null)
@@ -611,6 +616,7 @@ public abstract class SlimTable {
     }
   }
 
+  // TODO: ... ?
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);

@@ -259,6 +259,7 @@ public class ScriptTable extends SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       if (actual == null)
         return failMessage(expected, "Returned null value.");
@@ -278,6 +279,7 @@ public class ScriptTable extends SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       return (actual != null && actual.equals(BooleanConverter.TRUE)) ?
         pass(expected) : fail(expected);
@@ -289,6 +291,7 @@ public class ScriptTable extends SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       if (actual == null)
         return pass(expected);
@@ -302,6 +305,7 @@ public class ScriptTable extends SlimTable {
       super(col, row);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       try {
         table.appendContent(getRow(), Utils.escapeHTML(actual));
@@ -318,10 +322,12 @@ public class ScriptTable extends SlimTable {
       super(col, row);
     }
 
+    @Override
     public void evaluateExpectation(Object returnValue) {
       table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(getExpected()));
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       return null;
     }

@@ -235,12 +235,14 @@ public class ScenarioTable extends SlimTable {
       this.scriptTable = scriptTable;
     }
 
+    @Override
     public void evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
       parent.getTable().setTestStatusOnRow(getRow(), testStatus);
     }
 
+    @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       return null;
     }
