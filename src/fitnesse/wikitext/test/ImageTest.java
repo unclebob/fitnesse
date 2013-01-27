@@ -42,5 +42,9 @@ public class ImageTest {
         ParserTestHelper.assertTranslatesTo(testPage, "!img-w name");
         testPage = root.makePage("ImagePage", "!img-wNNN name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"NNN\"/>");
+        testPage = root.makePage("ImagePage", "!img-wN");
+        ParserTestHelper.assertTranslatesTo(testPage, "!img-wN");
+        testPage = root.makePage("ImagePage", "'''!img-wN'''");
+        ParserTestHelper.assertTranslatesTo(testPage, "<b>!img-wN</b>");
     }
 }
