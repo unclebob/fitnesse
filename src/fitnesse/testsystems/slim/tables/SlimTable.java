@@ -357,15 +357,20 @@ public abstract class SlimTable {
   public abstract class RowExpectation implements Expectation {
     private final int col;
     private final int row;
+    private final String originalContent;
+
     // Needed for Xml Formatter...
     private String actual;
     private Result evaluationMessage;
-    private final String originalContent;
 
     public RowExpectation(int col, int row) {
+      this(col, row, col >= 0 ? table.getCellContents(col, row) : null);
+    }
+
+    public RowExpectation(int col, int row, String originalContent) {
       this.row = row;
       this.col = col;
-      originalContent = col >= 0 ? table.getCellContents(col, row) : null;
+      this.originalContent = originalContent;
     }
 
     /* (non-Javadoc)
@@ -563,14 +568,13 @@ public abstract class SlimTable {
 
   class ReturnedValueExpectation extends RowExpectation implements ExpectationPassFailReporter {
     public ReturnedValueExpectation(int col, int row) {
-      super(col, row);
+      super(col, row, table.getUnescapedCellContents(col, row));
     }
 
     @Override
     protected Result createEvaluationMessage(String actual, String expected) {
       Result evaluationMessage;
-      // FixMe: Unescape HTML? Ugh!
-      String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
+      String replacedExpected = replaceSymbols(expected);
 
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
