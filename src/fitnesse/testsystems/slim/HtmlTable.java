@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
@@ -38,11 +39,6 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
-  public String getCellResult(int col, int row) {
-    return rows.get(row).getColumn(col).getResult();
-  }
-
-
   public String getUnescapedCellContents(int col, int row) {
     return Utils.unescapeHTML(getCellContents(col, row));
   }
@@ -57,7 +53,8 @@ public class HtmlTable implements Table {
 
   public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
-    cell.setContent(contents);
+    // TODO: need escaping here?
+    cell.setContent(Utils.escapeHTML(contents));
   }
 
   public List<List<String>> asList() {
@@ -80,13 +77,13 @@ public class HtmlTable implements Table {
     rows.add(row);
     tableNode.getChildren().add(row.getRowNode());
     for (String s : list)
-      row.appendCell(s == null ? "" : s);
+      row.appendCell(s == null ? "" : Utils.escapeHTML(s));
     return rows.size() - 1;
   }
 
   public void addColumnToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
-    row.appendCell(contents);
+    row.appendCell(Utils.escapeHTML(contents));
   }
 
   /**
@@ -151,13 +148,15 @@ public class HtmlTable implements Table {
   public void updateContent(int col, int row, TestResult testResult) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setTestResult(testResult);
-    substitute(col, row, formatTestResult(col, row, testResult));
+    cell.setContent(cell.formatTestResult());
   }
 
-//  @Override
-//  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
-//    updateContent(col, row, exceptionResult);
-//  }
+  @Override
+  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
+    Cell cell = rows.get(row).getColumn(col);
+    cell.setExceptionResult(exceptionResult);
+    cell.setContent(cell.formatExceptionResult());
+  }
 
   private Tag newTag(Class<? extends Tag> klass) {
     Tag tag = null;
@@ -272,10 +271,11 @@ public class HtmlTable implements Table {
     private final TableColumn columnNode;
     private final String originalContent;
     private TestResult testResult;
+    private ExceptionResult exceptionResult;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
-      originalContent = columnNode.getChildrenHTML();
+      originalContent = Utils.unescapeHTML(columnNode.getChildrenHTML());
     }
 
     public Cell(String contents) {
@@ -288,20 +288,8 @@ public class HtmlTable implements Table {
       originalContent = contents;
     }
 
-    public String getResult() {
-      String result = columnNode.getAttribute("class");
-      if (result == null) {
-        Node child = columnNode.getFirstChild();
-        if (child != null)
-        return child.getText();
-      } else if (result.equals("pass") || result.equals("fail") || result.equals("error") || result.equals("ignore")) {
-        return result;
-      }
-      return "Unknown Result";
-    }
-
     public String getContent() {
-      return getEscapedContent();
+      return Utils.unescapeHTML(getEscapedContent());
     }
 
     public String getEscapedContent() {
@@ -310,7 +298,8 @@ public class HtmlTable implements Table {
       return "&nbsp;".equals(unescaped) ? "" : unescaped;
     }
 
-    public void setContent(String s) {
+    private void setContent(String s) {
+      // No HTML escaping here.
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);
@@ -327,6 +316,45 @@ public class HtmlTable implements Table {
     public void setTestResult(TestResult testResult) {
       this.testResult = testResult;
     }
+
+    public void setExceptionResult(ExceptionResult exceptionResult) {
+      this.exceptionResult = exceptionResult;
+    }
+
+    public String formatTestResult() {
+      if (testResult.getExecutionResult() == null) {
+        return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
+      }
+      final String escapedMessage = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
+      switch (testResult.getExecutionResult()) {
+        case PASS:
+          return String.format("<span class=\"pass\">%s</span>", escapedMessage);
+        case FAIL:
+          if (testResult.hasActual() && testResult.hasExpected()) {
+            return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
+                    Utils.escapeHTML(testResult.getActual()),
+                    Utils.escapeHTML(testResult.getExpected()));
+          }
+          return String.format("<span class=\"fail\">%s</span>", escapedMessage);
+        case IGNORE:
+          return String.format("<span class=\"ignore\">%s</span>", escapedMessage);
+        case ERROR:
+          return String.format("<span class=\"error\">%s</span>", escapedMessage);
+      }
+      return "Should not be here";
+    }
+
+    public String formatExceptionResult() {
+      if (exceptionResult.hasMessage()) {
+        return String.format("<span class=\"%s\">%s</span>",
+                exceptionResult.getExecutionResult().toString(),
+                Utils.escapeHTML(exceptionResult.getMessage()));
+      } else {
+        // TODO: prefix Exception block -- now done in HtmlSlimTestSystem
+        return String.format("<span class=\"%s\"><a href=\"%s\">%s</a></span>", exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
+      }
+    }
+
   }
 
   @Override
@@ -337,26 +365,6 @@ public class HtmlTable implements Table {
     return new HtmlTableScanner(script).getTable(0);
   }
 
-  public String formatTestResult(int col, int row, TestResult testResult) {
-    final String originalContent = rows.get(row).getColumn(col).originalContent;
-    if (testResult.getExecutionResult() == null) {
-      return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
-    }
-    switch (testResult.getExecutionResult()) {
-      case PASS:
-        return String.format("<span class=\"pass\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
-      case FAIL:
-        if (testResult.hasActual() && testResult.hasExpected()) {
-          return String.format("[%s] <span class=\"fail\">expected [%s]</span>", testResult.getActual(), testResult.getExpected());
-        }
-        return String.format("<span class=\"fail\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
-      case IGNORE:
-        return String.format("<span class=\"ignore\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
-      case ERROR:
-        return String.format("<span class=\"error\">%s</span>", testResult.getMessage());
-    }
-    return "Should not be here";
-  }
 }
 
 

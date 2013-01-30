@@ -7,24 +7,26 @@ import java.util.regex.Pattern;
 
 import static fitnesse.slim.SlimServer.*;
 
-public class ExceptionResult extends TestResult {
+public class ExceptionResult {
   public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>");
 
   private final String resultKey;
   private final String exceptionValue;
 
   public ExceptionResult(String resultKey, String exceptionValue) {
-    super(null, null, null, exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR);
+    //super(null, null, null, exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR);
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
   }
 
-  @Override
+  public ExecutionResult getExecutionResult() {
+    return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR;
+  }
+
   public boolean hasMessage() {
     return getMessage() != null;
   }
 
-  @Override
   public String getMessage() {
     Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
     if (exceptionMessageMatcher.find()) {

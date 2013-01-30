@@ -45,7 +45,7 @@ public class ImportTable extends SlimTable {
     @Override
     protected TestResult createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return TestResult.pass();
+        return TestResult.ok(expected);
       else
         return TestResult.error(String.format("Unknown import message: %s", actual));
     }

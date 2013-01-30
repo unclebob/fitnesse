@@ -48,6 +48,19 @@ public class TestResult {
     return executionResult;
   }
 
+  public TestResult negateTestResult() {
+    ExecutionResult newExecutionResult;
+    if (executionResult == ExecutionResult.PASS) {
+      newExecutionResult = ExecutionResult.FAIL;
+    } else if (executionResult == ExecutionResult.FAIL) {
+      newExecutionResult = ExecutionResult.PASS;
+    } else  {
+      newExecutionResult = executionResult;
+    }
+    System.out.println("Negated result " + executionResult + " -> " + newExecutionResult);
+    return new TestResult(actual, expected, message, newExecutionResult);
+  }
+
   public String toString(String originalContent) {
     StringBuilder builder = new StringBuilder();
     if (executionResult != null) {
@@ -132,5 +145,9 @@ public class TestResult {
   public static TestResult plain(String message) {
    return new TestResult(null, null, message, null);
   }
-
+  // pass without counting
+  public static TestResult ok(String message) {
+    // TODO: make sure it doesn't count
+    return new TestResult(null, null, message, ExecutionResult.PASS);
+  }
 }

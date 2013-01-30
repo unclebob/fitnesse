@@ -5,10 +5,7 @@ package fitnesse.testsystems.slim;
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.PageFactory;
 import fitnesse.slim.*;
-import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.*;
@@ -27,8 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem extends TestSystem {
-  public static final String MESSAGE_ERROR = "!error:";
-  public static final String MESSAGE_FAIL = "!fail:";
   public static final SlimTable START_OF_TEST = null;
   public static final SlimTable END_OF_TEST = null;
 
@@ -328,7 +323,7 @@ public abstract class SlimTestSystem extends TestSystem {
             a.getExpectation().handleException(exceptionResult);
           }
         } else {
-          a.getExpectation().evaluateExpectation(returnValue);
+          TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
         }
       } catch (Throwable ex) {
         exceptions.addException("ABORT", exceptionToString(ex));
@@ -499,6 +494,16 @@ public abstract class SlimTestSystem extends TestSystem {
     @Override
     public void incrementIgnoredTestsCount() {
       testSummary.ignores++;
+    }
+
+    @Override
+    public void increment(ExecutionResult result) {
+      testSummary.add(result);
+    }
+
+    @Override
+    public void increment(TestSummary summary) {
+      testSummary.add(summary);
     }
   }
 }

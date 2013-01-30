@@ -309,6 +309,18 @@ public class ScenarioTable extends SlimTable {
       testSummary.ignores++;
     }
 
+    @Override
+    public void increment(ExecutionResult result) {
+      testContext.increment(result);
+      testSummary.add(result);
+    }
+
+    @Override
+    public void increment(TestSummary summary) {
+      testContext.increment(summary);
+      testSummary.add(summary);
+    }
+
     ExecutionResult getExecutionResult() {
       return ExecutionResult.getExecutionResult(testSummary);
     }

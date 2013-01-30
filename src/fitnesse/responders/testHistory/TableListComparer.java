@@ -1,12 +1,13 @@
 package fitnesse.responders.testHistory;
 
-import static fitnesse.responders.testHistory.HistoryComparer.MatchedPair;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.Table;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import static fitnesse.responders.testHistory.HistoryComparer.MatchedPair;
 
 public class TableListComparer {
   private HtmlTableScanner leftHandScanner;
@@ -184,8 +185,8 @@ public class TableListComparer {
     }
 
     private double scoreCellPassFailResult(int row, int col) {
-      String content1 = table1.getCellResult(col, row);
-      String content2 = table2.getCellResult(col, row);
+      String content1 = table1.getCellContents(col, row);
+      String content2 = table2.getCellContents(col, row);
       return content1.equals(content2) ? 1 : 0;
     }
 

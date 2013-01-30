@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
@@ -52,6 +53,16 @@ public class MockSlimTestContext implements SlimTestContext {
   @Override
   public void incrementIgnoredTestsCount() {
     testSummary.ignores++;
+  }
+
+  @Override
+  public void increment(ExecutionResult result) {
+    this.testSummary.add(result);
+  }
+
+  @Override
+  public void increment(TestSummary testSummary) {
+    this.testSummary.add(testSummary);
   }
 
   public TestSummary getTestSummary() {

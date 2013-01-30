@@ -77,8 +77,6 @@ public class ScriptTable extends SlimTable {
   private List<Assertion> actionAndAssign(String symbolName, int row) {
     List<Assertion> assertions = new ArrayList<Assertion>();
     int lastCol = table.getColumnCountInRow(row) - 1;
-    //assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION,
-    //        new SymbolAssignmentExpectation(symbolName, 0, row)));
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(1 + 1, lastCol, row, assertions);

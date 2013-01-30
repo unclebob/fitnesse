@@ -174,8 +174,6 @@ public class DecisionTable extends SlimTable {
         assertion = makeAssertion(callAndAssign(assignedSymbol, functionName),
                 new SymbolAssignmentExpectation(assignedSymbol, col, row));
       } else {
-        // TODO: -AJM- Why this call?
-        table.getCellContents(col, row);
         assertion = makeAssertion(callFunction(getTableName(), functionName),
                 new ReturnedValueExpectation(col, row));
       }

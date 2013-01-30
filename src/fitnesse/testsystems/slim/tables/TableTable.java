@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -44,25 +45,29 @@ public class TableTable extends SlimTable {
         testResult = TestResult.error((String) tableReturn);
         table.updateContent(0, 0, testResult);
       } else {
-        resizeTableAndEvaluateRows(tableReturn);
-        // TODO: Return gross result from table evaluation.
-        testResult = null;
+        TestSummary testSummary = resizeTableAndEvaluateRows(tableReturn);
+        getTestContext().increment(testSummary);
+        testResult = new TestResult(ExecutionResult.getExecutionResult(testSummary));
       }
+      getTestContext().increment(testResult.getExecutionResult());
       return testResult;
     }
 
     @Override
     public void handleException(ExceptionResult exceptionResult) {
       table.updateContent(0, 0, exceptionResult);
+      getTestContext().incrementErroredTestsCount();
     }
   }
 
   @SuppressWarnings("unchecked")
-  private void resizeTableAndEvaluateRows(Object returnValue) {
+  private TestSummary resizeTableAndEvaluateRows(Object returnValue) {
     List<List<Object>> tableResults = (List<List<Object>>) returnValue;
     extendTable(table, tableResults);
+    TestSummary testSummary = new TestSummary();
     for (int row = 0; row < tableResults.size(); row++)
-      evaluateRow(tableResults, row);
+      evaluateRow(tableResults, row, testSummary);
+    return testSummary;
   }
 
   private void extendTable(Table table, List<List<Object>> tableResults) {
@@ -89,22 +94,18 @@ public class TableTable extends SlimTable {
       table.addColumnToRow(row, (String) cellList.get(table.getColumnCountInRow(row)));
   }
 
-  private TestSummary evaluateRow(List<List<Object>> tableResults, int resultRow) {
-    final TestSummary testSummary = new TestSummary();
+  private void evaluateRow(List<List<Object>> tableResults, int resultRow, TestSummary testSummary) {
     final List<Object> rowList = tableResults.get(resultRow);
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
       String contents = table.getCellContents(col, tableRow);
-      //table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
       String result = (String) rowList.get(col);
       TestResult testResult = getTestResult(result, replaceSymbolsWithFullExpansion(contents));
       if (testResult != null) {
         table.updateContent(col, tableRow, testResult);
-        // TODO: build a summary.
-        //testSummary.add(testResult.getExecutionResult());
+        testSummary.add(testResult.getExecutionResult());
       }
     }
-    return testSummary;
   }
 
   private TestResult getTestResult(String message, String content) {

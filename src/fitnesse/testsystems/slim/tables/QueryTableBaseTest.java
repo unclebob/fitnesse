@@ -331,7 +331,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(2&lt;5), pass(4)]" +
+        "[pass(2<5), pass(4)]" +
         "]"
     );
   }

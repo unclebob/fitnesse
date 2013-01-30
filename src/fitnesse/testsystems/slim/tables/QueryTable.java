@@ -92,6 +92,7 @@ public class QueryTable extends SlimTable {
     @Override
     public void handleException(ExceptionResult exceptionResult) {
       table.updateContent(0, 0, exceptionResult);
+      getTestContext().incrementErroredTestsCount();
     }
   }
 
@@ -112,7 +113,7 @@ public class QueryTable extends SlimTable {
       int newTableRow = table.addRow(surplusRow);
       TestResult testResult = TestResult.fail(surplusRow.get(0), null, "surplus");
       table.updateContent(0, newTableRow, testResult);
-      // TODO: need a summary
+      getTestContext().increment(result);
       markMissingFields(surplusRow, newTableRow);
       result = ExecutionResult.FAIL;
     }
@@ -126,6 +127,7 @@ public class QueryTable extends SlimTable {
         String fieldName = fieldNames.get(col);
         TestResult testResult = TestResult.fail(String.format("field %s not present", fieldName));
         table.updateContent(col, newTableRow, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       }
     }
   }
@@ -136,6 +138,7 @@ public class QueryTable extends SlimTable {
       replaceAllvariablesInRow(tableRow);
       TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
       table.updateContent(0, tableRow, testResult);
+      getTestContext().increment(testResult.getExecutionResult());
     } else {
       markFieldsInMatchedRow(tableRow, matchedRow, queryResults);
     }
@@ -180,6 +183,7 @@ public class QueryTable extends SlimTable {
         testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
     }
     table.updateContent(col, tableRow, testResult);
+    getTestContext().increment(testResult.getExecutionResult());
     return testResult;
   }
 

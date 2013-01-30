@@ -9,7 +9,8 @@ import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.*;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.wikitext.Utils;
 
 import java.util.ArrayList;
@@ -298,8 +299,10 @@ public abstract class SlimTable {
         value = returnValue.toString();
         testResult = evaluationMessage(value, originalContent);
       }
-      if (testResult != null)
+      if (testResult != null) {
         table.updateContent(col, row, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
+      }
       return testResult;
     }
 
@@ -313,6 +316,7 @@ public abstract class SlimTable {
     @Override
     public void handleException(ExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
+      getTestContext().incrementErroredTestsCount();
     }
 
     public int getCol() {
@@ -435,6 +439,7 @@ public abstract class SlimTable {
     @Override
     public void handleException(ExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
+      getTestContext().incrementErroredTestsCount();
     }
   }
 
@@ -446,7 +451,7 @@ public abstract class SlimTable {
     @Override
     protected TestResult createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return TestResult.pass(replaceSymbolsWithFullExpansion(expected));
+        return TestResult.ok(replaceSymbolsWithFullExpansion(expected));
       else
         return TestResult.error("Unknown construction message", actual);
     }
@@ -479,26 +484,18 @@ public abstract class SlimTable {
       String replacedExpected = replaceSymbols(expected);
 
       if (actual == null)
-        testResult = falseResult("null", replacedExpected); //todo can't be right message.
+        testResult = TestResult.fail("null", replacedExpected); //todo can't be right message.
       else if (actual.equals(replacedExpected))
-        testResult = trueResult(actual, announceBlank(replaceSymbolsWithFullExpansion(expected)));
+        testResult = TestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
       else if (replacedExpected.length() == 0)
         testResult = TestResult.ignore(actual);
       else {
         testResult = new Comparator(replacedExpected, actual, expected).evaluate();
         if (testResult == null)
-          testResult = falseResult(actual, replaceSymbolsWithFullExpansion(expected));
+          testResult = TestResult.fail(actual, replaceSymbolsWithFullExpansion(expected));
       }
 
       return testResult;
-    }
-
-    protected TestResult trueResult(String actual, String expected) {
-      return TestResult.pass(expected);
-    }
-
-    protected TestResult falseResult(String actual, String expected) {
-      return TestResult.fail(actual, expected);
     }
 
     private String announceBlank(String originalValue) {
@@ -512,14 +509,14 @@ public abstract class SlimTable {
       super(col, row);
     }
 
-    protected TestResult trueResult(String actual, String expected) {
-      return TestResult.fail(expected);
+    @Override
+    protected TestResult createEvaluationMessage(String actual, String expected) {
+      System.out.println("RejectedValueExpectation");
+      TestResult testResult = super.createEvaluationMessage(actual, expected);
+      if (testResult != null)
+        return testResult.negateTestResult();
+      return null;
     }
-
-    protected TestResult falseResult(String actual, String expected) {
-      return TestResult.pass(actual, expected);
-    }
-
   }
 
   class Comparator {
