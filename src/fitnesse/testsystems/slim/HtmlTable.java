@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
@@ -46,11 +45,6 @@ public class HtmlTable implements Table {
 
   public String getUnescapedCellContents(int col, int row) {
     return Utils.unescapeHTML(getCellContents(col, row));
-  }
-
-  public void appendToCell(int col, int row, String message) {
-    Cell cell = rows.get(row).getColumn(col);
-    cell.setContent(cell.getEscapedContent() + message);
   }
 
   public int getRowCount() {
@@ -149,8 +143,8 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int row, TestResult result) {
-    throw new RuntimeException("Needs implementing!");
+  public void updateContent(int row, TestResult testResult) {
+    rows.get(row).setTestResult(testResult);
   }
 
   @Override
@@ -234,13 +228,13 @@ public class HtmlTable implements Table {
       return list;
     }
 
-    private void setTestStatus(ExecutionResult testStatus) {
+    private void setTestResult(TestResult testResult) {
       NodeList cells = rowNode.getChildren();
       for (int i = 0; i < cells.size(); i++) {
         Node cell = cells.elementAt(i);
         if (cell instanceof Tag) {
           Tag tag = (Tag) cell;
-          tag.setAttribute("class", String.format("\"%s\"", testStatus.toString()));
+          tag.setAttribute("class", testResult.getExecutionResult().toString(), '"');
         }
       }
     }
@@ -275,12 +269,13 @@ public class HtmlTable implements Table {
   }
 
   class Cell {
-    private TableColumn columnNode;
-    private String originalContent;
+    private final TableColumn columnNode;
+    private final String originalContent;
     private TestResult testResult;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
+      originalContent = columnNode.getChildrenHTML();
     }
 
     public Cell(String contents) {
@@ -290,6 +285,7 @@ public class HtmlTable implements Table {
       text.setChildren(new NodeList());
       columnNode = (TableColumn) newTag(TableColumn.class);
       columnNode.setChildren(new NodeList(text));
+      originalContent = contents;
     }
 
     public String getResult() {
@@ -315,7 +311,6 @@ public class HtmlTable implements Table {
     }
 
     public void setContent(String s) {
-      originalContent = getContent();
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);
@@ -343,7 +338,7 @@ public class HtmlTable implements Table {
   }
 
   public String formatTestResult(int col, int row, TestResult testResult) {
-    final String originalContent = getCellContents(col, row);
+    final String originalContent = rows.get(row).getColumn(col).originalContent;
     if (testResult.getExecutionResult() == null) {
       return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
     }

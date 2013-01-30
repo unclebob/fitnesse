@@ -262,9 +262,9 @@ public class ScriptTable extends SlimTable {
       if (actual == null)
         return TestResult.fail("null", expected);
       else if (actual.equals(VoidConverter.VOID_TAG) || actual.equals("null"))
-        return TestResult.pass(expected);
+        return TestResult.plain();
       else if (actual.equals(BooleanConverter.FALSE))
-        return TestResult.fail(actual, expected);
+        return TestResult.fail();
       else if (actual.equals(BooleanConverter.TRUE))
         return TestResult.pass();
       else

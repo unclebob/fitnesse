@@ -76,12 +76,21 @@ public class TestResult {
     return builder.toString();
   }
 
+  public String toString() {
+    return toString("");
+  }
+
   public static TestResult pass() {
     return new TestResult(ExecutionResult.PASS);
   }
 
   public static TestResult pass(String message) {
     return new TestResult(null, null, message, ExecutionResult.PASS);
+  }
+
+  // For negating checks:
+  public static TestResult pass(String actual, String expected) {
+    return new TestResult(actual, expected, null, ExecutionResult.PASS);
   }
 
   public static TestResult fail() {
@@ -123,4 +132,5 @@ public class TestResult {
   public static TestResult plain(String message) {
    return new TestResult(null, null, message, null);
   }
+
 }

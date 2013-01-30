@@ -7,6 +7,7 @@ import fitnesse.testsystems.slim.MockSlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 
+import fitnesse.testsystems.slim.results.TestResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,8 +26,9 @@ public class ReturnedValueExpectationTest {
     Table t = ts.getTable(0);
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
     SlimTable.RowExpectation expectation = slimTable.new ReturnedValueExpectation(0, 0);
-    assertEquals(message, expectation.evaluationMessage(value, expected).toString());
-    assertEquals(message, expectation.getEvaluationMessage());
+    TestResult testResult = expectation.evaluationMessage(value, expected);
+    assertEquals(message, testResult.toString(expected));
+    //assertEquals(message, expectation.getEvaluationMessage());
     assertEquals(0, expectation.getRow());
     assertEquals(0, expectation.getCol());
   }
@@ -60,7 +62,7 @@ public class ReturnedValueExpectationTest {
   @Test
   public void mismatchedSymbolIsReplaced() throws Exception {
     testContext.setSymbol("S", "Value");
-    assertExpectationMessage("$S", "WrongValue", "fail(a=WrongValue;e=$S->[Value]])");
+    assertExpectationMessage("$S", "WrongValue", "fail(a=WrongValue;e=$S->[Value])");
   }
 
   @Test

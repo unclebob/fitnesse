@@ -95,9 +95,9 @@ public class TableTable extends SlimTable {
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
       String contents = table.getCellContents(col, tableRow);
-      table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
+      //table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
       String result = (String) rowList.get(col);
-      TestResult testResult = getTestResult(result);
+      TestResult testResult = getTestResult(result, replaceSymbolsWithFullExpansion(contents));
       if (testResult != null) {
         table.updateContent(col, tableRow, testResult);
         // TODO: build a summary.
@@ -107,14 +107,14 @@ public class TableTable extends SlimTable {
     return testSummary;
   }
 
-  private TestResult getTestResult(String message) {
+  private TestResult getTestResult(String message, String content) {
     TestResult result;
     if (message.equalsIgnoreCase("no change") || message.length() == 0)
       return null; // do nothing
     else if (message.equalsIgnoreCase("pass"))
-      result = TestResult.pass();
+      result = TestResult.pass(content);
     else if (message.equalsIgnoreCase("fail"))
-      result = TestResult.fail();
+      result = TestResult.fail(content);
     else if (message.equalsIgnoreCase("ignore"))
       result = TestResult.ignore();
     else if ((result = resultFromMessage(message)) == null)

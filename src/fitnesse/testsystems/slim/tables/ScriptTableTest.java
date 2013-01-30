@@ -373,7 +373,7 @@ public class ScriptTableTest {
             ListUtility.<List<?>>list(
                     list("scriptTable_id_0", "4")
             ),
-      "[[Script], [check, func, [4] fail(expected [3])]]"
+      "[[Script], [check, func, fail(a=4;e=3)]]"
     );
   }
 
@@ -383,7 +383,7 @@ public class ScriptTableTest {
             ListUtility.<List<?>>list(
                     list("scriptTable_id_0", "4")
             ),
-      "[[Script], [check not, func, [4] pass(is not [3])]]"
+      "[[Script], [check not, func, pass(a=4;e=3)]]"
     );
   }
 

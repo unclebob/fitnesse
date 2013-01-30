@@ -479,18 +479,26 @@ public abstract class SlimTable {
       String replacedExpected = replaceSymbols(expected);
 
       if (actual == null)
-        testResult = TestResult.fail("null", replacedExpected); //todo can't be right message.
+        testResult = falseResult("null", replacedExpected); //todo can't be right message.
       else if (actual.equals(replacedExpected))
-        testResult = TestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
+        testResult = trueResult(actual, announceBlank(replaceSymbolsWithFullExpansion(expected)));
       else if (replacedExpected.length() == 0)
         testResult = TestResult.ignore(actual);
       else {
         testResult = new Comparator(replacedExpected, actual, expected).evaluate();
         if (testResult == null)
-          testResult = TestResult.fail(actual, replaceSymbolsWithFullExpansion(expected));
+          testResult = falseResult(actual, replaceSymbolsWithFullExpansion(expected));
       }
 
       return testResult;
+    }
+
+    protected TestResult trueResult(String actual, String expected) {
+      return TestResult.pass(expected);
+    }
+
+    protected TestResult falseResult(String actual, String expected) {
+      return TestResult.fail(actual, expected);
     }
 
     private String announceBlank(String originalValue) {
@@ -499,11 +507,19 @@ public abstract class SlimTable {
 
   }
 
-  // TODO: ... ?
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);
     }
+
+    protected TestResult trueResult(String actual, String expected) {
+      return TestResult.fail(expected);
+    }
+
+    protected TestResult falseResult(String actual, String expected) {
+      return TestResult.pass(actual, expected);
+    }
+
   }
 
   class Comparator {
