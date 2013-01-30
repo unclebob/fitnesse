@@ -319,7 +319,7 @@ public class TableTableTest {
       )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture)error(Exception: except), argument], [2, 4]]",
+    assertEquals("[[error(Exception: except), argument], [2, 4]]",
         tt.getTable().toString());
   }
 }
