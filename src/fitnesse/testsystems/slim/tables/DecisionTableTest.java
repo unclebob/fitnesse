@@ -250,7 +250,7 @@ public class DecisionTableTest {
         "[pass(DT:fixture), argument], " +
         "[var, func?], " +
         "[3, pass(5)], " +
-        "[7, [5] fail(expected [9])]" +
+        "[7, fail(a=5;e=9)]" +
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
@@ -283,7 +283,7 @@ public class DecisionTableTest {
         "[pass(DT:fixture), argument], " +
         "[var, func?], " +
         "[3, pass(5)], " +
-        "[7, [5] fail(expected [9])]" +
+        "[7, fail(a=5;e=9)]" +
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
