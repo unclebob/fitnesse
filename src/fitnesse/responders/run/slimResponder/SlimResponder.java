@@ -115,8 +115,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   public void exceptionOccurred(Throwable e) {
-    //todo remove sout
-    System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
   }
 
   public String getCommandLine() {
