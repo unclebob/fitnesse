@@ -8,18 +8,27 @@ public class TestResult {
   private final String expected;
   private final ExecutionResult executionResult;
   private final String message;
+  private final boolean counts;
 
   public TestResult(ExecutionResult executionResult) {
-    this(null, null, null, executionResult);
+    this(null, null, null, executionResult, true);
   }
 
   protected TestResult(String actual, String expected, String message, ExecutionResult executionResult) {
+    this(actual, expected, message, executionResult, true);
+  }
+
+  protected TestResult(String actual, String expected, String message, ExecutionResult executionResult, boolean counts) {
     this.actual = actual;
     this.expected = expected;
     this.message = message;
     this.executionResult = executionResult;
+    this.counts = counts;
   }
 
+  public boolean doesCount() {
+    return counts;
+  }
   public boolean hasActual() {
     return actual != null;
   }
@@ -57,7 +66,6 @@ public class TestResult {
     } else  {
       newExecutionResult = executionResult;
     }
-    System.out.println("Negated result " + executionResult + " -> " + newExecutionResult);
     return new TestResult(actual, expected, message, newExecutionResult);
   }
 
@@ -145,9 +153,9 @@ public class TestResult {
   public static TestResult plain(String message) {
    return new TestResult(null, null, message, null);
   }
+
   // pass without counting
   public static TestResult ok(String message) {
-    // TODO: make sure it doesn't count
-    return new TestResult(null, null, message, ExecutionResult.PASS);
+    return new TestResult(null, null, message, ExecutionResult.PASS, false);
   }
 }

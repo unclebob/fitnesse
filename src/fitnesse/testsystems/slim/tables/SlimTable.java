@@ -301,7 +301,8 @@ public abstract class SlimTable {
       }
       if (testResult != null) {
         table.updateContent(col, row, testResult);
-        getTestContext().increment(testResult.getExecutionResult());
+        if (testResult.doesCount())
+          getTestContext().increment(testResult.getExecutionResult());
       }
       return testResult;
     }
@@ -511,7 +512,6 @@ public abstract class SlimTable {
 
     @Override
     protected TestResult createEvaluationMessage(String actual, String expected) {
-      System.out.println("RejectedValueExpectation");
       TestResult testResult = super.createEvaluationMessage(actual, expected);
       if (testResult != null)
         return testResult.negateTestResult();
