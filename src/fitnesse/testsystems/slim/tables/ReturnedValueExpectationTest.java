@@ -38,7 +38,7 @@ public class ReturnedValueExpectationTest {
 
   @Test
   public void failingMesage() throws Exception {
-    assertExpectationMessage("expected", "actual", "[actual] fail(expected [expected])");
+    assertExpectationMessage("expected", "actual", "fail(a=actual;e=expected)");
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ReturnedValueExpectationTest {
   @Test
   public void mismatchedSymbolIsReplaced() throws Exception {
     testContext.setSymbol("S", "Value");
-    assertExpectationMessage("$S", "WrongValue", "[WrongValue] fail(expected [$S->[Value]])");
+    assertExpectationMessage("$S", "WrongValue", "fail(a=WrongValue;e=$S->[Value]])");
   }
 
   @Test
@@ -70,7 +70,7 @@ public class ReturnedValueExpectationTest {
 
   @Test
   public void mismatchedUnboundSymbolIsNotReplaced() throws Exception {
-    assertExpectationMessage("$S", "$X", "[$X] fail(expected [$S])");
+    assertExpectationMessage("$S", "$X", "fail(a=$X;e=$S)");
   }
 
   @Test

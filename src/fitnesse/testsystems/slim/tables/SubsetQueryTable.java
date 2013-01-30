@@ -1,5 +1,6 @@
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -12,11 +13,13 @@ public class SubsetQueryTable extends QueryTable {
   }
 
   @Override
-  protected void scanRowsForMatches(List<Object> queryResultList) {
+  protected ExecutionResult scanRowsForMatches(List<Object> queryResultList) {
     QueryResults queryResults = new QueryResults(queryResultList);
     int rows = table.getRowCount();
-    for (int tableRow = 2; tableRow < rows; tableRow++)
+    for (int tableRow = 2; tableRow < rows; tableRow++) {
       scanRowForMatch(tableRow, queryResults);
+    }
+    return null;
   }
 
 }

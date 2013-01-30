@@ -3,11 +3,11 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.PlainResult;
-import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +35,25 @@ public class TableTable extends SlimTable {
   public class TableTableExpectation implements Expectation {
 
     @Override
-    public void evaluateExpectation(Object tableReturn) {
+    public TestResult evaluateExpectation(Object tableReturn) {
+      TestResult testResult;
       if (tableReturn == null || "null".equals(tableReturn)) {
-        table.appendContent(table.getColumnCountInRow(0) - 1, 0, ignore("No results from table"));
+        testResult = TestResult.ignore("No results from table");
+        table.updateContent(table.getColumnCountInRow(0) - 1, 0, testResult);
       } else if (tableReturn instanceof String) {
-        table.appendContent(0, 0, error((String) tableReturn));
+        testResult = TestResult.error((String) tableReturn);
+        table.updateContent(0, 0, testResult);
       } else {
         resizeTableAndEvaluateRows(tableReturn);
+        // TODO: Return gross result from table evaluation.
+        testResult = null;
       }
+      return testResult;
     }
 
     @Override
     public void handleException(ExceptionResult exceptionResult) {
-      table.appendContent(0, 0, exceptionResult);
+      table.updateContent(0, 0, exceptionResult);
     }
   }
 
@@ -80,37 +86,43 @@ public class TableTable extends SlimTable {
 
   private void extendRow(Table table, int row, List<Object> cellList) {
     while (table.getColumnCountInRow(row) < cellList.size())
-      table.appendContent(row, (String) cellList.get(table.getColumnCountInRow(row)));
+      table.addColumnToRow(row, (String) cellList.get(table.getColumnCountInRow(row)));
   }
 
-  private void evaluateRow(List<List<Object>> tableResults, int resultRow) {
-    List<Object> rowList = tableResults.get(resultRow);
+  private TestSummary evaluateRow(List<List<Object>> tableResults, int resultRow) {
+    final TestSummary testSummary = new TestSummary();
+    final List<Object> rowList = tableResults.get(resultRow);
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
       String contents = table.getCellContents(col, tableRow);
       table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(contents));
       String result = (String) rowList.get(col);
-      colorCell(col, tableRow, result);
+      TestResult testResult = getTestResult(result);
+      if (testResult != null) {
+        table.updateContent(col, tableRow, testResult);
+        // TODO: build a summary.
+        //testSummary.add(testResult.getExecutionResult());
+      }
     }
+    return testSummary;
   }
 
-  private void colorCell(int col, int row, String message) {
-    Result result;
+  private TestResult getTestResult(String message) {
+    TestResult result;
     if (message.equalsIgnoreCase("no change") || message.length() == 0)
-      return; // do nothing
+      return null; // do nothing
     else if (message.equalsIgnoreCase("pass"))
-      pass(col, row);
+      result = TestResult.pass();
     else if (message.equalsIgnoreCase("fail"))
-      fail(col, row, table.getCellContents(col, row));
+      result = TestResult.fail();
     else if (message.equalsIgnoreCase("ignore"))
-      ignore(col, row, table.getCellContents(col, row));
-    else if ((result = resultFromMessage(message)) != null)
-      table.setCell(col, row, result);
-    else
-      fail(col, row, message);
+      result = TestResult.ignore();
+    else if ((result = resultFromMessage(message)) == null)
+      result = TestResult.fail(message);
+    return result;
   }
 
-  private Result resultFromMessage(String contents) {
+  private TestResult resultFromMessage(String contents) {
     int colon = contents.indexOf(":");
     if (colon == -1)
       return null;
@@ -118,15 +130,15 @@ public class TableTable extends SlimTable {
     String message = contents.substring(colon + 1);
 
     if (code.equalsIgnoreCase("error"))
-      return error(message);
+      return TestResult.error(message);
     else if (code.equalsIgnoreCase("fail"))
-      return fail(message);
+      return TestResult.fail(message);
     else if (code.equalsIgnoreCase("pass"))
-      return pass(message);
+      return TestResult.pass(message);
     else if (code.equalsIgnoreCase("ignore"))
-      return ignore(message);
+      return TestResult.ignore(message);
     else if (code.equalsIgnoreCase("report"))
-      return new PlainResult(message);
+      return TestResult.plain(message);
     else
       return null;
   }

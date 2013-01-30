@@ -1,41 +1,56 @@
 package fitnesse.testsystems.slim.results;
 
+import fitnesse.testsystems.ExecutionResult;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static fitnesse.slim.SlimServer.*;
 
-public class ExceptionResult implements Result {
+public class ExceptionResult extends TestResult {
   public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>");
 
   private final String resultKey;
-  private final boolean isStopTestException;
   private final String exceptionValue;
 
   public ExceptionResult(String resultKey, String exceptionValue) {
+    super(null, null, null, exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR);
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
-    this.isStopTestException = exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
   }
 
   @Override
-  public String toHtml() {
-    return String.format(" <span class=\"%s\">%s</span>", htmlClass(), processException());
+  public boolean hasMessage() {
+    return getMessage() != null;
   }
 
-  private String htmlClass() {
-    return isStopTestException ? "fail" : "error";
-  }
-
-  private String processException() {
+  @Override
+  public String getMessage() {
     Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
     if (exceptionMessageMatcher.find()) {
       String exceptionMessage = exceptionMessageMatcher.group(1);
       return translateExceptionMessage(exceptionMessage);
-    } else {
-      return exceptionResult(resultKey);
     }
+    return null;
   }
+
+  public String getResultKey() {
+    return resultKey;
+  }
+
+  //  private String toHtml() {
+//    return String.format("<span class=\"%s\">%s</span>", htmlClass(), processException());
+//  }
+//
+//  private String processException() {
+//    Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
+//    if (exceptionMessageMatcher.find()) {
+//      String exceptionMessage = exceptionMessageMatcher.group(1);
+//      return translateExceptionMessage(exceptionMessage);
+//    } else {
+//      return exceptionResult(resultKey);
+//    }
+//  }
 
   private String translateExceptionMessage(String exceptionMessage) {
     String tokens[] = exceptionMessage.split(" ");
@@ -57,11 +72,11 @@ public class ExceptionResult implements Result {
     return exceptionMessage;
   }
 
-  private String exceptionResult(String resultKey) {
-    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
-  }
+//  private String exceptionResult(String resultKey) {
+//    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
+//  }
 
-  public String toString() {
-    return String.format("%s(%s)", htmlClass(), processException());
-  }
+//  public String toString() {
+//    return String.format("%s(%s)", htmlClass(), processException());
+//  }
 }

@@ -10,7 +10,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.FailResult;
+import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.*;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -260,7 +260,7 @@ public abstract class SlimTestSystem extends TestSystem {
       } catch (SyntaxError e) {
         String tableName = table.getTable().getCellContents(0, 0);
         // TODO: remove: raise TableFormatException or something like that.
-        table.getTable().setCell(0, 0, new FailResult(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+        table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
       }
     }
     return assertions;

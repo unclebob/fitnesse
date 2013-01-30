@@ -3,13 +3,13 @@
 package fitnesse.testsystems.slim;
 
 import org.htmlparser.util.ParserException;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Ignore;
 import org.junit.Test;
-import static util.RegexTestCase.assertHasRegexp;
 
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
 
 public class HtmlTableScannerTest {
   private HtmlTableScanner ts;
@@ -124,7 +124,7 @@ public class HtmlTableScannerTest {
   public void canAppendCellToRow() throws Exception {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    t.appendContent(0, "ray");
+    t.addColumnToRow(0, "ray");
     assertEquals("ray", t.getCellContents(1, 0));
   }
 

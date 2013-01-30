@@ -4,7 +4,7 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +21,8 @@ public class SlimErrorTable extends SlimTable {
   public List<Assertion> getAssertions() {
 	// No need for Expectations, this is just an errorous table. Put a notification in.
     String tableType = table.getCellContents(0, 0);
-    Result errorMessage = fail(String.format("\"%s\" is not a valid table type.", tableType));
-    table.setCell(0, 0, errorMessage);
+    TestResult errorMessage = TestResult.fail(String.format("\"%s\" is not a valid table type.", tableType));
+    table.updateContent(0, 0, errorMessage);
     return Collections.emptyList();
   }
 }

@@ -8,9 +8,7 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.PlainResult;
-import fitnesse.testsystems.slim.results.Result;
-import fitnesse.wikitext.Utils;
+import fitnesse.testsystems.slim.results.TestResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -260,17 +258,17 @@ public class ScriptTable extends SlimTable {
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       if (actual == null)
-        return failMessage(expected, "Returned null value.");
+        return TestResult.fail("null", expected);
       else if (actual.equals(VoidConverter.VOID_TAG) || actual.equals("null"))
-        return new PlainResult(expected);
+        return TestResult.pass(expected);
       else if (actual.equals(BooleanConverter.FALSE))
-        return fail(expected);
+        return TestResult.fail(actual, expected);
       else if (actual.equals(BooleanConverter.TRUE))
-        return pass(expected);
+        return TestResult.pass();
       else
-        return new PlainResult(expected);
+        return TestResult.plain();
     }
   }
 
@@ -280,9 +278,9 @@ public class ScriptTable extends SlimTable {
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       return (actual != null && actual.equals(BooleanConverter.TRUE)) ?
-        pass(expected) : fail(expected);
+              TestResult.pass() : TestResult.fail();
     }
   }
 
@@ -292,11 +290,11 @@ public class ScriptTable extends SlimTable {
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       if (actual == null)
-        return pass(expected);
+        return TestResult.pass();
       else
-        return actual.equals(BooleanConverter.FALSE) ? pass(expected) : fail(expected);
+        return actual.equals(BooleanConverter.FALSE) ? TestResult.pass() : TestResult.fail();
     }
   }
 
@@ -306,13 +304,13 @@ public class ScriptTable extends SlimTable {
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       try {
-        table.appendContent(getRow(), Utils.escapeHTML(actual));
+        table.addColumnToRow(getRow(), actual);
       } catch (Throwable e) {
-        return failMessage(actual, SlimTestSystem.exceptionToString(e));
+        return TestResult.fail(actual, SlimTestSystem.exceptionToString(e));
       }
-      return new PlainResult(expected);
+      return TestResult.plain();
     }
   }
 
@@ -323,12 +321,13 @@ public class ScriptTable extends SlimTable {
     }
 
     @Override
-    public void evaluateExpectation(Object returnValue) {
+    public TestResult evaluateExpectation(Object returnValue) {
       table.substitute(getCol(), getRow(), replaceSymbolsWithFullExpansion(getExpected()));
+      return null;
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

@@ -3,9 +3,6 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.PlainResult;
-import fitnesse.testsystems.slim.results.Result;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
@@ -93,7 +90,7 @@ public class HtmlTable implements Table {
     return rows.size() - 1;
   }
 
-  public void appendContent(int rowIndex, String contents) {
+  public void addColumnToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
     row.appendCell(contents);
   }
@@ -151,21 +148,22 @@ public class HtmlTable implements Table {
     }
   }
 
-
-  public void setTestStatusOnRow(int rowIndex, ExecutionResult testStatus) {
-    Row row = rows.get(rowIndex);
-    row.setTestStatus(testStatus);
-  }
-
   @Override
   public void updateContent(int row, TestResult result) {
     throw new RuntimeException("Needs implementing!");
   }
 
   @Override
-  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
-    appendContent(col, row, exceptionResult);
+  public void updateContent(int col, int row, TestResult testResult) {
+    Cell cell = rows.get(row).getColumn(col);
+    cell.setTestResult(testResult);
+    substitute(col, row, formatTestResult(col, row, testResult));
   }
+
+//  @Override
+//  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
+//    updateContent(col, row, exceptionResult);
+//  }
 
   private Tag newTag(Class<? extends Tag> klass) {
     Tag tag = null;
@@ -231,7 +229,7 @@ public class HtmlTable implements Table {
       List<String> list = new ArrayList<String>();
       for (Cell cell : cells) {
         // was "colorized"
-        list.add(cell.getResponse());
+        list.add(cell.getTestResult());
       }
       return list;
     }
@@ -278,7 +276,8 @@ public class HtmlTable implements Table {
 
   class Cell {
     private TableColumn columnNode;
-    private Result response;
+    private String originalContent;
+    private TestResult testResult;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
@@ -293,11 +292,6 @@ public class HtmlTable implements Table {
       columnNode.setChildren(new NodeList(text));
     }
 
-    public Cell(Node node) {
-      columnNode = (TableColumn) newTag(TableColumn.class);
-      columnNode.setChildren(new NodeList(node));
-    }
-
     public String getResult() {
       String result = columnNode.getAttribute("class");
       if (result == null) {
@@ -307,7 +301,7 @@ public class HtmlTable implements Table {
       } else if (result.equals("pass") || result.equals("fail") || result.equals("error") || result.equals("ignore")) {
         return result;
       }
-      return "Unkown Result";
+      return "Unknown Result";
     }
 
     public String getContent() {
@@ -321,43 +315,23 @@ public class HtmlTable implements Table {
     }
 
     public void setContent(String s) {
+      originalContent = getContent();
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);
     }
 
-    public String getResponse() {
-      return response != null ? response.toString() : getContent();
-    }
-
-    public void setResponse(Result response) {
-      if (this.response != null) {
-        this.response = new PlainResult(this.response, response);
-      } else {
-        this.response = response;
-      }
+    public String getTestResult() {
+      return testResult != null ? testResult.toString(originalContent) : getContent();
     }
 
     public TableColumn getColumnNode() {
       return columnNode;
     }
-  }
 
-  @Override
-  public void setCell(int col, int row, Result response) {
-    substitute(col, row, response.toHtml());
-    updateResponse(col, row, response);
-  }
-
-  @Override
-  public void appendContent(int col, int row, Result response) {
-    appendToCell(col, row, response.toHtml());
-    updateResponse(col, row, response);
-  }
-
-  private void updateResponse(int col, int row, Result response) {
-    Cell cell = rows.get(row).getColumn(col);
-    cell.setResponse(response);
+    public void setTestResult(TestResult testResult) {
+      this.testResult = testResult;
+    }
   }
 
   @Override
@@ -366,6 +340,27 @@ public class HtmlTable implements Table {
     // Quick 'n' Dirty
     script = substitution.substitute(0, 0, script);
     return new HtmlTableScanner(script).getTable(0);
+  }
+
+  public String formatTestResult(int col, int row, TestResult testResult) {
+    final String originalContent = getCellContents(col, row);
+    if (testResult.getExecutionResult() == null) {
+      return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
+    }
+    switch (testResult.getExecutionResult()) {
+      case PASS:
+        return String.format("<span class=\"pass\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
+      case FAIL:
+        if (testResult.hasActual() && testResult.hasExpected()) {
+          return String.format("[%s] <span class=\"fail\">expected [%s]</span>", testResult.getActual(), testResult.getExpected());
+        }
+        return String.format("<span class=\"fail\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
+      case IGNORE:
+        return String.format("<span class=\"ignore\">%s</span>", testResult.hasMessage() ? testResult.getMessage() : originalContent);
+      case ERROR:
+        return String.format("<span class=\"error\">%s</span>", testResult.getMessage());
+    }
+    return "Should not be here";
   }
 }
 
