@@ -2,17 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimServer;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
-  private Set<String> dontReportExceptionsInTheseInstructions = new HashSet<String>();
 
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
@@ -48,12 +49,6 @@ public class DecisionTable extends SlimTable {
 
   protected Instruction callAndAssign(String symbolName, String functionName) {
     return callAndAssign(symbolName, getTableName(), functionName);
-  }
-
-  public boolean shouldIgnoreException(String resultKey, String resultString) {
-    boolean shouldNotReport = dontReportExceptionsInTheseInstructions.contains(resultKey);
-    boolean isNoSuchMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);
-    return shouldNotReport && isNoSuchMethodException;
   }
 
   private class DecisionTableCaller {
@@ -124,9 +119,9 @@ public class DecisionTable extends SlimTable {
     public List<Assertion> call(String fixtureName) throws SyntaxError {
       final List<Assertion> assertions = new ArrayList<Assertion>();
       assertions.add(constructFixture(fixtureName));
-      final Instruction callTable = callFunction(getTableName(), "table", tableAsList());
-      assertions.add(makeAssertion(callTable, new SilentReturnExpectation(0, 0)));
-      dontReportExceptionsInTheseInstructions.add(callTable.getId());
+      assertions.add(makeAssertion(
+              callFunction(getTableName(), "table", tableAsList()),
+              new SilentReturnExpectation(0, 0)));
       if (table.getRowCount() > 2)
         assertions.addAll(invokeRows());
       return assertions;
@@ -153,9 +148,8 @@ public class DecisionTable extends SlimTable {
     }
 
     private Assertion callUnreportedFunction(String functionName, int row) {
-      final Instruction functionCall = callFunction(getTableName(), functionName);
-      dontReportExceptionsInTheseInstructions.add(functionCall.getId());
-      return makeAssertion(functionCall, new SilentReturnExpectation(0, row));
+      return makeAssertion(callFunction(getTableName(), functionName),
+              new SilentReturnExpectation(0, row));
     }
 
     private List<Assertion> callFunctions(int row) {

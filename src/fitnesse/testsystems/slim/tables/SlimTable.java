@@ -311,9 +311,10 @@ public abstract class SlimTable {
     protected abstract TestResult createEvaluationMessage(String actual, String expected);
 
     @Override
-    public void handleException(ExceptionResult exceptionResult) {
+    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
       getTestContext().incrementErroredTestsCount();
+      return exceptionResult;
     }
 
     public int getCol() {
@@ -424,9 +425,13 @@ public abstract class SlimTable {
     }
 
     @Override
-    public void handleException(ExceptionResult exceptionResult) {
+    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+      if (exceptionResult.isNoMethodInClassException()) {
+        return null;
+      }
       table.updateContent(col, row, exceptionResult);
       getTestContext().incrementErroredTestsCount();
+      return exceptionResult;
     }
   }
 

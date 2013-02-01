@@ -304,13 +304,14 @@ public abstract class SlimTestSystem extends TestSystem {
   protected void evaluateTables() {
     for (Assertion a : assertions) {
       try {
-        Object returnValue = instructionResults.get(a.getInstruction().getId());
+        final String key = a.getInstruction().getId();
+        final Object returnValue = instructionResults.get(key);
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
-          String key = a.getInstruction().getId();
-          if (shouldReportException(key, (String) returnValue)) {
-          ExceptionResult exceptionResult = processException(key, (String) returnValue);
-          a.getExpectation().handleException(exceptionResult);
-          testSystemListener.testExceptionOccurred(a, exceptionResult);
+          ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
+          exceptionResult = a.getExpectation().evaluateException(exceptionResult);
+          if (exceptionResult != null) {
+            exceptions.addException(key, (String) returnValue);
+            testSystemListener.testExceptionOccurred(a, exceptionResult);
           }
         } else {
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
@@ -323,23 +324,13 @@ public abstract class SlimTestSystem extends TestSystem {
     }
   }
 
-  private boolean shouldReportException(String resultKey, String resultString) {
-    for (SlimTable table : testTables) {
-      if (table.shouldIgnoreException(resultKey, resultString))
-        return false;
-    }
-    return true;
-  }
-
-  private ExceptionResult processException(String resultKey, String resultString) {
-    testSummary.exceptions++;
+  private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
     boolean isStopTestException = resultString.contains(EXCEPTION_STOP_TEST_TAG);
     if (isStopTestException) {
       stopTestCalled = true;
     }
-    exceptions.addException(resultKey, resultString);
 
-    return new ExceptionResult(resultKey, resultString);
+    return new ExceptionResult(resultKey, resultString, isStopTestException);
   }
 
   public static class SlimDescriptor extends Descriptor {

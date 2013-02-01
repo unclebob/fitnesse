@@ -8,10 +8,10 @@ public interface Expectation {
 
   Expectation NOOP_EXPECTATION = new Expectation() {
     @Override public TestResult evaluateExpectation(Object returnValues) { return null; }
-    @Override public void handleException(ExceptionResult exceptionResult) { }
+    @Override public ExceptionResult evaluateException(ExceptionResult exceptionResult) { return null; }
   };
 
   TestResult evaluateExpectation(Object returnValues);
 
-  void handleException(ExceptionResult exceptionResult);
+  ExceptionResult evaluateException(ExceptionResult exceptionResult);
 }

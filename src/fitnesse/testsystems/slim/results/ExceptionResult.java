@@ -12,11 +12,12 @@ public class ExceptionResult {
 
   private final String resultKey;
   private final String exceptionValue;
+  private final boolean stopTestException;
 
-  public ExceptionResult(String resultKey, String exceptionValue) {
-    //super(null, null, null, exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR);
+  public ExceptionResult(String resultKey, String exceptionValue, boolean stopTestException) {
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
+    this.stopTestException = stopTestException;
   }
 
   public ExecutionResult getExecutionResult() {
@@ -28,10 +29,17 @@ public class ExceptionResult {
   }
 
   public String getMessage() {
+    String exceptionMessage = getExceptionMessage();
+    if (exceptionMessage != null) {
+      return translateExceptionMessage(exceptionMessage);
+    }
+    return null;
+  }
+
+  private String getExceptionMessage() {
     Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
     if (exceptionMessageMatcher.find()) {
-      String exceptionMessage = exceptionMessageMatcher.group(1);
-      return translateExceptionMessage(exceptionMessage);
+      return exceptionMessageMatcher.group(1);
     }
     return null;
   }
@@ -40,19 +48,14 @@ public class ExceptionResult {
     return resultKey;
   }
 
-  //  private String toHtml() {
-//    return String.format("<span class=\"%s\">%s</span>", htmlClass(), processException());
-//  }
-//
-//  private String processException() {
-//    Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
-//    if (exceptionMessageMatcher.find()) {
-//      String exceptionMessage = exceptionMessageMatcher.group(1);
-//      return translateExceptionMessage(exceptionMessage);
-//    } else {
-//      return exceptionResult(resultKey);
-//    }
-//  }
+  public boolean isStopTestException() {
+    return stopTestException;
+  }
+
+  public boolean isNoMethodInClassException() {
+    String exceptionMessage = getExceptionMessage();
+    return exceptionMessage != null && exceptionMessage.contains(NO_METHOD_IN_CLASS);
+  }
 
   private String translateExceptionMessage(String exceptionMessage) {
     String tokens[] = exceptionMessage.split(" ");
@@ -74,11 +77,4 @@ public class ExceptionResult {
     return exceptionMessage;
   }
 
-//  private String exceptionResult(String resultKey) {
-//    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
-//  }
-
-//  public String toString() {
-//    return String.format("%s(%s)", htmlClass(), processException());
-//  }
 }

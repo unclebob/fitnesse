@@ -90,9 +90,10 @@ public class QueryTable extends SlimTable {
     }
 
     @Override
-    public void handleException(ExceptionResult exceptionResult) {
+    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
       table.updateContent(0, 0, exceptionResult);
       getTestContext().incrementErroredTestsCount();
+      return exceptionResult;
     }
   }
 

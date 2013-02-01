@@ -167,7 +167,7 @@ public class HtmlSlimResponderTest {
   }
 
   @Test
-  public void decisionTableIgnoresMethodMissingForResetExecuteaAndTable()
+  public void decisionTableIgnoresMethodMissingForResetExecuteAndTable()
       throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.DummyDecisionTable|\n"
         + "|x?|\n" + "|1|\n");
@@ -195,7 +195,7 @@ public class HtmlSlimResponderTest {
       throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.DecisionTableExecuteThrows|\n"
         + "|x?|\n" + "|1|\n");
-    assertEquals(2, responder.getTestSummary().getExceptions());
+    assertEquals(1, responder.getTestSummary().getExceptions());
     assertTestResultsContain("EXECUTE_THROWS");
   }
 
