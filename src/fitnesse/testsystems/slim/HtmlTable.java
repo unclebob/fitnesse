@@ -6,6 +6,7 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.parser.Collapsible;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -19,6 +20,7 @@ import java.util.Stack;
 public class HtmlTable implements Table {
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
+  private List<ExceptionResult> exceptions = new ArrayList<ExceptionResult>();
 
   public HtmlTable(TableTag tableNode) {
     this.tableNode = tableNode;
@@ -29,6 +31,7 @@ public class HtmlTable implements Table {
         rows.add(new Row((CompositeTag) node));
       }
     }
+    tableNode.getChildren().prepend(new ExceptionTextNode());
   }
 
   public TableTag getTableNode() {
@@ -155,8 +158,9 @@ public class HtmlTable implements Table {
   public void updateContent(int col, int row, ExceptionResult exceptionResult) {
     Cell cell = rows.get(row).getColumn(col);
     if (cell.exceptionResult == null) {
-     cell.setExceptionResult(exceptionResult);
-     cell.setContent(cell.formatExceptionResult());
+      cell.setExceptionResult(exceptionResult);
+      cell.setContent(cell.formatExceptionResult());
+      exceptions.add(exceptionResult);
     }
   }
 
@@ -353,8 +357,8 @@ public class HtmlTable implements Table {
                 exceptionResult.getExecutionResult().toString(),
                 Utils.escapeHTML(exceptionResult.getMessage()));
       } else {
-        // TODO: prefix Exception block -- now done in HtmlSlimTestSystem
-        return String.format("%s <span class=\"%s\">Exception: <a href=\"%s\">%s</a></span>", originalContent, exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
+        // See below where exception block is formatted
+        return String.format("%s <span class=\"%s\">Exception: <a href=\"#%s\">%s</a></span>", originalContent, exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
       }
     }
 
@@ -368,6 +372,39 @@ public class HtmlTable implements Table {
     return new HtmlTableScanner(script).getTable(0);
   }
 
+  class ExceptionTextNode extends TextNode {
+
+    public ExceptionTextNode() {
+      super("");
+    }
+
+    @Override
+    public String toHtml(boolean verbatim) {
+      if(!haveExceptionsWithoutMessage()) {
+        return "";
+      }
+      StringBuilder buffer = new StringBuilder(512);
+      buffer.append("<div class=\"exceptions\"><h3>Exceptions</h3>");
+      for (ExceptionResult exceptionResult : exceptions) {
+        if (!exceptionResult.hasMessage()) {
+          buffer.append(String.format("<a name=\"%s\"></a>", exceptionResult.getResultKey()));
+          buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(exceptionResult.getResultKey()),
+                  "<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"));
+        }
+      }
+      buffer.append("</div>");
+      return buffer.toString();
+    }
+
+    private boolean haveExceptionsWithoutMessage() {
+      for (ExceptionResult exception : exceptions) {
+        if (!exception.hasMessage()) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
 }
 
 

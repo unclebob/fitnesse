@@ -66,11 +66,10 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   // TODO: Get rid of this
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
     evaluateTables();
-    String exceptionsString = exceptions.toHtml();
 
     HtmlTable start = (startWithTable != null) ? (HtmlTable) startWithTable.getTable() : null;
     HtmlTable end = (stopBeforeTable != null) ? (HtmlTable) stopBeforeTable.getTable() : null;
     String testResultHtml = tableScanner.toHtml(start, end);
-    return exceptionsString + testResultHtml;
+    return testResultHtml;
   }
 }
