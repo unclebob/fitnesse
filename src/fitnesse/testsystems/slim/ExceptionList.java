@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Deprecated
 public class ExceptionList {
-  private boolean stopTestCalled = false;
   private Map<String, String> exceptions;
   private boolean firstHtmlRequest = true;
   private int testNumber = 0;
@@ -39,16 +39,7 @@ public class ExceptionList {
     }
   }
 
-  public boolean stopTestCalled() {
-    return stopTestCalled;
-  }
-
-  public void setStopTestCalled() {
-    stopTestCalled = true;
-  }
-
   public void resetForNewTest() {
-    stopTestCalled = false;
     firstHtmlRequest = true;
     testNumber++;
   }

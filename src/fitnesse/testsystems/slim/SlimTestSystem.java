@@ -40,6 +40,7 @@ public abstract class SlimTestSystem extends TestSystem {
   private NestedSlimTestContext testContext;
   private final SlimDescriptor descriptor;
   private List<Assertion> assertions;
+  private boolean stopTestCalled;
 
 
   public SlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
@@ -164,6 +165,7 @@ public abstract class SlimTestSystem extends TestSystem {
     testContext = new NestedSlimTestContext();
     testSummary.clear();
     exceptions.resetForNewTest();
+    stopTestCalled = false;
   }
 
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
@@ -224,7 +226,7 @@ public abstract class SlimTestSystem extends TestSystem {
 
     testTables = tables;
     assertions = createAssertions(tables);
-    if (!exceptions.stopTestCalled()) {
+    if (!stopTestCalled) {
       instructionResults = slimClient.invokeAndGetResponse(Assertion.getInstructions(assertions));
     }
     String html = createHtmlResults(startWithTable, nextTable);
@@ -333,7 +335,7 @@ public abstract class SlimTestSystem extends TestSystem {
     testSummary.exceptions++;
     boolean isStopTestException = resultString.contains(EXCEPTION_STOP_TEST_TAG);
     if (isStopTestException) {
-      exceptions.setStopTestCalled();
+      stopTestCalled = true;
     }
     exceptions.addException(resultKey, resultString);
 
