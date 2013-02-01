@@ -18,6 +18,7 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
 
 import java.io.IOException;
 
@@ -33,6 +34,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   private PageData pageData;
   private PageCrawler crawler;
   private FitNesseContext context;
+  private Throwable slimException;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -78,10 +80,14 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
       } catch (IOException e) {
-        e.printStackTrace();
+        slimException = e;
       }
 
-      return html;
+      String exceptionString = "";
+      if (slimException != null) {
+        exceptionString = String.format("<div class='error'>%s</div>", Utils.escapeHTML(slimException.getMessage()));
+      }
+      return exceptionString + html;
     }
   }
 
@@ -121,6 +127,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   @Override
   public void exceptionOccurred(Throwable e) {
+    slimException = e;
   }
 
   @Override

@@ -12,12 +12,10 @@ public class ExceptionResult {
 
   private final String resultKey;
   private final String exceptionValue;
-  private final boolean stopTestException;
 
-  public ExceptionResult(String resultKey, String exceptionValue, boolean stopTestException) {
+  public ExceptionResult(String resultKey, String exceptionValue) {
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
-    this.stopTestException = stopTestException;
   }
 
   public ExecutionResult getExecutionResult() {
@@ -48,8 +46,12 @@ public class ExceptionResult {
     return resultKey;
   }
 
+  public String getException() {
+    return exceptionValue;
+  }
+
   public boolean isStopTestException() {
-    return stopTestException;
+    return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
   }
 
   public boolean isNoMethodInClassException() {
@@ -76,5 +78,4 @@ public class ExceptionResult {
 
     return exceptionMessage;
   }
-
 }

@@ -34,7 +34,6 @@ public abstract class SlimTestSystem extends TestSystem {
   protected ReadOnlyPageData testResults;
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
-  protected ExceptionList exceptions = new ExceptionList();
   protected TestSummary testSummary;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private NestedSlimTestContext testContext;
@@ -99,7 +98,7 @@ public abstract class SlimTestSystem extends TestSystem {
       waitForConnection();
       started = true;
     } catch (SlimError e) {
-      testSystemListener.exceptionOccurred(e);
+      exceptionOccurred(e);
     }
   }
 
@@ -164,7 +163,6 @@ public abstract class SlimTestSystem extends TestSystem {
   private void initializeTest() {
     testContext = new NestedSlimTestContext();
     testSummary.clear();
-    exceptions.resetForNewTest();
     stopTestCalled = false;
   }
 
@@ -172,12 +170,12 @@ public abstract class SlimTestSystem extends TestSystem {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
     if (serverVersionNumber == SlimClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
-    	exceptions.addException("Sever Not Connected Error", "Server did not respond with a valid version number.");
+    	exceptionOccurred(new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number."));
     }
     else {
-    	if (serverVersionNumber < expectedVersionNumber)
-      exceptions.addException("Slim Protocol Version Error",
-        String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
+      if (serverVersionNumber < expectedVersionNumber) {
+        exceptionOccurred(new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber)));
+      }
     }
   }
 
@@ -310,27 +308,25 @@ public abstract class SlimTestSystem extends TestSystem {
           ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {
-            exceptions.addException(key, (String) returnValue);
-            testSystemListener.testExceptionOccurred(a, exceptionResult);
+            testExceptionOccurred(a, exceptionResult);
           }
         } else {
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
-          testSystemListener.testAssertionVerified(a, testResult);
+          testAssertionVerified(a, testResult);
         }
       } catch (Throwable ex) {
-        exceptions.addException("ABORT", exceptionToString(ex));
+        //exceptions.addException("ABORT", exceptionToString(ex));
         exceptionOccurred(ex);
       }
     }
   }
 
   private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
-    boolean isStopTestException = resultString.contains(EXCEPTION_STOP_TEST_TAG);
-    if (isStopTestException) {
+    ExceptionResult exceptionResult = new ExceptionResult(resultKey, resultString);
+    if (exceptionResult.isStopTestException()) {
       stopTestCalled = true;
     }
-
-    return new ExceptionResult(resultKey, resultString, isStopTestException);
+    return exceptionResult;
   }
 
   public static class SlimDescriptor extends Descriptor {
