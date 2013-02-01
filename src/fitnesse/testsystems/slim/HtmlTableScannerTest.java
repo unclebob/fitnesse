@@ -142,7 +142,7 @@ public class HtmlTableScannerTest {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
     t.addRow(Arrays.asList("y", "z"));
-    assertHasRegexp("<table _tablenumber=\\d+><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>",ts.toHtml().toLowerCase());
+    assertHasRegexp("<table _tablenumber=\"\\d+\"><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>",ts.toHtml().toLowerCase());
   }
 
 
@@ -151,7 +151,7 @@ public class HtmlTableScannerTest {
     String html_format = "gunk<body>gunk<table%s>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
     String html = String.format(html_format, "");
     scan(html);
-    String expectedPattern = String.format(html_format, " _TABLENUMBER=\\d+");
+    String expectedPattern = String.format(html_format, " _TABLENUMBER=\"\\d+\"");
     assertHasRegexp(expectedPattern,ts.toHtml());
   }
 
@@ -205,9 +205,9 @@ public class HtmlTableScannerTest {
 
 
     String MULTI_TABLE_HTML = String.format(table1_fmt + table2_fmt + table3_fmt, "", "", "");
-    String expected_pattern1 = String.format(table1_fmt, " _TABLENUMBER=\\d+");
-    String expected_pattern2 = String.format(table2_fmt, " _TABLENUMBER=\\d+");
-    String expected_pattern3 = String.format(table3_fmt, " _TABLENUMBER=\\d+");
+    String expected_pattern1 = String.format(table1_fmt, " _TABLENUMBER=\"\\d+\"");
+    String expected_pattern2 = String.format(table2_fmt, " _TABLENUMBER=\"\\d+\"");
+    String expected_pattern3 = String.format(table3_fmt, " _TABLENUMBER=\"\\d+\"");
     scan(MULTI_TABLE_HTML);
     assertHasRegexp(expected_pattern1 + expected_pattern2 + expected_pattern3, ts.toHtml(null, null));
     assertHasRegexp(expected_pattern1, ts.toHtml(null, ts.getTable(1)));
