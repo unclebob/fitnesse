@@ -119,8 +119,12 @@ public class TableListComparer {
       int cellCountForTable1 = 0;
       int cellCountForTable2 = 0;
       for (int row = 0; row < table1rows; row++) {
-        cellCountForTable1 += table1.getColumnCountInRow(row);
-        cellCountForTable2 += table2.getColumnCountInRow(row);
+        if (!isCalledScenario(table1, row)) {
+          cellCountForTable1 += table1.getColumnCountInRow(row);
+        }
+        if (!isCalledScenario(table2, row)) {
+          cellCountForTable2 += table2.getColumnCountInRow(row);
+        }
       }
       if (cellCountForTable1 == cellCountForTable2)
         return .1;
@@ -130,17 +134,22 @@ public class TableListComparer {
 
     private double scoreRowContent() {
       double colScore = 0.0;
-      for (int row = 0; row < table1rows; row++)
-        colScore += compareCellsInRow(row);
+      int rowCount = 0;
+      for (int row = 0; row < table1rows; row++) {
+        if (!isCalledScenario(table1, row) || !isCalledScenario(table2, row)) {
+          colScore += compareCellsInRow(row);
+          rowCount++;
+        }
+      }
 
-      return (colScore * 2) / (table1rows + table2rows);
+      return (colScore) / rowCount;
     }
 
     private double scoreRowTopology() {
       double score = 0.0;
       for (int row = 0; row < table1rows; row++) {
-        int table1Cols = table1.getColumnCountInRow(row);
-        int table2Cols = table2.getColumnCountInRow(row);
+        int table1Cols = isCalledScenario(table1, row) ? 0 : table1.getColumnCountInRow(row);
+        int table2Cols = isCalledScenario(table2, row) ? 0 : table2.getColumnCountInRow(row);
         if (table1Cols == table2Cols)
           score += .1 * (2.0 / (table1rows + table2rows));
       }
@@ -188,6 +197,14 @@ public class TableListComparer {
       String content1 = table1.getCellContents(col, row);
       String content2 = table2.getCellContents(col, row);
       return content1.equals(content2) ? 1 : 0;
+    }
+
+    private boolean isCalledScenario(Table table, int row) {
+      if (table.getColumnCountInRow(row) == 1) {
+        String content = table.getCellContents(0, row);
+        return content.contains("<table>");
+      }
+      return false;
     }
 
     private boolean isCalledScenario(String content1) {
