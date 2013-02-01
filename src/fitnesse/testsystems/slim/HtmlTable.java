@@ -372,6 +372,7 @@ public class HtmlTable implements Table {
     return new HtmlTableScanner(script).getTable(0);
   }
 
+  // This is not the nicest solution, since the the exceptions are put inside the <table> tag.
   class ExceptionTextNode extends TextNode {
 
     public ExceptionTextNode() {
