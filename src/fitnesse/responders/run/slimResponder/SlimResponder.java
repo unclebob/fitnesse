@@ -14,6 +14,9 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.SlimTestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.*;
 
 import java.io.IOException;
@@ -108,13 +111,24 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     this.fastTest = fastTest;
   }
 
+  @Override
   public void acceptOutputFirst(String output) {
   }
 
+  @Override
   public void testComplete(TestSummary testSummary)  {
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   public String getCommandLine() {

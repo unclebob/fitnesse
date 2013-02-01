@@ -191,7 +191,7 @@ public class TableListComparer {
     }
 
     private boolean isCalledScenario(String content1) {
-      return content1.contains("<div class=\"collapsible hidden\">");
+      return content1.contains("<table>");
     }
   }
 }

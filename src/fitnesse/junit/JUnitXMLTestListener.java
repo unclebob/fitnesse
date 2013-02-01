@@ -1,16 +1,19 @@
 package fitnesse.junit;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import fitnesse.responders.run.*;
+import fitnesse.responders.run.ResultsListener;
+import fitnesse.responders.run.TestPage;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.WikiPagePath;
 import util.TimeMeasurement;
 
-import fitnesse.wiki.WikiPagePath;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class JUnitXMLTestListener implements ResultsListener {
   
@@ -74,6 +77,14 @@ public class JUnitXMLTestListener implements ResultsListener {
 
   @Override
   public void testOutputChunk(String output)  {
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   @Override

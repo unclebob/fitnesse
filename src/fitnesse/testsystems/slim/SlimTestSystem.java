@@ -319,11 +319,13 @@ public abstract class SlimTestSystem extends TestSystem {
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
           String key = a.getInstruction().getId();
           if (shouldReportException(key, (String) returnValue)) {
-            ExceptionResult exceptionResult = processException(key, (String) returnValue);
-            a.getExpectation().handleException(exceptionResult);
+          ExceptionResult exceptionResult = processException(key, (String) returnValue);
+          a.getExpectation().handleException(exceptionResult);
+          testSystemListener.testExceptionOccurred(a, exceptionResult);
           }
         } else {
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
+          testSystemListener.testAssertionVerified(a, testResult);
         }
       } catch (Throwable ex) {
         exceptions.addException("ABORT", exceptionToString(ex));
@@ -355,13 +357,13 @@ public abstract class SlimTestSystem extends TestSystem {
     return allTables;
   }
 
-  public List<Assertion> getAssertions() {
-    return allAssertions;
-  }
-
-  public Map<String, Object> getInstructionResults() {
-    return allInstructionResults;
-  }
+//  public List<Assertion> getAssertions() {
+//    return allAssertions;
+//  }
+//
+//  public Map<String, Object> getInstructionResults() {
+//    return allInstructionResults;
+//  }
 
   public static class SlimDescriptor extends Descriptor {
 

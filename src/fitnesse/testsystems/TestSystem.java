@@ -2,16 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.responders.PageFactory;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Map;
-
-import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.PageFactory;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 
 public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_COMMAND_PATTERN =
@@ -69,18 +72,31 @@ public abstract class TestSystem implements TestSystemListener {
     return parts[0];
   }
 
+  @Override
   public void acceptOutputFirst(String output) throws IOException {
     testSystemListener.acceptOutputFirst(output);
   }
 
+  @Override
   public void testComplete(TestSummary testSummary) throws IOException {
     testSystemListener.testComplete(testSummary);
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
     log.addException(e);
     log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
     testSystemListener.exceptionOccurred(e);
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    testSystemListener.testAssertionVerified(assertion, testResult);
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
   public abstract void start() throws IOException;

@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import java.io.IOException;
-
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -14,6 +11,9 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import util.TimeMeasurement;
+
+import java.io.IOException;
 
 public abstract class TestHtmlFormatter extends InteractiveFormatter {
   protected TimeMeasurement latestTestTime;

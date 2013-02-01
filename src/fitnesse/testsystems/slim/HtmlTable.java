@@ -154,8 +154,10 @@ public class HtmlTable implements Table {
   @Override
   public void updateContent(int col, int row, ExceptionResult exceptionResult) {
     Cell cell = rows.get(row).getColumn(col);
-    cell.setExceptionResult(exceptionResult);
-    cell.setContent(cell.formatExceptionResult());
+    if (cell.exceptionResult == null) {
+     cell.setExceptionResult(exceptionResult);
+     cell.setContent(cell.formatExceptionResult());
+    }
   }
 
   private Tag newTag(Class<? extends Tag> klass) {
@@ -337,21 +339,22 @@ public class HtmlTable implements Table {
           }
           return String.format("<span class=\"fail\">%s</span>", escapedMessage);
         case IGNORE:
-          return String.format("<span class=\"ignore\">%s</span>", escapedMessage);
+          return String.format("%s <span class=\"ignore\">%s</span>", originalContent, escapedMessage);
         case ERROR:
-          return String.format("<span class=\"error\">%s</span>", escapedMessage);
+          return String.format("%s <span class=\"error\">%s</span>", originalContent, escapedMessage);
       }
       return "Should not be here";
     }
 
     public String formatExceptionResult() {
       if (exceptionResult.hasMessage()) {
-        return String.format("<span class=\"%s\">%s</span>",
+        return String.format("%s <span class=\"%s\">%s</span>",
+                originalContent,
                 exceptionResult.getExecutionResult().toString(),
                 Utils.escapeHTML(exceptionResult.getMessage()));
       } else {
         // TODO: prefix Exception block -- now done in HtmlSlimTestSystem
-        return String.format("<span class=\"%s\"><a href=\"%s\">%s</a></span>", exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
+        return String.format("%s <span class=\"%s\">Exception: <a href=\"%s\">%s</a></span>", originalContent, exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
       }
     }
 
