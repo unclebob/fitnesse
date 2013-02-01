@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -66,4 +70,54 @@ public class VersionResponderTest extends RegexTestCase {
     makeTestResponse("PageOne.PageTwo");
     assertSubString("PageOne.PageTwo?responder=", response.getContent());
   }
+  
+  public void testPageWithMultipleVersionsForNavigationButtons() throws Exception {
+    String pageName = "MultiVersionPage";
+    
+    root = InMemoryPage.makeRoot("RooT");
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original base content");
+    PageData data = page.getData();
+    
+    data.setContent("updated content");
+    page.commit(data);
+
+    data.setContent("futher update to content");
+    page.commit(data);
+
+    data.setContent("latest content");
+    page.commit(data);
+
+    //root.getChildPage("MultiVersionPage").getData().getVersions()
+    List<VersionInfo> versions = new ArrayList<VersionInfo>(data.getVersions());
+    Collections.sort(versions);
+    Collections.reverse(versions);
+    
+    for(VersionInfo v : versions)
+      System.out.println(String.format("%10s, %10s, %s, %d", v.getName(), v.getAge(), v.getCreationTime(), v.getCreationTime().getTime()));
+    
+    // check base version has next but no previous button
+    MockRequest request = new MockRequest();
+    request.setResource(pageName);
+    request.addInput("version", versions.get(2).getName());
+
+    Responder responder = new VersionResponder();
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    
+    assertHasRegexp(">Next</a>", response.getContent());
+    assertDoesntHaveRegexp(">Previous</a>", response.getContent());
+
+    // check updated version has both next and previous button
+    request = new MockRequest();
+    request.setResource(pageName);
+    request.addInput("version", versions.get(1).getName());
+
+    responder = new VersionResponder();
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    
+    assertHasRegexp(">Next</a>", response.getContent());
+    assertHasRegexp(">Previous</a>", response.getContent());
+  }
+
+
 }
