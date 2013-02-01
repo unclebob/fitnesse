@@ -143,6 +143,7 @@ public abstract class SlimTable {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
+  @Deprecated
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     return false;
   }
@@ -272,10 +273,6 @@ public abstract class SlimTable {
     private final int row;
     private final String originalContent;
 
-    // Needed for Xml Formatter...
-    private String actual;
-    //private TestResult evaluationMessage;
-
     public RowExpectation(int col, int row) {
       this(col, row, col >= 0 ? table.getCellContents(col, row) : null);
     }
@@ -308,7 +305,6 @@ public abstract class SlimTable {
     }
 
     TestResult evaluationMessage(String actual, String expected) {
-      this.actual = actual;
       return createEvaluationMessage(actual, expected);
     }
 
@@ -329,18 +325,8 @@ public abstract class SlimTable {
     }
 
     // Used only by XmlFormatter.SlimTestXmlFormatter
-    public String getActual() {
-      return actual;
-    }
-
-    // Used only by XmlFormatter.SlimTestXmlFormatter
     public String getExpected() {
-      return originalContent; //table.getCellContents(col, row);
-    }
-
-    // Used only by XmlFormatter.SlimTestXmlFormatter
-    public String getEvaluationMessage() {
-      return ""; //evaluationMessage == null ? "" : evaluationMessage.toString();
+      return originalContent;
     }
   }
 
