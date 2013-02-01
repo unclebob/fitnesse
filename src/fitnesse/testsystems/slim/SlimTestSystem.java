@@ -30,12 +30,6 @@ public abstract class SlimTestSystem extends TestSystem {
   private CommandRunner slimRunner;
   private SlimClient slimClient;
 
-  // TODO: get rid of those. Expose via Listener interface
-  protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
-  protected List<SlimTable> allTables = new ArrayList<SlimTable>();
-  protected List<Assertion> allAssertions = new ArrayList<Assertion>();
-
-
   private boolean started;
   protected ReadOnlyPageData testResults;
   protected Map<String, Object> instructionResults;
@@ -169,9 +163,6 @@ public abstract class SlimTestSystem extends TestSystem {
   private void initializeTest() {
     testContext = new NestedSlimTestContext();
     testSummary.clear();
-    allInstructionResults.clear();
-    allAssertions.clear();
-    allTables.clear();
     exceptions.resetForNewTest();
   }
 
@@ -205,7 +196,7 @@ public abstract class SlimTestSystem extends TestSystem {
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
   String processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
-    allTables = createSlimTables(pageData);
+    List<SlimTable> allTables = createSlimTables(pageData);
     testResults = pageData;
 
     boolean runAllTablesAtOnce = false;
@@ -238,10 +229,6 @@ public abstract class SlimTestSystem extends TestSystem {
     }
     String html = createHtmlResults(startWithTable, nextTable);
     acceptOutputFirst(html);
-
-    // update all lists
-    allAssertions.addAll(assertions);
-    allInstructionResults.putAll(instructionResults);
 
     return html;
   }
@@ -352,18 +339,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
     return new ExceptionResult(resultKey, resultString);
   }
-
-  public List<SlimTable> getTestTables() {
-    return allTables;
-  }
-
-//  public List<Assertion> getAssertions() {
-//    return allAssertions;
-//  }
-//
-//  public Map<String, Object> getInstructionResults() {
-//    return allInstructionResults;
-//  }
 
   public static class SlimDescriptor extends Descriptor {
 
