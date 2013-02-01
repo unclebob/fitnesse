@@ -46,10 +46,16 @@
         <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
         #foreach($expectation in $instructionResult.Expectations)
         <expectation>
+          #if($expectation.Status)
           <status>$expectation.Status</status>
+          #end
           <instructionId>$expectation.InstructionId</instructionId>
+          #if($expectation.Col)
           <col>$expectation.Col</col>
+          #end
+          #if($expectation.Row)
           <row>$expectation.Row</row>
+          #end
           <type>$expectation.Type</type>
           #if($expectation.Actual)
           <actual><![CDATA[$expectation.Actual]]></actual>

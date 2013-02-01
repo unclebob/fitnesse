@@ -71,7 +71,6 @@ public class XmlFormatter extends BaseFormatter {
     instructionResults.add(instructionResult);
 
     String id = instruction.getId();
-    //Object result = results.get(id);
 
     instructionResult.instruction = instruction.toString();
     instructionResult.slimResult = testResult.toString();
@@ -85,16 +84,11 @@ public class XmlFormatter extends BaseFormatter {
       expectationResult.evaluationMessage = testResult.getMessage();
       if (testResult.getExecutionResult() != null) {
         expectationResult.status = testResult.getExecutionResult().toString();
-      } else {
-        expectationResult.status = "";
       }
       if (expectation instanceof SlimTable.RowExpectation) {
         SlimTable.RowExpectation rowExpectation = (SlimTable.RowExpectation) expectation;
         expectationResult.col = Integer.toString(rowExpectation.getCol());
         expectationResult.row = Integer.toString(rowExpectation.getRow());
-      } else {
-        expectationResult.col = "";
-        expectationResult.row = "";
       }
     } catch (Throwable e) {
       e.printStackTrace();
