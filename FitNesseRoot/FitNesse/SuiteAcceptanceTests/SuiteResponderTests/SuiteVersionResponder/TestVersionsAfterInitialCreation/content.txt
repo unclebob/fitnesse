@@ -1,0 +1,21 @@
+When creating a page their should be 1 version in the version list.
+
+Create a page to be requested.
+!|Page creator.|
+|Page name.|valid?|
+|VersionCreatePage|true|
+
+Now load up the version list.
+!|Response Requester.|
+|uri|status?|
+|VersionCreatePage?versions|200|
+
+The version list has no entries.
+|Response Examiner.|
+|type|pattern|matchCount?|
+|contents|!-href="\?responder=viewVersion&amp;version=-!|1|
+
+Show the contents.
+|Response Examiner.|
+|contents?|
+||
