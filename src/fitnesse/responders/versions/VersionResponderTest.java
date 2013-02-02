@@ -3,8 +3,6 @@
 package fitnesse.responders.versions;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
@@ -79,27 +77,21 @@ public class VersionResponderTest extends RegexTestCase {
     page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original base content");
     PageData data = page.getData();
     
+    VersionInfo base = new ArrayList<VersionInfo>(page.getData().getVersions()).get(0);
+    
     data.setContent("updated content");
-    page.commit(data);
+    VersionInfo update1 = page.commit(data);
 
     data.setContent("futher update to content");
-    page.commit(data);
+    VersionInfo update2 = page.commit(data);
 
     data.setContent("latest content");
-    page.commit(data);
+    VersionInfo update3 = page.commit(data);
 
-    //root.getChildPage("MultiVersionPage").getData().getVersions()
-    List<VersionInfo> versions = new ArrayList<VersionInfo>(data.getVersions());
-    Collections.sort(versions);
-    Collections.reverse(versions);
-    
-    for(VersionInfo v : versions)
-      System.out.println(String.format("%10s, %10s, %s, %d", v.getName(), v.getAge(), v.getCreationTime(), v.getCreationTime().getTime()));
-    
     // check base version has next but no previous button
     MockRequest request = new MockRequest();
     request.setResource(pageName);
-    request.addInput("version", versions.get(2).getName());
+    request.addInput("version", base.getName());
 
     Responder responder = new VersionResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
@@ -107,17 +99,38 @@ public class VersionResponderTest extends RegexTestCase {
     assertHasRegexp(">Next</a>", response.getContent());
     assertDoesntHaveRegexp(">Previous</a>", response.getContent());
 
-    // check updated version has both next and previous button
+    // check 'updated content' version has both next and previous button
     request = new MockRequest();
     request.setResource(pageName);
-    request.addInput("version", versions.get(1).getName());
+    request.addInput("version", update1.getName());
 
     responder = new VersionResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
     
     assertHasRegexp(">Next</a>", response.getContent());
     assertHasRegexp(">Previous</a>", response.getContent());
-  }
 
+    // check 'further updated to content' version has both next and previous button
+    request = new MockRequest();
+    request.setResource(pageName);
+    request.addInput("version", update2.getName());
+
+    responder = new VersionResponder();
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    
+    assertHasRegexp(">Next</a>", response.getContent());
+    assertHasRegexp(">Previous</a>", response.getContent());
+
+    // check 'latest content' version has both next and previous button
+    request = new MockRequest();
+    request.setResource(pageName);
+    request.addInput("version", update3.getName());
+
+    responder = new VersionResponder();
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    
+    assertDoesntHaveRegexp(">Next</a>", response.getContent());
+    assertHasRegexp(">Previous</a>", response.getContent());
+  }
 
 }
