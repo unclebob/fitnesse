@@ -3,7 +3,6 @@
 package fitnesse.testsystems.slim;
 
 import org.htmlparser.util.ParserException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -169,32 +168,6 @@ public class HtmlTableScannerTest {
     String html = "<table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>";
     scan(html);
     assertEquals("[[a, b], [c, d]]", ts.getTable(0).toString());
-  }
-
-  @Test
-  @Ignore
-  // -AJM- Think this is not applicable anymore
-  public void colorizedCellsHaveSpecialRepresentationInStringLists() throws Exception {
-    String html =
-      "" +
-        "<table><tr><td>" +
-        "<span class=\"zot\">x</span>"+
-        "</td></tr></table>";
-    scan(html);
-    assertEquals("[[zot(x)]]", ts.getTable(0).toString());
-  }
-
-  @Test
-  @Ignore
-  // -AJM- Think this is not applicable anymore
-  public void multipleColoredStringsAreTranslated() throws Exception {
-    String html =
-      "" +
-        "<table><tr><td>" +
-        "<span class=\"zot\">x</span> X <span class=\"zork\">z</span>"+
-        "</td></tr></table>";
-    scan(html);
-    assertEquals("[[zot(x) X zork(z)]]", ts.getTable(0).toString());
   }
 
   @Test
