@@ -243,34 +243,6 @@ public class HtmlTable implements Table {
         }
       }
     }
-
-    private Tag findById(Node node, String id) {
-      if (hasId(node, id))
-        return (Tag) node;
-      return findChildMatchingId(node, id);
-    }
-
-    private Tag findChildMatchingId(Node node, String id) {
-      NodeList children = node.getChildren();
-      if (children != null) {
-        for (int i = 0; i < children.size(); i++) {
-          Node child = children.elementAt(i);
-          Tag found = findById(child, id);
-          if (found != null)
-            return found;
-        }
-      }
-      return null;
-    }
-
-    private boolean hasId(Node node, String id) {
-      if (node instanceof Tag) {
-        Tag t = (Tag) node;
-        if (id.equals(t.getAttribute("id")))
-          return true;
-      }
-      return false;
-    }
   }
 
   class Cell {
