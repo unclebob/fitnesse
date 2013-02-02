@@ -29,6 +29,7 @@
 		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="standalone->default,default" />
 		<dependency org="org.json" name="json" rev="20090211" conf="standalone->default,default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
+		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="standalone->default,default"/>
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.7" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
