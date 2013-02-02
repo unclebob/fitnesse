@@ -312,6 +312,10 @@ public class HtmlTable implements Table {
             return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
                     Utils.escapeHTML(testResult.getActual()),
                     Utils.escapeHTML(testResult.getExpected()));
+          } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
+            return String.format("[%s] <span class=\"fail\">%s</span>",
+                    Utils.escapeHTML(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
+                    Utils.escapeHTML(testResult.getMessage()));
           }
           return String.format("<span class=\"fail\">%s</span>", escapedMessage);
         case IGNORE:
