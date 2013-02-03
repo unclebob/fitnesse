@@ -1,17 +1,19 @@
 <h2>Comparing version $original to $revised</h2>
 
-<table class="plain_text_table" style="margin: 0px; padding: 0px; border: 0px; border-spacing: 0px; font-family: monospace; font-size: 125%;">
+<table class="diff_table">
  #foreach($line in $differences)
- <tr>
-  <td style="padding-bottom: 0px; padding-top: 0px;" class="diff_chunk_header">
-   #if($line.startsWith("@@"))
-    <span class="diff_chunk_header">
-   #end
-   $line
-   #if($line.startsWith("@@"))
-    </span>
-   #end
-  </td>
- </tr>
+  #set($class = "diff_line")
+  #if($line.startsWith("-") && !$line.startsWith("---"))
+   #set($class = "${class} diff_line_removed")
+  #end
+  #if($line.startsWith("+") && !$line.startsWith("+++"))
+   #set($class = "${class} diff_line_added")
+  #end
+  #if($line.startsWith("@@") || $line.startsWith("---") || $line.startsWith("+++"))
+   #set($class = "${class} diff_chunk_header")
+  #end
+  <tr>
+   <td class="$class">$line</td>
+  </tr>
  #end
 </table>
