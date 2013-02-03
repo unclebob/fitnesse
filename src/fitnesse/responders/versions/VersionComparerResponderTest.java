@@ -2,8 +2,6 @@ package fitnesse.responders.versions;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
@@ -24,9 +22,6 @@ import fitnesse.wiki.WikiPageProperties;
 public class VersionComparerResponderTest {
   private String firstVersion;
   private String secondVersion;
-  private String firstFilePath;
-  private String secondFilePath;
-  private String currentVersionFilePath;
   private SimpleResponse response;
   private WikiPage root;
   private WikiPage page;
@@ -44,16 +39,14 @@ public class VersionComparerResponderTest {
     
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
+    data = page.getData();
     data.setContent("new stuff");
     firstVersion = page.commit(data).getName();
-    firstFilePath = "./" + FitNesseUtil.base + File.separator + page.getName() + File.separator + firstVersion + ".zip#contents.txt";
     
+    data = page.getData();
     data.setContent("even newer stuff");
     secondVersion = page.commit(data).getName();
-    secondFilePath = "./" + FitNesseUtil.base + File.separator + page.getName() + File.separator + secondVersion + ".zip#contents.txt";
 
-    currentVersionFilePath = "./" + FitNesseUtil.base + File.separator + page.getName() + File.separator + "contents.txt";
-    
     request = new MockRequest();
     request.setResource("ComparedPage");
     
@@ -66,19 +59,19 @@ public class VersionComparerResponderTest {
   public void shouldCompareTheTwoVersionsSpecified() throws Exception {
     request.addInput("Version_" + firstVersion, "");
     request.addInput("Version_" + secondVersion, "");
-    when(mockedComparer.compare(firstFilePath, secondFilePath)).thenReturn(true);
+    when(mockedComparer.compare(firstVersion, "original content", secondVersion, "new stuff")).thenReturn(true);
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
-    verify(mockedComparer).compare(firstFilePath, secondFilePath);
+    verify(mockedComparer).compare(firstVersion, "original content", secondVersion, "new stuff");
   }
 
   @Test
   public void shouldCompareTheOneVersionSpecifiedToTheCurrentVersion() throws Exception {
     request.addInput("Version_" + secondVersion, "");
-    when(mockedComparer.compare(secondFilePath, currentVersionFilePath)).thenReturn(true);
+    when(mockedComparer.compare(secondVersion, "new stuff", "latest", "even newer stuff")).thenReturn(true);
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
-    verify(mockedComparer).compare(secondFilePath, currentVersionFilePath);
+    verify(mockedComparer).compare(secondVersion, "new stuff", "latest", "even newer stuff");
   }
   
   @Test

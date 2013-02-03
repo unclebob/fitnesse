@@ -1,0 +1,7 @@
+Comparing version $original to $revised
+
+<pre>
+ #foreach($line in $differences)
+  $line
+ #end
+</pre>
