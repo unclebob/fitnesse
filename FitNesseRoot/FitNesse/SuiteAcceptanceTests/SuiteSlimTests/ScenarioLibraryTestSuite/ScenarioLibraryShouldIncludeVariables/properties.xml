@@ -2,8 +2,9 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<Help/>
+	<Help></Help>
 	<Properties/>
+	<Prune/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>

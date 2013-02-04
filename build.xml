@@ -203,6 +203,10 @@
 		</java>
 	</target>
 
+	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for IDE's">
+		<ivy:retrieve pattern="lib/[artifact].[ext]" />
+	</target>
+
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />
