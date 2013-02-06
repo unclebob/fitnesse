@@ -78,7 +78,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         testSystem.getExecutionLog();
         testSystem.start();
         testSystem.setFastTest(fastTest);
-        testSystem.runTestsAndGenerateHtml(pageData);
+        testSystem.runTests(pageData);
       } catch (IOException e) {
         slimException = e;
       } finally {

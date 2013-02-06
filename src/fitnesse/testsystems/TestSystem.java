@@ -107,7 +107,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws IOException;
 
-  public abstract String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException;
+  public abstract void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException;
 
   public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
     return new Descriptor(page, pageFactory, isRemoteDebug);

@@ -37,13 +37,12 @@ public class FitTestSystem extends TestSystem {
    client.join();
  }
 
- public String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException {
+ public void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException {
    String html = pageData.getHtml();
    if (html.length() == 0)
      client.send(emptyPageContent);
    else
      client.send(html);
-   return html;
  }
 
  public boolean isSuccessfullyStarted() {

@@ -123,6 +123,7 @@ public abstract class SlimTestSystem extends TestSystem {
       }
   }
 
+  // For testing only
   private boolean tryCreateSlimService(String args) throws SocketException {
     try {
       SlimService.parseCommandLine(args.trim().split(" "));
@@ -154,12 +155,11 @@ public abstract class SlimTestSystem extends TestSystem {
     }
   }
 
-  public String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException {
+  public void runTests(ReadOnlyPageData pageData) throws IOException {
     initializeTest();
     checkForAndReportVersionMismatch(pageData);
-    String html = processAllTablesOnPage(pageData);
+    processAllTablesOnPage(pageData);
     testComplete(testSummary);
-    return html;
   }
 
   private void initializeTest() {

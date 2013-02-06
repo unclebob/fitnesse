@@ -128,7 +128,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
-      testSystem.runTestsAndGenerateHtml(testPage.getDecoratedData());
+      testSystem.runTests(testPage.getDecoratedData());
     }
   }
 
