@@ -35,6 +35,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   private PageCrawler crawler;
   private FitNesseContext context;
   private Throwable slimException;
+  private StringBuilder output;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -69,15 +70,15 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   public class SlimRenderer {
 
     public String render() {
-      String html = null;
 
       TestSystem.Descriptor descriptor = getDescriptor();
       try {
+        output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.getExecutionLog();
         testSystem.start();
         testSystem.setFastTest(fastTest);
-        html = testSystem.runTestsAndGenerateHtml(pageData);
+        testSystem.runTestsAndGenerateHtml(pageData);
       } catch (IOException e) {
         slimException = e;
       } finally {
@@ -89,12 +90,11 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
           }
         }
       }
-
       String exceptionString = "";
       if (slimException != null) {
         exceptionString = String.format("<div class='error'>%s</div>", Utils.escapeHTML(slimException.getMessage()));
       }
-      return exceptionString + html;
+      return exceptionString + output.toString();
     }
   }
 
@@ -126,6 +126,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   @Override
   public void acceptOutputFirst(String output) {
+    this.output.append(output);
   }
 
   @Override
