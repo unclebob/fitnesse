@@ -63,6 +63,7 @@ public abstract class SlimTestSystem extends TestSystem {
       slimClient.close();
   }
 
+  // TODO: this smells: createExecutionLog is starting a test system in a separate thread using conditions used for testing only
   protected ExecutionLog createExecutionLog() throws SocketException {
     final String classPath = descriptor.getClassPath();
     final String slimArguments = buildArguments();
@@ -130,6 +131,7 @@ public abstract class SlimTestSystem extends TestSystem {
     } catch (SocketException e) {
       throw e;
     } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
   }
