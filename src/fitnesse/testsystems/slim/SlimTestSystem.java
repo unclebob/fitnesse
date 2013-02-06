@@ -195,16 +195,16 @@ public abstract class SlimTestSystem extends TestSystem {
   }
 
   protected abstract List<SlimTable> createSlimTables(ReadOnlyPageData pageData);
+
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  String processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
+  void processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
     List<SlimTable> allTables = createSlimTables(pageData);
     testResults = pageData;
 
     boolean runAllTablesAtOnce = false;
-    StringBuilder htmlResults = new StringBuilder();
     if (runAllTablesAtOnce || (allTables.size() == 0)) {
-      htmlResults.append(processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST));
+      processTables(allTables, START_OF_TEST, END_OF_TEST);
     } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
@@ -213,16 +213,15 @@ public abstract class SlimTestSystem extends TestSystem {
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
         oneTableList.add(theTable);
-        htmlResults.append(processTablesAndGetHtml(oneTableList, startWithTable, nextTable));
+        processTables(oneTableList, startWithTable, nextTable);
         oneTableList.clear();
       }
     }
-    return htmlResults.toString();
   }
 
   protected abstract <T extends Table> TableScanner<T> scanTheTables(ReadOnlyPageData pageData);
 
-  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
+  private void processTables(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
 
     testTables = tables;
     assertions = createAssertions(tables);
@@ -231,8 +230,6 @@ public abstract class SlimTestSystem extends TestSystem {
     }
     String html = createHtmlResults(startWithTable, nextTable);
     acceptOutputFirst(html);
-
-    return html;
   }
 
 
@@ -317,7 +314,6 @@ public abstract class SlimTestSystem extends TestSystem {
           testAssertionVerified(a, testResult);
         }
       } catch (Throwable ex) {
-        //exceptions.addException("ABORT", exceptionToString(ex));
         exceptionOccurred(ex);
       }
     }
