@@ -35,7 +35,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
-  private transient boolean isStopped = false;
+  private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
