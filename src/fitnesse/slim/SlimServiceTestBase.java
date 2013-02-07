@@ -2,15 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static util.ListUtility.list;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -18,6 +9,13 @@ import fitnesse.slim.instructions.MakeInstruction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -28,6 +26,8 @@ public abstract class SlimServiceTestBase {
 
   protected abstract void startSlimService() throws Exception;
 
+  protected abstract void closeSlimService() throws Exception;
+
   protected abstract String getImport();
 
   protected abstract String expectedExceptionMessage();
@@ -35,19 +35,19 @@ public abstract class SlimServiceTestBase {
   protected abstract String expectedStopTestExceptionMessage();
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, IOException {
     createSlimService();
     slimClient = new SlimClient("localhost", 8099);
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }
 
-  protected void createSlimService() throws Exception {
+  protected void createSlimService() throws InterruptedException {
     while (!tryCreateSlimService())
       Thread.sleep(10);
   }
 
-  private boolean tryCreateSlimService() throws Exception {
+  private boolean tryCreateSlimService() {
     try {
       startSlimService();
       return true;
@@ -64,6 +64,7 @@ public abstract class SlimServiceTestBase {
   protected void teardown() throws Exception {
     slimClient.sendBye();
     slimClient.close();
+    closeSlimService();
   }
 
   @Test

@@ -39,7 +39,8 @@ public class SlimServer implements SocketServer {
     try {
       tryProcessInstructions(s);
     } catch (Throwable e) {
-      e.printStackTrace();
+      System.err.println("Error while executing SLIM instructions: " + e.getMessage());
+      e.printStackTrace(System.err);
     } finally {
       slimFactory.stop();
       close();
@@ -70,8 +71,18 @@ public class SlimServer implements SocketServer {
   }
 
   private String getInstructionsFromClient() throws IOException {
-    int instructionLength = Integer.parseInt(reader.read(6));
-    reader.read(1);
+    String data = reader.read(6);
+    int instructionLength;
+    try {
+      instructionLength = Integer.parseInt(data);
+    } catch (NumberFormatException e) {
+      System.err.println("Number format error: " + data);
+      throw e;
+    }
+    String colon = reader.read(1);
+    if (!":".equals(colon)) {
+      throw new SlimError("protocol error: expected colon after message length field: " + colon);
+    }
     String instructions = reader.read(instructionLength);
     return instructions;
   }

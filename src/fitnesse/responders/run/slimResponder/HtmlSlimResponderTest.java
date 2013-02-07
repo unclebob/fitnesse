@@ -12,6 +12,9 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
@@ -88,7 +91,8 @@ public class HtmlSlimResponderTest {
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
-    assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span> <span class=\"error\">The instance decisionTable_0.table. does not exist</span></td>");
+    //assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span> <span class=\"error\">The instance decisionTable_0.table. does not exist</span></td>");
+    assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span></td>");
   }
 
   @Test
@@ -163,7 +167,7 @@ public class HtmlSlimResponderTest {
   }
 
   @Test
-  public void decisionTableIgnoresMethodMissingForResetExecuteaAndTable()
+  public void decisionTableIgnoresMethodMissingForResetExecuteAndTable()
       throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.DummyDecisionTable|\n"
         + "|x?|\n" + "|1|\n");
@@ -356,13 +360,24 @@ public class HtmlSlimResponderTest {
   }
 
   private static class DummyListener implements TestSystemListener {
+    @Override
     public void acceptOutputFirst(String output) {
     }
 
+    @Override
     public void testComplete(TestSummary testSummary) {
     }
 
+    @Override
     public void exceptionOccurred(Throwable e) {
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     }
   }
 }

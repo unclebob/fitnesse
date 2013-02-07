@@ -140,8 +140,8 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[2] fail(missing), 4], " +
-        "[[3] fail(surplus), 5]" +
+        "[fail(e=2;missing), 4], " +
+        "[fail(a=3;surplus), 5]" +
         "]"
     );
   }
@@ -155,7 +155,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(2), [5] fail(expected [4])]" +
+        "[pass(2), fail(a=5;e=4)]" +
         "]"
     );
   }
@@ -191,8 +191,8 @@ public abstract class QueryTableBaseTest {
         headRow +
         "[n, 2n], " +
         "[pass(3), pass(6)], " +
-        "[[99] fail(missing), 99], " +
-        "[[2] fail(surplus), 4]" +
+        "[fail(e=99;missing), 99], " +
+        "[fail(a=2;surplus), 4]" +
         "]"
     );
   }
@@ -209,9 +209,9 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[99] fail(missing), 99], " +
+        "[fail(e=99;missing), 99], " +
         "[pass(2), pass(4)], " +
-        "[[3] fail(surplus), 6]" +
+        "[fail(a=3;surplus), 6]" +
         "]"
     );
   }
@@ -226,7 +226,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(3), [4] fail(field 2n not present)]" +
+        "[pass(3), fail(a=field 2n not present;e=4)]" +
         "]"
     );
   }
@@ -241,7 +241,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[3] fail(surplus), fail(field 2n not present)]" +
+        "[fail(a=3;surplus), fail(field 2n not present)]" +
         "]"
     );
   }
@@ -292,7 +292,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(2), [4] fail(expected [$V->[5]])]" +
+        "[pass(2), fail(a=4;e=$V->[5])]" +
         "]",
       Utils.unescapeWiki(qt.getTable().toString())
     );
@@ -317,7 +317,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[3] fail(missing), $V->[5]]" +
+        "[fail(e=3;missing), $V->[5]]" +
         "]", qt.getTable().toString()
     );
   }
@@ -331,7 +331,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(2&lt;5), pass(4)]" +
+        "[pass(2<5), pass(4)]" +
         "]"
     );
   }

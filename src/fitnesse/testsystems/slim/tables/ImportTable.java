@@ -6,8 +6,7 @@ import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.ErrorResult;
-import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +43,11 @@ public class ImportTable extends SlimTable {
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return passUncounted(expected);
+        return TestResult.ok(expected);
       else
-        return new ErrorResult("Unknown import message", actual);
+        return TestResult.error(String.format("Unknown import message: %s", actual));
     }
   }
 }

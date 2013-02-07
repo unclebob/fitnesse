@@ -161,7 +161,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-      "[[scenario, echo, input, giving, output], [check, echo, 7, [7] fail(expected [8])]]";
+      "[[scenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
     assertEquals(0, getTestSummary().getRight());

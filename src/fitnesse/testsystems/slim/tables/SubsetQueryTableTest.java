@@ -58,7 +58,7 @@ public class SubsetQueryTableTest extends QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[2] fail(missing), 4]" +
+        "[fail(e=2;missing), 4]" +
         "]"
     );
   }
@@ -77,7 +77,7 @@ public class SubsetQueryTableTest extends QueryTableBaseTest {
             headRow +
             "[n, 2n], " +
             "[pass(3), pass(6)], " +
-            "[[99] fail(missing), 99]" +
+            "[fail(e=99;missing), 99]" +
             "]"
     );
   }
@@ -95,7 +95,7 @@ public class SubsetQueryTableTest extends QueryTableBaseTest {
             "[" +
               headRow +
               "[n, 2n], " +
-              "[[99] fail(missing), 99], " +
+              "[fail(e=99;missing), 99], " +
               "[pass(2), pass(4)]" +
               "]"
     );

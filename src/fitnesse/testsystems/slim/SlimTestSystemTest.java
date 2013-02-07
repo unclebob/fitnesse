@@ -2,19 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import static org.junit.Assert.assertEquals;
-import java.net.ServerSocket;
-import java.net.SocketException;
-
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.ServerSocket;
+import java.net.SocketException;
+
+import static org.junit.Assert.assertEquals;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -103,6 +107,14 @@ public class SlimTestSystemTest {
     }
 
     public void exceptionOccurred(Throwable e) {
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     }
   }
 }

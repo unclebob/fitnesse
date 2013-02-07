@@ -29,6 +29,8 @@ public class PageTitle {
         pagePath.removeNameFromEnd();
       }
       Collections.reverse(breadCrumbs);
+    } else {
+    	title = "root";
     }
   }
 

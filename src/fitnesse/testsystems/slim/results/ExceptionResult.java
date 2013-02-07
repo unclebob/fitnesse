@@ -1,40 +1,62 @@
 package fitnesse.testsystems.slim.results;
 
+import fitnesse.testsystems.ExecutionResult;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static fitnesse.slim.SlimServer.*;
 
-public class ExceptionResult implements Result {
+public class ExceptionResult {
   public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>");
 
   private final String resultKey;
-  private final boolean isStopTestException;
   private final String exceptionValue;
 
   public ExceptionResult(String resultKey, String exceptionValue) {
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
-    this.isStopTestException = exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
   }
 
-  @Override
-  public String toHtml() {
-    return String.format(" <span class=\"%s\">%s</span>", htmlClass(), processException());
+  public ExecutionResult getExecutionResult() {
+    return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR;
   }
 
-  private String htmlClass() {
-    return isStopTestException ? "fail" : "error";
+  public boolean hasMessage() {
+    return getMessage() != null;
   }
 
-  private String processException() {
+  public String getMessage() {
+    String exceptionMessage = getExceptionMessage();
+    if (exceptionMessage != null) {
+      return translateExceptionMessage(exceptionMessage);
+    }
+    return null;
+  }
+
+  private String getExceptionMessage() {
     Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
     if (exceptionMessageMatcher.find()) {
-      String exceptionMessage = exceptionMessageMatcher.group(1);
-      return translateExceptionMessage(exceptionMessage);
-    } else {
-      return exceptionResult(resultKey);
+      return exceptionMessageMatcher.group(1);
     }
+    return null;
+  }
+
+  public String getResultKey() {
+    return resultKey;
+  }
+
+  public String getException() {
+    return exceptionValue;
+  }
+
+  public boolean isStopTestException() {
+    return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
+  }
+
+  public boolean isNoMethodInClassException() {
+    String exceptionMessage = getExceptionMessage();
+    return exceptionMessage != null && exceptionMessage.contains(NO_METHOD_IN_CLASS);
   }
 
   private String translateExceptionMessage(String exceptionMessage) {
@@ -55,13 +77,5 @@ public class ExceptionResult implements Result {
       return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
 
     return exceptionMessage;
-  }
-
-  private String exceptionResult(String resultKey) {
-    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
-  }
-
-  public String toString() {
-    return String.format("%s(%s)", htmlClass(), processException());
   }
 }

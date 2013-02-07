@@ -1,9 +1,9 @@
 package fitnesse.testsystems.slim.tables;
 
-import static util.ListUtility.list;
-
 import org.junit.Test;
 import util.ListUtility;
+
+import static util.ListUtility.list;
 
 public class OrderedQueryTableTest extends QueryTableBaseTest {
   @Override
@@ -29,7 +29,7 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
         headRow +
         "[n, 2n], " +
         "[pass(3), pass(6)], " +
-        "[[2] fail(out of order: row 1), pass(4)]" +
+        "[fail(e=2;out of order: row 1), pass(4)]" +
         "]"
     );
   }
@@ -49,8 +49,8 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
         headRow +
         "[n, 2n], " +
         "[pass(3), pass(6)], " +
-        "[[7] fail(out of order: row 2), pass(5)], " +
-        "[[2] fail(out of order: row 1), pass(4)]" +
+        "[fail(e=7;out of order: row 2), pass(5)], " +
+        "[fail(e=2;out of order: row 1), pass(4)]" +
         "]"
     );
   }
@@ -69,8 +69,8 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
         headRow +
         "[n, 2n], " +
         "[pass(3), pass(6)], " +
-        "[[7] fail(missing), 5], " +
-        "[[2] fail(out of order: row 1), pass(4)]]"
+        "[fail(e=7;missing), 5], " +
+        "[fail(e=2;out of order: row 1), pass(4)]]"
     );
   }
 }

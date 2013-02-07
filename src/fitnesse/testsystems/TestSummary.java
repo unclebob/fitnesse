@@ -90,4 +90,23 @@ public class TestSummary {
   public int getExceptions() {
     return exceptions;
   }
+
+  public void add(ExecutionResult executionResult) {
+    if (executionResult != null) {
+     switch (executionResult) {
+       case PASS:
+         right++;
+         break;
+       case FAIL:
+         wrong++;
+         break;
+       case IGNORE:
+         ignores++;
+         break;
+       case ERROR:
+         exceptions++;
+         break;
+     }
+    }
+  }
 }

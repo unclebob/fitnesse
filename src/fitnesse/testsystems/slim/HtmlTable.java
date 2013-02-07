@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.PlainResult;
-import fitnesse.testsystems.slim.results.Result;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.parser.Collapsible;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -22,6 +20,7 @@ import java.util.Stack;
 public class HtmlTable implements Table {
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
+  private List<ExceptionResult> exceptions = new ArrayList<ExceptionResult>();
 
   public HtmlTable(TableTag tableNode) {
     this.tableNode = tableNode;
@@ -32,6 +31,7 @@ public class HtmlTable implements Table {
         rows.add(new Row((CompositeTag) node));
       }
     }
+    tableNode.getChildren().prepend(new ExceptionTextNode());
   }
 
   public TableTag getTableNode() {
@@ -42,18 +42,8 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
-  public String getCellResult(int col, int row) {
-    return rows.get(row).getColumn(col).getResult();
-  }
-
-
   public String getUnescapedCellContents(int col, int row) {
     return Utils.unescapeHTML(getCellContents(col, row));
-  }
-
-  public void appendToCell(int col, int row, String message) {
-    Cell cell = rows.get(row).getColumn(col);
-    cell.setContent(cell.getEscapedContent() + message);
   }
 
   public int getRowCount() {
@@ -66,7 +56,8 @@ public class HtmlTable implements Table {
 
   public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
-    cell.setContent(contents);
+    // TODO: need escaping here?
+    cell.setContent(Utils.escapeHTML(contents));
   }
 
   public List<List<String>> asList() {
@@ -89,13 +80,13 @@ public class HtmlTable implements Table {
     rows.add(row);
     tableNode.getChildren().add(row.getRowNode());
     for (String s : list)
-      row.appendCell(s == null ? "" : s);
+      row.appendCell(s == null ? "" : Utils.escapeHTML(s));
     return rows.size() - 1;
   }
 
-  public void appendContent(int rowIndex, String contents) {
+  public void addColumnToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
-    row.appendCell(contents);
+    row.appendCell(Utils.escapeHTML(contents));
   }
 
   /**
@@ -151,20 +142,26 @@ public class HtmlTable implements Table {
     }
   }
 
-
-  public void setTestStatusOnRow(int rowIndex, ExecutionResult testStatus) {
-    Row row = rows.get(rowIndex);
-    row.setTestStatus(testStatus);
+  @Override
+  public void updateContent(int row, TestResult testResult) {
+    rows.get(row).setTestResult(testResult);
   }
 
   @Override
-  public void updateContent(int row, TestResult result) {
-    throw new RuntimeException("Needs implementing!");
+  public void updateContent(int col, int row, TestResult testResult) {
+    Cell cell = rows.get(row).getColumn(col);
+    cell.setTestResult(testResult);
+    cell.setContent(cell.formatTestResult());
   }
 
   @Override
   public void updateContent(int col, int row, ExceptionResult exceptionResult) {
-    appendContent(col, row, exceptionResult);
+    Cell cell = rows.get(row).getColumn(col);
+    if (cell.exceptionResult == null) {
+      cell.setExceptionResult(exceptionResult);
+      cell.setContent(cell.formatExceptionResult());
+      exceptions.add(exceptionResult);
+    }
   }
 
   private Tag newTag(Class<? extends Tag> klass) {
@@ -231,57 +228,32 @@ public class HtmlTable implements Table {
       List<String> list = new ArrayList<String>();
       for (Cell cell : cells) {
         // was "colorized"
-        list.add(cell.getResponse());
+        list.add(cell.getTestResult());
       }
       return list;
     }
 
-    private void setTestStatus(ExecutionResult testStatus) {
+    private void setTestResult(TestResult testResult) {
       NodeList cells = rowNode.getChildren();
       for (int i = 0; i < cells.size(); i++) {
         Node cell = cells.elementAt(i);
         if (cell instanceof Tag) {
           Tag tag = (Tag) cell;
-          tag.setAttribute("class", String.format("\"%s\"", testStatus.toString()));
+          tag.setAttribute("class", testResult.getExecutionResult().toString(), '"');
         }
       }
-    }
-
-    private Tag findById(Node node, String id) {
-      if (hasId(node, id))
-        return (Tag) node;
-      return findChildMatchingId(node, id);
-    }
-
-    private Tag findChildMatchingId(Node node, String id) {
-      NodeList children = node.getChildren();
-      if (children != null) {
-        for (int i = 0; i < children.size(); i++) {
-          Node child = children.elementAt(i);
-          Tag found = findById(child, id);
-          if (found != null)
-            return found;
-        }
-      }
-      return null;
-    }
-
-    private boolean hasId(Node node, String id) {
-      if (node instanceof Tag) {
-        Tag t = (Tag) node;
-        if (id.equals(t.getAttribute("id")))
-          return true;
-      }
-      return false;
     }
   }
 
   class Cell {
-    private TableColumn columnNode;
-    private Result response;
+    private final TableColumn columnNode;
+    private final String originalContent;
+    private TestResult testResult;
+    private ExceptionResult exceptionResult;
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
+      originalContent = Utils.unescapeHTML(columnNode.getChildrenHTML());
     }
 
     public Cell(String contents) {
@@ -291,27 +263,11 @@ public class HtmlTable implements Table {
       text.setChildren(new NodeList());
       columnNode = (TableColumn) newTag(TableColumn.class);
       columnNode.setChildren(new NodeList(text));
-    }
-
-    public Cell(Node node) {
-      columnNode = (TableColumn) newTag(TableColumn.class);
-      columnNode.setChildren(new NodeList(node));
-    }
-
-    public String getResult() {
-      String result = columnNode.getAttribute("class");
-      if (result == null) {
-        Node child = columnNode.getFirstChild();
-        if (child != null)
-        return child.getText();
-      } else if (result.equals("pass") || result.equals("fail") || result.equals("error") || result.equals("ignore")) {
-        return result;
-      }
-      return "Unkown Result";
+      originalContent = contents;
     }
 
     public String getContent() {
-      return getEscapedContent();
+      return Utils.unescapeHTML(getEscapedContent());
     }
 
     public String getEscapedContent() {
@@ -320,44 +276,68 @@ public class HtmlTable implements Table {
       return "&nbsp;".equals(unescaped) ? "" : unescaped;
     }
 
-    public void setContent(String s) {
+    private void setContent(String s) {
+      // No HTML escaping here.
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);
     }
 
-    public String getResponse() {
-      return response != null ? response.toString() : getContent();
-    }
-
-    public void setResponse(Result response) {
-      if (this.response != null) {
-        this.response = new PlainResult(this.response, response);
-      } else {
-        this.response = response;
-      }
+    public String getTestResult() {
+      return testResult != null ? testResult.toString(originalContent) : getContent();
     }
 
     public TableColumn getColumnNode() {
       return columnNode;
     }
-  }
 
-  @Override
-  public void setCell(int col, int row, Result response) {
-    substitute(col, row, response.toHtml());
-    updateResponse(col, row, response);
-  }
+    public void setTestResult(TestResult testResult) {
+      this.testResult = testResult;
+    }
 
-  @Override
-  public void appendContent(int col, int row, Result response) {
-    appendToCell(col, row, response.toHtml());
-    updateResponse(col, row, response);
-  }
+    public void setExceptionResult(ExceptionResult exceptionResult) {
+      this.exceptionResult = exceptionResult;
+    }
 
-  private void updateResponse(int col, int row, Result response) {
-    Cell cell = rows.get(row).getColumn(col);
-    cell.setResponse(response);
+    public String formatTestResult() {
+      if (testResult.getExecutionResult() == null) {
+        return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
+      }
+      final String escapedMessage = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
+      switch (testResult.getExecutionResult()) {
+        case PASS:
+          return String.format("<span class=\"pass\">%s</span>", escapedMessage);
+        case FAIL:
+          if (testResult.hasActual() && testResult.hasExpected()) {
+            return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
+                    Utils.escapeHTML(testResult.getActual()),
+                    Utils.escapeHTML(testResult.getExpected()));
+          } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
+            return String.format("[%s] <span class=\"fail\">%s</span>",
+                    Utils.escapeHTML(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
+                    Utils.escapeHTML(testResult.getMessage()));
+          }
+          return String.format("<span class=\"fail\">%s</span>", escapedMessage);
+        case IGNORE:
+          return String.format("%s <span class=\"ignore\">%s</span>", originalContent, escapedMessage);
+        case ERROR:
+          return String.format("%s <span class=\"error\">%s</span>", originalContent, escapedMessage);
+      }
+      return "Should not be here";
+    }
+
+    public String formatExceptionResult() {
+      if (exceptionResult.hasMessage()) {
+        return String.format("%s <span class=\"%s\">%s</span>",
+                originalContent,
+                exceptionResult.getExecutionResult().toString(),
+                Utils.escapeHTML(exceptionResult.getMessage()));
+      } else {
+        // See below where exception block is formatted
+        return String.format("%s <span class=\"%s\">Exception: <a href=\"#%s\">%s</a></span>", originalContent, exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
+      }
+    }
+
   }
 
   @Override
@@ -366,6 +346,41 @@ public class HtmlTable implements Table {
     // Quick 'n' Dirty
     script = substitution.substitute(0, 0, script);
     return new HtmlTableScanner(script).getTable(0);
+  }
+
+  // This is not the nicest solution, since the the exceptions are put inside the <table> tag.
+  class ExceptionTextNode extends TextNode {
+
+    public ExceptionTextNode() {
+      super("");
+    }
+
+    @Override
+    public String toHtml(boolean verbatim) {
+      if(!haveExceptionsWithoutMessage()) {
+        return "";
+      }
+      StringBuilder buffer = new StringBuilder(512);
+      buffer.append("<div class=\"exceptions\"><h3>Exceptions</h3>");
+      for (ExceptionResult exceptionResult : exceptions) {
+        if (!exceptionResult.hasMessage()) {
+          buffer.append(String.format("<a name=\"%s\"></a>", exceptionResult.getResultKey()));
+          buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(exceptionResult.getResultKey()),
+                  "<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"));
+        }
+      }
+      buffer.append("</div>");
+      return buffer.toString();
+    }
+
+    private boolean haveExceptionsWithoutMessage() {
+      for (ExceptionResult exception : exceptions) {
+        if (!exception.hasMessage()) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 }
 

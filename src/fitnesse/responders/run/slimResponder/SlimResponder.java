@@ -14,7 +14,11 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.SlimTestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
 
 import java.io.IOException;
 
@@ -30,6 +34,8 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   private PageData pageData;
   private PageCrawler crawler;
   private FitNesseContext context;
+  private Throwable slimException;
+  private StringBuilder output;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -64,21 +70,31 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   public class SlimRenderer {
 
     public String render() {
-      String html = null;
 
       TestSystem.Descriptor descriptor = getDescriptor();
       try {
+        output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.getExecutionLog();
         testSystem.start();
         testSystem.setFastTest(fastTest);
-        html = testSystem.runTestsAndGenerateHtml(pageData);
-        testSystem.bye();
+        testSystem.runTests(pageData);
       } catch (IOException e) {
-        e.printStackTrace();
+        slimException = e;
+      } finally {
+        try {
+          if (testSystem != null) testSystem.bye();
+        } catch (IOException e) {
+          if (slimException == null) {
+            slimException = e;
+          }
+        }
       }
-
-      return html;
+      String exceptionString = "";
+      if (slimException != null) {
+        exceptionString = String.format("<div class='error'>%s</div>", Utils.escapeHTML(slimException.getMessage()));
+      }
+      return exceptionString + output.toString();
     }
   }
 
@@ -108,15 +124,26 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     this.fastTest = fastTest;
   }
 
+  @Override
   public void acceptOutputFirst(String output) {
+    this.output.append(output);
   }
 
+  @Override
   public void testComplete(TestSummary testSummary)  {
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
-    //todo remove sout
-    System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
+    slimException = e;
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   public String getCommandLine() {

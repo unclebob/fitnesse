@@ -1,19 +1,13 @@
 package fitnesse.wikitext.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.WikiWord;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class WikiWordTest {
     private TestRoot root;
@@ -47,7 +41,7 @@ public class WikiWordTest {
     @Test
     public void translatesMissingWikiWords() throws Exception {
         ParserTestHelper.assertTranslatesTo(pageOne, "PageNine",
-          "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
+          "PageNine<a title=\"create page\" href=\"PageNine?edit&amp;nonExistent=true\">[?]</a>");
     }
 
     @Test

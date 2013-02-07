@@ -13,6 +13,10 @@ import fitnesse.wikitext.parser.ParsedPage;
 import java.util.Collections;
 import java.util.List;
 
+/*
+TODO: scan for scenario's on each parent level. Create a TestContext for each page level (linking the parent)
+TODO: Ease page loading by parsing the scenario tables only once. figure out what output should look like.
+ */
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private ParsedPage preparsedScenarioLibrary;
   private HtmlTableScanner tableScanner;
@@ -63,14 +67,12 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   @Override
-  // TODO: Get rid of this
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
     evaluateTables();
-    String exceptionsString = exceptions.toHtml();
 
     HtmlTable start = (startWithTable != null) ? (HtmlTable) startWithTable.getTable() : null;
     HtmlTable end = (stopBeforeTable != null) ? (HtmlTable) stopBeforeTable.getTable() : null;
     String testResultHtml = tableScanner.toHtml(start, end);
-    return exceptionsString + testResultHtml;
+    return testResultHtml;
   }
 }

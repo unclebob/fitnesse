@@ -7,7 +7,7 @@ import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 import util.StringUtil;
 
 import java.util.*;
@@ -236,14 +236,15 @@ public class ScenarioTable extends SlimTable {
     }
 
     @Override
-    public void evaluateExpectation(Object returnValue) {
+    public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      parent.getTable().setTestStatusOnRow(getRow(), testStatus);
+      parent.getTable().updateContent(getRow(), new TestResult(testStatus));
+      return null;
     }
 
     @Override
-    protected Result createEvaluationMessage(String actual, String expected) {
+    protected TestResult createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }
@@ -306,6 +307,18 @@ public class ScenarioTable extends SlimTable {
     public void incrementIgnoredTestsCount() {
       testContext.incrementIgnoredTestsCount();
       testSummary.ignores++;
+    }
+
+    @Override
+    public void increment(ExecutionResult result) {
+      testContext.increment(result);
+      testSummary.add(result);
+    }
+
+    @Override
+    public void increment(TestSummary summary) {
+      testContext.increment(summary);
+      testSummary.add(summary);
     }
 
     ExecutionResult getExecutionResult() {

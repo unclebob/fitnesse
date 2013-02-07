@@ -2,29 +2,32 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.responders.PageFactory;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Map;
-
-import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.PageFactory;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 
 public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_COMMAND_PATTERN =
     "java -cp fitnesse.jar" +
       System.getProperties().get("path.separator") +
       "%p %m";
+
   public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   protected WikiPage page;
   protected boolean fastTest;
   protected boolean manualStart;
-  protected static final String emptyPageContent = "OH NO! This page is empty!";
   protected TestSystemListener testSystemListener;
   protected ExecutionLog log;
 
@@ -69,18 +72,31 @@ public abstract class TestSystem implements TestSystemListener {
     return parts[0];
   }
 
+  @Override
   public void acceptOutputFirst(String output) throws IOException {
     testSystemListener.acceptOutputFirst(output);
   }
 
+  @Override
   public void testComplete(TestSummary testSummary) throws IOException {
     testSystemListener.testComplete(testSummary);
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
     log.addException(e);
     log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
     testSystemListener.exceptionOccurred(e);
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    testSystemListener.testAssertionVerified(assertion, testResult);
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
   public abstract void start() throws IOException;
@@ -91,7 +107,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws IOException;
 
-  public abstract String runTestsAndGenerateHtml(ReadOnlyPageData pageData) throws IOException, InterruptedException;
+  public abstract void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException;
 
   public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
     return new Descriptor(page, pageFactory, isRemoteDebug);

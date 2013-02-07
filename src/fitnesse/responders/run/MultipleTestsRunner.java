@@ -2,25 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.testsystems.TestSystemGroup;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.TestSystem.Descriptor;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -35,7 +35,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
-  private boolean isStopped = false;
+  private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
@@ -77,10 +77,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    synchronized (this) {
-      testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
-      stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
-    }
+    testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
+    stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
+
     testSystemGroup.setFastTest(isFastTest);
     testSystemGroup.setManualStart(useManualStartForTestSystem());
 
@@ -105,23 +104,22 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
-    synchronized (this) {
+    try {
       if (!isStopped) {
         testSystem = testSystemGroup.startTestSystem(descriptor,
                 new ClassPathBuilder().buildClassPath(testPagesToRun));
         resultsListener.testSystemStarted(testSystem, descriptor.getTestSystem(), descriptor.getTestRunner());
       }
-    }
-    if (testSystem != null) {
-      if (testSystem.isSuccessfullyStarted()) {
-        executeTestSystemPages(testSystemPages, testSystem);
-        waitForTestSystemToSendResults();
-      }
 
-      synchronized (this) {
-        if (!isStopped) {
-          testSystem.bye();
+      if (testSystem != null) {
+        if (testSystem.isSuccessfullyStarted()) {
+          executeTestSystemPages(testSystemPages, testSystem);
+          waitForTestSystemToSendResults();
         }
+      }
+    } finally {
+      if (!isStopped && testSystem != null) {
+        testSystem.bye();
       }
     }
   }
@@ -130,7 +128,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
-      testSystem.runTestsAndGenerateHtml(testPage.getDecoratedData());
+      testSystem.runTests(testPage.getDecoratedData());
     }
   }
 
@@ -224,17 +222,25 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  private synchronized boolean isNotStopped() {
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    resultsListener.testAssertionVerified(assertion, testResult);
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    resultsListener.testExceptionOccurred(assertion, exceptionResult);
+  }
+
+  private boolean isNotStopped() {
     return !isStopped;
   }
 
   public void stop() throws IOException {
     boolean wasNotStopped = isNotStopped();
-    synchronized (this) {
-      isStopped = true;
-      if (stopId != null) {
-        fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
-      }
+    isStopped = true;
+    if (stopId != null) {
+      fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
     }
 
     if (wasNotStopped) {

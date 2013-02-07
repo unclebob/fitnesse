@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 import java.util.Collection;
@@ -24,4 +26,8 @@ public interface SlimTestContext {
   void incrementErroredTestsCount();
 
   void incrementIgnoredTestsCount();
+
+  void increment(ExecutionResult testSummary);
+
+  void increment(TestSummary testSummary);
 }

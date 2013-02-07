@@ -82,8 +82,8 @@ public class WikiWordBuilder {
     private String makeLinkToNonExistentWikiPage(String text, String url) {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
-        link.addAttribute("href", url+ "?edit&nonExistent=true");
-        return new HtmlText(text).html() + link.htmlInline();
+        link.addAttribute("href", url+ "?edit&amp;nonExistent=true");
+        return text + link.htmlInline();
     }
 
     private String makeParentPath(SourcePage page, String content) {

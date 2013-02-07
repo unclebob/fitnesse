@@ -1,5 +1,8 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestPage;
@@ -35,6 +38,14 @@ public class NullFormatter extends BaseFormatter {
 
   @Override
   public void testOutputChunk(String output) {
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   @Override

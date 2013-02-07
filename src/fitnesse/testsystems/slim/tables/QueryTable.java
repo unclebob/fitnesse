@@ -3,10 +3,11 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.SlimServer;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.Result;
+import fitnesse.testsystems.slim.results.TestResult;
 
 import java.util.*;
 
@@ -31,18 +32,16 @@ public class QueryTable extends SlimTable {
     if (actual.equals(replaceSymbols(expected)))
       return true;
     Comparator c = new Comparator(actual, expected);
-    c.evaluate();
     return c.matches();
   }
 
-  public String matchMessage(String actual, String expected) {
+  public TestResult matchMessage(String actual, String expected) {
     if (actual == null)
-      return "NULL";
+      return TestResult.fail("NULL");
     if (actual.equals(replaceSymbols(expected)))
-      return expected;
+      return TestResult.pass(replaceSymbolsWithFullExpansion(expected));
     Comparator c = new Comparator(actual, expected);
-    Result e = c.evaluate();
-    return e != null ? e.toString() : null;
+    return c.evaluate();
   }
 
   @Override
@@ -76,44 +75,50 @@ public class QueryTable extends SlimTable {
   public class QueryTableExpectation implements Expectation {
 
     @Override
-    public void evaluateExpectation(Object queryReturn) {
+    public TestResult evaluateExpectation(Object queryReturn) {
+      TestResult testResult;
       if (queryId == null || queryReturn == null) {
-        table.appendContent(0, 0, error("query method did not return a list."));
-        return;
+        testResult = TestResult.error("query method did not return a list");
+        table.updateContent(0, 0, testResult);
       } else if (queryReturn instanceof List) {
-        scanRowsForMatches((List<Object>) queryReturn);
+        testResult = new TestResult(scanRowsForMatches((List<Object>) queryReturn));
       } else {
-        appendQueryErrorMessage(queryReturn);
+        testResult = TestResult.error(String.format("The query method returned: %s", queryReturn));
+        table.updateContent(0, 0, testResult);
       }
+      return testResult;
     }
 
     @Override
-    public void handleException(ExceptionResult exceptionResult) {
-      table.appendContent(0, 0, exceptionResult);
-    }
-
-    private void appendQueryErrorMessage(Object message) {
-      table.appendContent(0, 0, error(String.format("The query method returned: %s", message)));
+    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+      table.updateContent(0, 0, exceptionResult);
+      getTestContext().incrementErroredTestsCount();
+      return exceptionResult;
     }
   }
 
 
-  protected void scanRowsForMatches(List<Object> queryResultList) {
+  protected ExecutionResult scanRowsForMatches(List<Object> queryResultList) {
     final QueryResults queryResults = new QueryResults(queryResultList);
     int rows = table.getRowCount();
     for (int tableRow = 2; tableRow < rows; tableRow++)
       scanRowForMatch(tableRow, queryResults);
-    markSurplusRows(queryResults);
+    return markSurplusRows(queryResults);
   }
 
-  private void markSurplusRows(final QueryResults queryResults) {
+  private ExecutionResult markSurplusRows(final QueryResults queryResults) {
     List<Integer> unmatchedRows = queryResults.getUnmatchedRows();
+    ExecutionResult result = ExecutionResult.PASS;
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
-      failMessage(0, newTableRow, "surplus");
+      TestResult testResult = TestResult.fail(surplusRow.get(0), null, "surplus");
+      table.updateContent(0, newTableRow, testResult);
+      getTestContext().increment(result);
       markMissingFields(surplusRow, newTableRow);
+      result = ExecutionResult.FAIL;
     }
+    return result;
   }
 
   private void markMissingFields(List<String> surplusRow, int newTableRow) {
@@ -121,7 +126,9 @@ public class QueryTable extends SlimTable {
       String surplusField = surplusRow.get(col);
       if (surplusField == null) {
         String fieldName = fieldNames.get(col);
-        fail(col, newTableRow, String.format("field %s not present", fieldName));
+        TestResult testResult = TestResult.fail(String.format("field %s not present", fieldName));
+        table.updateContent(col, newTableRow, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       }
     }
   }
@@ -130,7 +137,9 @@ public class QueryTable extends SlimTable {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
-      failMessage(0, tableRow, "missing");
+      TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      table.updateContent(0, tableRow, testResult);
+      getTestContext().increment(testResult.getExecutionResult());
     } else {
       markFieldsInMatchedRow(tableRow, matchedRow, queryResults);
     }
@@ -151,32 +160,36 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  protected void markField(int tableRow, int matchedRow, int col, QueryResults queryResults) {
+  protected TestResult markField(int tableRow, int matchedRow, int col, QueryResults queryResults) {
     if (col >= fieldNames.size())
-      return; // ignore strange table geometry.
+      return null; // ignore strange table geometry.
     String fieldName = fieldNames.get(col);
     String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
+    TestResult testResult;
     if (actualValue == null)
-      failMessage(col, tableRow, String.format("field %s not present", fieldName));
+      testResult = TestResult.fail(String.format("field %s not present", fieldName), expectedValue);
     else if (expectedValue == null || expectedValue.length() == 0)
-      ignore(col, tableRow, actualValue);
+      testResult = TestResult.ignore(actualValue);
     else {
-      String message = matchMessage(actualValue, expectedValue);
-      // TODO: -AJM- why are we performing symbol expansion here?
-      if (message != null)
-        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(message));
-      else
-        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
-      if (matches(actualValue, expectedValue))
-        markMatch(tableRow, matchedRow, col);
-      else
-        expected(col, tableRow, actualValue);
+      testResult = matchMessage(actualValue, expectedValue);
+//      if (testResult != null)
+//        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(message));
+//      else
+//        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
+//      else
+      if (testResult == null)
+        testResult = TestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
+      else if (testResult.getExecutionResult() == ExecutionResult.PASS)
+        testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
     }
+    table.updateContent(col, tableRow, testResult);
+    getTestContext().increment(testResult.getExecutionResult());
+    return testResult;
   }
 
-  protected void markMatch(int tableRow, int matchedRow, int col) {
-    pass(col, tableRow);
+  protected TestResult markMatch(int tableRow, int matchedRow, int col, String message) {
+    return TestResult.pass(message);
   }
 
   class QueryResults {

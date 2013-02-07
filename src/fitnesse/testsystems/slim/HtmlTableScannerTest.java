@@ -3,13 +3,12 @@
 package fitnesse.testsystems.slim;
 
 import org.htmlparser.util.ParserException;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Ignore;
 import org.junit.Test;
-import static util.RegexTestCase.assertHasRegexp;
 
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
 
 public class HtmlTableScannerTest {
   private HtmlTableScanner ts;
@@ -124,7 +123,7 @@ public class HtmlTableScannerTest {
   public void canAppendCellToRow() throws Exception {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    t.appendContent(0, "ray");
+    t.addColumnToRow(0, "ray");
     assertEquals("ray", t.getCellContents(1, 0));
   }
 
@@ -142,7 +141,7 @@ public class HtmlTableScannerTest {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
     t.addRow(Arrays.asList("y", "z"));
-    assertHasRegexp("<table _tablenumber=\\d+><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>",ts.toHtml().toLowerCase());
+    assertHasRegexp("<table _tablenumber=\"\\d+\"><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>",ts.toHtml().toLowerCase());
   }
 
 
@@ -151,7 +150,7 @@ public class HtmlTableScannerTest {
     String html_format = "gunk<body>gunk<table%s>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
     String html = String.format(html_format, "");
     scan(html);
-    String expectedPattern = String.format(html_format, " _TABLENUMBER=\\d+");
+    String expectedPattern = String.format(html_format, " _TABLENUMBER=\"\\d+\"");
     assertHasRegexp(expectedPattern,ts.toHtml());
   }
 
@@ -172,32 +171,6 @@ public class HtmlTableScannerTest {
   }
 
   @Test
-  @Ignore
-  // -AJM- Think this is not applicable anymore
-  public void colorizedCellsHaveSpecialRepresentationInStringLists() throws Exception {
-    String html =
-      "" +
-        "<table><tr><td>" +
-        "<span class=\"zot\">x</span>"+
-        "</td></tr></table>";
-    scan(html);
-    assertEquals("[[zot(x)]]", ts.getTable(0).toString());
-  }
-
-  @Test
-  @Ignore
-  // -AJM- Think this is not applicable anymore
-  public void multipleColoredStringsAreTranslated() throws Exception {
-    String html =
-      "" +
-        "<table><tr><td>" +
-        "<span class=\"zot\">x</span> X <span class=\"zork\">z</span>"+
-        "</td></tr></table>";
-    scan(html);
-    assertEquals("[[zot(x) X zork(z)]]", ts.getTable(0).toString());
-  }
-
-  @Test
   public void canExtractTablesFromHtml() throws Exception {
     String table1_fmt = "<body>GunkHeader gunk<table%s>gunk</table>gunk middle directions";
     String table2_fmt = "<table%s>gunk 2</table>gunk middle directions2";
@@ -205,9 +178,9 @@ public class HtmlTableScannerTest {
 
 
     String MULTI_TABLE_HTML = String.format(table1_fmt + table2_fmt + table3_fmt, "", "", "");
-    String expected_pattern1 = String.format(table1_fmt, " _TABLENUMBER=\\d+");
-    String expected_pattern2 = String.format(table2_fmt, " _TABLENUMBER=\\d+");
-    String expected_pattern3 = String.format(table3_fmt, " _TABLENUMBER=\\d+");
+    String expected_pattern1 = String.format(table1_fmt, " _TABLENUMBER=\"\\d+\"");
+    String expected_pattern2 = String.format(table2_fmt, " _TABLENUMBER=\"\\d+\"");
+    String expected_pattern3 = String.format(table3_fmt, " _TABLENUMBER=\"\\d+\"");
     scan(MULTI_TABLE_HTML);
     assertHasRegexp(expected_pattern1 + expected_pattern2 + expected_pattern3, ts.toHtml(null, null));
     assertHasRegexp(expected_pattern1, ts.toHtml(null, ts.getTable(1)));

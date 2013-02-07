@@ -50,7 +50,7 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
   }
 
   private void guaranteeThatAllTablesAreUnique(TableTag tagTable) {
-    tagTable.setAttribute("_TABLENUMBER", ""+ Math.abs((new Random()).nextLong()));
+    tagTable.setAttribute("_TABLENUMBER", ""+ Math.abs((new Random()).nextLong()), '"');
   }
 
   public int getTableCount() {

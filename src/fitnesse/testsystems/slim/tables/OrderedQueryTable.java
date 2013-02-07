@@ -2,6 +2,7 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.TestResult;
 
 public class OrderedQueryTable extends QueryTable {
   private int lastMatchedRow = -1;
@@ -15,7 +16,8 @@ public class OrderedQueryTable extends QueryTable {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
-      failMessage(0, tableRow, "missing");
+      TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      table.updateContent(0, tableRow, testResult);
     } else {
       int columns = table.getColumnCountInRow(tableRow);
       markColumns(tableRow, matchedRow, columns, queryResults);
@@ -30,11 +32,13 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   @Override
-  protected void markMatch(int tableRow, int matchedRow, int col) {
+  protected TestResult markMatch(int tableRow, int matchedRow, int col, String message) {
+    TestResult testResult;
     if (col == 0 && matchedRow <= lastMatchedRow) {
-      failMessage(0, tableRow, "out of order: row " + (matchedRow+1));
+      testResult = TestResult.fail(null, message, "out of order: row " + (matchedRow+1));
     } else {
-      pass(col, tableRow);
+      testResult = TestResult.pass(message);
     }
+    return testResult;
   }
 }
