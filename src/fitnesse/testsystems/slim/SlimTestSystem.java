@@ -4,6 +4,7 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.PageFactory;
+import fitnesse.responders.run.TestPage;
 import fitnesse.slim.*;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -155,10 +156,11 @@ public abstract class SlimTestSystem extends TestSystem {
     }
   }
 
-  public void runTests(ReadOnlyPageData pageData) throws IOException {
+  @Override
+  public void runTests(TestPage pageToTest) throws IOException {
     initializeTest();
-    checkForAndReportVersionMismatch(pageData);
-    processAllTablesOnPage(pageData);
+    checkForAndReportVersionMismatch(pageToTest.getDecoratedData());
+    processAllTablesOnPage(pageToTest);
     testComplete(testSummary);
   }
 
@@ -194,13 +196,13 @@ public abstract class SlimTestSystem extends TestSystem {
     return expectedVersionNumber;
   }
 
-  protected abstract List<SlimTable> createSlimTables(ReadOnlyPageData pageData);
+  protected abstract List<SlimTable> createSlimTables(TestPage pageTotest);
 
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  void processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
-    List<SlimTable> allTables = createSlimTables(pageData);
-    testResults = pageData;
+  void processAllTablesOnPage(TestPage pageToTest) throws IOException {
+    List<SlimTable> allTables = createSlimTables(pageToTest);
+    testResults = pageToTest.getDecoratedData();
 
     boolean runAllTablesAtOnce = false;
     if (runAllTablesAtOnce || (allTables.size() == 0)) {

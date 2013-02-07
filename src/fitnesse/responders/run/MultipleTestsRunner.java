@@ -127,8 +127,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
+      // TODO: This should be done with the respective test system (Slim/Fit).
       SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
-      testSystem.runTests(testPage.getDecoratedData());
+      testSystem.runTests(testPage);
     }
   }
 

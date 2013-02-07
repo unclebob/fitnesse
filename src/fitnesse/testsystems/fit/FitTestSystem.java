@@ -3,10 +3,10 @@
 package fitnesse.testsystems.fit;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestPage;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -40,8 +40,8 @@ public class FitTestSystem extends TestSystem {
   }
 
   @Override
-  public void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException {
-    String html = pageData.getHtml();
+  public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
+    String html = pageToTest.getDecoratedData().getHtml();
     if (html.length() == 0)
       client.send(EMPTY_PAGE_CONTENT);
     else

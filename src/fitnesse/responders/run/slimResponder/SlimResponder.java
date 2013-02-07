@@ -9,6 +9,7 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.run.TestPage;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -78,7 +79,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         testSystem.getExecutionLog();
         testSystem.start();
         testSystem.setFastTest(fastTest);
-        testSystem.runTests(pageData);
+        testSystem.runTests(new TestPage(pageData));
       } catch (IOException e) {
         slimException = e;
       } finally {

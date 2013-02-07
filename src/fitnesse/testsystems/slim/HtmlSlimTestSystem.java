@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.responders.run.TestPage;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageCrawlerImpl;
@@ -26,8 +27,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   @Override
-  protected List<SlimTable> createSlimTables(ReadOnlyPageData pageData) {
-    tableScanner = scanTheTables(pageData);
+  protected List<SlimTable> createSlimTables(TestPage pageToTest) {
+    tableScanner = scanTheTables(pageToTest.getDecoratedData());
     return createSlimTables(tableScanner);
   }
 

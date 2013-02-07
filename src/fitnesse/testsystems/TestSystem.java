@@ -4,6 +4,7 @@ package fitnesse.testsystems;
 
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.PageFactory;
+import fitnesse.responders.run.TestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -107,7 +108,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws IOException;
 
-  public abstract void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException;
+  public abstract void runTests(TestPage pageToTest) throws IOException, InterruptedException;
 
   public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
     return new Descriptor(page, pageFactory, isRemoteDebug);
