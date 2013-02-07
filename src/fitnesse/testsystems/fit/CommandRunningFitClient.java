@@ -17,20 +17,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  private int ticketNumber;
-  public CommandRunner commandRunner;
+  private final int ticketNumber;
+  private final boolean fastTest;
+  public final CommandRunner commandRunner;
+
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
   private Thread timeoutThread;
   private Thread earlyTerminationThread;
-  private boolean fastTest = false;
   private Thread fastFitServer;
-
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest)
-    throws Exception {
-    this(listener, command, port, null, dealer, fastTest);
-  }
 
   public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) {
     super(listener);
@@ -109,10 +105,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     synchronized (this) {
       notify();
     }
-  }
-
-  void setTicketNumber(int ticketNumber) {
-    this.ticketNumber = ticketNumber;
   }
 
   public boolean isSuccessfullyStarted() {

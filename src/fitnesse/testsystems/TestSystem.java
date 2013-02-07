@@ -21,13 +21,13 @@ public abstract class TestSystem implements TestSystemListener {
     "java -cp fitnesse.jar" +
       System.getProperties().get("path.separator") +
       "%p %m";
+
   public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   protected WikiPage page;
   protected boolean fastTest;
   protected boolean manualStart;
-  protected static final String emptyPageContent = "OH NO! This page is empty!";
   protected TestSystemListener testSystemListener;
   protected ExecutionLog log;
 

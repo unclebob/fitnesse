@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
- private CommandRunningFitClient client;
- private FitNesseContext context;
+  protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
+
+  private CommandRunningFitClient client;
+  private FitNesseContext context;
   private final Descriptor descriptor;
 
   public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
@@ -40,7 +42,7 @@ public class FitTestSystem extends TestSystem {
  public void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException {
    String html = pageData.getHtml();
    if (html.length() == 0)
-     client.send(emptyPageContent);
+     client.send(EMPTY_PAGE_CONTENT);
    else
      client.send(html);
  }
