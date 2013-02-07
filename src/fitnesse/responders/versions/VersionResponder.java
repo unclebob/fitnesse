@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -50,9 +54,40 @@ public class VersionResponder implements SecureResponder {
     html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);
     html.put("localPath", name);
+
+    List<VersionInfo> versions = new ArrayList<VersionInfo>(page.getData().getVersions());
+    Collections.sort(versions);
+    Collections.reverse(versions);
+    String nextVersion = selectNextVersion(versions, version);
+    html.put("nextVersionNavigable", nextVersion!=null);
+    html.put("nextVersion", nextVersion);
+    String previousVersion = selectPreviousVersion(versions, version);
+    html.put("previousVersionNavigable", previousVersion!=null);
+    html.put("previousVersion", previousVersion);
+
     html.setMainTemplate("wikiPage");
     html.put("content", new VersionRenderer(pageData));
     return html;
+  }
+
+  private String selectPreviousVersion(List<VersionInfo> versions, String current) {
+    int i = 0;
+    for (i=0; i<versions.size(); i++)
+      if (versions.get(i).getName().equals(current))
+        break;
+    if(i<0 || i>versions.size()-2)
+      return null;
+    return versions.get(i+1).getName();
+  }
+
+  private String selectNextVersion(List<VersionInfo> versions, String current) {
+    int i = 0;
+    for (; i<versions.size(); i++)
+      if (versions.get(i).getName().equals(current))
+        break;
+    if(i<1 || i>versions.size())
+      return null;
+    return versions.get(i-1).getName();
   }
 
   public SecureOperation getSecureOperation() {
