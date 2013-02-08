@@ -104,6 +104,8 @@ public class VersionComparerResponder implements Responder {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Version Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
+    page.setNavTemplate("compareVersionsNav.vm");
+    page.put("localPath", request.getResource());
     page.put("original", firstVersion);
     page.put("revised", secondVersion.equals("") ? "latest" : secondVersion);
     if (!testing) {
