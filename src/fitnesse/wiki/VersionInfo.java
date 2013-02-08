@@ -102,6 +102,8 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     VersionInfo otherVersion;
     if (o instanceof VersionInfo) {
       otherVersion = ((VersionInfo) o);
+      if(getCreationTime().compareTo(otherVersion.getCreationTime())==0)
+        return getName().compareTo(otherVersion.getName());
       return getCreationTime().compareTo(otherVersion.getCreationTime());
     } else
       return 0;

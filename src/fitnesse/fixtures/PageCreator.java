@@ -25,10 +25,12 @@ public class
       WikiPage root = FitnesseFixtureContext.root;
       WikiPagePath pagePath = PathParser.parse(pageName);
       WikiPage thePage = root.getPageCrawler().addPage(root, pagePath, pageContents);
-      PageData data = thePage.getData();
-      setAttributes(data);
-      thePage.commit(data);
-      setPageAttributes("");
+      if(pageAttributes!=null && pageAttributes.length()>0) {
+        PageData data = thePage.getData();
+        setAttributes(data);
+        thePage.commit(data);
+        setPageAttributes("");
+      }
     }
     catch (Exception e) {
       e.printStackTrace();

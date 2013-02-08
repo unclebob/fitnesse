@@ -29,7 +29,7 @@ public class PrintTestListener implements ResultsListener {
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
-        + testSummary.wrong + " " + testSummary.exceptions 
+        + testSummary.wrong + " e " + testSummary.exceptions
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }
 

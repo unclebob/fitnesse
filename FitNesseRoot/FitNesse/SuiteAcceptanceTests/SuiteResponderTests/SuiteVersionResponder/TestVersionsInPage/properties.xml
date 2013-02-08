@@ -6,9 +6,7 @@
 	<RecentChanges>true</RecentChanges>
 	<Refactor>true</Refactor>
 	<Search>true</Search>
-	<Test>true</Test>
+	<Test/>
 	<Versions>true</Versions>
 	<WhereUsed>true</WhereUsed>
-	<saveId>1238175009151</saveId>
-	<ticketId>-6940628553317529561</ticketId>
 </properties>

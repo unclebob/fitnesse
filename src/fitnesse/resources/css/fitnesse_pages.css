@@ -27,7 +27,7 @@ label input {
 .suitePage td,
 .testExecutionReport td,
 .compareHistory td {
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 
 /** Edit page **/
@@ -248,3 +248,18 @@ tr.scenario-detail {
 	background-position: center top;
 	background-repeat: no-repeat;
 }
+
+/** Test Execution report, backwards compatibility */
+.collapse_rim {
+  background: #F9F9F9;
+  border: 1px dotted #909090;
+}
+.collapse_rim > a {
+  padding-left: 16px;
+  background: url(../images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
+}
+.collapse_rim.open > a {
+  background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
+}
+
+   

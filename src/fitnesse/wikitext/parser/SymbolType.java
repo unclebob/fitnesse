@@ -67,7 +67,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType NoteLine = new SymbolType("NoteLine")
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("span").body(0).attribute("class", "note").inline());
+            .htmlTranslation(new HtmlBuilder("p").body(0).attribute("class", "note").inline());
     public static final SymbolType OpenBrace = new SymbolType("OpenBrace")
             .wikiMatcher(new Matcher().string("{"));
     public static final SymbolType OpenBracket = new SymbolType("OpenBracket")

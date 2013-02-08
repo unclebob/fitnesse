@@ -54,7 +54,7 @@ $(function() {
             this.assertEqual(anonymous.innerHTML, generatedHtml, "wikitextToFragment");
         }
         if (!withoutDomToWikitext) {
-            this.assertEqual(wikitext, instance.domToWikitext(anonymous, options), "domToWikitext");
+            this.assertEqual(wikitext + "\n", instance.domToWikitext(anonymous, options), "domToWikitext");
         }
     }
 
@@ -195,6 +195,18 @@ $(function() {
                 "{{{",
                 "= level 2",
                 "}}}= level 1}}}" ].join("\n"));
+        });
+
+        unit.add("code block with empty lines", function() {
+            var dom = fragment(
+                element("p", "test:",
+                    element("pre", br(), "first line", br(), br(), "  second line ")));
+            var wikitext = [
+                "test:{{{",
+                "first line",
+                "",
+                "  second line }}}" ].join("\n");
+            generate.call(this, dom, wikitext);
         });
 
         unit.add("paragraph", function() {
@@ -541,6 +553,16 @@ $(function() {
                 "!6 Heading 6 " ].join("\n"));
         });
 
+        unit.add("header with link", function() {
+            var dom = fragment(
+                element("h3",
+                    a("http://encyclopedia.thefreedictionary.com/XUnit", "xUnit"),
+                    ": Building the ", element("i", "Code Right")));
+            generateFragment.call(this, dom, [
+                "!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''",
+                ].join("\n"));
+        });
+
         unit.add("list", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -586,7 +608,8 @@ $(function() {
                 "            * Subitem 2",
                 "            * Subitem 3",
                 "    * item 2",
-                "Paragraph" ].join("\n"));
+                "Paragraph",
+                "" ].join("\n"));
             generate.call(this, dom, [
                 " * foo bar",
                 "   * Subitem 1",
@@ -617,6 +640,18 @@ $(function() {
                 " * Item 2",
                 "",
                 "And numbered lists can also be given an explicit number" ].join("\n"));
+        });
+
+        unit.add("ordered list", function() {
+            var dom = fragment(
+                element("ol",
+                    element("li", "foo bar"),
+                    element("ol", element("li", "Subitem")),
+                    element("li", "item 2")));
+            generate.call(this, dom, [
+                " 1 foo bar",
+                "   1 Subitem",
+                " 1 item 2" ].join("\n"));
         });
 
         unit.add("list at beginning of line", function() {
@@ -737,6 +772,7 @@ $(function() {
                 element("p", { 'class': 'comment' }, "# second comment"),
                 element("p", " #Not a comment"),
                 element("p", { 'class': 'comment' }, "# third comment"),
+                element("p", { 'class': 'comment' }, "# | table comment |"),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -745,6 +781,7 @@ $(function() {
                 "",
                 " #Not a comment",
                 "# third comment",
+                "# | table comment |",
                 "Paragraph" ].join("\n"));
             generateWikitext.call(this, dom, [
                 "Paragraph",
@@ -756,6 +793,8 @@ $(function() {
                 "#Not a comment",
                 "",
                 "# third comment",
+                "",
+                "# | table comment |",
                 "",
                 "Paragraph" ].join("\n"));
         });
@@ -1020,10 +1059,11 @@ $(function() {
                 "quote continued",
                 "",
                 " * item 1 continued",
-                "   1. item 1.1",
+                "   1 item 1.1",
                 "",
                 "!define def {dt dd}",
-                "| cell 1 | cell 2 |" ].join("\n"), wikitext);
+                "| cell 1 | cell 2 |",
+                "" ].join("\n"), wikitext);
         });
 
         unit.add("selectRange", function() {
@@ -1205,6 +1245,29 @@ $(function() {
                 "",
                 "| table | row |",
                 "",
+                "More text",
+                "",
+                "*!"].join("\n"));
+        });
+
+        unit.add("Collapsible area with header", function() {
+            var dom = fragment(
+                element("div", { "class": "collapsable" },
+                    element("p", "title"),
+                    element("p", br()),
+                    element("h2", "Header"),
+                    element("p", "More text")
+                ),
+                element("p", br()));
+            generateFragment.call(this, dom, [
+                "!*** title",
+                "!2 Header",
+                "More text",
+                "*!"].join("\n"));
+            generateWikitext.call(this, dom, [
+                "!*** title",
+                "",
+                "!2 Header",
                 "More text",
                 "",
                 "*!"].join("\n"));

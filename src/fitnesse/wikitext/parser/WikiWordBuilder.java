@@ -83,7 +83,7 @@ public class WikiWordBuilder {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
         link.addAttribute("href", url+ "?edit&nonExistent=true");
-        return new HtmlText(text).html() + link.htmlInline();
+        return text + link.htmlInline();
     }
 
     private String makeParentPath(SourcePage page, String content) {

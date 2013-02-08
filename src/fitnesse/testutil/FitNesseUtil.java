@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import java.io.IOException;
-
-import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
@@ -13,6 +10,9 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
+import util.FileUtil;
+
+import java.io.IOException;
 
 public class FitNesseUtil {
   public static final String base = "TestDir";

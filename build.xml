@@ -28,7 +28,7 @@
 		<exclude name="**/*.zip" />
 	</zipfileset>
 
-	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
+	<target name="run" depends="compile, compile-bootstrap-less" description="Start FitNesse from the command line">
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
 			<arg value="-p" />
@@ -118,19 +118,21 @@
 		</copy>
 	</target>
 
-	<scriptdef name="lessc" language="javascript" src="extra/lesscss/less-rhino-1.3.1.js">
-		<attribute name="file" />
-		<attribute name="tofile" />
-	</scriptdef>
-
 	<uptodate property="bootstrap-css-up-to-date" targetfile="${classes}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
 		<srcfiles dir="." includes="src/fitnesse/resources/bootstrap/less/*.less" />
 	</uptodate>
 
-	<target name="compile-bootstrap-less" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
+	<target name="compile-bootstrap-less" depends="ivy-init" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
 		<mkdir dir="${classes}/fitnesse/resources/bootstrap/css" />
-		<lessc file="src/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less"
-			tofile="${classes}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" />
+		<ivy:cachepath pathid="lesscss.classpath" conf="lesscss" />
+		<java classname="org.mozilla.javascript.tools.shell.Main"
+			classpathref="lesscss.classpath"
+			failonerror="true"
+			fork="true"
+			output="${classes}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css">
+			<arg value="extra/lesscss/less-rhino-1.3.3.js" />
+			<arg value="src/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less" />
+		</java>
 	</target>
 
 	<target name="set-version-if-not-manualy-set" unless="version">
@@ -154,7 +156,7 @@
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
-	<target name="unit_test" depends="compile, retrieve" description="run the unit tests">
+	<target name="unit_test" depends="compile" description="run the unit tests">
 		<mkdir dir="test-results" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
 			<classpath refid="classpath" />
@@ -183,7 +185,7 @@
 
 	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
-	<target name="acceptance_tests_xml" depends="standalone-jar,retrieve">
+	<target name="acceptance_tests_xml" depends="standalone-jar">
 		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
@@ -192,7 +194,7 @@
 		</java>
 	</target>
 
-	<target name="acceptance_tests" depends="standalone-jar,retrieve">
+	<target name="acceptance_tests" depends="standalone-jar">
 		<java jar="dist/fitnesse-standalone.jar" failonerror="true" fork="true">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
@@ -204,7 +206,7 @@
 	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for IDE's">
 		<ivy:retrieve pattern="lib/[artifact].[ext]" />
 	</target>
-	
+
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />

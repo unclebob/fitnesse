@@ -1177,10 +1177,11 @@ Wysiwyg.prototype.insertTableColumn = function (after) {
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
         var i;
-        for (i = 0; i < length; i++) {
+        for (i = 1; i < length; i++) {
             var row = rows[i];
             this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
         }
+        this.spanTableColumns(focus.table);
     }
 };
 
@@ -1213,12 +1214,13 @@ Wysiwyg.prototype.deleteTableColumn = function () {
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex;
         var i;
-        for (i = 0; i < length; i++) {
+        for (i = 1; i < length; i++) {
             var row = rows[i];
             if (cellIndex < row.cells.length) {
                 row.deleteCell(cellIndex);
             }
         }
+        this.spanTableColumns(focus.table);
     }
 };
 
@@ -1609,7 +1611,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -2. list
-    wikiRules.push("^[ \\t\\r\\f\\v]*[*-][ \\t\\r\\f\\v]");
+    wikiRules.push("^[ \\t\\r\\f\\v]*[*1-9-][ \\t\\r\\f\\v]");
     // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
     // -4. closing table row
@@ -1779,7 +1781,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         closeToFragment();
         var tag = "h" + match[1];
         var element = contentDocument.createElement(tag);
-        fragment.appendChild(element);
+        holder.appendChild(element);
         holder = element;
         return tag;
     }
@@ -1795,6 +1797,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     function handleDefinition(line) {
         closeToFragment();
         openParagraph();
+        holder.appendChild(contentDocument.createTextNode(line));
+        self.updateElementClassName(holder);
     }
 
     function handleCollapsibleBlock(value) {
@@ -1944,16 +1948,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         createAnchor(value, value);
     }
 
-    function handleBracketLinks(value) {
-        var d = contentDocument;
-        var link = value.slice(1, -1);
-        var anchor = self.createAnchor(link, link);
-        var _holder = holder;
-        _holder.appendChild(d.createTextNode("<"));
-        _holder.appendChild(anchor);
-        _holder.appendChild(d.createTextNode(">"));
-    }
-
     function handleWikiPageName(name, label) {
         if (!inAnchor()) {
             createAnchor(name, label || name, true);
@@ -1962,20 +1956,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         }
     }
 
-    function handleWikiAnchor(text) {
-        var match = /^\[=#([^ \t\r\f\v\]]+)(?:[ \t\r\f\v]+([^\]]*))?\]$/.exec(text);
-        var d = contentDocument;
-        var element = d.createElement("span");
-        element.className = "wikianchor";
-        element.id = match[1];
-        if (match[2]) {
-            element.appendChild(self.wikitextToOnelinerFragment(match[2], d, self.options));
-        }
-        holder.appendChild(element);
-    }
-
     function handleList(value) {
-        var match = /^(\s*)[*-]\s/.exec(value);
+        var match = /^(\s*)([*1-9-])\s/.exec(value);
         var className, depth, start;
         if (!match) {
             holder.appendChild(contentDocument.createTextNode(value));
@@ -1987,7 +1969,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         var last = listDepth.length - 1;
         if (depth > (last >= 0 ? listDepth[last] : -1)) {
             closeToFragment("li");
-            openList("ul", className, start, depth);
+            openList(/[1-9]/.test(match[2]) ? "ol" : "ul", className, start, depth);
         } else {
             var container, list, tmp;
             if (listDepth.length > 1 && depth < listDepth[last]) {
@@ -2309,10 +2291,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleList(matchText);
                 continue;
-            case -3:    // definition (leading "!")
+            case -3:    // definition (leading "!") and comments (leading "#")
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleDefinition(matchText);
-                break;
+                continue;
             case -4:    // closing table row
                 if (inEscapedText() || inCodeBlock()) { break; }
                 if (inTable()) {
@@ -2321,6 +2303,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
                 }
                 break;
             case -5:    // cell
+                if (inDefinition()) { break; }
                 if (inEscapedText() || inCodeBlock()) { 
                     if (/^-!/.test(matchText)) {
                         closeEscapedText(matchText);
@@ -2374,7 +2357,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
             fragment.appendChild(contentDocument.createElement("hr"));
             continue;
         }
-        if (line.length === 0) {
+        if (line.length === 0 && !inCodeBlock()) {
             closeToFragment();
             continue;
         }
@@ -2385,13 +2368,15 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
         decorationStack = [];
 
         handleLine(line);
-
+        
+        // Close headers here, since they should not interfere with other line types parsed.
         if (currentHeader) {
             closeHeader();
         }
         if (inTable() && !inEscapedText()) {
             handleTableCell(-1);
         }
+        
     }
     closeToFragment();
 
@@ -2631,8 +2616,6 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         var autolink = node.getAttribute("data-wysiwyg-autolink");
 
         link = (link || node.href).replace(/^\s+|\s+$/g, "");
-        // Obtain label as text content. Allow to render special attributes
-        //var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
         var label = self.domToWikitext(node, options);
         if (!label) {
             return;
@@ -2711,31 +2694,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 _texts.push(" " + string("  ", listDepth - 1));
                 var container = node.parentNode;
                 if ((container.tagName || "").toLowerCase() === "ol") {
-                    var start = container.getAttribute("start") || "";
-                    if (start !== "1" && /^(?:[0-9]+|[a-zA-Z]|[ivxIVX]{1,5})$/.test(start)) {
-                        _texts.push(start, ". ");
-                    } else {
-                        switch (container.className) {
-                        case "arabiczero":
-                            _texts.push("0. ");
-                            break;
-                        case "lowerroman":
-                            _texts.push("i. ");
-                            break;
-                        case "upperroman":
-                            _texts.push("I. ");
-                            break;
-                        case "loweralpha":
-                            _texts.push("a. ");
-                            break;
-                        case "upperalpha":
-                            _texts.push("A. ");
-                            break;
-                        default:
-                            _texts.push("1. ");
-                            break;
-                        }
-                    }
+                    _texts.push("1 ");
                 } else {
                     _texts.push("* ");
                 }
@@ -2768,7 +2727,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "td":
                 skipNode = node;
                 _texts.push("|");
-                text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "");
+                text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "").replace(/\n$/, "");
                 if (text) {
                     _texts.push(" ", text, " ");
                     break;
@@ -2949,7 +2908,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     }
 
     this.treeWalk(root, iterator);
-    return texts.join("").replace(/^(?: *\n)+|(?: *\n)+$/g, "");
+    return texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n");
 };
 
 Wysiwyg.prototype.updateElementClassName = function (element) {
