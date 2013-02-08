@@ -1,0 +1,19 @@
+<h2>Comparing version $original to $revised</h2>
+
+<table class="diff_table">
+ #foreach($line in $differences)
+  #set($class = "diff_line")
+  #if($line.startsWith("-") && !$line.startsWith("---"))
+   #set($class = "${class} diff_line_removed")
+  #end
+  #if($line.startsWith("+") && !$line.startsWith("+++"))
+   #set($class = "${class} diff_line_added")
+  #end
+  #if($line.startsWith("@@") || $line.startsWith("---") || $line.startsWith("+++"))
+   #set($class = "${class} diff_chunk_header")
+  #end
+  <tr>
+   <td class="$class">$line</td>
+  </tr>
+ #end
+</table>
