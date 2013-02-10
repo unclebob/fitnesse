@@ -219,9 +219,8 @@
 	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
 		<ivy:deliver deliverpattern="dist/ivy.xml" pubrevision="${version}" status="release" />
 		<ivy:makepom ivyfile="${basedir}/dist/ivy.xml" templatefile="templates/pom.xml.template" pomfile="${basedir}/dist/fitnesse.pom" conf="standalone,default,test">
-			   <mapping conf="default" scope="compile"/>
-			   <mapping conf="standalone" scope="runtime"/>
-			   <mapping conf="test" scope="test"/>
+			   <mapping conf="standalone" scope="compile" />
+			   <mapping conf="test" scope="test" />
 		</ivy:makepom>
 	</target>
 
