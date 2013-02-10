@@ -278,7 +278,7 @@
 
 	<target name="ivy-download" unless="ivy.download.not.required">
 		<mkdir dir="antlib" />
-		<get src="${maven.central.url}/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
+		<get src="${maven.central.url}/org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
 		<!-- The following libs are used for signing artifacts
 		     when deployed to Maven Central.  -->
 		<get src="${maven.central.url}/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="antlib/bcprov.jar" usetimestamp="true" verbose="true" />
