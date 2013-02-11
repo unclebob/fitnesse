@@ -219,9 +219,8 @@
 	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
 		<ivy:deliver deliverpattern="dist/ivy.xml" pubrevision="${version}" status="release" />
 		<ivy:makepom ivyfile="${basedir}/dist/ivy.xml" templatefile="templates/pom.xml.template" pomfile="${basedir}/dist/fitnesse.pom" conf="standalone,default,test">
-			   <mapping conf="default" scope="compile"/>
-			   <mapping conf="standalone" scope="runtime"/>
-			   <mapping conf="test" scope="test"/>
+			   <mapping conf="standalone" scope="compile" />
+			   <mapping conf="test" scope="test" />
 		</ivy:makepom>
 	</target>
 
@@ -278,7 +277,7 @@
 
 	<target name="ivy-download" unless="ivy.download.not.required">
 		<mkdir dir="antlib" />
-		<get src="${maven.central.url}/org/apache/ivy/ivy/2.3.0-rc1/ivy-2.3.0-rc1.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
+		<get src="${maven.central.url}/org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar" dest="antlib/ivy.jar" usetimestamp="true" verbose="true" />
 		<!-- The following libs are used for signing artifacts
 		     when deployed to Maven Central.  -->
 		<get src="${maven.central.url}/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="antlib/bcprov.jar" usetimestamp="true" verbose="true" />
