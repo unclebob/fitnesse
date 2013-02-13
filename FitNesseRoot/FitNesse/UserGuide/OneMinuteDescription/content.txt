@@ -21,7 +21,7 @@ From another perspective, !-FitNesse-! is a lightweight, open-source framework t
 
 !3 !-FitNesse-! is a web server.
  * It requires '''no configuration or setup'''.
- * Just run it and then direct your browser to the machine where it is running (see [[Downloading and Installing][DownloadingAndInstallingFitNesse]]).
+ * Just run it and then direct your browser to the machine where it is running (see [[Downloading and Installing][http://fitnesse.org/FitNesseDownload]]).
 
 !3 Want a quick introduction? Check out the [[Two Minute Example][TwoMinuteExample]].
 ----
