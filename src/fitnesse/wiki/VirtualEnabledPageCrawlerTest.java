@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import junit.framework.TestCase;
-import fitnesse.testutil.FitNesseUtil;
 
 public class VirtualEnabledPageCrawlerTest extends TestCase {
   private WikiPage root;
@@ -21,7 +20,6 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
     vlink = crawler.addPage(root, PathParser.parse("VirtualLink"));
     child1 = crawler.addPage(target, child1Path);
     crawler.addPage(child1, PathParser.parse("GrandChildOne"));
-    FitNesseUtil.bindVirtualLinkToPage(vlink, target);
   }
 
   public void tearDown() throws Exception {
@@ -32,21 +30,6 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
     assertNotNull(virtualChild);
     assertEquals("ChildOne", virtualChild.getName());
     assertNotNull(crawler.getPage(vlink, PathParser.parse("ChildOne.GrandChildOne")));
-  }
-
-  public void testCanCrossMultipleVirtualLinks() throws Exception {
-    WikiPage secondTarget = crawler.addPage(root, PathParser.parse("SecondTarget"));
-    crawler.addPage(secondTarget, PathParser.parse("ChildOfSecondTarget"));
-    FitNesseUtil.bindVirtualLinkToPage(child1, secondTarget);
-    WikiPage virtualChild = crawler.getPage(vlink, PathParser.parse("ChildOne.ChildOfSecondTarget"));
-    assertNotNull(virtualChild);
-    assertEquals("ChildOfSecondTarget", virtualChild.getName());
-  }
-
-  public void testThatVirtualCylcesTerminate() throws Exception {
-    FitNesseUtil.bindVirtualLinkToPage(child1, target); //Cycle.
-    WikiPage virtualChild = crawler.getPage(vlink, PathParser.parse("ChildOne.ChildOne.ChildOne.ChildOne.ChildOne"));
-    assertNotNull(virtualChild);
   }
 
   public void testFullyQualifiedNameUsesVirtualParent() throws Exception {

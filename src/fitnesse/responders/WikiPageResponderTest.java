@@ -121,16 +121,6 @@ public class WikiPageResponderTest extends RegexTestCase {
     return (SimpleResponse) responder.makeResponse(context, request);
   }
 
-  public void testShouldGetVirtualPage() throws Exception {
-    final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
-    crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
-    final WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
-    FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
-    final SimpleResponse response = requestPage("LinkerPage.ChildPage");
-
-    assertSubString("child content", response.getContent());
-  }
-
   public void testVirtualPageIndication() throws Exception {
     final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
     crawler.addPage(targetPage, PathParser.parse("ChildPage"));
