@@ -38,11 +38,6 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   WikiPage getFooterPage();
 
-  //TODO Delete these method alone with ProxyPage when the time is right.
-  boolean hasExtension(String extensionName);
-
-  Extension getExtension(String extensionName);
-
   boolean isOpenInNewWindow();
 }
 

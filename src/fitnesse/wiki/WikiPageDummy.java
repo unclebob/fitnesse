@@ -3,10 +3,10 @@
 
 package fitnesse.wiki;
 
+import util.Clock;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import util.Clock;
 
 public class WikiPageDummy implements WikiPage {
   private static final long serialVersionUID = 1L;
@@ -101,14 +101,6 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public WikiPage getChildPage(String name) {
-    return null;
-  }
-
-  public boolean hasExtension(String extensionName) {
-    return false;
-  }
-
-  public Extension getExtension(String extensionName) {
     return null;
   }
 
