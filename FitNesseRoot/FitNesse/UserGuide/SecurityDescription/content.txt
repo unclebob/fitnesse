@@ -22,8 +22,6 @@ Pages inherit their security from their parent pages.  If a parent page has ''se
  * A user must be authenticated to inspect or change the /files directory structure.  However, unauthenticated readers can read files from the /files directory.
  * Searching, WhereUsed, Sisterhood, and other queries of that kind are not secure and do not require authentication.
 
-!3 Virtual Wiki
-A virtual page inherits the security of its ''local'' parents, not its remote parents.  This is a security hole for reading and testing.  If the parent of a page has secure-read, but that page is accessed through a virtual wiki below the secure parent, then the security will be lost.  Fortunately this is only true for reading and testing.  Writing is never done over a virtual wiki, so it remains secure.  At this point we're not sure whether this is a real problem or not.  Let us know what you think.
 !3 Authentication
 The users and their passwords are supplied to FitNesse by using the -a as one of the CommandLineArguments.
 !3 SPNEGO/GSSAPI Authentication
