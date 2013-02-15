@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 
 public class HashingCipher implements PasswordCipher {
   private static final int repetitions = 3;
