@@ -1,12 +1,14 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,38 +28,6 @@ public class WikiSourcePageTest {
         assertEquals(2, names.size());
         assertTrue(names.contains("PageTwo"));
         assertTrue(names.contains("PageThree"));
-    }
-
-    @Test
-    public void getsVirtualChildren() {
-        TestRoot root = new TestRoot();
-        WikiPage page = root.makePage("PageOne");
-        root.makePage(page, "PageTwo");
-        root.makePage(page, "PageThree");
-        WikiPage virtualPage = root.makePage("VirtualPage");
-        VirtualCouplingExtension extension = (VirtualCouplingExtension) virtualPage.getExtension(VirtualCouplingExtension.NAME);
-        extension.setVirtualCoupling(new MockVirtualCouplingPage(page));
-
-        WikiSourcePage source = new WikiSourcePage(virtualPage);
-        ArrayList<String> names = new ArrayList<String>();
-        for (SourcePage child: source.getChildren()) names.add(child.getName());
-
-        assertEquals(2, names.size());
-        assertTrue(names.contains("PageTwo"));
-        assertTrue(names.contains("PageThree"));
-    }
-
-    @SuppressWarnings("serial")
-    private class MockVirtualCouplingPage extends VirtualCouplingPage {
-        private WikiPage mockVirtualPage;
-        public MockVirtualCouplingPage(WikiPage mockVirtualPage) {
-            super(mockVirtualPage);
-            this.mockVirtualPage = mockVirtualPage;
-        }
-
-        public List<WikiPage> getChildren() {
-          return mockVirtualPage.getChildren();
-        }
     }
 
     @Test

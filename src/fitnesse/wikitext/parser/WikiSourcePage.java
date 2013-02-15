@@ -150,13 +150,6 @@ public class WikiSourcePage implements SourcePage {
             for (WikiPage child: page.getChildren()) {
                 children.add(new WikiSourcePage(child));
             }
-            if (page.hasExtension(VirtualCouplingExtension.NAME)) {
-                VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
-                WikiPage virtualCoupling = extension.getVirtualCoupling();
-                for (WikiPage child: virtualCoupling.getChildren()) {
-                    children.add(new WikiSourcePage(child));
-                }
-            }
         }
         catch (Exception e) {
             e.printStackTrace();

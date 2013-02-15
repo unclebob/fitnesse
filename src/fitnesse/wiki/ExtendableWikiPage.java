@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: remove this.
 public abstract class ExtendableWikiPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 

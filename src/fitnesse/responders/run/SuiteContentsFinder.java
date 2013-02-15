@@ -2,13 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.wiki.*;
+
+import java.util.*;
 
 public class SuiteContentsFinder {
 
@@ -105,17 +101,7 @@ public class SuiteContentsFinder {
 	  private static List<WikiPage> getChildren(WikiPage page) {
 	    List<WikiPage> children = new ArrayList<WikiPage>();
 	    children.addAll(page.getChildren());
-	    addVirtualChildrenIfAny(page, children);
 	    return children;
-	  }
-
-	  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) {
-	    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-	      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-	        VirtualCouplingExtension.NAME
-	      );
-	      children.addAll(extension.getVirtualCoupling().getChildren());
-	    }
 	  }
 
   protected List<WikiPage> gatherCrossReferencedTestPages() {
