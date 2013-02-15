@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.components.CommandRunner;
+import fitnesse.testsystems.CommandRunner;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import fitnesse.slim.*;
@@ -10,7 +10,7 @@ import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.*;
-import fitnesse.testutil.MockCommandRunner;
+import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 

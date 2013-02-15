@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-import fitnesse.components.CommandRunner;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;

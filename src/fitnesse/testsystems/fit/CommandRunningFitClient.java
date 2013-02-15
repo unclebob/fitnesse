@@ -3,11 +3,11 @@
 package fitnesse.testsystems.fit;
 
 import fit.FitServer;
-import fitnesse.components.CommandRunner;
+import fitnesse.testsystems.CommandRunner;
 import fitnesse.components.FitClient;
 import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testutil.MockCommandRunner;
+import fitnesse.testsystems.MockCommandRunner;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
