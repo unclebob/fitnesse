@@ -47,11 +47,6 @@
     <label for="Suites">Tags:</label>
      <input type="text" id="Suites" title="Separate tags by a comma" name="Suites"#value( "Suites" ) size="70"/>
    </fieldset>
-
-   <fieldset>
-    <label for="VirtualWiki">VirtualWiki URL:</label>
-    <input type="text" id="VirtualWiki" name="VirtualWiki" value="$!virtualWikiValue" size="70"/> <strong>(DEPRECATED)</strong>
-   </fieldset>
   </div>
   <fieldset class="buttons">
    <input type="submit" name="Save" value="Save Properties" accesskey="s"/>

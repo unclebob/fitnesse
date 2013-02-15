@@ -1,19 +1,17 @@
 package fitnesse.components;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import fitnesse.wiki.*;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class RegularExpressionWikiPageFinderTest implements TraversalListener<WikiPage> {
 
@@ -40,8 +38,6 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
     virtualPage = crawler.addPage(root, PathParser.parse("PageTwo"),
         "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = virtualPage.getData();
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:"
-        + FitNesseUtil.PORT + "/PageOne");
     virtualPage.commit(data);
     foundPages.clear();
   }

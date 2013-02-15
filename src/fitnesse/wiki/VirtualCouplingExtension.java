@@ -7,6 +7,7 @@ import fitnesse.responders.ErrorResponder;
 public class VirtualCouplingExtension implements Extension {
   private static final long serialVersionUID = 1L;
 
+  public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
   public static final String NAME = "VirtualCoupling";
 
   private WikiPage hostPage;
@@ -36,8 +37,8 @@ public class VirtualCouplingExtension implements Extension {
 
   protected void detectAndLoadVirtualChildren() {
     PageData data = hostPage.getData();
-    if (data.hasAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))
-      loadVirtualChildren(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
+    if (data.hasAttribute(VIRTUAL_WIKI_ATTRIBUTE))
+      loadVirtualChildren(data.getAttribute(VIRTUAL_WIKI_ATTRIBUTE));
   }
 
   public void loadVirtualChildren(String url) {

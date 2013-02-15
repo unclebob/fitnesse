@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.List;
-
-import junit.framework.TestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleCachinePage;
+import junit.framework.TestCase;
+
+import java.util.List;
 
 public class VirtualCouplingExtensionTest extends TestCase {
   public WikiPage root;
@@ -30,7 +30,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
 
   public static void setVirtualWiki(WikiPage page, String virtualWikiURL) throws Exception {
     PageData data = page.getData();
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, virtualWikiURL);
+    data.setAttribute(VirtualCouplingExtension.VIRTUAL_WIKI_ATTRIBUTE, virtualWikiURL);
     page.commit(data);
   }
 

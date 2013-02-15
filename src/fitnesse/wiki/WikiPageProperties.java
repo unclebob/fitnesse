@@ -28,7 +28,6 @@ import fitnesse.wikitext.Utils;
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
   private Map<?, ?> symbolicLinks;
 
   public WikiPageProperties() {
