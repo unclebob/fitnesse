@@ -271,9 +271,9 @@ public class FitNesseSuite extends ParentRunner<String> {
     try {
       helper.assertTestPasses(test);
     } catch (AssertionFailedError e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
+      notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, test), e));
     } catch (Exception e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
+      notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, test), e));
     }
   }
 

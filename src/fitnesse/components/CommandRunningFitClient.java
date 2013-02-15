@@ -2,157 +2,78 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fit.FitServer;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.UnknownHostException;
+import java.util.Map;
+
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SocketDoner;
 import fitnesse.responders.run.SocketSeeker;
+import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
-
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.Map;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  private int ticketNumber;
   public CommandRunner commandRunner;
   private SocketDoner donor;
-  private boolean connectionEstablished = false;
+  private volatile boolean connectionEstablished = false;
 
-  private Thread timeoutThread;
-  private Thread earlyTerminationThread;
-  private boolean fastTest = false;
-  private Thread fastFitServer;
+  private final CommandRunningStrategy commandRunningStrategy;
 
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest)
-    throws Exception {
-    this(listener, command, port, null, dealer, fastTest);
-  }
-
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) {
+  public CommandRunningFitClient(TestSystemListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
     super(listener);
-    this.fastTest = fastTest;
-    ticketNumber = dealer.seekingSocket(this);
-    String hostName;
-    try {
-      hostName = java.net.InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-    String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
-    String commandLine = command + SPACE + fitArguments;
-    if (fastTest) {
-      commandRunner = new MockCommandRunner();
-      createFitServer("-x " + fitArguments);
-    } else
-      commandRunner = new CommandRunner(commandLine, "", environmentVariables);
-  }
-
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws Exception {
-    this(listener, command, port, null, dealer);
-  }
-
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer) throws Exception {
-    this(listener, command, port, environmentVariables, dealer, false);
-  }
-
-  //For testing only.  Makes responder faster.
-  void createFitServer(String args) {
-    final String fitArgs = args;
-    Runnable fastFitServerRunnable = new Runnable() {
-      public void run() {
-        try {
-          while (!tryCreateFitServer(fitArgs))
-            Thread.sleep(10);
-        } catch (Exception e) {
-
-        }
-      }
-    };
-    fastFitServer = new Thread(fastFitServerRunnable);
-    fastFitServer.start();
-  }
-
-  private boolean tryCreateFitServer(String args) {
-    try {
-      FitServer.main(args.trim().split(" "));
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+    this.commandRunningStrategy = commandRunningStrategy;
+    int ticketNumber = socketDealer.seekingSocket(this);
+    String hostName = getLocalhostName();
+    this.commandRunner = commandRunningStrategy.init(this, hostName, port, ticketNumber);
   }
 
   public void start() {
     try {
       commandRunner.asynchronousStart();
-      if (!fastTest) {
-        timeoutThread = new Thread(new TimeoutRunnable(), "FitClient timeout");
-        timeoutThread.start();
-        earlyTerminationThread = new Thread(new EarlyTerminationRunnable(), "FitClient early termination");
-        earlyTerminationThread.start();
-      }
+      commandRunningStrategy.start();
       waitForConnection();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       listener.exceptionOccurred(e);
     }
   }
 
-  public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
+  public synchronized void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
     this.donor = donor;
     acceptSocket(donor.donateSocket());
     connectionEstablished = true;
-
     synchronized (this) {
       notify();
     }
   }
 
-  void setTicketNumber(int ticketNumber) {
-    this.ticketNumber = ticketNumber;
-  }
-
-  public boolean isSuccessfullyStarted() {
-    return fitSocket != null;
-  }
-
   private void waitForConnection() throws InterruptedException {
-    while (fitSocket == null) {
+    while (!isSuccessfullyStarted()) {
       Thread.sleep(100);
       checkForPulse();
     }
   }
 
+  public synchronized boolean isConnectionEstablished() {
+    return connectionEstablished;
+  }
+
   public void join() {
-    try {
-      if (fastTest) {
-        fastFitServer.join();
-      } else {
-        commandRunner.join();
-      }
-      super.join();
-      if (donor != null)
-        donor.finishedWithSocket();
-      killVigilantThreads();
-    }
-    catch (InterruptedException e) {
-    }
+    commandRunningStrategy.join();
+    super.join();
+    if (donor != null)
+      donor.finishedWithSocket();
+    commandRunningStrategy.kill();
   }
 
   public void kill() {
     super.kill();
-    killVigilantThreads();
+    commandRunningStrategy.kill();
     commandRunner.kill();
-  }
-
-  private void killVigilantThreads() {
-    if (timeoutThread != null)
-      timeoutThread.interrupt();
-    if (earlyTerminationThread != null)
-      earlyTerminationThread.interrupt();
   }
 
   public void exceptionOccurred(Exception e) {
@@ -160,41 +81,193 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     super.exceptionOccurred(e);
   }
 
-  private class TimeoutRunnable implements Runnable {
+  public interface CommandRunningStrategy {
+    CommandRunner init(CommandRunningFitClient fitClient, String hostname, int port, int ticketNumber);
 
-    public void run() {
-      try {
-        Thread.sleep(TIMEOUT);
-        synchronized (CommandRunningFitClient.this) {
-          if (fitSocket == null) {
-            CommandRunningFitClient.this.notify();
-            listener.exceptionOccurred(new Exception(
-              "FitClient: communication socket was not received on time."));
+    void start() throws IOException;
+
+    void join();
+
+    void kill();
+  }
+
+  /** Runs commands by starting a new process. */
+  public static class OutOfProcessCommandRunner implements CommandRunningStrategy {
+
+    private Map<String, String> environmentVariables;
+    private final String command;
+    private Thread timeoutThread;
+    private Thread earlyTerminationThread;
+    private CommandRunner commandRunner;
+    private CommandRunningFitClient fitClient;
+
+    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables) {
+      this.command = command;
+      this.environmentVariables = environmentVariables;
+    }
+
+    @Override
+    public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
+      this.fitClient = fitClient;
+      String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
+      String commandLine = command + SPACE + fitArguments;
+      this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
+      return commandRunner;
+    }
+
+    @Override
+    public void start() throws IOException {
+      timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
+      timeoutThread.start();
+      earlyTerminationThread = new Thread(new EarlyTerminationRunnable(fitClient, commandRunner), "FitClient early termination");
+      earlyTerminationThread.start();
+    }
+
+    @Override
+    public void join() {
+      commandRunner.join();
+    }
+
+    @Override
+    public void kill() {
+      killVigilantThreads();
+    }
+
+    private void killVigilantThreads() {
+      if (timeoutThread != null)
+        timeoutThread.interrupt();
+      if (earlyTerminationThread != null)
+        earlyTerminationThread.interrupt();
+    }
+
+    private static class TimeoutRunnable implements Runnable {
+
+      private final FitClient fitClient;
+
+      public TimeoutRunnable(FitClient fitClient) {
+        this.fitClient = fitClient;
+      }
+
+      public void run() {
+        try {
+          Thread.sleep(TIMEOUT);
+          if (!fitClient.isSuccessfullyStarted()) {
+            fitClient.notify();
+            fitClient.listener.exceptionOccurred(new Exception(
+                "FitClient: communication socket was not received on time."));
           }
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt(); // remember interrupted
         }
       }
-      catch (InterruptedException e) {
-        // ok
+    }
+
+    private static class EarlyTerminationRunnable implements Runnable {
+      private final CommandRunningFitClient fitClient;
+      private final CommandRunner commandRunner;
+
+      EarlyTerminationRunnable(CommandRunningFitClient fitClient, CommandRunner commandRunner) {
+        this.fitClient = fitClient;
+        this.commandRunner = commandRunner;
+      }
+
+      public void run() {
+        try {
+          Thread.sleep(1000); // next waitFor() can finish too quickly on Linux!
+          commandRunner.process.waitFor();
+          synchronized (fitClient) {
+            if (!fitClient.isConnectionEstablished()) {
+              fitClient.notify();
+              fitClient.listener.exceptionOccurred(new Exception(
+                  "FitClient: external process terminated before a connection could be established."));
+            }
+          }
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt(); // remember interrupted
+        }
       }
     }
   }
 
-  private class EarlyTerminationRunnable implements Runnable {
-    public void run() {
+  /** Runs commands in fast mode (in-process). */
+  public static class InProcessCommandRunner implements CommandRunningStrategy {
+    private Thread fastFitServer;
+    private final Descriptor testDescriptor;
+    private final MockCommandRunner commandRunner = new MockCommandRunner();
+
+    public InProcessCommandRunner(Descriptor testDescriptor) {
+      this.testDescriptor = testDescriptor;
+    }
+
+    @Override
+    public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
+      String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
+      String[] arguments = ("-x " + fitArguments).trim().split(" ");
+      this.fastFitServer = createTestRunnerThread(testDescriptor.testRunner, arguments);
+      this.fastFitServer.start();
+      return this.commandRunner;
+    }
+
+    @Override
+    public void start() throws IOException {
+      // do nothing
+    }
+
+    @Override
+    public void join() {
       try {
-        Thread.sleep(1000);  // next waitFor() can finish too quickly on Linux!
-        commandRunner.process.waitFor();
-        synchronized (CommandRunningFitClient.this) {
-          if (!connectionEstablished) {
-            CommandRunningFitClient.this.notify();
-            listener.exceptionOccurred(new Exception(
-              "FitClient: external process terminated before a connection could be established."));
+        fastFitServer.join();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt(); // remember interrupted
+      }
+    }
+
+    @Override
+    public void kill() {
+      // do nothing
+    }
+
+    protected Thread createTestRunnerThread(final String testRunner, final String[] args) {
+      final Method testRunnerMethod = getTestRunnerMethod(testRunner);
+      Runnable fastFitServerRunnable = new Runnable() {
+        public void run() {
+          try {
+            while (tryCreateTestRunner(testRunnerMethod, args))
+              Thread.sleep(10);
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // remember interrupted
           }
         }
+
+      };
+      Thread fitServerThread = new Thread(fastFitServerRunnable);
+      return fitServerThread;
+    }
+
+    private boolean tryCreateTestRunner(Method testRunnerMethod, String[] args) {
+      try {
+        testRunnerMethod.invoke(null, (Object) args);
+        return true;
+      } catch (Exception e) {
+        return false;
       }
-      catch (InterruptedException e) {
-        // ok
+    }
+
+    private Method getTestRunnerMethod(String testRunner) {
+      try {
+        return Class.forName(testRunner).getDeclaredMethod("main", String[].class);
+      } catch (Exception e) {
+        throw new IllegalArgumentException(e);
       }
+    }
+
+  }
+
+  private static String getLocalhostName() {
+    try {
+      return java.net.InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
 }
