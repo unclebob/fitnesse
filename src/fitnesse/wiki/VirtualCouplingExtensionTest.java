@@ -56,7 +56,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
     BaseWikiPage realChild = (BaseWikiPage) page2.getChildPage("PageTwoChild");
 
     PageCrawler crawler = page2.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
+    crawler.setDeadEndStrategy(new MockingPageCrawler());
     ProxyPage childProxy = (ProxyPage) crawler.getPage(page1, PathParser.parse("PageTwoChild"));
     assertNull(childProxy.getChildPage("AnotherChild"));
 

@@ -95,7 +95,6 @@ public class WikiSourcePage implements SourcePage {
 
     public Maybe<SourcePage> findIncludedPage(String pageName) {
         PageCrawler crawler = page.getPageCrawler();
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
           return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
