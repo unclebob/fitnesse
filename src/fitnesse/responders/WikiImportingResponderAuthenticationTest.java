@@ -29,6 +29,10 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
     baseUrl = FitNesseUtil.URL;
 
     createResponder();
+
+    // clear out any credentials from a previous test
+    WikiImporter.remoteUsername = null;
+    WikiImporter.remotePassword = null;
   }
 
   private void createResponder() throws Exception {
@@ -78,6 +82,9 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
   }
 
   public void testUnauthorizedResponse() throws Exception {
+    // ensure any credentials from a previous test have been cleared out
+    assertNull(WikiImporter.remoteUsername);
+
     makeSecurePage(testData.remoteRoot);
 
     Response response = makeSampleResponse(baseUrl);
@@ -88,6 +95,9 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
   }
 
   public void testUnauthorizedResponseFromNonRoot() throws Exception {
+    // ensure any credentials from a previous test have been cleared out
+    assertNull(WikiImporter.remoteUsername);
+
     WikiPage childPage = testData.remoteRoot.getChildPage("PageOne");
     makeSecurePage(childPage);
 
