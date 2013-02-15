@@ -20,7 +20,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   public CommandRunner commandRunner;
   private SocketDoner donor;
-  private boolean connectionEstablished = false;
+  private volatile boolean connectionEstablished = false;
 
   private final CommandRunningStrategy commandRunningStrategy;
 
@@ -42,7 +42,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
+  public synchronized void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
     this.donor = donor;
     acceptSocket(donor.donateSocket());
     connectionEstablished = true;
@@ -58,7 +58,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public boolean isConnectionEstablished() {
+  public synchronized boolean isConnectionEstablished() {
     return connectionEstablished;
   }
 
@@ -67,12 +67,13 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     super.join();
     if (donor != null)
       donor.finishedWithSocket();
+    commandRunningStrategy.kill();
   }
 
   public void kill() {
     super.kill();
-    commandRunner.kill();
     commandRunningStrategy.kill();
+    commandRunner.kill();
   }
 
   public void exceptionOccurred(Exception e) {
@@ -117,17 +118,14 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     @Override
     public void start() throws IOException {
       timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
-      timeoutThread.setDaemon(true);
       timeoutThread.start();
       earlyTerminationThread = new Thread(new EarlyTerminationRunnable(fitClient, commandRunner), "FitClient early termination");
-      earlyTerminationThread.setDaemon(true);
       earlyTerminationThread.start();
     }
 
     @Override
     public void join() {
       commandRunner.join();
-      killVigilantThreads();
     }
 
     @Override
@@ -153,12 +151,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       public void run() {
         try {
           Thread.sleep(TIMEOUT);
-          synchronized (this.fitClient) {
-            if (fitClient.fitSocket == null) {
-              fitClient.notify();
-              fitClient.listener.exceptionOccurred(new Exception(
-                  "FitClient: communication socket was not received on time."));
-            }
+          if (!fitClient.isSuccessfullyStarted()) {
+            fitClient.notify();
+            fitClient.listener.exceptionOccurred(new Exception(
+                "FitClient: communication socket was not received on time."));
           }
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt(); // remember interrupted
@@ -197,7 +193,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private Thread fastFitServer;
     private final Descriptor testDescriptor;
-    private MockCommandRunner commandRunner;
+    private final MockCommandRunner commandRunner = new MockCommandRunner();
 
     public InProcessCommandRunner(Descriptor testDescriptor) {
       this.testDescriptor = testDescriptor;
@@ -209,8 +205,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       String[] arguments = ("-x " + fitArguments).trim().split(" ");
       this.fastFitServer = createTestRunnerThread(testDescriptor.testRunner, arguments);
       this.fastFitServer.start();
-      this.commandRunner = new MockCommandRunner();
-      return commandRunner;
+      return this.commandRunner;
     }
 
     @Override
@@ -246,7 +241,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
       };
       Thread fitServerThread = new Thread(fastFitServerRunnable);
-      fitServerThread.setDaemon(true);
       return fitServerThread;
     }
 
