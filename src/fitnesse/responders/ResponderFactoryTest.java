@@ -9,7 +9,10 @@ import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
 import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.*;
+import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
+import fitnesse.responders.search.SearchFormResponder;
+import fitnesse.responders.search.SearchResponder;
+import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
@@ -17,14 +20,17 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-import static org.junit.Assert.assertEquals;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
 
 public class ResponderFactoryTest {
   private ResponderFactory factory;
@@ -266,17 +272,6 @@ public class ResponderFactoryTest {
   @Test
   public void testReplaceResponder() throws Exception {
     assertResponderTypeMatchesInput("replace", SearchReplaceResponder.class);
-  }
-
-  @Test
-  public void testWillDisplayVirtualPages() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(page1, PathParser.parse("ChildOne"), "child content");
-    WikiPage page2 = crawler.addPage(root, PathParser.parse("PageTwo"));
-    FitNesseUtil.bindVirtualLinkToPage(page2, page1);
-    request.setResource("PageTwo.ChildOne");
-    assertResponderType(WikiPageResponder.class, root);
   }
 
   @Test

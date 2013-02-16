@@ -2,12 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import util.Clock;
-import util.RegexTestCase;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -15,6 +9,11 @@ import fitnesse.responders.PageFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
+import util.Clock;
+import util.RegexTestCase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WikiImportPropertyTest extends RegexTestCase {
   private WikiImportProperty property;
@@ -106,26 +105,6 @@ public class WikiImportPropertyTest extends RegexTestCase {
     request.setResource(name);
     Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-  }
-
-  public void testVirtualPageIndication() throws Exception {
-    pageRenderingSetUp();
-
-    WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
-    crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-    WikiPage linkPage = (BaseWikiPage) crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
-
-    FitNesseUtil.startFitnesse(root);
-    SimpleResponse response = null;
-    try {
-      response = requestPage("LinkPage.ChildPage");
-    }
-    finally {
-      FitNesseUtil.stopFitnesse();
-    }
-
-    assertSubString("<body class=\"virtual\">", response.getContent());
   }
 
   public void testImportedPageIndication() throws Exception {

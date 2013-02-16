@@ -81,13 +81,4 @@ public class SymbolicPage extends BaseWikiPage {
   public VersionInfo commit(PageData data) {
     return realPage.commit(data);
   }
-
-  //TODO Delete these method alone with ProxyPage when the time is right.
-  public boolean hasExtension(String extensionName) {
-    return realPage.hasExtension(extensionName);
-  }
-
-  public Extension getExtension(String extensionName) {
-    return realPage.getExtension(extensionName);
-  }
 }

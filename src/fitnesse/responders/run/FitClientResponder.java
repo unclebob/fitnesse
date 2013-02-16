@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.List;
-
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -15,12 +11,11 @@ import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
   private FitNesseContext context;
@@ -33,7 +28,6 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     resource = request.getResource();
     shouldIncludePaths = request.hasInput("includePaths");
     suiteFilter = (String) request.getInput("suiteFilter");

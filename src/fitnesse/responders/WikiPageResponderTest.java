@@ -10,15 +10,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtensionTest;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
@@ -119,33 +111,6 @@ public class WikiPageResponderTest extends RegexTestCase {
     request.setResource(name);
     final Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(context, request);
-  }
-
-  public void testShouldGetVirtualPage() throws Exception {
-    final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
-    crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
-    final WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
-    FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
-    final SimpleResponse response = requestPage("LinkerPage.ChildPage");
-
-    assertSubString("child content", response.getContent());
-  }
-
-  public void testVirtualPageIndication() throws Exception {
-    final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
-    crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-    final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
-
-    FitNesseUtil.startFitnesse(root);
-    SimpleResponse response = null;
-    try {
-      response = requestPage("LinkPage.ChildPage");
-    } finally {
-      FitNesseUtil.stopFitnesse();
-    }
-
-    assertSubString("<body class=\"virtual\">", response.getContent());
   }
 
   public void testImportedPageIndication() throws Exception {

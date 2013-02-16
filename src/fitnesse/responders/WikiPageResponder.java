@@ -14,14 +14,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
   private WikiPage page;
@@ -39,7 +32,6 @@ public class WikiPageResponder implements SecureResponder {
   protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);
     if (page != null)
       pageData = page.getData();

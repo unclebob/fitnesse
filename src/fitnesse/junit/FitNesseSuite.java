@@ -1,15 +1,13 @@
 package fitnesse.junit;
 
-import java.io.File;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.List;
-
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContext.Builder;
+import fitnesse.WikiPageFactory;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.wiki.*;
 import junit.framework.AssertionFailedError;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -17,17 +15,13 @@ import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
-import fitnesse.WikiPageFactory;
-import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FitNesseSuite extends ParentRunner<String> {
 
@@ -144,7 +138,6 @@ public class FitNesseSuite extends ParentRunner<String> {
   private List<String> initChildren(FitNesseContext context) {
     WikiPagePath path = PathParser.parse(this.suiteName);
     PageCrawler crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     WikiPage suiteRoot = crawler.getPage(context.root, path);
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
