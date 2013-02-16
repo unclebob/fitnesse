@@ -235,14 +235,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       final Method testRunnerMethod = getTestRunnerMethod(testRunner);
       Runnable fastFitServerRunnable = new Runnable() {
         public void run() {
-          try {
-            while (tryCreateTestRunner(testRunnerMethod, args))
-              Thread.sleep(10);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // remember interrupted
-          }
+          tryCreateTestRunner(testRunnerMethod, args);
         }
-
       };
       Thread fitServerThread = new Thread(fastFitServerRunnable);
       fitServerThread.setDaemon(true);
