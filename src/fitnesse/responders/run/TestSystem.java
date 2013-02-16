@@ -29,7 +29,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   protected static String fitnesseJar(String classpath) {
 	  for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
-		  String[] paths = pathEntry.split(getFileSeparator());
+		  String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
 		  String jarFile = paths[paths.length-1];
 		  if ("fitnesse-standalone.jar".equals(jarFile)) {
 			  return pathEntry;
@@ -43,12 +43,6 @@ public abstract class TestSystem implements TestSystemListener {
 	  }
 	  
 	  return "fitnesse.jar";
-  }
-  
-  protected static String getFileSeparator() {
-    if ("\\".equals(System.getProperty("file.separator")))
-	  return "\\\\";
-    return System.getProperty("file.separator");
   }
   
   public TestSystem(WikiPage page, TestSystemListener testSystemListener) {
