@@ -1,15 +1,19 @@
 package fitnesse.junit;
 
-import fitnesse.responders.run.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import util.TimeMeasurement;
-
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.ResultsListener;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPagePath;
 
 public class JUnitRunNotifierResultsListener implements ResultsListener {
+
   private final Class<?> mainClass;
   private final RunNotifier notifier;
 
@@ -32,7 +36,9 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
 
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
-    notifier.fireTestStarted(descriptionFor(test));
+    if (test.isTestPage()) {
+      notifier.fireTestStarted(descriptionFor(test));
+    }
   }
 
   private Description descriptionFor(TestPage test) {
@@ -44,9 +50,11 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)  {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
-      notifier.fireTestFinished(descriptionFor(test));
+      if (test.isTestPage()) {
+        notifier.fireTestFinished(descriptionFor(test));
+      }
     } else {
       notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("wrong: "
           + testSummary.wrong + " exceptions: " + testSummary.exceptions)));
