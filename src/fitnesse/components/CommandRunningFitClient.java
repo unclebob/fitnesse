@@ -67,6 +67,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     super.join();
     if (donor != null)
       donor.finishedWithSocket();
+    commandRunningStrategy.kill();
   }
 
   public void kill() {
@@ -117,10 +118,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     @Override
     public void start() throws IOException {
       timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
-      timeoutThread.setDaemon(true);
       timeoutThread.start();
       earlyTerminationThread = new Thread(new EarlyTerminationRunnable(fitClient, commandRunner), "FitClient early termination");
-      earlyTerminationThread.setDaemon(true);
       earlyTerminationThread.start();
     }
 
@@ -154,7 +153,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         try {
           Thread.sleep(TIMEOUT);
           synchronized (this.fitClient) {
-            if (fitClient.fitSocket == null) {
+            if (!fitClient.isSuccessfullyStarted()) {
               fitClient.notify();
               fitClient.listener.exceptionOccurred(new Exception(
                   "FitClient: communication socket was not received on time."));

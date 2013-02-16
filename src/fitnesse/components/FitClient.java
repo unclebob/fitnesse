@@ -29,7 +29,7 @@ public class FitClient {
     this.listener = listener;
   }
 
-  public void acceptSocket(Socket socket) throws IOException, InterruptedException {
+  public synchronized void acceptSocket(Socket socket) throws IOException, InterruptedException {
     checkForPulse();
     fitSocket = socket;
     fitInput = fitSocket.getOutputStream();
@@ -67,7 +67,7 @@ public class FitClient {
       fitListeningThread.interrupt();
   }
 
-  public boolean isSuccessfullyStarted() {
+  public synchronized boolean isSuccessfullyStarted() {
     return fitSocket != null;
   }
 
