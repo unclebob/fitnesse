@@ -130,7 +130,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       // TODO: This should be done with the respective test system (Slim/Fit).
-      SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
+      SetupTeardownAndLibraryIncluder.includeInto(testPage);
       testSystem.runTests(testPage);
     }
   }

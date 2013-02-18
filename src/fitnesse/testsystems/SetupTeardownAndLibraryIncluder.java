@@ -28,10 +28,6 @@ public class SetupTeardownAndLibraryIncluder {
     new SetupTeardownAndLibraryIncluder(testPage).includeInto(isSuite);
   }
 
-  public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(TestPage testPage, WikiPage suitePage) {
-    new SetupTeardownAndLibraryIncluder(testPage).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
-  }
-
   private SetupTeardownAndLibraryIncluder(TestPage testPage) {
     this.testPage = testPage;
     pageCrawler = testPage.getSourcePage().getPageCrawler();
@@ -44,7 +40,6 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
 
-  // TODO: Why are these 2 different:
   private void includeSetupTeardownAndLibraryPages() {
     String pageName = testPage.getName();
     includeScenarioLibraries();
@@ -54,23 +49,8 @@ public class SetupTeardownAndLibraryIncluder {
       includeTeardownPages();
   }
 
-  // and this one:
-  private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) {
-    String pageName = testPage.getName();
-    includeScenarioLibraryBelow(suitePage);
-    //includeScenarioLibraries();
-    if (!isSuiteSetUpOrTearDownPage(pageName))
-      includeSetupPages();
-    if (!isSuiteSetUpOrTearDownPage(pageName))
-      includeTeardownPages();
-  }
-
   private boolean isSuiteSetUpOrTearDownPage(String pageName) {
     return PageData.SUITE_SETUP_NAME.equals(pageName) || PageData.SUITE_TEARDOWN_NAME.equals(pageName);
-  }
-
-  private void includeScenarioLibraryBelow(WikiPage suitePage) {
-    includeScenarioLibrariesIfAppropriate(new BelowSuiteLibraryFilter(suitePage));
   }
 
   private void includeScenarioLibraries() {
@@ -136,19 +116,5 @@ public class SetupTeardownAndLibraryIncluder {
       return true;
     }
   }
-
-  private class BelowSuiteLibraryFilter implements LibraryFilter {
-    private int minimumPathLength;
-
-    public BelowSuiteLibraryFilter(WikiPage suitePage) {
-      minimumPathLength = suitePage.getPageCrawler().getFullPath(suitePage).addNameToEnd("ScenarioLibrary").toString().length();
-    }
-
-    @Override
-    public boolean canUse(WikiPage libraryPage) {
-      return libraryPage.getPageCrawler().getFullPath(libraryPage).toString().length() > minimumPathLength;
-    }
-  }
-
 
 }

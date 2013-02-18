@@ -58,28 +58,6 @@ public class SetupTeardownAndLibraryIncluderTest {
   }
 
   @Test
-  public void includeSetupsAndTeardownsAndLibrariesBelowASuite()
-    throws Exception {
-    WikiPage suitePage = wikiPage;
-    TestPage testPage = new TestPage(subTestPage);
-    SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, suitePage);
-    String html = testPage.getDecoratedData().getHtml();
-    assertSubString(".SetUp", html);
-    assertSubString("setup", html);
-    assertSubString(".TearDown", html);
-    assertSubString("teardown", html);
-    assertSubString("sub test page", html);
-    assertSubString("class=\"collapsible closed\"", html);
-    assertSubString("scenario library 3", html);
-    assertNotSubString(".SuiteSetUp", html);
-    assertNotSubString("suiteSetUp", html);
-    assertNotSubString(".SuiteTearDown", html);
-    assertNotSubString("suitTearDown", html);
-    assertNotSubString("scenario library 1", html);
-    assertNotSubString("scenario library 2", html);
-  }
-
-  @Test
   public void testIncludeSetupTearDownInsideOfSuite() throws Exception {
     TestPage test = new TestPage(wikiPage);
     SetupTeardownAndLibraryIncluder.includeInto(test, true);
