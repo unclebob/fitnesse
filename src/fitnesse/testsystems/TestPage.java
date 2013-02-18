@@ -53,8 +53,8 @@ public class TestPage {
 
     decoratedContent.append(parsedData().getContent());
 
-    includePage(tearDown, "-setup", decoratedContent);
-    includePage(suiteTearDown, "-setup", decoratedContent);
+    includePage(tearDown, "-teardown", decoratedContent);
+    includePage(suiteTearDown, "-teardown", decoratedContent);
 
     return new PageData(sourcePage, decoratedContent.toString());
   }
