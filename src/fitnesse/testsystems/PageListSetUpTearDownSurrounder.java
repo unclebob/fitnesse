@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
@@ -45,8 +46,8 @@ public class PageListSetUpTearDownSurrounder {
   }
 
   private String getSetUpTearDownGroup(WikiPage page) {
-    String setUpPath = getPathForSetUpTearDown(page, SuiteContentsFinder.SUITE_SETUP_NAME);
-    String tearDownPath = getPathForSetUpTearDown(page, SuiteContentsFinder.SUITE_TEARDOWN_NAME);
+    String setUpPath = getPathForSetUpTearDown(page, PageData.SUITE_SETUP_NAME);
+    String tearDownPath = getPathForSetUpTearDown(page, PageData.SUITE_TEARDOWN_NAME);
     return setUpPath + "," + tearDownPath;
   }
 

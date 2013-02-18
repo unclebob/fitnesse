@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.testsystems;
 
 import java.util.List;
 

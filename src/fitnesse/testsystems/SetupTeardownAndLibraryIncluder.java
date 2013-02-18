@@ -1,12 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.html;
+package fitnesse.testsystems;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;

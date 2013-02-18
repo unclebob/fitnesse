@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testsystems.TestPage;
 import util.TimeMeasurement;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.testsystems.CompositeExecutionLog;

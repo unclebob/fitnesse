@@ -3,7 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;

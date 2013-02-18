@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;

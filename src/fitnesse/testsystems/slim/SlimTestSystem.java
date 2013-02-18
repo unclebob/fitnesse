@@ -4,7 +4,7 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.slim.*;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;

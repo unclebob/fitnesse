@@ -4,7 +4,6 @@ package fitnesse.testsystems;
 
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.TestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;

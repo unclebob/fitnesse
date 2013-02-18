@@ -9,7 +9,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {

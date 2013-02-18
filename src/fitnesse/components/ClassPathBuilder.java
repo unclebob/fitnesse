@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;

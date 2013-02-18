@@ -9,7 +9,7 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
