@@ -2,18 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import static util.RegexTestCase.*;
+
 import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
-import static util.RegexTestCase.*;
-
 public class SetupTeardownAndLibraryIncluderTest {
-  private PageData pageData;
   private PageCrawler crawler;
   private WikiPage root;
-  private WikiPage testPage;
+  private WikiPage wikiPage;
   private WikiPage subPage;
   private WikiPage subTestPage;
 
@@ -21,18 +23,17 @@ public class SetupTeardownAndLibraryIncluderTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
-    testPage = addPage("TestPage", "!define TEST_SYSTEM {slim}\n"+"the content");
+    wikiPage = addPage("TestPage", "!define TEST_SYSTEM {slim}\n"+"the content");
     addPage("SetUp", "setup");
     addPage("TearDown", "teardown");
     addPage("SuiteSetUp", "suiteSetUp");
     addPage("SuiteTearDown", "suiteTearDown");
 
-    subPage = crawler.addPage(testPage, PathParser.parse("SubPage"), "sub page");
-    crawler.addPage(testPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
+    subPage = crawler.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
+    crawler.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
     subTestPage = crawler.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
     crawler.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
-    pageData = testPage.getData();
   }
 
   private WikiPage addPage(String pageName, String content) throws Exception {
@@ -42,8 +43,9 @@ public class SetupTeardownAndLibraryIncluderTest {
   @Test
   public void testIncludeSetupTearDownOutsideOfSuite()
     throws Exception {
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    String html = pageData.getHtml();
+    TestPage testPage = new TestPage(wikiPage);
+    SetupTeardownAndLibraryIncluder.includeInto(testPage);
+    String html = testPage.getDecoratedData().getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -59,7 +61,7 @@ public class SetupTeardownAndLibraryIncluderTest {
   @Test
   public void includeSetupsAndTeardownsAndLibrariesBelowASuite()
     throws Exception {
-    WikiPage suitePage = testPage;
+    WikiPage suitePage = wikiPage;
     TestPage testPage = new TestPage(subTestPage);
     SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, suitePage);
     String html = testPage.getDecoratedData().getHtml();
@@ -80,8 +82,9 @@ public class SetupTeardownAndLibraryIncluderTest {
 
   @Test
   public void testIncludeSetupTearDownInsideOfSuite() throws Exception {
-    SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
-    String html = pageData.getHtml();
+    TestPage test = new TestPage(wikiPage);
+    SetupTeardownAndLibraryIncluder.includeInto(test, true);
+    String html = test.getDecoratedData().getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -99,10 +102,10 @@ public class SetupTeardownAndLibraryIncluderTest {
   @Test
   public void includeScenarioLibraryBrother() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
-    pageData = slimTestPage.getData();
+    TestPage testPage = new TestPage(slimTestPage);
     addPage("ScenarioLibrary", "scenario library");
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    String html = pageData.getHtml();
+    SetupTeardownAndLibraryIncluder.includeInto(testPage);
+    String html = testPage.getDecoratedData().getHtml();
     assertSubString("scenario library", html);
   }
 
@@ -113,9 +116,9 @@ public class SetupTeardownAndLibraryIncluderTest {
     WikiPage nephew = addPage("TestPage.TestPageChild.TestPageGrandChild", "!define TEST_SYSTEM {slim}\n");
     addPage("TestPage.TestPageChild.ScenarioLibrary", "grand child library");
 
-    pageData = nephew.getData();
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    String html = pageData.getHtml();
+    TestPage testPage = new TestPage(nephew);
+    SetupTeardownAndLibraryIncluder.includeInto(testPage);
+    String html = testPage.getDecoratedData().getHtml();
     assertSubString("child library", html);
     assertSubString("grand child library", html);
     assertSubString("TestPage.ScenarioLibrary", html);
@@ -127,9 +130,9 @@ public class SetupTeardownAndLibraryIncluderTest {
   @Test
   public void shouldNotContainScenarioLibrarySectionIfThereAreNone() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
-    pageData = slimTestPage.getData();
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    String html = pageData.getHtml();
+    TestPage testPage = new TestPage(slimTestPage);
+    SetupTeardownAndLibraryIncluder.includeInto(testPage);
+    String html = testPage.getDecoratedData().getHtml();
     assertNotSubString("Scenario Libraries", html);
   }
 
@@ -138,9 +141,9 @@ public class SetupTeardownAndLibraryIncluderTest {
   public void shouldNotIncludeScenarioLibrariesIfNotSlimTest() throws Exception {
     addPage("ScenarioLibrary", "scenario library");
     WikiPage someTest = addPage("SomeTest", "some test");
-    PageData somePageData = someTest.getData();
-    SetupTeardownAndLibraryIncluder.includeInto(somePageData);
-    String html = somePageData.getHtml();
+    TestPage testPage = new TestPage(someTest);
+    SetupTeardownAndLibraryIncluder.includeInto(testPage);
+    String html = testPage.getDecoratedData().getHtml();
     assertNotSubString("scenario library", html);
   }
 }

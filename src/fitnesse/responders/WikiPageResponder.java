@@ -65,7 +65,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public String makeHtml(FitNesseContext context) {
-    PageData pageData = pageData = page.getData();
+    PageData pageData = page.getData();
     WikiPage page = pageData.getWikiPage();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
@@ -87,13 +87,14 @@ public class WikiPageResponder implements SecureResponder {
 
     if (isTestPage(pageData)) {
       TestPage testPage = new TestPage(page);
-
-      SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
+      SetupTeardownAndLibraryIncluder.includeInto(testPage, true);
+      html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
+    } else {
+      html.put("content", new WikiPageRenderer(page.getData()));
     }
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
-    html.put("content", new WikiPageRenderer());
     html.put("footerContent", new WikiPageFooterRenderer());
     handleSpecialProperties(html, page);
     return html.html();
@@ -108,8 +109,12 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public class WikiPageRenderer {
+    private PageData data;
+    WikiPageRenderer(PageData data) {
+      this.data = data;
+    }
     public String render() {
-        return HtmlUtil.makePageHtml(page.getData());
+        return HtmlUtil.makePageHtml(data);
     }
   }
 

@@ -2,13 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.*;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.responders.run.TestPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+
+// TODO: refactor this into a TestPageBuilder.
 public class SetupTeardownAndLibraryIncluder {
   private TestPage testPage;
   private boolean isSuite;
@@ -16,20 +22,17 @@ public class SetupTeardownAndLibraryIncluder {
   private PageCrawler pageCrawler;
 
 
-  public static void includeInto(PageData pageData) {
-    includeInto(pageData, false);
+  public static void includeInto(TestPage testPage) {
+    includeInto(testPage, false);
   }
 
-  public static void includeInto(PageData pageData, boolean isSuite) {
-    TestPage testPage = new TestPage(pageData);
+  public static void includeInto(TestPage testPage, boolean isSuite) {
     new SetupTeardownAndLibraryIncluder(testPage).includeInto(isSuite);
-    pageData.setContent(testPage.getDecoratedData().getContent());
   }
 
   public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(TestPage testPage, WikiPage suitePage) {
     new SetupTeardownAndLibraryIncluder(testPage).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
   }
-
 
   private SetupTeardownAndLibraryIncluder(TestPage testPage) {
     this.testPage = testPage;
@@ -44,17 +47,23 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
 
+  // TODO: Why are these 2 different:
   private void includeSetupTeardownAndLibraryPages() {
+    String pageName = testPage.getName();
     includeScenarioLibraries();
-    includeSetupPages();
+    if (!isSuiteSetUpOrTearDownPage(pageName))
+      includeSetupPages();
     includePageContent();
-    includeTeardownPages();
+    if (!isSuiteSetUpOrTearDownPage(pageName))
+      includeTeardownPages();
     updatePageContent();
   }
 
+  // and this one:
   private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) {
     String pageName = testPage.getName();
     includeScenarioLibraryBelow(suitePage);
+    //includeScenarioLibraries();
     if (!isSuiteSetUpOrTearDownPage(pageName))
       includeSetupPages();
     includePageContent();
