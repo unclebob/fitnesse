@@ -12,6 +12,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.run.TestPage;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
@@ -25,7 +26,6 @@ import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
   private WikiPage page;
-  private PageData pageData;
   private PageCrawler crawler;
 
   public Response makeResponse(FitNesseContext context, Request request) {
@@ -41,8 +41,6 @@ public class WikiPageResponder implements SecureResponder {
     crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);
-    if (page != null)
-      pageData = page.getData();
   }
 
   private Response notFoundResponse(FitNesseContext context, Request request) {
@@ -67,6 +65,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public String makeHtml(FitNesseContext context) {
+    PageData pageData = pageData = page.getData();
     WikiPage page = pageData.getWikiPage();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
@@ -86,7 +85,11 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
+    if (isTestPage(pageData)) {
+      TestPage testPage = new TestPage(page);
+
+      SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
+    }
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
@@ -97,7 +100,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {
-    WikiImportProperty.handleImportProperties(html, page, pageData);
+    WikiImportProperty.handleImportProperties(html, page);
   }
 
   public SecureOperation getSecureOperation() {
@@ -106,14 +109,18 @@ public class WikiPageResponder implements SecureResponder {
 
   public class WikiPageRenderer {
     public String render() {
-        return HtmlUtil.makePageHtml(pageData);
+        return HtmlUtil.makePageHtml(page.getData());
     }
   }
 
   public class WikiPageFooterRenderer {
     public String render() {
-        return HtmlUtil.makePageFooterHtml(pageData);
+        return HtmlUtil.makePageFooterHtml(page.getData());
     }
+  }
+
+  private boolean isTestPage(PageData pageData) {
+    return pageData.hasAttribute("Test");
   }
 
 }
