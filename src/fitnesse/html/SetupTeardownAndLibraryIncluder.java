@@ -10,15 +10,14 @@ import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 // TODO: refactor this into a TestPageBuilder.
 public class SetupTeardownAndLibraryIncluder {
+  public static final String TEAR_DOWN = "TearDown";
+  public static final String SET_UP = "SetUp";
   private TestPage testPage;
   private boolean isSuite;
-  private StringBuffer newPageContent;
   private PageCrawler pageCrawler;
 
 
@@ -37,7 +36,6 @@ public class SetupTeardownAndLibraryIncluder {
   private SetupTeardownAndLibraryIncluder(TestPage testPage) {
     this.testPage = testPage;
     pageCrawler = testPage.getSourcePage().getPageCrawler();
-    newPageContent = new StringBuffer();
   }
 
   private void includeInto(boolean isSuite) {
@@ -53,10 +51,8 @@ public class SetupTeardownAndLibraryIncluder {
     includeScenarioLibraries();
     if (!isSuiteSetUpOrTearDownPage(pageName))
       includeSetupPages();
-    includePageContent();
     if (!isSuiteSetUpOrTearDownPage(pageName))
       includeTeardownPages();
-    updatePageContent();
   }
 
   // and this one:
@@ -66,10 +62,8 @@ public class SetupTeardownAndLibraryIncluder {
     //includeScenarioLibraries();
     if (!isSuiteSetUpOrTearDownPage(pageName))
       includeSetupPages();
-    includePageContent();
     if (!isSuiteSetUpOrTearDownPage(pageName))
       includeTeardownPages();
-    updatePageContent();
   }
 
   private boolean isSuiteSetUpOrTearDownPage(String pageName) {
@@ -86,46 +80,16 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includeSetupPages() {
-    if (isSuite)
-      includeSuiteSetupPage();
-    includeSetupPage();
-  }
-
-  private void includeSuiteSetupPage() {
-    include(PageData.SUITE_SETUP_NAME, "-setup");
-  }
-
-  private void includeSetupPage() {
-    include("SetUp", "-setup");
-  }
-
-  private void includePageContent() {
-    newPageContent.append(testPage.parsedData().getContent());
+    if (isSuite) {
+      testPage.setSuiteSetUp(findInheritedPage(PageData.SUITE_SETUP_NAME));
+    }
+    testPage.setSetUp(findInheritedPage(SET_UP));
   }
 
   private void includeTeardownPages() {
-    includeTeardownPage();
-    if (isSuite)
-      includeSuiteTeardownPage();
-  }
-
-  private void includeTeardownPage() {
-    include("TearDown", "-teardown");
-  }
-
-  private void includeSuiteTeardownPage() {
-    include(PageData.SUITE_TEARDOWN_NAME, "-teardown");
-  }
-
-  private void updatePageContent() {
-    testPage.decorate(newPageContent.toString());
-  }
-
-  private void include(String pageName, String arg) {
-    WikiPage inheritedPage = findInheritedPage(pageName);
-    if (inheritedPage != null) {
-      String pagePathName = getPathNameForPage(inheritedPage);
-      includePage(pagePathName, arg);
+    testPage.setTearDown(findInheritedPage(TEAR_DOWN));
+    if (isSuite) {
+      testPage.setSuiteTearDown(findInheritedPage(PageData.SUITE_TEARDOWN_NAME));
     }
   }
 
@@ -153,35 +117,13 @@ public class SetupTeardownAndLibraryIncluder {
 
   private void includeScenarioLibraries(List<WikiPage> uncles) {
     Collections.reverse(uncles);
-    newPageContent.append("!*> Scenario Libraries\n");
-    for (WikiPage uncle : uncles)
-      includeScenarioLibrary(uncle);
-    newPageContent.append("*!\n");
-  }
-
-  private void includeScenarioLibrary(WikiPage uncle) {
-    newPageContent.append("!include -c .");
-    newPageContent.append(PathParser.render(pageCrawler.getFullPath(uncle)));
-    newPageContent.append("\n");
+    testPage.setScenarioLibraries(uncles);
   }
 
   private WikiPage findInheritedPage(String pageName) {
     return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage.getSourcePage());
   }
 
-  private String getPathNameForPage(WikiPage page) {
-    WikiPagePath pagePath = pageCrawler.getFullPath(page);
-    return PathParser.render(pagePath);
-  }
-
-  private void includePage(String pagePathName, String arg) {
-    newPageContent
-      .append("\n!include ")
-      .append(arg)
-      .append(" .")
-      .append(pagePathName)
-      .append("\n");
-  }
 
   private static interface LibraryFilter {
     boolean canUse(WikiPage libraryPage);
