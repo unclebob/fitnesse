@@ -73,8 +73,8 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   @Override
-  public void acceptOutputFirst(String output) throws IOException {
-    testSystemListener.acceptOutputFirst(output);
+  public void testOutputChunk(String output) throws IOException {
+    testSystemListener.testOutputChunk(output);
   }
 
   @Override

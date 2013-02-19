@@ -49,7 +49,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   @Override
-  public void acceptOutputFirst(String output) {
+  public void testOutputChunk(String output) {
     outputs.add(output);
   }
 

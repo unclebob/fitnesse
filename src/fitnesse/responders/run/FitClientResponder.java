@@ -129,7 +129,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   @Override
-  public void acceptOutputFirst(String output) {
+  public void testOutputChunk(String output) {
   }
 
   @Override

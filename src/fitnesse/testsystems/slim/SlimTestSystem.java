@@ -231,7 +231,7 @@ public abstract class SlimTestSystem extends TestSystem {
       instructionResults = slimClient.invokeAndGetResponse(Assertion.getInstructions(assertions));
     }
     String html = createHtmlResults(startWithTable, nextTable);
-    acceptOutputFirst(html);
+    testOutputChunk(html);
   }
 
 

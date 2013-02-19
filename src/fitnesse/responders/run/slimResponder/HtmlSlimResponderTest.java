@@ -361,7 +361,7 @@ public class HtmlSlimResponderTest {
 
   private static class DummyListener implements TestSystemListener {
     @Override
-    public void acceptOutputFirst(String output) {
+    public void testOutputChunk(String output) {
     }
 
     @Override
