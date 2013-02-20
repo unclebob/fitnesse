@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
@@ -10,12 +14,12 @@ import fitnesse.wikitext.parser.Collapsible;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.*;
+import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableHeader;
+import org.htmlparser.tags.TableRow;
+import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 public class HtmlTable implements Table {
   private List<Row> rows = new ArrayList<Row>();
@@ -301,7 +305,7 @@ public class HtmlTable implements Table {
 
     public String formatTestResult() {
       if (testResult.getExecutionResult() == null) {
-        return testResult.getMessage() != null ? testResult.getMessage() : originalContent;
+        return testResult.getMessage() != null ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
       }
       final String escapedMessage = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
       switch (testResult.getExecutionResult()) {
