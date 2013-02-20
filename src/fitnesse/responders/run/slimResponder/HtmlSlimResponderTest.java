@@ -2,6 +2,9 @@
 //Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -16,13 +19,14 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HtmlSlimResponderTest {
   private WikiPage root;
@@ -210,7 +214,7 @@ public class HtmlSlimResponderTest {
   public void tableWithBadConstructorHasException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|badArgument|\n"
         + "|returnConstructorArgument?|\n" + "|3|\n");
-    TableScanner ts = new HtmlTableScanner(responder.getTestResults().getHtml());
+    TableScanner ts = new HtmlTableScanner(testPage.getData().getHtml());
     ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }

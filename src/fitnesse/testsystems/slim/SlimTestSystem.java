@@ -50,7 +50,6 @@ public abstract class SlimTestSystem extends TestSystem {
   private SlimClient slimClient;
 
   private boolean started;
-  protected ReadOnlyPageData testResults;
   protected TestSummary testSummary;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private NestedSlimTestContext testContext;
@@ -216,7 +215,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
   void processAllTablesOnPage(TestPage pageToTest) throws IOException {
     List<SlimTable> allTables = createSlimTables(pageToTest);
-    testResults = pageToTest.getDecoratedData();
 
     if (allTables.size() == 0) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
@@ -297,10 +295,6 @@ public abstract class SlimTestSystem extends TestSystem {
       return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
 
     return exceptionMessage;
-  }
-
-  public ReadOnlyPageData getTestResults() {
-    return testResults;
   }
 
   public static String exceptionToString(Throwable e) {
