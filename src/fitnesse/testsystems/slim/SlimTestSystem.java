@@ -2,27 +2,45 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.responders.PageFactory;
-import fitnesse.testsystems.TestPage;
-import fitnesse.slim.*;
-import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.*;
-import fitnesse.testsystems.MockCommandRunner;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
+import static fitnesse.slim.SlimServer.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static fitnesse.slim.SlimServer.*;
+import fitnesse.responders.PageFactory;
+import fitnesse.slim.JavaSlimFactory;
+import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimService;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.MockCommandRunner;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SyntaxError;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
 public abstract class SlimTestSystem extends TestSystem {
   public static final SlimTable START_OF_TEST = null;
@@ -33,13 +51,10 @@ public abstract class SlimTestSystem extends TestSystem {
 
   private boolean started;
   protected ReadOnlyPageData testResults;
-  protected Map<String, Object> instructionResults;
-  protected List<SlimTable> testTables = new ArrayList<SlimTable>();
   protected TestSummary testSummary;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private NestedSlimTestContext testContext;
   private final SlimDescriptor descriptor;
-  private List<Assertion> assertions;
   private boolean stopTestCalled;
 
 
@@ -167,7 +182,6 @@ public abstract class SlimTestSystem extends TestSystem {
   private void initializeTest() {
     testContext = new NestedSlimTestContext();
     testSummary.clear();
-    stopTestCalled = false;
   }
 
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
@@ -204,9 +218,9 @@ public abstract class SlimTestSystem extends TestSystem {
     List<SlimTable> allTables = createSlimTables(pageToTest);
     testResults = pageToTest.getDecoratedData();
 
-    boolean runAllTablesAtOnce = false;
-    if (runAllTablesAtOnce || (allTables.size() == 0)) {
-      processTables(allTables, START_OF_TEST, END_OF_TEST);
+    if (allTables.size() == 0) {
+      String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
+      testOutputChunk(html);
     } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
@@ -214,37 +228,37 @@ public abstract class SlimTestSystem extends TestSystem {
         SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
-        oneTableList.add(theTable);
-        processTables(oneTableList, startWithTable, nextTable);
-        oneTableList.clear();
+        processTable(theTable);
+
+        String html = createHtmlResults(startWithTable, nextTable);
+        testOutputChunk(html);
       }
     }
   }
 
   protected abstract <T extends Table> TableScanner<T> scanTheTables(ReadOnlyPageData pageData);
 
-  private void processTables(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
-
-    testTables = tables;
-    assertions = createAssertions(tables);
+  private void processTable(SlimTable table) throws IOException {
+    List<Assertion> assertions = createAssertions(table);
+    Map<String, Object> instructionResults;
     if (!stopTestCalled) {
       instructionResults = slimClient.invokeAndGetResponse(Assertion.getInstructions(assertions));
+    } else {
+      instructionResults = Collections.emptyMap();
     }
-    String html = createHtmlResults(startWithTable, nextTable);
-    testOutputChunk(html);
+
+    evaluateTables(assertions, instructionResults);
   }
 
 
-  private List<Assertion> createAssertions(List<SlimTable> tables) {
+  private List<Assertion> createAssertions(SlimTable table) {
     List<Assertion> assertions = new ArrayList<Assertion>();
-    for (SlimTable table : tables) {
-      try {
-        assertions.addAll(table.getAssertions());
-      } catch (SyntaxError e) {
-        String tableName = table.getTable().getCellContents(0, 0);
-        // TODO: remove: raise TableFormatException or something like that.
-        table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
-      }
+    try {
+      assertions.addAll(table.getAssertions());
+    } catch (SyntaxError e) {
+      String tableName = table.getTable().getCellContents(0, 0);
+      // TODO: remove: raise TableFormatException or something like that.
+      table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
     }
     return assertions;
   }
@@ -300,13 +314,16 @@ public abstract class SlimTestSystem extends TestSystem {
     return testSummary;
   }
 
-  protected void evaluateTables() {
+  protected void evaluateTables(List<Assertion> assertions, Map<String, Object> instructionResults) {
     for (Assertion a : assertions) {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
           ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
+          if (exceptionResult.isStopTestException()) {
+            stopTestCalled = true;
+          }
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {
             testExceptionOccurred(a, exceptionResult);
@@ -323,9 +340,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
   private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
     ExceptionResult exceptionResult = new ExceptionResult(resultKey, resultString);
-    if (exceptionResult.isStopTestException()) {
-      stopTestCalled = true;
-    }
     return exceptionResult;
   }
 

@@ -69,8 +69,6 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
 
   @Override
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
-    evaluateTables();
-
     HtmlTable start = (startWithTable != null) ? (HtmlTable) startWithTable.getTable() : null;
     HtmlTable end = (stopBeforeTable != null) ? (HtmlTable) stopBeforeTable.getTable() : null;
     String testResultHtml = tableScanner.toHtml(start, end);
