@@ -20,8 +20,6 @@ public class JavaFormatter extends BaseFormatter {
 
   private String mainPageName;
   private boolean isSuite = true;
-  public static final String SUMMARY_FOOTER = "</table>";
-  public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
 
   public interface ResultsRepository {
     void open(String string) throws IOException;
@@ -201,31 +199,63 @@ public class JavaFormatter extends BaseFormatter {
 
   public void writeSummary(String suiteName) throws IOException {
     resultsRepository.open(suiteName);
-    resultsRepository.write(SUMMARY_HEADER);
-    for (String s : visitedTestPages) {
-      resultsRepository.write(summaryRow(s, testSummaries.get(s)));
-    }
-    resultsRepository.write(SUMMARY_FOOTER);
+    resultsRepository.write(new TestResultsSummaryTable(visitedTestPages, testSummaries).toString());
     resultsRepository.close();
   }
 
-  public String summaryRow(String testName, TestSummary testSummary) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
-        "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
-        "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
-        .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
-    return sb.toString();
+  public static class TestResultsSummaryTableRow {
+    private String testName;
+    private TestSummary testSummary;
+
+    public TestResultsSummaryTableRow(String testName, TestSummary testSummary) {
+      this.testName = testName;
+      this.testSummary = testSummary;
+    }
+
+    public String toString() {
+      StringBuffer sb = new StringBuffer();
+      sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
+              "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
+              "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
+              .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
+      return sb.toString();
+    }
+
+    private String getCssClass(TestSummary ts) {
+      if (ts.exceptions > 0)
+        return "error";
+      if (ts.wrong > 0)
+        return "fail";
+      if (ts.right > 0)
+        return "pass";
+      return "plain";
+    }
   }
 
-  private String getCssClass(TestSummary ts) {
-    if (ts.exceptions > 0)
-      return "error";
-    if (ts.wrong > 0)
-      return "fail";
-    if (ts.right > 0)
-      return "pass";
-    return "plain";
+  public static class TestResultsSummaryTable {
+    public static final String SUMMARY_FOOTER = "</table>";
+    public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
+    private List<String> visitedTestPages;
+    private Map<String, TestSummary> testSummaries;
+
+    public TestResultsSummaryTable(List<String> visitedTestPages, Map<String, TestSummary> testSummaries) {
+      this.visitedTestPages = visitedTestPages;
+      this.testSummaries = testSummaries;
+    }
+
+    public String summaryRow(String testName, TestSummary testSummary) {
+      return new TestResultsSummaryTableRow(testName, testSummary).toString();
+    }
+
+    public String toString() {
+      StringBuffer sb = new StringBuffer();
+      sb.append(SUMMARY_HEADER);
+      for (String s : visitedTestPages) {
+        sb.append(summaryRow(s, testSummaries.get(s)));
+      }
+      sb.append(SUMMARY_FOOTER);
+      return sb.toString();
+    }
   }
 
   public void setListener(ResultsListener listener) {
