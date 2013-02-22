@@ -1,21 +1,15 @@
 package fitnesse.responders.run;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import util.TimeMeasurement;
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -37,49 +31,9 @@ public class JavaFormatter extends BaseFormatter {
     void write(String content) throws IOException;
   }
 
-  public static class FolderResultsRepository implements ResultsRepository {
-    private String outputPath;
-    private Writer currentWriter;
-
-    public FolderResultsRepository(String outputPath, String fitNesseRoot) throws IOException {
-      this.outputPath = outputPath;
-      initFolder(fitNesseRoot);
-    }
-
-    public void close() throws IOException {
-      if (currentWriter != null) {
-        currentWriter.write("</body></html>");
-        currentWriter.close();
-      }
-    }
-
-    public void open(String testName) throws IOException {
-      File outputFile = new File(outputPath, testName + ".html");
-      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
-
-      currentWriter.write("<html><head><title>");
-      currentWriter.write(testName);
-      currentWriter
-          .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
-              + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
-      currentWriter.write(testName);
-      currentWriter.write("</h2>");
-
-    }
-
-    public void write(String content) throws IOException {
-      currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
-    }
-
-    public void addFile(String r, String relativeFilePath) throws IOException {
-      File dst = new File(outputPath, relativeFilePath);
-      dst.getParentFile().mkdirs();
-      copy(r, dst);
-    }
-
-    private void copy(String src, File dst) throws IOException {
-      InputStream in = getClass().getResourceAsStream(src);
+  public static class FileCopier {
+    public static void copy(String src, File dst) throws IOException {
+      InputStream in = FileCopier.class.getResourceAsStream(src);
       OutputStream out = new FileOutputStream(dst);
       // Transfer bytes from in to out
       byte[] buf = new byte[1024];
@@ -90,8 +44,69 @@ public class JavaFormatter extends BaseFormatter {
       in.close();
       out.close();
     }
+  }
 
-    private void initFolder(String fitnesseRoot) throws IOException {
+  public static class TestResultPage {
+    private OutputStreamWriter currentWriter;
+
+    public TestResultPage(String outputPath, String testName) throws IOException, UnsupportedEncodingException {
+      File outputFile = new File(outputPath, testName + ".html");
+      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+      writeHeaderFor(testName);
+    }
+
+    public void appendResultChunk(String content) throws IOException {
+      currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
+    }
+
+    private void writeHeaderFor(String testName) throws IOException {
+      currentWriter.write("<html><head><title>");
+      currentWriter.write(testName);
+      currentWriter
+              .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+                      + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
+                      + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
+      currentWriter.write(testName);
+      currentWriter.write("</h2>");
+    }
+
+    public void finish() throws IOException {
+      if (currentWriter != null) {
+        currentWriter.write("</body></html>");
+        currentWriter.close();
+      }
+    }
+  }
+  
+  public static class FolderResultsRepository implements ResultsRepository {
+    private String outputPath;
+    private TestResultPage testResultPage;
+
+    public FolderResultsRepository(String outputPath) throws IOException {
+      this.outputPath = outputPath;
+      copyAssets();
+    }
+
+    public void close() throws IOException {
+      testResultPage.finish();
+    }
+
+    public void open(String testName) throws IOException {
+      testResultPage = new TestResultPage(outputPath, testName);
+
+    }
+
+    public void write(String content) throws IOException {
+      testResultPage.appendResultChunk(content);
+    }
+
+    public void addFile(String r, String relativeFilePath) throws IOException {
+      File dst = new File(outputPath, relativeFilePath);
+      dst.getParentFile().mkdirs();
+      FileCopier.copy(r, dst);
+    }
+
+    private void copyAssets() throws IOException {
       String base = "/fitnesse/resources/";
       String cssDir = base + "css/";
       addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
