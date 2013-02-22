@@ -67,8 +67,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
 
   private InputStream getHtmlOutputStream() throws FileNotFoundException {
     File outputHtml = new File(temporaryFolder.getRoot(), TEST_NAME + ".html");
-    InputStream outputHtmlStream = new FileInputStream(outputHtml);
-    return outputHtmlStream;
+    return new FileInputStream(outputHtml);
   }
 
 }
