@@ -130,8 +130,7 @@ public class JavaFormatter extends BaseFormatter {
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
-    if (listener != null)
-      listener.newTestStarted(test, timeMeasurement);
+    listener.newTestStarted(test, timeMeasurement);
   }
 
   @Override
@@ -145,8 +144,7 @@ public class JavaFormatter extends BaseFormatter {
     testSummaries.put(fullPath, new TestSummary(testSummary));
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
-    if (listener != null)
-      listener.testComplete(test, testSummary, timeMeasurement);
+    listener.testComplete(test, testSummary, timeMeasurement);
   }
 
   TestSummary getTestSummary(String testPath) {
@@ -183,7 +181,7 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   private static Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
-  private ResultsListener listener;
+  private ResultsListener listener = new NullListener();
 
   public synchronized static JavaFormatter getInstance(String testName) {
     JavaFormatter existing = allocatedInstances.get(testName);
@@ -198,8 +196,7 @@ public class JavaFormatter extends BaseFormatter {
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    if (listener != null)
-      listener.allTestingComplete(totalTimeMeasurement);
+    listener.allTestingComplete(totalTimeMeasurement);
   }
 
   public void writeSummary(String suiteName) throws IOException {
