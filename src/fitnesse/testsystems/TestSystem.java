@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import java.util.regex.Matcher;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.PageFactory;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -50,13 +51,8 @@ public abstract class TestSystem implements TestSystemListener {
     return command;
   }
 
-  // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
   protected static String replace(String value, String mark, String replacement) {
-    int index = value.indexOf(mark);
-    if (index == -1)
-      return value;
-
-    return value.substring(0, index) + replacement + value.substring(index + mark.length());
+    return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
   }
 
   public void setFastTest(boolean fastTest) {
