@@ -3,7 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 
@@ -24,7 +24,7 @@ public class ScenarioTableTest {
     private WikiPage root;
     private List<Object> instructions;
     public ScenarioTable st;
-    private MockSlimTestContext testContext;
+    private SlimTestContextImpl testContext;
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +38,7 @@ public class ScenarioTableTest {
 
         TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
         Table t = ts.getTable(0);
-        testContext = new MockSlimTestContext();
+        testContext = new SlimTestContextImpl();
         st = new ScenarioTable(t, "id", testContext);
         instructions.addAll(st.getAssertions());
 

@@ -10,9 +10,7 @@ import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +24,13 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
@@ -50,9 +45,8 @@ public abstract class SlimTestSystem extends TestSystem {
   private SlimClient slimClient;
 
   private boolean started;
-  protected TestSummary testSummary;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  private NestedSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
   private final SlimDescriptor descriptor;
   private boolean stopTestCalled;
 
@@ -60,7 +54,6 @@ public abstract class SlimTestSystem extends TestSystem {
   public SlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
     super(page, listener);
     this.descriptor = new SlimDescriptor(descriptor);
-    testSummary = new TestSummary(0, 0, 0, 0);
   }
 
   public SlimTestContext getTestContext() {
@@ -172,12 +165,11 @@ public abstract class SlimTestSystem extends TestSystem {
     initializeTest();
     checkForAndReportVersionMismatch(pageToTest.getDecoratedData());
     processAllTablesOnPage(pageToTest);
-    testComplete(testSummary);
+    testComplete(testContext.getTestSummary());
   }
 
   private void initializeTest() {
-    testContext = new NestedSlimTestContext();
-    testSummary.clear();
+    testContext = new SlimTestContextImpl();
   }
 
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
@@ -301,10 +293,6 @@ public abstract class SlimTestSystem extends TestSystem {
     return SlimServer.EXCEPTION_TAG + stringWriter.toString();
   }
 
-  public TestSummary getTestSummary() {
-    return testSummary;
-  }
-
   protected void evaluateTables(List<Assertion> assertions, Map<String, Object> instructionResults) {
     for (Assertion a : assertions) {
       try {
@@ -416,65 +404,5 @@ public abstract class SlimTestSystem extends TestSystem {
     }
 
 
-  }
-
-  private class NestedSlimTestContext implements SlimTestContext {
-    private Map<String, String> symbols = new HashMap<String, String>();
-    private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-
-    @Override
-    public String getSymbol(String symbolName) {
-      return symbols.get(symbolName);
-    }
-
-    @Override
-    public void setSymbol(String symbolName, String value) {
-      symbols.put(symbolName, value);
-    }
-
-    @Override
-    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-      scenarios.put(scenarioName, scenarioTable);
-    }
-
-    @Override
-    public ScenarioTable getScenario(String scenarioName) {
-      return scenarios.get(scenarioName);
-    }
-
-    @Override
-    public Collection<ScenarioTable> getScenarios() {
-      return scenarios.values();
-    }
-
-    @Override
-    public void incrementPassedTestsCount() {
-      testSummary.right++;
-    }
-
-    @Override
-    public void incrementFailedTestsCount() {
-      testSummary.wrong = testSummary.getWrong() + 1;
-    }
-
-    @Override
-    public void incrementErroredTestsCount() {
-      testSummary.exceptions = testSummary.getExceptions() + 1;
-    }
-
-    @Override
-    public void incrementIgnoredTestsCount() {
-      testSummary.ignores++;
-    }
-
-    @Override
-    public void increment(ExecutionResult result) {
-      testSummary.add(result);
-    }
-
-    @Override
-    public void increment(TestSummary summary) {
-      testSummary.add(summary);
-    }
   }
 }

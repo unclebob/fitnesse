@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -121,7 +121,7 @@ public class SlimTableTest {
 
   private static class MockTable extends SlimTable {
     public MockTable() {
-      super(null, null, new MockSlimTestContext());
+      super(null, null, new SlimTestContextImpl());
     }
 
     protected String getTableType() {

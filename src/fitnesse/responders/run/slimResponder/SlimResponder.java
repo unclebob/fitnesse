@@ -42,6 +42,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   private FitNesseContext context;
   private Throwable slimException;
   private StringBuilder output;
+  private TestSummary testSummary;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -118,7 +119,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   public TestSummary getTestSummary() {
-    return testSystem.getTestSummary();
+    return testSummary;
   }
 
   protected void setFastTest(boolean fastTest) {
@@ -132,6 +133,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   @Override
   public void testComplete(TestSummary testSummary)  {
+    this.testSummary = testSummary;
   }
 
   @Override

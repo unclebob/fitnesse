@@ -43,7 +43,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
       String html = root.getData().getHtml();
       TableScanner ts = new HtmlTableScanner(html);
       Table t = ts.getTable(0);
-      MockSlimTestContext testContext = new MockSlimTestContext();
+      SlimTestContextImpl testContext = new SlimTestContextImpl();
       return constructor.newInstance(t, "id", testContext);
     } catch (Exception e) {
       throw new RuntimeException(e);

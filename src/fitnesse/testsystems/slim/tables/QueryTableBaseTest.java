@@ -28,7 +28,7 @@ public abstract class QueryTableBaseTest {
   private List<Assertion> assertions;
   private String queryTableHeader;
   public QueryTable qt;
-  private MockSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
   protected String headRow;
 
   @Before
@@ -55,7 +55,7 @@ public abstract class QueryTableBaseTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
+    testContext = new SlimTestContextImpl();
     return constructQueryTable(t);
   }
 

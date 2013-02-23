@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.tables.ScenarioTable;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockSlimTestContext implements SlimTestContext {
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+
+public class SlimTestContextImpl implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   private TestSummary testSummary = new TestSummary();
