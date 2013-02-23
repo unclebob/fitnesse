@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
+import java.io.IOException;
+import java.util.Map;
+
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
@@ -25,14 +25,6 @@ public class FitTestSystem extends TestSystem {
     this.descriptor = descriptor;
     this.context = context;
   }
-
-  protected ExecutionLog createExecutionLog() {
-    String command = buildCommand(descriptor);
-    Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
-    client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
-    return new ExecutionLog(page, client.commandRunner);
-  }
-
 
   public void bye() throws IOException, InterruptedException {
     client.done();
@@ -57,6 +49,10 @@ public class FitTestSystem extends TestSystem {
   }
 
   public void start() {
+    String command = buildCommand(descriptor);
+    Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
+    client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
     client.start();
+    setExecutionLog(new ExecutionLog(page, client.commandRunner));
   }
 }

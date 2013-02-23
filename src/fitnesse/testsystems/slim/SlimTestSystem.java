@@ -78,22 +78,6 @@ public abstract class SlimTestSystem extends TestSystem {
       slimClient.close();
   }
 
-  // TODO: this smells: createExecutionLog is starting a test system in a separate thread using conditions used for testing only
-  protected ExecutionLog createExecutionLog() throws SocketException {
-    final String classPath = descriptor.getClassPath();
-    final String slimArguments = buildArguments();
-    if (fastTest) {
-      slimRunner = new MockCommandRunner();
-      createSlimService(slimArguments);
-    }
-    else if (manualStart) {
-      slimRunner = new MockCommandRunner();
-    } else {
-      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
-    }
-    return new ExecutionLog(page, slimRunner);
-  }
-
   public String buildCommand() {
     String slimArguments = buildArguments();
     String slimCommandPrefix = super.buildCommand(descriptor);
@@ -107,6 +91,18 @@ public abstract class SlimTestSystem extends TestSystem {
   }
 
   public void start() throws IOException {
+    final String classPath = descriptor.getClassPath();
+    final String slimArguments = buildArguments();
+    if (fastTest) {
+      slimRunner = new MockCommandRunner();
+      createSlimService(slimArguments);
+    }
+    else if (manualStart) {
+      slimRunner = new MockCommandRunner();
+    } else {
+      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
+    }
+
     slimRunner.asynchronousStart();
 
     slimClient = new SlimClient(descriptor.determineSlimHost(), descriptor.getSlimPort());
@@ -116,6 +112,7 @@ public abstract class SlimTestSystem extends TestSystem {
     } catch (SlimError e) {
       exceptionOccurred(e);
     }
+    setExecutionLog(new ExecutionLog(page, slimRunner));
   }
 
   public void bye() throws IOException {
