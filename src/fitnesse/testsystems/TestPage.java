@@ -1,8 +1,10 @@
 package fitnesse.testsystems;
 
+import java.util.Collections;
 import java.util.List;
 
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -10,13 +12,14 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class TestPage {
+  public static final String TEAR_DOWN = "TearDown";
+  public static final String SET_UP = "SetUp";
+
   private WikiPage sourcePage;
   private PageData data;
   private List<WikiPage> scenarioLibraries;
-  private WikiPage suiteSetUp;
   private WikiPage setUp;
   private WikiPage tearDown;
-  private WikiPage suiteTearDown;
 
   public TestPage(WikiPage sourcePage) {
     this.sourcePage = sourcePage;
@@ -25,6 +28,10 @@ public class TestPage {
   public TestPage(PageData data) {
     this.data = data;
     this.sourcePage = data.getWikiPage();
+  }
+
+  public static boolean isTestPage(PageData pageData) {
+    return pageData.hasAttribute("Test");
   }
 
   public WikiPage getSourcePage() {
@@ -48,35 +55,33 @@ public class TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    includePage(suiteSetUp, "-setup", decoratedContent);
-    includePage(setUp, "-setup", decoratedContent);
+    includePage(getSetUp(), "-setup", decoratedContent);
 
     decoratedContent.append(parsedData().getContent());
 
-    includePage(tearDown, "-teardown", decoratedContent);
-    includePage(suiteTearDown, "-teardown", decoratedContent);
+    includePage(getTearDown(), "-teardown", decoratedContent);
 
     return new PageData(sourcePage, decoratedContent.toString());
   }
 
-  private void includeScenarioLibraries(StringBuilder decoratedContent) {
-    if (scenarioLibraries != null) {
+  protected void includeScenarioLibraries(StringBuilder decoratedContent) {
+    if (!getScenarioLibraries().isEmpty()) {
       decoratedContent.append("!*> Scenario Libraries\n");
-      for (WikiPage scenarioLibrary : scenarioLibraries)
+      for (WikiPage scenarioLibrary : getScenarioLibraries()) {
         includeScenarioLibrary(scenarioLibrary, decoratedContent);
+      }
       decoratedContent.append("*!\n");
     }
   }
 
-  private void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
+  protected void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
     newPageContent.append("!include -c .");
     PageCrawler pageCrawler = getSourcePage().getPageCrawler();
     newPageContent.append(PathParser.render(pageCrawler.getFullPath(scenarioLibrary)));
     newPageContent.append("\n");
   }
 
-
-  private void includePage(WikiPage wikiPage, String arg, StringBuilder newPageContent) {
+  protected void includePage(WikiPage wikiPage, String arg, StringBuilder newPageContent) {
     if (wikiPage == null)
       return;
     String pagePathName = getPathNameForPage(wikiPage);
@@ -104,46 +109,47 @@ public class TestPage {
   }
 
   public boolean isTestPage() {
-    return parsedData().hasAttribute("Test");
-  }
-
-  public void setScenarioLibraries(List<WikiPage> scenarioLibraries) {
-    this.scenarioLibraries = scenarioLibraries;
+    return isTestPage(getData());
   }
 
   public List<WikiPage> getScenarioLibraries() {
+    if (scenarioLibraries == null) {
+      scenarioLibraries = findScenarioLibraries();
+    }
     return scenarioLibraries;
   }
 
-  public void setSuiteSetUp(WikiPage suiteSetUp) {
-    this.suiteSetUp = suiteSetUp;
-  }
-
-  public WikiPage getSuiteSetUp() {
-    return suiteSetUp;
-  }
-
-  public void setSetUp(WikiPage setUp) {
-    this.setUp = setUp;
-  }
-
   public WikiPage getSetUp() {
+    if (setUp == null && !isSuiteSetUpOrTearDownPage()) {
+      setUp = findInheritedPage(SET_UP);
+    }
     return setUp;
   }
 
-  public void setTearDown(WikiPage tearDown) {
-    this.tearDown = tearDown;
-  }
-
   public WikiPage getTearDown() {
+    if (tearDown == null && !isSuiteSetUpOrTearDownPage()) {
+      tearDown = findInheritedPage(TEAR_DOWN);
+    }
     return tearDown;
   }
 
-  public void setSuiteTearDown(WikiPage suiteTearDown) {
-    this.suiteTearDown = suiteTearDown;
+  protected boolean isSuiteSetUpOrTearDownPage() {
+    return PageData.SUITE_SETUP_NAME.equals(getName()) || PageData.SUITE_TEARDOWN_NAME.equals(getName());
   }
 
-  public WikiPage getSuiteTearDown() {
-    return suiteTearDown;
+  protected WikiPage findInheritedPage(String pageName) {
+    return PageCrawlerImpl.getClosestInheritedPage(pageName, sourcePage);
   }
+
+  private List<WikiPage> findScenarioLibraries() {
+    List<WikiPage> uncles;
+    if (isSlim()) {
+      uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", sourcePage);
+      Collections.reverse(uncles);
+    } else {
+      uncles = Collections.emptyList();
+    }
+    return uncles;
+  }
+
 }

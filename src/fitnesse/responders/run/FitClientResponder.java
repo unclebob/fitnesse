@@ -11,11 +11,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
-import fitnesse.testsystems.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -79,7 +79,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
       client.send(classpath);
     }
 
-    sendPage(testPage, client, true);
+    sendPage(new TestPageWithSuiteSetUpAndTearDown(testPage), client);
     closeClient(client);
   }
 
@@ -95,16 +95,14 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     }
 
     for (WikiPage testPage : testPages) {
-      sendPage(testPage, client, false);
+      sendPage(new TestPage(testPage), client);
     }
     closeClient(client);
   }
 
-  private void sendPage(WikiPage testPage, FitClient client, boolean includeSuiteSetup) throws IOException, InterruptedException {
-    String pageName = crawler.getRelativeName(page, testPage);
-    TestPage test = new TestPage(testPage);
-    SetupTeardownAndLibraryIncluder.includeInto(test, includeSuiteSetup);
-    String testableHtml = test.getDecoratedData().getHtml();
+  private void sendPage(TestPage testPage, FitClient client) throws IOException, InterruptedException {
+    String pageName = crawler.getRelativeName(page, testPage.getSourcePage());
+    String testableHtml = testPage.getDecoratedData().getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);
   }

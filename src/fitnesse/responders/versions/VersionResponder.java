@@ -7,7 +7,6 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -77,7 +76,6 @@ public class VersionResponder implements SecureResponder {
         PageData data;
         if (isTestPage(pageData)) {
           TestPage testPage = new TestPage(pageData);
-          SetupTeardownAndLibraryIncluder.includeInto(testPage);
           data = testPage.getDecoratedData();
         } else {
           data = pageData;

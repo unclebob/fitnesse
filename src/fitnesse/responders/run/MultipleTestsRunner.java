@@ -11,7 +11,6 @@ import java.util.Map;
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.testsystems.PageListSetUpTearDownSurrounder;
-import fitnesse.testsystems.SetupTeardownAndLibraryIncluder;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -129,8 +128,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
-      // TODO: This should be done with the respective test system (Slim/Fit).
-      SetupTeardownAndLibraryIncluder.includeInto(testPage);
       testSystem.runTests(testPage);
     }
   }

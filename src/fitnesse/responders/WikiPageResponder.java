@@ -7,7 +7,6 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,6 +14,7 @@ import fitnesse.responders.editing.EditResponder;
 import fitnesse.testsystems.TestPage;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -85,9 +85,8 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (isTestPage(pageData)) {
-      TestPage testPage = new TestPage(page);
-      SetupTeardownAndLibraryIncluder.includeInto(testPage, true);
+    if (TestPage.isTestPage(pageData)) {
+      TestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
     } else {
       html.put("content", new WikiPageRenderer(page.getData()));
@@ -122,10 +121,6 @@ public class WikiPageResponder implements SecureResponder {
     public String render() {
         return HtmlUtil.makePageFooterHtml(page.getData());
     }
-  }
-
-  private boolean isTestPage(PageData pageData) {
-    return pageData.hasAttribute("Test");
   }
 
 }
