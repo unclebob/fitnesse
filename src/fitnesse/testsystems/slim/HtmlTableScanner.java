@@ -80,14 +80,17 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
           scanForTables(children);
         }
 
-        // Deal with closing tags
-        if (node instanceof Tag && !((Tag) node).isEmptyXmlTag()) {
+        if (needEndTag(node)) {
           // No copying required since the node is not modified and has no children.
           this.nodes.add(((Tag) node).getEndTag());
           ((Tag) newNode).setEndTag(null);
         }
       }
     }
+  }
+
+  private boolean needEndTag(Node node) {
+    return node instanceof Tag && !((Tag) node).isEmptyXmlTag() && ((Tag) node).getEndTag() != null;
   }
 
   private void guaranteeThatAllTablesAreUnique(TableTag tagTable) {
