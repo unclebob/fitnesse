@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import static fitnesse.util.HtmlParserTools.deepClone;
+import static fitnesse.util.HtmlParserTools.flatClone;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,24 +13,27 @@ import java.util.Random;
 import fitnesse.slim.SlimError;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
+import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-// TODO: TableScanner should return a list of Tables and page content fragments
+// TODO: TableScanner should return a list of Tables and page content nodes
 // TODO: Need logic to split (by clone) data blocks and and to render (to html) those blocks
 public class HtmlTableScanner implements TableScanner<HtmlTable> {
 
   // This should contain content blobs (List<Object>?)
-  private List<HtmlTable> tables = new ArrayList<HtmlTable>();
-  private NodeList htmlTree;
+  private List<HtmlTable> tables = new ArrayList<HtmlTable>(16);
+  // TODO: use NodeList instead?
+  private List<Node> nodes = new ArrayList<Node>(512);
 
   public HtmlTableScanner(String page) {
     if (page == null || page.equals(""))
       page = "<i>This page intentionally left blank.</i>";
 
+    NodeList htmlTree;
     try {
       Parser parser = new Parser(new Lexer(new Page(page)));
       htmlTree = parser.parse(null);
@@ -38,6 +44,7 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
   }
 
   public HtmlTableScanner(String... fragments) {
+    NodeList htmlTree;
     try {
       htmlTree = new NodeList();
       for (String fragment: fragments) {
@@ -51,17 +58,34 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
     scanForTables(htmlTree);
   }
 
+  public HtmlTableScanner(NodeList... nodeLists) {
+    for (NodeList nodeList: nodeLists) {
+      scanForTables(nodeList);
+    }
+  }
+
   private void scanForTables(NodeList nodes) {
     for (int i = 0; i < nodes.size(); i++) {
       Node node = nodes.elementAt(i);
       if (node instanceof TableTag) {
-        TableTag tableTag = (TableTag) node;
+        TableTag tableTag = deepClone((TableTag) node);
         guaranteeThatAllTablesAreUnique(tableTag);
         tables.add(new HtmlTable(tableTag));
+        this.nodes.add(tableTag);
       } else {
+        Node newNode = flatClone(node);
+        this.nodes.add(newNode);
         NodeList children = node.getChildren();
-        if (children != null)
+        if (children != null) {
           scanForTables(children);
+        }
+
+        // Deal with closing tags
+        if (node instanceof Tag && !((Tag) node).isEmptyXmlTag()) {
+          // No copying required since the node is not modified and has no children.
+          this.nodes.add(((Tag) node).getEndTag());
+          ((Tag) newNode).setEndTag(null);
+        }
       }
     }
   }
@@ -83,29 +107,27 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
   }
 
   public String toHtml(HtmlTable startTable, HtmlTable endBeforeTable) {
-    String allHtml = htmlTree.toHtml();
 
-    int startIndex = 0;
-    int endIndex = allHtml.length();
+    int index = 0;
     if (startTable != null) {
-      String startText = startTable.toHtml();
-      int nodeIndex = allHtml.indexOf(startText);
-      if (nodeIndex > 0) {
-        startIndex = nodeIndex;
-      }
+      index = nodes.indexOf(startTable.getTableNode());
     }
-    
+
+    Node endTag = null;
     if (endBeforeTable != null) {
-      String stopText = endBeforeTable.toHtml();
-      int nodeIndex = allHtml.indexOf(stopText);
-      if (nodeIndex > 0) {
-        endIndex = nodeIndex;
-      }
+      endTag = endBeforeTable.getTableNode();
     }
-    return allHtml.substring(startIndex, endIndex);
+
+    StringBuilder html = new StringBuilder(512);
+    for (int i = index; i < nodes.size() && nodes.get(i) != endTag; i++) {
+      Node node = nodes.get(i);
+      html.append(node.toHtml());
+    }
+
+    return html.toString();
   }
-  
+
   public String toHtml() {
-    return htmlTree.toHtml();
+    return toHtml(null, null);
   }
 }

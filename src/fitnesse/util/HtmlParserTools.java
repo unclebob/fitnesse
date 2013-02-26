@@ -20,6 +20,7 @@ public final class HtmlParserTools {
    * Clone just this one node. No nesting
    */
   public static Node flatClone(Node node) {
+    if (node == null) return null;
     Node newNode = cloneOnlyNode(node, null);
     newNode.setChildren(new NodeList());
     return newNode;
@@ -33,6 +34,16 @@ public final class HtmlParserTools {
    */
   public static NodeList deepClone(NodeList nodeList) {
     return deepClone(nodeList, null);
+  }
+
+  /**
+   * Make a 1:1 clone of the Node.
+   *
+   * @param node
+   * @return
+   */
+  public static <T extends Node> T deepClone(T node) {
+    return (T) deepClone(new NodeList(node), null).elementAt(0);
   }
 
   private static NodeList deepClone(NodeList tree, Node clonedParent) {
