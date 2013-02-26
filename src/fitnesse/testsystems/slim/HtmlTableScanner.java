@@ -65,27 +65,9 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
     return tables.iterator();
   }
 
-  public String toWikiText() {
-    StringBuffer b = new StringBuffer();
-    for (Table t : tables) {
-      b.append("\n");
-      for (int row = 0; row < t.getRowCount(); row++) {
-        b.append("|");
-        if (t.getColumnCountInRow(row) == 0)
-          b.append("|");
-        for (int col = 0; col < t.getColumnCountInRow(row); col++) {
-          b.append(t.getCellContents(col, row));
-          b.append("|");
-        }
-        b.append("\n");
-      }
-    }
-    return b.toString();
-  }
-
   public String toHtml(HtmlTable startTable, HtmlTable endBeforeTable) {
     String allHtml = htmlTree.toHtml();
-    
+
     int startIndex = 0;
     int endIndex = allHtml.length();
     if (startTable != null) {

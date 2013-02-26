@@ -96,22 +96,6 @@ public class HtmlTableScannerTest {
   }
 
   @Test
-  public void canConvertToWiki() throws Exception {
-    scan(
-      "  <table>" +
-        "  <th>" +
-        "    <td>Name</td>" +
-        "    <td>Address</td>" +
-        "  </th>" +
-        "  <tr>" +
-        "    <td>Bob</td>" +
-        "    <td>Here</td>" +
-        "  </tr>" +
-        "</table>  ");
-    assertEquals("\n|Name|Address|\n|Bob|Here|\n", ts.toWikiText());
-  }
-
-  @Test
   public void canSetCellContents() throws Exception {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
