@@ -1,6 +1,6 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.Before;

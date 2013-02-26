@@ -1,7 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems;
 
+import fitnesse.testsystems.CommandRunner;
 import util.RegexTestCase;
 
 public class CommandRunnerTest extends RegexTestCase {

@@ -1,10 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testutil;
+package fitnesse.testsystems;
 
 import java.io.IOException;
-
-import fitnesse.components.CommandRunner;
 
 public class MockCommandRunner extends CommandRunner {
   public MockCommandRunner() {

@@ -3,7 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 
@@ -14,11 +14,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class ReturnedValueExpectationTest {
-  private MockSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
 
   @Before
   public void setup() {
-    testContext = new MockSlimTestContext();
+    testContext = new SlimTestContextImpl();
   }
 
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {

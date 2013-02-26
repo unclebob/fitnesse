@@ -5,7 +5,7 @@ package fitnesse.responders.run.formatters;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;

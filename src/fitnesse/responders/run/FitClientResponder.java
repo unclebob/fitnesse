@@ -2,25 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
+
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
-import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.wiki.*;
-
-import java.io.IOException;
-import java.net.Socket;
-import java.util.List;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
   private FitNesseContext context;
@@ -47,15 +53,15 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     WikiPagePath pagePath = PathParser.parse(resource);
     try {
       if (!crawler.pageExists(context.root, pagePath))
-	      FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
+        FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
       else {
-	      page = crawler.getPage(context.root, pagePath);
-	      PageData data = page.getData();
+        page = crawler.getPage(context.root, pagePath);
+        PageData data = page.getData();
 
       	if (data.hasAttribute("Suite"))
       	  handleSuitePage(socket, page, context.root);
       	else if (data.hasAttribute("Test"))
-      	  handleTestPage(socket, data);
+      	  handleTestPage(socket, page);
       	else
       	  FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
       }
@@ -65,7 +71,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     sender.close();
   }
 
-  private void handleTestPage(Socket socket, PageData data) throws IOException, InterruptedException {
+  private void handleTestPage(Socket socket, WikiPage testPage) throws IOException, InterruptedException {
     FitClient client = startClient(socket);
 
     if (shouldIncludePaths) {
@@ -73,7 +79,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
       client.send(classpath);
     }
 
-    sendPage(data, client, true);
+    sendPage(new TestPageWithSuiteSetUpAndTearDown(testPage), client);
     closeClient(client);
   }
 
@@ -89,16 +95,14 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     }
 
     for (WikiPage testPage : testPages) {
-      PageData testPageData = testPage.getData();
-      sendPage(testPageData, client, false);
+      sendPage(new TestPage(testPage), client);
     }
     closeClient(client);
   }
 
-  private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws IOException, InterruptedException {
-    String pageName = crawler.getRelativeName(page, data.getWikiPage());
-    SetupTeardownAndLibraryIncluder.includeInto(data, includeSuiteSetup);
-    String testableHtml = data.getHtml();
+  private void sendPage(TestPage testPage, FitClient client) throws IOException, InterruptedException {
+    String pageName = crawler.getRelativeName(page, testPage.getSourcePage());
+    String testableHtml = testPage.getDecoratedData().getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);
   }
@@ -123,7 +127,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   @Override
-  public void acceptOutputFirst(String output) {
+  public void testOutputChunk(String output) {
   }
 
   @Override

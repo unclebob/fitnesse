@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 import util.StreamReader;
 
 import java.io.*;

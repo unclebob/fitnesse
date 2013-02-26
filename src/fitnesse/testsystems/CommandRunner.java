@@ -1,10 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
 
-package fitnesse.components;
+package fitnesse.testsystems;
 
-import util.TimeMeasurement;
-
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import util.TimeMeasurement;
 
 public class CommandRunner {
   private Process process;
@@ -54,8 +55,8 @@ public class CommandRunner {
     stdout = process.getInputStream();
     stderr = process.getErrorStream();
 
-    new Thread(new OuputReadingRunnable(stdout, outputBuffer), "CommandRunner stdout").start();
-    new Thread(new OuputReadingRunnable(stderr, errorBuffer), "CommandRunner error").start();
+    new Thread(new OutputReadingRunnable(stdout, outputBuffer), "CommandRunner stdout").start();
+    new Thread(new OutputReadingRunnable(stderr, errorBuffer), "CommandRunner error").start();
 
     sendInput();
   }
@@ -184,28 +185,25 @@ public class CommandRunner {
     }
   }
 
-  private void readOutput(InputStream input, StringBuffer buffer) {
-    try {
-      int c;
-      while ((c = input.read()) != -1)
-        buffer.append((char) c);
-    } catch (Exception e) {
-      exceptionOccurred(e);
-    }
-  }
-
-  private class OuputReadingRunnable implements Runnable {
+  private class OutputReadingRunnable implements Runnable {
     public InputStream input;
     public StringBuffer buffer;
 
-    public OuputReadingRunnable(InputStream input, StringBuffer buffer) {
-      this.input = input;
+    public OutputReadingRunnable(InputStream input, StringBuffer buffer) {
+      this.input = new BufferedInputStream(input);
       this.buffer = buffer;
     }
 
     public void run() {
-      readOutput(input, buffer);
+      try {
+        int c;
+        while ((c = input.read()) != -1)
+          buffer.append((char) c);
+      } catch (Exception e) {
+        exceptionOccurred(e);
+      }
     }
+
   }
 
   public int waitForCommandToFinish() throws InterruptedException {

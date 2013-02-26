@@ -100,7 +100,7 @@ public class SlimTestSystemTest {
   }
 
   static class DummyListener implements TestSystemListener {
-    public void acceptOutputFirst(String output) {
+    public void testOutputChunk(String output) {
     }
 
     public void testComplete(TestSummary testSummary) {

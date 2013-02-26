@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

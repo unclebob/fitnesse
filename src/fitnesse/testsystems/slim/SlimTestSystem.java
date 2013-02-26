@@ -2,26 +2,40 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.components.CommandRunner;
-import fitnesse.responders.PageFactory;
-import fitnesse.slim.*;
-import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.*;
-import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
+import static fitnesse.slim.SlimServer.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static fitnesse.slim.SlimServer.*;
+import fitnesse.responders.PageFactory;
+import fitnesse.slim.JavaSlimFactory;
+import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimService;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.MockCommandRunner;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SyntaxError;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
 public abstract class SlimTestSystem extends TestSystem {
   public static final SlimTable START_OF_TEST = null;
@@ -31,21 +45,15 @@ public abstract class SlimTestSystem extends TestSystem {
   private SlimClient slimClient;
 
   private boolean started;
-  protected ReadOnlyPageData testResults;
-  protected Map<String, Object> instructionResults;
-  protected List<SlimTable> testTables = new ArrayList<SlimTable>();
-  protected TestSummary testSummary;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  private NestedSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
   private final SlimDescriptor descriptor;
-  private List<Assertion> assertions;
   private boolean stopTestCalled;
 
 
   public SlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
     super(page, listener);
     this.descriptor = new SlimDescriptor(descriptor);
-    testSummary = new TestSummary(0, 0, 0, 0);
   }
 
   public SlimTestContext getTestContext() {
@@ -63,22 +71,6 @@ public abstract class SlimTestSystem extends TestSystem {
       slimClient.close();
   }
 
-  // TODO: this smells: createExecutionLog is starting a test system in a separate thread using conditions used for testing only
-  protected ExecutionLog createExecutionLog() throws SocketException {
-    final String classPath = descriptor.getClassPath();
-    final String slimArguments = buildArguments();
-    if (fastTest) {
-      slimRunner = new MockCommandRunner();
-      createSlimService(slimArguments);
-    }
-    else if (manualStart) {
-      slimRunner = new MockCommandRunner();
-    } else {
-      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
-    }
-    return new ExecutionLog(page, slimRunner);
-  }
-
   public String buildCommand() {
     String slimArguments = buildArguments();
     String slimCommandPrefix = super.buildCommand(descriptor);
@@ -92,6 +84,18 @@ public abstract class SlimTestSystem extends TestSystem {
   }
 
   public void start() throws IOException {
+    final String classPath = descriptor.getClassPath();
+    final String slimArguments = buildArguments();
+    if (fastTest) {
+      slimRunner = new MockCommandRunner();
+      createSlimService(slimArguments);
+    }
+    else if (manualStart) {
+      slimRunner = new MockCommandRunner();
+    } else {
+      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
+    }
+
     slimRunner.asynchronousStart();
 
     slimClient = new SlimClient(descriptor.determineSlimHost(), descriptor.getSlimPort());
@@ -101,6 +105,7 @@ public abstract class SlimTestSystem extends TestSystem {
     } catch (SlimError e) {
       exceptionOccurred(e);
     }
+    setExecutionLog(new ExecutionLog(page, slimRunner));
   }
 
   public void bye() throws IOException {
@@ -155,17 +160,16 @@ public abstract class SlimTestSystem extends TestSystem {
     }
   }
 
-  public void runTests(ReadOnlyPageData pageData) throws IOException {
+  @Override
+  public void runTests(TestPage pageToTest) throws IOException {
     initializeTest();
-    checkForAndReportVersionMismatch(pageData);
-    processAllTablesOnPage(pageData);
-    testComplete(testSummary);
+    checkForAndReportVersionMismatch(pageToTest.getDecoratedData());
+    processAllTablesOnPage(pageToTest);
+    testComplete(testContext.getTestSummary());
   }
 
   private void initializeTest() {
-    testContext = new NestedSlimTestContext();
-    testSummary.clear();
-    stopTestCalled = false;
+    testContext = new SlimTestContextImpl();
   }
 
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
@@ -194,17 +198,16 @@ public abstract class SlimTestSystem extends TestSystem {
     return expectedVersionNumber;
   }
 
-  protected abstract List<SlimTable> createSlimTables(ReadOnlyPageData pageData);
+  protected abstract List<SlimTable> createSlimTables(TestPage pageTotest);
 
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  void processAllTablesOnPage(ReadOnlyPageData pageData) throws IOException {
-    List<SlimTable> allTables = createSlimTables(pageData);
-    testResults = pageData;
+  void processAllTablesOnPage(TestPage pageToTest) throws IOException {
+    List<SlimTable> allTables = createSlimTables(pageToTest);
 
-    boolean runAllTablesAtOnce = false;
-    if (runAllTablesAtOnce || (allTables.size() == 0)) {
-      processTables(allTables, START_OF_TEST, END_OF_TEST);
+    if (allTables.size() == 0) {
+      String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
+      testOutputChunk(html);
     } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
@@ -212,37 +215,34 @@ public abstract class SlimTestSystem extends TestSystem {
         SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
-        oneTableList.add(theTable);
-        processTables(oneTableList, startWithTable, nextTable);
-        oneTableList.clear();
+        processTable(theTable);
+
+        String html = createHtmlResults(startWithTable, nextTable);
+        testOutputChunk(html);
       }
     }
   }
 
-  protected abstract <T extends Table> TableScanner<T> scanTheTables(ReadOnlyPageData pageData);
-
-  private void processTables(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
-
-    testTables = tables;
-    assertions = createAssertions(tables);
+  private void processTable(SlimTable table) throws IOException {
+    List<Assertion> assertions = createAssertions(table);
+    Map<String, Object> instructionResults;
     if (!stopTestCalled) {
       instructionResults = slimClient.invokeAndGetResponse(Assertion.getInstructions(assertions));
+    } else {
+      instructionResults = Collections.emptyMap();
     }
-    String html = createHtmlResults(startWithTable, nextTable);
-    acceptOutputFirst(html);
+
+    evaluateTables(assertions, instructionResults);
   }
 
-
-  private List<Assertion> createAssertions(List<SlimTable> tables) {
+  private List<Assertion> createAssertions(SlimTable table) {
     List<Assertion> assertions = new ArrayList<Assertion>();
-    for (SlimTable table : tables) {
-      try {
-        assertions.addAll(table.getAssertions());
-      } catch (SyntaxError e) {
-        String tableName = table.getTable().getCellContents(0, 0);
-        // TODO: remove: raise TableFormatException or something like that.
-        table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
-      }
+    try {
+      assertions.addAll(table.getAssertions());
+    } catch (SyntaxError e) {
+      String tableName = table.getTable().getCellContents(0, 0);
+      // TODO: remove: raise TableFormatException or something like that.
+      table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
     }
     return assertions;
   }
@@ -283,10 +283,6 @@ public abstract class SlimTestSystem extends TestSystem {
     return exceptionMessage;
   }
 
-  public ReadOnlyPageData getTestResults() {
-    return testResults;
-  }
-
   public static String exceptionToString(Throwable e) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
@@ -294,17 +290,16 @@ public abstract class SlimTestSystem extends TestSystem {
     return SlimServer.EXCEPTION_TAG + stringWriter.toString();
   }
 
-  public TestSummary getTestSummary() {
-    return testSummary;
-  }
-
-  protected void evaluateTables() {
+  protected void evaluateTables(List<Assertion> assertions, Map<String, Object> instructionResults) {
     for (Assertion a : assertions) {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
           ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
+          if (exceptionResult.isStopTestException()) {
+            stopTestCalled = true;
+          }
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {
             testExceptionOccurred(a, exceptionResult);
@@ -321,9 +316,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
   private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
     ExceptionResult exceptionResult = new ExceptionResult(resultKey, resultString);
-    if (exceptionResult.isStopTestException()) {
-      stopTestCalled = true;
-    }
     return exceptionResult;
   }
 
@@ -409,65 +401,5 @@ public abstract class SlimTestSystem extends TestSystem {
     }
 
 
-  }
-
-  private class NestedSlimTestContext implements SlimTestContext {
-    private Map<String, String> symbols = new HashMap<String, String>();
-    private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-
-    @Override
-    public String getSymbol(String symbolName) {
-      return symbols.get(symbolName);
-    }
-
-    @Override
-    public void setSymbol(String symbolName, String value) {
-      symbols.put(symbolName, value);
-    }
-
-    @Override
-    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-      scenarios.put(scenarioName, scenarioTable);
-    }
-
-    @Override
-    public ScenarioTable getScenario(String scenarioName) {
-      return scenarios.get(scenarioName);
-    }
-
-    @Override
-    public Collection<ScenarioTable> getScenarios() {
-      return scenarios.values();
-    }
-
-    @Override
-    public void incrementPassedTestsCount() {
-      testSummary.right++;
-    }
-
-    @Override
-    public void incrementFailedTestsCount() {
-      testSummary.wrong = testSummary.getWrong() + 1;
-    }
-
-    @Override
-    public void incrementErroredTestsCount() {
-      testSummary.exceptions = testSummary.getExceptions() + 1;
-    }
-
-    @Override
-    public void incrementIgnoredTestsCount() {
-      testSummary.ignores++;
-    }
-
-    @Override
-    public void increment(ExecutionResult result) {
-      testSummary.add(result);
-    }
-
-    @Override
-    public void increment(TestSummary summary) {
-      testSummary.add(summary);
-    }
   }
 }

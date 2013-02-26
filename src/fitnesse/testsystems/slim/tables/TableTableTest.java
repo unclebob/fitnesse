@@ -8,7 +8,7 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.InstructionExecutor;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
@@ -32,7 +32,7 @@ public class TableTableTest {
     "|Table:fixture|argument|\n";
 
   public TableTable tt;
-  private MockSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -50,7 +50,7 @@ public class TableTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
+    testContext = new SlimTestContextImpl();
     return new TableTable(t, "id", testContext);
   }
 

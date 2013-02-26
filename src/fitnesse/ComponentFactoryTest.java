@@ -10,7 +10,7 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testsystems.slim.HtmlTable;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -157,7 +157,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertTrue(content.contains("TestSlimTable"));
 
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
@@ -169,7 +169,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertTrue(content.contains("TestSlimTable"));
 
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 

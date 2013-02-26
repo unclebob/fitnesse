@@ -2,7 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;

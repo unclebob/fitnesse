@@ -92,7 +92,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
 
-    WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
+    WikiImportProperty.handleImportProperties(htmlPage, page);
 
     return htmlPage;
   }
