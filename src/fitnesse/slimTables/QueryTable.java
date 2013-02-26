@@ -79,7 +79,7 @@ public class QueryTable extends SlimTable {
 
   private void appendQueryErrorMessage(String message) {
     if (isExceptionMessage(message))
-      table.appendToCell(0, 0, makeExeptionMessage(message));
+      table.appendToCell(0, 0, makeExceptionMessage(message));
     else
       table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
   }

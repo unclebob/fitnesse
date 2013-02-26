@@ -295,7 +295,7 @@ public abstract class SlimTable {
   }
 
 
-  protected String makeExeptionMessage(String value) {
+  protected String makeExceptionMessage(String value) {
     if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))
       return fail(value.substring(SlimTestSystem.MESSAGE_FAIL.length()));
     else
@@ -478,7 +478,7 @@ public abstract class SlimTable {
       this.expected = expected;
       String evaluationMessage;
       if (isExceptionMessage(actual))
-        evaluationMessage = expected + " " + makeExeptionMessage(actual);
+        evaluationMessage = expected + " " + makeExceptionMessage(actual);
       else
         evaluationMessage = createEvaluationMessage(actual, expected);
       this.evaluationMessage = HtmlTable.colorize(evaluationMessage);
