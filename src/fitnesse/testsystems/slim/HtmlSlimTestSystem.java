@@ -41,11 +41,14 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     for (WikiPage scenario: pageToTest.getScenarioLibraries()) {
       fragments.add(getHtmlFragment(getPathNameForPage(scenario), pageToTest.decorate(scenario)));
     }
-    for (WikiPage page: new WikiPage[] { pageToTest.getSetUp(), pageToTest.getSourcePage(), pageToTest.getTearDown()} ) {
-      String html = getHtmlFragment(getPathNameForPage(page), pageToTest.decorate(page));
-      if (html != null) {
-        fragments.add(html);
-      }
+    if (pageToTest.getSetUp() != null) {
+      fragments.add(getHtmlFragment(getPathNameForPage(pageToTest.getSetUp()), pageToTest.decorate(pageToTest.getSetUp())));
+    }
+    if (pageToTest.getSourcePage() != null) {
+      fragments.add(renderPageData(pageToTest.decorate(pageToTest.getSourcePage())));
+    }
+    if (pageToTest.getTearDown() != null) {
+      fragments.add(getHtmlFragment(getPathNameForPage(pageToTest.getTearDown()), pageToTest.decorate(pageToTest.getTearDown())));
     }
 
     return fragments.toArray(new String[fragments.size()]);
@@ -54,10 +57,15 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   private String getHtmlFragment(String path, PageData pageData) {
     String html = pathToHtmlCache.get(path);
     if (html == null) {
-      ParsedPage parsedPage = pageData.getParsedPage();
-      html = parsedPage.toHtml();
+      html = renderPageData(pageData);
       pathToHtmlCache.put(path, html);
     }
+    return html;
+  }
+
+  private String renderPageData(PageData pageData) {
+    String html;ParsedPage parsedPage = pageData.getParsedPage();
+    html = parsedPage.toHtml();
     return html;
   }
 
