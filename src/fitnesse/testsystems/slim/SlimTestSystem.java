@@ -223,8 +223,6 @@ public abstract class SlimTestSystem extends TestSystem {
     }
   }
 
-  protected abstract <T extends Table> TableScanner<T> scanTheTables(ReadOnlyPageData pageData);
-
   private void processTable(SlimTable table) throws IOException {
     List<Assertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
@@ -236,7 +234,6 @@ public abstract class SlimTestSystem extends TestSystem {
 
     evaluateTables(assertions, instructionResults);
   }
-
 
   private List<Assertion> createAssertions(SlimTable table) {
     List<Assertion> assertions = new ArrayList<Assertion>();
