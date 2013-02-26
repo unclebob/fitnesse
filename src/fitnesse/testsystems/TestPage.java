@@ -76,8 +76,7 @@ public class TestPage {
 
   protected void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
     newPageContent.append("!include -c .");
-    PageCrawler pageCrawler = getSourcePage().getPageCrawler();
-    newPageContent.append(PathParser.render(pageCrawler.getFullPath(scenarioLibrary)));
+    newPageContent.append(getPathNameForPage(scenarioLibrary));
     newPageContent.append("\n");
   }
 
@@ -99,6 +98,9 @@ public class TestPage {
     return PathParser.render(pagePath);
   }
 
+  public String getPath() {
+    return getPathNameForPage(sourcePage);
+  }
 
   public String getName() {
     return sourcePage.getName();
