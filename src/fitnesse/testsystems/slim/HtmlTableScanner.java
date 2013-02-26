@@ -8,7 +8,6 @@ import static fitnesse.util.HtmlParserTools.flatClone;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import fitnesse.slim.SlimError;
 import org.htmlparser.Node;
@@ -69,7 +68,6 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
       Node node = nodes.elementAt(i);
       if (node instanceof TableTag) {
         TableTag tableTag = deepClone((TableTag) node);
-        guaranteeThatAllTablesAreUnique(tableTag);
         tables.add(new HtmlTable(tableTag));
         this.nodes.add(tableTag);
       } else {
@@ -91,10 +89,6 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
 
   private boolean needEndTag(Node node) {
     return node instanceof Tag && !((Tag) node).isEmptyXmlTag() && ((Tag) node).getEndTag() != null;
-  }
-
-  private void guaranteeThatAllTablesAreUnique(TableTag tagTable) {
-    tagTable.setAttribute("_TABLENUMBER", ""+ Math.abs((new Random()).nextLong()), '"');
   }
 
   public int getTableCount() {
