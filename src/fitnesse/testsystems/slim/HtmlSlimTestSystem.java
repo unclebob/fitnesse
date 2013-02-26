@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;
@@ -15,15 +16,16 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.ParsedPage;
+import org.htmlparser.Parser;
+import org.htmlparser.lexer.Lexer;
+import org.htmlparser.lexer.Page;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
 
-/*
-TODO: scan for scenario's on each parent level. Create a TestContext for each page level (linking the parent)
-TODO: Ease page loading by parsing the scenario tables only once. figure out what output should look like.
- */
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private HtmlTableScanner tableScanner;
 
-  private Map<String, String> pathToHtmlCache = new HashMap<String, String>();
+  private Map<String, NodeList> pathToHtmlCache = new HashMap<String, NodeList>();
 
   public HtmlSlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
     super(page, descriptor, listener);
@@ -31,13 +33,13 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
 
   @Override
   protected List<SlimTable> createSlimTables(TestPage pageToTest) {
-    String[] fragments = getHtmlFragments(pageToTest);
+    NodeList[] fragments = getHtmlFragments(pageToTest);
     tableScanner = new HtmlTableScanner(fragments);
     return createSlimTables(tableScanner);
   }
 
-  private String[] getHtmlFragments(TestPage pageToTest) {
-    List<String> fragments = new LinkedList<String>();
+  private NodeList[] getHtmlFragments(TestPage pageToTest) {
+    List<NodeList> fragments = new LinkedList<NodeList>();
     for (WikiPage scenario: pageToTest.getScenarioLibraries()) {
       fragments.add(getHtmlFragment(getPathNameForPage(scenario), pageToTest.decorate(scenario)));
     }
@@ -45,28 +47,33 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
       fragments.add(getHtmlFragment(getPathNameForPage(pageToTest.getSetUp()), pageToTest.decorate(pageToTest.getSetUp())));
     }
     if (pageToTest.getSourcePage() != null) {
-      fragments.add(renderPageData(pageToTest.decorate(pageToTest.getSourcePage())));
+      fragments.add(makeNodeList(pageToTest.decorate(pageToTest.getSourcePage())));
     }
     if (pageToTest.getTearDown() != null) {
       fragments.add(getHtmlFragment(getPathNameForPage(pageToTest.getTearDown()), pageToTest.decorate(pageToTest.getTearDown())));
     }
 
-    return fragments.toArray(new String[fragments.size()]);
+    return fragments.toArray(new NodeList[fragments.size()]);
   }
 
-  private String getHtmlFragment(String path, PageData pageData) {
-    String html = pathToHtmlCache.get(path);
-    if (html == null) {
-      html = renderPageData(pageData);
-      pathToHtmlCache.put(path, html);
+  private NodeList getHtmlFragment(String path, PageData pageData) {
+    NodeList nodeList = pathToHtmlCache.get(path);
+    if (nodeList == null) {
+      nodeList = makeNodeList(pageData);
+      pathToHtmlCache.put(path, nodeList);
     }
-    return html;
+    return nodeList;
   }
 
-  private String renderPageData(PageData pageData) {
+  private NodeList makeNodeList(PageData pageData) {
     String html;ParsedPage parsedPage = pageData.getParsedPage();
     html = parsedPage.toHtml();
-    return html;
+    Parser parser = new Parser(new Lexer(new Page(html)));
+    try {
+      return parser.parse(null);
+    } catch (ParserException e) {
+      throw new SlimError(e);
+    }
   }
 
   private String getPathNameForPage(WikiPage page) {
