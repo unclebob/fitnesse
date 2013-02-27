@@ -4,7 +4,7 @@ import fitnesse.slim.SlimException;
 
 import java.util.Arrays;
 
-public class MakeInstruction extends Instruction<MakeInstruction.MakeExecutor> {
+public class MakeInstruction extends Instruction {
   public static final String INSTRUCTION = "make";
   private final String instanceName;
   private final String className;
@@ -22,12 +22,9 @@ public class MakeInstruction extends Instruction<MakeInstruction.MakeExecutor> {
   }
 
   @Override
-  protected Object executeInternal(MakeExecutor executor) throws SlimException {
-    return executor.create(instanceName, className, args);
-  }
-
-  public static interface MakeExecutor extends InstructionExecutor {
-    Object create(String instanceName, String className, Object... constructorArgs) throws SlimException;
+  protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    executor.create(instanceName, className, args);
+    return new InstructionResult.Ok(getId());
   }
 
   @Override

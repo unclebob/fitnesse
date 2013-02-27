@@ -1,34 +1,26 @@
 package fitnesse.slim.instructions;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.anyVararg;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.*;
 
 public class MakeInstructionTest {
   private static final String ID = "id_1";
   private static final String RESULT = "OK";
 
-  private MakeInstruction.MakeExecutor executor;
+  private InstructionExecutor executor;
 
   @Before
   public void setUp() throws Exception {
-    executor = mock(MakeInstruction.MakeExecutor.class);
-
-    when(executor.create(anyString(), anyString(), anyVararg())).thenReturn(RESULT);
+    executor = mock(InstructionExecutor.class);
   }
 
   @Test
   public void shouldDelegateCallToExecutor() throws Exception {
-    MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[] {"arg1", "arg2"});
+    MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[]{"arg1", "arg2"});
 
     instruction.execute(executor);
 
@@ -38,11 +30,12 @@ public class MakeInstructionTest {
   @Test
   @SuppressWarnings("unchecked")
   public void shouldFormatReturnValues() {
-    MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[] {"arg1", "arg2"});
+    MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[]{"arg1", "arg2"});
 
-    List<Object> result = (List<Object>) instruction.execute(executor);
+    InstructionResult result = instruction.execute(executor);
 
-    assertEquals(ID, result.get(0));
-    assertEquals(RESULT, result.get(1));
+    assertEquals(ID, result.getId());
+    assertFalse(result.hasResult());
+    assertFalse(result.hasError());
   }
 }

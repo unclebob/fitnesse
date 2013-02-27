@@ -1,28 +1,22 @@
 package fitnesse.slim.instructions;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 public class ImportInstructionTest {
   private static final String ID = "id_1";
   private static final String RESULT = "OK";
 
-  private ImportInstruction.ImportExecutor executor;
+  private InstructionExecutor executor;
 
   @Before
   public void setUp() throws Exception {
-    executor = mock(ImportInstruction.ImportExecutor.class);
-
-    when(executor.addPath(anyString())).thenReturn(RESULT);
+    executor = mock(InstructionExecutor.class);
   }
 
   @Test
@@ -39,9 +33,11 @@ public class ImportInstructionTest {
   public void shouldFormatReturnValues() {
     ImportInstruction instruction = new ImportInstruction(ID, "path");
 
-    List<Object> result = (List<Object>) instruction.execute(executor);
+    InstructionResult result = instruction.execute(executor);
 
-    assertEquals(ID, result.get(0));
-    assertEquals(RESULT, result.get(1));
+    assertEquals(ID, result.getId());
+    assertFalse(result.hasError());
+    assertTrue(result.hasResult());
+    assertEquals("OK", result.getResult());
   }
 }

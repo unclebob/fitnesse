@@ -5,8 +5,7 @@ import fitnesse.slim.SlimException;
 
 import java.util.Arrays;
 
-public class CallAndAssignInstruction
-    extends Instruction<CallAndAssignInstruction.CallAndAssignExecutor> {
+public class CallAndAssignInstruction extends Instruction {
   public static final String INSTRUCTION = "callAndAssign";
   private String symbolName;
   private String instanceName;
@@ -26,7 +25,7 @@ public class CallAndAssignInstruction
   }
 
   public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName, Object[] args,
-      NameTranslator methodNameTranslator) {
+                                  NameTranslator methodNameTranslator) {
     super(id);
     this.symbolName = symbolName;
     this.instanceName = instanceName;
@@ -35,13 +34,9 @@ public class CallAndAssignInstruction
   }
 
   @Override
-  protected Object executeInternal(CallAndAssignExecutor executor) throws SlimException {
-    return executor.callAndAssign(symbolName, instanceName, methodName, args);
-  }
-
-  public static interface CallAndAssignExecutor extends InstructionExecutor {
-    Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments)
-        throws SlimException;
+  protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    Object result = executor.callAndAssign(symbolName, instanceName, methodName, args);
+    return new InstructionResult(getId(), result);
   }
 
   @Override

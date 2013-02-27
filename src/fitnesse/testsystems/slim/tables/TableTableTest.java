@@ -73,7 +73,7 @@ public class TableTableTest {
   @Test
   public void instructionsForEmptyTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader);
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list()})
     );
@@ -83,7 +83,7 @@ public class TableTableTest {
   @Test
   public void instructionsForTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|a|b|\n|x|y|\n");
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list(list("a", "b"), list("x", "y"))})
     );

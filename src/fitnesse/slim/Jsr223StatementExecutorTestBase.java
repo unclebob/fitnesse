@@ -203,9 +203,8 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
   }
 
   protected void createFixtureInstance(String fixtureClass) throws Exception  {
-    Object created = statementExecutor.create(INSTANCE_NAME, fixtureClass,
+    statementExecutor.create(INSTANCE_NAME, fixtureClass,
         new Object[] {});
-    assertEquals("OK", created);
   }
 
   @Override
@@ -231,9 +230,7 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
   @Override
   protected EchoSupport createEchoLibrary() throws Exception {
     String instanceName = "library" + library++;
-    Object created = statementExecutor.create(instanceName, echoLibraryName(),
-        new Object[] {});
-    assertEquals("OK", created);
+    statementExecutor.create(instanceName, echoLibraryName(), new Object[] {});
     return new EchoSupportJsr223(new FixtureProxyJsr223(statementExecutor
         .getInstance(instanceName)));
   }
@@ -241,9 +238,7 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
   @Override
   protected FileSupport createFileSupportLibrary() throws Exception {
     String instanceName = "library" + library++;
-    Object created = statementExecutor.create(instanceName, fileSupportName(),
-        new Object[] {});
-    assertEquals("OK", created);
+    statementExecutor.create(instanceName, fileSupportName(), new Object[] {});
     return new FileSupportJsr223(new FixtureProxyJsr223(statementExecutor
         .getInstance(instanceName)));
   }

@@ -207,8 +207,7 @@ public abstract class StatementExecutorTestBase {
   protected abstract String fileSupportName();
 
   protected void createFixtureInstance(String fixtureClass) throws Exception {
-    Object created = statementExecutor.create(INSTANCE_NAME, fixtureClass, new Object[] {});
-    assertEquals("OK", created);
+    statementExecutor.create(INSTANCE_NAME, fixtureClass, new Object[] {});
   }
 
   protected Echo getVerifiedInstance() {

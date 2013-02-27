@@ -90,7 +90,7 @@ public class DecisionTableTest {
   @Test
   public void decisionTableCanBeConstructorOnly() throws Exception {
     makeDecisionTableAndBuildInstructions("|fixture|argument|\n");
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("decisionTable_id_0", "decisionTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("decisionTable_id_1", "decisionTable_id", "table", new Object[]{list()})
     );
@@ -113,7 +113,7 @@ public class DecisionTableTest {
   public void canBuildInstructionsForSimpleDecisionTable() throws Exception {
     makeDecisionTableAndBuildInstructions(simpleDecisionTable);
     int n = 0;
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), "decisionTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction(id(n++), "decisionTable_id", "table", new Object[]{list(list("var", "func?"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), "decisionTable_id", "beginTable"),
@@ -143,7 +143,7 @@ public class DecisionTableTest {
       "|3|5|\n" +
       "|7|9|\n");
     int n=0;
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), "decisionTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction(id(n++), "decisionTable_id", "table", new Object[]{list(list("var", "func!"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), "decisionTable_id", "beginTable"),
@@ -169,7 +169,7 @@ public class DecisionTableTest {
       "|a|a|b|b|c|c|d|e|f|d|e|f|\n");
     int n = 0;
 
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), "decisionTable_id", "fixture"),
             new CallInstruction(id(n++),"decisionTable_id", "table", new Object[] {list(
                 list("a", "fa?", "b", "fb?", "c", "fc?", "d", "e", "f", "fd?", "fe?", "ff?"),
@@ -205,7 +205,7 @@ public class DecisionTableTest {
         "|$V|9|\n"
     );
     int n=0;
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), "decisionTable_id", "fixture"),
             new CallInstruction(id(n++), "decisionTable_id", "table", new Object[]{list(list("var", "func?"), list("3", "$V="), list("$V", "9"))}),
             new CallInstruction(id(n++), "decisionTable_id", "beginTable"),

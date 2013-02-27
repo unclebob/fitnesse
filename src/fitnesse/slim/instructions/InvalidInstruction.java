@@ -1,10 +1,11 @@
 package fitnesse.slim.instructions;
 
 import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimServer;
 
 import static java.lang.String.format;
 
-public class InvalidInstruction extends Instruction<InstructionExecutor> {
+public class InvalidInstruction extends Instruction {
   private final String operation;
 
   public InvalidInstruction(String id, String operation) {
@@ -13,7 +14,7 @@ public class InvalidInstruction extends Instruction<InstructionExecutor> {
   }
 
   @Override
-  protected Object executeInternal(InstructionExecutor executor) throws SlimException {
-    throw new SlimException(format("message:<<INVALID_STATEMENT: %s>>", operation));
+  protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    throw new SlimException(operation, SlimServer.MALFORMED_INSTRUCTION, true);
   }
 }

@@ -97,7 +97,7 @@ private void validateConnection() {
     return resultToMap(resultList);
   }
 
-  private interface ToListExecutor extends MakeInstruction.MakeExecutor, ImportInstruction.ImportExecutor, CallInstruction.CallExecutor, CallAndAssignInstruction.CallAndAssignExecutor {
+  private interface ToListExecutor extends InstructionExecutor {
 
   }
 
@@ -106,9 +106,8 @@ private void validateConnection() {
     for (final Instruction instruction: instructions) {
       ToListExecutor executor = new ToListExecutor() {
         @Override
-        public Object addPath(String path) throws SlimException {
+        public void addPath(String path) throws SlimException {
           statementsAsList.add(list(instruction.getId(), ImportInstruction.INSTRUCTION, path));
-          return null;
         }
 
         @Override
@@ -128,11 +127,10 @@ private void validateConnection() {
         }
 
         @Override
-        public Object create(String instanceName, String className, Object... constructorArgs) throws SlimException {
+        public void create(String instanceName, String className, Object... constructorArgs) throws SlimException {
           List<Object> list = ListUtility.list((Object) instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
           addArguments(list, constructorArgs);
           statementsAsList.add(list);
-          return null;
         }
       };
 

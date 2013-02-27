@@ -1,16 +1,12 @@
 package fitnesse.slim.instructions;
 
 import fitnesse.slim.SlimException;
-import fitnesse.slim.SlimServer;
 
-import static java.lang.String.format;
-import static util.ListUtility.list;
-
-public abstract class Instruction<T extends InstructionExecutor> {
-  public static Instruction NOOP_INSTRUCTION = new Instruction("NOOP") {
+public abstract class Instruction {
+  public static final Instruction NOOP_INSTRUCTION = new Instruction("NOOP") {
     @Override
-    protected Object executeInternal(InstructionExecutor executor) throws SlimException {
-      return null;
+    protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+      return new InstructionResult.Void(getId());
     }
   };
 
@@ -21,21 +17,20 @@ public abstract class Instruction<T extends InstructionExecutor> {
   }
 
   public String getId() {
-    return id;
+    return this.id;
   }
 
-  public Object execute(T executor) {
-    Object result;
+  public final InstructionResult execute(InstructionExecutor executor) {
+    InstructionResult result;
     try {
       result = executeInternal(executor);
     } catch (SlimException e) {
-      result = format("%s%s", SlimServer.EXCEPTION_TAG, e.getMessage());
+      result = new InstructionResult.Error(getId(), e);
     }
-    return list(id, result);
+    return result;
   }
 
-  protected abstract Object executeInternal(T executor) throws SlimException;
-
+  protected abstract InstructionResult executeInternal(InstructionExecutor executor) throws SlimException;
 
   @Override
   public String toString() {

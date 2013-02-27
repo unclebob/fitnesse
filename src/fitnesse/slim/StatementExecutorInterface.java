@@ -1,13 +1,8 @@
 package fitnesse.slim;
 
-import fitnesse.slim.instructions.CallAndAssignInstruction;
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.ImportInstruction;
-import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.slim.instructions.InstructionExecutor;
 
-public interface StatementExecutorInterface
-    extends CallAndAssignInstruction.CallAndAssignExecutor, CallInstruction.CallExecutor,
-    ImportInstruction.ImportExecutor, MakeInstruction.MakeExecutor {
+public interface StatementExecutorInterface extends InstructionExecutor {
 
   public abstract void setVariable(String name, Object value);
 

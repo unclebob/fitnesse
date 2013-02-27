@@ -81,7 +81,7 @@ public abstract class QueryTableBaseTest {
   @SuppressWarnings("unchecked")
   public void instructionsForQueryTable() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader);
-    List<Instruction<? extends InstructionExecutor>> expectedInstructions = list(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("queryTable_id_0", "queryTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{list(list("n", "2n"))}),
             new CallInstruction("queryTable_id_2", "queryTable_id", "query")

@@ -5,7 +5,7 @@ import fitnesse.slim.SlimException;
 
 import java.util.Arrays;
 
-public class CallInstruction extends Instruction<CallInstruction.CallExecutor> {
+public class CallInstruction extends Instruction {
   public static final String INSTRUCTION = "call";
   private String instanceName;
   private String methodName;
@@ -23,7 +23,7 @@ public class CallInstruction extends Instruction<CallInstruction.CallExecutor> {
   }
 
   public CallInstruction(String id, String instanceName, String methodName, Object[] args,
-      NameTranslator methodNameTranslator) {
+                         NameTranslator methodNameTranslator) {
     super(id);
     this.instanceName = instanceName;
     this.methodName = methodNameTranslator.translate(methodName);
@@ -31,12 +31,9 @@ public class CallInstruction extends Instruction<CallInstruction.CallExecutor> {
   }
 
   @Override
-  protected Object executeInternal(CallExecutor executor) throws SlimException {
-    return executor.call(this.instanceName, this.methodName, this.args);
-  }
-
-  public static interface CallExecutor extends InstructionExecutor {
-    Object call(String instanceName, String methodName, Object... arguments) throws SlimException;
+  protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    Object result = executor.call(this.instanceName, this.methodName, this.args);
+    return new InstructionResult(getId(), result);
   }
 
   @Override

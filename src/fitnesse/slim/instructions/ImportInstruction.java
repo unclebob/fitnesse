@@ -2,7 +2,7 @@ package fitnesse.slim.instructions;
 
 import fitnesse.slim.SlimException;
 
-public class ImportInstruction extends Instruction<ImportInstruction.ImportExecutor> {
+public class ImportInstruction extends Instruction {
   public static final String INSTRUCTION = "import";
   private String path;
 
@@ -12,12 +12,9 @@ public class ImportInstruction extends Instruction<ImportInstruction.ImportExecu
   }
 
   @Override
-  protected Object executeInternal(ImportExecutor executor) throws SlimException {
-    return executor.addPath(this.path);
-  }
-
-  public static interface ImportExecutor extends InstructionExecutor {
-    Object addPath(String path) throws SlimException;
+  protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    executor.addPath(this.path);
+    return new InstructionResult.Ok(getId());
   }
 
   @Override
