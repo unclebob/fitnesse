@@ -52,7 +52,7 @@ public class FitTestSystem extends TestSystem {
     String command = buildCommand(descriptor);
     Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
     client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
-    client.start();
     setExecutionLog(new ExecutionLog(page, client.commandRunner));
+    client.start();
   }
 }

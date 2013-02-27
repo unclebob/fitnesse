@@ -95,6 +95,7 @@ public abstract class SlimTestSystem extends TestSystem {
     } else {
       slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
+    setExecutionLog(new ExecutionLog(page, slimRunner));
 
     slimRunner.asynchronousStart();
 
@@ -105,7 +106,6 @@ public abstract class SlimTestSystem extends TestSystem {
     } catch (SlimError e) {
       exceptionOccurred(e);
     }
-    setExecutionLog(new ExecutionLog(page, slimRunner));
   }
 
   public void bye() throws IOException {
