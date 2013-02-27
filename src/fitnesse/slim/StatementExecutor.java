@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.converters.MapEditor;
+
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -9,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.converters.MapEditor;
-
 import static java.lang.String.format;
 
-/** This is the API for executing a SLIM statement. This class should not know about the syntax of a SLIM statement. */
+/**
+ * This is the API for executing a SLIM statement. This class should not know about the syntax of a SLIM statement.
+ */
 
 public class StatementExecutor implements StatementExecutorInterface {
   private static final String SLIM_HELPER_LIBRARY_INSTANCE_NAME = "SlimHelperLibrary";
@@ -59,9 +61,8 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public Object addPath(String path) {
+  public void addPath(String path) throws SlimException {
     context.addPath(path);
-    return "OK";
   }
 
   @Override
@@ -70,7 +71,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public Object create(String instanceName, String className, Object[] args) {
+  public void create(String instanceName, String className, Object[] args) throws SlimException {
     try {
       context.create(instanceName, className, args);
       // TODO Hack for supporting SlimHelperLibrary, please remove.
@@ -78,41 +79,41 @@ public class StatementExecutor implements StatementExecutorInterface {
       if (newInstance instanceof StatementExecutorConsumer) {
         ((StatementExecutorConsumer) newInstance).setStatementExecutor(this);
       }
-      return "OK";
     } catch (SlimError e) {
-      return couldNotInvokeConstructorException(className, args);
+      throw new SlimException(format("%s[%d]", className, args.length), e, SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR,
+          true);
     } catch (IllegalArgumentException e) {
-      return couldNotInvokeConstructorException(className, args);
+      throw new SlimException(format("%s[%d]", className, args.length), e, SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR,
+          true);
     } catch (Throwable e) {
-      return exceptionToString(e);
+      checkExceptionForStop(e);
+      throw new SlimException(e);
     }
   }
 
   @Override
-  public Object call(String instanceName, String methodName, Object... args) {
+  public Object call(String instanceName, String methodName, Object... args) throws SlimException {
     try {
-      return getMethodExecutionResult(instanceName, methodName, args)
-          .returnValue();
+      return getMethodExecutionResult(instanceName, methodName, args).returnValue();
     } catch (Throwable e) {
-      return exceptionToString(e);
+      checkExceptionForStop(e);
+      throw new SlimException(e);
     }
   }
 
   @Override
-  public Object callAndAssign(String variable, String instanceName,
-      String methodName, Object[] args) {
+  public Object callAndAssign(String variable, String instanceName, String methodName, Object[] args) throws SlimException {
     try {
-      MethodExecutionResult result = getMethodExecutionResult(
-          instanceName, methodName, args);
+      MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
       context.setVariable(variable, result);
       return result.returnValue();
     } catch (Throwable e) {
-      return exceptionToString(e);
+      checkExceptionForStop(e);
+      throw new SlimException(e);
     }
   }
 
-  private MethodExecutionResult getMethodExecutionResult(String instanceName,
-      String methodName, Object... args) throws Throwable {
+  private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args) throws Throwable {
     MethodExecutionResults results = new MethodExecutionResults();
     for (int i = 0; i < executorChain.size(); i++) {
       MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName, context.replaceSymbols(args));
@@ -124,23 +125,10 @@ public class StatementExecutor implements StatementExecutorInterface {
     return results.getFirstResult();
   }
 
-  private String exceptionToString(Throwable exception) {
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter pw = new PrintWriter(stringWriter);
-    exception.printStackTrace(pw);
+  private void checkExceptionForStop(Throwable exception) {
     if (exception.getClass().toString().contains("StopTest")) {
       stopRequested = true;
-      return SlimServer.EXCEPTION_STOP_TEST_TAG + stringWriter.toString();
-    } else {
-      return SlimServer.EXCEPTION_TAG + stringWriter.toString();
     }
-  }
-
-  private String couldNotInvokeConstructorException(String className,
-      Object[] args) {
-    return exceptionToString(new SlimError(format(
-        "message:<<%s %s[%d]>>", SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR, className,
-        args.length)));
   }
 
   @Override
