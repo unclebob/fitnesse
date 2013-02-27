@@ -16,15 +16,25 @@ public class TestPageWithSuiteSetUpAndTearDown extends TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    includePage(getSuiteSetUp(), "-setup", decoratedContent);
-    includePage(getSetUp(), "-setup", decoratedContent);
+    decorate(getSuiteSetUp(), decoratedContent);
+
+    decorate(getSetUp(), decoratedContent);
 
     decoratedContent.append(parsedData().getContent());
 
-    includePage(getTearDown(), "-teardown", decoratedContent);
-    includePage(getSuiteTearDown(), "-teardown", decoratedContent);
+    decorate(getTearDown(), decoratedContent);
+
+    decorate(getSuiteTearDown(), decoratedContent);
 
     return new PageData(getSourcePage(), decoratedContent.toString());
+  }
+
+  protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
+    if (wikiPage == getSuiteSetUp() || wikiPage == getSuiteTearDown()) {
+      includePage(wikiPage, true, decoratedContent);
+    } else {
+      super.decorate(wikiPage, decoratedContent);
+    }
   }
 
   public WikiPage getSuiteSetUp() {
