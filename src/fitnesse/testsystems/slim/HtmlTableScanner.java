@@ -2,8 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import static fitnesse.util.HtmlParserTools.deepClone;
-import static fitnesse.util.HtmlParserTools.flatClone;
+import static fitnesse.util.HtmlParserTools.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,20 +11,15 @@ import java.util.List;
 import fitnesse.slim.SlimError;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
-import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-// TODO: TableScanner should return a list of Tables and page content nodes
-// TODO: Need logic to split (by clone) data blocks and and to render (to html) those blocks
 public class HtmlTableScanner implements TableScanner<HtmlTable> {
 
-  // This should contain content blobs (List<Object>?)
   private List<HtmlTable> tables = new ArrayList<HtmlTable>(16);
-  // TODO: use NodeList instead?
   private List<Node> nodes = new ArrayList<Node>(512);
 
   public HtmlTableScanner(String page) {
@@ -36,21 +30,6 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
     try {
       Parser parser = new Parser(new Lexer(new Page(page)));
       htmlTree = parser.parse(null);
-    } catch (ParserException e) {
-      throw new SlimError(e);
-    }
-    scanForTables(htmlTree);
-  }
-
-  public HtmlTableScanner(String... fragments) {
-    NodeList htmlTree;
-    try {
-      htmlTree = new NodeList();
-      for (String fragment: fragments) {
-        Parser parser = new Parser(new Lexer(new Page(fragment)));
-        NodeList tree = parser.parse(null);
-        htmlTree.add(tree);
-      }
     } catch (ParserException e) {
       throw new SlimError(e);
     }
@@ -71,24 +50,19 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
         tables.add(new HtmlTable(tableTag));
         this.nodes.add(tableTag);
       } else {
-        Node newNode = flatClone(node);
-        this.nodes.add(newNode);
+        this.nodes.add(flatClone(node));
+
         NodeList children = node.getChildren();
         if (children != null) {
           scanForTables(children);
         }
 
-        if (needEndTag(node)) {
-          // No copying required since the node is not modified and has no children.
-          this.nodes.add(((Tag) node).getEndTag());
-          ((Tag) newNode).setEndTag(null);
+        Node endNode = endTag(node);
+        if (endNode != null) {
+          this.nodes.add(endNode);
         }
       }
     }
-  }
-
-  private boolean needEndTag(Node node) {
-    return node instanceof Tag && !((Tag) node).isEmptyXmlTag() && ((Tag) node).getEndTag() != null;
   }
 
   public int getTableCount() {

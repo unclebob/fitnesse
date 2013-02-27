@@ -23,6 +23,9 @@ public final class HtmlParserTools {
     if (node == null) return null;
     Node newNode = cloneOnlyNode(node, null);
     newNode.setChildren(new NodeList());
+    if (newNode instanceof Tag) {
+      ((Tag) newNode).setEndTag(null);
+    }
     return newNode;
   }
 
@@ -46,6 +49,17 @@ public final class HtmlParserTools {
     return (T) deepClone(new NodeList(node), null).elementAt(0);
   }
 
+  /**
+   * Get closing node for this node, if any.
+   * @param node
+   * @return node or null
+   */
+  public static Node endTag(Node node) {
+    // No copying required since the node is not modified and has no children.
+    return node instanceof Tag ? ((Tag) node).getEndTag() : null;
+  }
+
+
   private static NodeList deepClone(NodeList tree, Node clonedParent) {
     NodeList newNodeList = new NodeList();
     for (int i = 0; i < tree.size(); i++) {
@@ -68,7 +82,8 @@ public final class HtmlParserTools {
     }
     node.setParent(clonedParent);
     if (newNode instanceof Tag) {
-      ((Tag) newNode).setAttributesEx(cloneAttributes(((Tag) node).getAttributesEx()));
+      Tag newTag = (Tag) newNode;
+      newTag.setAttributesEx(cloneAttributes(((Tag) node).getAttributesEx()));
     }
     return newNode;
   }
