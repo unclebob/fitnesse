@@ -12,9 +12,14 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.testsystems.TestPage;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -60,15 +65,28 @@ public class VersionResponder implements SecureResponder {
   }
   
   public class VersionRenderer {
-    private PageData pageData;
-    
+    private final PageData pageData;
+
     public VersionRenderer(PageData pageData) {
       super();
       this.pageData = pageData;
     }
 
     public String render() {
-      return HtmlUtil.makeNormalWikiPageContent(pageData);
+        PageData data;
+        if (isTestPage(pageData)) {
+          TestPage testPage = new TestPage(pageData);
+          data = testPage.getDecoratedData();
+        } else {
+          data = pageData;
+        }
+        return HtmlUtil.makePageHtml(data);
+
     }
+
+    private boolean isTestPage(PageData pageData) {
+      return pageData.hasAttribute("Test");
+    }
+
   }
 }

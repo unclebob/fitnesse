@@ -1,7 +1,5 @@
 package fitnesse.testsystems;
 
-import org.junit.Before;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import fitnesse.FitNesse;
@@ -12,6 +10,8 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestSystemTest {
 
@@ -128,4 +128,12 @@ public class TestSystemTest {
     assertEquals(fitnesseRootpath + "/rubyslim.rb", myDescriptor.getTestRunner());
   }
 
+  @Test
+  public void shouldReplaceMarkWithValue() {
+    assertEquals("Hello world", TestSystem.replace("Hello %p", "%p", "world"));
+    assertEquals("/path/to/somewhere", TestSystem.replace("/path/%p/somewhere", "%p", "to"));
+    assertEquals("/path/to/somewhere", TestSystem.replace("/path%p", "%p", "/to/somewhere"));
+    assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path\\%p\\somewhere", "%p", "to"));
+    assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path%p", "%p", "\\to\\somewhere"));
+  }
 }

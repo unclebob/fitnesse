@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 
 import util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

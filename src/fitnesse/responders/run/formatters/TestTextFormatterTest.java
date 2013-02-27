@@ -4,7 +4,7 @@ import static org.mockito.Mockito.*;
 
 import java.text.SimpleDateFormat;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.Test;
 
 import util.TimeMeasurement;

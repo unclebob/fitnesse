@@ -9,7 +9,6 @@ import java.util.Map;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
-import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
@@ -61,9 +60,9 @@ public class TestSystemGroup {
       testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
 
-      // TODO: Need to pass classPath to test system.
-      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
       testSystem.start();
+
+      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
     }
     return testSystem;
   }

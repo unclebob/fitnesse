@@ -2,7 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;

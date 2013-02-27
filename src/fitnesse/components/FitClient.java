@@ -93,7 +93,7 @@ public class FitClient {
         String readValue = fitOutput.read(size);
         if (fitOutput.byteCount() < size)
           throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-        listener.acceptOutputFirst(readValue);
+        listener.testOutputChunk(readValue);
       } else {
         Counts counts = FitProtocol.readCounts(fitOutput);
         TestSummary summary = new TestSummary();

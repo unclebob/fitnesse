@@ -6,7 +6,7 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.*;
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
@@ -31,14 +31,14 @@ public class DecisionTableTest {
       "|3|5|\n" +
       "|7|9|\n";
   private DecisionTable decisionTable;
-  private MockSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
   private List<Assertion> assertions;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<Assertion>();
-    testContext = new MockSlimTestContext();
+    testContext = new SlimTestContextImpl();
   }
 
 

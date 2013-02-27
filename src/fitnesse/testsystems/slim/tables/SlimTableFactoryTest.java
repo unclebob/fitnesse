@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class SlimTableFactoryTest {
 
   private void assertThatTableTypeCreateSlimTableType(String tableType, Class<? extends SlimTable> expectedClass) {
     when(table.getCellContents(0, 0)).thenReturn(tableType);
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new MockSlimTestContext());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
     String message = "should have created a " + expectedClass + " for tabletype: " + tableType
         + " but was " + slimTable.getClass();
     assertThat(message, slimTable, instanceOf(expectedClass));
@@ -90,6 +90,6 @@ public class SlimTableFactoryTest {
     when(table.getRowCount()).thenReturn(2);
     when(table.getColumnCountInRow(0)).thenReturn(1);
     when(table.getColumnCountInRow(1)).thenReturn(2);
-    slimTableFactory.makeSlimTable(table, "0", new MockSlimTestContext());
+    slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
   }
 }

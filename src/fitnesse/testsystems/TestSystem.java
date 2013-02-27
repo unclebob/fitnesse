@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.regex.Matcher;
+
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.PageFactory;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -10,11 +15,6 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
-
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.Collections;
-import java.util.Map;
 
 public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_COMMAND_PATTERN =
@@ -25,23 +25,16 @@ public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
-  protected WikiPage page;
+  protected final WikiPage page;
+  protected final TestSystemListener testSystemListener;
   protected boolean fastTest;
   protected boolean manualStart;
-  protected TestSystemListener testSystemListener;
-  protected ExecutionLog log;
+  private ExecutionLog log;
 
   public TestSystem(WikiPage page, TestSystemListener testSystemListener) {
     this.page = page;
     this.testSystemListener = testSystemListener;
   }
-
-  public ExecutionLog getExecutionLog() throws SocketException {
-    log = createExecutionLog();
-    return log;
-  }
-
-  protected abstract ExecutionLog createExecutionLog() throws SocketException;
 
   protected String buildCommand(TestSystem.Descriptor descriptor) {
     String commandPattern = descriptor.getCommandPattern();
@@ -50,13 +43,8 @@ public abstract class TestSystem implements TestSystemListener {
     return command;
   }
 
-  // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
   protected static String replace(String value, String mark, String replacement) {
-    int index = value.indexOf(mark);
-    if (index == -1)
-      return value;
-
-    return value.substring(0, index) + replacement + value.substring(index + mark.length());
+    return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
   }
 
   public void setFastTest(boolean fastTest) {
@@ -73,8 +61,8 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   @Override
-  public void acceptOutputFirst(String output) throws IOException {
-    testSystemListener.acceptOutputFirst(output);
+  public void testOutputChunk(String output) throws IOException {
+    testSystemListener.testOutputChunk(output);
   }
 
   @Override
@@ -85,7 +73,6 @@ public abstract class TestSystem implements TestSystemListener {
   @Override
   public void exceptionOccurred(Throwable e) {
     log.addException(e);
-    log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
     testSystemListener.exceptionOccurred(e);
   }
 
@@ -107,7 +94,15 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws IOException;
 
-  public abstract void runTests(ReadOnlyPageData pageData) throws IOException, InterruptedException;
+  public abstract void runTests(TestPage pageToTest) throws IOException, InterruptedException;
+
+  public final ExecutionLog getExecutionLog() {
+    return log;
+  }
+
+  protected final void setExecutionLog(final ExecutionLog log) {
+    this.log = log;
+  }
 
   public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
     return new Descriptor(page, pageFactory, isRemoteDebug);

@@ -2,6 +2,7 @@ package fitnesse.responders.run;
 
 import java.io.IOException;
 
+import fitnesse.testsystems.TestPage;
 import util.TimeMeasurement;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;

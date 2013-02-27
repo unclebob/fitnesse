@@ -2,9 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.html.SetupTeardownAndLibraryIncluder;
+import fitnesse.testsystems.PageListSetUpTearDownSurrounder;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystem.Descriptor;
@@ -15,12 +22,6 @@ import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -127,8 +128,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
-      SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
-      testSystem.runTests(testPage.getDecoratedData());
+      testSystem.runTests(testPage);
     }
   }
 
@@ -191,7 +191,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     totalTestTime = new TimeMeasurement().start();
   }
 
-  public void acceptOutputFirst(String output) throws IOException {
+  public void testOutputChunk(String output) throws IOException {
     TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {

@@ -10,7 +10,7 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
@@ -34,7 +34,7 @@ public class ScriptTableTest {
   private List<Assertion> assertions;
   private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
-  private MockSlimTestContext testContext;
+  private SlimTestContextImpl testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -52,7 +52,7 @@ public class ScriptTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
+    testContext = new SlimTestContextImpl();
     return new ScriptTable(t, "id", testContext);
   }
 

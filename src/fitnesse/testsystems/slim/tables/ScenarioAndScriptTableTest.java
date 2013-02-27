@@ -6,7 +6,7 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.MockSlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.InMemoryPage;
@@ -22,7 +22,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class ScenarioAndScriptTableTest extends MockSlimTestContext {
+public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
   private WikiPage root;
   private List<Assertion> assertions;
   private ScenarioTable st;
