@@ -41,7 +41,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
     repository.open(TEST_NAME);
     repository.close();
     
-    String heading = evaluateXPathAgainstOutputHtml("/html/body/h2/text()");
+    String heading = evaluateXPathAgainstOutputHtml("/html/body/header/h2/text()");
     assertEquals(TEST_NAME, heading);
   }
 
