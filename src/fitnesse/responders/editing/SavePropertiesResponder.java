@@ -53,20 +53,6 @@ public class SavePropertiesResponder implements SecureResponder {
         data.removeAttribute(attribute);
     }
 
-    String value = (String) request.getInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
-    value = value == null ? "" : value;
-    if (!value.equals(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))) {
-      WikiPage page = data.getWikiPage();
-      if (page.hasExtension(VirtualCouplingExtension.NAME)) {
-        VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
-        extension.resetVirtualCoupling();
-      }
-    }
-    if ("".equals(value) || value == null)
-      data.removeAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
-    else
-      data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, value);
-
     String suites = (String) request.getInput("Suites");
     data.setAttribute(PageData.PropertySUITES, suites);
 

@@ -99,7 +99,6 @@ public class ClassPathBuilderTest extends RegexTestCase {
   public void testThatPathsWithSpacesGetQuoted() throws Exception {
     crawler.addPage(root, somePagePath, "!path Some File.jar");
     crawler = root.getPageCrawler();
-    crawler.setDeadEndStrategy(new MockingPageCrawler());
     WikiPage page = crawler.getPage(root, somePagePath);
 
     assertEquals("\"Some File.jar\"", builder.getClasspath(page));
