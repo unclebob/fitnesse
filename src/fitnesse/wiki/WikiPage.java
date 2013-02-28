@@ -9,10 +9,6 @@ import java.util.List;
 public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getParent();
 
-  WikiPage getParentForVariables();
-
-  void setParentForVariables(WikiPage parent);
-
   WikiPage addChildPage(String name);
 
   boolean hasChildPage(String name);
