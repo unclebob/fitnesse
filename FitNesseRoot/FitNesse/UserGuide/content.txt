@@ -1,8 +1,8 @@
 !1 !c !-FitNesse-! User Guide
-!c Robert C. Martin
-!c Micah D. Martin
-!c Patrick Wilson-Welsh
-!c October, 2008
+!c Robert C. Martin,
+!c Micah D. Martin,
+!c Patrick Wilson-Welsh &
+!c !-FitNesse-! contributors
 ----
 !2 Getting Started
 What !-FitNesse-! is, a brief example, and how to install it on your computer.
