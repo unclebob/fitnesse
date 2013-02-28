@@ -1,5 +1,10 @@
 package fitnesse.responders.run;
 
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,11 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import util.TimeMeasurement;
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -46,13 +46,6 @@ public class JavaFormatter extends BaseFormatter {
       initFolder(fitNesseRoot);
     }
 
-    public void close() throws IOException {
-      if (currentWriter != null) {
-        currentWriter.write("</body></html>");
-        currentWriter.close();
-      }
-    }
-
     public void open(String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
       currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
@@ -60,27 +53,35 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write("<html><head><title>");
       currentWriter.write(testName);
       currentWriter
-          .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
-              + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
+        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+          + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
+          + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
+          + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
       currentWriter.write(testName);
-      currentWriter.write("</h2>");
+      currentWriter.write("</h2></header><article>");
 
+    }
+
+    public void close() throws IOException {
+      if (currentWriter != null) {
+        currentWriter.write("</article></body></html>");
+        currentWriter.close();
+      }
     }
 
     public void write(String content) throws IOException {
       currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
     }
 
-    public void addFile(String r, String relativeFilePath) throws IOException {
+    public void addFile(String resource, String relativeFilePath) throws IOException {
       File dst = new File(outputPath, relativeFilePath);
       dst.getParentFile().mkdirs();
-      copy(r, dst);
+      copy(resource, dst);
     }
 
-    private void copy(String src, File dst) throws IOException {
-      InputStream in = getClass().getResourceAsStream(src);
-      OutputStream out = new FileOutputStream(dst);
+    private void copy(String source, File destination) throws IOException {
+      InputStream in = getClass().getResourceAsStream(source);
+      OutputStream out = new FileOutputStream(destination);
       // Transfer bytes from in to out
       byte[] buf = new byte[1024];
       int len;
@@ -94,9 +95,10 @@ public class JavaFormatter extends BaseFormatter {
     private void initFolder(String fitnesseRoot) throws IOException {
       String base = "/fitnesse/resources/";
       String cssDir = base + "css/";
-      addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
+      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse.css");
       String javascriptDir = base + "javascript/";
-      addFile(javascriptDir + "fitnesse.js", "fitnesse.js");
+      addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
+      addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
       String imagesDir = base + "images/";
       addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
       addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
@@ -162,7 +164,9 @@ public class JavaFormatter extends BaseFormatter {
 
   }
 
-  /** package-private to prevent instantiation apart from getInstance and tests */
+  /**
+   * package-private to prevent instantiation apart from getInstance and tests
+   */
   JavaFormatter(String suiteName) {
     this.mainPageName = suiteName;
   }
@@ -198,11 +202,11 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   public String summaryRow(String testName, TestSummary testSummary) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
-        "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
-        "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
-        .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
+      "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
+      "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
+      .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
     return sb.toString();
   }
 
