@@ -37,7 +37,6 @@ public class ExecutionLog {
     this.pageFactory = pageFactory;
     
     crawler = testPage.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     root = crawler.getRoot(testPage);
     errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ErrorLogName);
     errorLogPageName = PathParser.render(errorLogPagePath);

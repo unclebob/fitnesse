@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import java.io.IOException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -17,6 +15,8 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.wiki.*;
+
+import java.io.IOException;
 
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
@@ -47,7 +47,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);
     if (page != null)
       pageData = page.getData();

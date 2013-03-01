@@ -1,22 +1,15 @@
 package fitnesse.components;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   WikiPage root;
@@ -38,7 +31,6 @@ public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
     crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
     pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = pageTwo.getData();
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.PORT + "/PageOne");
     pageTwo.commit(data);
     hits.clear();
   }

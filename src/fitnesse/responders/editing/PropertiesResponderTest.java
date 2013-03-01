@@ -47,7 +47,6 @@ public void setUp() throws Exception {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Page Tags");
     properties.set("Test", "true");
-    properties.set(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
     page.commit(data);
 
     MockRequest request = new MockRequest();
@@ -59,7 +58,6 @@ public void setUp() throws Exception {
 
     String content = response.getContent();
     assertSubString("PageOne", content);
-    assertSubString("value=\"http://www.fitnesse.org\"", content);
     assertDoesntHaveRegexp("textarea name=\"extensionXml\"", content);
     assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
@@ -111,16 +109,6 @@ public void setUp() throws Exception {
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
-  }
-
-  public void testGetVirtualWikiValue() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
-    PageData data = page.getData();
-
-    assertEquals("", PropertiesResponder.getVirtualWikiValue(data));
-
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.objectmentor.com");
-    assertEquals("http://www.objectmentor.com", PropertiesResponder.getVirtualWikiValue(data));
   }
 
   public void testUsernameDisplayed() throws Exception {

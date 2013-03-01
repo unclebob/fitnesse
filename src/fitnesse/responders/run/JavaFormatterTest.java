@@ -1,11 +1,12 @@
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.*;
-import static org.mockito.Mockito.*;
+import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
-import fitnesse.wiki.WikiPageDummy;
+
+import static junit.framework.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class JavaFormatterTest {
 
@@ -57,11 +58,14 @@ public class JavaFormatterTest {
     secondPage.setParent(new WikiPageDummy("root", null));
     jf.testComplete(new TestPage(secondPage), new TestSummary(11,12,13,14), timeMeasurement.stop());
     jf.writeSummary("SummaryPageName");
+    String expectedOutput = new StringBuffer()
+            .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_HEADER)
+            .append(new JavaFormatter.TestResultsSummaryTableRow(nestedPageName, new TestSummary(5,6,7,8)).toString())
+            .append(new JavaFormatter.TestResultsSummaryTableRow("SecondPage", new TestSummary(11,12,13,14)).toString())
+            .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_FOOTER)
+            .toString();
     verify(mockResultsRepository).open("SummaryPageName");
-    verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_HEADER);
-    verify(mockResultsRepository, times(1)).write(jf.summaryRow(nestedPageName, new TestSummary(5,6,7,8)));
-    verify(mockResultsRepository, times(1)).write(jf.summaryRow("SecondPage", new TestSummary(11,12,13,14)));
-    verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_FOOTER);
+    verify(mockResultsRepository, times(1)).write(expectedOutput);
   }
   @Test
   public void testComplete_clones_TestSummary_Objects() throws Exception{
@@ -77,15 +81,15 @@ public class JavaFormatterTest {
   }
   @Test
   public void summaryRowFormatsTestOutputRows(){
-    assertEquals("pass, no errors or exceptions", 
-        "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,0,0,0)));
+    assertEquals("pass, no errors or exceptions",
+            "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
+            new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 0, 0, 0)).toString());
     assertEquals("red, 1 error ", 
         "<tr class=\"fail\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>1</td><td>0</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,1,0,0)));
-    assertEquals("error,exceptions", 
-        "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,6,0,7)));
+        new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5,1,0,0)).toString());
+    assertEquals("error,exceptions",
+            "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
+            new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 6, 0, 7)).toString());
   }
   @Test
   public void testOutputChunk_forwardsWriteToResultRepository() throws Exception{

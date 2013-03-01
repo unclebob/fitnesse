@@ -32,7 +32,6 @@ public class InMemoryPage extends CommitingPage {
 
   protected InMemoryPage(String name, WikiPage parent) {
     super(name, parent);
-    addExtention(new VirtualCouplingExtension(this));
     versions.put(currentVersionName, new PageData(this, ""));
   }
 

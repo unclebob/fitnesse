@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -19,6 +15,10 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -59,10 +59,8 @@ public class VersionResponder implements SecureResponder {
     Collections.sort(versions);
     Collections.reverse(versions);
     String nextVersion = selectNextVersion(versions, version);
-    html.put("nextVersionNavigable", nextVersion!=null);
     html.put("nextVersion", nextVersion);
     String previousVersion = selectPreviousVersion(versions, version);
-    html.put("previousVersionNavigable", previousVersion!=null);
     html.put("previousVersion", previousVersion);
 
     html.setMainTemplate("wikiPage");

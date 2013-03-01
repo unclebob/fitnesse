@@ -1,21 +1,15 @@
 package fitnesse.responders.run;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import util.TimeMeasurement;
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -26,8 +20,6 @@ public class JavaFormatter extends BaseFormatter {
 
   private String mainPageName;
   private boolean isSuite = true;
-  public static final String SUMMARY_FOOTER = "</table>";
-  public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
 
   public interface ResultsRepository {
     void open(String string) throws IOException;
@@ -37,49 +29,9 @@ public class JavaFormatter extends BaseFormatter {
     void write(String content) throws IOException;
   }
 
-  public static class FolderResultsRepository implements ResultsRepository {
-    private String outputPath;
-    private Writer currentWriter;
-
-    public FolderResultsRepository(String outputPath, String fitNesseRoot) throws IOException {
-      this.outputPath = outputPath;
-      initFolder(fitNesseRoot);
-    }
-
-    public void close() throws IOException {
-      if (currentWriter != null) {
-        currentWriter.write("</body></html>");
-        currentWriter.close();
-      }
-    }
-
-    public void open(String testName) throws IOException {
-      File outputFile = new File(outputPath, testName + ".html");
-      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
-
-      currentWriter.write("<html><head><title>");
-      currentWriter.write(testName);
-      currentWriter
-          .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
-              + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
-      currentWriter.write(testName);
-      currentWriter.write("</h2>");
-
-    }
-
-    public void write(String content) throws IOException {
-      currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
-    }
-
-    public void addFile(String r, String relativeFilePath) throws IOException {
-      File dst = new File(outputPath, relativeFilePath);
-      dst.getParentFile().mkdirs();
-      copy(r, dst);
-    }
-
-    private void copy(String src, File dst) throws IOException {
-      InputStream in = getClass().getResourceAsStream(src);
+  public static class FileCopier {
+    public static void copy(String src, File dst) throws IOException {
+      InputStream in = FileCopier.class.getResourceAsStream(src);
       OutputStream out = new FileOutputStream(dst);
       // Transfer bytes from in to out
       byte[] buf = new byte[1024];
@@ -90,13 +42,75 @@ public class JavaFormatter extends BaseFormatter {
       in.close();
       out.close();
     }
+  }
 
-    private void initFolder(String fitnesseRoot) throws IOException {
+  public static class TestResultPage {
+    private OutputStreamWriter currentWriter;
+
+    public TestResultPage(String outputPath, String testName) throws IOException, UnsupportedEncodingException {
+      File outputFile = new File(outputPath, testName + ".html");
+      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+      writeHeaderFor(testName);
+    }
+
+    public void appendResultChunk(String content) throws IOException {
+      currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
+    }
+
+    private void writeHeaderFor(String testName) throws IOException {
+      currentWriter.write("<html><head><title>");
+      currentWriter.write(testName);
+      currentWriter
+        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+          + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
+          + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
+          + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
+      currentWriter.write(testName);
+      currentWriter.write("</h2></header><article>");
+    }
+
+    public void finish() throws IOException {
+      if (currentWriter != null) {
+        currentWriter.write("</article></body></html>");
+        currentWriter.close();
+      }
+    }
+  }
+  
+  public static class FolderResultsRepository implements ResultsRepository {
+    private String outputPath;
+    private TestResultPage testResultPage;
+
+    public FolderResultsRepository(String outputPath) throws IOException {
+      this.outputPath = outputPath;
+      copyAssets();
+    }
+
+    public void close() throws IOException {
+      testResultPage.finish();
+    }
+
+    public void open(String testName) throws IOException {
+      testResultPage = new TestResultPage(outputPath, testName);
+    }
+
+    public void write(String content) throws IOException {
+      testResultPage.appendResultChunk(content);
+    }
+
+    public void addFile(String resource, String relativeFilePath) throws IOException {
+      File dst = new File(outputPath, relativeFilePath);
+      dst.getParentFile().mkdirs();
+      FileCopier.copy(resource, dst);
+    }
+
+    private void copyAssets() throws IOException {
       String base = "/fitnesse/resources/";
       String cssDir = base + "css/";
-      addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
+      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse.css");
       String javascriptDir = base + "javascript/";
-      addFile(javascriptDir + "fitnesse.js", "fitnesse.js");
+      addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
+      addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
       String imagesDir = base + "images/";
       addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
       addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
@@ -115,8 +129,7 @@ public class JavaFormatter extends BaseFormatter {
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
-    if (listener != null)
-      listener.newTestStarted(test, timeMeasurement);
+    listener.newTestStarted(test, timeMeasurement);
   }
 
   @Override
@@ -130,8 +143,7 @@ public class JavaFormatter extends BaseFormatter {
     testSummaries.put(fullPath, new TestSummary(testSummary));
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
-    if (listener != null)
-      listener.testComplete(test, testSummary, timeMeasurement);
+    listener.testComplete(test, testSummary, timeMeasurement);
   }
 
   TestSummary getTestSummary(String testPath) {
@@ -162,13 +174,15 @@ public class JavaFormatter extends BaseFormatter {
 
   }
 
-  /** package-private to prevent instantiation apart from getInstance and tests */
+  /**
+   * package-private to prevent instantiation apart from getInstance and tests
+   */
   JavaFormatter(String suiteName) {
     this.mainPageName = suiteName;
   }
 
   private static Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
-  private ResultsListener listener;
+  private ResultsListener listener = new NullListener();
 
   public synchronized static JavaFormatter getInstance(String testName) {
     JavaFormatter existing = allocatedInstances.get(testName);
@@ -183,37 +197,68 @@ public class JavaFormatter extends BaseFormatter {
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    if (listener != null)
-      listener.allTestingComplete(totalTimeMeasurement);
+    listener.allTestingComplete(totalTimeMeasurement);
   }
 
   public void writeSummary(String suiteName) throws IOException {
     resultsRepository.open(suiteName);
-    resultsRepository.write(SUMMARY_HEADER);
-    for (String s : visitedTestPages) {
-      resultsRepository.write(summaryRow(s, testSummaries.get(s)));
-    }
-    resultsRepository.write(SUMMARY_FOOTER);
+    resultsRepository.write(new TestResultsSummaryTable(visitedTestPages, testSummaries).toString());
     resultsRepository.close();
   }
 
-  public String summaryRow(String testName, TestSummary testSummary) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
-        "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
-        "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
-        .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
-    return sb.toString();
+  public static class TestResultsSummaryTableRow {
+    private String testName;
+    private TestSummary testSummary;
+
+    public TestResultsSummaryTableRow(String testName, TestSummary testSummary) {
+      this.testName = testName;
+      this.testSummary = testSummary;
+    }
+
+    public String toString() {
+      StringBuffer sb = new StringBuffer();
+      sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
+              "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
+              "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
+              .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
+      return sb.toString();
+    }
+
+    private String getCssClass(TestSummary ts) {
+      if (ts.exceptions > 0)
+        return "error";
+      if (ts.wrong > 0)
+        return "fail";
+      if (ts.right > 0)
+        return "pass";
+      return "plain";
+    }
   }
 
-  private String getCssClass(TestSummary ts) {
-    if (ts.exceptions > 0)
-      return "error";
-    if (ts.wrong > 0)
-      return "fail";
-    if (ts.right > 0)
-      return "pass";
-    return "plain";
+  public static class TestResultsSummaryTable {
+    public static final String SUMMARY_FOOTER = "</table>";
+    public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
+    private List<String> visitedTestPages;
+    private Map<String, TestSummary> testSummaries;
+
+    public TestResultsSummaryTable(List<String> visitedTestPages, Map<String, TestSummary> testSummaries) {
+      this.visitedTestPages = visitedTestPages;
+      this.testSummaries = testSummaries;
+    }
+
+    public String summaryRow(String testName, TestSummary testSummary) {
+      return new TestResultsSummaryTableRow(testName, testSummary).toString();
+    }
+
+    public String toString() {
+      StringBuffer sb = new StringBuffer();
+      sb.append(SUMMARY_HEADER);
+      for (String s : visitedTestPages) {
+        sb.append(summaryRow(s, testSummaries.get(s)));
+      }
+      sb.append(SUMMARY_FOOTER);
+      return sb.toString();
+    }
   }
 
   public void setListener(ResultsListener listener) {

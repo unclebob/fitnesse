@@ -9,10 +9,6 @@ import java.util.List;
 public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getParent();
 
-  WikiPage getParentForVariables();
-
-  void setParentForVariables(WikiPage parent);
-
   WikiPage addChildPage(String name);
 
   boolean hasChildPage(String name);
@@ -37,11 +33,6 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getHeaderPage();
 
   WikiPage getFooterPage();
-
-  //TODO Delete these method alone with ProxyPage when the time is right.
-  boolean hasExtension(String extensionName);
-
-  Extension getExtension(String extensionName);
 
   boolean isOpenInNewWindow();
 }

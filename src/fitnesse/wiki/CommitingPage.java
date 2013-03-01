@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-public abstract class CommitingPage extends ExtendableWikiPage {
+public abstract class CommitingPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   protected CommitingPage(String name, WikiPage parent) {
