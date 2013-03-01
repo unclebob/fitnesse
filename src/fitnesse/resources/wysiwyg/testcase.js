@@ -236,8 +236,22 @@ $(function() {
         unit.add("link with markup", function() {
             var dom = fragment(
                 element("p", a("LinkPage", element("i", "label"))));
-            generateFragment.call(this, dom,
+            generate.call(this, dom,
                 "[[''label''][LinkPage]]");
+        });
+
+        unit.add("link with hash", function() {
+            var dom = fragment(
+                element("p", a("LinkPage#foo", "label")));
+            generate.call(this, dom,
+                "[[label][LinkPage#foo]]");
+        });
+
+        unit.add("link with parameter", function() {
+            var dom = fragment(
+                element("p", a("LinkPage?edit&test", "label")));
+            generate.call(this, dom,
+                "[[label][LinkPage?edit&test]]");
         });
 
         unit.add("wiki macros", function() {
