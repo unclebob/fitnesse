@@ -12,6 +12,4 @@ public interface VersionsController {
   public void removeVersion(FileSystemPage page, String versionName);
 
   public void prune(FileSystemPage page);
-
-  public boolean isExternalRevisionControlEnabled();
 }

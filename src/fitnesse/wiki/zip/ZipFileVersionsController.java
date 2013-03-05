@@ -1,18 +1,29 @@
 package fitnesse.wiki.zip;
 
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.PageData;
-import util.Clock;
-import util.StreamReader;
-import fitnesse.wiki.*;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.NoSuchVersionException;
+import fitnesse.wiki.NullVersionsController;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPageProperties;
+import util.Clock;
+import util.StreamReader;
 
 public class ZipFileVersionsController extends NullVersionsController {
   public static SimpleDateFormat dateFormat() {
@@ -20,10 +31,6 @@ public class ZipFileVersionsController extends NullVersionsController {
   }
 
   public ZipFileVersionsController() {
-    this(new Properties());
-  }
-
-  public ZipFileVersionsController(final Properties properties) {
   }
 
   public PageData getRevisionData(final FileSystemPage page, final String label) {
@@ -74,14 +81,6 @@ public class ZipFileVersionsController extends NullVersionsController {
       }
     }
     return versions;
-  }
-
-  public boolean isRevisionControlEnabled() {
-    return true;
-  }
-
-  public boolean isExternalRevisionControlEnabled() {
-    return false;
   }
 
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
