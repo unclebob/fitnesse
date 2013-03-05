@@ -2,17 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.util.Date;
+
 import fitnesse.ComponentFactory;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 import util.Clock;
 import util.DiskFileSystem;
 import util.FileSystem;
 import util.FileUtil;
-
-import java.io.*;
-import java.lang.reflect.Method;
-import java.util.Date;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
@@ -28,7 +35,7 @@ public class FileSystemPage extends CachingPage {
     super(name, null);
     this.path = path;
 
-    versionsController = createVersionsController(componentFactory);
+    versionsController = componentFactory.getVersionsController();
     createDirectoryIfNewPage(fileSystem);
   }
 
@@ -42,11 +49,6 @@ public class FileSystemPage extends CachingPage {
         versionsController = parent.versionsController;
         createDirectoryIfNewPage(fileSystem);
     }
-
-  private VersionsController createVersionsController(ComponentFactory factory) {
-    return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,
-      ZipFileVersionsController.class);
-  }
 
   @Override
   public void removeChildPage(final String name) {

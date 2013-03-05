@@ -38,6 +38,7 @@ public class ComponentFactory {
   private final String propertiesLocation;
   private boolean propertiesAreLoaded = false;
   private SymbolProvider symbolProvider;
+  private VersionsController versionsController;
 
   public ComponentFactory() {
     this(new Properties());
@@ -97,8 +98,13 @@ public class ComponentFactory {
         componentClass = defaultComponent;
   
       if (componentClass != null) {
-        Constructor<?> constructor = componentClass.getConstructor(Properties.class);
-        return constructor.newInstance(loadedProperties);
+        try {
+          Constructor<?> constructor = componentClass.getConstructor(Properties.class);
+          return constructor.newInstance(loadedProperties);
+        } catch (NoSuchMethodException e) {
+          Constructor<?> constructor = componentClass.getConstructor();
+          return constructor.newInstance();
+        }
       }
     } catch (Exception e) {
       throw new RuntimeException("Unable to instantiate component for type " + componentType, e);
@@ -239,11 +245,23 @@ public class ComponentFactory {
     return buffer.toString();
   }
   
-  public VersionsController loadVersionsController() {
-    VersionsController versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
+  public String loadVersionsController(int historyDepth) {
+    versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
     if (versionsController == null) {
       versionsController = new ZipFileVersionsController();
     }
+    StringBuilder buffer = new StringBuilder();
+    return new StringBuilder()
+            .append("\tVersion controller: ")
+            .append(versionsController.getClass().getName())
+            .append(endl)
+            .append("\tHistory depth:     ")
+            .append(historyDepth)
+            .append(" days")
+            .append(endl).toString();
+  }
+
+  public VersionsController getVersionsController() {
     return versionsController;
   }
 }

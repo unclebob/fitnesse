@@ -185,14 +185,15 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public void testShouldUseZipFileRevisionControllerAsDefault() throws Exception {
-    VersionsController defaultRevisionController = factory.loadVersionsController();
+    factory.loadVersionsController(14);
+    VersionsController defaultRevisionController = factory.getVersionsController();
     assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
   }
 
   public void testShouldUseSpecifiedRevisionController() throws Exception {
     testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
-
-    VersionsController defaultRevisionController = factory.loadVersionsController();
+    factory.loadVersionsController(14);
+    VersionsController defaultRevisionController = factory.getVersionsController();
     assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
   }
 
