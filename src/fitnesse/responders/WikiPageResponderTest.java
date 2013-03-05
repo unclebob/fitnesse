@@ -23,7 +23,6 @@ public class WikiPageResponderTest extends RegexTestCase {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
-    PageVersionPruner.daysTillVersionsExpire = 14;
   }
 
   public void testResponse() throws Exception {

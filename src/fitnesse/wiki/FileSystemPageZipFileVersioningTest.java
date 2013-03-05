@@ -11,7 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fitnesse.ComponentFactory;
 import junit.framework.TestCase;
+import util.DiskFileSystem;
 import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest extends TestCase {
@@ -19,11 +21,13 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   private VersionInfo firstVersion;
   private PageCrawler crawler;
   private WikiPage root;
+  private ComponentFactory componentFactory;
 
   @Override
   public void setUp() throws Exception {
-    PageVersionPruner.daysTillVersionsExpire=1;
-    root = new FileSystemPage("testDir", "RooT");
+    componentFactory = new ComponentFactory();
+    componentFactory.loadVersionsController(1);
+    root = new FileSystemPage("testDir", "RooT", new DiskFileSystem(), componentFactory.getVersionsController());
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 
@@ -80,7 +84,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testVersionsExpire() throws Exception {
-    PageVersionPruner.daysTillVersionsExpire = 3;
+    componentFactory.getVersionsController().setHistoryDepth(3);
     PageData data = page.makePageData();
     Set<VersionInfo> versions = data.getVersions();
     for (VersionInfo version : versions)
@@ -95,8 +99,6 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     data.getProperties().setLastModificationTime(dateFormat().parse("20031216000000"));
     page.makeVersion(data);
 
-    versions = page.makePageData().getVersions();
-    PageVersionPruner.pruneVersions(page, versions);
     versions = page.makePageData().getVersions();
     assertEquals(3, versions.size());
 

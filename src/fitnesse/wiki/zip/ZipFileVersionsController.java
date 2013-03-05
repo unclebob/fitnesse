@@ -6,9 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -17,22 +23,29 @@ import java.util.zip.ZipOutputStream;
 
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.NoSuchVersionException;
-import fitnesse.wiki.NullVersionsController;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
 import util.Clock;
 import util.StreamReader;
 
-public class ZipFileVersionsController extends NullVersionsController {
+public class ZipFileVersionsController implements VersionsController {
   public static SimpleDateFormat dateFormat() {
     return new SimpleDateFormat("yyyyMMddHHmmss");
   }
 
+  private int daysTillVersionsExpire = 14;
+
   public ZipFileVersionsController() {
   }
 
+  @Override
+  public void setHistoryDepth(int historyDepth) {
+    daysTillVersionsExpire = historyDepth;
+  }
+
+  @Override
   public PageData getRevisionData(final FileSystemPage page, final String label) {
     final String filename = getFileSystemPath(page) + "/" + label + ".zip";
     final File file = new File(filename);
@@ -69,6 +82,7 @@ public class ZipFileVersionsController extends NullVersionsController {
     }
   }
 
+  @Override
   public Collection<VersionInfo> history(final FileSystemPage page) {
     final File dir = new File(getFileSystemPath(page));
     final File[] files = dir.listFiles();
@@ -83,6 +97,7 @@ public class ZipFileVersionsController extends NullVersionsController {
     return versions;
   }
 
+  @Override
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
     final String dirPath = getFileSystemPath(page);
     final Set<File> filesToZip = getFilesToZip(dirPath);
@@ -111,17 +126,20 @@ public class ZipFileVersionsController extends NullVersionsController {
       } catch (IOException e) {
         e.printStackTrace();
       }
+      pruneVersions(page, history(page));
     }
   }
 
+  @Override
   public void prune(final FileSystemPage page) {
     try {
-      PageVersionPruner.pruneVersions(page, history(page));
+      pruneVersions(page, history(page));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
+  @Override
   public void removeVersion(final FileSystemPage page, final String versionName) {
     final String versionFileName = makeVersionFileName(page, versionName);
     final File versionFile = new File(versionFileName);
@@ -241,6 +259,40 @@ public class ZipFileVersionsController extends NullVersionsController {
   private String makeVersionName(final File file) {
     final String name = file.getName();
     return name.substring(0, name.length() - 4);
+  }
+
+
+  public void pruneVersions(FileSystemPage page, Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = makeSortedVersionList(versions);
+    if (versions.size() > 0) {
+      VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
+      GregorianCalendar expirationDate = makeVersionExpirationDate(lastVersion);
+      for (Iterator<VersionInfo> iterator = versionsList.iterator(); iterator.hasNext();) {
+        VersionInfo version = iterator.next();
+        removeVersionIfExpired(page, version, expirationDate);
+      }
+    }
+  }
+
+  private List<VersionInfo> makeSortedVersionList(Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = new ArrayList<VersionInfo>(versions);
+    Collections.sort(versionsList);
+    return versionsList;
+  }
+
+  private GregorianCalendar makeVersionExpirationDate(VersionInfo lastVersion) {
+    Date dateOfLastVersion = lastVersion.getCreationTime();
+    GregorianCalendar expirationDate = new GregorianCalendar();
+    expirationDate.setTime(dateOfLastVersion);
+    expirationDate.add(Calendar.DAY_OF_MONTH, -(daysTillVersionsExpire));
+    return expirationDate;
+  }
+
+  private void removeVersionIfExpired(FileSystemPage page, VersionInfo version, GregorianCalendar expirationDate) {
+    Calendar thisDate = new GregorianCalendar();
+    thisDate.setTime(version.getCreationTime());
+    if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
+      removeVersion(page, version.getName());
   }
 
   @Override

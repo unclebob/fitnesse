@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import fitnesse.ComponentFactory;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 import util.Clock;
 import util.DiskFileSystem;
@@ -31,16 +31,16 @@ public class FileSystemPage extends CachingPage {
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) {
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, null);
     this.path = path;
 
-    versionsController = componentFactory.getVersionsController();
+    this.versionsController = versionsController;
     createDirectoryIfNewPage(fileSystem);
   }
 
   public FileSystemPage(final String path, final String name) {
-    this(path, name, new DiskFileSystem(), new ComponentFactory());
+    this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
   }
 
     public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) {

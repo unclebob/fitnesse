@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.ComponentFactory;
-import util.Clock;
-import util.FileSystem;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import util.Clock;
+import util.FileSystem;
 
 public class InMemoryPage extends CommitingPage {
   private static final long serialVersionUID = 1L;
@@ -22,11 +21,11 @@ public class InMemoryPage extends CommitingPage {
   protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
   protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
-    public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) {
+    public InMemoryPage(String rootPath, String rootPageName, VersionsController versionsController) {
       this(rootPageName, null);
     }
 
-    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, ComponentFactory factory) {
+    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, VersionsController versionsController) {
       this(rootPageName, null);
     }
 
