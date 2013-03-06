@@ -139,9 +139,4 @@ public abstract class BaseWikiPage implements WikiPage {
       return 0;
     }
   }
-
-  public String getHelpText() {
-    String helpText = getData().getAttribute(PageData.PropertyHELP);
-    return ((helpText == null) || (helpText.length() == 0)) ? null : helpText;
-  }
 }
