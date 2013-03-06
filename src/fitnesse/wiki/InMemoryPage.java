@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import util.Clock;
 import util.FileSystem;
 
-public class InMemoryPage extends CommitingPage {
+public class InMemoryPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   protected static final String currentVersionName = "current_version";
@@ -83,10 +83,12 @@ public class InMemoryPage extends CommitingPage {
       return getDataVersion(currentVersionName);
   }
 
-  public void doCommit(PageData newData) {
+  public VersionInfo commit(PageData newData) {
+    VersionInfo previousVersion = makeVersion();
     newData.setWikiPage(this);
     newData.getProperties().setLastModificationTime(Clock.currentDate());
     versions.put(currentVersionName, newData);
+    return previousVersion;
   }
 
   public PageData getDataVersion(String versionName) {

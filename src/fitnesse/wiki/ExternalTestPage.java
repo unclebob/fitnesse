@@ -14,15 +14,6 @@ public class ExternalTestPage extends CachingPage {
         this.path = path;
         this.fileSystem = fileSystem;
     }
-    
-    @Override
-    protected VersionInfo makeVersion() {
-        return null;
-    }
-
-    @Override
-    protected void doCommit(PageData data) {
-    }
 
     @Override
     public boolean hasChildPage(String pageName) {

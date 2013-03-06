@@ -246,10 +246,13 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Override
-  public void doCommit(final PageData data) {
+  public VersionInfo commit(final PageData data) {
+    VersionInfo previousVersion = makeVersion();
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
     this.versionsController.prune(this);
+    super.commit(data);
+    return previousVersion;
   }
 
   @Override
@@ -277,8 +280,7 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  @Override
-  protected VersionInfo makeVersion() {
+  private VersionInfo makeVersion() {
     final PageData data = getData();
     return makeVersion(data);
   }

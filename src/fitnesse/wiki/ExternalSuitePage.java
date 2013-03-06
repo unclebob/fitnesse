@@ -45,12 +45,4 @@ public class ExternalSuitePage extends CachingPage {
         pageData.setAttribute(PageType.SUITE.toString(), Boolean.toString(true));
         return pageData;
     }
-
-    protected VersionInfo makeVersion() {
-        return null;
-    }
-
-    protected void doCommit(PageData data) {
-        
-    }
 }

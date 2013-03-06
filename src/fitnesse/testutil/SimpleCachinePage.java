@@ -40,8 +40,10 @@ public class SimpleCachinePage extends CachingPage {
     return new VersionInfo("abc", "Jon", Clock.currentDate());
   }
 
-  protected void doCommit(PageData data) {
+  public VersionInfo commit(PageData data) {
     this.data = data;
+    super.commit(data);
+    return makeVersion();
   }
 
   public PageData getDataVersion(String versionName) {
