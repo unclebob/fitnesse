@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class MakeInstructionTest {
@@ -35,7 +36,8 @@ public class MakeInstructionTest {
     InstructionResult result = instruction.execute(executor);
 
     assertEquals(ID, result.getId());
-    assertFalse(result.hasResult());
+    assertTrue(result.hasResult());
     assertFalse(result.hasError());
+    assertEquals("OK", result.getResult());
   }
 }

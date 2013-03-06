@@ -7,6 +7,7 @@ import fitnesse.slim.converters.MapEditor;
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,8 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (IllegalArgumentException e) {
       throw new SlimException(format("%s[%d]", className, args.length), e, SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR,
           true);
+    } catch (InvocationTargetException e) {
+      throw new SlimException(e.getTargetException(), true);
     } catch (Throwable e) {
       checkExceptionForStop(e);
       throw new SlimException(e);

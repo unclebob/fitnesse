@@ -21,8 +21,8 @@ public class InvalidInstructionTest {
   @SuppressWarnings("unchecked")
   public void shouldReturnAnErrorResponseOnExecution() {
     InvalidInstruction instruction = new InvalidInstruction("id_1", "invalidFunction");
-    List<Object> result = (List<Object>) instruction.execute(executor);
-    assertEquals("id_1", result.get(0));
-    assertEquals("__EXCEPTION__:message:<<INVALID_STATEMENT: invalidFunction>>", result.get(1));
+    InstructionResult result = instruction.execute(executor);
+    assertEquals("id_1", result.getId());
+    assertEquals("__EXCEPTION__:message:<<MALFORMED_INSTRUCTION invalidFunction>>", result.getResult().toString());
   }
 }

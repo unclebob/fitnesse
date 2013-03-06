@@ -1,11 +1,12 @@
 package fitnesse.slim;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -103,12 +104,17 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest() throws Exception {
-    createAnnotatedFixture();
-    String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
-    String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
-        annotatedFixtureName());
-    assertTrue(result.contains(expectedErrorMessage));
+  public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest()
+      throws Exception {
+    try {
+      createAnnotatedFixture();
+      String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
+      fail("Executed non-existing method.");
+    } catch (SlimException e) {
+      String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
+          annotatedFixtureName());
+      assertTrue(e.getMessage().contains(expectedErrorMessage));
+    }
   }
 
   @Test
@@ -150,7 +156,8 @@ public abstract class StatementExecutorTestBase {
   }
 
   @Test
-  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture_WithSystemUnderTestInFixture() throws Exception {
+  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture_WithSystemUnderTestInFixture()
+      throws Exception {
     createNamedFixture();
     FileSupport library = createFileSupportLibrary();
     assertNotNull(library);

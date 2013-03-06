@@ -4,6 +4,7 @@ package fitnesse.slim;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static util.ListUtility.list;
 
 import java.util.Date;
@@ -37,10 +38,13 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
-    String response = (String) caller.call("testSlim", "noSuchMethod");
-    assertTrue(response,
-      response.contains(SlimServer.EXCEPTION_TAG) &&
-        response.contains("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] " + getTestClassName() + ".>>"));
+    try {
+      caller.call("testSlim", "noSuchMethod");
+      fail("Called non-existing method.");
+    } catch (SlimException e) {
+      assertTrue(e.getMessage(),e.toString().contains(SlimServer.EXCEPTION_TAG) &&
+          e.toString().contains("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] " + getTestClassName() + ".>>"));
+    }
   }
 
   @Test
@@ -132,9 +136,12 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void convertArrayOfIntegersThrowsExceptionIfNotInteger() throws Exception {
-    Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
-    String resultString = (String) result;
-    assertTrue(resultString, resultString.contains("message:<<CANT_CONVERT_TO_INTEGER_LIST>>"));
+    try {
+      Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
+      fail("Converted array with non-integers to an integer array.");
+    } catch (SlimException e) {
+      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_INTEGER_LIST>>"));
+    }
   }
 
   @Test
@@ -151,9 +158,12 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void convertArrayOfDoublesThrowsExceptionIfNotInteger() throws Exception {
-    Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
-    String resultString = (String) result;
-    assertTrue(resultString, resultString.contains("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>"));
+    try {
+      Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
+      fail("Converted array with non-doubles to a double array.");
+    } catch (SlimException e) {
+      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>"));
+    }
   }
 
   @Test

@@ -57,7 +57,7 @@ public abstract class ListExecutorTestBase {
   @Test()
   public void invalidOperation() throws Exception {
     statements.add(list("inv1", "invalidOperation"));
-    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation>>", "inv1");
+    assertExceptionReturned(String.format("message:<<%s invalidOperation>>", SlimServer.MALFORMED_INSTRUCTION),"inv1");
   }
 
   @Test(expected = SlimError.class)
@@ -68,8 +68,9 @@ public abstract class ListExecutorTestBase {
 
   private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
-    String result = (String) results.get(returnTag);
-    assertTrue(result, result.contains(SlimServer.EXCEPTION_TAG) && result.indexOf(message) != -1);
+    SlimException result = (SlimException) results.get(returnTag);
+    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().indexOf
+        (message) != -1);
   }
 
   @Test
