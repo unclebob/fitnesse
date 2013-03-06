@@ -11,12 +11,13 @@ import java.util.List;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
-import fitnesse.WikiPageFactory;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.wiki.FileSystemPageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
@@ -282,7 +283,7 @@ public class FitNesseSuite extends ParentRunner<String> {
 
   private static FitNesseContext initContext(String rootPath, int port) throws Exception {
     Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
     ComponentFactory componentFactory = new ComponentFactory(rootPath);
 
     builder.port = port;
@@ -294,7 +295,7 @@ public class FitNesseSuite extends ParentRunner<String> {
             .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-            builder.rootDirectoryName, componentFactory);
+        builder.rootDirectoryName);
 
     builder.logger = null;
     builder.authenticator = new PromiscuousAuthenticator();

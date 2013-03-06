@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.ComponentFactory;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import junit.framework.TestCase;
 import util.DiskFileSystem;
 import util.FileUtil;
@@ -25,10 +25,8 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   @Override
   public void setUp() throws Exception {
-    ComponentFactory componentFactory = new ComponentFactory();
-    componentFactory.loadVersionsController(1);
-    versionsController = componentFactory.getVersionsController();
-    root = new FileSystemPage("testDir", "RooT", new DiskFileSystem(), componentFactory.getVersionsController());
+    versionsController = new ZipFileVersionsController();
+    root = new FileSystemPage("testDir", "RooT", new DiskFileSystem(), versionsController);
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 

@@ -142,7 +142,7 @@ public class FileSystemPage extends CachingPage {
   @Override
   protected WikiPage createChildPage(final String name) {
     //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
-    return new PageRepository().makeChildPage(name, this);
+    return new FileSystemPageFactory().makeChildPage(name, this);
   }
 
   private void loadContent(final PageData data) {

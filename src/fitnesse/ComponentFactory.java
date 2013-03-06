@@ -24,7 +24,7 @@ import fitnesse.wikitext.parser.SymbolType;
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
   public static final String PROPERTIES_FILE = "plugins.properties";
-  public static final String WIKI_PAGE_CLASS = "WikiPage";
+  public static final String WIKI_PAGE_FACTORY_CLASS = "WikiPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
   public static final String SYMBOL_TYPES = "SymbolTypes";
@@ -38,33 +38,25 @@ public class ComponentFactory {
   private final Properties loadedProperties;
   private final String propertiesLocation;
   private boolean propertiesAreLoaded = false;
-  private SymbolProvider symbolProvider;
-  private VersionsController versionsController;
 
   public ComponentFactory() {
     this(new Properties());
   }
 
   public ComponentFactory(String propertiesLocation) {
-    this(propertiesLocation, new Properties(), SymbolProvider.wikiParsingProvider);
+    this(propertiesLocation, new Properties());
   }
 
   public ComponentFactory(Properties properties) {
-      this(properties, SymbolProvider.wikiParsingProvider);
-  }
-
-  public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {
     this.propertiesLocation = null;
     this.loadedProperties = properties;
     propertiesAreLoaded = true;
-    this.symbolProvider = symbolProvider;
   }
 
-  public ComponentFactory(String propertiesLocation, Properties properties, SymbolProvider symbolProvider) {
+  public ComponentFactory(String propertiesLocation, Properties properties) {
     this.propertiesLocation = propertiesLocation;
     this.loadedProperties = properties;
     loadProperties(propertiesLocation);
-    this.symbolProvider = symbolProvider;
   }
 
   protected void loadProperties(String propertiesLocation) {
@@ -77,7 +69,7 @@ public class ComponentFactory {
     }
   }
 
-  Properties getProperties() {
+  public Properties getProperties() {
     if (!propertiesAreLoaded) {
       loadProperties(propertiesLocation);
       propertiesAreLoaded = true;
@@ -117,40 +109,18 @@ public class ComponentFactory {
     return createComponent(componentType, null);
   }
 
-  public String loadWikiPage(WikiPageFactory factory) throws ClassNotFoundException {
-    StringBuffer buffer = new StringBuffer();
-    String rootPageClassName = loadedProperties.getProperty(WIKI_PAGE_CLASS);
-    if (rootPageClassName != null) {
-      factory.setWikiPageClass(Class.forName(rootPageClassName));
-      buffer.append("\tCustom wiki page plugin loaded: ").append(rootPageClassName).append(endl);
-    }
-    return buffer.toString();
-  }
-
-  public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+  public String loadPlugins(ResponderFactory responderFactory, SymbolProvider symbolProvider) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
     StringBuffer buffer = new StringBuffer();
     String[] responderPlugins = getListFromProperties(PLUGINS);
     if (responderPlugins != null) {
       buffer.append("\tCustom plugins loaded:").append(endl);
       for (String responderPlugin : responderPlugins) {
         Class<?> pluginClass = Class.forName(responderPlugin);
-        loadWikiPageFromPlugin(pluginClass, wikiPageFactory, buffer);
         loadRespondersFromPlugin(pluginClass, responderFactory, buffer);
         loadSymbolTypesFromPlugin(pluginClass, symbolProvider, buffer);
       }
     }
     return buffer.toString();
-  }
-
-  private void loadWikiPageFromPlugin(Class<?> pluginClass, WikiPageFactory wikiPageFactory, StringBuffer buffer)
-    throws IllegalAccessException, InvocationTargetException {
-    try {
-      Method method = pluginClass.getMethod("registerWikiPage", WikiPageFactory.class);
-      method.invoke(pluginClass, wikiPageFactory);
-      buffer.append("\t\t").append("wikiPage:").append(pluginClass.getName()).append(endl);
-    } catch (NoSuchMethodException e) {
-      // ok, no wiki page to register in this plugin
-    }
   }
 
   private void loadRespondersFromPlugin(Class<?> pluginClass, ResponderFactory responderFactory, StringBuffer buffer)
@@ -204,7 +174,7 @@ public class ComponentFactory {
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
-  public String loadSymbolTypes() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public String loadSymbolTypes(SymbolProvider symbolProvider) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     StringBuffer buffer = new StringBuffer();
     String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
     if (symbolTypeNames != null) {
@@ -244,26 +214,5 @@ public class ComponentFactory {
       }
     }
     return buffer.toString();
-  }
-  
-  public String loadVersionsController(int historyDepth) {
-    versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
-    if (versionsController == null) {
-      versionsController = new ZipFileVersionsController();
-    }
-    versionsController.setHistoryDepth(historyDepth);
-    StringBuilder buffer = new StringBuilder();
-    return new StringBuilder()
-            .append("\tVersion controller: ")
-            .append(versionsController.getClass().getName())
-            .append(endl)
-            .append("\tHistory depth:     ")
-            .append(historyDepth)
-            .append(" days")
-            .append(endl).toString();
-  }
-
-  public VersionsController getVersionsController() {
-    return versionsController != null ? versionsController : new NullVersionsController();
   }
 }

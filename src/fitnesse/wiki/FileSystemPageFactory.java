@@ -2,23 +2,42 @@ package fitnesse.wiki;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import fitnesse.ComponentFactory;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 import util.DiskFileSystem;
 import util.FileSystem;
 
-public class PageRepository {
+// TODO: Merge with WikiPageFactory
+public class FileSystemPageFactory implements WikiPageFactory {
   private FileSystem fileSystem;
+  private VersionsController versionsController;
 
-  public PageRepository() {
+  public FileSystemPageFactory() {
     fileSystem = new DiskFileSystem();
+    versionsController = new ZipFileVersionsController();
   }
 
-  public PageRepository(FileSystem fileSystem) {
+  public FileSystemPageFactory(Properties properties) {
+    fileSystem = new DiskFileSystem();
+    versionsController = (VersionsController) new ComponentFactory(properties).createComponent(
+            ComponentFactory.VERSIONS_CONTROLLER, ZipFileVersionsController.class);
+  }
+
+  public FileSystemPageFactory(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
+    this.versionsController = new ZipFileVersionsController();
   }
 
+  @Override
+  // RootPath should be a File()
+  public WikiPage makeRootPage(String rootPath, String rootPageName) {
+    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController);
+  }
 
+  @Override
   public WikiPage makeChildPage(String name, FileSystemPage parent) {
     String path = parent.getFileSystemPath() + "/" + name;
     if (hasContentChild(path)) {
@@ -32,7 +51,7 @@ public class PageRepository {
 
   private Boolean hasContentChild(String path) {
     for (String child : fileSystem.list(path)) {
-      if (child.equals(FileSystemPage.contentFilename)) return true;
+      if (child.equals("content.txt")) return true;
     }
     return false;
   }
@@ -58,5 +77,9 @@ public class PageRepository {
       }
     }
     return children;
+  }
+
+  VersionsController getVersionsController() {
+    return versionsController;
   }
 }

@@ -6,7 +6,6 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
-import fitnesse.WikiPageFactory;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -16,6 +15,9 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
+import fitnesse.wiki.FileSystemPageFactory;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
 import java.io.File;
@@ -106,8 +108,9 @@ public class FitNesseMain {
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
     Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
     ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
+
+    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     builder.port = arguments.getPort();
     builder.rootPath = arguments.getRootPath();
@@ -118,10 +121,10 @@ public class FitNesseMain {
         .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
 
     // This should be done before the root wiki page is created:
-    extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
+    //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-      builder.rootDirectoryName, componentFactory);
+      builder.rootDirectoryName);
 
     builder.logger = makeLogger(arguments);
     builder.authenticator = makeAuthenticator(arguments.getUserpass(),
@@ -129,11 +132,11 @@ public class FitNesseMain {
 
     FitNesseContext context = builder.createFitNesseContext();
 
-    extraOutput += componentFactory.loadPlugins(context.responderFactory,
-        wikiPageFactory);
-    extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
+    SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
+
+    extraOutput += componentFactory.loadPlugins(context.responderFactory, symbolProvider);
     extraOutput += componentFactory.loadResponders(context.responderFactory);
-    extraOutput += componentFactory.loadSymbolTypes();
+    extraOutput += componentFactory.loadSymbolTypes(symbolProvider);
     extraOutput += componentFactory.loadContentFilter();
     extraOutput += componentFactory.loadSlimTables();
 
