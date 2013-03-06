@@ -3,8 +3,6 @@ package fitnesse.slim;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
-
 public class SlimException extends Exception {
   private static final String PRETTY_PRINT_TAG_START = "message:<<";
   private static final String PRETTY_PRINT_TAG_END = ">>";
@@ -91,11 +89,12 @@ public class SlimException extends Exception {
     if (this.prettyPrint)
       sb.append(PRETTY_PRINT_TAG_START);
 
-    if (!isEmpty(tag))
+    if (tag != null && tag.length() > 0)
       sb.append(tag).append(" ");
 
-    if (!isEmpty(getMessage())) {
-      sb.append(getMessage());
+    String msg = getMessage();
+    if (msg != null && msg.length() > 0) {
+      sb.append(msg);
     } else if (getCause() != null) {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
