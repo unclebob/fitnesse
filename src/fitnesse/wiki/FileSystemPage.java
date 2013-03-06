@@ -87,6 +87,8 @@ public class FileSystemPage extends CachingPage {
     //a strange behavior on windows.
     content = content.replaceAll("\n", separator);
 
+    // TODO: Do this in the VersionsController
+    @Deprecated
     String contentPath = getFileSystemPath() + contentFilename;
     final File output = new File(contentPath);
     OutputStreamWriter writer = null;
@@ -107,6 +109,8 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
+  // TODO: Do this in the VersionsController
+  @Deprecated
   protected synchronized void saveAttributes(final WikiPageProperties attributes)
     {
     OutputStream output = null;
@@ -268,6 +272,8 @@ public class FileSystemPage extends CachingPage {
     return this.versionsController.getRevisionData(this, versionName);
   }
 
+  @Deprecated
+  // Move to persistence engine
   private void createDirectoryIfNewPage(FileSystem fileSystem) {
     String pagePath = getFileSystemPath();
     if (!fileSystem.exists(pagePath)) {

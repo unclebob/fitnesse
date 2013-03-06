@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import util.Clock;
 import util.FileSystem;
 
+// Remove this page, create FileSystemPage with right FileSystem: MemoryFileSystem.
+@Deprecated
 public class InMemoryPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
