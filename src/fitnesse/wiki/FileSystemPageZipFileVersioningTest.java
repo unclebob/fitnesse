@@ -21,12 +21,13 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   private VersionInfo firstVersion;
   private PageCrawler crawler;
   private WikiPage root;
-  private ComponentFactory componentFactory;
+  private VersionsController versionsController;
 
   @Override
   public void setUp() throws Exception {
-    componentFactory = new ComponentFactory();
+    ComponentFactory componentFactory = new ComponentFactory();
     componentFactory.loadVersionsController(1);
+    versionsController = componentFactory.getVersionsController();
     root = new FileSystemPage("testDir", "RooT", new DiskFileSystem(), componentFactory.getVersionsController());
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
@@ -84,7 +85,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testVersionsExpire() throws Exception {
-    componentFactory.getVersionsController().setHistoryDepth(3);
+    versionsController.setHistoryDepth(3);
     PageData data = page.makePageData();
     Set<VersionInfo> versions = data.getVersions();
     for (VersionInfo version : versions)
