@@ -9,7 +9,6 @@ import java.util.List;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.apache.velocity.VelocityContext;
@@ -31,7 +30,6 @@ public class ExecutionLog {
     runner = client;
 
     crawler = testPage.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ErrorLogName);
     errorLogPageName = PathParser.render(errorLogPagePath);
   }

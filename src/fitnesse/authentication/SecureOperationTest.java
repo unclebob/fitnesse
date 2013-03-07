@@ -68,7 +68,7 @@ public class SecureOperationTest extends TestCase {
     assertFalse(sro.shouldAuthenticate(context, request));
   }
 
-  public void testParentOfNonExistentPageStillSetsPriviledges() throws Exception {
+  public void testParentOfNonExistentPageStillSetsPrivileges() throws Exception {
     WikiPage parentPage = crawler.addPage(root, parentPagePath);
     makeSecure(parentPage);
     request.setResource("ParentPage.NonExistentPage");

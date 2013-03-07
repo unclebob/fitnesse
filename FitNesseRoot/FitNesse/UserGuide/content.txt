@@ -1,40 +1,41 @@
-!1 !c FitNesse User Guide
-!c Robert C. Martin
-!c Micah D. Martin
-!c Patrick Wilson-Welsh
-!c October, 2008
+!1 !c !-FitNesse-! User Guide
+!c Robert C. Martin,
+!c Micah D. Martin,
+!c Patrick Wilson-Welsh &
+!c !-FitNesse-! contributors
 ----
 !2 Getting Started
-What FitNesse is, a brief example, and how to install it on your computer.
-|[[A One-Minute Description][>OneMinuteDescription]]|''What is FitNesse? Start here.''|
-|[[A Two-Minute Example][>TwoMinuteExample]]|''A brief example. Read this one second.''|
-|[[Downloading, Installing, and Updating][>DownloadingAndInstallingFitNesse]]|''How to get FitNesse up and running on your machine.''|
-|[[Quick Reference Guide][>QuickReferenceGuide]]|''A cheat sheet for markups and usage.''|
+What !-FitNesse-! is, a brief example, and how to install it on your computer.
+
+| [[A One-Minute Description][>OneMinuteDescription]] | ''What is !-FitNesse-!? Start here.'' |
+| [[A Two-Minute Example][>TwoMinuteExample]] | ''A brief example. Read this one second.'' |
+| [[Downloading, Installing, and Updating][http://fitnesse.org/FitNesseDownload]] | ''How to get !-FitNesse-! up and running on your machine.'' |
+| [[Quick Reference Guide][>QuickReferenceGuide]] | ''A cheat sheet for markups and usage.'' |
 
 ----
-!2 Working With FitNesse Wiki Pages
-FitNesse is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Learn how to use wiki features to create and change FitNesse pages.
+!2 Working With !-FitNesse-! Wiki Pages
+!-FitNesse-! is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Learn how to use wiki features to create and change !-FitNesse-! pages.
 
-FitNesse is an application testing suite that allows you to test the business layer of your application.
+!-FitNesse-! is an application testing suite that allows you to test the business layer of your application.
 
-It is not a browser automation tool, although there are such tools that work with FitNesse.
+It is not a browser automation tool, although there are such tools that work with !-FitNesse-!.
 
-It is not a unit testing tool.  The tests that FitNesse runs integrate the various layers of your application together, demonstrating even to non-coders that the application works as designed.
+It is not a unit testing tool.  The tests that !-FitNesse-! runs integrate the various layers of your application together, demonstrating even to non-coders that the application works as designed.
 
 It is an ''integration testing tool''.  That means that it provides a method to automatically determine that your application is working correctly.  Not your beautiful user interface, with all its fancy CSS and slick Ajax calls, but the stuff underneath, where the actual brains of the application live.
 
-The goal is for FitNesse to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are returned.  In a sense, you could consider it an alternative user interface for the application.
+The goal is for !-FitNesse-! to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are returned.  In a sense, you could consider it an alternative user interface for the application.
 
-FitNesse provides an easy-to-use [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] to create web pages that are run as tests.  Test pages have a button on them allowing all the tests on the page to be run, so any user can go to that page and click the button at any time, and see if the tests are passing.  Also, FitNesse provides means to automatically run tests, so it can be easily added to your automated build scripts.
+!-FitNesse-! provides an easy-to-use [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] to create web pages that are run as tests.  Test pages have a button on them allowing all the tests on the page to be run, so any user can go to that page and click the button at any time, and see if the tests are passing.  Also, !-FitNesse-! provides means to automatically run tests, so it can be easily added to your automated build scripts.
 
 So what does a test page look like?  Each page that has tests will consist of a series of HTML tables.  Fitnesse understands various formats of tables, and if those formats are not sufficient, developers are welcome to add additional ones.  Generally, the tables take the basic form of a Command cell and some Parameter cells, which are followed by some Output cells.  When a test is run, the command and parameters are evaluated to see if the correct output is given.  [[Here's a quick example][>TwoMinuteExample]] to get you started.
 
-Now, if you're reading this on the web site, you probably found that the Fitnesse Test button in that example didn't work as advertised.  It's been disabled to minimize stress on the site.  But that's ok - since among other things, Fitnesse is a wiki, you can simply download and run it, and read these same web pages as served up by your local system.  When you do that, you'll be able to run the tests.  Why not [[download it now][>DownloadingAndInstallingFitNesse]]?
+Now, if you're reading this on the web site, you probably found that the Fitnesse Test button in that example didn't work as advertised.  It's been disabled to minimize stress on the site.  But that's ok - since among other things, Fitnesse is a wiki, you can simply download and run it, and read these same web pages as served up by your local system.  When you do that, you'll be able to run the tests.  Why not [[download it now][http://fitnesse.org/FitNesseDownload]]?
 
 !3 Creating the Table
 Okay, so you saw what Fitnesse can do.  You ran a test with some inputs, checked to make sure the outputs were as expected, and saw how easy it was to determine whether the application worked correctly or not.  Now you'd like to create some tests of your own.  How do you do it?
 
-If you go back and edit the [[Example page][>TwoMinuteExample]], you'll see some wiki markup that looks like this: {{{
+If you go back and edit the [[Example page][>TwoMinuteExample]], you'll see some wiki markup that looks like this:{{{
 |eg.Division|
 |numerator|denominator|quotient?|
 |10       |2          |5        |
@@ -45,59 +46,58 @@ The vertical bars delimit table cells. For this table, there is not much more to
 
 If you'll be spending a lot of time writing tests, you'll probably want to study these tips for using the wiki:
 
-|[[Editing !-FitNesse-! Pages][>EditingFitNessePages]]|''An intro to creating and changing FitNesse pages using the wiki markup language.''|
-|[[Working with Wiki Pages][>WorkingWithWikiPages]]|''More FitNesse wiki page features.''|
-|[[Markup Language Reference][>MarkupLanguageReference]]|''A reference for formatting FitNesse pages using the wiki markup language.''|
-|[[Sub Wikis][>SubWiki]]|''How to create hierarchies of FitNesse pages.''|
-|[[Special Wiki Functions][>SpecialWikiFunctions]]|''Special things you can do with wikis.''|
-|[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server.''|
-|[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure.''|
-|[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
-|[[Quick Reference Guide][>QuickReferenceGuide]]|''A cheat sheet for markups and usage.''|
-|[[Changing look and feel][>WikiTheming]]|''Style FitNesse the way you like (theming).''|
+| [[Editing !-FitNesse-! Pages][>EditingFitNessePages]] | ''An intro to creating and changing ''!-FitNesse-!'' pages using the wiki markup language.'' |
+| [[Working with Wiki Pages][>WorkingWithWikiPages]] | ''More ''!-FitNesse-!'' wiki page features.'' |
+| [[Markup Language Reference][>MarkupLanguageReference]] | ''A reference for formatting ''!-FitNesse-!'' pages using the wiki markup language.'' |
+| [[Sub Wikis][>SubWiki]] | ''How to create hierarchies of ''!-FitNesse-!'' pages.'' |
+| [[Special Wiki Functions][>SpecialWikiFunctions]] | ''Special things you can do with wikis.'' |
+| [[Wiki Import][>WikiImport]] | ''Importing wiki pages from a remote ''!-FitNesse-!'' server.'' |
+| [[Symbolic Links][>SymbolicLinks]] | ''Dynamically altering the wiki page structure.'' |
+| [[Special Pages][>SpecialPages]] | ''Some pages in ''!-FitNesse-!'' that serve special purposes.'' |
+| [[Quick Reference Guide][>QuickReferenceGuide]] | ''A cheat sheet for markups and usage.'' |
+| [[Changing look and feel][>WikiTheming]] | ''Style ''!-FitNesse-!'' the way you like (theming).'' |
 
 !3 Creating the Fixtures
-
 The task of actually making the test ''pass'' is going to fall to a developer, presumably one who knows a little about the feature of the application that we're interested in.  Going back to the Division example, let's pretend that the actual application has a web page containing two input boxes that accept numbers, and a Submit button.  When the user clicks Submit, the application will divide the two numbers and show the result on the page.
 
 Again, we're not interested in testing the user interface.  We're not interested in making sure that the input boxes only accept digits, for example - we're strictly concerned with the business logic.  We have some code that accepts two numbers as inputs, divides them, and returns the result.  That's the code we're interested in.
 
-So our goal is to write this code in such a way that it can be called from either the web page UI or the FitNesse table UI.  (If we've done that properly, we could even easily expand our product line by adding an iPhone UI, for example, or a console application.)
+So our goal is to write this code in such a way that it can be called from either the web page UI or the !-FitNesse-! table UI.  (If we've done that properly, we could even easily expand our product line by adding an iPhone UI, for example, or a console application.)
 
-But how do we get from an HTML table to our code?  Well, FitNesse provides a set of classes called Fixtures.  Depending on the organization of the input and output cells, various fixtures translate the data in the cells to class properties.  The application developer will derive a class from one of the fixtures, and make a call inside a fixture method to the business logic.  [[Here's][>FixtureCode]] a more detailed walkthrough of the process.
+But how do we get from an HTML table to our code?  Well, !-FitNesse-! provides a set of classes called Fixtures.  Depending on the organization of the input and output cells, various fixtures translate the data in the cells to class properties.  The application developer will derive a class from one of the fixtures, and make a call inside a fixture method to the business logic.  [[Here's][>FixtureCode]] a more detailed walkthrough of the process.
 
-Of course, there's plenty more to know.  If you have an existing application, you'll want to [[Tell FitNesse where to find it][>ClassPath]].  If you don't think the HTML table matches up well to your application, you might be interested in a different [[Test Table Style][>TestTableStyles]].  If you do change the style, you'll probably want to look through the [[Fixture Gallery][>FixtureGallery]] to determine which fixture is most appropriate to use.  And, of course, developers always need to know [[How to debug the fixtures][>DebugingFixtureCode]].
+Of course, there's plenty more to know.  If you have an existing application, you'll want to [[Tell !-FitNesse-! where to find it][>ClassPath]].  If you don't think the HTML table matches up well to your application, you might be interested in a different [[Test Table Style][>TestTableStyles]].  If you do change the style, you'll probably want to look through the [[Fixture Gallery][>FixtureGallery]] to determine which fixture is most appropriate to use.  And, of course, developers always need to know [[How to debug the fixtures][>DebugingFixtureCode]].
 
 And continue on below to learn more!
 
 !2 Tutorial: Creating and Organizing Acceptance Tests
-Acceptance tests are what FitNesse is about. Learn why and how to make, run, and organize them.
-|[[Project Death by Requirements][>ProjectDeathByRequirements]]|''Why use automated acceptance tests? What goes wrong when we don't use them?''|
-|[[Test Systems][>TestSystems]]|''[[Slim][>SliM]] and [[Fit][>FitFramework]], the two major test systems of FitNesse.''|
-|[[Acceptance Tests][>AcceptanceTests]]|''What are the advantages of FitNesse automated acceptance tests?''|
-|[[Delivering the Right System][>DeliveringTheRightSystem]]|''An intro to how software teams can use FitNesse to build better systems.''|
-|[[Creating Test Tables][>CreatingTestTables]]|''Creating and enabling test tables on FitNesse pages.''|
-|[[Graceful Names][>GracefulName]]|''Managing the names of fixtures, packages, and variables.''|
-|[[Test Table Styles][>TestTableStyles]]|''The different styles and uses of test tables and corresponding fixtures.''|
-|[[Test Suites][>TestSuites]]|''How to group many test pages into a suite; then tag, search, and execute them.''|
-|[[Acceptance Test Patterns][>AcceptanceTestPatterns]]|''Some patterns we have seen emerge while writing FitNesse [[Acceptance Tests][>AcceptanceTests]].''|
-|[[Test History][>TestHistory]]|''The results of all test runs are recorded.  You can access and display those results at any time.''|
+Acceptance tests are what !-FitNesse-! is about. Learn why and how to make, run, and organize them.
 
-!2 Tutorial: FitNesse Fixtures
-|[[Fixture Code][>FixtureCode]]|''An intro to the fixture code that lets you run FitNesse tables.''|
-|[[Class Path][>ClassPath]]|''Telling FitNesse where your Fixture Code is.''|
-|[[Test Table Styles][>TestTableStyles]]|''The styles of FitNesse test tables, and corresponding Fixture Code they use.''|
-|[[Fixture Gallery][>FixtureGallery]]|''A walk through of the various Fit Fixtures.''|
-|[[Debuging Fixture Code][>DebugingFixtureCode]]|''How to debug the testing code.''|
+| [[Project Death by Requirements][>ProjectDeathByRequirements]] | ''Why use automated acceptance tests? What goes wrong when we don't use them?'' |
+| [[Test Systems][>TestSystems]] | ''[[Slim][>SliM]] and [[Fit][>FitFramework]], the two major test systems of ''!-FitNesse-!''.'' |
+| [[Acceptance Tests][>AcceptanceTests]] | ''What are the advantages of ''!-FitNesse-!'' automated acceptance tests?'' |
+| [[Delivering the Right System][>DeliveringTheRightSystem]] | ''An intro to how software teams can use ''!-FitNesse-!'' to build better systems.'' |
+| [[Creating Test Tables][>CreatingTestTables]] | ''Creating and enabling test tables on ''!-FitNesse-!'' pages.'' |
+| [[Graceful Names][>GracefulName]] | ''Managing the names of fixtures, packages, and variables.'' |
+| [[Test Table Styles][>TestTableStyles]] | ''The different styles and uses of test tables and corresponding fixtures.'' |
+| [[Test Suites][>TestSuites]] | ''How to group many test pages into a suite; then tag, search, and execute them.'' |
+| [[Acceptance Test Patterns][>AcceptanceTestPatterns]] | ''Some patterns we have seen emerge while writing ''!-FitNesse-!'' [[Acceptance Tests][>AcceptanceTests]].'' |
+| [[Test History][>TestHistory]] | ''The results of all test runs are recorded.  You can access and display those results at any time.'' |
 
-!2 FitNesse for Integrators
-|[[Source Code Control][>SourceCodeControl]]|''How to create a plugin for marrying !-FitNesse-! to your SCM system.''|
-|[[Customizing Test Execution][>CustomizingTestExecution]]|''Modify the way tests are executed.''|
-|[[Multi-Language Fitnesse][>MultiLanguageFitNesse]] |''Using fixtures written in programming languages other than Java.''|
-|[[Executing Tests from Outside The UI][>ExecutingTestsOutsideTheUserInterface]]|''How to run tests from IDEs, commandline and build scripts.''|
-|[[Plugin Usage][>PluginUsage]]|''How to create and use plugins.''|
-Several plugins for FitNesse are available at http://www.fitnesse.org/FrontPage.PluginsPage.
+!2 Tutorial: !-FitNesse-! Fixtures
+| [[Fixture Code][>FixtureCode]] | ''An intro to the fixture code that lets you run ''!-FitNesse-!'' tables.'' |
+| [[Class Path][>ClassPath]] | ''Telling ''!-FitNesse-!'' where your Fixture Code is.'' |
+| [[Test Table Styles][>TestTableStyles]] | ''The styles of ''!-FitNesse-!'' test tables, and corresponding Fixture Code they use.'' |
+| [[Fixture Gallery][>FixtureGallery]] | ''A walk through of the various Fit Fixtures.'' |
+| [[Debuging Fixture Code][>DebugingFixtureCode]] | ''How to debug the testing code.'' |
+
+!2 !-FitNesse-! for Integrators
+| [[Source Code Control][>SourceCodeControl]] | ''How to create a plugin for marrying !-FitNesse-! to your SCM system.'' |
+| [[Customizing Test Execution][>CustomizingTestExecution]] | ''Modify the way tests are executed.'' |
+| [[Multi-Language Fitnesse][>MultiLanguageFitNesse]] | ''Using fixtures written in programming languages other than Java.'' |
+| [[Executing Tests from Outside The UI][>ExecutingTestsOutsideTheUserInterface]] | ''How to run tests from IDEs, commandline and build scripts.'' |
+| [[Plugin Usage][>PluginUsage]] | ''How to create and use plugins.'' |
 
 !2 Miscellaneous
-|[[Design Notes][>DesignNotes]]|''Various articles and discussions on the design of FitNesse.''|
-|[[!-FitNesse-! Tests][<FitNesse.SuiteAcceptanceTests]]|''The suite of acceptance tests for !-FitNesse-! itself.''|
+| [[Design Notes][>DesignNotes]] | ''Various articles and discussions on the design of ''!-FitNesse-!''.'' |
+| [[!-FitNesse-! Tests][<FitNesse.SuiteAcceptanceTests]] | ''The suite of acceptance tests for !-FitNesse-! itself.'' |

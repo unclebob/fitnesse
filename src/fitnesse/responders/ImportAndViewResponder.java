@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.net.MalformedURLException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -12,6 +10,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
+
+import java.net.MalformedURLException;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
   private WikiPage page;
@@ -36,7 +36,6 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
   protected void loadPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);
   }
 

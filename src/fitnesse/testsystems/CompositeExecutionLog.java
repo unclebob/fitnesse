@@ -9,7 +9,6 @@ import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -21,7 +20,6 @@ public class CompositeExecutionLog {
   public CompositeExecutionLog(WikiPage testPage) {
     crawler = testPage.getPageCrawler();
     root = crawler.getRoot(testPage);
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
   }
 

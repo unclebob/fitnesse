@@ -3,13 +3,13 @@
 
 package fitnesse.wiki;
 
+import util.TimeMeasurement;
+
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import util.TimeMeasurement;
 
 public abstract class CachingPage extends CommitingPage {
   private static final long serialVersionUID = 1L;
@@ -22,7 +22,6 @@ public abstract class CachingPage extends CommitingPage {
 
   public CachingPage(String name, WikiPage parent) {
     super(name, parent);
-    addExtention(new VirtualCouplingExtension(this));
   }
 
   protected abstract WikiPage createChildPage(String name);

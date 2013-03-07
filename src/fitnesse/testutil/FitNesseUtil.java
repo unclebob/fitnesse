@@ -7,8 +7,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
@@ -35,11 +33,6 @@ public class FitNesseUtil {
   public static void stopFitnesse() throws IOException {
     instance.stop();
     FileUtil.deleteFileSystemDirectory("TestDir");
-  }
-
-  public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) {
-    VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
-    ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
 
   public static FitNesseContext makeTestContext() {

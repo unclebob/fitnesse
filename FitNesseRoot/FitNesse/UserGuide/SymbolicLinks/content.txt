@@ -1,4 +1,4 @@
-!img-r http://docs.fitnesse.org/files/images/symlinkDiagram.gif
+!img-r http://files/fitnesse/images/symlinkDiagram.gif
 
 !3 What are SymbolicLinks?
 Symbolic Links allow a user to easily create parent-child links between pages without permanently affecting the wiki structure.  Refer to the diagram on the right.  You will notice that the !-ApplicationTests-! page has a child page named !-SuiteTests-! which contains several other pages.  The !-EnvironmentOne-! page has no static child pages but it does have a symbolic link to the !-SuiteTests-! page.  This symbolic link acts like a child page in almost every way and give two full names to the !-SuiteTests-! page:

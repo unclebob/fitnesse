@@ -24,7 +24,6 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -40,7 +39,6 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     resource = request.getResource();
     shouldIncludePaths = request.hasInput("includePaths");
     suiteFilter = (String) request.getInput("suiteFilter");

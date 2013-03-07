@@ -2600,16 +2600,11 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         if (!/\]/.test(label) && !/^[\"\']/.test(label)) {
             return "[[" + label + "][" + link + "]]";
         }
-        if (!/\"/.test(label)) {
-            return "[[" + label + ']["' + link + '"]]';
-        }
-        if (!/\'/.test(label)) {
-            return "[[" + label + "]['" + link + "']]";
-        }
-        return "[[" + label.replace(/"+/g, "") + ' ]["' + link + '"]]';
+        return "[[" + label.replace(/"+/g, "") + "][" + link + "]]";
     }
 
     function pushAnchor(node, bracket) {
+        var _texts = texts;
         var link = node.getAttribute("data-wysiwyg-link");
         var autolink = node.getAttribute("data-wysiwyg-autolink");
 
@@ -2628,7 +2623,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         if (text === null) {
             text = linkText(link, label);
         }
-        pushTextWithDecorations(text, node);
+        _texts.push(text);
     }
 
     function string(source, times) {

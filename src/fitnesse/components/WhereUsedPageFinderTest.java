@@ -1,14 +1,13 @@
 package fitnesse.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import util.RegexTestCase;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import util.RegexTestCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalListener<WikiPage> {
@@ -71,13 +70,6 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
     crawler.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
     List<WikiPage> resultList = whereUsed.search(pageThree);
     assertEquals(0, resultList.size());
-  }
-
-  public void testDontLookForReferencesInVirtualPages() throws Exception {
-    FitNesseUtil.bindVirtualLinkToPage(pageOne, pageTwo);
-    whereUsed = new WhereUsedPageFinder(pageOne, this);
-    whereUsed.search(pageOne);
-    assertEquals(0, hits.size());
   }
 
 }

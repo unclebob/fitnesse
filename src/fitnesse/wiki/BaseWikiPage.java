@@ -12,11 +12,10 @@ public abstract class BaseWikiPage implements WikiPage {
 
   protected String name;
   protected WikiPage parent;
-  protected WikiPage parentForVariables;
 
   protected BaseWikiPage(String name, WikiPage parent) {
     this.name = name;
-    this.parent = this.parentForVariables = parent;
+    this.parent = parent;
   }
 
   public String getName() {
@@ -29,14 +28,6 @@ public abstract class BaseWikiPage implements WikiPage {
 
   public WikiPage getParent() {
     return parent == null ? this : parent;
-  }
-
-  public void setParentForVariables(WikiPage parent) {
-    parentForVariables = parent;
-  }
-
-  public WikiPage getParentForVariables() {
-    return parentForVariables == null ? this : parentForVariables;
   }
 
   protected abstract List<WikiPage> getNormalChildren();
