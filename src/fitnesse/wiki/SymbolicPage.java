@@ -37,16 +37,6 @@ public class SymbolicPage extends BaseWikiPage {
     return childPage;
   }
 
-  @Override
-  protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) {
-    WikiPagePath path = PathParser.parse(linkPath);
-    WikiPage start = (path.isRelativePath()) ? getRealPage().getParent() : getRealPage();
-    WikiPage page = getPageCrawler().getPage(start, path);
-    if (page != null)
-      page = new SymbolicPage(linkName, page, this);
-    return page;
-  }
-
   public void removeChildPage(String name) {
     realPage.removeChildPage(name);
   }

@@ -11,6 +11,8 @@ import java.util.Map;
 
 import util.TimeMeasurement;
 
+@Deprecated
+// TODO: Do caching in WikiPageFactory
 public abstract class CachingPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 

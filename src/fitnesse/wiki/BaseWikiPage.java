@@ -32,6 +32,7 @@ public abstract class BaseWikiPage implements WikiPage {
 
   protected abstract List<WikiPage> getNormalChildren();
 
+  // TODO: Use Factory for this.
   public List<WikiPage> getChildren() {
     List<WikiPage> children = getNormalChildren();
     WikiPageProperties props = getData().getProperties();
