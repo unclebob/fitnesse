@@ -10,7 +10,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.GracefulNamer;
 
 public class TestPage {
   public static final String TEAR_DOWN = "TearDown";
@@ -73,47 +72,43 @@ public class TestPage {
 
   protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
     if (wikiPage == getSetUp()) {
-      includePage(wikiPage, collapse("SETUP"), decoratedContent);
+      includePage(wikiPage, "-setup", decoratedContent);
     } else if (wikiPage == getTearDown()) {
-      includePage(wikiPage, collapse("TEARDOWN"), decoratedContent);
+      includePage(wikiPage, "-teardown", decoratedContent);
     } else if (getScenarioLibraries().contains(wikiPage)) {
-      includePage(wikiPage, true, decoratedContent);
+      includeScenarioLibrary(wikiPage, decoratedContent);
     } else {
       decoratedContent.append(wikiPage.readOnlyData().getContent());
     }
   }
 
-  protected boolean collapse(String page) {
-    String collapse = sourcePage.getData().getVariable("COLLAPSE_" + page);
-    return collapse == null || "true".equals(collapse);
-  }
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
     if (!getScenarioLibraries().isEmpty()) {
       decoratedContent.append("!*> Scenario Libraries\n");
       for (WikiPage scenarioLibrary : getScenarioLibraries()) {
-        includePage(scenarioLibrary, true, decoratedContent);
+        includeScenarioLibrary(scenarioLibrary, decoratedContent);
       }
       decoratedContent.append("*!\n");
     }
   }
 
-  protected void includePage(WikiPage wikiPage, boolean collapse, StringBuilder newPageContent) {
+  protected void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
+    newPageContent.append("!include -c .");
+    newPageContent.append(getPathNameForPage(scenarioLibrary));
+    newPageContent.append("\n");
+  }
+
+  protected void includePage(WikiPage wikiPage, String arg, StringBuilder newPageContent) {
     if (wikiPage == null)
       return;
     String pagePathName = getPathNameForPage(wikiPage);
-    String content = wikiPage.readOnlyData().getContent();
     newPageContent
-            .append("\n!*")
-            .append(collapse ? ">" : "")
-            .append(" !-")
-            .append(GracefulNamer.regrace(wikiPage.getName()))
-            .append("-! page: .")
+            .append("\n!include ")
+            .append(arg)
+            .append(" .")
             .append(pagePathName)
-            .append("\n")
-            .append(content)
-            .append(content.endsWith("\n") ? "" : "\n")
-            .append("*!\n");
+            .append("\n");
   }
 
   private String getPathNameForPage(WikiPage page) {
