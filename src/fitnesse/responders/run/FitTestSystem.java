@@ -2,13 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.components.CommandRunningFitClient;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
-
 import java.io.IOException;
 import java.util.Map;
+
+import fitnesse.FitNesseContext;
+import fitnesse.components.CommandRunningFitClient;
+import fitnesse.components.CommandRunningFitClient.CommandRunningStrategy;
+import fitnesse.components.CommandRunningFitClient.InProcessCommandRunner;
+import fitnesse.components.CommandRunningFitClient.OutOfProcessCommandRunner;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
 public class FitTestSystem extends TestSystem {
  private CommandRunningFitClient client;
@@ -22,7 +25,12 @@ public class FitTestSystem extends TestSystem {
  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) {
    String command = buildCommand(descriptor, classPath);
    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
-   client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
+   CommandRunningStrategy runningStrategy = fastTest ?
+       new InProcessCommandRunner(descriptor) :
+       new OutOfProcessCommandRunner(command, environmentVariables);
+
+   this.client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+   
    return new ExecutionLog(page, client.commandRunner, context.pageFactory);
  }
 
