@@ -46,6 +46,8 @@ public abstract class BaseWikiPage implements WikiPage {
     return children;
   }
 
+  @Deprecated
+  // Move to factory
   private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
     if (symLinkProperty == null)
       return null;
@@ -58,6 +60,8 @@ public abstract class BaseWikiPage implements WikiPage {
       return createInternalSymbolicPage(linkPath, linkName);
   }
 
+  @Deprecated
+  // Move to factory
   private WikiPage createExternalSymbolicLink(String linkPath, String linkName) {
     String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
     File file = new File(fullPagePath);
@@ -66,6 +70,7 @@ public abstract class BaseWikiPage implements WikiPage {
       if (!file.exists())
         FileUtil.makeDir(file.getPath());
       if (file.isDirectory()) {
+        //WikiPageFactory.makeRootPage
         WikiPage externalRoot = new FileSystemPage(parentDirectory.getPath(), file.getName());
         return new SymbolicPage(linkName, externalRoot, this);
       }
@@ -73,6 +78,8 @@ public abstract class BaseWikiPage implements WikiPage {
     return null;
   }
 
+  @Deprecated
+  // Move to factory
   protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) {
     WikiPagePath path = PathParser.parse(linkPath);
     WikiPage start = (path.isRelativePath()) ? getParent() : this;  //TODO -AcD- a better way?

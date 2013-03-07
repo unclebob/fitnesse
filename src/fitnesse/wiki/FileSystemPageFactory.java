@@ -34,18 +34,18 @@ public class FileSystemPageFactory implements WikiPageFactory {
   @Override
   // RootPath should be a File()
   public WikiPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController);
+    return new FileSystemPage(rootPath, rootPageName, this, fileSystem, versionsController);
   }
 
   @Override
   public WikiPage makeChildPage(String name, FileSystemPage parent) {
     String path = parent.getFileSystemPath() + "/" + name;
     if (hasContentChild(path)) {
-      return new FileSystemPage(name, parent, fileSystem);
+      return new FileSystemPage(name, parent, this, fileSystem);
     } else if (hasHtmlChild(path)) {
       return new ExternalSuitePage(path, name, parent, fileSystem);
     } else {
-      return new FileSystemPage(name, parent, fileSystem);
+      return new FileSystemPage(name, parent, this, fileSystem);
     }
   }
 

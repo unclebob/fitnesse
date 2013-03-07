@@ -30,25 +30,29 @@ public class FileSystemPage extends CachingPage {
   private final String path;
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
+  private final WikiPageFactory wikiPageFactory;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
+  public FileSystemPage(final String path, final String name,
+                        final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, null);
     this.path = path;
-
+    this.wikiPageFactory = wikiPageFactory;
     this.versionsController = versionsController;
     createDirectoryIfNewPage(fileSystem);
   }
 
   public FileSystemPage(final String path, final String name) {
-    this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
+    this(path, name, new FileSystemPageFactory(), new DiskFileSystem(), new ZipFileVersionsController());
   }
 
-    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) {
-        super(name, parent);
-        path = parent.getFileSystemPath();
-        versionsController = parent.versionsController;
-        createDirectoryIfNewPage(fileSystem);
-    }
+  public FileSystemPage(final String name, final FileSystemPage parent,
+                        final WikiPageFactory wikiPageFactory, final FileSystem fileSystem) {
+    super(name, parent);
+    path = parent.getFileSystemPath();
+    versionsController = parent.versionsController;
+    this.wikiPageFactory = wikiPageFactory;
+    createDirectoryIfNewPage(fileSystem);
+  }
 
   @Override
   public void removeChildPage(final String name) {
@@ -141,8 +145,7 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   protected WikiPage createChildPage(final String name) {
-    //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
-    return new FileSystemPageFactory().makeChildPage(name, this);
+    return wikiPageFactory.makeChildPage(name, this);
   }
 
   private void loadContent(final PageData data) {
