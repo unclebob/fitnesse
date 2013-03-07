@@ -43,7 +43,18 @@ public class ConverterTest {
 		assertConverts("false", converter, "0");
 		assertConverts("false", converter, "1");
 		assertConverts("false", converter, "x");
-	}
+    assertConverts("false", converter, "null");
+    assertConverts("false", converter, "NULL");
+  }
+
+  @Test
+  public void convertBooleanWrapperNull() {
+    // the string "null" should convert to null iff the argument type is a
+    // Boolean wrapper.
+    Object[] converted = ConverterSupport.convertArgs(new Object[] { "null" },
+        new Class<?>[] { Boolean.class });
+    assertNull(converted[0]);
+  }
 
 	@Test
 	public void defaultEnumConversion() {
