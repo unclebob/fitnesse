@@ -1,12 +1,14 @@
 package fitnesse.responders.run;
 
-import fitnesse.wiki.WikiPageDummy;
+import static junit.framework.Assert.*;
+import static org.mockito.Mockito.*;
+
+import fitnesse.testsystems.TestPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
-
-import static junit.framework.Assert.*;
-import static org.mockito.Mockito.*;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {
 

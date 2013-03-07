@@ -1,19 +1,21 @@
 package fitnesse.slim;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 public class SystemUnderTestMethodExecutor extends MethodExecutor {
-  private final Map<String, Object> instances;
 
-  public SystemUnderTestMethodExecutor(Map<String, Object> instances) {
-    this.instances = instances;
+  private final SlimExecutionContext context;
+
+  public SystemUnderTestMethodExecutor(SlimExecutionContext context) {
+    this.context = context;
   }
 
   public MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable {
-    Object instance = instances.get(instanceName);
-    if (instance == null) {
-      return MethodExecutionResult.noInstance(instanceName);
+    Object instance;
+    try {
+      instance = context.getInstance(instanceName);
+    } catch (SlimError e) {
+      return MethodExecutionResult.noInstance(instanceName + "." + methodName);
     }
     Field field = findSystemUnderTest(instance.getClass());
     if (field != null) {

@@ -8,9 +8,6 @@ import java.util.*;
 
 public class SuiteContentsFinder {
 
-  public static final String SUITE_SETUP_NAME = "SuiteSetUp";
-  public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
-
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
@@ -133,7 +130,7 @@ public class SuiteContentsFinder {
 
   public static boolean isSuiteSetupOrTearDown(WikiPage testPage) {
     String name = testPage.getName();
-    return (SUITE_SETUP_NAME.equals(name) || SUITE_TEARDOWN_NAME.equals(name));
+    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
 
 }

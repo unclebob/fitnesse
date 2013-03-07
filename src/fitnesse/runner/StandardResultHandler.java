@@ -5,8 +5,8 @@ package fitnesse.runner;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import fitnesse.responders.run.ExecutionResult;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler {

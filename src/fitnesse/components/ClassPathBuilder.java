@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.InheritedItemBuilder;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import util.Wildcard;
 
@@ -23,13 +23,35 @@ public class ClassPathBuilder extends InheritedItemBuilder {
     return createClassPathString(paths, getPathSeparator(page));
   }
 
-  public String getPathSeparator(WikiPage page) {
-    return TestSystem.getPathSeparator(page.getData());
-  }
-
   public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) {
     return getInheritedItems(page, visitedPages);
   }
+
+  public String buildClassPath(List<WikiPage> testPages) {
+    final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
+    final String pathSeparator = getPathSeparator(testPages.get(0));
+    List<String> classPathElements = new ArrayList<String>();
+    Set<WikiPage> visitedPages = new HashSet<WikiPage>();
+
+    for (WikiPage testPage : testPages) {
+      addClassPathElements(testPage, classPathElements, visitedPages);
+    }
+
+    return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
+  }
+
+  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) {
+    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
+    classPathElements.addAll(pathElements);
+  }
+
+  public String getPathSeparator(WikiPage page) {
+    String separator = page.getData().getVariable(PageData.PATH_SEPARATOR);
+    if (separator == null)
+      separator = (String) System.getProperties().get("path.separator");
+    return separator;
+  }
+
 
   public String createClassPathString(List<String> paths, String separator) {
     if (paths.isEmpty())

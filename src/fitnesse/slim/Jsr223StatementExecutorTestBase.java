@@ -202,48 +202,43 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
     return myInstance;
   }
 
-  protected void createFixtureInstance(String fixtureClass) {
-    Object created = statementExecutor.create(INSTANCE_NAME, fixtureClass,
+  protected void createFixtureInstance(String fixtureClass) throws Exception  {
+    statementExecutor.create(INSTANCE_NAME, fixtureClass,
         new Object[] {});
-    assertEquals("OK", created);
   }
 
   @Override
-  protected MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() {
+  protected MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() throws Exception {
     createFixtureInstance(annotatedFixtureName());
     return new MyAnnotatedSystemUnderTestFixtureJsr223(
         (FixtureProxyJsr223) getVerifiedInstance());
   }
 
   @Override
-  protected FixtureWithNamedSystemUnderTestBase createNamedFixture() {
+  protected FixtureWithNamedSystemUnderTestBase createNamedFixture() throws Exception {
     createFixtureInstance(namedFixtureName());
     return new FixtureWithNamedSystemUnderTestJsr223(
         (FixtureProxyJsr223) getVerifiedInstance());
   }
 
   @Override
-  protected SimpleFixture createSimpleFixture() {
+  protected SimpleFixture createSimpleFixture() throws Exception {
     createFixtureInstance(simpleFixtureName());
     return new SimpleFixtureJsr223((FixtureProxyJsr223) getVerifiedInstance());
   }
 
   @Override
-  protected EchoSupport createEchoLibrary() {
+  protected EchoSupport createEchoLibrary() throws Exception {
     String instanceName = "library" + library++;
-    Object created = statementExecutor.create(instanceName, echoLibraryName(),
-        new Object[] {});
-    assertEquals("OK", created);
+    statementExecutor.create(instanceName, echoLibraryName(), new Object[] {});
     return new EchoSupportJsr223(new FixtureProxyJsr223(statementExecutor
         .getInstance(instanceName)));
   }
 
   @Override
-  protected FileSupport createFileSupportLibrary() {
+  protected FileSupport createFileSupportLibrary() throws Exception {
     String instanceName = "library" + library++;
-    Object created = statementExecutor.create(instanceName, fileSupportName(),
-        new Object[] {});
-    assertEquals("OK", created);
+    statementExecutor.create(instanceName, fileSupportName(), new Object[] {});
     return new FileSupportJsr223(new FixtureProxyJsr223(statementExecutor
         .getInstance(instanceName)));
   }

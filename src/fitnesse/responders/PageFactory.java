@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Properties;
-
+import fitnesse.FitNesseContext;
+import fitnesse.responders.templateUtilities.EscapeDirective;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.TraverseDirective;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.TraverseDirective;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Properties;
 
 public class PageFactory {
 
@@ -62,6 +62,7 @@ public class PageFactory {
       velocityEngine.init(properties);
 
       velocityEngine.loadDirective(TraverseDirective.class.getName());
+      velocityEngine.loadDirective(EscapeDirective.class.getName());
     }
     return velocityEngine;
   }

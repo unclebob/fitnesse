@@ -53,11 +53,6 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makeNormalWikiPageContent(PageData pageData) {
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    return makePageHtml(pageData);
-  }
-
   public static String makePageHtml(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(WikiPageUtil.getHeaderPageHtml(pageData.getWikiPage()));

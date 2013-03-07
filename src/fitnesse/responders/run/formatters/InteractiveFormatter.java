@@ -7,11 +7,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.ExecutionStatus;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
@@ -25,10 +25,6 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   private CompositeExecutionLog log;
 
   private String relativeName;
-  
-  protected InteractiveFormatter() {
-    super();
-  }
 
   protected InteractiveFormatter(FitNesseContext context, WikiPage page) {
     super(context, page);
@@ -43,7 +39,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   protected String getRelativeName() {
 	  return relativeName;
   }
-  
+
   protected String getRelativeName(TestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
@@ -58,7 +54,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
     HtmlTag status = HtmlUtil.makeSilentLink(link, new RawHtml("Stop Test"));
     status.addAttribute("class", "stop");
-    
+
     writeData(HtmlUtil.makeReplaceElementScript("test-action", status.html()).html());
   }
 
@@ -74,13 +70,13 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   public boolean wasInterupted() {
     return wasInterupted;
   }
-  
+
   @Override
   public void errorOccured() {
     wasInterupted = true;
     super.errorOccured();
   }
-  
+
   @Override
   public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement)
 		throws IOException {
@@ -103,7 +99,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
   protected void close() {
   }
-  
+
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     this.log = log;
@@ -112,11 +108,11 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
   protected void publishAndAddLog() throws IOException {
     if (log != null) {
-      log.publish();
+      log.publish(context.pageFactory);
       writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
     }
   }
-  
+
   protected void maybeMakeErrorNavigatorVisible(){
     if(exceptionsOrErrorsExist()){
       writeData(makeErrorNavigatorVisible());
@@ -143,7 +139,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "error-nav-hidden");
     return toggler.html();
   }
-  
+
   private String initErroMetadata() {
     HtmlTag init = HtmlUtil.makeInitErrorMetadataScript();
     return init.html();

@@ -10,7 +10,7 @@ Now you want to measure how much time this test is taking to execute. But you do
 
 It would be cool if you could write a decorator around your fit test which starts a timer before the execution of the fit test starts, runs the fit test as usual and once the execution is completed it records the amount of time it took to run the test. An assertion on the execution time to make sure it executes within a max time is also quite handy to be aware of the application's performance over a period of time. Something like this:
 
-!|Max Time|300|milliseconds|
+!|Max Time|100|milliseconds|
 |Division|
 |numerator|denominator|quotient()|
 |10|2|5|

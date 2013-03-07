@@ -16,6 +16,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.slim.converters.VoidConverter;
 import org.junit.Before;
 import org.junit.Test;
+import util.ListUtility;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -28,7 +29,7 @@ public abstract class ListExecutorTestBase {
 
   protected abstract ListExecutor getListExecutor() throws Exception;
   protected abstract String getTestClassPath();
-  
+
   @Before
   public void setup() throws Exception {
     executor = getListExecutor();
@@ -39,7 +40,7 @@ public abstract class ListExecutorTestBase {
     expectedResults.add(list("m1", "OK"));
   }
 
-  protected void respondsWith(List<Object> expected) {
+  protected void respondsWith(List<?> expected) {
     expectedResults.addAll(expected);
     List<Object> result = executor.execute(statements);
     Map<String, Object> expectedMap = SlimClient.resultToMap(expectedResults);
@@ -50,13 +51,13 @@ public abstract class ListExecutorTestBase {
   @Test
   public void checkSetup()
   {
-    respondsWith(list());
+    respondsWith(ListUtility.list());
   }
 
   @Test()
   public void invalidOperation() throws Exception {
     statements.add(list("inv1", "invalidOperation"));
-    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation.>>", "inv1");
+    assertExceptionReturned(String.format("message:<<%s invalidOperation>>", SlimServer.MALFORMED_INSTRUCTION),"inv1");
   }
 
   @Test(expected = SlimError.class)
@@ -67,8 +68,9 @@ public abstract class ListExecutorTestBase {
 
   private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
-    String result = (String) results.get(returnTag);
-    assertTrue(result, result.contains(SlimServer.EXCEPTION_TAG) && result.indexOf(message) != -1);
+    SlimException result = (SlimException) results.get(returnTag);
+    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().indexOf
+        (message) != -1);
   }
 
   @Test
@@ -82,7 +84,7 @@ public abstract class ListExecutorTestBase {
     statements.clear();
     executor.execute(statements);
     expectedResults.clear();
-    respondsWith(list());
+    respondsWith(ListUtility.<List<Object>>list());
   }
 
   @Test
@@ -90,7 +92,7 @@ public abstract class ListExecutorTestBase {
     statements.clear();
     statements.add(list("m1", "make", "testSlim", getTestClassPath() + "." + testClass));
     expectedResults.clear();
-    respondsWith(list(list("m1", "OK")));
+    respondsWith(list(list("m1", (Object) "OK")));
   }
 
   @Test
@@ -104,7 +106,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void oneFunctionCall() throws Exception {
     statements.add(list("id", "call", "testSlim", "returnString"));
-    respondsWith(list(list("id", "string")));
+    respondsWith(list(list("id", (Object) "string")));
   }
 
   @Test
@@ -137,7 +139,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {
     statements.add(list("id", "call", "testSlim", "echoString", ""));
-    respondsWith(list(list("id", "")));
+    respondsWith(list(list("id", (Object) "")));
   }
 
   @Test
@@ -145,7 +147,7 @@ public abstract class ListExecutorTestBase {
     statements.add(0,list("i2", "import", getTestClassPath() + ".testSlimInThisPackageShouldNotBeTheOneUsed"));
     statements.add(list("id", "call", "testSlim", "returnString"));
     expectedResults.add(0, list("i2", "OK"));
-    respondsWith(list(list("id", "string")));
+    respondsWith(list(list("id", (Object) "string")));
   }
 
   @Test
@@ -155,9 +157,9 @@ public abstract class ListExecutorTestBase {
     statements.add(list("c2", "call", "testSlim", "returnConstructorArg"));
     respondsWith(
       list(
-        list("m2", "OK"),
-        list("c1", "3"),
-        list("c2", "0")
+        list("m2", (Object) "OK"),
+        list("c1", (Object) "3"),
+        list("c2", (Object) "0")
       )
     );
   }
@@ -167,14 +169,14 @@ public abstract class ListExecutorTestBase {
   public void multiFunctionCall() throws Exception {
     statements.add(list("id1", "call", "testSlim", "addTo", "1", "2"));
     statements.add(list("id2", "call", "testSlim", "addTo", "3", "4"));
-    respondsWith(list(list("id1", "3"), list("id2", "7")));
+    respondsWith(list(list("id1", (Object) "3"), list("id2", (Object) "7")));
   }
 
   @Test
   public void callAndAssign() throws Exception {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "addTo", "5", "6"));
     statements.add(list("id2", "call", "testSlim", "echoInt", "$v"));
-    respondsWith(list(list("id1", "11"), list("id2", "11")));
+    respondsWith(list(list("id1", (Object) "11"), list("id2", (Object) "11")));
   }
 
   @Test
@@ -182,7 +184,10 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "callAndAssign", "v1", "testSlim", "echoString", "Bob"));
     statements.add(list("id2", "callAndAssign", "v2", "testSlim", "echoString", "Martin"));
     statements.add(list("id3", "call", "testSlim", "echoString", "name: $v1 $v2"));
-    respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
+    respondsWith(list(
+            list("id1", (Object) "Bob"),
+            list("id2", (Object) "Martin"),
+            list("id3", (Object) "name: Bob Martin")));
   }
 
   @Test
@@ -190,7 +195,10 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "echoString", "Bob"));
     statements.add(list("id2", "callAndAssign", "v1", "testSlim", "echoString", "Martin"));
     statements.add(list("id3", "call", "testSlim", "echoString", "name: $v $v1"));
-    respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
+    respondsWith(list(
+            list("id1", (Object) "Bob"),
+            list("id2", (Object) "Martin"),
+            list("id3", (Object) "name: Bob Martin")));
   }
 
   @Test
@@ -198,7 +206,10 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "make", "nf", "NullFixture"));
     statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
     statements.add(list("id3", "call", "testSlim", "echoString", "$v"));
-    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", null)));
+    respondsWith(list(
+            list("id1", (Object) "OK"),
+            list("id2", (Object) null),
+            list("id3", (Object) null)));
   }
 
   @Test
@@ -212,19 +223,21 @@ public abstract class ListExecutorTestBase {
   public void passAndReturnListWithVariable() throws Exception {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "addTo", "3", "4"));
     statements.add(list("id2", "call", "testSlim", "echoList", list("$v")));
-    respondsWith(list(list("id1", "7"), list("id2", list(7))));
+    respondsWith(list(
+            list("id1", (Object) "7"),
+            list("id2", (Object) list(7))));
   }
 
   @Test
   public void callToVoidFunctionReturnsVoidValue() throws Exception {
     statements.add(list("id", "call", "testSlim", "voidFunction"));
-    respondsWith(list(list("id", VoidConverter.VOID_TAG)));
+    respondsWith(list(list("id", (Object) VoidConverter.VOID_TAG)));
   }
 
   @Test
   public void callToFunctionReturningNull() throws Exception {
     statements.add(list("id", "call", "testSlim", "nullString"));
-    respondsWith(list(list("id", null)));
+    respondsWith(list(list("id", (Object) null)));
   }
 
   @Test
@@ -233,8 +246,10 @@ public abstract class ListExecutorTestBase {
         "test string"));
     statements.add(list("m2", "make", "chainedTestSlim", "$v"));
     statements.add(list("id2", "call", "chainedTestSlim", "getStringArg"));
-    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("m2", "OK"),
-        list("id2", "test string")));
+    respondsWith(list(
+            list("id1", (Object) "TestSlim: 0, test string"),
+            list("m2", (Object) "OK"),
+            list("id2", (Object) "test string")));
   }
 
   @Test
@@ -242,7 +257,9 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "createTestSlimWithString",
         "test string"));
     statements.add(list("id2", "call", "testSlim", "getStringFromOther", "$v"));
-    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "test string")));
+    respondsWith(list(
+            list("id1", (Object) "TestSlim: 0, test string"),
+            list("id2", (Object) "test string")));
   }
 
   @Test
@@ -252,8 +269,12 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id2", "call", "testSlim", "isSame", "$v"));
     statements.add(list("m2", "make", "chainedTestSlim", "$v"));
     statements.add(list("id3", "call", "chainedTestSlim", "isSame", "$v"));
-  
-    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "false"), list("m2", "OK"), list("id3", "true")));
+
+    respondsWith(list(
+            list("id1", (Object) "TestSlim: 0, test string"),
+            list("id2", (Object)"false"),
+            list("m2", (Object) "OK"),
+            list("id3", (Object) "true")));
   }
 
   @Test
@@ -262,7 +283,10 @@ public abstract class ListExecutorTestBase {
         "test string"));
     statements.add(list("m2", "make", "newTestSlim", testClass, "4", "$v"));
     statements.add(list("id2", "call", "newTestSlim", "getStringArg"));
-    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("m2", "OK"), list("id2", "test string")));
+    respondsWith(list(
+            list("id1", (Object) "TestSlim: 0, test string"),
+            list("m2", (Object) "OK"),
+            list("id2", (Object) "test string")));
   }
 
 }

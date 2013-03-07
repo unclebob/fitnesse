@@ -6,19 +6,16 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
-import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import static util.RegexTestCase.*;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
@@ -26,6 +23,13 @@ import util.XmlUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.*;
 
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -394,7 +398,7 @@ public class SuiteResponderTest {
     addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
     addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
     String results = runSuite();
-    assertSubString("<content><![CDATA[", results);
+    assertSubString("<content>", results);
   }
 
   private File expectedXmlResultsFile() {

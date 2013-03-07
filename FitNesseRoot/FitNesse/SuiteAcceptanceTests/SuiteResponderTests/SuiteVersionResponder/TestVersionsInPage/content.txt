@@ -27,8 +27,8 @@ The version list has the correct headings.
 The version list has 3 entries and each has a checkbox.
 |Response Examiner.|
 |type|pattern|matches?|matchCount?|
-|contents|!-href="\?responder=viewVersion&amp;version=-!|true|3|
-|contents|!-input type="checkbox" name="Version_-!|true|3|
+|contents|!-href="\?responder=viewVersion&amp;version=-!|true|4|
+|contents|!-input type="checkbox" name="Version_-!|true|4|
 
 Show the contents.
 |Response Examiner.|

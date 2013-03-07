@@ -1,10 +1,10 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 import util.TimeMeasurement;
 import util.FileUtil;
 

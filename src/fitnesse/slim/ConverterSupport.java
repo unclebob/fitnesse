@@ -25,7 +25,8 @@ class ConverterSupport {
 			return converter.fromString(arg.toString());
 		}
 		throw new SlimError(String.format(
-				"message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
+				"message:<<%s %s.>>",
+				SlimServer.NO_CONVERTER_FOR_ARGUMENT_NUMBER,
 				argumentType.getName()));
 	}
 

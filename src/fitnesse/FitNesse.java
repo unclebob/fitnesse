@@ -4,7 +4,7 @@ package fitnesse;
 
 import fitnesse.http.*;
 import fitnesse.socketservice.SocketService;
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 
 import java.io.File;
 import java.io.IOException;

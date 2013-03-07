@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,10 +19,10 @@ import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
 import fitnesse.responders.run.formatters.XmlFormatter.WriterFactory;
 import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;

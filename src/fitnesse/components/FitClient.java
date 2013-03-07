@@ -9,8 +9,8 @@ import java.net.Socket;
 import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystemListener;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
 
 public class FitClient {
 
@@ -93,7 +93,7 @@ public class FitClient {
         String readValue = fitOutput.read(size);
         if (fitOutput.byteCount() < size)
           throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-        listener.acceptOutputFirst(readValue);
+        listener.testOutputChunk(readValue);
       } else {
         Counts counts = FitProtocol.readCounts(fitOutput);
         TestSummary summary = new TestSummary();

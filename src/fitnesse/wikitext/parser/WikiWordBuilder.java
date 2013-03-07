@@ -82,7 +82,7 @@ public class WikiWordBuilder {
     private String makeLinkToNonExistentWikiPage(String text, String url) {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
-        link.addAttribute("href", url+ "?edit&nonExistent=true");
+        link.addAttribute("href", url+ "?edit&amp;nonExistent=true");
         return text + link.htmlInline();
     }
 

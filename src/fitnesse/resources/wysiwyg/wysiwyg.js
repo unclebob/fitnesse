@@ -1177,11 +1177,10 @@ Wysiwyg.prototype.insertTableColumn = function (after) {
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
         var i;
-        for (i = 1; i < length; i++) {
+        for (i = 0; i < length; i++) {
             var row = rows[i];
             this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
         }
-        this.spanTableColumns(focus.table);
     }
 };
 
@@ -1214,13 +1213,12 @@ Wysiwyg.prototype.deleteTableColumn = function () {
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex;
         var i;
-        for (i = 1; i < length; i++) {
+        for (i = 0; i < length; i++) {
             var row = rows[i];
             if (cellIndex < row.cells.length) {
                 row.deleteCell(cellIndex);
             }
         }
-        this.spanTableColumns(focus.table);
     }
 };
 

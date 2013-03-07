@@ -2,18 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.fit.CommandRunningFitClient;
+import fitnesse.testsystems.fit.FitSocketReceiver;
+import fitnesse.testsystems.fit.SimpleSocketDoner;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.util.MockSocket;
+import util.RegexTestCase;
+import util.TimeMeasurement;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import util.RegexTestCase;
-import util.TimeMeasurement;
-import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystemListener;
-import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.SimpleSocketDoner;
 
 public class FitClientTest extends RegexTestCase implements TestSystemListener {
   private List<String> outputs = new ArrayList<String>();
@@ -45,14 +48,17 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     receiver.close();
   }
 
-  public void acceptOutputFirst(String output) {
+  @Override
+  public void testOutputChunk(String output) {
     outputs.add(output);
   }
 
+  @Override
   public void testComplete(TestSummary testSummary) {
     this.counts.add(testSummary);
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
     exceptionOccurred = true;
     try {
@@ -61,6 +67,14 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     catch (Exception e1) {
       e1.printStackTrace();
     }
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   public void testOneRunUsage() throws Exception {

@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -14,11 +18,13 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -91,17 +97,29 @@ public class VersionResponder implements SecureResponder {
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
-  
+
   public class VersionRenderer {
     private PageData pageData;
-    
+
     public VersionRenderer(PageData pageData) {
       super();
       this.pageData = pageData;
     }
 
     public String render() {
-      return HtmlUtil.makeNormalWikiPageContent(pageData);
+      PageData data;
+      if (isTestPage(pageData)) {
+        TestPage testPage = new TestPage(pageData);
+        data = testPage.getDecoratedData();
+      } else {
+        data = pageData;
+      }
+      return HtmlUtil.makePageHtml(data);
+
+    }
+
+    private boolean isTestPage(PageData pageData) {
+      return pageData.hasAttribute("Test");
     }
   }
 }

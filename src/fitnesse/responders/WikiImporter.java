@@ -28,8 +28,8 @@ import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.XmlizerPageHandler;
 
 public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
-  public static String remoteUsername;
-  public static String remotePassword;
+  private String remoteUsername;
+  private String remotePassword;
 
   private String remoteHostname;
   private int remotePort;

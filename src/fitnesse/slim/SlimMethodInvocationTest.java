@@ -19,7 +19,7 @@ public class SlimMethodInvocationTest extends SlimMethodInvocationTestBase {
 
   @Before
   @Override
-  public void setUp() {
+  public void setUp() throws Exception {
     caller = new StatementExecutor();
     caller.create("testSlim", getTestClassName(), new Object[0]);
     testSlim = (TestSlim) caller.getInstance("testSlim");

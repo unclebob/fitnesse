@@ -1,6 +1,14 @@
 package fitnesse.junit;
 
 import fitnesse.responders.run.*;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -55,6 +63,14 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
 
   @Override
   public void testOutputChunk(String output) {
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   @Override

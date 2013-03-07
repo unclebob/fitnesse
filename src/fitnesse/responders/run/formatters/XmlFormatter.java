@@ -3,11 +3,17 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.*;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.slimTables.HtmlTable;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.Table;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.testsystems.TestPage;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.Expectation;
+import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -17,8 +23,8 @@ import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
   public interface WriterFactory {
@@ -28,31 +34,89 @@ public class XmlFormatter extends BaseFormatter {
   private WriterFactory writerFactory;
   private long currentTestStartTime;
   private StringBuilder outputBuffer;
-  private TestSystem testSystem;
   protected TestExecutionReport testResponse = new TestExecutionReport();
+  public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
   protected TestSummary finalSummary = new TestSummary();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
     this.writerFactory = writerFactory;
   }
-  
+
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     currentTestStartTime = timeMeasurement.startedAt();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
-  
+
   @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    this.testSystem = testSystem;
   }
-  
+
   @Override
   public void testOutputChunk(String output) {
     appendHtmlToBuffer(output);
   }
-  
+
+  // TODO: store tables -> need handler startNewTable(SlimTable slimTable)
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    if (testResult == null) {
+      return;
+    }
+    Instruction instruction = assertion.getInstruction();
+    Expectation expectation = assertion.getExpectation();
+    TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
+    instructionResults.add(instructionResult);
+
+    String id = instruction.getId();
+
+    instructionResult.instruction = instruction.toString();
+    instructionResult.slimResult = testResult.toString();
+    try {
+      TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
+      instructionResult.addExpectation(expectationResult);
+      expectationResult.instructionId = id;
+      expectationResult.type = expectation.getClass().getSimpleName();
+      expectationResult.actual = testResult.getActual();
+      expectationResult.expected = testResult.getExpected();
+      expectationResult.evaluationMessage = testResult.getMessage();
+      if (testResult.getExecutionResult() != null) {
+        expectationResult.status = testResult.getExecutionResult().toString();
+      }
+      if (expectation instanceof SlimTable.RowExpectation) {
+        SlimTable.RowExpectation rowExpectation = (SlimTable.RowExpectation) expectation;
+        expectationResult.col = Integer.toString(rowExpectation.getCol());
+        expectationResult.row = Integer.toString(rowExpectation.getRow());
+      }
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    Instruction instruction = assertion.getInstruction();
+    Expectation expectation = assertion.getExpectation();
+    TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
+    instructionResults.add(instructionResult);
+
+    String id = instruction.getId();
+
+    instructionResult.instruction = instruction.toString();
+    try {
+      TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
+      instructionResult.addExpectation(expectationResult);
+      expectationResult.instructionId = id;
+      expectationResult.type = expectation.getClass().getSimpleName();
+      expectationResult.evaluationMessage = exceptionResult.getMessage();
+      expectationResult.status = exceptionResult.getExecutionResult().toString();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(test, testSummary, timeMeasurement);
@@ -70,21 +134,19 @@ public class XmlFormatter extends BaseFormatter {
     currentResult.runTimeInMillis = String.valueOf(timeMeasurement.elapsed());
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.getInstructions().addAll(instructionResults);
+    instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
-    if (testSystem instanceof SlimTestSystem) {
-      SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
-      new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
-    }
   }
 
   protected TestExecutionReport.TestResult newTestResult() {
     return new TestExecutionReport.TestResult();
   }
-  
+
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
-  
+
   protected void setPage(WikiPage testPage) {
     this.page = testPage;
     testResponse.rootPath = testPage.getName();
@@ -100,7 +162,7 @@ public class XmlFormatter extends BaseFormatter {
   protected void setTotalRunTimeOnReport(TimeMeasurement totalTimeMeasurement) {
     testResponse.setTotalRunTimeInMillis(totalTimeMeasurement);
   }
-  
+
   protected void writeResults() throws IOException {
     writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
   }
@@ -137,146 +199,6 @@ public class XmlFormatter extends BaseFormatter {
     if (outputBuffer == null)
       outputBuffer = new StringBuilder();
     outputBuffer.append(output);
-  }
-
-  private static class SlimTestXmlFormatter {
-    private TestExecutionReport.TestResult testResult;
-    private List<Object> instructions;
-    private Map<String, Object> results;
-    private List<SlimTable.Expectation> expectations;
-    private List<SlimTable> slimTables;
-
-    public SlimTestXmlFormatter(TestExecutionReport.TestResult testResult, SlimTestSystem slimSystem) {
-      this.testResult = testResult;
-      instructions = slimSystem.getInstructions();
-      results = slimSystem.getInstructionResults();
-      expectations = slimSystem.getExpectations();
-      slimTables = slimSystem.getTestTables();
-    }
-
-    public void invoke() {
-      addTables();
-      addInstructionResults();
-    }
-
-    private void addTables() {
-      if (slimTables.size() > 0) {
-        for (SlimTable slimTable : slimTables) {
-          addTable(slimTable);
-        }
-      }
-    }
-
-    private void addTable(SlimTable slimTable) {
-      TestExecutionReport.Table resultTable = new TestExecutionReport.Table(slimTable.getTableName());
-      testResult.tables.add(resultTable);
-      addRowsToTable(slimTable, resultTable);
-      addChildTables(slimTable);
-    }
-
-    private void addChildTables(SlimTable slimTable) {
-      for (SlimTable child : slimTable.getChildren()) {
-        addTable(child);
-      }
-    }
-
-    private void addRowsToTable(SlimTable slimTable, TestExecutionReport.Table resultTable) {
-      Table table = slimTable.getTable();
-      int rows = table.getRowCount();
-      for (int row = 0; row < rows; row++) {
-        addRowToTable(resultTable, table, row);
-      }
-    }
-
-    private void addRowToTable(TestExecutionReport.Table resultTable, Table table, int row) {
-      TestExecutionReport.Row resultRow = new TestExecutionReport.Row();
-      resultTable.add(resultRow);
-      int cols = table.getColumnCountInRow(row);
-      for (int col = 0; col < cols; col++) {
-        String contents = table.getCellContents(col, row);
-        if (isScenarioHtml(contents)) {
-          addColorizedScenarioReference(resultRow, contents);
-        } else {
-          String colorizedContents = HtmlTable.colorize(contents);
-          resultRow.add(colorizedContents);
-        }
-      }
-    }
-
-    private void addColorizedScenarioReference(TestExecutionReport.Row resultRow, String contents) {
-      String status = getTestStatus(contents);
-      String tableName = getTableName(contents);
-      resultRow.add(String.format("%s(scenario:%s)", status, tableName));
-    }
-
-    private String getTableName(String contents) {
-      return getStringBetween(contents, "table_name=\"", "\"");
-    }
-
-    private static String getTestStatus(String contents) {
-      return getStringBetween(contents, "<span id=\"test_status\" class=", ">Scenario</span>");
-    }
-
-    private static String getStringBetween(String contents, String prefix, String suffix) {
-      int start = contents.indexOf(prefix) + prefix.length();
-      int end = contents.indexOf(suffix, start);
-      return contents.substring(start, end);
-    }
-
-    private boolean isScenarioHtml(String contents) {
-      return contents.startsWith("<div class=\"collapsible\">");
-    }
-
-    private void addInstructionResults() {
-      for (Object instruction : instructions) {
-        addInstructionResult(instruction);
-      }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addInstructionResult(Object instruction) {
-      TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-      testResult.instructions.add(instructionResult);
-
-      List<Object> instructionList = (List<Object>) instruction;
-      String id = (String) (instructionList.get(0));
-      Object result = results.get(id);
-
-      instructionResult.instruction = instruction.toString();
-      instructionResult.slimResult = (result != null) ? result.toString() : "";
-      for (SlimTable.Expectation expectation : expectations) {
-        if (expectation.getInstructionTag().equals(id)) {
-          try {
-            TestExecutionReport.Expectation expectationResult = new TestExecutionReport.Expectation();
-            instructionResult.addExpectation(expectationResult);
-            expectationResult.instructionId = expectation.getInstructionTag();
-            expectationResult.col = Integer.toString(expectation.getCol());
-            expectationResult.row = Integer.toString(expectation.getRow());
-            expectationResult.type = expectation.getClass().getSimpleName();
-            expectationResult.actual = expectation.getActual();
-            expectationResult.expected = expectation.getExpected();
-            String message = expectation.getEvaluationMessage();
-            expectationResult.evaluationMessage = message;
-            expectationResult.status = expectationStatus(message);
-          } catch (Throwable e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    }
-
-    private String expectationStatus(String message) {
-      String status;
-      if (message.matches(".*pass(.*)"))
-        status = "right";
-      else if (message.matches(".*fail(.*)"))
-        status = "wrong";
-      else if (message.matches(".*__EXCEPTION__:<"))
-        status = "exception";
-      else
-        status = "ignored";
-      return status;
-    }
   }
 
 }

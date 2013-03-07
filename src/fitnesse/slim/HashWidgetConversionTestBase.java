@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import util.ListUtility;
 
 //Extracted Test class to be implemented by all Java based Slim ports
 //The tests for PhpSlim and JsSlim implement this class
@@ -25,20 +26,18 @@ public abstract class HashWidgetConversionTestBase {
 
   protected abstract StatementExecutorInterface createStatementExecutor() throws Exception;
   
-  protected void createMapReceptorInstance() {
-    Object created = statementExecutor.create(MY_INSTANCE, mapReceptorClassName(), new Object[] {});
-    assertEquals("OK", created);
+  protected void createMapReceptorInstance() throws Exception {
+    statementExecutor.create(MY_INSTANCE, mapReceptorClassName(), new Object[] {});
   }
 
   protected abstract String mapReceptorClassName();
 
   protected abstract String mapConstructorClassName();
 
-  private void assertConvertsTo(String string, List<Object> list) {
+  private void assertConvertsTo(String string, List<Object> list) throws Exception  {
     assertEquals("true", statementExecutor.call(MY_INSTANCE, "setMap", string));
     assertEquals(list, statementExecutor.call(MY_INSTANCE, "query", new Object[] {}));
-    Object created = statementExecutor.create(OTHER_INSTANCE, mapConstructorClassName(), new Object[] {string});
-    assertEquals("OK", created);
+    statementExecutor.create(OTHER_INSTANCE, mapConstructorClassName(), new Object[] {string});
     assertEquals(list, statementExecutor.call(OTHER_INSTANCE, "query", new Object[] {}));
   }
 
@@ -87,7 +86,7 @@ public abstract class HashWidgetConversionTestBase {
         "  <td>name</td>" +
         "  <td>Bob</td>" +
         "</tr>" +
-        "</table>", list(list("name", "Bob")));
+        "</table>", ListUtility.<Object>list(list("name", "Bob")));
   }
 
   @Test
@@ -102,7 +101,7 @@ public abstract class HashWidgetConversionTestBase {
         "  <td>address</td>" +
         "  <td>here</td>" +
         "</tr>" +
-        "</table>", list(list("address", "here"), list("name", "Bob")));
+        "</table>", ListUtility.<Object>list(list("address", "here"), list("name", "Bob")));
   }
 
   @Test
