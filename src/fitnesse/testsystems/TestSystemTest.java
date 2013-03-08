@@ -2,8 +2,6 @@ package fitnesse.testsystems;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSystem.Descriptor;
@@ -137,25 +135,5 @@ public class TestSystemTest {
     assertEquals("/path/to/somewhere", TestSystem.replace("/path%p", "%p", "/to/somewhere"));
     assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path\\%p\\somewhere", "%p", "to"));
     assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path%p", "%p", "\\to\\somewhere"));
-  }
-
-  @Test
-  public void shouldIncludeStandaloneJarByDefault() {
-    assertEquals("fitnesse.jar", TestSystem.fitnesseJar("fitnesse.jar"));
-    assertEquals("fitnesse-20121220.jar",
-            TestSystem.fitnesseJar("fitnesse-20121220.jar"));
-    assertEquals("fitnesse-standalone.jar",
-            TestSystem.fitnesseJar("fitnesse-standalone.jar"));
-    assertEquals("fitnesse-standalone-20121220.jar",
-            TestSystem.fitnesseJar("fitnesse-standalone-20121220.jar"));
-    assertEquals("fitnesse.jar",
-            TestSystem.fitnesseJar("fitnesse-book.jar"));
-    assertEquals(
-            "fitnesse-standalone-20121220.jar",
-            TestSystem.fitnesseJar(String
-                    .format("irrelevant.jar%1$sfitnesse-book.jar%1$sfitnesse-standalone-20121220.jar",
-                            System.getProperty("path.separator"))));
-    assertEquals(String.format("lib%sfitnesse-standalone.jar", File.separator),
-            TestSystem.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
   }
 }

@@ -18,9 +18,7 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_COMMAND_PATTERN =
-    "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
-      System.getProperty("path.separator") +
-      "%p %m";
+          "java -cp %P" + System.getProperty("path.separator") + "%p %m";
 
   public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
@@ -31,24 +29,6 @@ public abstract class TestSystem implements TestSystemListener {
   protected boolean manualStart;
   private ExecutionLog log;
 
-  protected static String fitnesseJar(String classpath) {
-    for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
-      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
-      String jarFile = paths[paths.length-1];
-      if ("fitnesse-standalone.jar".equals(jarFile)) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-    }
-
-    return "fitnesse.jar";
-  }
-
   public TestSystem(WikiPage page, TestSystemListener testSystemListener) {
     this.page = page;
     this.testSystemListener = testSystemListener;
@@ -56,7 +36,8 @@ public abstract class TestSystem implements TestSystemListener {
 
   protected String buildCommand(TestSystem.Descriptor descriptor) {
     String commandPattern = descriptor.getCommandPattern();
-    String command = replace(commandPattern, "%p", descriptor.getClassPath());
+    String command = replace(commandPattern, "%P", System.getProperty("java.class.path"));
+    command = replace(command, "%p", descriptor.getClassPath());
     command = replace(command, "%m", descriptor.getTestRunner());
     return command;
   }
