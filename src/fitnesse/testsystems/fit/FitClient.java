@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems.fit;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,7 +29,7 @@ public class FitClient {
     this.listener = listener;
   }
 
-  public void acceptSocket(Socket socket) throws IOException, InterruptedException {
+  public synchronized void acceptSocket(Socket socket) throws IOException, InterruptedException {
     checkForPulse();
     fitSocket = socket;
     fitInput = fitSocket.getOutputStream();
@@ -67,6 +67,10 @@ public class FitClient {
       fitListeningThread.interrupt();
   }
 
+  public synchronized boolean isSuccessfullyStarted() {
+    return fitSocket != null;
+  }
+
   public void exceptionOccurred(Exception e) {
     listener.exceptionOccurred(e);
   }
@@ -79,8 +83,7 @@ public class FitClient {
   private void listenToFit() {
     try {
       attemptToListenToFit();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       exceptionOccurred(e);
     }
   }
@@ -116,9 +119,9 @@ public class FitClient {
   /**
    * @return true if the current state of the transission is indeterminate.
    *         <p/>
-   *         When the number of pages sent and recieved is the same, we may be done with the whole job,
-   *         or we may just be waiting for FitNesse to send the next page.  There's no way to know until
-   *         FitNesse either calls send, or done.
+   *         When the number of pages sent and recieved is the same, we may be done with the whole job, or we may just
+   *         be waiting for FitNesse to send the next page. There's no way to know until FitNesse either calls send, or
+   *         done.
    */
   private boolean stateIndeterminate() {
     return (received == sent) && !isDoneSending;
@@ -127,8 +130,7 @@ public class FitClient {
   private void shortSleep() {
     try {
       Thread.sleep(10);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
@@ -138,4 +140,5 @@ public class FitClient {
       listenToFit();
     }
   }
+
 }

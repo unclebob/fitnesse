@@ -10,7 +10,7 @@ import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.FitClient;
+import fitnesse.testsystems.fit.FitClient;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;

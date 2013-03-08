@@ -1,7 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems.fit;
 
+import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.fit.CommandRunningFitClient;
@@ -29,7 +30,8 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
 
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
-    client = new CommandRunningFitClient(this, "java -cp classes fit.FitServer -v", port, new SocketDealer());
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
+        "java -cp classes fit.FitServer -v", null));
     receiver = new CustomFitSocketReceiver(port);
   }
 
@@ -63,8 +65,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     exceptionOccurred = true;
     try {
       client.kill();
-    }
-    catch (Exception e1) {
+    } catch (Exception e1) {
       e1.printStackTrace();
     }
   }
@@ -96,7 +97,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.start();
     Thread.sleep(100);
     client.join();
@@ -107,7 +108,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.start();
     Thread.sleep(50);
     client.join();
@@ -120,8 +121,8 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     receiver.receiveSocket();
     client.start();
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
-      "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
-      "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
+        "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
+        "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
     client.done();
     client.join();
     assertFalse(exceptionOccurred);
