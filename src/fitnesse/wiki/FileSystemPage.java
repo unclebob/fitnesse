@@ -28,30 +28,32 @@ public class FileSystemPage extends CachingPage {
   public static final String propertiesFilename = "/properties.xml";
 
   private final String path;
+  private final WikiPageFactory wikiPageFactory;
+  private final FileSystem fileSystem;
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
-  private final WikiPageFactory wikiPageFactory;
 
   public FileSystemPage(final String path, final String name,
                         final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, null);
     this.path = path;
     this.wikiPageFactory = wikiPageFactory;
+    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
-    createDirectoryIfNewPage(fileSystem);
   }
 
+  @Deprecated
+  // TODO: not to be used in production code
   public FileSystemPage(final String path, final String name) {
     this(path, name, new FileSystemPageFactory(), new DiskFileSystem(), new ZipFileVersionsController());
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent,
-                        final WikiPageFactory wikiPageFactory, final FileSystem fileSystem) {
+  public FileSystemPage(final String name, final FileSystemPage parent) {
     super(name, parent);
     path = parent.getFileSystemPath();
+    wikiPageFactory = parent.wikiPageFactory;
+    fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
-    this.wikiPageFactory = wikiPageFactory;
-    createDirectoryIfNewPage(fileSystem);
   }
 
   @Override
@@ -74,6 +76,8 @@ public class FileSystemPage extends CachingPage {
     return false;
   }
 
+  // TODO: Do this in the VersionsController
+  @Deprecated
   protected synchronized void saveContent(String content) {
     if (content == null) {
       return;
@@ -91,8 +95,6 @@ public class FileSystemPage extends CachingPage {
     //a strange behavior on windows.
     content = content.replaceAll("\n", separator);
 
-    // TODO: Do this in the VersionsController
-    @Deprecated
     String contentPath = getFileSystemPath() + contentFilename;
     final File output = new File(contentPath);
     OutputStreamWriter writer = null;
@@ -255,6 +257,7 @@ public class FileSystemPage extends CachingPage {
   @Override
   public VersionInfo commit(final PageData data) {
     VersionInfo previousVersion = makeVersion();
+    createDirectoryIfNewPage();
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
     this.versionsController.prune(this);
@@ -277,7 +280,7 @@ public class FileSystemPage extends CachingPage {
 
   @Deprecated
   // Move to persistence engine
-  private void createDirectoryIfNewPage(FileSystem fileSystem) {
+  private void createDirectoryIfNewPage() {
     String pagePath = getFileSystemPath();
     if (!fileSystem.exists(pagePath)) {
       try {

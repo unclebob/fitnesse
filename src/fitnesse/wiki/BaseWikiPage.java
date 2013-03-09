@@ -4,8 +4,8 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.util.List;
+
 import util.EnvironmentVariableTool;
-import util.FileUtil;
 
 public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;
@@ -47,8 +47,6 @@ public abstract class BaseWikiPage implements WikiPage {
     return children;
   }
 
-  @Deprecated
-  // Move to factory
   private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
     if (symLinkProperty == null)
       return null;
@@ -68,8 +66,6 @@ public abstract class BaseWikiPage implements WikiPage {
     File file = new File(fullPagePath);
     File parentDirectory = file.getParentFile();
     if (parentDirectory.exists()) {
-      if (!file.exists())
-        FileUtil.makeDir(file.getPath());
       if (file.isDirectory()) {
         //WikiPageFactory.makeRootPage
         WikiPage externalRoot = new FileSystemPage(parentDirectory.getPath(), file.getName());

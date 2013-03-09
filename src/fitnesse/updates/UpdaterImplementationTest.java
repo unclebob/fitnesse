@@ -1,22 +1,23 @@
 package fitnesse.updates;
 
-import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.WikiPage;
-import org.junit.After;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import util.FileUtil;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.WikiPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import util.FileUtil;
 
 public class UpdaterImplementationTest {
   private File updateList;
@@ -49,6 +50,7 @@ public class UpdaterImplementationTest {
   private void setTheContext() {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(testDir, rootName);
+    root.commit(root.getData());
     crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root, testDir, rootName, 80);
   }

@@ -3,19 +3,19 @@
 
 package fitnesse.wiki;
 
-import org.junit.After;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import util.Clock;
-import util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import util.Clock;
+import util.FileUtil;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
@@ -60,7 +60,8 @@ public class FileSystemPageTest {
   @Test
   public void testTwoLevel() throws Exception {
     WikiPage levelA = crawler.addPage(root, PathParser.parse("PageA"));
-    crawler.addPage(levelA, PathParser.parse("PageB"));
+    WikiPage page = crawler.addPage(levelA, PathParser.parse("PageB"));
+    page.commit(page.getData());
     assertTrue(new File(defaultPath + "/RooT/PageA/PageB").exists());
   }
 
@@ -109,6 +110,7 @@ public class FileSystemPageTest {
   @Test
   public void testRemovePage() throws Exception {
     WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
+    levelOne.commit(levelOne.getData());
     crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
     levelOne.removeChildPage("LevelTwo");
     File fileOne = new File(defaultPath + "/RooT/LevelOne");
@@ -120,7 +122,9 @@ public class FileSystemPageTest {
   @Test
   public void testDelTree() throws Exception {
     WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
-    crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
+    WikiPage levelTwo = crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
+    levelOne.commit(levelOne.getData());
+    levelTwo.commit(levelTwo.getData());
     File childOne = new File(defaultPath + "/RooT/LevelOne");
     File childTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
     assertTrue(childOne.exists());
@@ -228,19 +232,23 @@ public class FileSystemPageTest {
   @Test
   public void cmPluginCalledForCreate() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    page.commit(page.getData());
     cmMethodCalls.clear();
-    page.addChildPage("CreatedPage");
-    assertEquals(1, cmMethodCalls.size());
+    WikiPage childPage = page.addChildPage("CreatedPage");
+    childPage.commit(childPage.getData());
+    assertEquals(3, cmMethodCalls.size());
     assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
   }
 
   @Test
   public void cmPluginCalledIfNoPayload() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest}");
+    page.commit(page.getData());
     cmMethodCalls.clear();
-    page.addChildPage("CreatedPage");
+    WikiPage childPage = page.addChildPage("CreatedPage");
+    childPage.commit(childPage.getData());
     assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest", cmMethodCalls.get(0));
-    assertEquals(1, cmMethodCalls.size());
+    assertEquals(3, cmMethodCalls.size());
   }
 
   @Test

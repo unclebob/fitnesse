@@ -32,7 +32,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
   }
 
   @Override
-  // RootPath should be a File()
+  // TODO: RootPath should be a File()?
   public WikiPage makeRootPage(String rootPath, String rootPageName) {
     return new FileSystemPage(rootPath, rootPageName, this, fileSystem, versionsController);
   }
@@ -41,11 +41,11 @@ public class FileSystemPageFactory implements WikiPageFactory {
   public WikiPage makeChildPage(String name, FileSystemPage parent) {
     String path = parent.getFileSystemPath() + "/" + name;
     if (hasContentChild(path)) {
-      return new FileSystemPage(name, parent, this, fileSystem);
+      return new FileSystemPage(name, parent);
     } else if (hasHtmlChild(path)) {
       return new ExternalSuitePage(path, name, parent, fileSystem);
     } else {
-      return new FileSystemPage(name, parent, this, fileSystem);
+      return new FileSystemPage(name, parent);
     }
   }
 
@@ -64,6 +64,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
     return false;
   }
 
+  // TODO: move WikiPage.getChildren logic over here
   public List<WikiPage> findChildren(ExternalSuitePage parent) {
     List<WikiPage> children = new ArrayList<WikiPage>();
     for (String child : fileSystem.list(parent.getFileSystemPath())) {
