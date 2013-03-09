@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.util.Date;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -31,7 +30,6 @@ public class FileSystemPage extends CachingPage {
   private final WikiPageFactory wikiPageFactory;
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
-  private CmSystem cmSystem = new CmSystem();
 
   public FileSystemPage(final String path, final String name,
                         final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
@@ -61,9 +59,7 @@ public class FileSystemPage extends CachingPage {
     super.removeChildPage(name);
     String pathToDelete = getFileSystemPath() + "/" + name;
     final File fileToBeDeleted = new File(pathToDelete);
-    cmSystem.preDelete(pathToDelete);
     FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
-    cmSystem.delete(pathToDelete);
   }
 
   @Override
@@ -99,8 +95,6 @@ public class FileSystemPage extends CachingPage {
     final File output = new File(contentPath);
     OutputStreamWriter writer = null;
     try {
-      if (output.exists())
-        cmSystem.edit(contentPath);
       writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
       writer.write(content);
     } catch (UnsupportedEncodingException e) {
@@ -110,7 +104,6 @@ public class FileSystemPage extends CachingPage {
     } finally {
       if (writer != null) {
         FileUtil.close(writer);
-        cmSystem.update(contentPath);
       }
     }
   }
@@ -124,8 +117,6 @@ public class FileSystemPage extends CachingPage {
     try {
       propertiesFilePath = getFileSystemPath() + propertiesFilename;
       File propertiesFile = new File(propertiesFilePath);
-      if (propertiesFile.exists())
-        cmSystem.edit(propertiesFilePath);
       output = new FileOutputStream(propertiesFile);
       WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
       removeAlwaysChangingProperties(propertiesToSave);
@@ -136,7 +127,6 @@ public class FileSystemPage extends CachingPage {
     } finally {
       if (output != null) {
         FileUtil.close(output);
-        cmSystem.update(propertiesFilePath);
       }
     }
   }
@@ -288,7 +278,6 @@ public class FileSystemPage extends CachingPage {
       } catch (IOException e) {
         throw new RuntimeException("Unable to create directory for new page", e);
       }
-      cmSystem.update(pagePath);
     }
   }
 
@@ -311,53 +300,6 @@ public class FileSystemPage extends CachingPage {
       return getClass().getName() + " at " + this.getFileSystemPath();
     } catch (final Exception e) {
       return super.toString();
-    }
-  }
-
-  class CmSystem {
-    public void update(String fileName) {
-      invokeCmMethod("cmUpdate", fileName);
-    }
-
-
-    public void edit(String fileName) {
-      invokeCmMethod("cmEdit", fileName);
-    }
-
-    public void delete(String fileToBeDeleted) {
-      invokeCmMethod("cmDelete", fileToBeDeleted);
-    }
-
-    public void preDelete(String fileToBeDeleted) {
-      invokeCmMethod("cmPreDelete", fileToBeDeleted);
-    }
-
-    private void invokeCmMethod(String method, String newPagePath) {
-      if (getCmSystemClassName() != null) {
-        try {
-          Class<?> cmSystem = Class.forName(getCmSystemClassName());
-          Method updateMethod = cmSystem.getMethod(method, String.class, String.class);
-          updateMethod.invoke(null, newPagePath, getCmSystemVariable());
-        } catch (Exception e) {
-          System.err.println("Could not invoke static " + method + "(path,payload) of " + getCmSystemClassName());
-          e.printStackTrace();
-        }
-      }
-    }
-
-    private String getCmSystemClassName() {
-      String cmSystemVariable = getCmSystemVariable();
-      if (cmSystemVariable == null)
-        return null;
-      String cmSystemClassName = cmSystemVariable.split(" ")[0].trim();
-      if (cmSystemClassName == null || cmSystemClassName.equals(""))
-        return null;
-
-      return cmSystemClassName;
-    }
-
-    private String getCmSystemVariable() {
-      return readOnlyData().getVariable("CM_SYSTEM");
     }
   }
 }

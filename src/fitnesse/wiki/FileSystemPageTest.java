@@ -6,7 +6,6 @@ package fitnesse.wiki;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +22,6 @@ public class FileSystemPageTest {
   private FileSystemPage root;
   private PageCrawler crawler;
 
-  private static List<String> cmMethodCalls = new ArrayList<String>();
-
   @BeforeClass
   public static void initialize() {
     FileUtil.deleteFileSystemDirectory(base);
@@ -33,7 +30,6 @@ public class FileSystemPageTest {
 
   @Before
   public void setUp() throws Exception {
-    cmMethodCalls.clear();
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
     root = new FileSystemPage(defaultPath, "RooT");
@@ -203,85 +199,5 @@ public class FileSystemPageTest {
     } catch (Exception e) {
       fail("No Exception should be thrown");
     }
-  }
-
-  public static void cmUpdate(String file, String payload) {
-    cmMethodCalls.add(String.format("update %s|%s", file, payload));
-  }
-
-  public static void cmEdit(String file, String payload) {
-    cmMethodCalls.add(String.format("edit %s|%s", file, payload));
-  }
-
-  public static void cmDelete(String file, String payload) {
-    cmMethodCalls.add(String.format("delete %s|%s", file, payload));
-  }
-
-  public static void cmPreDelete(String file, String payload) {
-    cmMethodCalls.add(String.format("preDelete %s|%s", file, payload));
-  }
-
-  @Test
-  public void cmPluginNotCalledIfBlank() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {}");
-    cmMethodCalls.clear();
-    page.addChildPage("CreatedPage");
-    assertEquals(0, cmMethodCalls.size());
-  }
-
-  @Test
-  public void cmPluginCalledForCreate() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
-    page.commit(page.getData());
-    cmMethodCalls.clear();
-    WikiPage childPage = page.addChildPage("CreatedPage");
-    childPage.commit(childPage.getData());
-    assertEquals(3, cmMethodCalls.size());
-    assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-  }
-
-  @Test
-  public void cmPluginCalledIfNoPayload() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest}");
-    page.commit(page.getData());
-    cmMethodCalls.clear();
-    WikiPage childPage = page.addChildPage("CreatedPage");
-    childPage.commit(childPage.getData());
-    assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest", cmMethodCalls.get(0));
-    assertEquals(3, cmMethodCalls.size());
-  }
-
-  @Test
-  public void cmPluginEditAndUpdateCalledForReWrite() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
-    cmMethodCalls.clear();
-    page.commit(page.getData());
-    assertEquals(4, cmMethodCalls.size());
-    assertEquals("edit " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-    assertEquals("update " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
-    assertEquals("edit " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
-    assertEquals("update " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(3));
-  }
-
-  @Test
-  public void cmPluginEditNotCalledIfNewPage() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
-    cmMethodCalls.clear();
-    crawler.addPage(page, PathParser.parse("NewPage"), "raw content");
-    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
-    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
-    assertEquals(3, cmMethodCalls.size());
-  }
-
-  @Test
-  public void cmPluginCalledForDelete() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
-    page.addChildPage("CreatedPage");
-    cmMethodCalls.clear();
-    page.removeChildPage("CreatedPage");
-    assertEquals(2, cmMethodCalls.size());
-    assertEquals("preDelete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-    assertEquals("delete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
   }
 }
