@@ -15,7 +15,6 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import util.FileUtil;
 
@@ -36,7 +35,7 @@ public class UpdaterImplementationTest {
 
   @Before
   public void setUp() throws Exception {
-    setTheContext();
+    setTheContext(rootName);
     root = setTheRoot();
     createFakeJarFileResources();
     createFakeUpdateListFiles();
@@ -47,12 +46,12 @@ public class UpdaterImplementationTest {
     return root;
   }
 
-  private void setTheContext() {
+  private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPage(testDir, rootName);
+    root = new FileSystemPage(testDir, name);
     root.commit(root.getData());
     crawler = root.getPageCrawler();
-    context = FitNesseUtil.makeTestContext(root, testDir, rootName, 80);
+    context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 
   private void createFakeUpdateListFiles() {
@@ -113,10 +112,10 @@ public class UpdaterImplementationTest {
   }
 
   @Test
-  @Ignore
   public void shouldReplaceFitNesseRootWithDirectoryRoot() throws Exception {
     String filePath = "FitNesseRoot/someFolder/someFile";
-    //context.rootDirectoryName = "MyNewRoot";
+    setTheContext("MyNewRoot");
+    updater = new UpdaterImplementation(context);
     String updatedPath = updater.getCorrectPathForTheDestination(filePath);
     assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
   }
