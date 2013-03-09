@@ -131,15 +131,6 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void prune(final FileSystemPage page) {
-    try {
-      pruneVersions(page, history(page));
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
   public void removeVersion(final FileSystemPage page, final String versionName) {
     final String versionFileName = makeVersionFileName(page, versionName);
     final File versionFile = new File(versionFileName);

@@ -13,6 +13,4 @@ public interface VersionsController {
   VersionInfo makeVersion(FileSystemPage page, PageData data);
 
   void removeVersion(FileSystemPage page, String versionName);
-
-  void prune(FileSystemPage page);
 }

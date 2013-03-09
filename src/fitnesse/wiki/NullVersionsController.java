@@ -31,10 +31,6 @@ public class NullVersionsController implements VersionsController {
   }
 
   @Override
-  public void prune(final FileSystemPage page) {
-  }
-
-  @Override
   public void removeVersion(final FileSystemPage page, final String versionName) {
   }
 }

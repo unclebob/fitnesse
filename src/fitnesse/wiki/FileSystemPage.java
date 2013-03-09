@@ -250,7 +250,6 @@ public class FileSystemPage extends CachingPage {
     createDirectoryIfNewPage();
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
-    this.versionsController.prune(this);
     super.commit(data);
     return previousVersion;
   }
