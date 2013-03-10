@@ -27,12 +27,13 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 import util.Clock;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {
   public static SimpleDateFormat dateFormat() {
-    return new SimpleDateFormat("yyyyMMddHHmmss");
+    return WikiPageProperty.getTimeFormat();
   }
 
   private int daysTillVersionsExpire = 14;
@@ -288,9 +289,5 @@ public class ZipFileVersionsController implements VersionsController {
   @Override
   public String toString() {
     return this.getClass().getSimpleName();
-  }
-
-  public String getControllerName() {
-    return "Zipped Version History";
   }
 }
