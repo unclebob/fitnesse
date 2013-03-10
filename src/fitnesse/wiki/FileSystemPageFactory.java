@@ -24,6 +24,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
     fileSystem = new DiskFileSystem();
     versionsController = (VersionsController) new ComponentFactory(properties).createComponent(
             ComponentFactory.VERSIONS_CONTROLLER, ZipFileVersionsController.class);
+    versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
   }
 
   public FileSystemPageFactory(FileSystem fileSystem) {

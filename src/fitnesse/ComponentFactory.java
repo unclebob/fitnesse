@@ -13,9 +13,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -32,6 +29,7 @@ public class ComponentFactory {
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
   public static final String VERSIONS_CONTROLLER = "VersionsController";
+  public static final String VERSIONS_CONTROLLER_DAYS = VERSIONS_CONTROLLER + ".days";
   public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
   public static final String THEME = "Theme";
 

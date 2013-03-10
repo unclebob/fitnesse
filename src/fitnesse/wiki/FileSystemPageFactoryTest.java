@@ -85,6 +85,19 @@ public class FileSystemPageFactoryTest {
 
     VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
     assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
+    assertEquals(14, ((NullVersionsController) defaultRevisionController).getHistoryDepth());
+  }
+
+  @Test
+  public void testShouldUseSpecifiedRevisionControllerWithHistoryDepth() throws Exception {
+    Properties testProperties = new Properties();
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "42");
+    fileSystemPageFactory = new FileSystemPageFactory(testProperties);
+
+    VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
+    assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
+    assertEquals(42, ((NullVersionsController) defaultRevisionController).getHistoryDepth());
   }
 
 

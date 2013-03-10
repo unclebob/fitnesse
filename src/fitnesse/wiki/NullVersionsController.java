@@ -4,11 +4,18 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class NullVersionsController implements VersionsController {
+  private int historyDepth;
+
   public NullVersionsController() {
   }
 
   @Override
   public void setHistoryDepth(int historyDepth) {
+    this.historyDepth = historyDepth;
+  }
+
+  public int getHistoryDepth() {
+    return historyDepth;
   }
 
   @Override

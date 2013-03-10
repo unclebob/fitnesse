@@ -110,6 +110,9 @@ public class FitNesseMain {
     Builder builder = new Builder();
     ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
 
+    // Enrich properties with command line values:
+    componentFactory.getProperties().setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     builder.port = arguments.getPort();
