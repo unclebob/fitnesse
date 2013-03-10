@@ -289,10 +289,6 @@ public class FileSystemPage extends CachingPage {
     return this.versionsController.makeVersion(this, data);
   }
 
-  protected void removeVersion(final String versionName) {
-    this.versionsController.removeVersion(this, versionName);
-  }
-
   @Override
   public String toString() {
     try {

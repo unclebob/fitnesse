@@ -6,6 +6,7 @@ import static fitnesse.wiki.zip.ZipFileVersionsController.dateFormat;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,28 +85,36 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testVersionsExpire() throws Exception {
     versionsController.setHistoryDepth(3);
-    PageData data = page.makePageData();
-    Set<VersionInfo> versions = data.getVersions();
-    for (VersionInfo version : versions)
-      page.removeVersion(version.toString());
+    PageData data = page.getData();
 
-    data.getProperties().setLastModificationTime(dateFormat().parse("20031213000000"));
+    Calendar modificationTime = Calendar.getInstance();
+    modificationTime.add(Calendar.DATE, -1);
+    String timeIndex1 = format(modificationTime);
+    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex1));
     page.makeVersion(data);
-    data.getProperties().setLastModificationTime(dateFormat().parse("20031214000000"));
+    modificationTime.add(Calendar.DATE, -1);
+    String timeIndex2 = format(modificationTime);
+    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex2));
     page.makeVersion(data);
-    data.getProperties().setLastModificationTime(dateFormat().parse("20031215000000"));
+    modificationTime.add(Calendar.DATE, -1);
+    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.makeVersion(data);
-    data.getProperties().setLastModificationTime(dateFormat().parse("20031216000000"));
+    modificationTime.add(Calendar.DATE, -1);
+    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.makeVersion(data);
 
-    versions = page.makePageData().getVersions();
+    Set<VersionInfo> versions = page.makePageData().getVersions();
     assertEquals(3, versions.size());
 
     List<VersionInfo> versionsList = new LinkedList<VersionInfo>(versions);
     Collections.sort(versionsList);
-    assertTrue(versionsList.get(0).toString().endsWith("20031214000000"));
-    assertTrue(versionsList.get(1).toString().endsWith("20031215000000"));
-    assertTrue(versionsList.get(2).toString().endsWith("20031216000000"));
+    assertTrue(versionsList.toString(), versionsList.get(0).toString().endsWith(timeIndex2));
+    assertTrue(versionsList.toString(), versionsList.get(1).toString().endsWith(timeIndex1));
+    assertEquals(versionsList.get(2), firstVersion);
+  }
+
+  private String format(Calendar modificationTime) {
+    return WikiPageProperty.getTimeFormat().format(modificationTime.getTime());
   }
 
   public void testGetContent() throws Exception {

@@ -29,8 +29,4 @@ public class NullVersionsController implements VersionsController {
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
     return new VersionInfo(page.getFileSystemPath());
   }
-
-  @Override
-  public void removeVersion(final FileSystemPage page, final String versionName) {
-  }
 }

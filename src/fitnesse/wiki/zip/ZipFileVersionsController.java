@@ -130,13 +130,6 @@ public class ZipFileVersionsController implements VersionsController {
     }
   }
 
-  @Override
-  public void removeVersion(final FileSystemPage page, final String versionName) {
-    final String versionFileName = makeVersionFileName(page, versionName);
-    final File versionFile = new File(versionFileName);
-    versionFile.delete();
-  }
-
   private void addToZip(final File file, final ZipOutputStream zos) throws IOException {
     final ZipEntry entry = new ZipEntry(file.getName());
     zos.putNextEntry(entry);
@@ -284,6 +277,12 @@ public class ZipFileVersionsController implements VersionsController {
     thisDate.setTime(version.getCreationTime());
     if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
       removeVersion(page, version.getName());
+  }
+
+  private void removeVersion(final FileSystemPage page, final String versionName) {
+    final String versionFileName = makeVersionFileName(page, versionName);
+    final File versionFile = new File(versionFileName);
+    versionFile.delete();
   }
 
   @Override
