@@ -60,7 +60,6 @@ public class ZipFileVersionsController implements VersionsController {
       zipFile = new ZipFile(file);
       loadVersionContent(zipFile, data);
       loadVersionAttributes(zipFile, data);
-      data.addVersions(loadVersions(page));
       return data;
     } catch (Throwable th) {
       throw new RuntimeException(th);

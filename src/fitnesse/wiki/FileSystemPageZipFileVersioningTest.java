@@ -7,10 +7,10 @@ import static fitnesse.wiki.zip.ZipFileVersionsController.dateFormat;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import junit.framework.TestCase;
@@ -59,7 +59,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testGetVersions() throws Exception {
-    Set<VersionInfo> versionNames = page.getData().getVersions();
+    Collection<VersionInfo> versionNames = page.getVersions();
     assertEquals(1, versionNames.size());
     assertTrue(versionNames.contains(firstVersion));
   }
@@ -77,7 +77,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     PageData data = page.getData();
     data.setContent("new content");
     VersionInfo secondVersion = page.commit(data);
-    Set<VersionInfo> versionNames = page.getData().getVersions();
+    Collection<VersionInfo> versionNames = page.getVersions();
     assertEquals(2, versionNames.size());
     assertTrue(versionNames.contains(firstVersion));
     assertTrue(versionNames.contains(secondVersion));
@@ -103,7 +103,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.makeVersion(data);
 
-    Set<VersionInfo> versions = page.makePageData().getVersions();
+    Collection<VersionInfo> versions = page.getVersions();
     assertEquals(3, versions.size());
 
     List<VersionInfo> versionsList = new LinkedList<VersionInfo>(versions);
@@ -153,8 +153,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     data.setContent("new content");
     VersionInfo previousVersion = page.commit(data);
 
-    data = page.getData();
-    Set<VersionInfo> versions = data.getVersions();
+    Collection<VersionInfo> versions = page.getVersions();
     assertEquals(1, versions.size());
     assertEquals(true, versions.contains(previousVersion));
 

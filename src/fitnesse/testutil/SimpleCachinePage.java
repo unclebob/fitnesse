@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import util.Clock;
+import java.util.Collection;
+import java.util.Collections;
 
 import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import util.Clock;
 
 public class SimpleCachinePage extends CachingPage {
   private static final long serialVersionUID = 1L;
@@ -20,6 +22,11 @@ public class SimpleCachinePage extends CachingPage {
 
   public boolean hasChildPage(String pageName) {
     return hasCachedSubpage(pageName);
+  }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
   }
 
   protected WikiPage createChildPage(String name) {

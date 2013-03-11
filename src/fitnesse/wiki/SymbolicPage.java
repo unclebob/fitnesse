@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,6 +62,11 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   public ReadOnlyPageData readOnlyData() { return getData(); }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return realPage.getVersions();
+  }
 
   public PageData getDataVersion(String versionName) {
     PageData data = realPage.getDataVersion(versionName);

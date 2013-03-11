@@ -1,5 +1,8 @@
 package fitnesse.wiki;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import util.FileSystem;
 
 public class ExternalSuitePage extends CachingPage {
@@ -19,7 +22,12 @@ public class ExternalSuitePage extends CachingPage {
         return false;
     }
 
-    public PageData getDataVersion(String versionName) {
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
+  }
+
+  public PageData getDataVersion(String versionName) {
         return null;
     }
 

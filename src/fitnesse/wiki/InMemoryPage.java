@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -85,6 +86,16 @@ public class InMemoryPage extends BaseWikiPage {
       return getDataVersion(currentVersionName);
   }
 
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    Set<VersionInfo> set = new HashSet<VersionInfo>();
+    for (Map.Entry<String, PageData> entry : versions.entrySet()) {
+      if (!currentVersionName.equals(entry.getKey()))
+        set.add(makeVersionInfo(entry.getValue(), entry.getKey()));
+    }
+    return set;
+  }
+
   public VersionInfo commit(PageData newData) {
     VersionInfo previousVersion = makeVersion();
     newData.setWikiPage(this);
@@ -105,12 +116,7 @@ public class InMemoryPage extends BaseWikiPage {
       PageData data = versions.get(name);
       pageVersions.add(makeVersionInfo(data, name));
     }
-    version.addVersions(pageVersions);
     return new PageData(version);
-  }
-
-  public int numberOfVersions() {
-    return versions.size() - 1;
   }
 
   protected VersionInfo makeVersionInfo(PageData current, String name) {

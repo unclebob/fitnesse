@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Date;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -259,10 +260,15 @@ public class FileSystemPage extends CachingPage {
     final PageData pagedata = new PageData(this);
     loadContent(pagedata);
     loadAttributes(pagedata);
-    pagedata.addVersions(this.versionsController.history(this));
     return pagedata;
   }
 
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return versionsController.history(this);
+  }
+
+  @Override
   public PageData getDataVersion(final String versionName) {
     return this.versionsController.getRevisionData(this, versionName);
   }

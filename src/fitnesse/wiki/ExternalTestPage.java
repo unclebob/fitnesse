@@ -1,6 +1,8 @@
 package fitnesse.wiki;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 import util.FileSystem;
 
@@ -20,7 +22,12 @@ public class ExternalTestPage extends CachingPage {
         return false;
     }
 
-    @Override
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
+  }
+
+  @Override
     protected WikiPage createChildPage(String name) {
         return null;
     }

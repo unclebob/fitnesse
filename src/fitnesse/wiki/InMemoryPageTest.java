@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -39,14 +39,14 @@ public class InMemoryPageTest extends TestCase {
     page1.commit(data);
 
     data = page1.getData();
-    Set<VersionInfo> versions = data.getVersions();
+    Collection<VersionInfo> versions = page1.getVersions();
 
     assertEquals(3, versions.size());
   }
 
   public void testVersionAuthor() throws Exception {
     PageData data = page1.getData();
-    Set<VersionInfo> versions = data.getVersions();
+    Collection<VersionInfo> versions = page1.getVersions();
     for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();) {
       VersionInfo versionInfo = iterator.next();
       assertEquals("", versionInfo.getAuthor());
@@ -57,7 +57,7 @@ public class InMemoryPageTest extends TestCase {
     page1.commit(data);
 
     data = page1.getData();
-    versions = data.getVersions();
+    versions = page1.getVersions();
     boolean joeFound = false;
     for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();) {
       VersionInfo versionInfo = iterator.next();

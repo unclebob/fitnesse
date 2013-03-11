@@ -4,6 +4,8 @@
 package fitnesse.wiki;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import util.Clock;
@@ -48,6 +50,11 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public ReadOnlyPageData readOnlyData() { return getData(); }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
+  }
 
   public VersionInfo commit(PageData data) {
     pageData = data;

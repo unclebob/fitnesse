@@ -8,12 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import util.Clock;
-
 import fitnesse.http.ResponseParser;
+import util.Clock;
 
 public class ProxyPage extends CachingPage implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -98,6 +98,11 @@ public class ProxyPage extends CachingPage implements Serializable {
       loadChildren();
       return children.containsKey(pageName);
     }
+  }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    throw new RuntimeException("ProxyPage.getVersions() needs implementing");
   }
 
   public void setTransientValues(String host, long lastLoadTime) {
