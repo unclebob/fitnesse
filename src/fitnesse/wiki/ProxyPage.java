@@ -102,7 +102,7 @@ public class ProxyPage extends CachingPage implements Serializable {
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    throw new RuntimeException("ProxyPage.getVersions() needs implementing");
+    return (Collection<VersionInfo>) getObjectFromUrl(getThisPageUrl() + "?responder=proxy&type=versions");
   }
 
   public void setTransientValues(String host, long lastLoadTime) {
@@ -139,16 +139,20 @@ public class ProxyPage extends CachingPage implements Serializable {
     urlString.append("?responder=proxy&type=meat");
     if (versionName != null)
       urlString.append("&version=").append(versionName);
-    URL url;
-    try {
-      url = new URL(urlString.toString());
-    } catch (MalformedURLException e) {
-      throw new RuntimeException(e);
-    }
-    PageData data = (PageData) getObjectFromUrl(url);
+    PageData data = (PageData) getObjectFromUrl(urlString.toString());
     if (data != null)
       data.setWikiPage(this);
     return data;
+  }
+
+  private static Object getObjectFromUrl(String urlString) {
+    URL url;
+    try {
+      url = new URL(urlString);
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+    return getObjectFromUrl(url);
   }
 
   private static Object getObjectFromUrl(URL url) {

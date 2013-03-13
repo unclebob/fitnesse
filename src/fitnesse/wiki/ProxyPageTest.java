@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -99,5 +100,11 @@ public class ProxyPageTest extends TestCase {
     assertEquals(0, ProxyPage.retrievalCount);
     proxy.hasChildPage("SomeMissingChild");
     assertEquals(1, ProxyPage.retrievalCount);
+  }
+
+  public void testGetVersions() {
+    Collection<VersionInfo> versions = proxy.getVersions();
+    assertNotNull(versions);
+    assertEquals(3, versions.size());
   }
 }
