@@ -17,6 +17,7 @@
 !path ${java.class.path}
 -!)
 
+!path ${java.class.path}
 
 ----
 !2 ''Port''
