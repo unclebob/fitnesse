@@ -38,4 +38,17 @@ public class MemoryFileSystem implements FileSystem{
     public String getContent(String path) {
         return files.get(path);
     }
+
+  @Override
+  public void delete(String pathToDelete) {
+    for (String f : files.keySet()) {
+      if (f.startsWith(pathToDelete))
+        files.remove(f);
+    }
+  }
+
+  @Override
+  public long lastModified(String path) {
+    return Clock.currentTimeInMillis();
+  }
 }

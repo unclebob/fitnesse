@@ -8,4 +8,8 @@ public interface FileSystem {
     boolean exists(String path);
     String[] list(String path);
     String getContent(String path) throws IOException;
+
+    void delete(String path);
+
+    long lastModified(String path);
 }

@@ -2,17 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.Clock;
 import util.DiskFileSystem;
 import util.FileSystem;
-import util.FileUtil;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
@@ -52,14 +49,13 @@ public class FileSystemPage extends CachingPage {
   public void removeChildPage(final String name) {
     super.removeChildPage(name);
     String pathToDelete = getFileSystemPath() + "/" + name;
-    final File fileToBeDeleted = new File(pathToDelete);
-    FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
+    fileSystem.delete(pathToDelete);
   }
 
   @Override
   public boolean hasChildPage(final String pageName) {
-    final File f = new File(getFileSystemPath() + "/" + pageName);
-    if (f.exists()) {
+    final String file = getFileSystemPath() + "/" + pageName;
+    if (fileSystem.exists(file)) {
       addChildPage(pageName);
       return true;
     }
@@ -134,10 +130,12 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Override
+  @Deprecated
+  // TODO: move to versions controller
   protected void loadChildren() {
-    final File thisDir = new File(getFileSystemPath());
-    if (thisDir.exists()) {
-      final String[] subFiles = thisDir.list();
+    final String thisDir = getFileSystemPath();
+    if (fileSystem.exists(thisDir)) {
+      final String[] subFiles = fileSystem.list(thisDir);
       for (final String subFile : subFiles) {
         if (fileIsValid(subFile, thisDir) && !this.children.containsKey(subFile)) {
           this.children.put(subFile, getChildPage(subFile));
@@ -146,10 +144,9 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  private boolean fileIsValid(final String filename, final File dir) {
+  private boolean fileIsValid(final String filename, final String dir) {
     if (WikiWordPath.isWikiWord(filename)) {
-      final File f = new File(dir, filename);
-      if (f.isDirectory()) {
+      if (fileSystem.exists(dir + "/" + filename)) {
         return true;
       }
     }
@@ -164,29 +161,24 @@ public class FileSystemPage extends CachingPage {
     return getParentFileSystemPath() + "/" + getName();
   }
 
+  @Deprecated
+  // TODO: move to versions controller
   private void loadAttributes(final PageData data) {
-    final String file = getFileSystemPath() + propertiesFilename;
-    if (fileSystem.exists(file)) {
+    final String path = getFileSystemPath() + propertiesFilename;
+    if (fileSystem.exists(path)) {
       try {
         long lastModifiedTime = getLastModifiedTime();
-        attemptToReadPropertiesFile(file, data, lastModifiedTime);
+        attemptToReadPropertiesFile(path, data, lastModifiedTime);
       } catch (final Exception e) {
-        System.err.println("Could not read properties file:" + file);
+        System.err.println("Could not read properties file:" + path);
         e.printStackTrace();
       }
     }
   }
 
   private long getLastModifiedTime() {
-    long lastModifiedTime = 0;
-
-    final File file = new File(getFileSystemPath() + contentFilename);
-    if (file.exists()) {
-      lastModifiedTime = file.lastModified();
-    } else {
-      lastModifiedTime = Clock.currentTimeInMillis();
-    }
-    return lastModifiedTime;
+    final String path = getFileSystemPath() + contentFilename;
+    return fileSystem.lastModified(path);
   }
 
   private void attemptToReadPropertiesFile(String file, PageData data,
