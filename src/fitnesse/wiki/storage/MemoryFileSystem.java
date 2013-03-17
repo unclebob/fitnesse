@@ -1,7 +1,9 @@
-package util;
+package fitnesse.wiki.storage;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+
+import util.Clock;
 
 public class MemoryFileSystem implements FileSystem{
     private final Hashtable<String, String> files = new Hashtable<String, String>();

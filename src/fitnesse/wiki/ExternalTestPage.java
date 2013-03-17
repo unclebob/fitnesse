@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import util.FileSystem;
+import fitnesse.wiki.storage.FileSystem;
 
 public class ExternalTestPage extends CachingPage {
     private static final long serialVersionUID = 1L;

@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import util.Clock;
-import util.FileSystem;
+import fitnesse.wiki.storage.FileSystem;
 
 // Remove this page, create FileSystemPage with right FileSystem: MemoryFileSystem.
 @Deprecated

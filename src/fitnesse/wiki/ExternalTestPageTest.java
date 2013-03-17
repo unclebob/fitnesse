@@ -3,8 +3,8 @@ package fitnesse.wiki;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import util.FileSystem;
-import util.MemoryFileSystem;
+import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.storage.MemoryFileSystem;
 
 public class ExternalTestPageTest {
 

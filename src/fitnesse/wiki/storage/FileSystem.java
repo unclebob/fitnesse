@@ -1,4 +1,4 @@
-package util;
+package fitnesse.wiki.storage;
 
 import java.io.IOException;
 

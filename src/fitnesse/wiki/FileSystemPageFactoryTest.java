@@ -8,8 +8,8 @@ import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileSystem;
-import util.MemoryFileSystem;
+import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.storage.MemoryFileSystem;
 
 public class FileSystemPageFactoryTest {
     private FileSystem fileSystem;

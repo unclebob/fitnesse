@@ -14,7 +14,7 @@ import java.util.List;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import junit.framework.TestCase;
-import util.DiskFileSystem;
+import fitnesse.wiki.storage.DiskFileSystem;
 import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest extends TestCase {

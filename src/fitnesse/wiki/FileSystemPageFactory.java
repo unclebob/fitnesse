@@ -7,8 +7,8 @@ import java.util.Properties;
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.DiskFileSystem;
-import util.FileSystem;
+import fitnesse.wiki.storage.DiskFileSystem;
+import fitnesse.wiki.storage.FileSystem;
 
 // TODO: Merge with WikiPageFactory
 public class FileSystemPageFactory implements WikiPageFactory {

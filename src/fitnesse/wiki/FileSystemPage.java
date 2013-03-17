@@ -8,8 +8,8 @@ import java.util.Date;
 
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.DiskFileSystem;
-import util.FileSystem;
+import fitnesse.wiki.storage.DiskFileSystem;
+import fitnesse.wiki.storage.FileSystem;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
