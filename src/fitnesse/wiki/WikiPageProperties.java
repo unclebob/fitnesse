@@ -59,6 +59,17 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     loadFromRootElement(root);
   }
 
+  public void loadFromXml(String xml) {
+    Document document;
+    try {
+      document = XmlUtil.newDocument(xml);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to parse XML from string " + xml, e);
+    }
+    Element root = document.getDocumentElement();
+    loadFromRootElement(root);
+  }
+
   public void loadFromRootElement(Element root) {
     NodeList nodes = root.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {

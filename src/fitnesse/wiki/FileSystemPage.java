@@ -3,10 +3,7 @@
 package fitnesse.wiki;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
 
@@ -126,11 +123,9 @@ public class FileSystemPage extends CachingPage {
   private void loadContent(final PageData data) {
     String content = "";
     final String name = getFileSystemPath() + contentFilename;
-    final File input = new File(name);
     try {
-      if (input.exists()) {
-        final byte[] bytes = readContentBytes(input);
-        content = new String(bytes, "UTF-8");
+      if (fileSystem.exists(name)) {
+        content = fileSystem.getContent(name);
       }
       data.setContent(content);
     } catch (IOException e) {
@@ -147,21 +142,6 @@ public class FileSystemPage extends CachingPage {
         if (fileIsValid(subFile, thisDir) && !this.children.containsKey(subFile)) {
           this.children.put(subFile, getChildPage(subFile));
         }
-      }
-    }
-  }
-
-  private byte[] readContentBytes(final File input) throws IOException {
-    // TODO: Read through FileSystem
-    FileInputStream inputStream = null;
-    try {
-      final byte[] bytes = new byte[(int) input.length()];
-      inputStream = new FileInputStream(input);
-      inputStream.read(bytes);
-      return bytes;
-    } finally {
-      if (inputStream != null) {
-        inputStream.close();
       }
     }
   }
@@ -184,18 +164,14 @@ public class FileSystemPage extends CachingPage {
     return getParentFileSystemPath() + "/" + getName();
   }
 
-  public String getAbsoluteFileSystemPath() {
-    return new File(getFileSystemPath()).getAbsolutePath();
-  }
-
   private void loadAttributes(final PageData data) {
-    final File file = new File(getFileSystemPath() + propertiesFilename);
-    if (file.exists()) {
+    final String file = getFileSystemPath() + propertiesFilename;
+    if (fileSystem.exists(file)) {
       try {
         long lastModifiedTime = getLastModifiedTime();
         attemptToReadPropertiesFile(file, data, lastModifiedTime);
       } catch (final Exception e) {
-        System.err.println("Could not read properties file:" + file.getPath());
+        System.err.println("Could not read properties file:" + file);
         e.printStackTrace();
       }
     }
@@ -213,20 +189,13 @@ public class FileSystemPage extends CachingPage {
     return lastModifiedTime;
   }
 
-  private void attemptToReadPropertiesFile(File file, PageData data,
-                                           long lastModifiedTime) throws FileNotFoundException {
-    // TODO: read through FileSystem
-    InputStream input = null;
-    try {
-      final WikiPageProperties props = new WikiPageProperties();
-      input = new FileInputStream(file);
-      props.loadFromXmlStream(input);
-      props.setLastModificationTime(new Date(lastModifiedTime));
-      data.setProperties(props);
-    } finally {
-      if (input != null)
-        FileUtil.close(input);
-    }
+  private void attemptToReadPropertiesFile(String file, PageData data,
+                                           long lastModifiedTime) throws IOException {
+    String propertiesXml = fileSystem.getContent(file);
+    final WikiPageProperties props = new WikiPageProperties();
+    props.loadFromXml(propertiesXml);
+    props.setLastModificationTime(new Date(lastModifiedTime));
+    data.setProperties(props);
   }
 
   @Override

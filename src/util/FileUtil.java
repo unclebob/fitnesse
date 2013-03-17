@@ -119,7 +119,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input));
+    return new String(getFileBytes(input), "UTF-8");
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
