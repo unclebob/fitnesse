@@ -77,11 +77,8 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     assertEquals(">SubChild.SymLink", symbolics.get("SubLink"));
   }
 
-  public void testSave() throws Exception {
-    ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
-    properties.save(os);
-
-    String xml = os.toString();
+  public void testToXml() throws Exception {
+    String xml = properties.toXml();
     for (String fragment : sampleXmlFragments) {
       assertTrue(fragment, xml.contains(fragment));
     }

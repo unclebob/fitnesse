@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,15 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fitnesse.wikitext.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import util.Clock;
 import util.XmlUtil;
-import util.XmlWriter;
-import fitnesse.wikitext.Utils;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -89,21 +87,10 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     }
   }
 
-  public void save(OutputStream outputStream) throws Exception {
-    Document document = null;
-    XmlWriter writer = null;
-    try {
-      document = XmlUtil.newDocument();
-      document.appendChild(makeRootElement(document));
-
-      writer = new XmlWriter(outputStream);
-      writer.write(document);
-    } finally {
-      if (writer != null) {
-        writer.flush();
-        writer.close();
-      }
-    }
+  public String toXml() throws IOException {
+    Document document = XmlUtil.newDocument();
+    document.appendChild(makeRootElement(document));
+    return XmlUtil.xmlAsString(document);
   }
 
   public Element makeRootElement(Document document) {
@@ -165,4 +152,5 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public void setLastModificationTime(Date date) {
     set(PageData.PropertyLAST_MODIFIED, getTimeFormat().format(date));
   }
+
 }

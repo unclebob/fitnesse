@@ -5,12 +5,8 @@ package fitnesse.wiki;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -92,20 +88,12 @@ public class FileSystemPage extends CachingPage {
     //a strange behavior on windows.
     content = content.replaceAll("\n", separator);
 
+    // Should use FileSystem instance instead
     String contentPath = getFileSystemPath() + contentFilename;
-    final File output = new File(contentPath);
-    OutputStreamWriter writer = null;
     try {
-      writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
-      writer.write(content);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException("Can not decode file " + output, e);
+      fileSystem.makeFile(contentPath, content);
     } catch (IOException e) {
       throw new RuntimeException(e);
-    } finally {
-      if (writer != null) {
-        FileUtil.close(writer);
-      }
     }
   }
 
@@ -113,22 +101,16 @@ public class FileSystemPage extends CachingPage {
   @Deprecated
   protected synchronized void saveAttributes(final WikiPageProperties attributes)
     {
-    OutputStream output = null;
     String propertiesFilePath = "<unknown>";
     try {
       propertiesFilePath = getFileSystemPath() + propertiesFilename;
-      File propertiesFile = new File(propertiesFilePath);
-      output = new FileOutputStream(propertiesFile);
       WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
       removeAlwaysChangingProperties(propertiesToSave);
-      propertiesToSave.save(output);
+      propertiesToSave.toXml();
+      fileSystem.makeFile(propertiesFilePath, propertiesToSave.toXml());
     } catch (final Exception e) {
       throw new RuntimeException("Failed to save properties file: \""
         + propertiesFilePath + "\" (exception: " + e + ").", e);
-    } finally {
-      if (output != null) {
-        FileUtil.close(output);
-      }
     }
   }
 
@@ -170,6 +152,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   private byte[] readContentBytes(final File input) throws IOException {
+    // TODO: Read through FileSystem
     FileInputStream inputStream = null;
     try {
       final byte[] bytes = new byte[(int) input.length()];
@@ -232,6 +215,7 @@ public class FileSystemPage extends CachingPage {
 
   private void attemptToReadPropertiesFile(File file, PageData data,
                                            long lastModifiedTime) throws FileNotFoundException {
+    // TODO: read through FileSystem
     InputStream input = null;
     try {
       final WikiPageProperties props = new WikiPageProperties();
