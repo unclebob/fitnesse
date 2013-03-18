@@ -1,18 +1,18 @@
 package fitnesse.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import util.RegexTestCase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalListener<WikiPage> {
   private WikiPage root;
-  private InMemoryPage pageOne;
+  private WikiPage pageOne;
   private WikiPage pageTwo;
   private WikiPage pageThree;
   private WhereUsedPageFinder whereUsed;
@@ -27,7 +27,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
-    pageOne = (InMemoryPage) crawler.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
+    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
     pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
     pageThree = crawler.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
     crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");

@@ -2,6 +2,7 @@ package fitnesse.wiki.storage;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import util.Clock;
 
@@ -43,9 +44,10 @@ public class MemoryFileSystem implements FileSystem{
 
   @Override
   public void delete(String pathToDelete) {
-    for (String f : files.keySet()) {
+    for (Iterator<String> iter = files.keySet().iterator(); iter.hasNext(); ) {
+      String f = iter.next();
       if (f.startsWith(pathToDelete))
-        files.remove(f);
+        iter.remove();
     }
   }
 

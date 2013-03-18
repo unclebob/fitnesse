@@ -36,7 +36,7 @@ public class ExternalSuitePage extends CachingPage {
     }
 
     protected void loadChildren() {
-        for (WikiPage child: new FileSystemPageFactory(fileSystem).findChildren(this)) {
+        for (WikiPage child: new FileSystemPageFactory(fileSystem, new NullVersionsController()).findChildren(this)) {
             if (!children.containsKey(child.getName())) {
                 children.put(child.getName(), child);
             }

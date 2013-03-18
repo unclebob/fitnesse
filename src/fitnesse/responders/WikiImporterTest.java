@@ -174,6 +174,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     addLocalPageWithImportProperty(localRoot, "PageThree", false);
     addLocalPageWithImportProperty(pageOne, "ChildTwo", false);
     addLocalPageWithImportProperty(childPageOne, "GrandChildOne", false);
+    // Page is not committed, therefore should not import
     localRoot.addChildPage("PageThatDoesntImport");
     addLocalPageWithImportProperty(localRoot, "OtherImportRoot", true);
 
@@ -186,8 +187,8 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertFalse(localRoot.hasChildPage("PageThree"));
     assertFalse(pageOne.hasChildPage("ChildTwo"));
     assertFalse(childPageOne.hasChildPage("GrandChildOne"));
+    assertFalse(localRoot.hasChildPage("PageThatDoesntImport"));
 
-    assertTrue(localRoot.hasChildPage("PageThatDoesntImport"));
     assertTrue(localRoot.hasChildPage("OtherImportRoot"));
   }
 
