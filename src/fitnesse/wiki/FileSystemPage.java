@@ -2,25 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 
-import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.storage.DiskFileSystem;
 import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wikitext.parser.WikiWordPath;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
-
-  public static final String contentFilename = "/content.txt";
-  public static final String propertiesFilename = "/properties.xml";
 
   private final String path;
   private final WikiPageFactory wikiPageFactory;
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
+  @Deprecated // TODO: Unite in one versionsController
+  private final VersionsController fileVersionsController;
 
   public FileSystemPage(final String path, final String name,
                         final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
@@ -28,6 +25,7 @@ public class FileSystemPage extends CachingPage {
     this.path = path;
     this.wikiPageFactory = wikiPageFactory;
     this.fileSystem = fileSystem;
+    this.fileVersionsController = new SimpleFileVersionsController(fileSystem);
     this.versionsController = versionsController;
   }
 
@@ -43,6 +41,7 @@ public class FileSystemPage extends CachingPage {
     wikiPageFactory = parent.wikiPageFactory;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
+    fileVersionsController = parent.fileVersionsController;
   }
 
   @Override
@@ -62,75 +61,12 @@ public class FileSystemPage extends CachingPage {
     return false;
   }
 
-  // TODO: Do this in the VersionsController
-  @Deprecated
-  protected synchronized void saveContent(String content) {
-    if (content == null) {
-      return;
-    }
-
-    final String separator = System.getProperty("line.separator");
-
-    if (content.endsWith("|")) {
-      content += separator;
-    }
-    
-    //First replace every windows style to unix
-    content = content.replaceAll("\r\n", "\n");
-    //Then do the replace to match the OS.  This works around
-    //a strange behavior on windows.
-    content = content.replaceAll("\n", separator);
-
-    // Should use FileSystem instance instead
-    String contentPath = getFileSystemPath() + contentFilename;
-    try {
-      fileSystem.makeFile(contentPath, content);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  // TODO: Do this in the VersionsController
-  @Deprecated
-  protected synchronized void saveAttributes(final WikiPageProperties attributes)
-    {
-    String propertiesFilePath = "<unknown>";
-    try {
-      propertiesFilePath = getFileSystemPath() + propertiesFilename;
-      WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
-      removeAlwaysChangingProperties(propertiesToSave);
-      fileSystem.makeFile(propertiesFilePath, propertiesToSave.toXml());
-    } catch (final Exception e) {
-      throw new RuntimeException("Failed to save properties file: \""
-        + propertiesFilePath + "\" (exception: " + e + ").", e);
-    }
-  }
-
-  private void removeAlwaysChangingProperties(WikiPageProperties properties) {
-    properties.remove(PageData.PropertyLAST_MODIFIED);
-  }
-
   @Override
   protected WikiPage createChildPage(final String name) {
     return wikiPageFactory.makeChildPage(name, this);
   }
 
-  private void loadContent(final PageData data) {
-    String content = "";
-    final String name = getFileSystemPath() + contentFilename;
-    try {
-      if (fileSystem.exists(name)) {
-        content = fileSystem.getContent(name);
-      }
-      data.setContent(content);
-    } catch (IOException e) {
-      throw new RuntimeException("Error while loading content", e);
-    }
-  }
-
   @Override
-  @Deprecated
-  // TODO: move to versions controller
   protected void loadChildren() {
     final String thisDir = getFileSystemPath();
     if (fileSystem.exists(thisDir)) {
@@ -160,51 +96,17 @@ public class FileSystemPage extends CachingPage {
     return getParentFileSystemPath() + "/" + getName();
   }
 
-  @Deprecated
-  // TODO: move to versions controller
-  private void loadAttributes(final PageData data) {
-    final String path = getFileSystemPath() + propertiesFilename;
-    if (fileSystem.exists(path)) {
-      try {
-        long lastModifiedTime = getLastModifiedTime();
-        attemptToReadPropertiesFile(path, data, lastModifiedTime);
-      } catch (final Exception e) {
-        System.err.println("Could not read properties file:" + path);
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private long getLastModifiedTime() {
-    final String path = getFileSystemPath() + contentFilename;
-    return fileSystem.lastModified(path);
-  }
-
-  private void attemptToReadPropertiesFile(String file, PageData data,
-                                           long lastModifiedTime) throws IOException {
-    String propertiesXml = fileSystem.getContent(file);
-    final WikiPageProperties props = new WikiPageProperties();
-    props.loadFromXml(propertiesXml);
-    props.setLastModificationTime(new Date(lastModifiedTime));
-    data.setProperties(props);
-  }
-
   @Override
   public VersionInfo commit(final PageData data) {
     VersionInfo previousVersion = makeVersion();
-    createDirectoryIfNewPage();
-    saveContent(data.getContent());
-    saveAttributes(data.getProperties());
+    fileVersionsController.makeVersion(this, data);
     super.commit(data);
     return previousVersion;
   }
 
   @Override
   protected PageData makePageData() {
-    final PageData pagedata = new PageData(this);
-    loadContent(pagedata);
-    loadAttributes(pagedata);
-    return pagedata;
+    return fileVersionsController.getRevisionData(this, "");
   }
 
   @Override
@@ -218,18 +120,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Deprecated
-  // Move to persistence engine
-  private void createDirectoryIfNewPage() {
-    String pagePath = getFileSystemPath();
-    if (!fileSystem.exists(pagePath)) {
-      try {
-        fileSystem.makeDirectory(pagePath);
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to create directory for new page", e);
-      }
-    }
-  }
-
+  //
   private VersionInfo makeVersion() {
     final PageData data = getData();
     return makeVersion(data);
