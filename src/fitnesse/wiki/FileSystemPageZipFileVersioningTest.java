@@ -2,9 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static fitnesse.wiki.zip.ZipFileVersionsController.dateFormat;
-
 import java.io.File;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -81,6 +80,10 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     assertEquals(2, versionNames.size());
     assertTrue(versionNames.contains(firstVersion));
     assertTrue(versionNames.contains(secondVersion));
+  }
+
+  public DateFormat dateFormat() {
+    return WikiImportProperty.getTimeFormat();
   }
 
   public void testVersionsExpire() throws Exception {

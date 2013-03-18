@@ -1,11 +1,14 @@
 package fitnesse.wiki.zip;
 
+import static fitnesse.wiki.SimpleFileVersionsController.contentFilename;
+import static fitnesse.wiki.SimpleFileVersionsController.propertiesFilename;
+import static fitnesse.wiki.VersionInfo.makeVersionInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -27,14 +30,10 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
 import util.Clock;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {
-  public static SimpleDateFormat dateFormat() {
-    return WikiPageProperty.getTimeFormat();
-  }
 
   private int daysTillVersionsExpire = 14;
 
@@ -48,7 +47,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   @Override
   public PageData getRevisionData(final FileSystemPage page, final String label) {
-    final String filename = getFileSystemPath(page) + "/" + label + ".zip";
+    final String filename = page.getFileSystemPath() + "/" + label + ".zip";
     final File file = new File(filename);
     if (!file.exists()) {
       throw new NoSuchVersionException("There is no version '" + label + "'");
@@ -74,17 +73,9 @@ public class ZipFileVersionsController implements VersionsController {
     }
   }
 
-  private String getFileSystemPath(final FileSystemPage page) {
-    try {
-      return page.getFileSystemPath();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   @Override
   public Collection<VersionInfo> history(final FileSystemPage page) {
-    final File dir = new File(getFileSystemPath(page));
+    final File dir = new File(page.getFileSystemPath());
     final File[] files = dir.listFiles();
     final Set<VersionInfo> versions = new HashSet<VersionInfo>();
     if (files != null) {
@@ -99,7 +90,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   @Override
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
-    final String dirPath = getFileSystemPath(page);
+    final String dirPath = page.getFileSystemPath();
     final Set<File> filesToZip = getFilesToZip(dirPath);
 
     final VersionInfo version = makeVersionInfo(data);
@@ -161,7 +152,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private void loadVersionAttributes(final ZipFile zipFile, final PageData data) {
-    final ZipEntry attributes = zipFile.getEntry("properties.xml");
+    final ZipEntry attributes = zipFile.getEntry(propertiesFilename);
     if (attributes != null) {
       InputStream attributeIS = null;
       try {
@@ -184,7 +175,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   private void loadVersionContent(final ZipFile zipFile, final PageData data) {
     String content = "";
-    final ZipEntry contentEntry = zipFile.getEntry("content.txt");
+    final ZipEntry contentEntry = zipFile.getEntry(contentFilename);
     if (contentEntry != null) {
       StreamReader reader = null;
       try {
@@ -207,7 +198,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private Collection<VersionInfo> loadVersions(final FileSystemPage page) {
-    final File dir = new File(getFileSystemPath(page));
+    final File dir = new File(page.getFileSystemPath());
     final File[] files = dir.listFiles();
     final Set<VersionInfo> versions = new HashSet<VersionInfo>();
     if (files != null) {
@@ -221,23 +212,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private String makeVersionFileName(final FileSystemPage page, final String name) {
-    return getFileSystemPath(page) + "/" + name + ".zip";
-  }
-
-  private VersionInfo makeVersionInfo(final PageData data) {
-    try {
-      Date time;
-      time = data.getProperties().getLastModificationTime();
-      String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
-      final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
-      if (user != null && !"".equals(user)) {
-        versionName = user + "-" + versionName;
-      }
-
-      return new VersionInfo(versionName, user, time);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return page.getFileSystemPath() + "/" + name + ".zip";
   }
 
   private String makeVersionName(final File file) {

@@ -52,6 +52,22 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     }
   }
 
+  public static VersionInfo makeVersionInfo(final PageData data) {
+    try {
+      Date time;
+      time = data.getProperties().getLastModificationTime();
+      String versionName = VersionInfo.nextId() + "-" + WikiImportProperty.getTimeFormat().format(time);
+      final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
+      if (user != null && !"".equals(user)) {
+        versionName = user + "-" + versionName;
+      }
+
+      return new VersionInfo(versionName, user, time);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public String getAuthor() {
     return author;
   }

@@ -1,7 +1,8 @@
 package fitnesse.wiki;
 
+import static fitnesse.wiki.VersionInfo.makeVersionInfo;
+
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -10,8 +11,8 @@ import fitnesse.wiki.storage.FileSystem;
 
 public class SimpleFileVersionsController implements VersionsController {
 
-  public static final String contentFilename = "/content.txt";
-  public static final String propertiesFilename = "/properties.xml";
+  public static final String contentFilename = "content.txt";
+  public static final String propertiesFilename = "properties.xml";
 
   private static VersionInfo versionInfo = new VersionInfo("current", "author", new Date());
 
@@ -36,7 +37,7 @@ public class SimpleFileVersionsController implements VersionsController {
 
   @Override
   public Collection<VersionInfo> history(FileSystemPage page) {
-    return Arrays.asList(versionInfo);
+    return Arrays.asList(makeVersion(page, getRevisionData(page, "")));
   }
 
   @Override
@@ -44,11 +45,11 @@ public class SimpleFileVersionsController implements VersionsController {
     createDirectoryIfNewPage(page);
     saveContent(page, data.getContent());
     saveAttributes(page, data.getProperties());
-    return null;
+    return makeVersionInfo(data);
   }
 
   private void createDirectoryIfNewPage(final FileSystemPage page) {
-    String pagePath = getFileSystemPath(page);
+    String pagePath = page.getFileSystemPath();
     if (!fileSystem.exists(pagePath)) {
       try {
         fileSystem.makeDirectory(pagePath);
@@ -75,7 +76,7 @@ public class SimpleFileVersionsController implements VersionsController {
     //a strange behavior on windows.
     content = content.replaceAll("\n", separator);
 
-    String contentPath = getFileSystemPath(page) + contentFilename;
+    String contentPath = page.getFileSystemPath() + "/" + contentFilename;
     try {
       fileSystem.makeFile(contentPath, content);
     } catch (IOException e) {
@@ -87,7 +88,7 @@ public class SimpleFileVersionsController implements VersionsController {
   {
     String propertiesFilePath = "<unknown>";
     try {
-      propertiesFilePath = getFileSystemPath(page) + propertiesFilename;
+      propertiesFilePath = page.getFileSystemPath() + "/" + propertiesFilename;
       WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
       removeAlwaysChangingProperties(propertiesToSave);
       fileSystem.makeFile(propertiesFilePath, propertiesToSave.toXml());
@@ -103,7 +104,7 @@ public class SimpleFileVersionsController implements VersionsController {
 
   private void loadContent(final FileSystemPage page, final PageData data) {
     String content = "";
-    final String name = getFileSystemPath(page) + contentFilename;
+    final String name = page.getFileSystemPath() + "/" + contentFilename;
     try {
       if (fileSystem.exists(name)) {
         content = fileSystem.getContent(name);
@@ -115,7 +116,7 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   private void loadAttributes(final FileSystemPage page, final PageData data) {
-    final String path = getFileSystemPath(page) + propertiesFilename;
+    final String path = page.getFileSystemPath() + "/" + propertiesFilename;
     if (fileSystem.exists(path)) {
       try {
         long lastModifiedTime = getLastModifiedTime(page);
@@ -137,35 +138,8 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   private long getLastModifiedTime(final FileSystemPage page) {
-    final String path = getFileSystemPath(page) + contentFilename;
+    final String path = page.getFileSystemPath() + "/" + contentFilename;
     return fileSystem.lastModified(path);
-  }
-
-  private VersionInfo makeVersionInfo(final PageData data) {
-    try {
-      Date time = new Date();
-      String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
-      final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
-      if (user != null && !"".equals(user)) {
-        versionName = user + "-" + versionName;
-      }
-
-      return new VersionInfo(versionName, user, time);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private String getFileSystemPath(final FileSystemPage page) {
-    try {
-      return page.getFileSystemPath();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static SimpleDateFormat dateFormat() {
-    return WikiPageProperty.getTimeFormat();
   }
 
 }
