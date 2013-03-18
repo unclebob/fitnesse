@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import fitnesse.wikitext.Utils;
@@ -26,10 +25,7 @@ import util.XmlUtil;
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  private Map<?, ?> symbolicLinks;
-
   public WikiPageProperties() {
-    symbolicLinks = new HashMap<Object, Object>();
   }
 
   public WikiPageProperties(InputStream inputStream) {
@@ -45,7 +41,6 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public WikiPageProperties(WikiPageProperties that) {
     if (that != null && that.children != null)
       children = new HashMap<String, WikiPageProperty>(that.children);
-    symbolicLinks = new HashMap<Object, Object>(that.symbolicLinks);
   }
 
   public void loadFromXmlStream(InputStream inputStream) {
@@ -110,7 +105,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     Collections.sort(keys);
 
     for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
+      String key = iterator.next();
       WikiPageProperty childProperty = getProperty(key);
       toXml(childProperty, key, document, root);
     }
