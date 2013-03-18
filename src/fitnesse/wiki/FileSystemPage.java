@@ -99,7 +99,6 @@ public class FileSystemPage extends CachingPage {
       propertiesFilePath = getFileSystemPath() + propertiesFilename;
       WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
       removeAlwaysChangingProperties(propertiesToSave);
-      propertiesToSave.toXml();
       fileSystem.makeFile(propertiesFilePath, propertiesToSave.toXml());
     } catch (final Exception e) {
       throw new RuntimeException("Failed to save properties file: \""
