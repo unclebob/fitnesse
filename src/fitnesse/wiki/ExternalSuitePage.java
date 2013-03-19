@@ -31,12 +31,12 @@ public class ExternalSuitePage extends CachingPage {
         return null;
     }
 
-    protected WikiPage createChildPage(String name) {
+  protected WikiPage createChildPage(String name) {
         return null;
     }
 
     protected void loadChildren() {
-        for (WikiPage child: new FileSystemPageFactory(fileSystem, new NullVersionsController()).findChildren(this)) {
+        for (WikiPage child: new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).findChildren(this)) {
             if (!children.containsKey(child.getName())) {
                 children.put(child.getName(), child);
             }

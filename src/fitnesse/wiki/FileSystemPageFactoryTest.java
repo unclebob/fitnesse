@@ -2,6 +2,8 @@ package fitnesse.wiki;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
@@ -100,5 +102,44 @@ public class FileSystemPageFactoryTest {
     assertEquals(42, ((NullVersionsController) defaultRevisionController).getHistoryDepth());
   }
 
+  public static class NullVersionsController implements VersionsController {
+    private int historyDepth;
+
+    public NullVersionsController() {
+    }
+
+    @Override
+    public void setHistoryDepth(int historyDepth) {
+      this.historyDepth = historyDepth;
+    }
+
+    public int getHistoryDepth() {
+      return historyDepth;
+    }
+
+    @Override
+    public PageData getRevisionData(final FileSystemPage page, final String label) {
+      try {
+        return page.getData();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    @Override
+    public Collection<VersionInfo> history(final FileSystemPage page) {
+      return new HashSet<VersionInfo>();
+    }
+
+    @Override
+    public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
+      return new VersionInfo(page.getFileSystemPath());
+    }
+
+    @Override
+    public VersionInfo getCurrentVersion(FileSystemPage page) {
+      return new VersionInfo(page.getFileSystemPath());
+    }
+  }
 
 }
