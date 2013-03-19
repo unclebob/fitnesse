@@ -27,17 +27,22 @@ import java.util.zip.ZipOutputStream;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
-import util.Clock;
+import fitnesse.wiki.storage.DiskFileSystem;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {
 
   private int daysTillVersionsExpire = 14;
 
+  private VersionsController persistence;
+
   public ZipFileVersionsController() {
+    // Fix on Disk file system, since that's what ZipFileVersionsController can deal with.
+    persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
   @Override
@@ -47,6 +52,9 @@ public class ZipFileVersionsController implements VersionsController {
 
   @Override
   public PageData getRevisionData(final FileSystemPage page, final String label) {
+    if (label == null) {
+      return persistence.getRevisionData(page, null);
+    }
     final String filename = page.getFileSystemPath() + "/" + label + ".zip";
     final File file = new File(filename);
     if (!file.exists()) {
@@ -90,13 +98,23 @@ public class ZipFileVersionsController implements VersionsController {
 
   @Override
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
+    makeZipVersion(page, page.getData());
+    return persistence.makeVersion(page, data);
+  }
+
+  @Override
+  public VersionInfo getCurrentVersion(FileSystemPage page) {
+    return persistence.getCurrentVersion(page);
+  }
+
+  protected VersionInfo makeZipVersion(FileSystemPage page, PageData data) {
     final String dirPath = page.getFileSystemPath();
     final Set<File> filesToZip = getFilesToZip(dirPath);
 
-    final VersionInfo version = makeVersionInfo(data);
+    final VersionInfo version = makeVersionInfo(history(page).size(), data);
 
     if (filesToZip.size() == 0) {
-      return new VersionInfo("first_commit", "", Clock.currentDate());
+      return version;
     }
     ZipOutputStream zos = null;
     try {
@@ -105,7 +123,7 @@ public class ZipFileVersionsController implements VersionsController {
       for (File aFilesToZip : filesToZip) {
         addToZip(aFilesToZip, zos);
       }
-      return new VersionInfo(version.getName());
+      return version;
     } catch (Throwable th) {
       throw new RuntimeException(th);
     } finally {

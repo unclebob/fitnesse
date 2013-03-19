@@ -16,8 +16,6 @@ public class FileSystemPage extends CachingPage {
   private final WikiPageFactory wikiPageFactory;
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
-  @Deprecated // TODO: Unite in one versionsController
-  private final VersionsController fileVersionsController;
 
   public FileSystemPage(final String path, final String name,
                         final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
@@ -25,7 +23,6 @@ public class FileSystemPage extends CachingPage {
     this.path = path;
     this.wikiPageFactory = wikiPageFactory;
     this.fileSystem = fileSystem;
-    this.fileVersionsController = new SimpleFileVersionsController(fileSystem);
     this.versionsController = versionsController;
   }
 
@@ -41,7 +38,6 @@ public class FileSystemPage extends CachingPage {
     wikiPageFactory = parent.wikiPageFactory;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
-    fileVersionsController = parent.fileVersionsController;
   }
 
   @Override
@@ -98,15 +94,14 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   public VersionInfo commit(final PageData data) {
-    VersionInfo previousVersion = makeVersion();
-    fileVersionsController.makeVersion(this, data);
+    VersionInfo versionInfo = versionsController.makeVersion(this, data);
     super.commit(data);
-    return previousVersion;
+    return versionInfo;
   }
 
   @Override
   protected PageData makePageData() {
-    return fileVersionsController.getRevisionData(this, "");
+    return versionsController.getRevisionData(this, null);
   }
 
   @Override
@@ -116,18 +111,7 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   public PageData getDataVersion(final String versionName) {
-    return this.versionsController.getRevisionData(this, versionName);
-  }
-
-  @Deprecated
-  //
-  private VersionInfo makeVersion() {
-    final PageData data = getData();
-    return makeVersion(data);
-  }
-
-  protected VersionInfo makeVersion(final PageData data) {
-    return this.versionsController.makeVersion(this, data);
+    return versionsController.getRevisionData(this, versionName);
   }
 
   @Override

@@ -4,16 +4,29 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fitnesse.wiki.storage.FileSystem;
+
 public class MemoryVersionsController implements VersionsController {
+
+  private static int counter = 0;
+
+  public static int nextId() {
+    return counter++;
+  }
+
 
   private Map<String, FileVersions> versions = new HashMap<String, FileVersions>();
   private int historyDepth;
+
+  private VersionsController persistence;
+
+  MemoryVersionsController(FileSystem fileSystem) {
+    this.persistence = new SimpleFileVersionsController(fileSystem);
+  }
 
   @Override
   public void setHistoryDepth(int historyDepth) {
@@ -22,6 +35,9 @@ public class MemoryVersionsController implements VersionsController {
 
   @Override
   public PageData getRevisionData(FileSystemPage page, String label) {
+    if (label == null || label.startsWith("0-")) {
+      return persistence.getRevisionData(page, null);
+    }
     FileVersions fileVersions = getFileVersions(page);
     if (fileVersions == null) return null;
     return fileVersions.getRevisionData(label);
@@ -37,7 +53,13 @@ public class MemoryVersionsController implements VersionsController {
   @Override
   public VersionInfo makeVersion(FileSystemPage page, PageData data) {
     FileVersions fileVersions = getFileVersions(page);
-    return fileVersions.makeVersion(data);
+    fileVersions.makeVersion(data);
+    return persistence.makeVersion(page, data);
+  }
+
+  @Override
+  public VersionInfo getCurrentVersion(FileSystemPage page) {
+    return persistence.getCurrentVersion(page);
   }
 
   private FileVersions getFileVersions(FileSystemPage page) {
@@ -54,7 +76,7 @@ public class MemoryVersionsController implements VersionsController {
     protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
 
     protected VersionInfo makeVersion(PageData current) {
-      String name = String.valueOf(VersionInfo.nextId());
+      String name = String.valueOf(nextId());
       VersionInfo version = makeVersionInfo(current, name);
       versions.put(version.getName(), current);
       return version;
@@ -73,11 +95,6 @@ public class MemoryVersionsController implements VersionsController {
       if (version == null)
         throw new NoSuchVersionException("There is no version '" + versionName + "'");
 
-      List<VersionInfo> pageVersions = new LinkedList<VersionInfo>();
-      for (String name : versions.keySet()) {
-        PageData data = versions.get(name);
-        pageVersions.add(makeVersionInfo(data, name));
-      }
       return new PageData(version);
     }
 

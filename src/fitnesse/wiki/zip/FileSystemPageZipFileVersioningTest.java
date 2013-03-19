@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.zip;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -11,17 +11,29 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.zip.ZipFileVersionsController;
-import junit.framework.TestCase;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.FileSystemPageFactory;
+import fitnesse.wiki.NoSuchVersionException;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.storage.DiskFileSystem;
+import junit.framework.TestCase;
 import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest extends TestCase {
   public FileSystemPage page;
   private VersionInfo firstVersion;
+  private VersionInfo secondVersion;
   private PageCrawler crawler;
   private WikiPage root;
-  private VersionsController versionsController;
+  private ZipFileVersionsController versionsController;
 
   @Override
   public void setUp() throws Exception {
@@ -31,7 +43,8 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
-    firstVersion = page.commit(data);
+    firstVersion = VersionInfo.makeVersionInfo(0, data);
+    secondVersion = page.commit(data);
   }
 
   @Override
@@ -75,9 +88,9 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   public void testTwoVersions() throws Exception {
     PageData data = page.getData();
     data.setContent("new content");
-    VersionInfo secondVersion = page.commit(data);
+    page.commit(data);
     Collection<VersionInfo> versionNames = page.getVersions();
-    assertEquals(2, versionNames.size());
+    assertEquals(versionNames.toString(), 2, versionNames.size());
     assertTrue(versionNames.contains(firstVersion));
     assertTrue(versionNames.contains(secondVersion));
   }
@@ -94,17 +107,17 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex1 = format(modificationTime);
     data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex1));
-    page.makeVersion(data);
+    versionsController.makeZipVersion(page, data);
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex2 = format(modificationTime);
     data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex2));
-    page.makeVersion(data);
+    versionsController.makeZipVersion(page, data);
     modificationTime.add(Calendar.DATE, -1);
     data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
-    page.makeVersion(data);
+    versionsController.makeZipVersion(page, data);
     modificationTime.add(Calendar.DATE, -1);
     data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
-    page.makeVersion(data);
+    versionsController.makeZipVersion(page, data);
 
     Collection<VersionInfo> versions = page.getVersions();
     assertEquals(3, versions.size());
@@ -171,10 +184,6 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
     PageData data = testPage.getData();
     data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
-    testPage.commit(data);
-
-    data = testPage.getData();
-    data.setAttribute(PageData.LAST_MODIFYING_USER, "Joe");
     VersionInfo record = testPage.commit(data);
 
     assertTrue(record.getName().startsWith("Aladdin"));

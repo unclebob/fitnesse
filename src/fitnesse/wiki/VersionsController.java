@@ -11,4 +11,6 @@ public interface VersionsController {
   Collection<VersionInfo> history(FileSystemPage page);
 
   VersionInfo makeVersion(FileSystemPage page, PageData data);
+
+  VersionInfo getCurrentVersion(FileSystemPage page);
 }

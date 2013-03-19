@@ -8,7 +8,8 @@ import fitnesse.wiki.storage.MemoryFileSystem;
 public class InMemoryPage {
 
   public static WikiPage makeRoot(String name) {
-    WikiPageFactory factory = new FileSystemPageFactory(new MemoryFileSystem(), new MemoryVersionsController());
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem));
     return factory.makeRootPage(null, name);
   }
 

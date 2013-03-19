@@ -14,8 +14,6 @@ public class SimpleFileVersionsController implements VersionsController {
   public static final String contentFilename = "content.txt";
   public static final String propertiesFilename = "properties.xml";
 
-  private static VersionInfo versionInfo = new VersionInfo("current", "author", new Date());
-
   private final FileSystem fileSystem;
 
   public SimpleFileVersionsController(FileSystem fileSystem) {
@@ -45,7 +43,12 @@ public class SimpleFileVersionsController implements VersionsController {
     createDirectoryIfNewPage(page);
     saveContent(page, data.getContent());
     saveAttributes(page, data.getProperties());
-    return makeVersionInfo(data);
+    return makeVersionInfo(0, data);
+  }
+
+  @Override
+  public VersionInfo getCurrentVersion(FileSystemPage page) {
+    return makeVersionInfo(0, getRevisionData(page, null));
   }
 
   private void createDirectoryIfNewPage(final FileSystemPage page) {
