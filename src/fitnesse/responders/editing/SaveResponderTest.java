@@ -201,6 +201,6 @@ public class SaveResponderTest {
   @Test
   public void testHasVersionHeader() throws Exception {
     doSimpleEdit();
-    assertTrue("header missing", response.getHeader("Previous-Version") != null);
+    assertTrue("header missing", response.getHeader("Current-Version") != null);
   }
 }
