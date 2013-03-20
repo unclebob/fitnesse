@@ -9,7 +9,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.fs.FileSystem;
 
 public class ExternalTestPage extends CachingPage {
     private static final long serialVersionUID = 1L;
