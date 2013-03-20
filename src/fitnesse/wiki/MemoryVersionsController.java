@@ -76,7 +76,7 @@ public class MemoryVersionsController implements VersionsController {
     }
 
     private VersionInfo makeVersionInfo(PageData current) {
-      String name = String.valueOf(versions.sechoize());
+      String name = String.valueOf(versions.size());
       return makeVersionInfo(current, name);
     }
 
