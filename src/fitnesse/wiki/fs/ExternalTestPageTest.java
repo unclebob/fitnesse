@@ -1,10 +1,9 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import static org.junit.Assert.*;
 
+import fitnesse.wiki.PageType;
 import org.junit.Test;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.MemoryFileSystem;
 
 public class ExternalTestPageTest {
 

@@ -1,4 +1,4 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
-import fitnesse.wiki.fs.ZipFileVersionsController;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.MemoryFileSystem;
 
 public class FileSystemPageFactoryTest {
     private FileSystem fileSystem;
@@ -28,14 +28,14 @@ public class FileSystemPageFactoryTest {
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
-        WikiPage page = fileSystemPageFactory.makeChildPage("ExternalSuite", rootPage);
+        WikiPage page = rootPage.createChildPage("ExternalSuite");
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
     @Test
     public void DirectoryOfDirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
-        WikiPage page = fileSystemPageFactory.makeChildPage("ExternalSuite", rootPage);
+        WikiPage page = rootPage.createChildPage("ExternalSuite");
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
@@ -43,7 +43,7 @@ public class FileSystemPageFactoryTest {
     public void DirectoryWithoutHtmlFilesIsFileSystemPage() throws Exception {
         fileSystem.makeFile("./somepath/WikiPage/myfile.txt", "stuff");
         fileSystem.makeFile("./somepath/OtherPage/myfile.html", "stuff");
-        WikiPage page = fileSystemPageFactory.makeChildPage("WikiPage", rootPage);
+        WikiPage page = rootPage.createChildPage("WikiPage");
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
@@ -51,15 +51,15 @@ public class FileSystemPageFactoryTest {
     public void DirectoryWithContentIsFileSystemPage() throws Exception {
         fileSystem.makeFile("./somepath/WikiPage/content.txt", "stuff");
         fileSystem.makeFile("./somepath/WikiPage/subsuite/myfile.html", "stuff");
-        WikiPage page = fileSystemPageFactory.makeChildPage("WikiPage", rootPage);
+        WikiPage page = rootPage.createChildPage("WikiPage");
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
     @Test
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
-        ExternalSuitePage page = (ExternalSuitePage) fileSystemPageFactory.makeChildPage("ExternalSuite", rootPage);
-        WikiPage child = fileSystemPageFactory.findChildren(page).get(0);
+        ExternalSuitePage page = (ExternalSuitePage) rootPage.createChildPage("ExternalSuite");
+        WikiPage child = page.findChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
         assertEquals("MyfilE", child.getName());
     }
@@ -67,8 +67,8 @@ public class FileSystemPageFactoryTest {
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
-        ExternalSuitePage page = (ExternalSuitePage) fileSystemPageFactory.makeChildPage("ExternalSuite", rootPage);
-        WikiPage child = fileSystemPageFactory.findChildren(page).get(0);
+        ExternalSuitePage page = (ExternalSuitePage) rootPage.createChildPage("ExternalSuite");
+        WikiPage child = page.findChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
         assertEquals("SubsuitE", child.getName());
     }

@@ -22,7 +22,7 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPageFactory;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wikitext.parser.ParseSpecification;
 import fitnesse.wikitext.parser.ScanString;
 import fitnesse.wikitext.parser.SymbolMatch;

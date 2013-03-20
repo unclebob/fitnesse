@@ -22,12 +22,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
 import util.StreamReader;
 

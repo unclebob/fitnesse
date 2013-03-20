@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import fitnesse.wiki.fs.FileSystem;
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.VersionsController;
 
 public class SimpleFileVersionsController implements VersionsController {
 

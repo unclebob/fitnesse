@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import java.io.File;
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
 import util.EnvironmentVariableTool;
 
 public abstract class BaseWikiPage implements WikiPage {

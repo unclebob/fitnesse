@@ -1,7 +1,7 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
 
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,11 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

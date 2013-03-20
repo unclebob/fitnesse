@@ -1,27 +1,25 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.util.Collection;
 
-import fitnesse.wiki.fs.DiskFileSystem;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.ZipFileVersionsController;
+import fitnesse.wiki.CachingPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
 
   private final String path;
-  private final WikiPageFactory wikiPageFactory;
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
 
-  public FileSystemPage(final String path, final String name,
-                        final WikiPageFactory wikiPageFactory, final FileSystem fileSystem, final VersionsController versionsController) {
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, null);
     this.path = path;
-    this.wikiPageFactory = wikiPageFactory;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
   }
@@ -29,13 +27,12 @@ public class FileSystemPage extends CachingPage {
   @Deprecated
   // TODO: not to be used in production code
   public FileSystemPage(final String path, final String name) {
-    this(path, name, new FileSystemPageFactory(), new DiskFileSystem(), new ZipFileVersionsController());
+    this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
     super(name, parent);
     path = parent.getFileSystemPath();
-    wikiPageFactory = parent.wikiPageFactory;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
   }
@@ -59,8 +56,31 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   protected WikiPage createChildPage(final String name) {
-    return wikiPageFactory.makeChildPage(name, this);
+    String path = getFileSystemPath() + "/" + name;
+    if (hasContentChild(path)) {
+      return new FileSystemPage(name, this);
+    } else if (hasHtmlChild(path)) {
+      return new ExternalSuitePage(path, name, this, fileSystem);
+    } else {
+      return new FileSystemPage(name, this);
+    }
   }
+
+  private Boolean hasContentChild(String path) {
+    for (String child : fileSystem.list(path)) {
+      if (child.equals("content.txt")) return true;
+    }
+    return false;
+  }
+
+  private Boolean hasHtmlChild(String path) {
+    if (path.endsWith(".html")) return true;
+    for (String child : fileSystem.list(path)) {
+      if (hasHtmlChild(path + "/" + child)) return true;
+    }
+    return false;
+  }
+
 
   @Override
   protected void loadChildren() {

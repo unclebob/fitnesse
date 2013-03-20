@@ -3,7 +3,7 @@
 package fitnesse.fixtures;
 
 import fit.Fixture;
-import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPage;
 
 public class FileSystemPageSetUp extends Fixture {
   public FileSystemPageSetUp() throws Exception {

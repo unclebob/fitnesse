@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

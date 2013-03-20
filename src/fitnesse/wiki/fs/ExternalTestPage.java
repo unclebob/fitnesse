@@ -1,9 +1,14 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import fitnesse.wiki.CachingPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
 
 public class ExternalTestPage extends CachingPage {

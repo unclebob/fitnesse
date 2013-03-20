@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.FileSystemPageFactory;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -37,7 +35,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   @Override
   public void setUp() throws Exception {
     versionsController = new ZipFileVersionsController();
-    root = new FileSystemPage("TestDir", "RooT", new FileSystemPageFactory(), new DiskFileSystem(), versionsController);
+    root = new FileSystemPage("TestDir", "RooT", new DiskFileSystem(), versionsController);
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 

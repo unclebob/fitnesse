@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
 import junit.framework.TestCase;
 import util.FileUtil;
 

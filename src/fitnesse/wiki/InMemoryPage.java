@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.MemoryFileSystem;
 
 // In memory page, used for testing

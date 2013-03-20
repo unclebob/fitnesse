@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fitnesse.wiki.fs.FileSystem;
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.VersionsController;
 
 public class MemoryVersionsController implements VersionsController {
 

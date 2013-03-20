@@ -13,7 +13,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.FileSystemPageFactory;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
