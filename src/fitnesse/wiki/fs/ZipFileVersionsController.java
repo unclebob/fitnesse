@@ -1,4 +1,4 @@
-package fitnesse.wiki.zip;
+package fitnesse.wiki.fs;
 
 import static fitnesse.wiki.SimpleFileVersionsController.contentFilename;
 import static fitnesse.wiki.SimpleFileVersionsController.propertiesFilename;
@@ -29,7 +29,6 @@ import fitnesse.wiki.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.fs.DiskFileSystem;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {

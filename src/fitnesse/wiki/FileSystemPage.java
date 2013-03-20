@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class FileSystemPage extends CachingPage {

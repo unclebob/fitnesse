@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki.zip;
+package fitnesse.wiki.fs;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -23,7 +23,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.fs.DiskFileSystem;
 import junit.framework.TestCase;
 import util.FileUtil;
 

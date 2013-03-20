@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
-import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wiki.fs.ZipFileVersionsController;
 import org.junit.Before;
 import org.junit.Test;
 import fitnesse.wiki.fs.FileSystem;

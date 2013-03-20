@@ -1,8 +1,8 @@
-package fitnesse.wiki.zip;
+package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.zip.ZipFileVersionInfo.COMPEX_NAME_PATTERN;
-import static fitnesse.wiki.zip.ZipFileVersionInfo.makeVersionInfo;
-import static fitnesse.wiki.zip.ZipFileVersionInfo.makeVersionTimeFormat;
+import static fitnesse.wiki.fs.ZipFileVersionInfo.COMPEX_NAME_PATTERN;
+import static fitnesse.wiki.fs.ZipFileVersionInfo.makeVersionInfo;
+import static fitnesse.wiki.fs.ZipFileVersionInfo.makeVersionTimeFormat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
-import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
