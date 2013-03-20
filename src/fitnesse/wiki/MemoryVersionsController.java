@@ -3,20 +3,13 @@ package fitnesse.wiki;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.TreeMap;
 
 import fitnesse.wiki.storage.FileSystem;
 
 public class MemoryVersionsController implements VersionsController {
-
-  private static int counter = 0;
-
-  public static int nextId() {
-    return counter++;
-  }
 
 
   private Map<String, FileVersions> versions = new HashMap<String, FileVersions>();
@@ -35,7 +28,7 @@ public class MemoryVersionsController implements VersionsController {
 
   @Override
   public PageData getRevisionData(FileSystemPage page, String label) {
-    if (label == null || label.startsWith("0-")) {
+    if (label == null) {
       return persistence.getRevisionData(page, null);
     }
     FileVersions fileVersions = getFileVersions(page);
@@ -53,8 +46,9 @@ public class MemoryVersionsController implements VersionsController {
   @Override
   public VersionInfo makeVersion(FileSystemPage page, PageData data) {
     FileVersions fileVersions = getFileVersions(page);
-    fileVersions.makeVersion(data);
-    return persistence.makeVersion(page, data);
+    // For FilePageFactory, it does some lookups in the file system.
+    persistence.makeVersion(page, data);
+    return fileVersions.makeVersion(data);
   }
 
   @Override
@@ -73,17 +67,21 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   private static class FileVersions {
-    protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
+    protected Map<String, PageData> versions = new TreeMap<String, PageData>();
 
     protected VersionInfo makeVersion(PageData current) {
-      String name = String.valueOf(nextId());
-      VersionInfo version = makeVersionInfo(current, name);
-      versions.put(version.getName(), current);
+      VersionInfo version = makeVersionInfo(current);
+      versions.put(version.getName(), new PageData(current));
       return version;
     }
 
+    private VersionInfo makeVersionInfo(PageData current) {
+      String name = String.valueOf(versions.size());
+      return makeVersionInfo(current, name);
+    }
+
     public Collection<VersionInfo> history() {
-      Set<VersionInfo> set = new HashSet<VersionInfo>();
+      LinkedList<VersionInfo> set = new LinkedList<VersionInfo>();
       for (Map.Entry<String, PageData> entry : versions.entrySet()) {
         set.add(makeVersionInfo(entry.getValue(), entry.getKey()));
       }

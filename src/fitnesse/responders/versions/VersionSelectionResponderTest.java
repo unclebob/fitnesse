@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,10 +39,10 @@ public class VersionSelectionResponderTest extends RegexTestCase {
   public void ignore_testGetVersionsList() throws Exception {
     // TODO: create page with test versions controller and let it return versions in arbitraty order
     Set<VersionInfo> set = new HashSet<VersionInfo>();
-    VersionInfo v1 = new VersionInfo("1-12345678901234");
-    VersionInfo v2 = new VersionInfo("2-45612345678901");
-    VersionInfo v3 = new VersionInfo("3-11112345678901");
-    VersionInfo v4 = new VersionInfo("4-12212345465679");
+    VersionInfo v1 = new VersionInfo("1-12345678901234", "", new Date(12345678901234L * 1000));
+    VersionInfo v2 = new VersionInfo("2-45612345678901", "", new Date(45612345678901L * 1000));
+    VersionInfo v3 = new VersionInfo("3-11112345678901", "", new Date(11112345678901L * 1000));
+    VersionInfo v4 = new VersionInfo("4-12212345465679", "", new Date(12212345465679L * 1000));
     set.add(v1);
     set.add(v2);
     set.add(v3);

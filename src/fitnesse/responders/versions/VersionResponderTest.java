@@ -30,9 +30,9 @@ public class VersionResponderTest extends RegexTestCase {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
     data.setContent("new stuff");
-    VersionInfo commitRecord = page.commit(data);
+    VersionInfo commitRecord = page.getVersions().iterator().next();
     oldVersion = commitRecord.getName();
-
+    page.commit(data);
     MockRequest request = new MockRequest();
     request.setResource(pageName);
     request.addInput("version", oldVersion);

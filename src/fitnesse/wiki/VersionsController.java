@@ -8,7 +8,7 @@ public interface VersionsController {
 
   PageData getRevisionData(FileSystemPage page, String label);
 
-  Collection<VersionInfo> history(FileSystemPage page);
+  Collection<? extends VersionInfo> history(FileSystemPage page);
 
   VersionInfo makeVersion(FileSystemPage page, PageData data);
 

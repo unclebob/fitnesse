@@ -133,12 +133,12 @@ public class FileSystemPageFactoryTest {
 
     @Override
     public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
-      return new VersionInfo(page.getFileSystemPath());
+      return null;
     }
 
     @Override
     public VersionInfo getCurrentVersion(FileSystemPage page) {
-      return new VersionInfo(page.getFileSystemPath());
+      return null;
     }
   }
 

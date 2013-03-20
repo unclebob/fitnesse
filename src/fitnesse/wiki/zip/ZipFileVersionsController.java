@@ -2,7 +2,6 @@ package fitnesse.wiki.zip;
 
 import static fitnesse.wiki.SimpleFileVersionsController.contentFilename;
 import static fitnesse.wiki.SimpleFileVersionsController.propertiesFilename;
-import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +15,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -35,6 +33,9 @@ import fitnesse.wiki.storage.DiskFileSystem;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {
+
+  public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
+  private static long counter = 1;
 
   private int daysTillVersionsExpire = 14;
 
@@ -82,14 +83,14 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public Collection<VersionInfo> history(final FileSystemPage page) {
+  public Collection<ZipFileVersionInfo> history(final FileSystemPage page) {
     final File dir = new File(page.getFileSystemPath());
     final File[] files = dir.listFiles();
-    final Set<VersionInfo> versions = new HashSet<VersionInfo>();
+    final Set<ZipFileVersionInfo> versions = new HashSet<ZipFileVersionInfo>();
     if (files != null) {
       for (final File file : files) {
         if (isVersionFile(file)) {
-          versions.add(new VersionInfo(makeVersionName(file)));
+          versions.add(ZipFileVersionInfo.makeVersionInfo(file));
         }
       }
     }
@@ -111,7 +112,7 @@ public class ZipFileVersionsController implements VersionsController {
     final String dirPath = page.getFileSystemPath();
     final Set<File> filesToZip = getFilesToZip(dirPath);
 
-    final VersionInfo version = makeVersionInfo(history(page).size(), data);
+    final VersionInfo version = VersionInfo.makeVersionInfo(data);
 
     if (filesToZip.size() == 0) {
       return version;
@@ -166,7 +167,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private boolean isVersionFile(final File file) {
-    return Pattern.matches("(\\S+)?\\d+\\.zip", file.getName());
+    return ZIP_FILE_PATTERN.matcher(file.getName()).matches();
   }
 
   private void loadVersionAttributes(final ZipFile zipFile, final PageData data) {
@@ -222,7 +223,7 @@ public class ZipFileVersionsController implements VersionsController {
     if (files != null) {
       for (final File file : files) {
         if (isVersionFile(file)) {
-          versions.add(new VersionInfo(makeVersionName(file)));
+          versions.add(ZipFileVersionInfo.makeVersionInfo(file));
         }
       }
     }
@@ -230,56 +231,44 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private String makeVersionFileName(final FileSystemPage page, final String name) {
-    return page.getFileSystemPath() + "/" + name + ".zip";
+    String filename = page.getFileSystemPath() + "/" + name + ".zip";
+    int counter = 1;
+    while (new File(filename).exists()) {
+      filename = page.getFileSystemPath() + "/" + name + "~" + (counter++) + ".zip";
+    }
+    return filename;
   }
 
-  private String makeVersionName(final File file) {
-    final String name = file.getName();
-    return name.substring(0, name.length() - 4);
-  }
-
-
-  public void pruneVersions(FileSystemPage page, Collection<VersionInfo> versions) {
-    List<VersionInfo> versionsList = makeSortedVersionList(versions);
+  public void pruneVersions(FileSystemPage page, Collection<ZipFileVersionInfo> versions) {
+    List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
     if (versions.size() > 0) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
-      GregorianCalendar expirationDate = makeVersionExpirationDate(lastVersion);
-      for (Iterator<VersionInfo> iterator = versionsList.iterator(); iterator.hasNext();) {
-        VersionInfo version = iterator.next();
-        removeVersionIfExpired(page, version, expirationDate);
+      Date expirationDate = makeVersionExpirationDate(lastVersion);
+      for (ZipFileVersionInfo version : versionsList) {
+        Date thisDate = version.getCreationTime();
+        if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
+          version.getFile().delete();
       }
     }
   }
 
-  private List<VersionInfo> makeSortedVersionList(Collection<VersionInfo> versions) {
-    List<VersionInfo> versionsList = new ArrayList<VersionInfo>(versions);
+  private List<ZipFileVersionInfo> makeSortedVersionList(Collection<ZipFileVersionInfo> versions) {
+    List<ZipFileVersionInfo> versionsList = new ArrayList<ZipFileVersionInfo>(versions);
     Collections.sort(versionsList);
     return versionsList;
   }
 
-  private GregorianCalendar makeVersionExpirationDate(VersionInfo lastVersion) {
+  private Date makeVersionExpirationDate(VersionInfo lastVersion) {
     Date dateOfLastVersion = lastVersion.getCreationTime();
     GregorianCalendar expirationDate = new GregorianCalendar();
     expirationDate.setTime(dateOfLastVersion);
     expirationDate.add(Calendar.DAY_OF_MONTH, -(daysTillVersionsExpire));
-    return expirationDate;
-  }
-
-  private void removeVersionIfExpired(FileSystemPage page, VersionInfo version, GregorianCalendar expirationDate) {
-    Calendar thisDate = new GregorianCalendar();
-    thisDate.setTime(version.getCreationTime());
-    if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
-      removeVersion(page, version.getName());
-  }
-
-  private void removeVersion(final FileSystemPage page, final String versionName) {
-    final String versionFileName = makeVersionFileName(page, versionName);
-    final File versionFile = new File(versionFileName);
-    versionFile.delete();
+    return expirationDate.getTime();
   }
 
   @Override
   public String toString() {
     return this.getClass().getSimpleName();
   }
+
 }

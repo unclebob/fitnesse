@@ -106,7 +106,7 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return versionsController.history(this);
+    return (Collection<VersionInfo>) versionsController.history(this);
   }
 
   @Override

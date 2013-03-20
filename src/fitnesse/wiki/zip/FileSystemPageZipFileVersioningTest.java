@@ -38,18 +38,18 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   @Override
   public void setUp() throws Exception {
     versionsController = new ZipFileVersionsController();
-    root = new FileSystemPage("testDir", "RooT", new FileSystemPageFactory(), new DiskFileSystem(), versionsController);
+    root = new FileSystemPage("TestDir", "RooT", new FileSystemPageFactory(), new DiskFileSystem(), versionsController);
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
-    firstVersion = VersionInfo.makeVersionInfo(0, data);
+    firstVersion = VersionInfo.makeVersionInfo(data);
     secondVersion = page.commit(data);
   }
 
   @Override
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("testDir");
+    FileUtil.deleteFileSystemDirectory("TestDir");
   }
 
   public void testSave() throws Exception {

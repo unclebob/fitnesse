@@ -43,12 +43,12 @@ public class SimpleFileVersionsController implements VersionsController {
     createDirectoryIfNewPage(page);
     saveContent(page, data.getContent());
     saveAttributes(page, data.getProperties());
-    return makeVersionInfo(0, data);
+    return makeVersionInfo(data);
   }
 
   @Override
   public VersionInfo getCurrentVersion(FileSystemPage page) {
-    return makeVersionInfo(0, getRevisionData(page, null));
+    return makeVersionInfo(getRevisionData(page, null));
   }
 
   private void createDirectoryIfNewPage(final FileSystemPage page) {
