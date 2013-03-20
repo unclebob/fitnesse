@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.fs.FileSystem;
 
 public class MemoryVersionsController implements VersionsController {
 
@@ -76,7 +76,7 @@ public class MemoryVersionsController implements VersionsController {
     }
 
     private VersionInfo makeVersionInfo(PageData current) {
-      String name = String.valueOf(versions.size());
+      String name = String.valueOf(versions.sechoize());
       return makeVersionInfo(current, name);
     }
 

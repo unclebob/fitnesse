@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Iterator;
 
-import fitnesse.wiki.storage.FileSystem;
-import fitnesse.wiki.storage.MemoryFileSystem;
+import fitnesse.wiki.fs.FileSystem;
+import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 

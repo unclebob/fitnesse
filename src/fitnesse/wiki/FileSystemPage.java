@@ -4,8 +4,8 @@ package fitnesse.wiki;
 
 import java.util.Collection;
 
-import fitnesse.wiki.storage.DiskFileSystem;
-import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.fs.DiskFileSystem;
+import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.WikiWordPath;
 

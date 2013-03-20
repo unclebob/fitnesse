@@ -3,7 +3,7 @@ package fitnesse.wiki;
 import java.util.Collection;
 import java.util.Collections;
 
-import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.fs.FileSystem;
 
 public class ExternalSuitePage extends CachingPage {
     private static final long serialVersionUID = 1L;

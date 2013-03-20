@@ -1,4 +1,4 @@
-package fitnesse.wiki.storage;
+package fitnesse.wiki.fs;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import fitnesse.wiki.storage.FileSystem;
+import fitnesse.wiki.fs.FileSystem;
 
 public class SimpleFileVersionsController implements VersionsController {
 

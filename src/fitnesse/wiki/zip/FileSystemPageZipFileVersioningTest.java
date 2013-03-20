@@ -23,7 +23,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.storage.DiskFileSystem;
+import fitnesse.wiki.fs.DiskFileSystem;
 import junit.framework.TestCase;
 import util.FileUtil;
 

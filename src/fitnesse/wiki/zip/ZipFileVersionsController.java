@@ -29,7 +29,7 @@ import fitnesse.wiki.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.storage.DiskFileSystem;
+import fitnesse.wiki.fs.DiskFileSystem;
 import util.StreamReader;
 
 public class ZipFileVersionsController implements VersionsController {
