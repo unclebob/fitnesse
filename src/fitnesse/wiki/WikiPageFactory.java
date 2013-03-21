@@ -1,5 +1,5 @@
 package fitnesse.wiki;
 
 public interface WikiPageFactory {
-  WikiPage makeRootPage(String rootPath, String rootPageName);
+  WikiPage makeRootPage(String path, String pageName);
 }
