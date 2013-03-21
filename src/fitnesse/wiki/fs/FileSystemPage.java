@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.SymbolicPageFactory;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
@@ -18,7 +19,7 @@ public class FileSystemPage extends CachingPage {
   private final VersionsController versionsController;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, null);
+    super(name, null, new SymbolicPageFactory());
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
@@ -31,7 +32,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent);
+    super(name, parent, new SymbolicPageFactory());
     path = parent.getFileSystemPath();
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;

@@ -16,7 +16,7 @@ public class ExternalTestPage extends CachingPage {
     private String path;
 
     public ExternalTestPage(String path, String name, WikiPage parent, FileSystem fileSystem) {
-        super(name, parent);
+        super(name, parent, null);
         this.path = path;
         this.fileSystem = fileSystem;
     }

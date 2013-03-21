@@ -22,8 +22,8 @@ public abstract class CachingPage extends BaseWikiPage {
   private transient SoftReference<PageData> cachedData;
   private transient TimeMeasurement cachedTime;
 
-  public CachingPage(String name, WikiPage parent) {
-    super(name, parent);
+  public CachingPage(String name, WikiPage parent, SymbolicPageFactory symbolicPageFactory) {
+    super(name, parent, symbolicPageFactory);
   }
 
   protected abstract WikiPage createChildPage(String name);

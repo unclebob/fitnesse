@@ -7,12 +7,14 @@ import java.util.List;
 public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;
 
-  protected String name;
+  protected final String name;
   protected WikiPage parent;
+  private final SymbolicPageFactory symbolicPageFactory;
 
-  protected BaseWikiPage(String name, WikiPage parent) {
+  protected BaseWikiPage(String name, WikiPage parent, SymbolicPageFactory symbolicPageFactory) {
     this.name = name;
     this.parent = parent;
+    this.symbolicPageFactory = symbolicPageFactory;
   }
 
   public String getName() {
@@ -49,7 +51,7 @@ public abstract class BaseWikiPage implements WikiPage {
     String linkPath = symLinkProperty.get(linkName);
     if (linkPath == null)
       return null;
-    return new SymbolicPageFactory(this).makeRootPage(linkPath, linkName);
+    return symbolicPageFactory.makePage(linkPath, linkName, this);
   }
 
   protected abstract WikiPage getNormalChildPage(String name);

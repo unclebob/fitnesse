@@ -27,7 +27,7 @@ public class ProxyPage extends CachingPage implements Serializable {
   private long lastLoadChildrenTime = 0;
 
   public ProxyPage(WikiPage original) {
-    super(original.getName(), null);
+    super(original.getName(), null, null);
     realPath = original.getPageCrawler().getFullPath(original);
 
     List<?> children = original.getChildren();
@@ -39,11 +39,11 @@ public class ProxyPage extends CachingPage implements Serializable {
   }
 
   protected ProxyPage(String name, WikiPage parent) {
-    super(name, parent);
+    super(name, parent, null);
   }
 
   public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path) {
-    super(name, parent);
+    super(name, parent, null);
     this.host = host;
     hostPort = port;
     realPath = path;

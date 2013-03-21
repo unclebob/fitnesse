@@ -17,7 +17,7 @@ public class SimpleCachinePage extends CachingPage {
   private PageData data;
 
   public SimpleCachinePage(String name, WikiPage parent) {
-    super(name, parent);
+    super(name, parent, null);
   }
 
   public boolean hasChildPage(String pageName) {

@@ -14,8 +14,8 @@ public class SymbolicPage extends BaseWikiPage {
 
   private WikiPage realPage;
 
-  public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
-    super(name, parent);
+  public SymbolicPage(String name, WikiPage realPage, WikiPage parent, SymbolicPageFactory symbolicPageFactory) {
+    super(name, parent, symbolicPageFactory);
     this.realPage = realPage;
   }
 
@@ -34,7 +34,7 @@ public class SymbolicPage extends BaseWikiPage {
   protected WikiPage getNormalChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
     if (childPage != null && !(childPage instanceof SymbolicPage))
-      childPage = new SymbolicPage(name, childPage, this);
+      childPage = new SymbolicPage(name, childPage, this, null);
     return childPage;
   }
 
@@ -50,7 +50,7 @@ public class SymbolicPage extends BaseWikiPage {
     //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
     for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
       WikiPage child = (WikiPage) iterator.next();
-      symChildren.add(new SymbolicPage(child.getName(), child, this));
+      symChildren.add(new SymbolicPage(child.getName(), child, this, null));
     }
     return symChildren;
   }
