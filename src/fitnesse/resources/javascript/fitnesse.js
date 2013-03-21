@@ -16,10 +16,10 @@ function doSilentRequest(url)
 }
 
 /**
- *  Scenario's (after test execution)
+ *  Scenario's and Exceptions (after test execution)
  */
-$(document).on("click", "article tr.scenario td", function () {
-	$(this).parent().toggleClass('closed').next().toggle();
+$(document).on("click", "article tr.scenario td, article tr.exception td", function () {
+	$(this).parent().toggleClass('closed').next().toggleClass("closed-detail");
 });
 
 /**

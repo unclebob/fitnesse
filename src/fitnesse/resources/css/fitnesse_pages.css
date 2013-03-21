@@ -151,17 +151,22 @@ label.checkbox {
 }
 
 /** Test result **/
-tr.scenario > td:first-child {
+tr.scenario > td:first-child,
+tr.exception > td:first-child {
 	padding-left: 16px;
 	background-image: url("../images/collapsibleOpen.png");
 	background-position: 2px;
 	background-repeat: no-repeat;
 }
-tr.scenario.closed > td:first-child {
+tr.scenario.closed > td:first-child,
+tr.exception.closed > td:first-child {
 	background-image: url("../images/collapsibleClosed.png");
 }
-tr.scenario-detail {
+tr.closed-detail {
 	display: none;
+}
+tr.exception-detail {
+    background-color: #ffffaa;
 }
 #test-summary, #progressBar {
 	padding: 0.5em;
@@ -175,7 +180,10 @@ tr.scenario-detail {
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }
-#test-summaries .pass {
+#test-summaries .pass,
+#test-summaries .fail,
+#test-summaries .error,
+span.error {
   padding: 0px 0px 0px 20px;
 }
 #test-summary.pass,
@@ -183,12 +191,15 @@ tr.scenario-detail {
   background-image: url("../images/checkmark.png");
   background-repeat: no-repeat;
 }
-#test-summaries .fail {
-  padding: 0px 0px 0px 20px;
-}
 #test-summary.fail,
 #test-summaries .fail {
   background-image: url("../images/wrong.png");
+  background-repeat: no-repeat;
+}
+#test-summary.error,
+#test-summaries .error,
+span.error {
+  background-image: url("../images/exception.png");
   background-repeat: no-repeat;
 }
 #test-action .stop {

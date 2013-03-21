@@ -250,8 +250,10 @@ public class HtmlSlimResponderTest {
         + "| should fail1| true           |\n" + "\n\n"
         + "!|DT:fitnesse.slim.test.ThrowException|\n" + "|throwNormal?|\n"
         + "| should fail2|\n");
-    assertTestResultsContain("<td>first <span class=\"error\">Exception: <a href");
-    assertTestResultsContain("<td>second <span class=\"fail\">Exception: <a href");
+    assertTestResultsContain("<tr class=\"exception closed\">");
+    assertTestResultsContain("<td class=\"fail\">first</td>");
+    assertTestResultsContain("<td class=\"fail\">second</td>");
+    assertTestResultsContain("<tr class=\"exception-detail closed-detail\">");
     assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
     assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
   }

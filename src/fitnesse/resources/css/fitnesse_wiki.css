@@ -94,9 +94,6 @@ table.plain_text_table th {
 /** !style_* */
 .error {
   background-color: #ffffaa;
-  padding: 0px 0px 0px 20px;
-  background-image: url("../images/exception.png");
-  background-repeat: no-repeat;
 }
 .pass {
   background-color: #AAFFAA;
