@@ -18,6 +18,7 @@ public class Arguments {
   private String userpass;
   private boolean installOnly;
   private String command = null;
+  private String output = null;
 
   public String getRootPath() {
     return rootPath;
@@ -99,5 +100,13 @@ public class Arguments {
 
   public void setCommand(String command) {
     this.command = command;
+  }
+
+  public void setOutput(String output) {
+    this.output = output;
+  }
+
+  public String getOutput() {
+    return output;
   }
 }
