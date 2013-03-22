@@ -5,7 +5,7 @@ import fitnesse.http.Request;
 
 public class MockRequestBuilder {
   protected String specification;
-  private boolean noChunk = false;
+  private boolean chunk = true;
 
   public MockRequestBuilder(String specification) {
     this.specification = specification;
@@ -18,8 +18,8 @@ public class MockRequestBuilder {
     if (hasCredentials()) {
       request.setCredentials(getUsername(), getPassword());
     }
-    if (noChunk) {
-      request.addInput("noChunk", true);
+    if (!chunk) {
+      request.addInput(Request.NOCHUNK, true);
     }
     return request;
   }
@@ -65,7 +65,7 @@ public class MockRequestBuilder {
   }
 
   public MockRequestBuilder noChunk() {
-    this.noChunk = true;
+    this.chunk = false;
     return this;
   }
 }
