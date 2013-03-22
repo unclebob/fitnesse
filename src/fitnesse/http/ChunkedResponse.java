@@ -62,7 +62,9 @@ public class ChunkedResponse extends Response {
   }
 
   public void closeChunks() {
-    sender.send(("0" + CRLF).getBytes());
+    if (!dontChunk) {
+      sender.send(("0" + CRLF).getBytes());
+    }
   }
 
   public void closeTrailer() {
