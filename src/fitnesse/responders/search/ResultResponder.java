@@ -20,7 +20,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return root.getPageCrawler();
   }
 
-  protected void doSending() {
+  protected void doSending(boolean includeDecoration) {
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(new PageTitle(getTitle()) {

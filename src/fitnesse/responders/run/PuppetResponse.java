@@ -13,7 +13,7 @@ public class PuppetResponse extends Response {
     this.puppeteer = puppeteer;
   }
 
-  public void sendTo(ResponseSender sender) {
+  public void sendTo(ResponseSender sender, boolean includeDecoration) {
     puppeteer.readyToSend(sender);
   }
 

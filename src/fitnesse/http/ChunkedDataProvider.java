@@ -2,6 +2,6 @@ package fitnesse.http;
 
 public interface ChunkedDataProvider {
 
-  void startSending();
+  void startSending(boolean includeDecoration);
 
 }

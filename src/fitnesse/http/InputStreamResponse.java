@@ -18,10 +18,12 @@ public class InputStreamResponse extends Response {
     super("html");
   }
 
-  public void sendTo(ResponseSender sender) throws IOException {
+  public void sendTo(ResponseSender sender, boolean includeDecoration) throws IOException {
     try {
-      addStandardHeaders();
-      sender.send(makeHttpHeaders().getBytes());
+      if (includeDecoration) {
+        addStandardHeaders();
+        sender.send(makeHttpHeaders().getBytes());
+      }
       while (!reader.isEof())
         sender.send(reader.readBytes(1000));
     } finally {

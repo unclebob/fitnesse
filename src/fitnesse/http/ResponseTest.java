@@ -61,7 +61,7 @@ public class ResponseTest {
       super(formatString);
     }
 
-    public void sendTo(ResponseSender sender) {
+    public void sendTo(ResponseSender sender, boolean includeDecoration) {
     }
 
     public int getContentSize() {

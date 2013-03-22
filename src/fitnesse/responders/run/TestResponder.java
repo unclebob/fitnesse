@@ -53,7 +53,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     formatters = new CompositeFormatter();
   }
 
-  protected void doSending() throws Exception {
+  protected void doSending(boolean includeDecoration) throws Exception {
     checkArguments();
     data = page.getData();
 
@@ -65,7 +65,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       doExecuteTests();
     }
 
-    closeHtmlResponse(exitCode);
+    closeHtmlResponse(exitCode, includeDecoration);
   }
 
   public void doExecuteTests() {
@@ -227,11 +227,15 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     isClosed = true;
   }
 
-  void closeHtmlResponse(int exitCode) {
+  void closeHtmlResponse(int exitCode, boolean includeDecoration) {
     if (!isClosed()) {
       setClosed();
       response.closeChunks();
-      response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
+
+      if (includeDecoration) {
+        response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
+      }
+
       response.closeTrailer();
       response.close();
     }
