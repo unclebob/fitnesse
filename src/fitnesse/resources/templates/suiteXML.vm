@@ -19,7 +19,7 @@
     <tags>$result.Tags</tags>
     #end
     #if($formatter.shouldIncludeHtml())
-      <content><![CDATA[$result.Content]]></content>
+      <content>$result.content</content>
     #end 
 
   </result>

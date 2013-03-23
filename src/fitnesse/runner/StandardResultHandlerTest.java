@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import util.RegexTestCase;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class StandardResultHandlerTest extends RegexTestCase {
   private StandardResultHandler handler;

@@ -11,10 +11,10 @@
       <exceptions>$result.Exceptions</exceptions>
     </counts>
     <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
-    <content><![CDATA[$result.Content]]></content>
+    <content>#escape($result.Content)</content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)
-    <tags>$result.Tags</tags>
+    <tags>#escape($result.Tags)</tags>
     #end
 
     #if($result.Tables.size() > 0)
@@ -25,7 +25,7 @@
         #foreach($row in $table)
         <row>
           #foreach($col in $row)
-          <col><![CDATA[$col]]></col>
+          <col>#escape($col)</col>
           #end
 
         </row>
@@ -42,23 +42,29 @@
     <instructions>
       #foreach($instructionResult in $result.Instructions)
       <instructionResult>
-        <instruction><![CDATA[$instructionResult.Instruction]]></instruction>
-        <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
+        <instruction>#escape($instructionResult.Instruction)</instruction>
+        <slimResult>#escape($instructionResult.SlimResult)</slimResult>
         #foreach($expectation in $instructionResult.Expectations)
         <expectation>
+          #if($expectation.Status)
           <status>$expectation.Status</status>
+          #end
           <instructionId>$expectation.InstructionId</instructionId>
+          #if($expectation.Col)
           <col>$expectation.Col</col>
+          #end
+          #if($expectation.Row)
           <row>$expectation.Row</row>
-          <type>$expectation.Type</type>
+          #end
+          <type>#escape($expectation.Type)</type>
           #if($expectation.Actual)
-          <actual><![CDATA[$expectation.Actual]]></actual>
+          <actual>#escape($expectation.Actual)</actual>
           #end
           #if($expectation.Expected)
-          <expected><![CDATA[$expectation.Expected]]></expected>
+          <expected>#escape($expectation.Expected)</expected>
           #end
           #if($expectation.EvaluationMessage)
-          <evaluationMessage><![CDATA[$expectation.EvaluationMessage]]></evaluationMessage>
+          <evaluationMessage>#escape($expectation.EvaluationMessage)</evaluationMessage>
           #end
         </expectation>
         #end

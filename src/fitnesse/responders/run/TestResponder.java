@@ -25,6 +25,8 @@ import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -90,7 +92,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
 
-    WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
+    WikiImportProperty.handleImportProperties(htmlPage, page);
 
     return htmlPage;
   }

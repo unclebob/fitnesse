@@ -2,8 +2,8 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Test;

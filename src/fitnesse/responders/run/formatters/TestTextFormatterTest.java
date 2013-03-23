@@ -4,13 +4,13 @@ import static org.mockito.Mockito.*;
 
 import java.text.SimpleDateFormat;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.Test;
 
 import util.TimeMeasurement;
 
 import fitnesse.http.ChunkedResponse;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 
 public class TestTextFormatterTest {

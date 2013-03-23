@@ -112,9 +112,6 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
 
     assertNotSubString("requires authentication", content);
     assertSubString("3 pages were imported.", content);
-
-    assertEquals("joe", WikiImporter.remoteUsername);
-    assertEquals("blow", WikiImporter.remotePassword);
   }
 
 }

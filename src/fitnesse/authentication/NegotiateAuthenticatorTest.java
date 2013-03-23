@@ -2,7 +2,7 @@ package fitnesse.authentication;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;

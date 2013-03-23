@@ -25,6 +25,9 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements Responder {
+  // 1000-trick: remove milliseconds.
+  private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
+
   private static final int RESOURCE_SIZE_LIMIT = 262144;
   private static FileNameMap fileNameMap = URLConnection.getFileNameMap();
   final public String resource;
@@ -70,6 +73,12 @@ public class FileResponder implements Responder {
   }
 
   private Response makeClasspathResponse(FitNesseContext context, Request request) throws IOException {
+
+    determineLastModifiedInfo(LAST_MODIFIED_FOR_RESOURCES);
+
+    if (isNotModified(request))
+      return createNotModifiedResponse();
+
     String classpathResource = "/fitnesse/resources/" + resource.substring("files/fitnesse/".length());
     
     InputStream input = getClass().getResourceAsStream(classpathResource);
@@ -82,13 +91,15 @@ public class FileResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     response.setContent(content);
     setContentType(classpathResource, response);
-    
+    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(LAST_MODIFIED_FOR_RESOURCES);
+    response.setLastModifiedHeader(lastModifiedDateString);
+
     return response;
   }
 
   private Response makeFileResponse(FitNesseContext context, Request request) throws FileNotFoundException {
     InputStreamResponse response = new InputStreamResponse();
-    determineLastModifiedInfo();
+    determineLastModifiedInfo(new Date(requestedFile.lastModified()));
 
     if (isNotModified(request))
       return createNotModifiedResponse();
@@ -125,8 +136,8 @@ public class FileResponder implements Responder {
     return response;
   }
 
-  private void determineLastModifiedInfo() {
-    lastModifiedDate = new Date(requestedFile.lastModified());
+  private void determineLastModifiedInfo(Date lastModified) {
+    lastModifiedDate = lastModified;
     lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
 
     try  // remove milliseconds

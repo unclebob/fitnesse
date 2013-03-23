@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import static fitnesse.responders.run.ExecutionResult.getExecutionResult;
+import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 import java.io.IOException;
 
@@ -10,10 +10,10 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.responders.run.ExecutionResult;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -60,7 +60,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     anchor.addAttribute("id", relativeName + currentTest);
     anchor.addAttribute("class", "test_name");
     HtmlTag title = new HtmlTag("h3", anchor);
-    
+
     HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
     topLink.addAttribute("class", "top_of_page");
 
@@ -78,7 +78,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
       printedTestOutput = true;
     }
   }
-  
+
   private void maybeWriteTestSystem() {
     if (testSystemFullName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
@@ -92,7 +92,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   @Override
   public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
     super.newTestStarted(testPage, timeMeasurement);
-    
+
     PageCrawler pageCrawler = getPage().getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath(testPage.getSourcePage());
     String fullPathName = PathParser.render(fullPath);
@@ -129,7 +129,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
     link.addAttribute("class", "link");
     tag.add(link);
-    
+
     if (latestTestTime != null) {
       tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
@@ -142,7 +142,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }
-  
+
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     latestTestTime = totalTimeMeasurement;
@@ -199,7 +199,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     writeData(testSummary());
     super.finishWritingOutput();
   }
-  
+
 }
 
 

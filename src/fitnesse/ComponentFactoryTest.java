@@ -2,18 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
-import java.util.Properties;
-
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.TableColumn;
-import org.htmlparser.tags.TableRow;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
-
-import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.ResponderFactory;
@@ -21,26 +9,28 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.slimTables.HtmlTable;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.SlimTableFactory;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTable;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.parser.ParseSpecification;
-import fitnesse.wikitext.parser.ScanString;
-import fitnesse.wikitext.parser.SymbolMatch;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolStream;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.Today;
+import fitnesse.wikitext.parser.*;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableRow;
+import org.htmlparser.tags.TableTag;
+import org.htmlparser.util.NodeList;
+import util.RegexTestCase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.Properties;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -162,29 +152,29 @@ public class ComponentFactoryTest extends RegexTestCase {
   public void testSlimTablesCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
-  
+
   public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   private HtmlTable makeMockTable(String tableIdentifier) {
-    // Create just enough "table" to test if 
+    // Create just enough "table" to test if
     TableTag tableTag = new TableTag();
     TableRow tableRow = new TableRow();
     TableColumn tableColumn = new TableColumn();
@@ -230,7 +220,7 @@ public class ComponentFactoryTest extends RegexTestCase {
         provider.add(new Today());
     }
   }
-  
+
   public static class TestSlimTable extends SlimTable {
 
     public TestSlimTable(Table table, String id, SlimTestContext testContext) {
@@ -243,13 +233,8 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public void appendInstructions() {
+    public List<Assertion> getAssertions() {
+      return null;
     }
-
-    @Override
-    public void evaluateReturnValues(Map<String, Object> returnValues)
-        throws Exception {
-    }
-    
   }
 }

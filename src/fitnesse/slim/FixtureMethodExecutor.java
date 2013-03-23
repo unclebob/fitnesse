@@ -1,21 +1,22 @@
 package fitnesse.slim;
 
-import java.util.Map;
-
 public class FixtureMethodExecutor extends MethodExecutor {
 
-  private final Map<String, Object> instances;
-  public FixtureMethodExecutor(Map<String, Object> instances) {
-    this.instances = instances;
+  private final SlimExecutionContext context;
+
+  public FixtureMethodExecutor(SlimExecutionContext context) {
+    this.context = context;
   }
+
   @Override
   public MethodExecutionResult execute(String instanceName, String methodName, Object[] args)
       throws Throwable {
-    Object instance = instances.get(instanceName);
-    if(instance == null) {
-      return MethodExecutionResult.noInstance(instanceName+"."+methodName);
+    Object instance;
+    try {
+      instance = context.getInstance(instanceName);
+    } catch (SlimError e) {
+      return MethodExecutionResult.noInstance(instanceName + "." + methodName);
     }
     return findAndInvoke(methodName, args, instance);
   }
-
 }

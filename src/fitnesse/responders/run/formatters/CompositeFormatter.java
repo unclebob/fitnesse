@@ -1,15 +1,18 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.WikiPage;
+import util.TimeMeasurement;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import util.TimeMeasurement;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.wiki.WikiPage;
 
 public class CompositeFormatter extends BaseFormatter {
   List<BaseFormatter> formatters = new ArrayList<BaseFormatter>();
@@ -80,4 +83,16 @@ public class CompositeFormatter extends BaseFormatter {
     return exitCode;
   }
 
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    for (BaseFormatter formatter : formatters)
+      formatter.testAssertionVerified(assertion, testResult);
+
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    for (BaseFormatter formatter : formatters)
+      formatter.testExceptionOccurred(assertion, exceptionResult);
+  }
 }

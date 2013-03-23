@@ -1,15 +1,25 @@
 package fitnesse.responders.run;
 
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import util.TimeMeasurement;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
 
 /**
  * Used to run tests from a JUnit test suite.

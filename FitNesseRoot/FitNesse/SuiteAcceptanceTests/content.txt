@@ -3,7 +3,6 @@
 |>SuiteWikiPageResponderTests|''Specify general behavior of all wiki pages.''|
 |>SuiteEditResponderTests|''Specify the behavior of edit requests.''|
 |>SuiteResponderTests|''Specify the behavior of the responders.''|
-|>SuiteVirtualWikiTests|''Demonstrate the behavior of virtual wikis''|
 |>SuiteWikiImportTests|''Specify the behavior of the Wiki Import feature''|
 |>SuiteAuthenticationTests|''Specify the authentication design''|
 |>SuiteFixtureTests|''Specify the behavior of various fixtures''|
@@ -17,6 +16,7 @@
 !path ${java.class.path}
 -!)
 
+!path ${java.class.path}
 
 ----
 !2 ''Port''

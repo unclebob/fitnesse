@@ -6,7 +6,7 @@ import fit.ColumnFixture;
 import fitnesse.FitNesseExpediter;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;

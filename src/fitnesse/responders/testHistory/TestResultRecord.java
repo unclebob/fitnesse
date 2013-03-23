@@ -3,7 +3,7 @@ package fitnesse.responders.testHistory;
 import java.io.File;
 import java.util.Date;
 
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class TestResultRecord extends TestSummary {
   private File file;

@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;
 
-import fitnesse.testutil.MockSocket;
+import fitnesse.util.MockSocket;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;

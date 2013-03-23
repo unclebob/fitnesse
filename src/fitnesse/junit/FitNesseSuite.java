@@ -1,20 +1,5 @@
 package fitnesse.junit;
 
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
-import fitnesse.WikiPageFactory;
-import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.*;
-import junit.framework.AssertionFailedError;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.RunnerBuilder;
-
 import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,6 +7,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContext.Builder;
+import fitnesse.WikiPageFactory;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import junit.framework.AssertionFailedError;
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.ParentRunner;
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.RunnerBuilder;
 
 public class FitNesseSuite extends ParentRunner<String> {
 
@@ -163,7 +166,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getFitnesseDir(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     if (fitnesseDirAnnotation == null) {
       throw new InitializationError("There must be a @FitnesseDir annotation");
@@ -172,7 +175,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getSuiteFilter(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
     if (suiteFilterAnnotation == null) {
       return null;
@@ -181,7 +184,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getExcludeSuiteFilter(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
     if (excludeSuiteFilterAnnotation == null) {
       return null;
@@ -211,7 +214,7 @@ public class FitNesseSuite extends ParentRunner<String> {
       return outputDir.getAbsolutePath();
     }
     throw new InitializationError(
-        "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
+            "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
   }
 
   public static boolean useDebugMode(Class<?> klass) {
@@ -288,10 +291,10 @@ public class FitNesseSuite extends ParentRunner<String> {
 
     builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
     builder.defaultNewPageContent = componentFactory
-        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+            .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-        builder.rootDirectoryName, componentFactory);
+            builder.rootDirectoryName, componentFactory);
 
     builder.logger = null;
     builder.authenticator = new PromiscuousAuthenticator();

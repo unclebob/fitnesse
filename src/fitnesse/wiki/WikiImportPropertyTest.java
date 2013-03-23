@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -11,9 +14,6 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import util.Clock;
 import util.RegexTestCase;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class WikiImportPropertyTest extends RegexTestCase {
   private WikiImportProperty property;
@@ -144,7 +144,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
 
   private String getContentAfterSpecialImportHandling() throws Exception {
     HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
-    WikiImportProperty.handleImportProperties(html, page, page.getData());
+    WikiImportProperty.handleImportProperties(html, page);
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
     return html.html();

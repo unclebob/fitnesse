@@ -3,6 +3,11 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.*;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PathParser;
 

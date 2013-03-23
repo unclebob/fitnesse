@@ -1,6 +1,6 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.run.TestPage;
+import fitnesse.testsystems.TestPage;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,13 +13,13 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestResultRecord;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
 import util.TimeMeasurement;

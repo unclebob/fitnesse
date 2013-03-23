@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 import util.StreamReader;
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();

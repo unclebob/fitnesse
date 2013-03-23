@@ -91,7 +91,8 @@ public class WikiImportProperty extends WikiPageProperty {
     return date;
   }
 
-  public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) {
+  public static void handleImportProperties(HtmlPage html, WikiPage page) {
+    PageData pageData = page.getData();
     if (isImported(pageData)) {
       html.setBodyClass("imported");
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());

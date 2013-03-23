@@ -5,7 +5,7 @@ package fitnesse.runner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class PageResult {
   private static final Pattern countsPattern = Pattern.compile("(\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*");

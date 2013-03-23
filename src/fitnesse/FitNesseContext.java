@@ -5,10 +5,10 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
+import fitnesse.components.SocketDealer;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
-import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;

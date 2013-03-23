@@ -18,16 +18,16 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
     return statementExecutorProxy;
   }
   
-  public Object addPath(String path) {
-    return callMethod("addPath", new Object[] {path});
+  public void addPath(String path) {
+    callMethod("addPath", new Object[] {path});
   }
 
   public Object call(String instanceName, String methodName, Object... args) {
     return callMethod("call", new Object[] {instanceName, methodName, args});
   }
 
-  public Object create(String instanceName, String className, Object[] args) {
-    return callMethod("create", new Object[] {instanceName, className, args});
+  public void create(String instanceName, String className, Object[] args) {
+    callMethod("create", new Object[] {instanceName, className, args});
   }
 
   public Object getInstance(String instanceName) {

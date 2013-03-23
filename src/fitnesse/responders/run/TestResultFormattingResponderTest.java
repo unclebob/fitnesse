@@ -17,6 +17,7 @@ import fitnesse.runner.HtmlResultFormatter;
 import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 
 public class TestResultFormattingResponderTest extends RegexTestCase {

@@ -9,6 +9,7 @@ import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -96,7 +97,16 @@ public class FileResponderTest {
   }
 
   @Test
-  public void test304IfNotModified() throws Exception {
+  public void testLastModifiedHeaderForClasspathResources() throws Exception {
+    Locale.setDefault(Locale.US);
+    request.setResource("files/fitnesse/css/fitnesse.css");
+    responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
+    response = responder.makeResponse(context, request);
+    String lastModifiedHeader = response.getHeader("Last-Modified");
+    assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
+  }
+
+  private void test304IfNotModified(String resource) throws IOException {
     Locale.setDefault(Locale.US);
     Calendar now = new GregorianCalendar();
     now.add(Calendar.DATE, -1);
@@ -104,13 +114,13 @@ public class FileResponderTest {
     now.add(Calendar.DATE, 2);
     String tomorrow = SimpleResponse.makeStandardHttpDateFormat().format(now.getTime());
 
-    request.setResource("files/testFile1");
+    request.setResource(resource);
     request.addHeader("If-Modified-Since", yesterday);
     responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
     response = responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
-    request.setResource("files/testFile1");
+    request.setResource(resource);
     request.addHeader("If-Modified-Since", tomorrow);
     responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
     SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
@@ -118,6 +128,16 @@ public class FileResponderTest {
     assertEquals("", notModifiedResponse.getContent());
     assertMatches(HTTP_DATE_REGEXP, notModifiedResponse.getHeader("Date"));
     assertNotNull(notModifiedResponse.getHeader("Cache-Control"));
+  }
+
+  @Test
+  public void test304IfNotModifiedForFiles() throws IOException {
+    test304IfNotModified("files/testFile1");
+  }
+
+  @Test
+  public void test304IfNotModifiedForClasspathResources() throws IOException {
+    test304IfNotModified("files/fitnesse/css/fitnesse.css");
   }
 
   @Test

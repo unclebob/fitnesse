@@ -1,14 +1,11 @@
 package fitnesse.responders.testHistory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import static org.junit.Assert.*;
 
 public class TableListComparerTest {
   private TableListComparer comparer;
@@ -102,12 +99,12 @@ public class TableListComparerTest {
 
   @Test
   public void shouldIgnoreCollapsedTables() throws Exception {
-    String table1text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>bleh1</td></tr></div></td></tr></table>";
-    String table2text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>HAHA</td></tr></div></td></tr></table>";
+    String table1text = "<table><tr><td>has collapsed table</td></tr><tr class=\"scenario-detail\"><td><table><tr><td>bleh1</td></tr></table></td></tr></table>";
+    String table2text = "<table><tr><td>has collapsed table</td></tr><tr class=\"scenario-detail\"><td><table><tr><td>HAHA</td></tr></table></td></tr></table>";
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
     double score = comparer.compareTables(table1, table2);
-    assertEquals(HistoryComparer.MAX_MATCH_SCORE,score,.01 );
+    assertEquals(HistoryComparer.MAX_MATCH_SCORE, score, .01 );
     assertTrue(comparer.theTablesMatch(score));
   }
 

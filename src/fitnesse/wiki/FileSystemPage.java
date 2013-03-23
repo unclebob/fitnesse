@@ -36,12 +36,12 @@ public class FileSystemPage extends CachingPage {
     this(path, name, new DiskFileSystem(), new ComponentFactory());
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) {
-    super(name, parent);
-    path = parent.getFileSystemPath();
-    versionsController = parent.versionsController;
-    createDirectoryIfNewPage(fileSystem);
-  }
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) {
+        super(name, parent);
+        path = parent.getFileSystemPath();
+        versionsController = parent.versionsController;
+        createDirectoryIfNewPage(fileSystem);
+    }
 
   private VersionsController createVersionsController(ComponentFactory factory) {
     return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,

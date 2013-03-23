@@ -9,7 +9,7 @@ import java.io.PipedOutputStream;
 
 import junit.framework.TestCase;
 import util.FileUtil;
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 import fitnesse.responders.editing.EditResponder;
 
 public class RequestTest extends TestCase {

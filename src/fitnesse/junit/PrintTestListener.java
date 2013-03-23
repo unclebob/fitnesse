@@ -1,6 +1,13 @@
 package fitnesse.junit;
 
 import fitnesse.responders.run.*;
+import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import util.TimeMeasurement;
 import fitnesse.wiki.WikiPagePath;
 
@@ -29,12 +36,20 @@ public class PrintTestListener implements ResultsListener {
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
-        + testSummary.wrong + " e " + testSummary.exceptions
+        + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }
 
   @Override
   public void testOutputChunk(String output) {
+  }
+
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   @Override

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.junit.*;
 
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class JUnitXmlTestListenerIntegrationTest {
   String htmlOutputDir=new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath();
