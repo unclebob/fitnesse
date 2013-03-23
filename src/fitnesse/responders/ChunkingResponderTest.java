@@ -21,7 +21,7 @@ public class ChunkingResponderTest {
   private FitNesseContext context;
   private WikiPage root = new WikiPageDummy();
   private ChunkingResponder responder = new ChunkingResponder() {
-    protected void doSending() throws Exception {
+    protected void doSending(boolean includeDecoration) throws Exception {
       throw exception;
     }
   };

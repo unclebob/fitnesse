@@ -16,10 +16,12 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  public void sendTo(ResponseSender sender) {
-    addStandardHeaders();
+  public void sendTo(ResponseSender sender, boolean includeDecoration) {
     try {
-      sender.send(makeHttpHeaders().getBytes());
+      if (includeDecoration) {
+        addStandardHeaders();
+        sender.send(makeHttpHeaders().getBytes());
+      }
       sender.send(content);
     } finally {
       sender.close();

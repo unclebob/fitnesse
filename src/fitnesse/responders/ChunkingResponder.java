@@ -61,9 +61,9 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     return true;
   }
 
-  public void startSending() {
+  public void startSending(boolean includeDecoration) {
     try {
-      doSending();
+      doSending(includeDecoration);
     }
     catch (SocketException e) {
       System.out.println("Socket Exception at: " + System.currentTimeMillis());
@@ -101,5 +101,5 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
    * 
    * @throws Exception
    */
-  protected abstract void doSending() throws Exception;
+  protected abstract void doSending(boolean includeDecoration) throws Exception;
 }

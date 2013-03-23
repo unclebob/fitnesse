@@ -18,6 +18,8 @@ public class Arguments {
   private String userpass;
   private boolean installOnly;
   private String command = null;
+  /** suppress headers, exit code from output */
+  private boolean suppressDecoration = false;
 
   public String getRootPath() {
     return rootPath;
@@ -99,5 +101,13 @@ public class Arguments {
 
   public void setCommand(String command) {
     this.command = command;
+  }
+
+  public boolean getSuppressDecoration() {
+    return suppressDecoration;
+  }
+
+  public void setSuppressDecoration(boolean suppressDecoration) {
+    this.suppressDecoration = suppressDecoration;
   }
 }

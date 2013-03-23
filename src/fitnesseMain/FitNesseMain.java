@@ -69,7 +69,7 @@ public class FitNesseMain {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
     System.out.println("-----Command Output-----");
-    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
+    fitnesse.executeSingleCommand(arguments.getCommand(), System.out, !arguments.getSuppressDecoration());
     System.out.println("-----Command Complete-----");
     fitnesse.stop();
     if (shouldExitAfterSingleCommand()) {
@@ -100,12 +100,12 @@ public class FitNesseMain {
 
     builder.logger = makeLogger(arguments);
     builder.authenticator = makeAuthenticator(arguments.getUserpass(),
-      componentFactory);
+            componentFactory);
 
     FitNesseContext context = builder.createFitNesseContext();
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
-        wikiPageFactory);
+            wikiPageFactory);
     extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
     extraOutput += componentFactory.loadResponders(context.responderFactory);
     extraOutput += componentFactory.loadSymbolTypes();
@@ -120,7 +120,7 @@ public class FitNesseMain {
 
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
+      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command][-s]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -138,6 +138,8 @@ public class FitNesseMain {
         arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
       if (commandLine.hasOption("c"))
         arguments.setCommand(commandLine.getOptionArgument("c", "command"));
+      if (commandLine.hasOption("s"))
+        arguments.setSuppressDecoration(true);
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
@@ -179,6 +181,7 @@ public class FitNesseMain {
       .println("\t-a {user:pwd | user-file-name} enable authentication.");
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
+    System.err.println("\t-s suppress output decoration (headers, exit code)");
   }
 
   private static void printStartMessage(Arguments args, FitNesseContext context) {

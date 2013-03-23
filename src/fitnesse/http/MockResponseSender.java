@@ -40,7 +40,11 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public void doSending(Response response) throws IOException {
-    response.sendTo(this);
+    doSending(response, true);
+  }
+
+  public void doSending(Response response, boolean includeDecoration) throws IOException {
+    response.sendTo(this, includeDecoration);
     assert closed == true;
   }
 
@@ -53,8 +57,8 @@ public class MockResponseSender implements ResponseSender {
       socket = new MockSocket(new PipedInputStream(), out);
     }
 
-    public void doSending(Response response) throws IOException {
-      response.sendTo(this);
+    public void doSending(Response response, boolean includeDecoration) throws IOException {
+      response.sendTo(this, includeDecoration);
       assert closed == true;
     }
   }

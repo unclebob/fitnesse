@@ -28,7 +28,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     this.importer = importer;
   }
 
-  protected void doSending() throws Exception {
+  protected void doSending(boolean includeDecoration) throws Exception {
     data = page.getData();
 
     initializeImporter();

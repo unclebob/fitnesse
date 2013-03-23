@@ -19,11 +19,13 @@ public class ChunkedResponse extends Response {
       dontChunk = true;
   }
 
-  public void sendTo(ResponseSender sender) {
+  public void sendTo(ResponseSender sender, boolean includeDecoration) {
     this.sender = sender;
-    addStandardHeaders();
-    sender.send(makeHttpHeaders().getBytes());
-    chunckedDataProvider.startSending();
+    if (includeDecoration) {
+      addStandardHeaders();
+      sender.send(makeHttpHeaders().getBytes());
+    }
+    chunckedDataProvider.startSending(includeDecoration);
   }
 
   @Override
