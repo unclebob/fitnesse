@@ -750,34 +750,34 @@ Wysiwyg.prototype.setupEditorEvents = function () {
      * raw data is collected and fed to the wikiToDom parser.
      */
     $(d).on('paste', 'body', function () {
+        console.log("Trigger paste");
         // Clone state is change in Firefox, need to extract the fields
-        var position = self.getSelectionRange();
-        position = {
-            sameContainer: position.startContainer === position.endContainer,
-            atStart: position.startOffset === 0,
-            atEnd: position.endOffset === position.endContainer.length
+        var range = self.getSelectionRange();
+        var position = {
+            startContainer: range.startContainer,
+            endContainer: range.startContainer === range.endContainer ? range.startContainer.nextSibling : range.endContainer,
+            sameContainer: range.startContainer === range.endContainer,
+            atStart: range.startOffset === 0,
+            atEnd: range.endOffset === range.endContainer.length
         };
-        var html = "<div id='pasteddata'><br id='pasteddata-remove-me'/></div>";
-        self.insertHTML(html);
-        var pastedDataBlock = d.getElementById('pasteddata');
-        self.selectNode(pastedDataBlock.firstChild);
         inPasteAction = true;
 
         // Post processing:
         setTimeout(function () {
+            console.log("Trigger paste postprocessing");
             var lines, next, i, c;
             inPasteAction = false;
 
             // convert nested .pasteddata divs to br's (safari/chrome)
-            $('div', pastedDataBlock).each(function (i, elem) {
-                if (!/^\s*$/.test($(this).text())) {
-                    $(this).before(this.childNodes);
-                    $(this).before('<br/>');
-                }
-                $(this).remove();
-            });
+//            $('div', pastedDataBlock).each(function (i, elem) {
+//                if (!/^\s*$/.test($(this).text())) {
+//                    $(this).before(this.childNodes);
+//                    $(this).before('<br/>');
+//                }
+//                $(this).remove();
+//            });
             
-            // How to determine if it's sensible html or plain text markup:
+            // How to determine if it's sensible html or plain text markup?
             // markup only contains text nodes and br
             var isPlainTextData = true
             $(pastedDataBlock).children().each(function (j, elem) {
@@ -785,54 +785,42 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             		isPlainTextData = false;
             	}
             });
-            
-            if (isPlainTextData) {
-                if (window.console) console.log('plain text', $(pastedDataBlock).html());
-            	lines = $(pastedDataBlock).html().split(/<br\/?>/);
-            } else {
-            	if (window.console) console.log('DOM2WIKI', $(pastedDataBlock).html());
-                lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
-            }
 
-            if (position.sameContainer && lines.length === 1 && /^\<.*\>$/.test(lines[0])) {
-                // paste data without markup.
-                if (!position.atStart) {
-                    var prev = $(pastedDataBlock).prev();
-                    $(prev).append($(pastedDataBlock).text());
-                    $(pastedDataBlock).remove();
-                    if (!position.atEnd) {
-                        next = $(prev).next();
-                        c = $(next).contents();
-                        for (i = 0; i < c.length; i++) {
-                            $(c[i]).appendTo(prev);
-                        }
-                        $(next).remove();
-                    }
-                } else if (!position.atEnd) {
-                    next = $(pastedDataBlock).next();
-                    $(next).prepend($(pastedDataBlock).text());
-                    $(pastedDataBlock).remove();
+//            if (isPlainTextData) {
+//                if (window.console) console.log('plain text', $(pastedDataBlock).html());
+//            	lines = $(pastedDataBlock).html().split(/<br\/?>/);
+//            } else {
+//            	if (window.console) console.log('DOM2WIKI', $(pastedDataBlock).html());
+//                lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
+//            }
+
+            // if !inTable: prepend till start of (toplevel) element, append from cursor-> end
+//            if (lines[lines.length - 1] === "") {
+//              lines.pop();
+//            }
+//            if (window.console) console.log('wiki text:', lines);
+
+            console.log('startcontainer', position.startContainer);
+            var parentTd = getSelfOrAncestor(position.startContainer, 'td');
+
+            if (parentTd) {
+                // Move tables up to the table they're pasted in
+                var nestedRows = $('tr', parentTd);
+                if (nestedRows.length) {
+                    var parentTr = getSelfOrAncestor(parentTd, 'tr');
+                    nestedRows.each(function(j, elem) {
+                        $(parentTr).after(elem);
+                        parentTr = $(parentTr).next();
+                    });
+                    self.spanTableColumns(getSelfOrAncestor(parentTr, 'table'));
                 }
-            } else {
-            	if (window.console) console.log('wiki text:', lines);
-                var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
-                var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
-                var parentTable = getSelfOrAncestor(pastedDataBlock, 'table');
-                c = $(fragment).children();
-                for (i = 0; i < c.length; i++) {
-                    if (parentTr && c[i].tagName === 'TABLE') {
-                        $(c[i]).find('tr').each(function(j, elem) {
-                            $(parentTr).after(elem);
-                            parentTr = $(parentTr).next();
-                        });
-                    } else {
-                        $(pastedDataBlock).before(c[i]);
-                    }
-                }
-                $(pastedDataBlock).remove();
-                if (parentTable) {
-                    self.spanTableColumns(parentTable);
-                }
+
+                // Make a one-liner for the content pasted in the table cell
+                var wikiText = self.domToWikitext(parentTd, self.options);
+                var fragment = self.wikitextToOnelinerFragment(wikiText.replace('\n', ' '), self.contentDocument, self.options);
+                console.log('fragment', fragment);
+                while (parentTd.firstChild) { parentTd.removeChild(parentTd.firstChild); }
+                parentTd.appendChild(fragment);
             }
         }, 20);
     });
