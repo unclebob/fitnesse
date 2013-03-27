@@ -81,17 +81,19 @@ Wysiwyg.prototype.initializeEditor = function (d) {
         ' "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n',
         '<html xmlns="http://www.w3.org/1999/xhtml">',
         '<head>',
-        '<base href="',
-        l.protocol,
-        '//',
-        l.host,
-        '/" />',
         '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
     ];
+
+    var base = Wysiwyg.paths.base.replace(/\/\/*$/, "/");
+    if (base) {
+        html.push('<base href="' + base + '" />');
+    } else {
+        html.push('<base href="' + l.protocol + '//' + l.host + '/" />');
+    }
+
     var stylesheets = Wysiwyg.paths.stylesheets;
     if (!stylesheets) {
         // Work around wysiwyg stops with Agilo
-        var base = Wysiwyg.paths.base.replace(/\/*$/, "/");
         stylesheets = [ "editor.css" ];
     }
     var length = stylesheets.length;
