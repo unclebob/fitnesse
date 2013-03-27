@@ -139,6 +139,16 @@ describe("Paste", function () {
                 '<p>test </p><p>contains text</p>');
         });
 
+        it("should format multi-line text formatted with br's (firefox)", function () {
+            givenHtml("<p>page contains text</p>");
+            select("p", 0, "p", 4);
+            paste("test<br/><br/>");
+
+            expect(contentBody.innerHTML).toBeEither(
+                '<p>test</p><p> contains text</p>',
+                'test<br><br><p> contains text</p>');
+        });
+
         it("should format as rich text", function () {
             givenHtml("<p>page contains text</p>");
             select("p", 0, "p", 4);
@@ -163,7 +173,7 @@ describe("Paste", function () {
             expect(contentBody.innerHTML).toBe('<table><tbody><tr><td> cell content </td><td> contains text</td></tr></tbody></table>');
         });
 
-        it("should add rows to parent table", function () {
+        it("should add table if table markup is pasted", function () {
             givenHtml("<p>page contains text</p>");
             select("p", 0, "p", 0);
             paste("| cell content |\n" +
