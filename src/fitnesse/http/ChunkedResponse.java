@@ -21,7 +21,6 @@ public class ChunkedResponse extends Response {
 
   public void sendTo(ResponseSender sender) {
     this.sender = sender;
-    addStandardHeaders();
     sender.send(makeHttpHeaders().getBytes());
     chunckedDataProvider.startSending();
   }
