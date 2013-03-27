@@ -752,9 +752,11 @@ Wysiwyg.prototype.setupEditorEvents = function () {
      * raw data is collected and fed to the wikiToDom parser.
      */
     $(d).on('paste', 'body', function () {
-        console.log("Trigger paste");
+        function tagNode(node) { while (node.nodeType === 3 /* TextNode */) { node = node.parentNode; } return node; }
+
         // Clone state is change in Firefox, need to extract the fields
         var range = self.getSelectionRange();
+
         var position = {
             startContainer: range.startContainer,
             endContainer: range.startContainer === range.endContainer ? range.startContainer.nextSibling : range.endContainer,
@@ -766,43 +768,8 @@ Wysiwyg.prototype.setupEditorEvents = function () {
 
         // Post processing:
         setTimeout(function () {
-            console.log("Trigger paste postprocessing");
-            var lines, next, i, c;
             inPasteAction = false;
 
-            // convert nested .pasteddata divs to br's (safari/chrome)
-//            $('div', pastedDataBlock).each(function (i, elem) {
-//                if (!/^\s*$/.test($(this).text())) {
-//                    $(this).before(this.childNodes);
-//                    $(this).before('<br/>');
-//                }
-//                $(this).remove();
-//            });
-            
-            // How to determine if it's sensible html or plain text markup?
-            // markup only contains text nodes and br
-            var isPlainTextData = true
-            $(pastedDataBlock).children().each(function (j, elem) {
-            	if (elem.tagName !== 'BR') {
-            		isPlainTextData = false;
-            	}
-            });
-
-//            if (isPlainTextData) {
-//                if (window.console) console.log('plain text', $(pastedDataBlock).html());
-//            	lines = $(pastedDataBlock).html().split(/<br\/?>/);
-//            } else {
-//            	if (window.console) console.log('DOM2WIKI', $(pastedDataBlock).html());
-//                lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
-//            }
-
-            // if !inTable: prepend till start of (toplevel) element, append from cursor-> end
-//            if (lines[lines.length - 1] === "") {
-//              lines.pop();
-//            }
-//            if (window.console) console.log('wiki text:', lines);
-
-            console.log('startcontainer', position.startContainer);
             var parentTd = getSelfOrAncestor(position.startContainer, 'td');
 
             if (parentTd) {
@@ -820,9 +787,15 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 // Make a one-liner for the content pasted in the table cell
                 var wikiText = self.domToWikitext(parentTd, self.options);
                 var fragment = self.wikitextToOnelinerFragment(wikiText.replace('\n', ' '), self.contentDocument, self.options);
-                console.log('fragment', fragment);
                 while (parentTd.firstChild) { parentTd.removeChild(parentTd.firstChild); }
                 parentTd.appendChild(fragment);
+            } else if (position.sameContainer) {
+                var c = tagNode(position.startContainer);
+                var wikiText = self.domToWikitext(c, { retainNewLines: true });
+                var fragment = self.wikitextToFragment(wikiText, self.contentDocument);
+                c.parentNode.insertBefore(fragment, c);
+                c.parentNode.removeChild(c);
+                // NOTE: At this point the position object is invalid/not useful.
             }
         }, 20);
     });
@@ -1313,7 +1286,7 @@ Wysiwyg.prototype.formatCodeBlock = function () {
     }
 
     var fragment = this.getSelectionFragment();
-    text = this.domToWikitext(fragment, { formatCodeBlock: true }).replace(/\s+$/, "");
+    text = this.domToWikitext(fragment).replace(/\s+$/, "");
 
     var d = this.contentDocument;
     var anonymous = d.createElement("div");
@@ -1710,9 +1683,7 @@ Wysiwyg.prototype.isInlineNode = function (node) {
     Wysiwyg.prototype.isFirstChildInBlockNode = generator("previousSibling", blocks);
 }());
 
-Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, options) {
-    options = options || {};
-
+Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var _linkScheme = this._linkScheme;
     var _quotedString = this._quotedString;
@@ -2371,8 +2342,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     return fragment;
 };
 
-Wysiwyg.prototype.wikitextToOnelinerFragment = function (wikitext, contentDocument, options) {
-    var source = this.wikitextToFragment(wikitext, contentDocument, options);
+Wysiwyg.prototype.wikitextToOnelinerFragment = function (wikitext, contentDocument) {
+    var source = this.wikitextToFragment(wikitext, contentDocument);
     var fragment = contentDocument.createDocumentFragment();
     this.collectChildNodes(fragment, source.firstChild);
     return fragment;
@@ -2442,7 +2413,7 @@ Wysiwyg.prototype.wikiInlineTags = {
 
 Wysiwyg.prototype.domToWikitext = function (root, options) {
     options = options || {};
-    var formatCodeBlock = !!options.formatCodeBlock;
+    var retainNewLines = !!options.retainNewLines;
 
     var self = this;
     var getTextContent = Wysiwyg.getTextContent;
@@ -2655,7 +2626,9 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                         if (value && !self.isInlineNode(node.nextSibling || node.parentNode)) {
                             value = value.replace(/[ \t\r\n\f\v]+$/g, "");
                         }
-                        value = value.replace(/\r?\n/g, " ");
+                        if (!retainNewLines) {
+                            value = value.replace(/\r?\n/g, " ");
+                        }
                     }
                     if (value) {
                         var length = _texts.length;

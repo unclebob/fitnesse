@@ -1,5 +1,5 @@
 
-describe("text should be pasted formatted according to the limitations of the wiki text", function () {
+describe("Paste", function () {
 
     var editor, contentDocument, contentBody;
 
@@ -17,7 +17,7 @@ describe("text should be pasted formatted according to the limitations of the wi
         document.getElementById("editor").innerHTML = '<textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off"></textarea>';
         jasmine.Clock.useMock();
 
-        Wysiwyg.paths = { base: ".", stylesheets: [] };
+        Wysiwyg.paths = { base: ".", stylesheets: ["../css/fitnesse_wiki.css", "editor.css"] };
         var options = Wysiwyg.getOptions();
         editor = new Wysiwyg(document.getElementById("pageContent"), options);
         jasmine.Clock.tick(1000);
@@ -129,20 +129,47 @@ describe("text should be pasted formatted according to the limitations of the wi
     });
 
     describe("Pasting wiki text", function () {
+        it("should format multi-line text", function () {
+            givenHtml("<p>page contains text</p>");
+            select("p", 0, "p", 4);
+            paste("test\n\n");
+
+            expect(contentBody.innerHTML).toBeEither(
+                '<p>test</p><p> contains text</p>',
+                '<p>test </p><p>contains text</p>');
+        });
+
         it("should format as rich text", function () {
             givenHtml("<p>page contains text</p>");
             select("p", 0, "p", 4);
             paste("''test''");
 
-            expect(contentBody.innerHTML).toBe("<p><b>test</b> contains text</p>");
+            expect(contentBody.innerHTML).toBe("<p><i>test</i> contains text</p>");
         });
 
-        xit("should construct tables", function () {
+        it("should format as rich text", function () {
+            givenHtml("<p>page contains text</p>");
+            select("p", 0, "p", 4);
+            paste("''test'' content\n\n'''test'''");
 
+            expect(contentBody.innerHTML).toBe('<p><i>test</i> content</p><p><b>test</b> contains text</p>');
         });
 
-        xit("should add rows to parent table", function () {
+        it("should construct tables", function () {
+            givenHtml("<p>page contains text</p>");
+            select("p", 0, "p", 4);
+            paste("| cell content |");
 
+            expect(contentBody.innerHTML).toBe('<table><tbody><tr><td> cell content </td><td> contains text</td></tr></tbody></table>');
+        });
+
+        it("should add rows to parent table", function () {
+            givenHtml("<p>page contains text</p>");
+            select("p", 0, "p", 0);
+            paste("| cell content |\n" +
+                  "| more content |\n");
+
+            expect(contentBody.innerHTML).toBe('<table><tbody><tr><td> cell content </td></tr><tr><td> more content </td></tr></tbody></table><p>page contains text</p>');
         });
 
     });
