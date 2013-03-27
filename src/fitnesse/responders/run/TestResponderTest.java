@@ -2,32 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.authentication.SecureTestOperation;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.fit.FitSocketReceiver;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-import fitnesse.wikitext.Utils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import util.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,6 +14,42 @@ import static util.RegexTestCase.assertFalse;
 import static util.RegexTestCase.*;
 import static util.RegexTestCase.fail;
 import static util.XmlUtil.getElementByTagName;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureTestOperation;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.fit.FitSocketReceiver;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wikitext.Utils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
+import util.FileUtil;
+import util.XmlUtil;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -122,7 +132,6 @@ public class TestResponderTest {
     }
     request.setResource(testPage.getName());
 
-    responder.turnOffChunking();
     response = responder.makeResponse(context, request);
     sender = new MockResponseSender();
     sender.doSending(response);
@@ -221,6 +230,7 @@ public class TestResponderTest {
 
   @Test
   public void pageHistoryLinkIsIncluded() throws Exception {
+    responder.turnOffChunking();
     doSimpleRun(passFixtureTable());
     assertSubString("href=\"TestPage?pageHistory\">", results);
     assertSubString("Page History", results);
@@ -263,6 +273,7 @@ public class TestResponderTest {
 
   @Test
   public void simpleXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     doSimpleRun(passFixtureTable());
     xmlChecker.assertFitPassFixtureXmlReportIsCorrect();
@@ -285,6 +296,7 @@ public class TestResponderTest {
 
   @Test
   public void slimXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
@@ -292,6 +304,14 @@ public class TestResponderTest {
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
+  }
+
+  @Test
+  public void slimXmlFormatGivesErrorCountAsExitCode() throws Exception {
+    request.addInput("format", "xml");
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    doSimpleRunWithTags(slimDecisionTable(), "zoo");
+    Document xmlFromFile = getXmlFromFileAndDeleteFile();
     assertSubString("Exit-Code: 1", results);
   }
 
@@ -316,6 +336,7 @@ public class TestResponderTest {
 
   @Test
   public void slimScenarioXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     doSimpleRun(XmlChecker.slimScenarioTable);
     xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
