@@ -1,8 +1,5 @@
 package fitnesse.http;
 
-import fitnesse.http.MockRequest;
-import fitnesse.http.Request;
-
 public class MockRequestBuilder {
   protected String specification;
   private boolean noChunk = false;
@@ -19,7 +16,7 @@ public class MockRequestBuilder {
       request.setCredentials(getUsername(), getPassword());
     }
     if (noChunk) {
-      request.addInput("noChunk", true);
+      request.addInput("nochunk", true);
     }
     return request;
   }
