@@ -11,6 +11,7 @@ There are several commands you can run to control the FitNesse wiki, as shown be
         -i Install only, do not run fitnesse after install. 
         -c <command> Run a Rest Command and then exit.  
             (Return status is the number of test pages that failed as a result of the command.)
+        -b <filename> redirect command output.
 }}}
 
 You can find more information on the -c options at CommandLineRestCommands.
