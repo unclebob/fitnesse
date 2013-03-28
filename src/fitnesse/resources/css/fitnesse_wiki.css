@@ -79,6 +79,14 @@ article .centered {
   border-left: 1px solid #BF8660;
 }
 
+table {
+	border: 1px solid #EEEEEE;
+	border-collapse:collapse;
+}
+td, th {
+	border: thin solid #777777;
+	padding: 0.25em 0.5em;
+}
 table.plain_text_table {
   border-top: none;
   border-right: none;
