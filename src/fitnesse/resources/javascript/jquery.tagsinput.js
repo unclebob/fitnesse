@@ -219,7 +219,7 @@
 			var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><span id="'+id+'_addTag">';
 			
 			if (settings.interactive) {
-				markup = markup + '<input id="'+id+'_tag" value="" placeholder="'+settings.defaultText+'" />';
+				markup = markup + '<input id="'+id+'_tag" type="text" value="" placeholder="'+settings.defaultText+'" />';
 			}
 			
 			markup = markup + '</span><span class="tags_clear"></span></div>';

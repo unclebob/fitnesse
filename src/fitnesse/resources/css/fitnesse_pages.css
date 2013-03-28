@@ -81,23 +81,23 @@ label input {
     position: fixed;
 }
 
-div.tagsinput {
+.tagsinput {
     display: inline;
 }
-div.tagsinput span.tag {
-    background: none repeat scroll 0 0 #F9F9F9;
+.tagsinput .tag {
+    background-color: #F9F9F9;
     border: 1px dotted #BF8660;
     color: #BF8660;
     margin-right: 4px;
     padding: 2px;
     text-decoration: none;
 }
-div.tagsinput span.tag a {
+.tagsinput .tag a {
     font-weight: bold;
     text-decoration: none;
     margin-left: 4px;
 }
-div.tagsinput input {
+.tagsinput input {
     background: none repeat scroll 0 0 transparent;
     color: #000000;
     margin: 0 ;
