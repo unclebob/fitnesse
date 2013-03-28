@@ -181,7 +181,7 @@
       minChars:0,
       autocomplete: {selectFirst: false },
       'hide':true,
-      'delimiter':',',
+      'delimiter':', ',
       'unique':true,
       removeWithBackspace:true,
       placeholderColor:'#666666',
@@ -321,7 +321,7 @@
 	$.fn.tagsInput.importTags = function(obj,val) {			
 		$(obj).val('');
 		var id = $(obj).attr('id');
-		var tags = val.split(delimiter[id]);
+		var tags = val.split(delimiter[id].trim());
 		for (i=0; i<tags.length; i++) { 
 			$(obj).addTag(tags[i],{focus:false,callback:false});
 		}
