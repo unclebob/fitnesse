@@ -103,7 +103,6 @@ $(function () {
     var h = $('#save_buttons').position().top;
     rte.height(h - rte.position().top - 1);
     textarea.height(h - textarea.position().top - 1);
-    console.log('textarea', textarea.height(), 'rte', rte.height());
   }).resize();
 });
 </script>
