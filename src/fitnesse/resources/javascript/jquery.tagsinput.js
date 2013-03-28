@@ -97,7 +97,7 @@
 				
 				if (value !='' && skipTag != true) { 
                     $('<span>').addClass('tag').append(
-                        $('<span>').text(value).append('&nbsp;&nbsp;'),
+                        $('<span>').text(value),
                         $('<a>', {
                             href  : '#',
                             title : 'Removing tag',
@@ -179,8 +179,6 @@
       interactive:true,
       defaultText:'add a tag',
       minChars:0,
-      width:'300px',
-      height:'100px',
       autocomplete: {selectFirst: false },
       'hide':true,
       'delimiter':',',
@@ -218,39 +216,26 @@
 				tags_callbacks[id]['onChange'] = settings.onChange;
 			}
 	
-			var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><div id="'+id+'_addTag">';
+			var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><span id="'+id+'_addTag">';
 			
 			if (settings.interactive) {
-				markup = markup + '<input id="'+id+'_tag" value="" data-default="'+settings.defaultText+'" />';
+				markup = markup + '<input id="'+id+'_tag" value="" placeholder="'+settings.defaultText+'" />';
 			}
 			
-			markup = markup + '</div><div class="tags_clear"></div></div>';
+			markup = markup + '</span><span class="tags_clear"></span></div>';
 			
 			$(markup).insertAfter(this);
 
-			$(data.holder).css('width',settings.width);
-			$(data.holder).css('min-height',settings.height);
-			$(data.holder).css('height','100%');
-	
-			if ($(data.real_input).val()!='') { 
+			if ($(data.real_input).val()!='') {
 				$.fn.tagsInput.importTags($(data.real_input),$(data.real_input).val());
 			}		
 			if (settings.interactive) { 
-				$(data.fake_input).val($(data.fake_input).attr('data-default'));
-				$(data.fake_input).css('color',settings.placeholderColor);
 		        $(data.fake_input).resetAutosize(settings);
 		
 				$(data.holder).bind('click',data,function(event) {
 					$(event.data.fake_input).focus();
 				});
 			
-				$(data.fake_input).bind('focus',data,function(event) {
-					if ($(event.data.fake_input).val()==$(event.data.fake_input).attr('data-default')) { 
-						$(event.data.fake_input).val('');
-					}
-					$(event.data.fake_input).css('color','#000000');		
-				});
-						
 				if (settings.autocomplete_url != undefined) {
 					autocomplete_options = {source: settings.autocomplete_url};
 					for (attrname in settings.autocomplete) { 
@@ -277,13 +262,9 @@
 						// if a user tabs out of the field, create a new tag
 						// this is only available if autocomplete is not used.
 						$(data.fake_input).bind('blur',data,function(event) { 
-							var d = $(this).attr('data-default');
-							if ($(event.data.fake_input).val()!='' && $(event.data.fake_input).val()!=d) { 
+							if ($(event.data.fake_input).val()!='') {
 								if( (event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)) )
 									$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:true,unique:(settings.unique)});
-							} else {
-								$(event.data.fake_input).val($(event.data.fake_input).attr('data-default'));
-								$(event.data.fake_input).css('color',settings.placeholderColor);
 							}
 							return false;
 						});

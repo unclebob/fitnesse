@@ -81,6 +81,30 @@ label input {
     position: fixed;
 }
 
+div.tagsinput {
+    display: inline;
+}
+div.tagsinput span.tag {
+    background: none repeat scroll 0 0 #F9F9F9;
+    border: 1px dotted #BF8660;
+    color: #BF8660;
+    margin-right: 4px;
+    padding: 2px;
+    text-decoration: none;
+}
+div.tagsinput span.tag a {
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 4px;
+}
+div.tagsinput input {
+    background: none repeat scroll 0 0 transparent;
+    color: #000000;
+    margin: 0 ;
+    outline: 0 none;
+    width: 80px;
+}
+
 /** Properties page / Search form / Directory page**/
 .propertiesPage form,
 .searchForm form,
