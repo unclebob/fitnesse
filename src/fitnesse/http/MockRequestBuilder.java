@@ -46,7 +46,7 @@ public class MockRequestBuilder {
 
   private void validate() {
     if (!hasCredentials() && !hasNoCredentials())
-      throw new IllegalArgumentException("Command specification [" + specification + "] invalid. Format shold be /cmd or user:pass:/cmd");
+      throw new IllegalArgumentException("Command specification [" + specification + "] invalid. Format should be /cmd or user:pass:/cmd");
   }
 
   private String[] commandParts() {
