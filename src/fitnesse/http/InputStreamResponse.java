@@ -20,7 +20,6 @@ public class InputStreamResponse extends Response {
 
   public void sendTo(ResponseSender sender) throws IOException {
     try {
-      addStandardHeaders();
       sender.send(makeHttpHeaders().getBytes());
       while (!reader.isEof())
         sender.send(reader.readBytes(1000));

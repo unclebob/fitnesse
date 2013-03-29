@@ -2,6 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -9,7 +19,12 @@ import fitnesse.http.Response;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,16 +35,6 @@ import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.XmlUtil;
-
-import java.io.File;
-import java.io.FileInputStream;
-
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.*;
 
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -62,7 +67,6 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     responder = new SuiteResponder();
-    responder.turnOffChunking();
     responder.setFastTest(true);
     responder.page = suite;
     context = FitNesseUtil.makeTestContext(root);
@@ -203,6 +207,12 @@ public class SuiteResponderTest {
     assertSubString("Exit-Code: 1", results);
   }
 
+  @Test
+  public void testNoExitCodeHeaderIfNotChunked() throws Exception {
+    responder.turnOffChunking();
+    String results = runSuite();
+    assertFalse(results.contains("Exit-Code: 0"));
+  }
 
   @Test
   public void testExecutionStatusAppears() throws Exception {
@@ -335,6 +345,7 @@ public class SuiteResponderTest {
 
   @Test
   public void xmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
