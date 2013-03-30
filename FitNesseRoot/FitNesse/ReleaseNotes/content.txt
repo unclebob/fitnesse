@@ -1,5 +1,16 @@
+!2 Spring 2013
+
+ * Many improvements in the JUnit test runner
+ * New: version comparator, thanks for Mark Hopkins
+ * Wiki: can set image width with -w option: !img -w 600 http://files/someImage.png
+ * FitNesse loads well with both fitnesse.jar and fitnesse-standalone.jar
+ * Virtual Wiki functionality has finally been removed
+ * Big refactoring of SLiM test system. Output is now XML compliant,  introduction of domain classes and caching of set up/tear down pages
+ * Many fixes in the rich text editor: full-screen editing, more lenient parsing of wiki text, improved cut-and-paste
+
+
 !2 2012-11-16
- * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables. 
+ * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables.
 
 !2 2012-09-18
  * Added the concept of a TemplateLibrary and the ability to insert existing templates into the plain text editor.
@@ -27,6 +38,6 @@ maven pom.xml cleanups:
  * Remove unneeded ${basedir} from <sourceDirectory> tag value.
 
 !2 20081128 (UB)
- * Added &debug flag to [[TestResponder][TestResponder]] url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
+ * Added &debug flag to TestResponder url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
  * Symbols can be java properties or environment variables.  Symbols first, env variables second, java properties third.
  * If the first cell of a script table is a symbol assignment ($V=) then the rest must be a function call.  The symbol is assigned the return value of the function.
