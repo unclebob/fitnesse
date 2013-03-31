@@ -4,39 +4,40 @@ import java.security.Permission;
 
 public class SystemExitSecurityManager extends SecurityManager {
 
-	private SecurityManager delegate;
+  private SecurityManager delegate;
 
-	public SystemExitSecurityManager(SecurityManager delegate) {
-		this.delegate = delegate;
-	}
+  public SystemExitSecurityManager(SecurityManager delegate) {
+    this.delegate = delegate;
+  }
 
-	@Override
-	public void checkExit(int status) {
-		throw new SystemExitException("prevented system exit with exit code " + status);
-	}
+  @Override
+  public void checkExit(int status) {
+    throw new SystemExitException("prevented system exit with exit code "
+        + status);
+  }
 
-	@Override
-	public void checkPermission(Permission perm, Object context) {
-		if (delegate != null) {
-			delegate.checkPermission(perm, context);
-		}
-	}
+  @Override
+  public void checkPermission(Permission perm, Object context) {
+    if (delegate != null) {
+      delegate.checkPermission(perm, context);
+    }
+  }
 
-	@Override
-	public void checkPermission(Permission perm) {
-		if (delegate != null) {
-			delegate.checkPermission(perm);
-		}
-	}
-	
-	public static class SystemExitException extends SecurityException {
+  @Override
+  public void checkPermission(Permission perm) {
+    if (delegate != null) {
+      delegate.checkPermission(perm);
+    }
+  }
 
-		public SystemExitException(String message) {
-			super(message);
-		}
+  public static class SystemExitException extends SecurityException {
 
-		private static final long serialVersionUID = 2584644457111168436L;
-		
-	}
+    public SystemExitException(String message) {
+      super(message);
+    }
+
+    private static final long serialVersionUID = 2584644457111168436L;
+
+  }
 
 }
