@@ -84,7 +84,7 @@ public abstract class ListExecutorTestBase {
     statements.clear();
     executor.execute(statements);
     expectedResults.clear();
-    respondsWith(ListUtility.<List<Object>>list());
+    respondsWith(ListUtility.list());
   }
 
   @Test
