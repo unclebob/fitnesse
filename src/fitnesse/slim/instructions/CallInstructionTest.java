@@ -44,7 +44,6 @@ public class CallInstructionTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFormatReturnValues() {
     CallInstruction instruction = new CallInstruction(ID, "instance", "method", new Object[]{"arg1", "arg2"},
       nameTranslator);
