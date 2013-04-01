@@ -26,7 +26,7 @@ $(document).on("click", "article tr.scenario td, article tr.exception td", funct
  * Collapsible section
  */
 $(document)
-	.on("click", "article .collapsible > p.title", function () {
+	.on("touchstart click", "article .collapsible > p.title", function () {
 		$(this).parent().toggleClass('closed');
 	})
 	.on("click", "article .collapsible > p.title a", function (event) {
