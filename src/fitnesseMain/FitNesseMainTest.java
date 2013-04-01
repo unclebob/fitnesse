@@ -3,7 +3,7 @@
 package fitnesseMain;
 
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
