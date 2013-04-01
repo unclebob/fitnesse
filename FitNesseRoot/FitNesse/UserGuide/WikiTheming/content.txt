@@ -7,7 +7,7 @@ As of April 2012, !-FitNesse-! has a new layout. There are a few reasons for mak
  * Lots of markup was generated directly from java code, now [[Velocity][http://velocity.apache.org]] is performing the rendering
  * !-FitNesse-! was not easy to customize
  * The web interface looked old fashioned. Having a fresh look and feel appeals to people (yes it does)
- * !-FitNesse-! style related files (css, javascript, templates) were put in !-FitNesseRoot-!. This is not desired since it mixes application files with user data (will pages)
+ * !-FitNesse-! style related files (css, javascript, templates) were put in !-FitNesseRoot-!. This is not desired since it mixes application files with user data (with pages)
 
 So here you are, in your new !-FitNesse-!, with a look and feel you're not accustomed to. How to deal with that?
 
@@ -17,7 +17,7 @@ One of the benefits you'll have from the new layout is that the page L&F is easi
  * ''fitnesse_straight'' - the default style
  * ''fitnesse_mint'' - a classy style
  * ''fitnesse_topnav'' - a minimalistic style
- * ''bootstrap'' - uses [[Twitter Bootstrap][http://twitter.github.com/bootstrap]] as a basis for it's styling
+ * ''bootstrap'' - uses [[Twitter Bootstrap][http://twitter.github.com/bootstrap]] as a basis for its styling
 
 For all styles the HTML remains the same. The default style can be configured through ''plugins.properties'', !-FitNesse-!'s settings file (this is where you also configure custom symbols). Add the line
 
@@ -25,7 +25,7 @@ For all styles the HTML remains the same. The default style can be configured th
 {{{
 Theme=fitnesse_mint
 }}}
-(re)start !-FitNesse-! and the style completely changed.
+(re)start !-FitNesse-! and the style will have completely changed.
 
 Apart from the layout style, fitnesse loads a few stylesheets by default: ''fitnesse_pages.css'' and ''fitnesse_wiki.css''. Both files serve the boilerplate for pages (like the properties page) and the wiki text.
 
