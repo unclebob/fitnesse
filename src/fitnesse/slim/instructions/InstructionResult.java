@@ -63,6 +63,10 @@ public class InstructionResult {
     public Error(String id, SlimException exception) {
       super(id, exception);
     }
+    
+    public Error(String id, SecurityException exception) {
+      super(id, exception);
+    }
 
     @Override
     public boolean hasResult() {
