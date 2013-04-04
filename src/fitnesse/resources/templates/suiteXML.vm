@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <testResults>
-  <FitNesseVersion>$formatter.getFitNesseVersion()</FitNesseVersion>
-  <rootPath>$formatter.getRootPageName()</rootPath>
-  #foreach ($reference in $formatter.getPageHistoryReferences())
+  <FitNesseVersion>$formatter.fitNesseVersion</FitNesseVersion>
+  <rootPath>#escape($formatter.rootPageName)</rootPath>
+  #foreach ($reference in $formatter.pageHistoryReferences)
   #set($executionReport = $formatter.getTestExecutionReport($reference))
   #set($result = $executionReport.getResults().get(0))
   <result>
@@ -13,15 +13,14 @@
       <exceptions>$result.Exceptions</exceptions>
     </counts>
     <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
-    <relativePageName>$result.RelativePageName</relativePageName>
+    <relativePageName>#escape($result.RelativePageName)</relativePageName>
     <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()&amp;format=xml</pageHistoryLink>
     #if($result.Tags)
-    <tags>$result.Tags</tags>
+    <tags>#escape($result.Tags)</tags>
     #end
     #if($formatter.shouldIncludeHtml())
-      <content>$result.content</content>
+    <content>#escape($result.content)</content>
     #end 
-
   </result>
   #end
 
