@@ -1,3 +1,5 @@
-If a file is removed
-
-version files are also removed
+!help
+!| script | versions controller fixture | fitnesse.wiki.fs.ZipFileVersionsController |
+| Given a wiki page with history |
+| When the page is deleted |
+| check | history size | 1 |
