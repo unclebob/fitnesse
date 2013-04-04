@@ -1,0 +1,5 @@
+!help
+!| script | versions controller fixture | fitnesse.wiki.fs.ZipFileVersionsController |
+| Given a wiki page with history |
+| When the page is moved |
+| check | history size | 0 |
