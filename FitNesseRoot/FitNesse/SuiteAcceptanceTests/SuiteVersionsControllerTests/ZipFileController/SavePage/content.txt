@@ -1,0 +1,5 @@
+Given a test page
+
+when a page is saved
+
+then a zip file is created of the page before saving

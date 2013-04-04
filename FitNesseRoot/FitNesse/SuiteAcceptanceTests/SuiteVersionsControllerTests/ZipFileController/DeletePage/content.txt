@@ -1,0 +1,3 @@
+If a file is removed
+
+version files are also removed

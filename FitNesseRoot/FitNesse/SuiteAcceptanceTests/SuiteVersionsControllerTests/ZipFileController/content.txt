@@ -1,0 +1,8 @@
+!contents -R2 -g -p -f -h
+Create a new page will not create any backup file
+
+Save changes to an existing page will create a "backup" zip file of the old contents
+
+Move a page will remove the page history
+
+Delete a page will remove the history
