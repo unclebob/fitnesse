@@ -14,7 +14,9 @@ import fitnesse.wikitext.parser.WikiWordPath;
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
 
+  // Only used for root page:
   private final String path;
+
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
 
@@ -33,7 +35,7 @@ public class FileSystemPage extends CachingPage {
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
     super(name, parent, new SymbolicPageFactory());
-    path = parent.getFileSystemPath();
+    path = null;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
   }
