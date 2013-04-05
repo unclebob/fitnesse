@@ -16,4 +16,6 @@ public interface VersionsController {
   VersionInfo makeVersion(FileSystemPage page, PageData data);
 
   VersionInfo getCurrentVersion(FileSystemPage page);
+
+  void delete(FileSystemPage page);
 }

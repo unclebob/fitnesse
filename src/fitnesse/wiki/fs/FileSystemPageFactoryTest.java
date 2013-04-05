@@ -141,6 +141,10 @@ public class FileSystemPageFactoryTest {
     public VersionInfo getCurrentVersion(FileSystemPage page) {
       return null;
     }
+
+    @Override
+    public void delete(FileSystemPage page) {
+    }
   }
 
 }

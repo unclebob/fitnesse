@@ -62,6 +62,11 @@ public class MemoryVersionsController implements VersionsController {
     return persistence.getCurrentVersion(page);
   }
 
+  @Override
+  public void delete(FileSystemPage page) {
+    persistence.delete(page);
+  }
+
   private FileVersions getFileVersions(FileSystemPage page) {
     final String key = page.getFileSystemPath();
     FileVersions fileVersions = versions.get(key);

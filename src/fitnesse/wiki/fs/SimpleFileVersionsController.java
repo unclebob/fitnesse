@@ -53,6 +53,11 @@ public class SimpleFileVersionsController implements VersionsController {
     return makeVersionInfo(getRevisionData(page, null));
   }
 
+  @Override
+  public void delete(FileSystemPage page) {
+    fileSystem.delete(page.getFileSystemPath());
+  }
+
   private void createDirectoryIfNewPage(final FileSystemPage page) {
     String pagePath = page.getFileSystemPath();
     if (!fileSystem.exists(pagePath)) {

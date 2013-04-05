@@ -41,8 +41,10 @@ public class FileSystemPage extends CachingPage {
   @Override
   public void removeChildPage(final String name) {
     super.removeChildPage(name);
-    String pathToDelete = getFileSystemPath() + "/" + name;
-    fileSystem.delete(pathToDelete);
+    WikiPage childPage = getChildPage(name);
+    if (childPage instanceof FileSystemPage) {
+      versionsController.delete((FileSystemPage) childPage);
+    }
   }
 
   @Override

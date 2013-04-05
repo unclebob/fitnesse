@@ -24,7 +24,6 @@ import java.util.zip.ZipOutputStream;
 
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.fs.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 import util.StreamReader;
@@ -103,6 +102,11 @@ public class ZipFileVersionsController implements VersionsController {
   @Override
   public VersionInfo getCurrentVersion(FileSystemPage page) {
     return persistence.getCurrentVersion(page);
+  }
+
+  @Override
+  public void delete(FileSystemPage page) {
+    persistence.delete(page);
   }
 
   protected VersionInfo makeZipVersion(FileSystemPage page, PageData data) {
