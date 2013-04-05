@@ -1,5 +1,6 @@
-package fitnesse.fixtures;
+package fitnesse.wiki.fs;
 
+import java.io.File;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
@@ -7,10 +8,13 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.fs.FileSystemPageFactory;
+import org.eclipse.jgit.api.InitCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import util.FileUtil;
 
 public class VersionsControllerFixture {
+  public static final String TEST_DIR = "TestDir";
+
   private FileSystemPageFactory pageFactory;
   private WikiPage rootPage;
   private WikiPage lastUsedPage;
@@ -26,11 +30,11 @@ public class VersionsControllerFixture {
   }
 
   public void createWikiRoot() {
-    rootPage = pageFactory.makeRootPage("TestDir", "RooT");
+    rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
   }
 
   public void cleanUp() {
-    FileUtil.deleteFileSystemDirectory("TestDir");
+    FileUtil.deleteFileSystemDirectory(TEST_DIR);
   }
 
   public Object savePageWithContent(String pageName, String content) {
@@ -49,5 +53,14 @@ public class VersionsControllerFixture {
 
   public int historySize() {
     return lastUsedPage.getVersions().size();
+  }
+
+  public boolean initialiseGitRepository() throws GitAPIException {
+    FileUtil.createDir(TEST_DIR);
+    new InitCommand()
+            .setDirectory(new File(TEST_DIR))
+            .setBare(false)
+            .call();
+    return true;
   }
 }

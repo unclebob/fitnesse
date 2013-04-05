@@ -8,3 +8,5 @@ Move a page, the history will also move (only if this is a feature of Git)
 Save a page will create a new version
 
 Save a page without change will not create a new version
+
+!define VERSION_CONTROLLER_CLASS {fitnesse.wiki.fs.GitFileVersionsController}
