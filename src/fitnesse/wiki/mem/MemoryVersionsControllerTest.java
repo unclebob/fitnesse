@@ -1,13 +1,15 @@
-package fitnesse.wiki;
+package fitnesse.wiki.mem;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Iterator;
 
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 

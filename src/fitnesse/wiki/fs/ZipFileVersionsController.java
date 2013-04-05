@@ -1,7 +1,7 @@
 package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.SimpleFileVersionsController.contentFilename;
-import static fitnesse.wiki.SimpleFileVersionsController.propertiesFilename;
+import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
+import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ import java.util.zip.ZipOutputStream;
 
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.SimpleFileVersionsController;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 import util.StreamReader;

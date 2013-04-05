@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import org.w3c.dom.Document;
 import util.RegexTestCase;
 import util.XmlUtil;

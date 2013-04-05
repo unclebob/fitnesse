@@ -1,6 +1,7 @@
 package fitnesse.components;
 
 import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -4,7 +4,7 @@ package fitnesse.components;
 
 import util.FileUtil;
 import util.RegexTestCase;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.MockingPageCrawler;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;

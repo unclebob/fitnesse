@@ -1,4 +1,4 @@
-package fitnesse.wiki;
+package fitnesse.wiki.mem;
 
 import java.util.Collection;
 import java.util.Date;
@@ -7,8 +7,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import fitnesse.wiki.NoSuchVersionException;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 import fitnesse.wiki.fs.VersionsController;
 
 public class MemoryVersionsController implements VersionsController {

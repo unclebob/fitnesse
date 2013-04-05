@@ -1,12 +1,13 @@
-package fitnesse.wiki.fs;
+package fitnesse.wiki.mem;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import fitnesse.wiki.fs.FileSystem;
 import util.Clock;
 
-public class MemoryFileSystem implements FileSystem{
+public class MemoryFileSystem implements FileSystem {
     private final Hashtable<String, String> files = new Hashtable<String, String>();
 
     public void makeFile(String path, String content) {

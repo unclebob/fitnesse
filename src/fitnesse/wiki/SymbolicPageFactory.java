@@ -5,6 +5,7 @@ import java.io.File;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 import util.EnvironmentVariableTool;
 
 public class SymbolicPageFactory {

@@ -2,7 +2,7 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.*;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;

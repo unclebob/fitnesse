@@ -4,6 +4,7 @@
 package fitnesse.wiki;
 
 import fitnesse.testutil.SimpleCachinePage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

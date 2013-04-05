@@ -3,6 +3,7 @@ package fitnesse.wiki.fs;
 import static org.junit.Assert.*;
 
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Test;
 
 public class ExternalTestPageTest {

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import util.Clock;
 
 import junit.framework.TestCase;

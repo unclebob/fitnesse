@@ -5,7 +5,7 @@ package fitnesse.components;
 import java.util.List;
 
 import util.RegexTestCase;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 

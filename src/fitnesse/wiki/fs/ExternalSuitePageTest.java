@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

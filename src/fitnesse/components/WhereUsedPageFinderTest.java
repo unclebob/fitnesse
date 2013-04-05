@@ -3,7 +3,7 @@ package fitnesse.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

@@ -1,9 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.mem;
 
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.MemoryFileSystem;
 
 // In memory page, used for testing
 public class InMemoryPage {

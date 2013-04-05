@@ -1,4 +1,4 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.VersionsController;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPageProperties;
 
 public class SimpleFileVersionsController implements VersionsController {
 
