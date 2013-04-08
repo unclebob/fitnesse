@@ -236,6 +236,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | Define "in-page" label | ${CODE} ${BANG}'''anchor''' ${LabelNAME} ${CODEend} | a.k.a. anchor |
 | Jump to "in-page" label | ${JumpTO} |
 | External Links | ${ExternalLINKS} |
+!note Link texts containing !-WikiText-! may be escaped. E.g. ''!-[[-!'''${BANG}-'''!-FitNesse-!'''-${BANG}'''!-][http://fitnesse.org]]-!''.
 
 #---------------------------------------------------------------------------------------------
 

@@ -173,20 +173,24 @@ public class PageHistory extends PageHistoryReader{
 
   public static class PassFailReport {
     private String date;
-    private boolean pass;
+    private ExecutionResult result;
 
-    public PassFailReport(Date date, boolean pass) {
+    public PassFailReport(Date date, ExecutionResult result) {
       SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
       this.date = dateFormat.format(date);
-      this.pass = pass;
+      this.result = result;
     }
 
     public String getDate() {
       return date;
     }
 
+    public ExecutionResult getResult() {
+      return result;
+    }
+
     public boolean isPass() {
-      return pass;
+      return result == ExecutionResult.PASS;
     }
   }
 
@@ -216,7 +220,7 @@ public class PageHistory extends PageHistoryReader{
 
       ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
 
-      passFailList.add(new PassFailReport(date, result == ExecutionResult.PASS));
+      passFailList.add(new PassFailReport(date, result));
     }
 
     private void minMaxDate(TestResultRecord summary) {
@@ -244,7 +248,7 @@ public class PageHistory extends PageHistoryReader{
     public String testString() {
       StringBuilder builder = new StringBuilder();
       for (PassFailReport report : passFailList) {
-        builder.append(report.pass ? "+" : "-");
+        builder.append(report.isPass() ? "+" : "-");
       }
       return builder.toString();
     }
