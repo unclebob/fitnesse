@@ -250,8 +250,10 @@ public class HtmlSlimResponderTest {
         + "| should fail1| true           |\n" + "\n\n"
         + "!|DT:fitnesse.slim.test.ThrowException|\n" + "|throwNormal?|\n"
         + "| should fail2|\n");
-    assertTestResultsContain("<td>first <span class=\"error\">Exception: <a href");
-    assertTestResultsContain("<td>second <span class=\"fail\">Exception: <a href");
+    assertTestResultsContain("<tr class=\"exception closed\">");
+    assertTestResultsContain("<td class=\"fail\">first</td>");
+    assertTestResultsContain("<td class=\"fail\">second</td>");
+    assertTestResultsContain("<tr class=\"exception-detail closed-detail\">");
     assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
     assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
   }
@@ -336,11 +338,21 @@ public class HtmlSlimResponderTest {
   }
 
   @Test
+  // TODO: Setting a constant here. We should use dependency inversion
+  //       for the minimum require slim version to get this under test
+  //       properly
+  //       Had to fix this with the introduction of JUnit 4.11 since the
+  //       ordering is different.
   public void versionMismatchIsReported() throws Exception {
+    double oldVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
     SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = 1000.0; // I doubt will ever get
                                                        // here.
-    getResultsForPageContents("");
-    assertTestResultsContain("Slim Protocol Version Error");
+    try {
+      getResultsForPageContents("");
+      assertTestResultsContain("Slim Protocol Version Error");
+    } finally {
+      SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = oldVersionNumber;
+    }
   }
 
   @Test

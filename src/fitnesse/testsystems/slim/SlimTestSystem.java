@@ -295,7 +295,7 @@ public abstract class SlimTestSystem extends TestSystem {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
-        if (returnValue != null && returnValue instanceof String && ((String)returnValue).contains(EXCEPTION_TAG)) {
+        if (returnValue != null && returnValue instanceof String && ((String)returnValue).startsWith(EXCEPTION_TAG)) {
           ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           if (exceptionResult.isStopTestException()) {
             stopTestCalled = true;

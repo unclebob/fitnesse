@@ -1,19 +1,7 @@
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimClient;
-import fitnesse.slim.converters.VoidConverter;
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.InstructionExecutor;
-import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.slim.*;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.Utils;
-import org.junit.Before;
-import org.junit.Test;
-import util.ListUtility;
+import static junit.framework.Assert.assertEquals;
+import static util.ListUtility.list;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static util.ListUtility.list;
+import fitnesse.slim.SlimClient;
+import fitnesse.slim.converters.VoidConverter;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.TableScanner;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.Utils;
+import org.junit.Before;
+import org.junit.Test;
+import util.ListUtility;
 
 public abstract class QueryTableBaseTest {
   private WikiPage root;
@@ -229,6 +233,8 @@ public abstract class QueryTableBaseTest {
         "[pass(3), fail(a=field 2n not present;e=4)]" +
         "]"
     );
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(1, testContext.getTestSummary().getWrong());
   }
 
   @Test
@@ -244,6 +250,8 @@ public abstract class QueryTableBaseTest {
         "[fail(a=3;surplus), fail(field 2n not present)]" +
         "]"
     );
+    assertEquals(0, testContext.getTestSummary().getRight());
+    assertEquals(2, testContext.getTestSummary().getWrong());
   }
 
   @Test

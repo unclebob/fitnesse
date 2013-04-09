@@ -5,8 +5,6 @@ package fitnesse.slim;
 import fitnesse.slim.converters.MapEditor;
 
 import java.beans.PropertyEditorManager;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +70,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public void create(String instanceName, String className, Object[] args) throws SlimException {
+  public void create(String instanceName, String className, Object... args) throws SlimException {
     try {
       context.create(instanceName, className, args);
       // TODO Hack for supporting SlimHelperLibrary, please remove.
@@ -105,7 +103,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public Object callAndAssign(String variable, String instanceName, String methodName, Object[] args) throws SlimException {
+  public Object callAndAssign(String variable, String instanceName, String methodName, Object... args) throws SlimException {
     try {
       MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
       context.setVariable(variable, result);

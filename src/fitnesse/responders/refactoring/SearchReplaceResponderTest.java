@@ -1,8 +1,7 @@
 package fitnesse.responders.refactoring;
 
-import static org.hamcrest.core.IsNot.*;
 import static org.junit.Assert.*;
-import static org.junit.internal.matchers.StringContains.*;
+import static org.hamcrest.Matchers.*;
 
 import fitnesse.wiki.*;
 import org.junit.Before;

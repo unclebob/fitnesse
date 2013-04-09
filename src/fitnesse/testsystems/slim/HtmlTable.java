@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.parser.Collapsible;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -24,7 +24,6 @@ import org.htmlparser.util.NodeList;
 public class HtmlTable implements Table {
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
-  private List<ExceptionResult> exceptions = new ArrayList<ExceptionResult>();
 
   public HtmlTable(TableTag tableNode) {
     this.tableNode = tableNode;
@@ -35,7 +34,6 @@ public class HtmlTable implements Table {
         rows.add(new Row((CompositeTag) node));
       }
     }
-    tableNode.getChildren().prepend(new ExceptionTextNode());
   }
 
   public TableTag getTableNode() {
@@ -101,15 +99,20 @@ public class HtmlTable implements Table {
    */
   public void appendChildTable(int rowIndex, Table childTable) {
     Row row = rows.get(rowIndex);
-    row.rowNode.setAttribute("class", "scenario closed", '"');
+    Row childRow = makeChildRow(row, ((HtmlTable) childTable).getTableNode(), "scenario");
+    insertRowAfter(row, childRow);
+  }
 
+  private Row makeChildRow(Row row, Node contents, String type) {
     Row childRow = new Row();
     TableColumn column = (TableColumn) newTag(TableColumn.class);
-    column.setChildren(new NodeList(((HtmlTable) childTable).getTableNode()));
+    column.setChildren(new NodeList(contents));
     column.setAttribute("colspan", "" + colspan(row), '"');
     childRow.appendCell(new Cell(column));
-    childRow.rowNode.setAttribute("class", "scenario-detail", '"');
-    insertRowAfter(row, childRow);
+
+    row.rowNode.setAttribute("class", type + " closed", '"');
+    childRow.rowNode.setAttribute("class", type + "-detail closed-detail", '"');
+    return childRow;
   }
 
   private int colspan(Row row) {
@@ -147,8 +150,8 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int row, TestResult testResult) {
-    rows.get(row).setTestResult(testResult);
+  public void updateContent(int rowIndex, TestResult testResult) {
+    rows.get(rowIndex).setExecutionResult(testResult.getExecutionResult());
   }
 
   @Override
@@ -159,12 +162,17 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int col, int row, ExceptionResult exceptionResult) {
-    Cell cell = rows.get(row).getColumn(col);
-    if (cell.exceptionResult == null) {
+  public void updateContent(int colIndex, int rowIndex, ExceptionResult exceptionResult) {
+    Row row = rows.get(rowIndex);
+    Cell cell = row.getColumn(colIndex);
+    if (exceptionResult.hasMessage()) {
       cell.setExceptionResult(exceptionResult);
-      cell.setContent(cell.formatExceptionResult());
-      exceptions.add(exceptionResult);
+    } else {
+      Row childRow = makeChildRow(row,
+              new TextNode("<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"),
+              "exception");
+      insertRowAfter(row, childRow);
+      row.setExecutionResult(exceptionResult.getExecutionResult());
     }
   }
 
@@ -237,13 +245,13 @@ public class HtmlTable implements Table {
       return list;
     }
 
-    private void setTestResult(TestResult testResult) {
+    private void setExecutionResult(ExecutionResult executionResult) {
       NodeList cells = rowNode.getChildren();
       for (int i = 0; i < cells.size(); i++) {
         Node cell = cells.elementAt(i);
         if (cell instanceof Tag) {
           Tag tag = (Tag) cell;
-          tag.setAttribute("class", testResult.getExecutionResult().toString(), '"');
+          tag.setAttribute("class", executionResult.toString(), '"');
         }
       }
     }
@@ -300,7 +308,14 @@ public class HtmlTable implements Table {
     }
 
     public void setExceptionResult(ExceptionResult exceptionResult) {
-      this.exceptionResult = exceptionResult;
+      if (this.exceptionResult == null) {
+        this.exceptionResult = exceptionResult;
+        setContent(String.format("%s <span class=\"%s\">%s</span>",
+                originalContent,
+                exceptionResult.getExecutionResult().toString(),
+                Utils.escapeHTML(exceptionResult.getMessage())));
+
+      }
     }
 
     public String formatTestResult() {
@@ -329,19 +344,6 @@ public class HtmlTable implements Table {
       }
       return "Should not be here";
     }
-
-    public String formatExceptionResult() {
-      if (exceptionResult.hasMessage()) {
-        return String.format("%s <span class=\"%s\">%s</span>",
-                originalContent,
-                exceptionResult.getExecutionResult().toString(),
-                Utils.escapeHTML(exceptionResult.getMessage()));
-      } else {
-        // See below where exception block is formatted
-        return String.format("%s <span class=\"%s\">Exception: <a href=\"#%s\">%s</a></span>", originalContent, exceptionResult.getExecutionResult().toString(), exceptionResult.getResultKey(), exceptionResult.getResultKey());
-      }
-    }
-
   }
 
   @Override
@@ -350,41 +352,6 @@ public class HtmlTable implements Table {
     // Quick 'n' Dirty
     script = substitution.substitute(0, 0, script);
     return new HtmlTableScanner(script).getTable(0);
-  }
-
-  // This is not the nicest solution, since the the exceptions are put inside the <table> tag.
-  class ExceptionTextNode extends TextNode {
-
-    public ExceptionTextNode() {
-      super("");
-    }
-
-    @Override
-    public String toHtml(boolean verbatim) {
-      if(!haveExceptionsWithoutMessage()) {
-        return "";
-      }
-      StringBuilder buffer = new StringBuilder(512);
-      buffer.append("<div class=\"exceptions\"><h3>Exceptions</h3>");
-      for (ExceptionResult exceptionResult : exceptions) {
-        if (!exceptionResult.hasMessage()) {
-          buffer.append(String.format("<a name=\"%s\"></a>", exceptionResult.getResultKey()));
-          buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, Utils.escapeHTML(exceptionResult.getResultKey()),
-                  "<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"));
-        }
-      }
-      buffer.append("</div>");
-      return buffer.toString();
-    }
-
-    private boolean haveExceptionsWithoutMessage() {
-      for (ExceptionResult exception : exceptions) {
-        if (!exception.hasMessage()) {
-          return true;
-        }
-      }
-      return false;
-    }
   }
 }
 

@@ -3,8 +3,8 @@
 package fitnesse.responders.run;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -259,7 +259,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();
       File resultFile = new File(resultDirectory, resultPath.getName());
-      return new FileWriter(resultFile);
+      return new PrintWriter(resultFile, "UTF-8");
     }
   }
 }

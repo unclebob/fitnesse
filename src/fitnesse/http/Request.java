@@ -27,6 +27,9 @@ public class Request {
 
   private static final Collection<String> allowedMethods = buildAllowedMethodList();
 
+  /** input key to suppress chunking. */
+  public static final String NOCHUNK = "nochunk";
+
   protected StreamReader input;
   protected String requestURI;
   private String resource;

@@ -1,11 +1,8 @@
 package fitnesse.http;
 
-import fitnesse.http.MockRequest;
-import fitnesse.http.Request;
-
 public class MockRequestBuilder {
   protected String specification;
-  private boolean noChunk = false;
+  private boolean chunk = true;
 
   public MockRequestBuilder(String specification) {
     this.specification = specification;
@@ -18,8 +15,8 @@ public class MockRequestBuilder {
     if (hasCredentials()) {
       request.setCredentials(getUsername(), getPassword());
     }
-    if (noChunk) {
-      request.addInput("noChunk", true);
+    if (!chunk) {
+      request.addInput(Request.NOCHUNK, true);
     }
     return request;
   }
@@ -49,7 +46,7 @@ public class MockRequestBuilder {
 
   private void validate() {
     if (!hasCredentials() && !hasNoCredentials())
-      throw new IllegalArgumentException("Command specification [" + specification + "] invalid. Format shold be /cmd or user:pass:/cmd");
+      throw new IllegalArgumentException("Command specification [" + specification + "] invalid. Format should be /cmd or user:pass:/cmd");
   }
 
   private String[] commandParts() {
@@ -65,7 +62,7 @@ public class MockRequestBuilder {
   }
 
   public MockRequestBuilder noChunk() {
-    this.noChunk = true;
+    this.chunk = false;
     return this;
   }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <suiteResults>
   <FitNesseVersion>$suiteExecutionReport.getVersion()</FitNesseVersion>
-  <rootPath>$suiteExecutionReport.getRootPath()</rootPath>
+  <rootPath>#escape($suiteExecutionReport.getRootPath())</rootPath>
   #foreach ($reference in $suiteExecutionReport.getPageHistoryReferences())
   <pageHistoryReference>
-    <name>$reference.getPageName()</name>
+    <name>#escape($reference.getPageName())</name>
     <date>$reference.getDateString()</date>
     <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()</pageHistoryLink>
     <counts>

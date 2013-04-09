@@ -16,17 +16,17 @@ function doSilentRequest(url)
 }
 
 /**
- *  Scenario's (after test execution)
+ *  Scenario's and Exceptions (after test execution)
  */
-$(document).on("click", "article tr.scenario td", function () {
-	$(this).parent().toggleClass('closed').next().toggle();
+$(document).on("click", "article tr.scenario td, article tr.exception td", function () {
+	$(this).parent().toggleClass('closed').next().toggleClass("closed-detail");
 });
 
 /**
  * Collapsible section
  */
 $(document)
-	.on("click", "article .collapsible > p.title", function () {
+	.on("touchstart click", "article .collapsible > p.title", function () {
 		$(this).parent().toggleClass('closed');
 	})
 	.on("click", "article .collapsible > p.title a", function (event) {
