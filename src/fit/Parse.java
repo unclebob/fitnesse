@@ -31,7 +31,7 @@ public class Parse {
     this.more = more;
   }
 
-  public static String tags[] = {"table", "tr", "td"};
+  public static final String tags[] = {"table", "tr", "td"};
 
   public Parse(String text) throws FitParseException {
     this(text, tags, 0, 0);

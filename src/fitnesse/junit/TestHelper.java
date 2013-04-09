@@ -67,8 +67,8 @@ public class TestHelper {
     return command;
   }
 
-  private static String COMMON_ARGS = "&nohistory=true&format=java";
-  private static String DEBUG_ARG = "&debug=true";
+  private static final String COMMON_ARGS = "&nohistory=true&format=java";
+  private static final String DEBUG_ARG = "&debug=true";
   private String getCommandArgs() {
     if (debug) {
       return DEBUG_ARG + COMMON_ARGS;

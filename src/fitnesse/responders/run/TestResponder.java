@@ -37,7 +37,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
-  private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
+  private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
   protected CompositeFormatter formatters;
   protected boolean isInteractive = false;

@@ -321,7 +321,7 @@ public abstract class SlimTestSystem extends TestSystem {
 
   public static class SlimDescriptor extends Descriptor {
 
-    private static AtomicInteger slimPortOffset = new AtomicInteger(0);
+    private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
     private final int slimPort;
 
     public SlimDescriptor(WikiPage page, PageFactory pageFactory, boolean remoteDebug) {

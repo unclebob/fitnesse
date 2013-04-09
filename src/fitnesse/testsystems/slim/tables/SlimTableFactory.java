@@ -10,7 +10,7 @@ import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
 
-  private static Map<String, Class<? extends SlimTable>> tableTypes;
+  private static final Map<String, Class<? extends SlimTable>> tableTypes;
 
   static {
     tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
