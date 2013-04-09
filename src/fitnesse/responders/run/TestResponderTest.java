@@ -2,6 +2,39 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
+import static util.XmlUtil.getElementByTagName;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
+import util.FileUtil;
+import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -13,33 +46,14 @@ import fitnesse.http.Response;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.Utils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import util.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertFalse;
-import static util.RegexTestCase.*;
-import static util.RegexTestCase.fail;
-import static util.XmlUtil.getElementByTagName;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -122,7 +136,6 @@ public class TestResponderTest {
     }
     request.setResource(testPage.getName());
 
-    responder.turnOffChunking();
     response = responder.makeResponse(context, request);
     sender = new MockResponseSender();
     sender.doSending(response);
@@ -221,6 +234,7 @@ public class TestResponderTest {
 
   @Test
   public void pageHistoryLinkIsIncluded() throws Exception {
+    responder.turnOffChunking();
     doSimpleRun(passFixtureTable());
     assertSubString("href=\"TestPage?pageHistory\">", results);
     assertSubString("Page History", results);
@@ -263,6 +277,7 @@ public class TestResponderTest {
 
   @Test
   public void simpleXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     doSimpleRun(passFixtureTable());
     xmlChecker.assertFitPassFixtureXmlReportIsCorrect();
@@ -285,6 +300,7 @@ public class TestResponderTest {
 
   @Test
   public void slimXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
@@ -292,6 +308,14 @@ public class TestResponderTest {
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
+  }
+
+  @Test
+  public void slimXmlFormatGivesErrorCountAsExitCode() throws Exception {
+    request.addInput("format", "xml");
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    doSimpleRunWithTags(slimDecisionTable(), "zoo");
+    getXmlFromFileAndDeleteFile();
     assertSubString("Exit-Code: 1", results);
   }
 
@@ -316,6 +340,7 @@ public class TestResponderTest {
 
   @Test
   public void slimScenarioXmlFormat() throws Exception {
+    responder.turnOffChunking();
     request.addInput("format", "xml");
     doSimpleRun(XmlChecker.slimScenarioTable);
     xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
@@ -723,35 +748,6 @@ public class TestResponderTest {
 
       checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "pass", "ConstructionExpectation", null, null, "DT:fitnesse.slim.test.TestSlim");
       checkExpectation(instructionList, 4, "decisionTable_0_10", "1", "3", "pass", "ReturnedValueExpectation", null, null, "wow");
-    }
-
-    private String tableElementToString(Element tableElement) {
-      StringBuilder result = new StringBuilder();
-      result.append("[");
-      rowsToString(tableElement, result);
-      result.append("]");
-      return result.toString();
-    }
-
-    private void rowsToString(Element tableElement, StringBuilder result) {
-      NodeList rows = tableElement.getElementsByTagName("row");
-      for (int row = 0; row < rows.getLength(); row++) {
-        result.append("[");
-        Element rowElement = (Element) rows.item(row);
-        colsToString(result, rowElement);
-        result.append("],");
-      }
-      result.deleteCharAt(result.length() - 1);
-    }
-
-    private void colsToString(StringBuilder result, Element rowElement) {
-      NodeList cols = rowElement.getElementsByTagName("col");
-      for (int col = 0; col < cols.getLength(); col++) {
-        Element colElement = (Element) cols.item(col);
-        result.append(colElement.getFirstChild().getNodeValue());
-        result.append(",");
-      }
-      result.deleteCharAt(result.length() - 1);
     }
 
     public final static String slimScenarioTable =

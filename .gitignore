@@ -19,7 +19,7 @@ lib/*
 .classpath
 .project
 .settings
-*-*.zip
+*.zip
 *.ipr
 fitnesse*.zip
 fitnesse.jar

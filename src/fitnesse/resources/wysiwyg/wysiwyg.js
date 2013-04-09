@@ -81,17 +81,19 @@ Wysiwyg.prototype.initializeEditor = function (d) {
         ' "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n',
         '<html xmlns="http://www.w3.org/1999/xhtml">',
         '<head>',
-        '<base href="',
-        l.protocol,
-        '//',
-        l.host,
-        '/" />',
         '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
     ];
+
+    var base = Wysiwyg.paths.base.replace(/\/\/*$/, "/");
+    if (base) {
+        html.push('<base href="' + base + '" />');
+    } else {
+        html.push('<base href="' + l.protocol + '//' + l.host + '/" />');
+    }
+
     var stylesheets = Wysiwyg.paths.stylesheets;
     if (!stylesheets) {
         // Work around wysiwyg stops with Agilo
-        var base = Wysiwyg.paths.base.replace(/\/*$/, "/");
         stylesheets = [ "editor.css" ];
     }
     var length = stylesheets.length;
@@ -750,89 +752,57 @@ Wysiwyg.prototype.setupEditorEvents = function () {
      * raw data is collected and fed to the wikiToDom parser.
      */
     $(d).on('paste', 'body', function () {
+        function tagNode(node) { while (node.nodeType === 3 /* TextNode */) { node = node.parentNode; } return node; }
+
         // Clone state is change in Firefox, need to extract the fields
-        var position = self.getSelectionRange();
-        position = {
-            sameContainer: position.startContainer === position.endContainer,
-            atStart: position.startOffset === 0,
-            atEnd: position.endOffset === position.endContainer.length
+        var range = self.getSelectionRange();
+
+        var position = {
+            startContainer: range.startContainer,
+            endContainer: range.startContainer === range.endContainer ? range.startContainer.nextSibling : range.endContainer,
+            sameContainer: range.startContainer === range.endContainer,
+            atStart: range.startOffset === 0,
+            atEnd: range.endOffset === range.endContainer.length
         };
-        var html = "<div id='pasteddata'><br id='pasteddata-remove-me'/></div>";
-        self.insertHTML(html);
-        var pastedDataBlock = d.getElementById('pasteddata');
-        self.selectNode(pastedDataBlock.firstChild);
         inPasteAction = true;
 
-        // Post processing:
-        setTimeout(function () {
-            var lines, next, i, c;
-            inPasteAction = false;
-
-            // convert nested .pasteddata divs to br's (safari/chrome)
-            $('div', pastedDataBlock).each(function (i, elem) {
-                if (!/^\s*$/.test($(this).text())) {
-                    $(this).before(this.childNodes);
-                    $(this).before('<br/>');
-                }
-                $(this).remove();
-            });
-            
-            // How to determine if it's sensible html or plain text markup:
-            // markup only contains text nodes and br
-            var isPlainTextData = true
-            $(pastedDataBlock).children().each(function (j, elem) {
-            	if (elem.tagName !== 'BR') {
-            		isPlainTextData = false;
-            	}
-            });
-            
-            if (isPlainTextData) {
-                if (window.console) console.log('plain text', $(pastedDataBlock).html());
-            	lines = $(pastedDataBlock).html().split(/<br\/?>/);
-            } else {
-            	if (window.console) console.log('DOM2WIKI', $(pastedDataBlock).html());
-                lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
+        // Move tables up to the table they're pasted in
+        function flattenTable(td) {
+            var nestedRows = $('tr', td);
+            if (nestedRows.length) {
+                var parentTr = getSelfOrAncestor(td, 'tr');
+                nestedRows.each(function(j, elem) {
+                    $(parentTr).after(elem);
+                    parentTr = $(parentTr).next();
+                });
+                self.spanTableColumns(getSelfOrAncestor(parentTr, 'table'));
             }
 
-            if (position.sameContainer && lines.length === 1 && /^\<.*\>$/.test(lines[0])) {
-                // paste data without markup.
-                if (!position.atStart) {
-                    var prev = $(pastedDataBlock).prev();
-                    $(prev).append($(pastedDataBlock).text());
-                    $(pastedDataBlock).remove();
-                    if (!position.atEnd) {
-                        next = $(prev).next();
-                        c = $(next).contents();
-                        for (i = 0; i < c.length; i++) {
-                            $(c[i]).appendTo(prev);
-                        }
-                        $(next).remove();
-                    }
-                } else if (!position.atEnd) {
-                    next = $(pastedDataBlock).next();
-                    $(next).prepend($(pastedDataBlock).text());
-                    $(pastedDataBlock).remove();
-                }
-            } else {
-            	if (window.console) console.log('wiki text:', lines);
-                var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
-                var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
-                var parentTable = getSelfOrAncestor(pastedDataBlock, 'table');
-                c = $(fragment).children();
-                for (i = 0; i < c.length; i++) {
-                    if (parentTr && c[i].tagName === 'TABLE') {
-                        $(c[i]).find('tr').each(function(j, elem) {
-                            $(parentTr).after(elem);
-                            parentTr = $(parentTr).next();
-                        });
-                    } else {
-                        $(pastedDataBlock).before(c[i]);
-                    }
-                }
-                $(pastedDataBlock).remove();
-                if (parentTable) {
-                    self.spanTableColumns(parentTable);
-                }
+        }
+        // Post processing:
+        setTimeout(function () {
+            inPasteAction = false;
+
+            var parentTd = getSelfOrAncestor(position.startContainer, 'td');
+
+            if (parentTd) {
+                flattenTable(parentTd);
+
+                // Make a one-liner for the content pasted in the table cell
+                var wikiText = self.domToWikitext(parentTd, self.options);
+                var fragment = self.wikitextToOnelinerFragment(wikiText.replace('\n', ' '), self.contentDocument, self.options);
+                while (parentTd.firstChild) { parentTd.removeChild(parentTd.firstChild); }
+                parentTd.appendChild(fragment);
+
+                flattenTable(parentTd);
+
+            } else if (position.sameContainer) {
+                var c = tagNode(position.startContainer);
+                var wikiText = self.domToWikitext(c, { retainNewLines: true });
+                var fragment = self.wikitextToFragment(wikiText, self.contentDocument);
+                c.parentNode.insertBefore(fragment, c);
+                c.parentNode.removeChild(c);
+                // NOTE: At this point the position object is invalid/not useful.
             }
         }, 20);
     });
@@ -1323,7 +1293,7 @@ Wysiwyg.prototype.formatCodeBlock = function () {
     }
 
     var fragment = this.getSelectionFragment();
-    text = this.domToWikitext(fragment, { formatCodeBlock: true }).replace(/\s+$/, "");
+    text = this.domToWikitext(fragment).replace(/\s+$/, "");
 
     var d = this.contentDocument;
     var anonymous = d.createElement("div");
@@ -1720,9 +1690,7 @@ Wysiwyg.prototype.isInlineNode = function (node) {
     Wysiwyg.prototype.isFirstChildInBlockNode = generator("previousSibling", blocks);
 }());
 
-Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, options) {
-    options = options || {};
-
+Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var _linkScheme = this._linkScheme;
     var _quotedString = this._quotedString;
@@ -2381,8 +2349,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
     return fragment;
 };
 
-Wysiwyg.prototype.wikitextToOnelinerFragment = function (wikitext, contentDocument, options) {
-    var source = this.wikitextToFragment(wikitext, contentDocument, options);
+Wysiwyg.prototype.wikitextToOnelinerFragment = function (wikitext, contentDocument) {
+    var source = this.wikitextToFragment(wikitext, contentDocument);
     var fragment = contentDocument.createDocumentFragment();
     this.collectChildNodes(fragment, source.firstChild);
     return fragment;
@@ -2452,7 +2420,7 @@ Wysiwyg.prototype.wikiInlineTags = {
 
 Wysiwyg.prototype.domToWikitext = function (root, options) {
     options = options || {};
-    var formatCodeBlock = !!options.formatCodeBlock;
+    var retainNewLines = !!options.retainNewLines;
 
     var self = this;
     var getTextContent = Wysiwyg.getTextContent;
@@ -2658,7 +2626,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "#text":
                 value = node.nodeValue;
                 if (value) {
-                    if (!inCodeBlock) {
+                    if (!(inCodeBlock || retainNewLines)) {
                         if (value && !self.isInlineNode(node.previousSibling || node.parentNode)) {
                             value = value.replace(/^[ \t\r\n\f\v]+/g, "");
                         }
@@ -2706,7 +2674,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 listDepth++;
                 break;
             case "br":
-                if (inCodeBlock) {
+                if (inCodeBlock || retainNewLines) {
                     _texts.push("\n");
                 } else if (!self.isBogusLineBreak(node)) {
                     _texts.push(" ");
@@ -2794,7 +2762,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         } else {
             switch (name) {
             case "p":
-                if ($(node).hasClass('meta')) {
+                if ($(node).hasClass('meta') || retainNewLines) {
                     _texts.push("\n");
                 } else {
                     _texts.push("\n\n");

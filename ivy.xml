@@ -32,7 +32,8 @@
 		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="standalone->default,default"/>
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.9.5" conf="test->default" />
-		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
+		<dependency org="junit" name="junit" rev="4.11" conf="test->default" />
+		<dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="test->default" />
 		<dependency org="org.mozilla" name="rhino" rev="1.7R4" conf="lesscss->default" />
 	</dependencies>
 </ivy-module>

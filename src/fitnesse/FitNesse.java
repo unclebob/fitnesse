@@ -2,15 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.http.*;
-import fitnesse.socketservice.SocketService;
-import fitnesse.util.MockSocket;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
+
+import fitnesse.http.MockRequestBuilder;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.socketservice.SocketService;
+import fitnesse.util.MockSocket;
 
 public class FitNesse {
   public static final FitNesseVersion VERSION = new FitNesseVersion();
@@ -107,6 +110,7 @@ public class FitNesse {
     Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
+    response.withoutHttpHeaders();
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
     sender.doSending(response);
   }

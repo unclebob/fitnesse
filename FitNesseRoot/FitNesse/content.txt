@@ -1,1 +1,2 @@
 !contents -g
+!path ${java.class.path}

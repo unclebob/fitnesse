@@ -15,6 +15,8 @@ import fitnesse.wiki.PageVersionPruner;
 import util.CommandLine;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class FitNesseMain {
   private static String extraOutput;
@@ -68,10 +70,28 @@ public class FitNesseMain {
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
-    System.out.println("-----Command Output-----");
-    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
-    System.out.println("-----Command Complete-----");
+
+    OutputStream os;
+
+    boolean outputRedirectedToFile = arguments.getOutput() != null;
+
+    if (outputRedirectedToFile) {
+      System.out.println("-----Command Output redirected to " + arguments.getOutput() + "-----");
+      os = new FileOutputStream(arguments.getOutput());
+    } else {
+      System.out.println("-----Command Output-----");
+      os = System.out;
+    }
+
+    fitnesse.executeSingleCommand(arguments.getCommand(), os);
     fitnesse.stop();
+
+    if (outputRedirectedToFile) {
+      os.close();
+    } else {
+      System.out.println("-----Command Complete-----");
+    }
+
     if (shouldExitAfterSingleCommand()) {
       System.exit(TestTextFormatter.finalErrorCount);
     }
@@ -120,7 +140,7 @@ public class FitNesseMain {
 
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
+      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -138,6 +158,8 @@ public class FitNesseMain {
         arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
       if (commandLine.hasOption("c"))
         arguments.setCommand(commandLine.getOptionArgument("c", "command"));
+      if (commandLine.hasOption("b"))
+        arguments.setOutput(commandLine.getOptionArgument("b", "output"));
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
@@ -165,7 +187,7 @@ public class FitNesseMain {
   }
 
   private static void printUsage() {
-    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
+    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoab]");
     System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
       + "}");
@@ -179,6 +201,7 @@ public class FitNesseMain {
       .println("\t-a {user:pwd | user-file-name} enable authentication.");
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
+    System.err.println("\t-b <filename> redirect command output.");
   }
 
   private static void printStartMessage(Arguments args, FitNesseContext context) {

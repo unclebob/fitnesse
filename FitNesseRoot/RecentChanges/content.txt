@@ -1,3 +1,4 @@
+|FitNesse.ReleaseNotes||15:32:24 Sat, Mar 30, 2013|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests||11:46:53 Fri, Feb 15, 2013|
 |FitNesse.UserGuide.SecurityDescription||11:46:04 Fri, Feb 15, 2013|
 |FitNesse.UserGuide.TestDevelopmentEnvironment||11:45:43 Fri, Feb 15, 2013|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||08:44:35 Wed, Feb 03, 2010|
 |FitNesse.SuiteAcceptanceTests.PageFooter||08:43:11 Wed, Feb 03, 2010|
 |FitNesse.UserGuide.SliM.ValueComparisons||19:06:36 Tue, Feb 02, 2010|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching||19:03:43 Tue, Feb 02, 2010|

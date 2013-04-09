@@ -43,6 +43,7 @@ public abstract class Response {
   private int status = 200;
   private HashMap<String, String> headers = new HashMap<String, String>(17);
   private String contentType = Format.HTML.contentType;
+  private boolean withHttpHeaders = true;
 
   public Response(String formatString) {
     Format format;
@@ -94,7 +95,14 @@ public abstract class Response {
     status = s;
   }
 
-  public String makeHttpHeaders() {
+  public void withoutHttpHeaders() {
+    this.withHttpHeaders = false;
+  }
+
+  public final String makeHttpHeaders() {
+    if (!withHttpHeaders)
+      return "";
+    addStandardHeaders();
     StringBuffer text = new StringBuffer();
     if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(

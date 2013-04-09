@@ -96,21 +96,18 @@ public class ResponseTest {
   @Test
   public void shouldNotHaveHeadersIfText() throws Exception {
     Response response = new MockResponse("text");
-    response.addStandardHeaders();
     assertEquals("", response.makeHttpHeaders());
   }
 
   @Test
   public void shouldHaveHeadersIfHtml() throws Exception {
     Response response = new MockResponse("html");
-    response.addStandardHeaders();
     assertTrue(response.makeHttpHeaders().contains("HTTP/1.1 200 OK"));
   }
 
   @Test
   public void shouldHaveHeadersIfXml() throws Exception {
     Response response = new MockResponse("xml");
-    response.addStandardHeaders();
     assertTrue(response.makeHttpHeaders().contains("HTTP/1.1 200 OK"));
   }
 }
