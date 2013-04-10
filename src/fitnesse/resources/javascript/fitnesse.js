@@ -122,7 +122,7 @@ $(document).ready(function() {
 	}
 
     function unfoldErrors(element) {
-        element.parents('.scenario-detail').show().prev().removeClass('closed');
+        element.parents('.scenario-detail').removeClass('closed-detail').prev().removeClass('closed');
         element.parents('.collapsible').removeClass('closed invisible');
         element.parents('tr.hidden').removeClass('hidden');
     }
