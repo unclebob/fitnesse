@@ -425,7 +425,7 @@ public abstract class SlimTable {
 
     @Override
     public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
-      if (exceptionResult.isNoMethodInClassException()) {
+      if (exceptionResult.isNoMethodInClassException() || exceptionResult.isNoInstanceException()) {
         return null;
       }
       table.updateContent(col, row, exceptionResult);
