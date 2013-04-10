@@ -55,8 +55,16 @@ public class ExceptionResult {
   }
 
   public boolean isNoMethodInClassException() {
+    return isExceptionOfType(NO_METHOD_IN_CLASS);
+  }
+
+  public boolean isNoInstanceException() {
+    return isExceptionOfType(NO_INSTANCE);
+  }
+
+  private boolean isExceptionOfType(String type) {
     String exceptionMessage = getExceptionMessage();
-    return exceptionMessage != null && exceptionMessage.contains(NO_METHOD_IN_CLASS);
+    return exceptionMessage != null && exceptionMessage.contains(type);
   }
 
   private String translateExceptionMessage(String exceptionMessage) {
