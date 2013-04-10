@@ -129,7 +129,7 @@ $(document).ready(function() {
     
 	function navigateToCurrentError(){
 		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		$("span.fail, span.error, td.fail, td.error")
+		$("span.fail, span.error, tr.exception, td.fail, td.error")
             .removeClass("selected-error")
 		    .filter(function() {
                 return $(this).data("error-num") == currentErrorNavIndex
@@ -167,7 +167,7 @@ $(document).ready(function() {
 
 function initErrorMetadata(){
 	var i = 1;
-	$("table span.fail, table span.error, table td.fail, table td.error").each(function(){ $(this).data("error-num", i); i++});
+	$("table span.fail, table span.error, table td.fail, table tr.exception, table td.error").not(".scenario, .scenario .fail, .scenario .error, .exception .error").each(function(){ $(this).data("error-num", i); i++ });
 	$("#error-nav-max").text(i - 1);
 }
 
