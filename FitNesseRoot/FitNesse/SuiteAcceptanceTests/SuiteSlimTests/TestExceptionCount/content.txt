@@ -1,0 +1,11 @@
+The amount of exceptions counted should not exceed the number of errors displayed on the screen.
+
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+|lorem ipsum                |
+|foo        |bar       |baz?|
+|dolor      |sit       |amet|
+|consectetur|adipiscing|elit|
+-! |
+| test results for page | TestPage | should contain | 0 right, 0 wrong, 0 ignored, 7 exceptions |

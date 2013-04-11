@@ -89,86 +89,77 @@ $(document).ready(function() {
 				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
 	});
 
-	function getMaxErrorNavIndex(){
-		return parseInt($("#error-nav-max").text());
+
+});
+
+function initErrorMetadata() {
+	var errors = $("table span.fail, table span.error, table td.fail, table tr.exception, table td.error")
+	                    .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
+
+	$("#error-nav-max").text(errors.length);
+
+	function validIndex(index) {
+		return index > 0 && index <= errors.length;
 	}
 
-	function getCurrentErrorNavIndex(){
+	function getCurrentErrorNavIndex() {
 		return parseInt($("#error-nav-text").val());
 	}
 
-	function setCurrentErrorNavIndex(index){
+	function setCurrentErrorNavIndex(index) {
 		$("#error-nav-text").val(index);
 	}
 
-	function incrementErrorNavIndex(){
+	function incrementErrorNavIndex(offset) {
 		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === getMaxErrorNavIndex()){
+		currentErrorNavIndex += offset;
+		if (isNaN(currentErrorNavIndex) || currentErrorNavIndex > errors.length) {
 			currentErrorNavIndex = 1;
-		} else {
-			currentErrorNavIndex += 1;
+	    } else if (currentErrorNavIndex < 1) {
+	        currentErrorNavIndex = errors.length;
 		}
 		setCurrentErrorNavIndex(currentErrorNavIndex);
-	}
-
-	function decrementErrorNavIndex(){
-		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		if( isNaN(currentErrorNavIndex) || currentErrorNavIndex === 1){
-			currentErrorNavIndex = getMaxErrorNavIndex();
-		} else {
-			currentErrorNavIndex -= 1;
-		}
-		setCurrentErrorNavIndex(currentErrorNavIndex);
+		navigateToCurrentError();
 	}
 
     function unfoldErrors(element) {
-        element.parents('.scenario-detail').show().prev().removeClass('closed');
+        element.parents('.scenario-detail').removeClass('closed-detail').prev().removeClass('closed');
         element.parents('.collapsible').removeClass('closed invisible');
         element.parents('tr.hidden').removeClass('hidden');
     }
-    
-	function navigateToCurrentError(){
+
+    var highlight;
+	function navigateToCurrentError() {
 		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		$("span.fail, span.error, td.fail, td.error")
-            .removeClass("selected-error")
-		    .filter(function() {
-                return $(this).data("error-num") == currentErrorNavIndex
-            }).each(function(){
-				unfoldErrors($(this)); 
-				$(this).addClass("selected-error");
-				$('html, body').animate({
-     				scrollTop: $(this).offset().top - 200
- 				}, 500);
-			});
+
+        if (highlight) {
+             highlight.removeClass("selected-error");
+        }
+
+		highlight = $(errors[currentErrorNavIndex - 1]);
+        unfoldErrors(highlight);
+        highlight.addClass("selected-error");
+        $('html, body').animate({
+            scrollTop: highlight.offset().top - 200
+        }, 500);
 	}
 
-	$("#error-nav-prev").click(function(){
-		decrementErrorNavIndex();
-		navigateToCurrentError();
+	$("#error-nav-prev").click(function () {
+		incrementErrorNavIndex(-1);
 	});
 
-	$("#error-nav-next").click(function(){
-		incrementErrorNavIndex();
-		navigateToCurrentError();
+	$("#error-nav-next").click(function () {
+		incrementErrorNavIndex(1);
 	});
 
-	$("#error-nav-text").change(function(){
-		if(getCurrentErrorNavIndex() > 0 && getCurrentErrorNavIndex() <= getMaxErrorNavIndex()){
-			navigateToCurrentError();
-		}
+	$("#error-nav-text").change(function (){
+	    incrementErrorNavIndex(0);
 	});
-
 
     /**
      * Open scenario's and collapsed sections which contain failed or errorous tests
      */
     unfoldErrors($('.fail,.error'));
-});
-
-function initErrorMetadata(){
-	var i = 1;
-	$("table span.fail, table span.error, table td.fail, table td.error").each(function(){ $(this).data("error-num", i); i++});
-	$("#error-nav-max").text(i - 1);
 }
 
 
