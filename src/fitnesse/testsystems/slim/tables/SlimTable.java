@@ -129,7 +129,7 @@ public abstract class SlimTable {
     int columnCount = table.getColumnCountInRow(row);
     List<String> arguments = new ArrayList<String>();
     for (int col = startingColumn; col < columnCount; col++) {
-      arguments.add(table.getUnescapedCellContents(col, row));
+      arguments.add(table.getCellContents(col, row));
     }
     return arguments.toArray(new String[arguments.size()]);
   }
@@ -466,7 +466,7 @@ public abstract class SlimTable {
 
   class ReturnedValueExpectation extends RowExpectation {
     public ReturnedValueExpectation(int col, int row) {
-      super(col, row, table.getUnescapedCellContents(col, row));
+      super(col, row, table.getCellContents(col, row));
     }
 
     @Override

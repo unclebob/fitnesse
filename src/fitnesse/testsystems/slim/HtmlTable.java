@@ -44,10 +44,6 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
-  public String getUnescapedCellContents(int col, int row) {
-    return Utils.unescapeHTML(getCellContents(col, row));
-  }
-
   public int getRowCount() {
     return rows.size();
   }
@@ -278,13 +274,9 @@ public class HtmlTable implements Table {
     }
 
     public String getContent() {
-      return Utils.unescapeHTML(getEscapedContent());
-    }
-
-    public String getEscapedContent() {
       String unescaped = columnNode.getChildrenHTML();
       //Some browsers need &nbsp; inside an empty table cell, so we remove it here.
-      return "&nbsp;".equals(unescaped) ? "" : unescaped;
+      return Utils.unescapeHTML("&nbsp;".equals(unescaped) ? "" : unescaped);
     }
 
     private void setContent(String s) {

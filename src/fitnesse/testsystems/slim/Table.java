@@ -2,16 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import java.util.List;
+
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
-import java.util.List;
-
 public interface Table {
   String getCellContents(int col, int row);
-  // FixMe: -AJM- Can I remove this without functional change???
-  String getUnescapedCellContents(int col, int row);
 
   int getRowCount();
 
