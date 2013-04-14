@@ -58,8 +58,7 @@ public class HtmlTable implements Table {
 
   public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
-    // TODO: need escaping here?
-    cell.setContent(Utils.escapeHTML(contents));
+    cell.setContent(contents);
   }
 
   public List<List<String>> asList() {
@@ -289,7 +288,6 @@ public class HtmlTable implements Table {
     }
 
     private void setContent(String s) {
-      // No HTML escaping here.
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);
