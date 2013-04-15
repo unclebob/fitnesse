@@ -19,7 +19,7 @@ function doSilentRequest(url)
  *  Scenario's and Exceptions (after test execution)
  */
 $(document).on("click", "article tr.scenario td, article tr.exception td", function () {
-	$(this).parent().toggleClass('closed').next().toggleClass("closed-detail");
+    $(this).parent().toggleClass('closed').nextUntil(":not(.exception-detail, .scenario-detail)").toggleClass("closed-detail");
 });
 
 /**

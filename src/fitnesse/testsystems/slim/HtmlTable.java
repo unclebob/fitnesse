@@ -44,10 +44,6 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
-  public String getUnescapedCellContents(int col, int row) {
-    return Utils.unescapeHTML(getCellContents(col, row));
-  }
-
   public int getRowCount() {
     return rows.size();
   }
@@ -58,8 +54,7 @@ public class HtmlTable implements Table {
 
   public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
-    // TODO: need escaping here?
-    cell.setContent(Utils.escapeHTML(contents));
+    cell.setContent(contents);
   }
 
   public List<List<String>> asList() {
@@ -265,7 +260,7 @@ public class HtmlTable implements Table {
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
-      originalContent = Utils.unescapeHTML(columnNode.getChildrenHTML());
+      originalContent = columnNode.getChildrenHTML();
     }
 
     public Cell(String contents) {
@@ -279,17 +274,12 @@ public class HtmlTable implements Table {
     }
 
     public String getContent() {
-      return Utils.unescapeHTML(getEscapedContent());
-    }
-
-    public String getEscapedContent() {
       String unescaped = columnNode.getChildrenHTML();
       //Some browsers need &nbsp; inside an empty table cell, so we remove it here.
-      return "&nbsp;".equals(unescaped) ? "" : unescaped;
+      return Utils.unescapeHTML("&nbsp;".equals(unescaped) ? "" : unescaped);
     }
 
     private void setContent(String s) {
-      // No HTML escaping here.
       TextNode textNode = new TextNode(s);
       NodeList nodeList = new NodeList(textNode);
       columnNode.setChildren(nodeList);

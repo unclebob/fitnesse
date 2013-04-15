@@ -6,7 +6,7 @@ This simple way to create a password file is to list each username:password pair
 Donatello:bo
 Rafael:sai
 Michaelangelo:nunchaku}}}
-4 users are defined here.  Leonardo who's password is Katana, Donatello who's password is bo, Rafael who's password is sai, and Michaelangelo who's password is nunchaka.
+4 users are defined here.  Leonardo whose password is Katana, Donatello whose password is bo, Rafael whose password is sai, and Michaelangelo whose password is nunchaka.
 
 !3 Hashed Passwords
 A password hashing program, similar to unix's '''passwd''' command, is provided with FitNesse. The Password program has the follwoing usage:

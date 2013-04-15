@@ -85,3 +85,12 @@ There's not much more to it than that.
 
 !4 Well, yes there is.
 But for that you should look at SymbolsInTables and ValueComparisons
+
+!4 Exceptions
+
+When exceptions occur in a decision table, they're displayed in line.
+
+|decision table all done wrong|
+| foo     | bar     | baz?    |
+| -       |         | /       |
+|         | *       |         |
