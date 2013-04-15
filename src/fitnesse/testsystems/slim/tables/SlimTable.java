@@ -57,7 +57,6 @@ public abstract class SlimTable {
 
     Table parentTable = getTable();
     Table childTable = slimtable.getTable();
-    //childTable.setName(slimtable.tableName);
     parentTable.appendChildTable(row, childTable);
   }
 
@@ -140,11 +139,6 @@ public abstract class SlimTable {
 
   protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
-  }
-
-  @Deprecated
-  public boolean shouldIgnoreException(String resultKey, String resultString) {
-    return false;
   }
 
   protected String ifSymbolAssignment(int col, int row) {
@@ -282,9 +276,6 @@ public abstract class SlimTable {
       this.originalContent = originalContent;
     }
 
-    /* (non-Javadoc)
-     * @see fitnesse.testsystems.slim.tables.Expectation#evaluateExpectation(java.util.Map)
-     */
     @Override
     public TestResult evaluateExpectation(Object returnValue) {
       TestResult testResult;
@@ -456,7 +447,6 @@ public abstract class SlimTable {
       this.symbolName = symbolName;
     }
 
-    // TODO: make something useful for substitution
     @Override
     protected TestResult createEvaluationMessage(String actual, String expected) {
       setSymbol(symbolName, actual);

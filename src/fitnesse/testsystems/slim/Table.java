@@ -29,10 +29,10 @@ public interface Table {
 
   void updateContent(int col, int row, ExceptionResult exceptionResult);
 
-  public Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
+  Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
 
   // Mainly for IDE navigation
-  public String toString();
+  String toString();
 
   interface CellContentSubstitution {
     String substitute(int col, int row, String content) throws SyntaxError;
