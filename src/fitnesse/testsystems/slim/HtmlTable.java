@@ -260,7 +260,7 @@ public class HtmlTable implements Table {
 
     public Cell(TableColumn tableColumn) {
       columnNode = tableColumn;
-      originalContent = Utils.unescapeHTML(columnNode.getChildrenHTML());
+      originalContent = columnNode.getChildrenHTML();
     }
 
     public Cell(String contents) {
