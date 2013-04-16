@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,14 +45,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     testProperties = new Properties();
     testProvider = new SymbolProvider(new SymbolType[] {});
     factory = new ComponentFactory(testProperties);
-  }
-
-  @Override
-  public void tearDown() throws Exception {
-    final File file = new File(ComponentFactory.PROPERTIES_FILE);
-    FileOutputStream out = new FileOutputStream(file);
-    out.write("".getBytes());
-    out.close();
   }
 
   public void testAddPlugins() throws Exception {
