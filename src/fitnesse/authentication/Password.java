@@ -6,8 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Password {
-  public static String defaultFile = "passwords.txt";
-  public static String defaultCipher = "fitnesse.authentication.HashingCipher";
+  public static final String defaultFile = "passwords.txt";
+  public static final String defaultCipher = "fitnesse.authentication.HashingCipher";
 
   private static BufferedReader input;
 

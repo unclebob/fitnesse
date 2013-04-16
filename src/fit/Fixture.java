@@ -32,7 +32,7 @@ public class Fixture {
 
   protected String[] args;
 
-  private static Map<String, Object> symbols = new HashMap<String, Object>();
+  private static final Map<String, Object> symbols = new HashMap<String, Object>();
   private static boolean forcedAbort = false;  //Semaphores
 
   public static void setForcedAbort(boolean state) {

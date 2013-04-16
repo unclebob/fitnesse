@@ -8,7 +8,7 @@ import util.Maybe;
 import java.util.HashMap;
 
 public class ParsingPage {
-    private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
+    private static final SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
         Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
         SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
         SymbolType.ClosePreformat, SymbolType.Text
