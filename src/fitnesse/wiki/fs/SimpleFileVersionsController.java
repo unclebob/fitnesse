@@ -130,7 +130,9 @@ public class SimpleFileVersionsController implements VersionsController {
     if (fileSystem.exists(path)) {
       try {
         long lastModifiedTime = getLastModifiedTime(page);
-        attemptToReadPropertiesFile(path, data, lastModifiedTime);
+        String propertiesXml = fileSystem.getContent(path);
+        final WikiPageProperties props = parsePropertiesXml(propertiesXml, lastModifiedTime);
+        data.setProperties(props);
       } catch (final Exception e) {
         System.err.println("Could not read properties file:" + path);
         e.printStackTrace();
@@ -138,18 +140,16 @@ public class SimpleFileVersionsController implements VersionsController {
     }
   }
 
-  private void attemptToReadPropertiesFile(String file, PageData data,
-                                           long lastModifiedTime) throws IOException {
-    String propertiesXml = fileSystem.getContent(file);
-    final WikiPageProperties props = new WikiPageProperties();
-    props.loadFromXml(propertiesXml);
-    props.setLastModificationTime(new Date(lastModifiedTime));
-    data.setProperties(props);
-  }
-
   private long getLastModifiedTime(final FileSystemPage page) {
     final String path = page.getFileSystemPath() + "/" + contentFilename;
     return fileSystem.lastModified(path);
+  }
+
+  public static WikiPageProperties parsePropertiesXml(String propertiesXml, long lastModifiedTime) {
+    final WikiPageProperties props = new WikiPageProperties();
+    props.loadFromXml(propertiesXml);
+    props.setLastModificationTime(new Date(lastModifiedTime));
+    return props;
   }
 
 }

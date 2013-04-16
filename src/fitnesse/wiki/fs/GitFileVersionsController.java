@@ -1,5 +1,9 @@
 package fitnesse.wiki.fs;
 
+import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
+import static fitnesse.wiki.fs.SimpleFileVersionsController.parsePropertiesXml;
+import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 /**
  * This class requires jGit to be available.
@@ -28,7 +33,7 @@ public class GitFileVersionsController implements VersionsController {
   private int historyDepth;
 
   public GitFileVersionsController() {
-    // Fix on Disk file system, since that's what ZipFileVersionsController can deal with.
+    // Fix on Disk file system, since that's what GitFileVersionsController can deal with.
     persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
@@ -39,7 +44,40 @@ public class GitFileVersionsController implements VersionsController {
 
   @Override
   public PageData getRevisionData(FileSystemPage page, String label) {
-    return persistence.getRevisionData(page, null);
+    // Workaround for CachingPage
+    if (label == null) {
+      return persistence.getRevisionData(page, null);
+    }
+    String content, propertiesXml;
+    RevCommit revCommit;
+    Repository repository = getRepository(page);
+
+    try {
+      String fileSystemPath = getPath(page, repository);
+      ObjectId rev = repository.resolve(label);
+      RevWalk walk = new RevWalk(repository);
+      revCommit = walk.parseCommit(rev);
+
+      content = getRepositoryContent(repository, revCommit, fileSystemPath + "/" + contentFilename);
+      propertiesXml = getRepositoryContent(repository, revCommit, fileSystemPath + "/" + propertiesFilename);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to get data for revision " + label, e);
+    }
+
+    final PageData pageData = new PageData(page);
+    pageData.setContent(content);
+    pageData.setProperties(parsePropertiesXml(propertiesXml, revCommit.getAuthorIdent().getWhen().getTime()));
+    return pageData;
+  }
+
+  private String getRepositoryContent(Repository repository, RevCommit revCommit, String fileName) throws IOException {
+    TreeWalk treewalk = TreeWalk.forPath(repository, fileName, revCommit.getTree());
+
+    if(treewalk != null) {
+      return new String(repository.open(treewalk.getObjectId(0)).getBytes());
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -50,8 +88,8 @@ public class GitFileVersionsController implements VersionsController {
 
     try {
       Iterable<RevCommit> log = git.log()
-              .addPath(fileSystemPath + "/" + SimpleFileVersionsController.contentFilename)
-              .addPath(fileSystemPath + "/" + SimpleFileVersionsController.propertiesFilename)
+              .addPath(fileSystemPath + "/" + contentFilename)
+              .addPath(fileSystemPath + "/" + propertiesFilename)
               .setMaxCount(historyDepth)
               .call();
       List<VersionInfo> versions = new ArrayList<VersionInfo>(historyDepth);
@@ -72,8 +110,8 @@ public class GitFileVersionsController implements VersionsController {
     String fileSystemPath = getPath(page, repository);
     try {
       git.add()
-              .addFilepattern(fileSystemPath + "/" + SimpleFileVersionsController.contentFilename)
-              .addFilepattern(fileSystemPath + "/" + SimpleFileVersionsController.propertiesFilename)
+              .addFilepattern(fileSystemPath + "/" + contentFilename)
+              .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
       commit(git, String.format("FitNesse page %s updated.", page.getName()));
     } catch (Exception e) {
@@ -94,8 +132,8 @@ public class GitFileVersionsController implements VersionsController {
     String fileSystemPath = getPath(page, repository);
     try {
       git.rm()
-              .addFilepattern(fileSystemPath + "/" + SimpleFileVersionsController.contentFilename)
-              .addFilepattern(fileSystemPath + "/" + SimpleFileVersionsController.propertiesFilename)
+              .addFilepattern(fileSystemPath + "/" + contentFilename)
+              .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
       commit(git, String.format("FitNesse page %s deleted.", page.getName()));
     } catch (Exception e) {

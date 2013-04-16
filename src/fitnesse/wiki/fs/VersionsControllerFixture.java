@@ -1,12 +1,16 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -52,7 +56,15 @@ public class VersionsControllerFixture {
   }
 
   public int historySize() {
-    return lastUsedPage.getVersions().size();
+    Collection<VersionInfo> versions = lastUsedPage.getVersions();
+    System.out.println(versions);
+    return versions.size();
+  }
+
+  public String contentForRevision(int n) {
+    List<VersionInfo> versions = new ArrayList<VersionInfo>(lastUsedPage.getVersions());
+    PageData data = lastUsedPage.getDataVersion(versions.get(versions.size() - 1 - n).getName());
+    return data.getContent();
   }
 
   public boolean initialiseGitRepository() throws GitAPIException {

@@ -11,3 +11,6 @@
 
 !| scenario | When the page is deleted |
 | delete page | TestPage |
+
+!| scenario | Then the first version can be retrieved |
+| check | content for revision | 0 | test data |
