@@ -23,7 +23,7 @@ public class FileSystemPageTest {
   private FileSystemPage root;
   private PageCrawler crawler;
 
-  private static List<String> cmMethodCalls = new ArrayList<String>();
+  private final static List<String> cmMethodCalls = new ArrayList<String>();
 
   @BeforeClass
   public static void initialize() {

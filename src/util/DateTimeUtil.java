@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeUtil {
-  private static String dateFormatString = "MM/dd/yyyy HH:mm:ss";
+  private final static String dateFormatString = "MM/dd/yyyy HH:mm:ss";
 
   public static long getTimeFromString(String time) {
     SimpleDateFormat format = new SimpleDateFormat(dateFormatString);

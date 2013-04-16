@@ -173,7 +173,7 @@ public abstract class Response {
     return getReasonPhrase(status);
   }
 
-  private static Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {
+  private static final Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {
     private static final long serialVersionUID = 1L;
 
     {

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GracefulNamer {
-  private static Pattern disgracefulNamePattern = Pattern
+  private static final Pattern disgracefulNamePattern = Pattern
     .compile("\\w(?:[.]|\\w)*[^.]");
 
   public static boolean isGracefulName(String fixtureName) {

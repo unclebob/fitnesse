@@ -13,8 +13,8 @@ import fitnesse.wiki.WikiPage;
 
 public class AttributeWikiPageFinder extends WikiPageFinder {
 
-  private static List<String> setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
-  private static List<String> tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
+  private static final List<String> setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
+  private static final List<String> tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
 
   private List<PageType> requestedPageTypes;
   private Map<String, Boolean> attributes;

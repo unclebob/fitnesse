@@ -10,7 +10,7 @@ import fitnesse.components.SocketDealer;
 import fitnesse.http.Request;
 
 public class FitSocketReceiver {
-  public static int DEFAULT_SOCKET = 9123;
+  public static final int DEFAULT_SOCKET = 9123;
 
   public ServerSocket serverSocket;
   public Socket socket;

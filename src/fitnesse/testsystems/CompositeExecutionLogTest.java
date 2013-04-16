@@ -16,7 +16,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
 public class CompositeExecutionLogTest {
-  private static String ErrorLogName = ExecutionLog.ErrorLogName;
+  private static final String ErrorLogName = ExecutionLog.ErrorLogName;
   private WikiPage testPage;
   private MockCommandRunner runner;
   private CompositeExecutionLog log;
