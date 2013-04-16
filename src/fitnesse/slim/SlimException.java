@@ -83,23 +83,30 @@ public class SlimException extends Exception {
     } else {
       sb.append(SlimServer.EXCEPTION_TAG);
     }
-    if (this.prettyPrint)
+    if (this.prettyPrint) {
       sb.append(PRETTY_PRINT_TAG_START);
+    }
 
-    if (tag != null && tag.length() > 0)
+    if (tag != null && tag.length() > 0) {
       sb.append(tag).append(" ");
+    }
 
     String msg = getMessage();
     if (msg != null && msg.length() > 0) {
       sb.append(msg);
     }
-    if (this.prettyPrint)
+    if (this.prettyPrint) {
       sb.append(PRETTY_PRINT_TAG_END);
+    }
 
+    StackTraceEnricher enricher = new StackTraceEnricher();
     if (getCause() != null) {
-      for (StackTraceElement element : getCause().getStackTrace()) {
-        sb.append("\n\tat ").append(element.toString());
+      sb.append(enricher.getStackTraceAsString(getCause()));
+    } else {
+      if (this.getStackTrace() == null || this.getStackTrace().length == 0) {
+        this.fillInStackTrace();
       }
+      sb.append(enricher.getStackTraceAsString(this));
     }
 
     return sb.toString();
