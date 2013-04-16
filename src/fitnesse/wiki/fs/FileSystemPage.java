@@ -42,10 +42,10 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   public void removeChildPage(final String name) {
-    super.removeChildPage(name);
     WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
       versionsController.delete((FileSystemPage) childPage);
+      super.removeChildPage(name);
     }
   }
 
