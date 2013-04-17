@@ -2,6 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import static util.ListUtility.list;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
@@ -9,13 +16,6 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.TestResult;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import static util.ListUtility.list;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
@@ -237,7 +237,7 @@ public class ScriptTable extends SlimTable {
     }
 
     public void extractNextArgument() {
-      arguments.add(table.getUnescapedCellContents(argumentColumn, row));
+      arguments.add(table.getCellContents(argumentColumn, row));
       String argumentKeyword = table.getCellContents(argumentColumn - 1, row);
       boolean argumentIsSequential = invokesSequentialArgumentProcessing(argumentKeyword);
       sequentialArguments = (sequentialArguments || argumentIsSequential);

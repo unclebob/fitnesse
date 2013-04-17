@@ -15,9 +15,9 @@ import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
 
 public abstract class Binding {
-  private static Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
-  private static Pattern methodPattern = Pattern.compile("(.+)(?:\\(\\)|\\?|!)");
-  private static Pattern fieldPattern = Pattern.compile("=?([^=]+)=?");
+  private static final Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
+  private static final Pattern methodPattern = Pattern.compile("(.+)(?:\\(\\)|\\?|!)");
+  private static final Pattern fieldPattern = Pattern.compile("=?([^=]+)=?");
 
   public TypeAdapter adapter;
 

@@ -15,7 +15,7 @@ public class XmlWriterTest extends RegexTestCase {
   private ByteArrayOutputStream output;
   private Document doc;
 
-  static String sampleXml = null;
+  static final String sampleXml;
 
   static {
     ByteArrayOutputStream out = new ByteArrayOutputStream();

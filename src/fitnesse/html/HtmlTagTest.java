@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class HtmlTagTest {
-  public static String endl = HtmlElement.endl;
+  public static final String endl = HtmlElement.endl;
   private HtmlTag tag;
 
   @Before

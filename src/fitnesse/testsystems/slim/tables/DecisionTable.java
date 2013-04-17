@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
@@ -108,7 +108,7 @@ public class DecisionTable extends SlimTable {
       for (String var : vars.keySet()) {
         String disgracedVar = Disgracer.disgraceMethodName(var);
         int col = vars.get(var);
-        String valueToSet = table.getUnescapedCellContents(col, row);
+        String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
       return scenarioArguments;
@@ -178,7 +178,7 @@ public class DecisionTable extends SlimTable {
       List<Assertion> assertions = new ArrayList<Assertion>();
       for (String var : varsLeftToRight) {
         int col = vars.get(var);
-        String valueToSet = table.getUnescapedCellContents(col, row);
+        String valueToSet = table.getCellContents(col, row);
         Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
         assertions.add(makeAssertion(setInstruction,
                 new VoidReturnExpectation(col, row)));

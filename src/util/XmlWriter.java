@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 public class XmlWriter {
-  private static String endl = System.getProperty("line.separator");
+  private static final String endl = System.getProperty("line.separator");
 
   private Writer writer;
   private boolean isNewLine;
