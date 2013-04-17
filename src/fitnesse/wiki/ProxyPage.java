@@ -6,25 +6,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import fitnesse.http.ResponseParser;
-import util.Clock;
+import util.TimeMeasurement;
 
-public class ProxyPage extends CachingPage implements Serializable {
+public class ProxyPage extends BaseWikiPage implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public static int retrievalCount = 0;
+  public static int cacheTime = 3000;
 
   private String host;
   private int hostPort;
   private WikiPagePath realPath;
   public ResponseParser parser;
-  private long lastLoadChildrenTime = 0;
+  private Map<String, WikiPage> children = new HashMap<String, WikiPage>();
+  private transient SoftReference<PageData> cachedData;
+  private transient TimeMeasurement cachedTime;
 
   public ProxyPage(WikiPage original) {
     super(original.getName(), null, null);
@@ -58,28 +65,49 @@ public class ProxyPage extends CachingPage implements Serializable {
       throw new RuntimeException(e);
     }
     ProxyPage page = (ProxyPage) getObjectFromUrl(url);
-    page.setTransientValues(url.getHost(), Clock.currentTimeInMillis());
     int port = url.getPort();
-    page.setHostPort((port == -1) ? 80 : port);
-    page.lastLoadChildrenTime = Clock.currentTimeInMillis();
+    page.setHostPort(url.getHost(), (port == -1) ? 80 : port);
     return page;
   }
 
-  protected WikiPage createChildPage(String name) {
+  public WikiPage addChildPage(String name) {
     WikiPagePath childPath = realPath.copy().addNameToEnd(name);
-    return new ProxyPage(name, this, host, getHostPort(), childPath);
+    WikiPage page = new ProxyPage(name, this, host, getHostPort(), childPath);
+    children.put(name, page);
+    return page;
   }
 
-  protected void loadChildren() {
-    if (cacheTime <= (Clock.currentTimeInMillis() - lastLoadChildrenTime)) {
-      ProxyPage page = retrievePage(getThisPageUrl());
-      children.clear();
-      for (Iterator<?> iterator = page.children.values().iterator(); iterator.hasNext();) {
-        ProxyPage child = (ProxyPage) iterator.next();
-        child.parent = this;
-        children.put(child.getName(), child);
-      }
-      lastLoadChildrenTime = Clock.currentTimeInMillis();
+  @Override
+  public List<WikiPage> getNormalChildren() {
+    loadChildren();
+    return getCachedChildren();
+  }
+
+  public List<WikiPage> getCachedChildren() {
+    return new ArrayList<WikiPage>(children.values());
+  }
+
+  @Override
+  public WikiPage getNormalChildPage(String name) {
+    if (hasChildPage(name))
+      return children.get(name);
+    else
+      return null;
+  }
+
+  private void loadChildren() {
+    if (cachedDataExpired()) {
+      forceLoadChildren();
+    }
+  }
+
+  private void forceLoadChildren() {
+    ProxyPage page = retrievePage(getThisPageUrl());
+    children.clear();
+    for (Iterator<?> iterator = page.children.values().iterator(); iterator.hasNext();) {
+      ProxyPage child = (ProxyPage) iterator.next();
+      child.parent = this;
+      children.put(child.getName(), child);
     }
   }
 
@@ -95,9 +123,15 @@ public class ProxyPage extends CachingPage implements Serializable {
     if (children.containsKey(pageName))
       return true;
     else {
-      loadChildren();
+      forceLoadChildren();
       return children.containsKey(pageName);
     }
+  }
+
+  @Override
+  public VersionInfo commit(PageData data) {
+    setCachedData(makePageData());
+    return null;
   }
 
   @Override
@@ -105,33 +139,64 @@ public class ProxyPage extends CachingPage implements Serializable {
     return (Collection<VersionInfo>) getObjectFromUrl(getThisPageUrl() + "?responder=proxy&type=versions");
   }
 
-  public void setTransientValues(String host, long lastLoadTime) {
-    this.host = host;
-    lastLoadChildrenTime = lastLoadTime;
-    for (Iterator<WikiPage> i = children.values().iterator(); i.hasNext();) {
-      ProxyPage page = (ProxyPage) i.next();
-      page.setTransientValues(host, lastLoadTime);
+  @Override
+  public void removeChildPage(String name) {
+    if (children.containsKey(name))
+      children.remove(name);
+  }
+
+  private void setCachedData(PageData data) {
+    if (cachedData != null)
+      cachedData.clear();
+    cachedData = new SoftReference<PageData>(data);
+    cachedTime = new TimeMeasurement().start();
+  }
+
+  public PageData getData() {
+    if (cachedDataExpired()) {
+      reloadCache();
     }
+    return new PageData(getCachedData());
+  }
+
+  public ReadOnlyPageData readOnlyData() {
+    if (getCachedData() == null) {
+      reloadCache();
+    }
+    return getCachedData();
+  }
+
+  private boolean cachedDataExpired() {
+    return getCachedData() == null || cachedTime.elapsed() >= cacheTime;
+  }
+
+  public PageData getCachedData() {
+    if (cachedData != null)
+      return cachedData.get();
+    else
+      return null;
+  }
+
+  private void reloadCache() {
+    PageData data = makePageData();
+    setCachedData(data);
   }
 
   public String getHost() {
     return host;
   }
 
-  public void setHostPort(int port) {
-    hostPort = port;
+  public void setHostPort(String host, int port) {
+    this.host = host;
+    this.hostPort = port;
     for (Iterator<WikiPage> i = children.values().iterator(); i.hasNext();) {
       ProxyPage page = (ProxyPage) i.next();
-      page.setHostPort(port);
+      page.setHostPort(host, port);
     }
   }
 
   public int getHostPort() {
     return hostPort;
-  }
-
-  public PageData getMeat() {
-    return getMeat(null);
   }
 
   public PageData getMeat(String versionName) {
@@ -181,7 +246,7 @@ public class ProxyPage extends CachingPage implements Serializable {
   }
 
   protected PageData makePageData() {
-    return getMeat();
+    return getMeat(null);
   }
 
   public PageData getDataVersion(String versionName) {

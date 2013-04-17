@@ -6,11 +6,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import fitnesse.wiki.mem.InMemoryPage;
-import util.Clock;
-
-import junit.framework.TestCase;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import junit.framework.TestCase;
 
 public class ProxyPageTest extends TestCase {
   private WikiPage root;
@@ -35,8 +33,7 @@ public class ProxyPageTest extends TestCase {
     FitNesseUtil.startFitnesse(root);
 
     proxy = new ProxyPage(original);
-    proxy.setTransientValues("localhost", Clock.currentTimeInMillis());
-    proxy.setHostPort(FitNesseUtil.PORT);
+    proxy.setHostPort("localhost", FitNesseUtil.PORT);
   }
 
   public void tearDown() throws Exception {
@@ -73,8 +70,7 @@ public class ProxyPageTest extends TestCase {
 
   public void testSetHostAndPort() throws Exception {
     List<?> children = proxy.getChildren();
-    proxy.setTransientValues("a.new.host", Clock.currentTimeInMillis());
-    proxy.setHostPort(123);
+    proxy.setHostPort("a.new.host", 123);
 
     assertEquals("a.new.host", proxy.getHost());
     assertEquals(123, proxy.getHostPort());
@@ -91,11 +87,12 @@ public class ProxyPageTest extends TestCase {
     assertNull(child1Proxy.getChildPage("ChildOneChild"));
 
     crawler.addPage(child1, PathParser.parse("ChildOneChild"), "child one child");
+
     assertNotNull(child1Proxy.getChildPage("ChildOneChild"));
   }
 
   public void testHasSubpageCallsLoadChildrenNoMoreThanNeeded() throws Exception {
-    proxy.loadChildren();
+    proxy.getNormalChildren();
     ProxyPage.retrievalCount = 0;
     proxy.hasChildPage("ChildTwo");
     assertEquals(0, ProxyPage.retrievalCount);
