@@ -21,7 +21,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RecentChanges {
-  private static final String RECENT_CHANGES = "RecentChanges";
+  public static final String RECENT_CHANGES = "RecentChanges";
 
   private static SimpleDateFormat makeDateFormat() {
     //SimpleDateFormat is not thread safe, so we need to create each instance independently.
@@ -59,6 +59,7 @@ public class RecentChanges {
     String content = convertLinesToWikiText(lines);
     recentChangesdata.setContent(content);
     recentChanges.commit(recentChangesdata);
+
   }
 
   private static String resource(PageData data) {
