@@ -159,14 +159,6 @@ public class FileSystemPageTest {
   }
 
   @Test
-  public void testCachedInfo() throws Exception {
-    WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-    WikiPage child1 = crawler.addPage(page1, PathParser.parse("ChildOne"), "child one");
-    WikiPage child = page1.getChildPage("ChildOne");
-    assertSame(child1, child);
-  }
-
-  @Test
   public void testCanFindExistingPages() throws Exception {
     crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
     WikiPage newRoot = new FileSystemPage(defaultPath, "RooT");
