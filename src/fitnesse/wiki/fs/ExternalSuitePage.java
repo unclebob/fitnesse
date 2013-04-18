@@ -5,14 +5,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wiki.CachingPage;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
-public class ExternalSuitePage extends CachingPage {
+public class ExternalSuitePage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
   public static final String HTML = ".html";
 
@@ -29,8 +30,28 @@ public class ExternalSuitePage extends CachingPage {
     return path;
   }
 
+  @Override
+  public WikiPage addChildPage(String name) {
+    return null;
+  }
+
+  @Override
   public boolean hasChildPage(String pageName) {
-    return false;
+    return getNormalChildPage(pageName) != null;
+  }
+
+  @Override
+  public void removeChildPage(String name) {
+  }
+
+  @Override
+  public PageData getData() {
+    return makePageData();
+  }
+
+  @Override
+  public ReadOnlyPageData readOnlyData() {
+    return getData();
   }
 
   @Override
@@ -38,24 +59,32 @@ public class ExternalSuitePage extends CachingPage {
     return Collections.emptySet();
   }
 
+  @Override
   public PageData getDataVersion(String versionName) {
     return null;
   }
 
-  protected WikiPage createChildPage(String name) {
+  @Override
+  public VersionInfo commit(PageData data) {
     return null;
   }
 
   @Override
-  protected void loadChildren() {
-    for (WikiPage child : findChildren()) {
-      if (!children.containsKey(child.getName())) {
-        children.put(child.getName(), child);
-      }
-    }
+  protected List<WikiPage> getNormalChildren() {
+    return findChildren();
   }
 
-  protected List<WikiPage> findChildren() {
+  @Override
+  protected WikiPage getNormalChildPage(String name) {
+    for (WikiPage child : findChildren()) {
+      if (child.getName().equals(name)) {
+        return child;
+      }
+    }
+    return null;
+  }
+
+  private List<WikiPage> findChildren() {
     List<WikiPage> children = new ArrayList<WikiPage>();
     for (String child : fileSystem.list(getFileSystemPath())) {
       String childPath = getFileSystemPath() + "/" + child;
@@ -78,8 +107,7 @@ public class ExternalSuitePage extends CachingPage {
     return false;
   }
 
-
-  protected PageData makePageData() {
+  private PageData makePageData() {
     PageData pageData = new PageData(this);
     pageData.setContent("!contents");
     pageData.removeAttribute(PageData.PropertyEDIT);
@@ -88,5 +116,6 @@ public class ExternalSuitePage extends CachingPage {
     pageData.removeAttribute(PageData.PropertyREFACTOR);
     pageData.setAttribute(PageType.SUITE.toString(), Boolean.toString(true));
     return pageData;
+
   }
 }

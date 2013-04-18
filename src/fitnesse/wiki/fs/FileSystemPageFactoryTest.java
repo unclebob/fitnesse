@@ -60,7 +60,7 @@ public class FileSystemPageFactoryTest {
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
-        WikiPage child = page.findChildren().get(0);
+        WikiPage child = page.getNormalChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
         assertEquals("MyfilE", child.getName());
     }
@@ -69,7 +69,7 @@ public class FileSystemPageFactoryTest {
     public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
-        WikiPage child = page.findChildren().get(0);
+        WikiPage child = page.getNormalChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
         assertEquals("SubsuitE", child.getName());
     }

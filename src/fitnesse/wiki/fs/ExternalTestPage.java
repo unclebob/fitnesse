@@ -3,14 +3,16 @@ package fitnesse.wiki.fs;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
-import fitnesse.wiki.CachingPage;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 
-public class ExternalTestPage extends CachingPage {
+public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
   private FileSystem fileSystem;
   private String path;
@@ -22,8 +24,42 @@ public class ExternalTestPage extends CachingPage {
   }
 
   @Override
+  public void removeChildPage(String name) {
+  }
+
+  @Override
+  public PageData getData() {
+    return makePageData();
+  }
+
+  @Override
+  public ReadOnlyPageData readOnlyData() {
+    return getData();
+  }
+
+  @Override
+  protected List<WikiPage> getNormalChildren() {
+    return null;
+  }
+
+  @Override
+  public WikiPage getNormalChildPage(String name) {
+    return null;
+  }
+
+  @Override
+  public WikiPage addChildPage(String name) {
+    return null;
+  }
+
+  @Override
   public boolean hasChildPage(String pageName) {
     return false;
+  }
+
+  @Override
+  public VersionInfo commit(PageData data) {
+    return null;
   }
 
   @Override
@@ -32,17 +68,11 @@ public class ExternalTestPage extends CachingPage {
   }
 
   @Override
-  protected WikiPage createChildPage(String name) {
+  public PageData getDataVersion(String versionName) {
     return null;
   }
 
-  @Override
-  protected void loadChildren() {
-
-  }
-
-  @Override
-  protected PageData makePageData() {
+  private PageData makePageData() {
     PageData pageData = new PageData(this);
     String content;
     try {
@@ -61,7 +91,4 @@ public class ExternalTestPage extends CachingPage {
     return pageData;
   }
 
-  public PageData getDataVersion(String versionName) {
-    return null;
-  }
 }
