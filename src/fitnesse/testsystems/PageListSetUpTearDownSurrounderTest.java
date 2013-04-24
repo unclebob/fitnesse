@@ -6,6 +6,7 @@ import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 
 import fitnesse.wiki.mem.InMemoryPage;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,12 +44,12 @@ public class PageListSetUpTearDownSurrounderTest {
 
     assertEquals(6, testPages.size());
 
-    assertSame(setUp2, testPages.get(0).getSourcePage());
-    assertSame(slimPage, testPages.get(1).getSourcePage());
-    assertSame(tearDown2, testPages.get(2).getSourcePage());
-    assertSame(setUp, testPages.get(3).getSourcePage());
-    assertSame(testPage, testPages.get(4).getSourcePage());
-    assertSame(tearDown, testPages.get(5).getSourcePage());
+    assertEquals(setUp2, testPages.get(0).getSourcePage());
+    assertEquals(slimPage, testPages.get(1).getSourcePage());
+    assertEquals(tearDown2, testPages.get(2).getSourcePage());
+    assertEquals(setUp, testPages.get(3).getSourcePage());
+    assertEquals(testPage, testPages.get(4).getSourcePage());
+    assertEquals(tearDown, testPages.get(5).getSourcePage());
   }
 
     private ArrayList<TestPage> MakeTestPageList() throws Exception {
@@ -66,8 +67,8 @@ public class PageListSetUpTearDownSurrounderTest {
     ArrayList<TestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
     assertEquals(3, testPages.size());
-    assertSame(setUp, testPages.get(0).getSourcePage());
-    assertSame(testPage, testPages.get(1).getSourcePage());
-    assertSame(tearDown, testPages.get(2).getSourcePage());
+    assertEquals(setUp, testPages.get(0).getSourcePage());
+    assertEquals(testPage, testPages.get(1).getSourcePage());
+    assertEquals(tearDown, testPages.get(2).getSourcePage());
   }
 }

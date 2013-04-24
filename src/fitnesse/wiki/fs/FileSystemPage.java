@@ -24,7 +24,7 @@ public class FileSystemPage extends BaseWikiPage {
   private final VersionsController versionsController;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, null, new SymbolicPageFactory());
+    super(name, null, new SymbolicPageFactory(fileSystem));
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
@@ -37,7 +37,7 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent, new SymbolicPageFactory());
+    super(name, parent, new SymbolicPageFactory(parent.fileSystem));
     path = null;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
@@ -61,12 +61,8 @@ public class FileSystemPage extends BaseWikiPage {
     return false;
   }
 
-  public WikiPage addChildPage(String name) {
-    return getNormalChildPage(name);
-  }
-
   @Override
-  protected WikiPage getNormalChildPage(final String name) {
+  public WikiPage addChildPage(String name) {
     String path = getFileSystemPath() + "/" + name;
     if (hasContentChild(path)) {
       return new FileSystemPage(name, this);
@@ -106,6 +102,15 @@ public class FileSystemPage extends BaseWikiPage {
       }
     }
     return children;
+  }
+
+  @Override
+  protected WikiPage getNormalChildPage(String pageName) {
+    final String file = getFileSystemPath() + "/" + pageName;
+    if (fileSystem.exists(file)) {
+      return addChildPage(pageName);
+    }
+    return null;
   }
 
   @Override

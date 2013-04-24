@@ -145,8 +145,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testPersistentAttributes() throws Exception {
-    crawler.addPage(root, PathParser.parse("FrontPage"));
-    WikiPage createdPage = root.getChildPage("FrontPage");
+    WikiPage createdPage = crawler.addPage(root, PathParser.parse("FrontPage"));
     PageData data = createdPage.getData();
     data.setAttribute("Test", "true");
     data.setAttribute("Search", "true");

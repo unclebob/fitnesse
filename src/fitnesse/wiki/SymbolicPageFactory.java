@@ -13,7 +13,10 @@ public class SymbolicPageFactory {
   private final WikiPageFactory wikiPageFactory;
 
   public SymbolicPageFactory() {
-    FileSystem fileSystem = new DiskFileSystem();
+    this(new DiskFileSystem());
+  }
+
+  public SymbolicPageFactory(FileSystem fileSystem) {
     wikiPageFactory = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem));
   }
 
