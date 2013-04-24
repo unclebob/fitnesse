@@ -4,6 +4,7 @@ package fitnesse.wiki.mem;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 
 // In memory page, used for testing
@@ -12,7 +13,9 @@ public class InMemoryPage {
   public static WikiPage makeRoot(String name) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem));
-    return factory.makeRootPage(null, name);
+    FileSystemPage page = (FileSystemPage) factory.makeRootPage(null, name);
+    page.autoCommit(true);
+    return page;
   }
 
 }

@@ -22,6 +22,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
+  private boolean autoCommit;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, null, new SymbolicPageFactory(fileSystem));
@@ -41,6 +42,7 @@ public class FileSystemPage extends BaseWikiPage {
     path = null;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
+    autoCommit = parent.autoCommit;
   }
 
   @Override
@@ -69,7 +71,9 @@ public class FileSystemPage extends BaseWikiPage {
     } else if (hasHtmlChild(path)) {
       return new ExternalSuitePage(path, name, this, fileSystem);
     } else {
-      return new FileSystemPage(name, this);
+      FileSystemPage page = new FileSystemPage(name, this);
+      if (autoCommit) page.commit(page.getData());
+      return page;
     }
   }
 
@@ -165,5 +169,9 @@ public class FileSystemPage extends BaseWikiPage {
     } catch (final Exception e) {
       return super.toString();
     }
+  }
+
+  public void autoCommit(boolean autoCommit) {
+    this.autoCommit = autoCommit;
   }
 }

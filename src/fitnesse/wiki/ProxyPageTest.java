@@ -103,6 +103,6 @@ public class ProxyPageTest extends TestCase {
   public void testGetVersions() {
     Collection<VersionInfo> versions = proxy.getVersions();
     assertNotNull(versions);
-    assertEquals(2, versions.size());
+    assertEquals(3, versions.size());
   }
 }

@@ -46,7 +46,7 @@ public class InMemoryPageTest extends TestCase {
     data = page1.getData();
     Collection<VersionInfo> versions = page1.getVersions();
 
-    assertEquals(3, versions.size());
+    assertEquals(4, versions.size());
   }
 
   public void testVersionAuthor() throws Exception {
