@@ -13,6 +13,7 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -124,6 +125,33 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "reset"),
             new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"7"}),
             new CallInstruction(id(n++), "decisionTable_id", "execute"),
+            new CallInstruction(id(n++), "decisionTable_id", "func"),
+            new CallInstruction(id(n++), "decisionTable_id", "endTable")
+
+    );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
+  public void canBuildInstructionsForMultipleCallsToSameFunction() throws Exception {
+    String decisionTableWithSameFunctionMultipleTimes =
+      "|DT:fixture|argument|\n" +
+      "|func?|func?|\n" +
+      "|3|5|\n" +
+      "|7|9|\n";
+    makeDecisionTableAndBuildInstructions(decisionTableWithSameFunctionMultipleTimes);
+    int n = 0;
+    List<Instruction> expectedInstructions = list(
+            new MakeInstruction(id(n++), "decisionTable_id", "fixture", new Object[]{"argument"}),
+            new CallInstruction(id(n++), "decisionTable_id", "table", new Object[]{list(list("func?", "func?"), list("3", "5"), list("7", "9"))}),
+            new CallInstruction(id(n++), "decisionTable_id", "beginTable"),
+            new CallInstruction(id(n++), "decisionTable_id", "reset"),
+            new CallInstruction(id(n++), "decisionTable_id", "execute"),
+            new CallInstruction(id(n++), "decisionTable_id", "func"),
+            new CallInstruction(id(n++), "decisionTable_id", "func"),
+            new CallInstruction(id(n++), "decisionTable_id", "reset"),
+            new CallInstruction(id(n++), "decisionTable_id", "execute"),
+            new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
@@ -284,6 +312,45 @@ public class DecisionTableTest {
         "[var, func?], " +
         "[3, pass(5)], " +
         "[7, fail(a=5;e=9)]" +
+        "]";
+    assertEquals(expectedColorizedTable, colorizedTable);
+  }
+
+  @Test
+  @Ignore
+  public void canEvaluateReturnValuesAndColorizeTableForMultipleCallsToSameFunction() throws Exception {
+    String decisionTableWithSameFunctionMultipleTimes =
+      "|DT:fixture|argument|\n" +
+      "|func?|func?|\n" +
+      "|3|5|\n" +
+      "|7|9|\n";
+    DecisionTable dt = makeDecisionTableAndBuildInstructions(decisionTableWithSameFunctionMultipleTimes);
+    int n=0;
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list(id(n++), "OK"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG), // beginTable
+        list(id(n++), VoidConverter.VOID_TAG), //reset
+        list(id(n++), VoidConverter.VOID_TAG), //execute
+        list(id(n++), "4"),
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), "7"),
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG) //endTable
+      )
+    );
+    Assertion.evaluateExpectations(assertions, pseudoResults);
+
+    String colorizedTable = dt.getTable().toString();
+    String expectedColorizedTable =
+      "[" +
+        "[pass(DT:fixture), argument], " +
+        "[func?, func?], " +
+        "[fail(a=4,e=3), pass(5)], " +
+        "[pass(7), fail(a=5;e=9)]" +
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
