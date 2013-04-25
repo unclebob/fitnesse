@@ -17,9 +17,9 @@ import util.RegexTestCase;
 public class WikiPagePropertiesTest extends RegexTestCase {
   private WikiPageProperties properties;
 
-  static String endl = System.getProperty("line.separator"),
-    tab = "\t";
-  static String sampleXml =
+  static final String endl = System.getProperty("line.separator");
+  static final String tab = "\t";
+  static final String sampleXml =
     "<?xml version=\"1.0\"?>" + endl +
       "<properties>" + endl +
       tab + "<Edit/>" + endl +
@@ -38,7 +38,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
       tab + "<Test/>" + endl +
       tab + "<VirtualWiki>http://someurl</VirtualWiki>" + endl +
       "</properties>" + endl;
-  static String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
+  static final String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
 
   public void setUp() throws Exception {
     installPropertiesFrom(sampleXml);

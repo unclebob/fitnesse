@@ -14,7 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
 public class XmlUtil {
-  private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+  private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
   public static DocumentBuilder getDocumentBuilder() {
     try {

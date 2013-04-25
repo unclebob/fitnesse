@@ -12,9 +12,9 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class SaveRecorder {
-  public static Random ticketNumGen = new Random();
-  private static Map<String, Long> ticketRegistry = new HashMap<String, Long>();
-  private static Map<String, Long> saveTime = new HashMap<String, Long>();
+  public static final Random ticketNumGen = new Random();
+  private static final Map<String, Long> ticketRegistry = new HashMap<String, Long>();
+  private static final Map<String, Long> saveTime = new HashMap<String, Long>();
 
   public static long pageSaved(PageData data, long ticketNumber) {
     long timeStamp = timeStamp();

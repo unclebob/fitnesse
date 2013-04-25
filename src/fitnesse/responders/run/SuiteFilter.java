@@ -25,13 +25,13 @@ public class SuiteFilter {
   final private boolean andStrategy;
   final private String startWithTest;
   
-  public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
+  public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
   
-  public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
+  public static final SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
 
   SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;

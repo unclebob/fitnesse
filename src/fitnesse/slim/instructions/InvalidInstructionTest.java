@@ -1,12 +1,11 @@
 package fitnesse.slim.instructions;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 public class InvalidInstructionTest {
 
@@ -23,6 +22,7 @@ public class InvalidInstructionTest {
     InvalidInstruction instruction = new InvalidInstruction("id_1", "invalidFunction");
     InstructionResult result = instruction.execute(executor);
     assertEquals("id_1", result.getId());
-    assertEquals("__EXCEPTION__:message:<<MALFORMED_INSTRUCTION invalidFunction>>", result.getResult().toString());
+    String s = result.getResult().toString();
+    assertTrue(s, s.startsWith("__EXCEPTION__:message:<<MALFORMED_INSTRUCTION invalidFunction>>"));
   }
 }

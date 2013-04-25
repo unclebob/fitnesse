@@ -29,7 +29,7 @@ public class FileResponder implements Responder {
   private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
 
   private static final int RESOURCE_SIZE_LIMIT = 262144;
-  private static FileNameMap fileNameMap = URLConnection.getFileNameMap();
+  private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
   final public String resource;
   final public File requestedFile;
   public Date lastModifiedDate;

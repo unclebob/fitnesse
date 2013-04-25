@@ -9,7 +9,7 @@ import fitnesse.slim.SlimError;
 
 @SuppressWarnings("rawtypes")
 public class BooleanArrayConverter implements Converter {
-  private static BooleanConverter booleanConverter = new BooleanConverter();
+  private static final BooleanConverter booleanConverter = new BooleanConverter();
 
   public String toString(Object o) {
     if (o == null) return "null";

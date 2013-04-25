@@ -191,7 +191,7 @@ public class JavaFormatter extends BaseFormatter {
     this.mainPageName = suiteName;
   }
 
-  private static Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
+  private static final Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
   private ResultsListener listener = new NullListener();
 
   public synchronized static JavaFormatter getInstance(String testName) {

@@ -60,7 +60,6 @@ public class QueryTable extends SlimTable {
             new QueryTableExpectation());
     tableInstruction = ti.getInstruction().getId();
     queryId = qi.getInstruction().getId();
-    //addExpectation(new QueryTableExpectation());
     return list(make, ti, qi);
   }
 
@@ -177,11 +176,6 @@ public class QueryTable extends SlimTable {
       testResult = TestResult.ignore(actualValue);
     else {
       testResult = matchMessage(actualValue, expectedValue);
-//      if (testResult != null)
-//        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(message));
-//      else
-//        table.substitute(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
-//      else
       if (testResult == null)
         testResult = TestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
       else if (testResult.getExecutionResult() == ExecutionResult.PASS)

@@ -9,7 +9,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class MockWikiImporter extends WikiImporter {
-  public static String mockContent = "mock importer content";
+  public static final String mockContent = "mock importer content";
   public boolean fail;
 
   protected void importRemotePageContent(WikiPage localPage) {
