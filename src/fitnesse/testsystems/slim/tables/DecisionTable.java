@@ -52,10 +52,27 @@ public class DecisionTable extends SlimTable {
   }
 
   private class DecisionTableCaller {
+    private class FuncStore {
+      protected Map<String, Integer> funcs = new HashMap<String, Integer>();
+      protected List<String> leftToRight = new ArrayList<String>();
+
+      public void add(String funcName, int col) {
+        leftToRight.add(funcName);
+        funcs.put(funcName, col);
+      }
+
+      public List<String> getLeftToRight() {
+        return leftToRight;
+      }
+
+      public int getColumn(String functionName) {
+        return funcs.get(functionName);
+      }
+    }
+
     protected Map<String, Integer> vars = new HashMap<String, Integer>();
-    protected Map<String, Integer> funcs = new HashMap<String, Integer>();
     protected List<String> varsLeftToRight = new ArrayList<String>();
-    protected List<String> funcsLeftToRight = new ArrayList<String>();
+    protected FuncStore funcStore = new FuncStore();
     protected int columnHeaders;
 
     protected void gatherFunctionsAndVariablesFromColumnHeader() {
@@ -68,8 +85,7 @@ public class DecisionTable extends SlimTable {
       String cell = table.getCellContents(col, 1);
       if (cell.endsWith("?") || cell.endsWith("!")) {
         String funcName = cell.substring(0, cell.length() - 1);
-        funcsLeftToRight.add(funcName);
-        funcs.put(funcName, col);
+        funcStore.add(funcName, col);
       } else {
         varsLeftToRight.add(cell);
         vars.put(cell, col);
@@ -154,14 +170,14 @@ public class DecisionTable extends SlimTable {
 
     private List<Assertion> callFunctions(int row) {
       List<Assertion> instructions = new ArrayList<Assertion>();
-      for (String functionName : funcsLeftToRight) {
+      for (String functionName : funcStore.getLeftToRight()) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
     }
 
     private Assertion callFunctionInRow(String functionName, int row) {
-      int col = funcs.get(functionName);
+      int col = funcStore.getColumn(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
       Assertion assertion;
       if (assignedSymbol != null) {
