@@ -317,7 +317,6 @@ public class DecisionTableTest {
   }
 
   @Test
-  @Ignore
   public void canEvaluateReturnValuesAndColorizeTableForMultipleCallsToSameFunction() throws Exception {
     String decisionTableWithSameFunctionMultipleTimes =
       "|DT:fixture|argument|\n" +
@@ -349,7 +348,7 @@ public class DecisionTableTest {
       "[" +
         "[pass(DT:fixture), argument], " +
         "[func?, func?], " +
-        "[fail(a=4,e=3), pass(5)], " +
+        "[fail(a=4;e=3), pass(5)], " +
         "[pass(7), fail(a=5;e=9)]" +
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);

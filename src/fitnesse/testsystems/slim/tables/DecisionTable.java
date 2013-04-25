@@ -4,6 +4,7 @@ package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,20 +54,32 @@ public class DecisionTable extends SlimTable {
 
   private class DecisionTableCaller {
     private class FuncStore {
-      protected Map<String, Integer> funcs = new HashMap<String, Integer>();
+      protected Map<String, List<Integer>> funcColumns = new HashMap<String, List<Integer>>();
+      protected Map<String, Iterator<Integer>> funcColumnsIterator;
       protected List<String> leftToRight = new ArrayList<String>();
 
       public void add(String funcName, int col) {
         leftToRight.add(funcName);
-        funcs.put(funcName, col);
+        getFuncColumns(funcName).add(col);
       }
 
-      public List<String> getLeftToRight() {
+      private List<Integer> getFuncColumns(String funcName) {
+        if (!funcColumns.containsKey(funcName)) {
+          funcColumns.put(funcName, new ArrayList<Integer>());
+        }
+        return funcColumns.get(funcName);
+      }
+
+      public List<String> getLeftToRightAndResetColumnMaps() {
+        funcColumnsIterator = new HashMap<String, Iterator<Integer>>();
+        for (String functionName : funcColumns.keySet()) {
+          funcColumnsIterator.put(functionName, funcColumns.get(functionName).iterator());
+        }
         return leftToRight;
       }
 
       public int getColumn(String functionName) {
-        return funcs.get(functionName);
+        return funcColumnsIterator.get(functionName).next();
       }
     }
 
@@ -170,7 +183,7 @@ public class DecisionTable extends SlimTable {
 
     private List<Assertion> callFunctions(int row) {
       List<Assertion> instructions = new ArrayList<Assertion>();
-      for (String functionName : funcStore.getLeftToRight()) {
+      for (String functionName : funcStore.getLeftToRightAndResetColumnMaps()) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
