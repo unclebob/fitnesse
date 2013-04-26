@@ -31,6 +31,11 @@ public class DecisionTableTest {
       "|var|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
+  private final String decisionTableWithSameSetterMultipleTimes =
+      "|DT:fixture|argument|\n" +
+        "|var|var|\n" +
+        "|3|5|\n" +
+        "|7|9|\n";
   private final String decisionTableWithSameFunctionMultipleTimes= "|DT:fixture|argument|\n" +
       "|func?|func?|\n" +
       "|3|5|\n" +
@@ -130,6 +135,28 @@ public class DecisionTableTest {
             new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"7"}),
             new CallInstruction(id(n++), "decisionTable_id", "execute"),
             new CallInstruction(id(n++), "decisionTable_id", "func"),
+            new CallInstruction(id(n++), "decisionTable_id", "endTable")
+
+    );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
+  public void canBuildInstructionsForMultipleCallsToSameSetter() throws Exception {
+    makeDecisionTableAndBuildInstructions(decisionTableWithSameSetterMultipleTimes);
+    int n = 0;
+    List<Instruction> expectedInstructions = list(
+            new MakeInstruction(id(n++), "decisionTable_id", "fixture", new Object[]{"argument"}),
+            new CallInstruction(id(n++), "decisionTable_id", "table", new Object[]{list(list("var", "var"), list("3", "5"), list("7", "9"))}),
+            new CallInstruction(id(n++), "decisionTable_id", "beginTable"),
+            new CallInstruction(id(n++), "decisionTable_id", "reset"),
+            new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"3"}),
+            new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"5"}),
+            new CallInstruction(id(n++), "decisionTable_id", "execute"),
+            new CallInstruction(id(n++), "decisionTable_id", "reset"),
+            new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"7"}),
+            new CallInstruction(id(n++), "decisionTable_id", "setVar", new Object[]{"9"}),
+            new CallInstruction(id(n++), "decisionTable_id", "execute"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
     );

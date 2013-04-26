@@ -53,39 +53,42 @@ public class DecisionTable extends SlimTable {
   }
 
   private class DecisionTableCaller {
-    private class FuncStore {
+    private class ColumnHeaderStore {
       private Map<String, List<Integer>> columnNumbers = new HashMap<String, List<Integer>>();
       private Map<String, Iterator<Integer>> columnNumberIterator;
       private List<String> leftToRight = new ArrayList<String>();
 
-      public void add(String funcName, int col) {
-        leftToRight.add(funcName);
-        getColumnNumbers(funcName).add(col);
+      public void add(String header, int columnNumber) {
+        leftToRight.add(header);
+        getColumnNumbers(header).add(columnNumber);
       }
 
-      private List<Integer> getColumnNumbers(String functionName) {
-        if (!columnNumbers.containsKey(functionName)) {
-          columnNumbers.put(functionName, new ArrayList<Integer>());
+      private List<Integer> getColumnNumbers(String header) {
+        if (!columnNumbers.containsKey(header)) {
+          columnNumbers.put(header, new ArrayList<Integer>());
         }
-        return columnNumbers.get(functionName);
-      }
-
-      public List<String> getLeftToRightAndResetColumnNumberIterator() {
-        columnNumberIterator = new HashMap<String, Iterator<Integer>>();
-        for (String functionName : columnNumbers.keySet()) {
-          columnNumberIterator.put(functionName, columnNumbers.get(functionName).iterator());
-        }
-        return leftToRight;
+        return columnNumbers.get(header);
       }
 
       public int getColumnNumber(String functionName) {
         return columnNumberIterator.get(functionName).next();
       }
+
+      public List<String> getLeftToRightAndResetColumnNumberIterator() {
+        resetColumnNumberIterator();
+        return leftToRight;
+      }
+
+      private void resetColumnNumberIterator() {
+        columnNumberIterator = new HashMap<String, Iterator<Integer>>();
+        for (String header : columnNumbers.keySet()) {
+          columnNumberIterator.put(header, columnNumbers.get(header).iterator());
+        }
+      }
     }
 
-    protected Map<String, Integer> vars = new HashMap<String, Integer>();
-    protected List<String> varsLeftToRight = new ArrayList<String>();
-    protected FuncStore funcStore = new FuncStore();
+    protected ColumnHeaderStore varStore = new ColumnHeaderStore();
+    protected ColumnHeaderStore funcStore = new ColumnHeaderStore();
     protected int columnHeaders;
 
     protected void gatherFunctionsAndVariablesFromColumnHeader() {
@@ -100,8 +103,7 @@ public class DecisionTable extends SlimTable {
         String funcName = cell.substring(0, cell.length() - 1);
         funcStore.add(funcName, col);
       } else {
-        varsLeftToRight.add(cell);
-        vars.put(cell, col);
+        varStore.add(cell, col);
       }
     }
 
@@ -134,9 +136,9 @@ public class DecisionTable extends SlimTable {
 
     private Map<String, String> getArgumentsForRow(int row) {
       Map<String, String> scenarioArguments = new HashMap<String, String>();
-      for (String var : vars.keySet()) {
+      for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         String disgracedVar = Disgracer.disgraceMethodName(var);
-        int col = vars.get(var);
+        int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
@@ -205,8 +207,8 @@ public class DecisionTable extends SlimTable {
 
     private List<Assertion> setVariables(int row) {
       List<Assertion> assertions = new ArrayList<Assertion>();
-      for (String var : varsLeftToRight) {
-        int col = vars.get(var);
+      for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
+        int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
         Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
         assertions.add(makeAssertion(setInstruction,
