@@ -54,32 +54,32 @@ public class DecisionTable extends SlimTable {
 
   private class DecisionTableCaller {
     private class FuncStore {
-      protected Map<String, List<Integer>> funcColumns = new HashMap<String, List<Integer>>();
-      protected Map<String, Iterator<Integer>> funcColumnsIterator;
-      protected List<String> leftToRight = new ArrayList<String>();
+      private Map<String, List<Integer>> columnNumbers = new HashMap<String, List<Integer>>();
+      private Map<String, Iterator<Integer>> columnNumberIterator;
+      private List<String> leftToRight = new ArrayList<String>();
 
       public void add(String funcName, int col) {
         leftToRight.add(funcName);
-        getFuncColumns(funcName).add(col);
+        getColumnNumbers(funcName).add(col);
       }
 
-      private List<Integer> getFuncColumns(String funcName) {
-        if (!funcColumns.containsKey(funcName)) {
-          funcColumns.put(funcName, new ArrayList<Integer>());
+      private List<Integer> getColumnNumbers(String functionName) {
+        if (!columnNumbers.containsKey(functionName)) {
+          columnNumbers.put(functionName, new ArrayList<Integer>());
         }
-        return funcColumns.get(funcName);
+        return columnNumbers.get(functionName);
       }
 
-      public List<String> getLeftToRightAndResetColumnMaps() {
-        funcColumnsIterator = new HashMap<String, Iterator<Integer>>();
-        for (String functionName : funcColumns.keySet()) {
-          funcColumnsIterator.put(functionName, funcColumns.get(functionName).iterator());
+      public List<String> getLeftToRightAndResetColumnNumberIterator() {
+        columnNumberIterator = new HashMap<String, Iterator<Integer>>();
+        for (String functionName : columnNumbers.keySet()) {
+          columnNumberIterator.put(functionName, columnNumbers.get(functionName).iterator());
         }
         return leftToRight;
       }
 
-      public int getColumn(String functionName) {
-        return funcColumnsIterator.get(functionName).next();
+      public int getColumnNumber(String functionName) {
+        return columnNumberIterator.get(functionName).next();
       }
     }
 
@@ -183,14 +183,14 @@ public class DecisionTable extends SlimTable {
 
     private List<Assertion> callFunctions(int row) {
       List<Assertion> instructions = new ArrayList<Assertion>();
-      for (String functionName : funcStore.getLeftToRightAndResetColumnMaps()) {
+      for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
     }
 
     private Assertion callFunctionInRow(String functionName, int row) {
-      int col = funcStore.getColumn(functionName);
+      int col = funcStore.getColumnNumber(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
       Assertion assertion;
       if (assignedSymbol != null) {
