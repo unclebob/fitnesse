@@ -134,7 +134,7 @@ public class SimpleFileVersionsController implements VersionsController {
         final WikiPageProperties props = parsePropertiesXml(propertiesXml, lastModifiedTime);
         data.setProperties(props);
       } catch (final Exception e) {
-        System.err.println("Could not read properties file:" + path);
+        System.err.println("Could not read properties file: " + path);
         e.printStackTrace();
       }
     }
