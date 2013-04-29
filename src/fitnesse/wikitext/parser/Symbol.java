@@ -9,25 +9,33 @@ import java.util.Map;
 import util.Maybe;
 
 public class Symbol {
+    private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
+
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
-    private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
-
     private SymbolType type;
-    private String content;
+    private String content = "";
     private List<Symbol> children;
     private Map<String,String> variables;
     private Map<String,String> properties;
 
-    public Symbol(SymbolType type) { this(type, ""); }
+    public Symbol(SymbolType type) { this(type, 0); }
 
     public Symbol(SymbolType type, String content) {
+        this(type, 0);
         this.content = content;
+    }
+
+    public Symbol(SymbolType type, int childrenCapacity) {
         this.type = type;
-        this.children = type.matchesFor(SymbolType.SymbolList)
-                        ? new ArrayList<Symbol>(2)
-                        : NO_CHILDREN;
+        if (childrenCapacity > 0) {
+            this.children = new ArrayList<Symbol>(childrenCapacity);
+        } else {
+            this.children = type.matchesFor(SymbolType.SymbolList)
+                            ? new ArrayList<Symbol>()
+                            : NO_CHILDREN;
+        }
     }
 
     public SymbolType getType() { return type; }
