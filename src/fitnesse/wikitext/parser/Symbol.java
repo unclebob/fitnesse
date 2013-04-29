@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -10,17 +11,22 @@ public class Symbol {
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
+    private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
+
     private SymbolType type;
-    private String content = "";
-    private List<Symbol> children = new ArrayList<Symbol>();
+    private String content;
+    private List<Symbol> children;
     private Properties variables;
     private Properties properties;
 
-    public Symbol(SymbolType type) { this.type = type; }
+    public Symbol(SymbolType type) { this(type, ""); }
 
     public Symbol(SymbolType type, String content) {
         this.content = content;
         this.type = type;
+        this.children = type.matchesFor(SymbolType.SymbolList)
+                        ? new ArrayList<Symbol>(2)
+                        : NO_CHILDREN;
     }
 
     public SymbolType getType() { return type; }
@@ -39,21 +45,25 @@ public class Symbol {
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
 
+    private List<Symbol> children() {
+        if (children == NO_CHILDREN) {
+            children = new ArrayList<Symbol>(1);
+        }
+        return children;
+    }
+
     public Symbol addToFront(Symbol child) {
-        ArrayList<Symbol> newChildren = new ArrayList<Symbol>();
-        newChildren.add(child);
-        newChildren.addAll(children);
-        children = newChildren;
+        children().add(0, child);
         return this;
     }
 
     public Symbol add(Symbol child) {
-        children.add(child);
+        children().add(child);
         return this;
     }
 
     public Symbol add(String text) {
-        children.add(new Symbol(SymbolType.Text, text));
+        children().add(new Symbol(SymbolType.Text, text));
         return this;
     }
 
