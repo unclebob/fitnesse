@@ -15,7 +15,7 @@ public class Matcher {
     private static final List<Character> defaultList =
             Collections.unmodifiableList(Arrays.asList('\0'));
 
-    private ArrayList<ScanMatch> matches = new ArrayList<ScanMatch>();
+    private List<ScanMatch> matches = new ArrayList<ScanMatch>(4);
     private List<Character> firsts = null;
 
     public List<Character> getFirsts() {
@@ -64,8 +64,7 @@ public class Matcher {
 
     public Matcher string(final String delimiter) {
         if (firsts == null) {
-            firsts = new ArrayList<Character>();
-            firsts.add(delimiter.charAt(0));
+            firsts = Collections.singletonList(delimiter.charAt(0));
         }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
@@ -122,8 +121,7 @@ public class Matcher {
 
     public Matcher repeat(final char delimiter) {
         if (firsts == null) {
-            firsts = new ArrayList<Character>();
-            firsts.add(delimiter);
+            firsts = Collections.singletonList(delimiter);
         }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
