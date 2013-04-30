@@ -82,7 +82,9 @@ public class ParseSpecification {
     }
 
     public Symbol parse(Parser parser, Scanner scanner) {
-        Symbol result = new Symbol(SymbolType.SymbolList);
+        Symbol result = (scanner.getOffset() == 0)
+                        ? new Symbol(SymbolType.SymbolList, 100)
+                        : new Symbol(SymbolType.SymbolList);
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(this);
