@@ -2,6 +2,8 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Matcher {
@@ -10,13 +12,11 @@ public class Matcher {
         Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset);
     }
 
-    private static final ArrayList<Character> defaultList = new ArrayList<Character>();
-    static {
-        defaultList.add('\0');
-    }
+    private static final List<Character> defaultList =
+            Collections.unmodifiableList(Arrays.asList('\0'));
 
-    private ArrayList<ScanMatch> matches = new ArrayList<ScanMatch>();
-    private ArrayList<Character> firsts = null;
+    private List<ScanMatch> matches = new ArrayList<ScanMatch>(4);
+    private List<Character> firsts = null;
 
     public List<Character> getFirsts() {
         return firsts != null ? firsts : defaultList;
@@ -64,8 +64,7 @@ public class Matcher {
 
     public Matcher string(final String delimiter) {
         if (firsts == null) {
-            firsts = new ArrayList<Character>();
-            firsts.add(delimiter.charAt(0));
+            firsts = Collections.singletonList(delimiter.charAt(0));
         }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
@@ -122,8 +121,7 @@ public class Matcher {
 
     public Matcher repeat(final char delimiter) {
         if (firsts == null) {
-            firsts = new ArrayList<Character>();
-            firsts.add(delimiter);
+            firsts = Collections.singletonList(delimiter);
         }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
@@ -166,5 +164,5 @@ public class Matcher {
 
         return new Maybe<Integer>(totalLength);
     }
-   
+
 }
