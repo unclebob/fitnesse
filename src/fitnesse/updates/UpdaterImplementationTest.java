@@ -111,15 +111,6 @@ public class UpdaterImplementationTest {
   }
 
   @Test
-  @Ignore
-  public void shouldReplaceFitNesseRootWithDirectoryRoot() throws Exception {
-    String filePath = "FitNesseRoot/someFolder/someFile";
-    //context.rootDirectoryName = "MyNewRoot";
-    String updatedPath = updater.getCorrectPathForTheDestination(filePath);
-    assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
-  }
-
-  @Test
   public void updatesShouldBeRunIfCurrentVersionNotAlreadyUpdated() throws Exception {
     String version = "TestVersion";
     updater.setFitNesseVersion(version);
