@@ -14,6 +14,7 @@ import fitnesse.FitNesseContext.Builder;
 import fitnesse.WikiPageFactory;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.responders.run.SuiteFilter;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -146,7 +147,7 @@ public class FitNesseSuite extends ParentRunner<String> {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
     WikiPage root = crawler.getPage(context.root, PathParser.parse("."));
-    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, null, root).getAllPagesToRunForThisSuite();
+    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.responders.run.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
 
     List<String> testPages = new ArrayList<String>();
     for (WikiPage wp : pages) {
