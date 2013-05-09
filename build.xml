@@ -208,7 +208,7 @@
 	</target>
 
 	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for Acceptance tests and IDE's">
-		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone" />
+		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone,default,test" />
 	</target>
 
 	<target name="resolve" depends="ivy-init">
