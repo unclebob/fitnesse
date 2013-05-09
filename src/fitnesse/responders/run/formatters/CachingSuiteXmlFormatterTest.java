@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
@@ -172,7 +174,6 @@ public class CachingSuiteXmlFormatterTest {
   }
 
   @Test
-  @Ignore // TODO: code needs cleanup, I can't add a unit test to it.
   public void shouldIncludeEscapedHtmlIfIncludeHtmlFlagIsSet() throws IOException, SAXException {
     // Note: HTML should be escaped, since FIT(-library) does not output XML compliant HTML
     final TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -180,7 +181,11 @@ public class CachingSuiteXmlFormatterTest {
     final TestResultRecord testResultRecord = mock(TestResultRecord.class);
     final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
     final File file = mock(File.class);
-    CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), null) {
+    final List<TestExecutionReport.TestResult> testResults = new ArrayList<TestExecutionReport.TestResult>();
+    TestExecutionReport.TestResult testResult = new TestExecutionReport.TestResult();
+    testResults.add(testResult);
+    testResult.content = "<html>blah\" <a class=unquoted>link</a>";
+    CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), writer) {
       @Override
       TestExecutionReport makeTestExecutionReport() {
         return expectedReport;
@@ -191,6 +196,7 @@ public class CachingSuiteXmlFormatterTest {
     when(pageHistory.get(any(Date.class))).thenReturn(testResultRecord);
     when(testResultRecord.getFile()).thenReturn(file);
     when(expectedReport.read(file)).thenReturn(expectedReport);
+    when(expectedReport.getResults()).thenReturn(testResults);
 
     formatter.setTestHistoryForTests(testHistory);
     formatter.includeHtml();
@@ -200,6 +206,6 @@ public class CachingSuiteXmlFormatterTest {
 
     formatter.allTestingComplete(timeMeasurement.stop());
     String output = writer.toString();
-    assertTrue(output, output.contains("&lt;html&gt;blah&quot; &lt;a class=unquoted"));
+    assertTrue(output, output.contains("&lt;html&gt;blah\" &lt;a class=unquoted"));
   }
 }

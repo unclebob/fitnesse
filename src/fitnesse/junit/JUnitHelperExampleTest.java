@@ -1,13 +1,15 @@
 package fitnesse.junit;
 
 import fitnesse.responders.run.JavaFormatter;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JUnitHelperExampleTest {
   JUnitHelper helper;
@@ -59,8 +61,8 @@ public class JUnitHelperExampleTest {
     String testName = "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SystemUnderTestTest";
     helper.assertTestPasses(testName);
     JavaFormatter formatter = JavaFormatter.getInstance(testName);
-    Assert.assertEquals(testName, formatter.getTestsExecuted().get(0));
-    Assert.assertEquals(1, formatter.getTestsExecuted().size());
+    assertEquals(testName, formatter.getTestsExecuted().get(0));
+    assertEquals(1, formatter.getTestsExecuted().size());
   }
 
 //todo There's a better way to do this.  Create a dummy suite instead of using SuiteSlimTests
@@ -78,7 +80,7 @@ public class JUnitHelperExampleTest {
     helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "testSuite");
 
     JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-    Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
+    assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
       new HashSet<String>(formatter.getTestsExecuted()));
 
   }
@@ -90,11 +92,11 @@ public class JUnitHelperExampleTest {
     
     }
     catch (AssertionError ae){
-      Assert.assertEquals("at least one test executed", ae.getMessage());
+      assertTrue(ae.getMessage().startsWith("at least one test"));
     }
     
     JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-    Assert.assertEquals(new HashSet<String>(),
+    assertEquals(new HashSet<String>(),
       new HashSet<String>(formatter.getTestsExecuted()));
     
   }

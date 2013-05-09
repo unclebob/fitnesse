@@ -13,7 +13,8 @@
 
 !2 ''Classpaths''
 !define SUT_PATH (!-
-!path ${java.class.path}
+!path classes
+!path lib/*.jar
 -!)
 ----
 !2 ''Port''

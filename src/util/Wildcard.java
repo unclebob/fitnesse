@@ -8,15 +8,15 @@ import java.io.FilenameFilter;
 public class Wildcard implements FilenameFilter {
   private String pattern;
   private String prefix;
-  private String sufix;
+  private String suffix;
   private int length;
 
   public Wildcard(String pattern) {
     int starIndex = pattern.indexOf("*");
     if (starIndex > -1) {
       prefix = pattern.substring(0, starIndex);
-      sufix = pattern.substring(starIndex + 1);
-      length = prefix.length() + sufix.length();
+      suffix = pattern.substring(starIndex + 1);
+      length = prefix.length() + suffix.length();
     } else {
       this.pattern = pattern;
     }
@@ -28,7 +28,7 @@ public class Wildcard implements FilenameFilter {
 
     boolean goodLength = name.length() >= length;
     boolean goodPrefix = name.startsWith(prefix);
-    boolean goodSufix = name.endsWith(sufix);
+    boolean goodSufix = name.endsWith(suffix);
 
     return goodLength && goodPrefix && goodSufix;
   }
