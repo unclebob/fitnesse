@@ -20,17 +20,26 @@ public class Define extends SymbolType implements Rule, Translation {
         if (!ScanString.isVariableName(variableName)) return Symbol.nothing;
 
         Symbol next = parser.moveNext(1);
-        SymbolType close = next.closeType();
-        if (close == SymbolType.Empty) return Symbol.nothing;
-
-        Maybe<String> valueString = parser.parseToAsString(close);
+        Maybe<String> valueString = (next.isType(SymbolType.Text))
+                ? copyVariableValue(parser, next)
+                : parseVariableValue(parser, next);
         if (valueString.isNothing()) return Symbol.nothing;
+
         String variableValue = valueString.getValue();
         parser.getPage().putVariable(variableName, variableValue);
+        return new Maybe<Symbol>(current.add(variableName).add(variableValue));
+    }
 
-        return new Maybe<Symbol>(current
-                .add(variableName)
-                .add(variableValue));
+    private Maybe<String> copyVariableValue(Parser parser, Symbol next) {
+      String fromVariableName = next.getContent();
+      if (!ScanString.isVariableName(fromVariableName)) return Maybe.noString;
+      return parser.getVariableSource().findVariable(fromVariableName);
+    }
+
+    private Maybe<String> parseVariableValue(Parser parser, Symbol next) {
+      SymbolType close = next.closeType();
+      if (close == SymbolType.Empty) return Maybe.noString;
+      return parser.parseToAsString(close);
     }
 
     public String toTarget(Translator translator, Symbol symbol) {
