@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class StackTraceEnricherTest {
-  private static final String JUNIT_JAR = "junit-4.11.jar";
+  private static final String JUNIT_JAR_PATTERN = "[junit";
   private static final String RT_JAR = "rt.jar";
   private static final String NON_EXISTING_FILE = "/this/should/not/exist/at/all/sadfbas";
 
@@ -68,8 +68,8 @@ public class StackTraceEnricherTest {
   public void shouldWriteEnrichedStackTraceToWriter() throws Exception {
     StringWriter writer = new StringWriter();
     enricher.printStackTrace(exception, writer);
-    assertTrue("JUnit jar " + JUNIT_JAR + " not found in stack trace written to writer",
-        writer.toString().contains(JUNIT_JAR));
+    assertTrue("JUnit jar " + JUNIT_JAR_PATTERN + " not found in stack trace written to writer",
+        writer.toString().contains(JUNIT_JAR_PATTERN));
   }
 
   @Test
@@ -77,14 +77,14 @@ public class StackTraceEnricherTest {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     enricher.printStackTrace(exception, outputStream);
     String output = new String(outputStream.toByteArray());
-    assertTrue("JUnit jar " + JUNIT_JAR + " not found in stack trace written to output stream",
-        output.contains(JUNIT_JAR));
+    assertTrue("JUnit jar " + JUNIT_JAR_PATTERN + " not found in stack trace written to output stream",
+        output.contains(JUNIT_JAR_PATTERN));
   }
 
   @Test
   public void shouldReturnEnrichedStackTraceAsString() {
-    assertTrue("JUnit jar " + JUNIT_JAR + " not found in stack trace as String",
-        enricher.getStackTraceAsString(exception).contains(JUNIT_JAR));
+    assertTrue("JUnit jar " + JUNIT_JAR_PATTERN + " not found in stack trace as String",
+        enricher.getStackTraceAsString(exception).contains(JUNIT_JAR_PATTERN));
   }
 
   @Test
@@ -154,8 +154,8 @@ public class StackTraceEnricherTest {
       System.setErr(new PrintStream(out));
       enricher.printStackTrace(exception);
       String output = new String(out.toByteArray());
-      assertTrue("JUnit jar " + JUNIT_JAR + " not found in stack trace written to default System.err stream",
-          output.contains(JUNIT_JAR));
+      assertTrue("JUnit jar " + JUNIT_JAR_PATTERN + " not found in stack trace written to default System.err stream",
+          output.contains(JUNIT_JAR_PATTERN));
     } finally {
       System.setErr(originalErrStream);
     }
