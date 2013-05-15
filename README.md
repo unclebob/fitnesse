@@ -74,27 +74,27 @@ Direct any questions to the FitNesse yahoo group or to [unclebob](https://www.gi
 
 There are a few things to keep in mind when working from an IDE:
 
-1. The ant build generates two files from the templates in the "templates"
-   directory:
-   * `FrontPage.content.txt.template` is used to generate
-     `FitNesseRoot/FrontPage/context.txt`;
-   * `FitNesseVersion.java.template` is used to generate
-     `src/fitnesse/FitNesseVersion.java`.
+1. The Ant build file does some extra things apart from compiling the code.
+    * It sets the FitNesse version in a META-INF/FitNesseVersion.txt
+    * It copies the dependencies to the lib folder so they can be used by the acceptance tests.
 
-   You can execute
-
+   Perform a
    ```
-   $ ant all
+   $ ant post-compile
    ```
+   to execute those actions. In your IDE it is possible to define "post-compilation" steps. If
+   you set the "post-compile" target from the build file, you won't have any trouble with
+   cleaning, building and executing tests from your IDE.
 
-   to generate those files.
+2. Apache Ivy is used for dependency management. You're IDE can be set up to support Ivy.
+    * In IntelliJ set IvyIDEA in "Project Structure" -> "Modules" -> "Dependencies".
+    * In Eclipse, install IvyDE and set it up.
 
-2. Apache Ivy is used for dependency management. You can either install an Ivy
-   plugin in your preferred IDE or run
+   Alternatively,
    ```
    $ ant retrieve
    ```
-   that will download the dependencies and copy them to lib/, from where your
+   will download the dependencies and copy them to lib/, from where your
    IDE can pick them up.
 
 

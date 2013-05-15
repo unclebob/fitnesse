@@ -7,9 +7,8 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import static junit.framework.Assert.assertEquals;
-
 import fitnesse.wiki.mem.InMemoryPage;
+import static org.junit.Assert.assertEquals;
 import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;

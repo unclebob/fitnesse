@@ -51,7 +51,14 @@ public class SuiteFilter {
         getAndTagFilters(request),
         getSuiteFirstTest(request, suitePath));
   }
-  
+
+  public SuiteFilter(String suiteFilter, String excludeSuiteFilter) {
+    matchTags = new SuiteTagMatcher(suiteFilter, true);
+    notMatchTags = new SuiteTagMatcher(excludeSuiteFilter, false);
+    andStrategy = false;
+    startWithTest = null;
+  }
+
   private static String getOrTagFilter(Request request) {
     return request != null ? getOrFilterString(request) : null;
   }

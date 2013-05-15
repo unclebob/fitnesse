@@ -1,7 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wikitext.parser.WikiWordBuilder;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WikiWordBuilderTest {

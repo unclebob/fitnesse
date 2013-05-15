@@ -1,8 +1,8 @@
 package fitnesse.updates;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.After;
 
 import static org.junit.Assert.*;
