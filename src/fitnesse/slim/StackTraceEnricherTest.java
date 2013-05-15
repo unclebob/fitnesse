@@ -100,15 +100,14 @@ public class StackTraceEnricherTest {
 
   @Test
   public void shouldGetVersionForClassInJarWithVersion() {
-    assertEquals("Version not retrieved for java.lang.reflect.Method",
-        enricher.getVersion(java.lang.reflect.Method.class), javaVersion);
+    assertTrue("Version not retrieved for java.lang.reflect.Method",
+        enricher.getVersion(java.lang.reflect.Method.class).contains(javaVersion));
   }
 
   @Test
   public void shouldGetVersionForStackTraceElementInJarWithVersion() {
     StackTraceElement javaLangElement = getJavaLangStackTraceElement(exception);
-    assertEquals("Version not retrieved for " + javaLangElement.getClassName(), enricher.getVersion(javaLangElement),
-        javaVersion);
+    assertTrue("Version not retrieved for " + javaLangElement.getClassName(), enricher.getVersion(javaLangElement).contains(javaVersion));
   }
 
   @Test
