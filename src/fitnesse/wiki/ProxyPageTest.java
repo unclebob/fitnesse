@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
