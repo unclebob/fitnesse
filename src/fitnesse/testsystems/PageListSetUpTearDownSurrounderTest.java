@@ -2,7 +2,7 @@ package fitnesse.testsystems;
 
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wiki.*;
-import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
