@@ -5,6 +5,7 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
+import fitnesse.components.RecentChanges;
 import fitnesse.components.SocketDealer;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
@@ -17,7 +18,6 @@ public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
-
 
 
   /**
@@ -34,6 +34,7 @@ public class FitNesseContext {
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public String defaultNewPageContent;
+    public RecentChanges recentChanges;
     public String pageTheme;
 
     public Builder() {
@@ -57,6 +58,7 @@ public class FitNesseContext {
         authenticator = context.authenticator;
         defaultNewPageContent = context.defaultNewPageContent;
         pageTheme = context.pageTheme;
+        recentChanges = context.recentChanges;
       }
     }
 
@@ -66,6 +68,7 @@ public class FitNesseContext {
           rootDirectoryName,
           pageTheme,
           defaultNewPageContent,
+          recentChanges,
           port,
           socketDealer,
           authenticator,
@@ -85,6 +88,7 @@ public class FitNesseContext {
   public final PageFactory pageFactory = new PageFactory(this);
 
   public final String defaultNewPageContent;
+  public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
   public final String pageTheme;
@@ -92,14 +96,15 @@ public class FitNesseContext {
 
   private FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
-      int port, SocketDealer socketDealer, Authenticator authenticator,
-      Logger logger) {
+      RecentChanges recentChanges, int port, SocketDealer socketDealer,
+      Authenticator authenticator, Logger logger) {
     super();
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
     this.pageTheme = pageTheme != null ? pageTheme : "fitnesse_straight";
     this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
+    this.recentChanges = recentChanges;
     this.port = port >= 0 ? port : 80;
     this.socketDealer = socketDealer != null ? socketDealer : new SocketDealer();
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
