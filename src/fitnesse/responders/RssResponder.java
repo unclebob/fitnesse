@@ -17,7 +17,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.RecentChanges;
+import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -36,7 +36,7 @@ public class RssResponder implements SecureResponder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage contextPage = getContextPage(context, request.getResource());
-    WikiPage recentChangesPage = context.root.getChildPage(RecentChanges.RECENT_CHANGES);
+    WikiPage recentChangesPage = context.root.getChildPage(RecentChangesWikiPage.RECENT_CHANGES);
 
     feed = new RssFeed(getConfiguredRssLinkPrefixFrom(contextPage));
 

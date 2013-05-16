@@ -7,7 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.components.RecentChanges;
+import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -69,7 +69,7 @@ public class SaveResponder implements SecureResponder {
     setData();
     VersionInfo commitRecord = page.commit(data);
     response.addHeader("Current-Version", commitRecord.getName());
-    RecentChanges.updateRecentChanges(data);
+    RecentChangesWikiPage.updateRecentChanges(data);
 
     if (request.hasInput("redirect"))
       response.redirect(request.getInput("redirect").toString());                                

@@ -5,7 +5,7 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
-import fitnesse.components.RecentChanges;
+import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.components.SocketDealer;
 import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
@@ -34,7 +34,7 @@ public class FitNesseContext {
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public String defaultNewPageContent;
-    public RecentChanges recentChanges;
+    public RecentChangesWikiPage recentChanges;
     public String pageTheme;
 
     public Builder() {
@@ -88,7 +88,7 @@ public class FitNesseContext {
   public final PageFactory pageFactory = new PageFactory(this);
 
   public final String defaultNewPageContent;
-  public final RecentChanges recentChanges;
+  public final RecentChangesWikiPage recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
   public final String pageTheme;
@@ -96,7 +96,7 @@ public class FitNesseContext {
 
   private FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
-      RecentChanges recentChanges, int port, SocketDealer socketDealer,
+      RecentChangesWikiPage recentChanges, int port, SocketDealer socketDealer,
       Authenticator authenticator, Logger logger) {
     super();
     this.root = root;

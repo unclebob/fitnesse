@@ -12,7 +12,7 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.components.RecentChanges;
+import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
@@ -123,7 +123,7 @@ public class FitNesseMain {
     builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
     builder.defaultNewPageContent = componentFactory
         .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChanges.class);
+    builder.recentChanges = (RecentChangesWikiPage) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:
     //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
