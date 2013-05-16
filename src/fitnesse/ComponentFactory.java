@@ -28,8 +28,8 @@ public class ComponentFactory {
   public static final String SLIM_TABLES = "SlimTables";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
-  public static final String VERSIONS_CONTROLLER = "VersionsController";
-  public static final String VERSIONS_CONTROLLER_DAYS = VERSIONS_CONTROLLER + ".days";
+  public static final String VERSIONS_CONTROLLER_CLASS = "VersionsController";
+  public static final String VERSIONS_CONTROLLER_DAYS = VERSIONS_CONTROLLER_CLASS + ".days";
   public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
   public static final String THEME = "Theme";
 

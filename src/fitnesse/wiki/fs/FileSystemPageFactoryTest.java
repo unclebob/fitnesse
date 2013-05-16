@@ -83,7 +83,7 @@ public class FileSystemPageFactoryTest {
   @Test
   public void testShouldUseSpecifiedRevisionController() throws Exception {
     Properties testProperties = new Properties();
-    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_CLASS, NullVersionsController.class.getName());
     fileSystemPageFactory = new FileSystemPageFactory(testProperties);
 
     VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
@@ -94,7 +94,7 @@ public class FileSystemPageFactoryTest {
   @Test
   public void testShouldUseSpecifiedRevisionControllerWithHistoryDepth() throws Exception {
     Properties testProperties = new Properties();
-    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_CLASS, NullVersionsController.class.getName());
     testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "42");
     fileSystemPageFactory = new FileSystemPageFactory(testProperties);
 
