@@ -28,11 +28,11 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   protected WikiPage loadPage(FitNesseContext context, String pageName) {
-    WikiPagePath path = PathParser.parse(pageName);
     WikiPage page;
-    if (RecentChanges.RECENT_CHANGES.equals(path)) {
+    if (RecentChanges.RECENT_CHANGES.equals(pageName)) {
       page = context.recentChanges.toWikiPage(context.root);
     } else {
+      WikiPagePath path = PathParser.parse(pageName);
       PageCrawler crawler = context.root.getPageCrawler();
       page = crawler.getPage(context.root, path);
     }
