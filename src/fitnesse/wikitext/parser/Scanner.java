@@ -83,7 +83,7 @@ public class Scanner {
     }
 
     public List<Symbol> peek(int count, ParseSpecification specification) {
-        List<Symbol> result = new ArrayList<Symbol>();
+        List<Symbol> result = new ArrayList<Symbol>(count);
         int startPosition = next;
         for (int i = 0; i < count; i++) {
             Step step = makeNextStep(specification, startPosition);

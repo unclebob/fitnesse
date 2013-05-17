@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
