@@ -71,14 +71,14 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  private Boolean hasContentChild(String path) {
+  private boolean hasContentChild(String path) {
     for (String child : fileSystem.list(path)) {
       if (child.equals("content.txt")) return true;
     }
     return false;
   }
 
-  private Boolean hasHtmlChild(String path) {
+  private boolean hasHtmlChild(String path) {
     if (path.endsWith(".html")) return true;
     for (String child : fileSystem.list(path)) {
       if (hasHtmlChild(path + "/" + child)) return true;
