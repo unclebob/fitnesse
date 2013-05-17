@@ -69,7 +69,7 @@ public class SaveResponder implements SecureResponder {
     setData();
     VersionInfo commitRecord = page.commit(data);
     response.addHeader("Current-Version", commitRecord.getName());
-    RecentChangesWikiPage.updateRecentChanges(data);
+    context.recentChanges.updateRecentChanges(data);
 
     if (request.hasInput("redirect"))
       response.redirect(request.getInput("redirect").toString());                                

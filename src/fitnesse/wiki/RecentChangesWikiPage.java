@@ -28,12 +28,12 @@ public class RecentChangesWikiPage {
     return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
   }
 
-  public static void updateRecentChanges(PageData pageData) {
+  public void updateRecentChanges(PageData pageData) {
     createRecentChangesIfNecessary(pageData);
     addCurrentPageToRecentChanges(pageData);
   }
 
-  public static List<String> getRecentChangesLines(PageData recentChangesdata) {
+  public List<String> getRecentChangesLines(PageData recentChangesdata) {
     String content = recentChangesdata.getContent();
     BufferedReader reader = new BufferedReader(new StringReader(content));
     List<String> lines = new ArrayList<String>();
@@ -48,7 +48,7 @@ public class RecentChangesWikiPage {
     return lines;
   }
 
-  private static void addCurrentPageToRecentChanges(PageData data) {
+  private void addCurrentPageToRecentChanges(PageData data) {
     WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot(data.getWikiPage()).getChildPage(RECENT_CHANGES);
     String resource = resource(data);
     PageData recentChangesdata = recentChanges.getData();
@@ -62,27 +62,27 @@ public class RecentChangesWikiPage {
 
   }
 
-  private static String resource(PageData data) {
+  private String resource(PageData data) {
     WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath(data.getWikiPage());
     String resource = PathParser.render(fullPath);
     return resource;
   }
 
-  private static void createRecentChangesIfNecessary(PageData data) {
+  private void createRecentChangesIfNecessary(PageData data) {
     PageCrawler crawler = data.getWikiPage().getPageCrawler();
     WikiPage root = crawler.getRoot(data.getWikiPage());
     if (!root.hasChildPage(RECENT_CHANGES))
       crawler.addPage(root, PathParser.parse(RECENT_CHANGES), "");
   }
 
-  private static String makeRecentChangesLine(PageData data) {
+  private String makeRecentChangesLine(PageData data) {
     String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null)
       user = "";
     return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(Clock.currentDate()) + "|";
   }
 
-  private static void removeDuplicate(List<String> lines, String resource) {
+  private void removeDuplicate(List<String> lines, String resource) {
     for (ListIterator<String> iterator = lines.listIterator(); iterator.hasNext();) {
       String s = iterator.next();
       if (s.startsWith("|" + resource + "|"))
@@ -90,7 +90,7 @@ public class RecentChangesWikiPage {
     }
   }
 
-  private static String convertLinesToWikiText(List<String> lines) {
+  private String convertLinesToWikiText(List<String> lines) {
     StringBuffer buffer = new StringBuffer();
     for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
       String s = iterator.next();
@@ -99,7 +99,7 @@ public class RecentChangesWikiPage {
     return buffer.toString();
   }
 
-  private static void trimExtraLines(List<String> lines) {
+  private void trimExtraLines(List<String> lines) {
     while (lines.size() > 100)
       lines.remove(100);
   }

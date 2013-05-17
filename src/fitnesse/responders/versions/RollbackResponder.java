@@ -34,7 +34,7 @@ public class RollbackResponder implements SecureResponder {
 
     page.commit(data);
 
-    RecentChangesWikiPage.updateRecentChanges(data);
+    context.recentChanges.updateRecentChanges(data);
     response.redirect(resource);
 
     return response;

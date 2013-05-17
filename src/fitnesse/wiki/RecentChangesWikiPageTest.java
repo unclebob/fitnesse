@@ -4,23 +4,22 @@ package fitnesse.wiki;
 
 import java.util.List;
 
-import fitnesse.wiki.RecentChangesWikiPage;
 import util.RegexTestCase;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
 
 public class RecentChangesWikiPageTest extends RegexTestCase {
   private WikiPage rootPage;
   private WikiPage newPage;
   private WikiPage page1;
   private WikiPage page2;
+  private RecentChangesWikiPage recentChangesWikiPage;
 
   public void setUp() throws Exception {
     rootPage = InMemoryPage.makeRoot("RooT");
     newPage = rootPage.addChildPage("SomeNewPage");
     page1 = rootPage.addChildPage("PageOne");
     page2 = rootPage.addChildPage("PageTwo");
+    recentChangesWikiPage = new RecentChangesWikiPage();
   }
 
   public void tearDown() throws Exception {
@@ -28,29 +27,29 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
 
   public void testFirstRecentChange() throws Exception {
     assertEquals(false, rootPage.hasChildPage("RecentChanges"));
-    RecentChangesWikiPage.updateRecentChanges(newPage.getData());
+    recentChangesWikiPage.updateRecentChanges(newPage.getData());
     assertEquals(true, rootPage.hasChildPage("RecentChanges"));
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(1, lines.size());
     assertHasRegexp("SomeNewPage", lines.get(0));
   }
 
   public void testTwoChanges() throws Exception {
-    RecentChangesWikiPage.updateRecentChanges(page1.getData());
-    RecentChangesWikiPage.updateRecentChanges(page2.getData());
+    recentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page2.getData());
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(2, lines.size());
     assertHasRegexp("PageTwo", lines.get(0));
     assertHasRegexp("PageOne", lines.get(1));
   }
 
   public void testNoDuplicates() throws Exception {
-    RecentChangesWikiPage.updateRecentChanges(page1.getData());
-    RecentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1.getData());
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(1, lines.size());
     assertHasRegexp("PageOne", lines.get(0));
   }
@@ -61,18 +60,18 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
       for (int j = 0; j < i; j++)
         b.append("a");
       WikiPage page = rootPage.addChildPage(b.toString());
-      RecentChangesWikiPage.updateRecentChanges(page.getData());
+      recentChangesWikiPage.updateRecentChanges(page.getData());
     }
 
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(100, lines.size());
   }
 
   public void testUsernameColumnWithoutUser() throws Exception {
-    RecentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1.getData());
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     String line = lines.get(0).toString();
     assertSubString("|PageOne||", line);
   }
@@ -82,9 +81,9 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
     page1.commit(data);
 
-    RecentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1.getData());
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-    List<String> lines = RecentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
+    List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     String line = lines.get(0).toString();
     assertSubString("|PageOne|Aladdin|", line);
   }
