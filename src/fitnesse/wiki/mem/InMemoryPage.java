@@ -4,9 +4,10 @@ package fitnesse.wiki.mem;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 
-// In memory page, used for testing
+// In memory page, used for testing and instant pages (like GitFileVersionController's RecentChanges page).
 public class InMemoryPage {
 
   public static WikiPage makeRoot(String name) {
@@ -15,4 +16,8 @@ public class InMemoryPage {
     return factory.makeRootPage(null, name);
   }
 
+  public static WikiPage createChildPage(String name, FileSystemPage parent) {
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return new FileSystemPage(name, parent, fileSystem, new MemoryVersionsController(fileSystem));
+  }
 }

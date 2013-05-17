@@ -15,6 +15,8 @@ import java.util.List;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.mem.MemoryFileSystem;
+import fitnesse.wiki.mem.MemoryVersionsController;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
@@ -122,13 +124,12 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     Repository repository = getRepository(page);
     Git git = new Git(repository);
     String fileSystemPath = getPath(page, repository);
-    PageCrawler crawler = page.getPageCrawler();
     try {
       git.add()
               .addFilepattern(fileSystemPath + "/" + contentFilename)
               .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
-      commit(git, String.format("FitNesse page update: %s", PathParser.render(crawler.getFullPath(page))));
+      commit(git, String.format("FitNesse page %s updated.", PathParser.render(page.getPageCrawler().getFullPath(page))));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -150,7 +151,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
               .addFilepattern(fileSystemPath + "/" + contentFilename)
               .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
-      commit(git, String.format("FitNesse page %s deleted.", page.getName()));
+      commit(git, String.format("FitNesse page %s deleted.", PathParser.render(page.getPageCrawler().getFullPath(page))));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -212,7 +213,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   @Override
   public WikiPage toWikiPage(WikiPage root) {
     FileSystemPage fsPage = (FileSystemPage) root;
-    WikiPage recentChangesPage = InMemoryPage.makeRoot(RECENT_CHANGES);
+    WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
     PageData pageData = recentChangesPage.getData();
     pageData.setContent(convertToWikiText(history(fsPage, new LogCommandSpec() {
       @Override
@@ -220,13 +221,20 @@ public class GitFileVersionsController implements VersionsController, RecentChan
         return log.setMaxCount(RECENT_CHANGES_DEPTH);
       }
     })));
+    // No properties, no features.
+    pageData.setProperties(recentChangesPageProperties());
     recentChangesPage.commit(pageData);
     return recentChangesPage;
+  }
+
+  private WikiPageProperties recentChangesPageProperties() {
+    return new WikiPageProperties();
   }
 
   private String convertToWikiText(Collection<GitVersionInfo> history) {
     final SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
     StringBuilder builder = new StringBuilder(1024);
+
     for (GitVersionInfo versionInfo : history) {
       builder.append("|")
               .append(versionInfo.getComment())

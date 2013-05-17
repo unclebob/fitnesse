@@ -33,11 +33,15 @@ public class FileSystemPage extends CachingPage {
     this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent) {
+  public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, final VersionsController versionsController) {
     super(name, parent, new SymbolicPageFactory());
     path = null;
-    fileSystem = parent.fileSystem;
-    versionsController = parent.versionsController;
+    this.fileSystem = fileSystem;
+    this.versionsController = versionsController;
+  }
+
+  public FileSystemPage(final String name, final FileSystemPage parent) {
+    this(name, parent, parent.fileSystem, parent.versionsController);
   }
 
   @Override
