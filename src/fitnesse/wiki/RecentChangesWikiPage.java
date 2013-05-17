@@ -20,14 +20,14 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class RecentChangesWikiPage {
-  public static final String RECENT_CHANGES = "RecentChanges";
+public class RecentChangesWikiPage implements RecentChanges {
 
   private static SimpleDateFormat makeDateFormat() {
     //SimpleDateFormat is not thread safe, so we need to create each instance independently.
     return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
   }
 
+  @Override
   public void updateRecentChanges(PageData pageData) {
     createRecentChangesIfNecessary(pageData);
     addCurrentPageToRecentChanges(pageData);

@@ -7,7 +7,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
