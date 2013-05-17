@@ -6,13 +6,17 @@ import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.VersionInfo;
+import fitnesse.FitNesseContext;
+import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -26,7 +30,9 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 /**
  * This class requires jGit to be available.
  */
-public class GitFileVersionsController implements VersionsController {
+public class GitFileVersionsController implements VersionsController, RecentChanges {
+
+  private static final int RECENT_CHANGES_DEPTH = 100;
 
   private final VersionsController persistence;
 
@@ -82,17 +88,25 @@ public class GitFileVersionsController implements VersionsController {
 
   @Override
   public Collection<? extends VersionInfo> history(FileSystemPage page) {
+    return history(page, new LogCommandSpec() {
+      public LogCommand specify(LogCommand log, String fileSystemPath) {
+         return log
+                .addPath(fileSystemPath + "/" + contentFilename)
+                .addPath(fileSystemPath + "/" + propertiesFilename)
+                .setMaxCount(historyDepth);
+
+      }
+    });
+  }
+
+  private Collection<GitVersionInfo> history(FileSystemPage page, LogCommandSpec logCommandSpec) {
     Repository repository = getRepository(page);
     Git git = new Git(repository);
     String fileSystemPath = getPath(page, repository);
 
     try {
-      Iterable<RevCommit> log = git.log()
-              .addPath(fileSystemPath + "/" + contentFilename)
-              .addPath(fileSystemPath + "/" + propertiesFilename)
-              .setMaxCount(historyDepth)
-              .call();
-      List<VersionInfo> versions = new ArrayList<VersionInfo>(historyDepth);
+      Iterable<RevCommit> log = logCommandSpec.specify(git.log(), fileSystemPath).call();
+      List<GitVersionInfo> versions = new ArrayList<GitVersionInfo>(historyDepth);
       for (RevCommit revCommit : log) {
         versions.add(makeVersionInfo(revCommit));
       }
@@ -108,12 +122,13 @@ public class GitFileVersionsController implements VersionsController {
     Repository repository = getRepository(page);
     Git git = new Git(repository);
     String fileSystemPath = getPath(page, repository);
+    PageCrawler crawler = page.getPageCrawler();
     try {
       git.add()
               .addFilepattern(fileSystemPath + "/" + contentFilename)
               .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
-      commit(git, String.format("FitNesse page %s updated.", page.getName()));
+      commit(git, String.format("FitNesse page update: %s", PathParser.render(crawler.getFullPath(page))));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -171,12 +186,12 @@ public class GitFileVersionsController implements VersionsController {
     }
   }
 
-  private VersionInfo makeVersionInfo(RevCommit revCommit) {
+  private GitVersionInfo makeVersionInfo(RevCommit revCommit) {
     PersonIdent authorIdent = revCommit.getAuthorIdent();
-    return new VersionInfo(revCommit.name(), authorIdent.getName(), authorIdent.getWhen());
+    return new GitVersionInfo(revCommit.name(), authorIdent.getName(), authorIdent.getWhen(), revCommit.getShortMessage());
   }
 
-  private Repository getRepository(FileSystemPage page) {
+  public static Repository getRepository(FileSystemPage page) {
     try {
       return new FileRepositoryBuilder()
               .findGitDir(new File(page.getFileSystemPath()))
@@ -188,4 +203,56 @@ public class GitFileVersionsController implements VersionsController {
     }
 
   }
+
+  @Override
+  public void updateRecentChanges(PageData pageData) {
+    // Nothing to do, read history from Git repository
+  }
+
+  @Override
+  public WikiPage toWikiPage(WikiPage root) {
+    FileSystemPage fsPage = (FileSystemPage) root;
+    WikiPage recentChangesPage = InMemoryPage.makeRoot(RECENT_CHANGES);
+    PageData pageData = recentChangesPage.getData();
+    pageData.setContent(convertToWikiText(history(fsPage, new LogCommandSpec() {
+      @Override
+      public LogCommand specify(LogCommand log, String fileSystemPath) {
+        return log.setMaxCount(RECENT_CHANGES_DEPTH);
+      }
+    })));
+    recentChangesPage.commit(pageData);
+    return recentChangesPage;
+  }
+
+  private String convertToWikiText(Collection<GitVersionInfo> history) {
+    final SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
+    StringBuilder builder = new StringBuilder(1024);
+    for (GitVersionInfo versionInfo : history) {
+      builder.append("|")
+              .append(versionInfo.getComment())
+              .append("|")
+              .append(versionInfo.getAuthor())
+              .append("|")
+              .append(dateFormat.format(versionInfo.getCreationTime()))
+              .append("|\n");
+    }
+    return builder.toString();
+  }
+
+  private static class GitVersionInfo extends VersionInfo {
+    private final String comment;
+
+    private GitVersionInfo(String name, String author, Date creationTime, String comment) {
+      super(name, author, creationTime);
+      this.comment = comment;
+    }
+
+    private String getComment() {
+      return comment;
+    }
+  }
+}
+
+interface LogCommandSpec {
+  LogCommand specify(LogCommand log, String fileSystemPath);
 }
