@@ -1,9 +1,13 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.WikiPage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+
 
 public class GitFileVersionsControllerTest {
 
@@ -32,4 +36,21 @@ public class GitFileVersionsControllerTest {
     fixture.deletePage("TestPage");
   }
 
+  @Test
+  public void shouldReadRecentChangesOnEmptyRepository() {
+    GitFileVersionsController versionsController = new GitFileVersionsController();
+    WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
+
+    assertTrue(recentChanges.getData().getContent().startsWith("Unable to read history: "));
+  }
+
+  @Test
+  public void shouldReadRecentChanges() {
+    fixture.savePageWithContent("TestPage", "content");
+
+    GitFileVersionsController versionsController = new GitFileVersionsController();
+    WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
+
+    assertTrue(recentChanges.getData().getContent().startsWith("|FitNesse page TestPage updated."));
+  }
 }

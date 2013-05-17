@@ -90,32 +90,32 @@ public class GitFileVersionsController implements VersionsController, RecentChan
 
   @Override
   public Collection<? extends VersionInfo> history(FileSystemPage page) {
-    return history(page, new LogCommandSpec() {
-      public LogCommand specify(LogCommand log, String fileSystemPath) {
-         return log
-                .addPath(fileSystemPath + "/" + contentFilename)
-                .addPath(fileSystemPath + "/" + propertiesFilename)
-                .setMaxCount(historyDepth);
+    try {
+      return history(page, new LogCommandSpec() {
+        public LogCommand specify(LogCommand log, String fileSystemPath) {
+           return log
+                  .addPath(fileSystemPath + "/" + contentFilename)
+                  .addPath(fileSystemPath + "/" + propertiesFilename)
+                  .setMaxCount(historyDepth);
 
-      }
-    });
+        }
+      });
+    } catch (GitAPIException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private Collection<GitVersionInfo> history(FileSystemPage page, LogCommandSpec logCommandSpec) {
+  private Collection<GitVersionInfo> history(FileSystemPage page, LogCommandSpec logCommandSpec) throws GitAPIException{
     Repository repository = getRepository(page);
     Git git = new Git(repository);
     String fileSystemPath = getPath(page, repository);
 
-    try {
-      Iterable<RevCommit> log = logCommandSpec.specify(git.log(), fileSystemPath).call();
-      List<GitVersionInfo> versions = new ArrayList<GitVersionInfo>(historyDepth);
-      for (RevCommit revCommit : log) {
-        versions.add(makeVersionInfo(revCommit));
-      }
-      return versions;
-    } catch (GitAPIException e) {
-      throw new RuntimeException(e);
+    Iterable<RevCommit> log = logCommandSpec.specify(git.log(), fileSystemPath).call();
+    List<GitVersionInfo> versions = new ArrayList<GitVersionInfo>(historyDepth);
+    for (RevCommit revCommit : log) {
+      versions.add(makeVersionInfo(revCommit));
     }
+    return versions;
   }
 
   @Override
@@ -215,12 +215,16 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     FileSystemPage fsPage = (FileSystemPage) root;
     WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
     PageData pageData = recentChangesPage.getData();
-    pageData.setContent(convertToWikiText(history(fsPage, new LogCommandSpec() {
-      @Override
-      public LogCommand specify(LogCommand log, String fileSystemPath) {
-        return log.setMaxCount(RECENT_CHANGES_DEPTH);
-      }
-    })));
+    try {
+      pageData.setContent(convertToWikiText(history(fsPage, new LogCommandSpec() {
+        @Override
+        public LogCommand specify(LogCommand log, String fileSystemPath) {
+          return log.setMaxCount(RECENT_CHANGES_DEPTH);
+        }
+      })));
+    } catch (GitAPIException e) {
+      pageData.setContent("Unable to read history: " + e.getMessage());
+    }
     // No properties, no features.
     pageData.setProperties(recentChangesPageProperties());
     recentChangesPage.commit(pageData);

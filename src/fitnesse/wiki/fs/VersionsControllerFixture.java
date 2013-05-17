@@ -37,6 +37,10 @@ public class VersionsControllerFixture {
     rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
   }
 
+  public WikiPage getRootPage() {
+    return rootPage;
+  }
+
   public void cleanUp() {
     FileUtil.deleteFileSystemDirectory(TEST_DIR);
   }
