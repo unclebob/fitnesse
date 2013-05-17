@@ -11,4 +11,6 @@ public interface RecentChanges {
   String RECENT_CHANGES = "RecentChanges";
 
   void updateRecentChanges(PageData pageData);
+
+  WikiPage toWikiPage(WikiPage root);
 }

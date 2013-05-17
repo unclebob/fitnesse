@@ -14,11 +14,6 @@ import java.util.ListIterator;
 import util.Clock;
 
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 public class RecentChangesWikiPage implements RecentChanges {
 
@@ -31,6 +26,11 @@ public class RecentChangesWikiPage implements RecentChanges {
   public void updateRecentChanges(PageData pageData) {
     createRecentChangesIfNecessary(pageData);
     addCurrentPageToRecentChanges(pageData);
+  }
+
+  @Override
+  public WikiPage toWikiPage(WikiPage root) {
+    return root.getPageCrawler().getRoot(root).getChildPage(RECENT_CHANGES);
   }
 
   public List<String> getRecentChangesLines(PageData recentChangesdata) {
@@ -51,14 +51,14 @@ public class RecentChangesWikiPage implements RecentChanges {
   private void addCurrentPageToRecentChanges(PageData data) {
     WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot(data.getWikiPage()).getChildPage(RECENT_CHANGES);
     String resource = resource(data);
-    PageData recentChangesdata = recentChanges.getData();
-    List<String> lines = getRecentChangesLines(recentChangesdata);
+    PageData recentChangesData = recentChanges.getData();
+    List<String> lines = getRecentChangesLines(recentChangesData);
     removeDuplicate(lines, resource);
     lines.add(0, makeRecentChangesLine(data));
     trimExtraLines(lines);
     String content = convertLinesToWikiText(lines);
-    recentChangesdata.setContent(content);
-    recentChanges.commit(recentChangesdata);
+    recentChangesData.setContent(content);
+    recentChanges.commit(recentChangesData);
 
   }
 

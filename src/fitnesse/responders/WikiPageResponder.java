@@ -15,17 +15,10 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
   private WikiPage page;
-  private PageCrawler crawler;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     loadPage(request.getResource(), context);
@@ -37,8 +30,12 @@ public class WikiPageResponder implements SecureResponder {
 
   protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
-    crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path);
+    if (RecentChanges.RECENT_CHANGES.equals(path)) {
+      page = context.recentChanges.toWikiPage(context.root);
+    } else {
+      PageCrawler crawler = context.root.getPageCrawler();
+      page = crawler.getPage(context.root, path);
+    }
   }
 
   private Response notFoundResponse(FitNesseContext context, Request request) {
@@ -53,7 +50,6 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context) {
-      PathParser.render(crawler.getFullPath(page));
       String html = makeHtml(context);
 
       SimpleResponse response = new SimpleResponse();
