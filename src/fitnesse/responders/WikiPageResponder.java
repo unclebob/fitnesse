@@ -18,24 +18,25 @@ import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
-  private WikiPage page;
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    loadPage(request.getResource(), context);
+    WikiPage page = loadPage(context, request.getResource());
     if (page == null)
       return notFoundResponse(context, request);
     else
-      return makePageResponse(context);
+      return makePageResponse(context, page);
   }
 
-  protected void loadPage(String pageName, FitNesseContext context) {
+  protected WikiPage loadPage(FitNesseContext context, String pageName) {
     WikiPagePath path = PathParser.parse(pageName);
+    WikiPage page;
     if (RecentChanges.RECENT_CHANGES.equals(path)) {
       page = context.recentChanges.toWikiPage(context.root);
     } else {
       PageCrawler crawler = context.root.getPageCrawler();
       page = crawler.getPage(context.root, path);
     }
+    return page;
   }
 
   private Response notFoundResponse(FitNesseContext context, Request request) {
@@ -49,8 +50,8 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context) {
-      String html = makeHtml(context);
+  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
+      String html = makeHtml(context, page);
 
       SimpleResponse response = new SimpleResponse();
       response.setMaxAge(0);
@@ -58,9 +59,8 @@ public class WikiPageResponder implements SecureResponder {
       return response;
   }
 
-  public String makeHtml(FitNesseContext context) {
+  public String makeHtml(FitNesseContext context, WikiPage page) {
     PageData pageData = page.getData();
-    WikiPage page = pageData.getWikiPage();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
     String fullPathName = PathParser.render(fullPath);
@@ -88,7 +88,7 @@ public class WikiPageResponder implements SecureResponder {
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
-    html.put("footerContent", new WikiPageFooterRenderer());
+    html.put("footerContent", new WikiPageFooterRenderer(pageData));
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -103,17 +103,25 @@ public class WikiPageResponder implements SecureResponder {
 
   public class WikiPageRenderer {
     private PageData data;
+
     WikiPageRenderer(PageData data) {
       this.data = data;
     }
+
     public String render() {
         return HtmlUtil.makePageHtml(data);
     }
   }
 
   public class WikiPageFooterRenderer {
+    private PageData data;
+
+    WikiPageFooterRenderer(PageData data) {
+      this.data = data;
+    }
+
     public String render() {
-        return HtmlUtil.makePageFooterHtml(page.getData());
+        return HtmlUtil.makePageFooterHtml(data);
     }
   }
 
