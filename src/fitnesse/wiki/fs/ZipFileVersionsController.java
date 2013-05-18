@@ -31,7 +31,6 @@ import util.StreamReader;
 public class ZipFileVersionsController implements VersionsController {
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
-  private static long counter = 1;
 
   private int daysTillVersionsExpire = 14;
 
