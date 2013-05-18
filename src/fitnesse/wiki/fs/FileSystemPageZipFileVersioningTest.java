@@ -2,27 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import fitnesse.wiki.NoSuchVersionException;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
 import util.FileUtil;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.util.*;
 
 public class FileSystemPageZipFileVersioningTest extends TestCase {
   public FileSystemPage page;

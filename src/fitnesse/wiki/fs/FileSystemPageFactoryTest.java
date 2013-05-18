@@ -1,11 +1,5 @@
 package fitnesse.wiki.fs;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Properties;
-
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
@@ -13,6 +7,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 public class FileSystemPageFactoryTest {
     private FileSystem fileSystem;

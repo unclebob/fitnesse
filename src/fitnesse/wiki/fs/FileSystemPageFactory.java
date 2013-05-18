@@ -1,10 +1,10 @@
 package fitnesse.wiki.fs;
 
-import java.util.Properties;
-
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+
+import java.util.Properties;
 
 // TODO: Merge with WikiPageFactory
 public class FileSystemPageFactory implements WikiPageFactory {

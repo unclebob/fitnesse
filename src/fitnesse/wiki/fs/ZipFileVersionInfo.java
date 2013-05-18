@@ -1,15 +1,15 @@
 package fitnesse.wiki.fs;
 
 
+import fitnesse.wiki.VersionInfo;
+import util.Clock;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fitnesse.wiki.VersionInfo;
-import util.Clock;
 
 public class ZipFileVersionInfo extends VersionInfo {
   public static final Pattern COMPEX_NAME_PATTERN = Pattern.compile("(?:([a-zA-Z][^\\-]*)-)?(?:\\d+-)?(\\d{14})");

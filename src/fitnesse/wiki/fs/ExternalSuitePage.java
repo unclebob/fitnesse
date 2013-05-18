@@ -1,16 +1,12 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.*;
+import fitnesse.wikitext.parser.WikiWordPath;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import fitnesse.wiki.CachingPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ExternalSuitePage extends CachingPage {
   private static final long serialVersionUID = 1L;

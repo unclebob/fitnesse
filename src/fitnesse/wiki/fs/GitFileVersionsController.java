@@ -1,22 +1,8 @@
 package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
-import static fitnesse.wiki.fs.SimpleFileVersionsController.parsePropertiesXml;
-import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
-import fitnesse.wiki.mem.MemoryVersionsController;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
@@ -28,6 +14,16 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import static fitnesse.wiki.fs.SimpleFileVersionsController.*;
 
 /**
  * This class requires jGit to be available.

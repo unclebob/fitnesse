@@ -1,10 +1,10 @@
 package fitnesse.wiki.fs;
 
-import java.io.File;
-import java.io.IOException;
-
 import util.Clock;
 import util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
 
 public class DiskFileSystem implements FileSystem {
   public void makeFile(String path, String content) throws IOException {

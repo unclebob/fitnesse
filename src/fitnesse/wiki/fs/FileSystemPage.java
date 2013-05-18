@@ -2,14 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
-import java.util.Collection;
-
-import fitnesse.wiki.CachingPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.SymbolicPageFactory;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.WikiWordPath;
+
+import java.util.Collection;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
