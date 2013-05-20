@@ -1,6 +1,6 @@
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import fitnesse.testsystems.TestPage;

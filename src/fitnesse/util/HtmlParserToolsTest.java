@@ -2,9 +2,9 @@ package fitnesse.util;
 
 import static fitnesse.util.HtmlParserTools.deepClone;
 import static fitnesse.util.HtmlParserTools.flatClone;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 
 import org.htmlparser.Node;
