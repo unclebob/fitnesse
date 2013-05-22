@@ -6,7 +6,6 @@ import fitnesse.wiki.WikiPageFactory;
 
 import java.util.Properties;
 
-// TODO: Merge with WikiPageFactory
 public class FileSystemPageFactory implements WikiPageFactory {
   private FileSystem fileSystem;
   private VersionsController versionsController;
