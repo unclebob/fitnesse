@@ -61,7 +61,7 @@ public class GitCmSystem {
   /**
    * Called just before the directory defining a page is going to be deleted.
    *
-   * @param file    The namem of the directory to be deleted.
+   * @param file    The name of the directory to be deleted.
    * @param payload Not needed for Git..
    */
   public static void cmPreDelete(String file, String payload) throws Exception {
