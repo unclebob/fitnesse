@@ -15,18 +15,20 @@ public class StackTraceEnricherTest {
   private static final String NON_EXISTING_FILE = "/this/should/not/exist/at/all/sadfbas";
 
   private Throwable exception;
+  private Throwable exceptionWithCause;
   private String javaVersion;
   private StackTraceEnricher enricher;
 
   @Before
   public void setUp() {
-    exception = createIoException();
+    exception = createIOException();
+    exceptionWithCause = createIllegalArgumentExceptionWithCause();
     javaVersion = getJavaVersion();
     enricher = new StackTraceEnricher();
   }
 
-  private Throwable createIoException() {
-    Throwable exception = null;
+  private IOException createIOException() {
+    IOException exception = null;
     try {
       new FileInputStream(new File(NON_EXISTING_FILE));
       fail("Managed to find a file that shouldn't exist " + NON_EXISTING_FILE);
@@ -37,6 +39,29 @@ public class StackTraceEnricherTest {
       exception = ioe;
     }
     return exception;
+  }
+
+  private IllegalArgumentException createIllegalArgumentExceptionWithCause() {
+    IllegalArgumentException exception = null;
+    try {
+      throwIllegalArgumentExceptionWithIOExceptionCause();
+    } catch (IllegalArgumentException iae) {
+      exception = iae;
+    }
+    return exception;
+  }
+
+  private void throwIOException() throws IOException {
+    throw createIOException();
+  }
+
+  private void throwIllegalArgumentExceptionWithIOExceptionCause() {
+    try {
+      throwIOException();
+      fail("No IOException was thrown.");
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Custom IllegalArgumentException message", e);
+    }
   }
 
   private String getJavaVersion() {
@@ -158,5 +183,12 @@ public class StackTraceEnricherTest {
     } finally {
       System.setErr(originalErrStream);
     }
+  }
+
+  @Test
+  public void shouldParseCauseExceptions() {
+    String parsedString = enricher.getStackTraceAsString(exceptionWithCause);
+    assertTrue("No FileNotFoundException found as cause in stacktrace.",
+            parsedString.contains("\nCaused by: java.io.FileNotFoundException:"));
   }
 }
