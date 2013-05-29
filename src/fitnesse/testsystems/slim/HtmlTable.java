@@ -153,7 +153,9 @@ public class HtmlTable implements Table {
   public void updateContent(int col, int row, TestResult testResult) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setTestResult(testResult);
-    cell.setContent(cell.formatTestResult());
+    final String newContent = cell.formatTestResult();
+    if (newContent != null)
+      cell.setContent(newContent);
   }
 
   @Override
@@ -254,7 +256,7 @@ public class HtmlTable implements Table {
 
   class Cell {
     private final TableColumn columnNode;
-    private final String originalContent;
+    private String originalContent;
     private TestResult testResult;
     private ExceptionResult exceptionResult;
 
@@ -310,12 +312,12 @@ public class HtmlTable implements Table {
 
     public String formatTestResult() {
       if (testResult.getExecutionResult() == null) {
-        return testResult.getMessage() != null ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
+        return testResult.getMessage() != null ? Utils.escapeHTML(testResult.getMessage()) : null;
       }
-      final String escapedMessage = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
+      final String message = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
-          return String.format("<span class=\"pass\">%s</span>", escapedMessage);
+          return String.format("<span class=\"pass\">%s</span>", message);
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
             return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
@@ -326,11 +328,11 @@ public class HtmlTable implements Table {
                     Utils.escapeHTML(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
                     Utils.escapeHTML(testResult.getMessage()));
           }
-          return String.format("<span class=\"fail\">%s</span>", escapedMessage);
+          return String.format("<span class=\"fail\">%s</span>", message);
         case IGNORE:
-          return String.format("%s <span class=\"ignore\">%s</span>", originalContent, escapedMessage);
+          return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
         case ERROR:
-          return String.format("%s <span class=\"error\">%s</span>", originalContent, escapedMessage);
+          return String.format("%s <span class=\"error\">%s</span>", originalContent, message);
       }
       return "Should not be here";
     }
