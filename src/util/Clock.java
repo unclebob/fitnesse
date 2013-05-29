@@ -19,9 +19,9 @@ public abstract class Clock {
     if (setAsInstance) instance = this;
   }
 
-  abstract long currentClockTimeInMillis() ;
+  abstract protected long currentClockTimeInMillis() ;
 
-  Date currentClockDate() {
+  protected Date currentClockDate() {
     return new Date(currentClockTimeInMillis());
   }
   
@@ -35,13 +35,13 @@ public abstract class Clock {
   
   public static void restoreDefaultClock() {
     Clock.instance = SYSTEM_CLOCK;
-}
+  }
 
 }
 
 class SystemClock extends Clock {
   @Override
-  long currentClockTimeInMillis() {
+  protected long currentClockTimeInMillis() {
     return System.currentTimeMillis();
   }  
 }
