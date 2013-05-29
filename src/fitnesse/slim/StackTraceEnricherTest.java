@@ -190,6 +190,6 @@ public class StackTraceEnricherTest {
   public void shouldParseCauseExceptions() {
     String parsedString = enricher.getStackTraceAsString(exceptionWithCause);
     assertTrue("No FileNotFoundException found as cause in stacktrace.",
-        parsedString.contains("Caused by: java.io.") && parsedString.contains("The system cannot find the path specified"));
+            parsedString.contains("\nCaused by: java.io.FileNotFoundException:"));
   }
 }
