@@ -64,25 +64,28 @@ public abstract class CachingPage extends CommitingPage {
   }
 
   public PageData getData() {
+    PageData pageData = getCachedData();
     if (cachedDataExpired()) {
-      ReloadCache();
+      pageData = ReloadCache();
     }
-    return new PageData(getCachedData());
+    return new PageData(pageData);
   }
 
-  private void ReloadCache() {
+  private PageData ReloadCache() {
     //if (getCachedData() == null) System.out.println("cache null " + (getName() != null ? getName() : "?"));
     //else if (cachedTime.elapsed() >= cacheTime) System.out.println("cache expired " + (getName() != null ? getName() : "?"));
     PageData data = makePageData();
     //System.out.println("reload " + getName() + " " + data.getContent().length());
     setCachedData(data);
+    return data;
   }
 
   public ReadOnlyPageData readOnlyData() {
-    if (getCachedData() == null) {
-      ReloadCache();
+    PageData pageData = getCachedData();
+    if (pageData == null) {
+      pageData = ReloadCache();
     }
-    return getCachedData();
+    return pageData;
   }
 
   private boolean cachedDataExpired() {
