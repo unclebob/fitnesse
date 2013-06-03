@@ -2,6 +2,7 @@ package fitnesse.util;
 
 import util.Clock;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -45,18 +46,18 @@ public interface Cache<K, V> {
 
     public Cache<K, V> build() {
       return new Cache<K, V>() {
-        private Map<K, WeakReference<CachedValue<V>>> cacheMap = new ConcurrentHashMap<K, WeakReference<CachedValue<V>>>();
+        private Map<K, SoftReference<CachedValue<V>>> cacheMap = new ConcurrentHashMap<K, SoftReference<CachedValue<V>>>();
 
         @Override
         public V get(K key) throws Exception {
-          WeakReference<CachedValue<V>> ref = cacheMap.get(key);
+          SoftReference<CachedValue<V>> ref = cacheMap.get(key);
           CachedValue<V> cachedValue = ref != null ? ref.get() : null;
           V value;
           if (cachedValue == null || expirationPolicy.isExpired(key, cachedValue.value, cachedValue.lastModified)) {
             value = loader.fetch(key);
             if (value != null) {
               cachedValue = new CachedValue<V>(value, Clock.currentTimeInMillis());
-              cacheMap.put(key, new WeakReference<CachedValue<V>>(cachedValue));
+              cacheMap.put(key, new SoftReference<CachedValue<V>>(cachedValue));
               // TODO: implement cleanup cycle.
             } else {
               cacheMap.remove(key);
