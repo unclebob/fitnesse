@@ -2,7 +2,10 @@ package fitnesse.util;
 
 import util.Clock;
 
+import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A simple Cache interface.
@@ -42,17 +45,19 @@ public interface Cache<K, V> {
 
     public Cache<K, V> build() {
       return new Cache<K, V>() {
-        private WeakHashMap<K, CachedValue<V>> cacheMap = new WeakHashMap<K, CachedValue<V>>();
+        private Map<K, WeakReference<CachedValue<V>>> cacheMap = new ConcurrentHashMap<K, WeakReference<CachedValue<V>>>();
 
         @Override
         public V get(K key) throws Exception {
-          CachedValue<V> cachedValue = cacheMap.get(key);
+          WeakReference<CachedValue<V>> ref = cacheMap.get(key);
+          CachedValue<V> cachedValue = ref != null ? ref.get() : null;
           V value;
           if (cachedValue == null || expirationPolicy.isExpired(key, cachedValue.value, cachedValue.lastModified)) {
             value = loader.fetch(key);
             if (value != null) {
               cachedValue = new CachedValue<V>(value, Clock.currentTimeInMillis());
-              cacheMap.put(key, cachedValue);
+              cacheMap.put(key, new WeakReference<CachedValue<V>>(cachedValue));
+              // TODO: implement cleanup cycle.
             } else {
               cacheMap.remove(key);
             }
