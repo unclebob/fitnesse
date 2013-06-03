@@ -30,6 +30,7 @@ public class FileSystemPage extends CachingPage {
 
     versionsController = createVersionsController(componentFactory);
     createDirectoryIfNewPage(fileSystem);
+    cmSystem.setExecutable();
   }
 
   public FileSystemPage(final String path, final String name) {
@@ -299,6 +300,12 @@ public class FileSystemPage extends CachingPage {
   }
 
   class CmSystem {
+    public void setExecutable() {
+      String executable = getCmExecutable();
+      if (executable != null && !executable.isEmpty())
+        invokeCmMethod("cmSetExecutable", getCmExecutable());
+    }
+
     public void update(String fileName) {
       invokeCmMethod("cmUpdate", fileName);
     }
@@ -342,6 +349,10 @@ public class FileSystemPage extends CachingPage {
 
     private String getCmSystemVariable() {
       return readOnlyData().getVariable("CM_SYSTEM");
+    }
+
+    private String getCmExecutable() {
+      return readOnlyData().getVariable("CM_EXECUTABLE");
     }
   }
 }

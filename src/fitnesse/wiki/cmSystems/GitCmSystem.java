@@ -27,16 +27,43 @@ import fitnesse.testsystems.CommandRunner;
  *
  * Oh, by the way, if there is no !define for CM_SYSTEM, fitnesse is happy to use the CM_SYSTEM environment variable
  * or system property in its place (as for all variables).
+ * In addition, specify !define CM_EXECUTABLE to the path to git executable if it is not in the default location.
  * </pre>
  */
 public class GitCmSystem {
+  private static String cmExecutable = "git";
+
+  static {
+    if (System.getProperty("os.name").startsWith("Windows")) {
+      String pf32 = System.getenv("ProgramFiles(X86)");
+      if (pf32.isEmpty()) {
+          String pf = System.getenv("ProgramFiles");
+          if (!pf.isEmpty())
+            cmExecutable = pf + "\\Git\\bin\\git.exe";
+      }
+      else
+        cmExecutable = pf32 + "\\Git\\bin\\git.exe";
+    }
+  }
+
+  /**
+   * Set the path to the CM executable.
+   *
+   * @param executable
+   */
+  public static void cmSetExecutable(String executable) {
+    if (executable == null || executable.isEmpty())
+      return;
+    cmExecutable = executable;
+  }
+
   /**
    * Called just after file has been written.
    *
    * @param payload Not needed for Git..
    */
   public static void cmUpdate(String file, String payload) throws Exception {
-    execute("cmUpdate", "/usr/local/bin/git add " + file);
+    execute("cmUpdate", new String[] { cmExecutable, "add", file });
   }
 
   /**
@@ -55,24 +82,27 @@ public class GitCmSystem {
    * @param payload Not needed for Git..
    */
   public static void cmDelete(String file, String payload) throws Exception {
-    execute("cmDelete", "/usr/local/bin/git rm -rf --cached " + file);
+    execute("cmDelete",  new String[] { cmExecutable, "rm", "-rf", "--cached", file });
   }
 
   /**
    * Called just before the directory defining a page is going to be deleted.
    *
-   * @param file    The namem of the directory to be deleted.
+   * @param file    The name of the directory to be deleted.
    * @param payload Not needed for Git..
    */
   public static void cmPreDelete(String file, String payload) throws Exception {
     //git doesn't need this.
   }
 
-  private static void execute(String method, String command) throws Exception {
+  private static void execute(String method, String[] command) throws Exception {
     CommandRunner runner = new CommandRunner(command, "");
     runner.run();
     if (runner.getOutput().length() + runner.getError().length() > 0) {
-      System.err.println(method + " command: " + command);
+      System.err.print(method + " command: ");
+      for (int i = 0; i < command.length; i++)
+        System.err.print((i > 0 ? " " : "") + command[i]);
+      System.err.println();
       System.err.println(method + " exit code: " + runner.getExitCode());
       System.err.println(method + " out:" + runner.getOutput());
       System.err.println(method + " err:" + runner.getError());

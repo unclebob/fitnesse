@@ -25,23 +25,23 @@ public class CommandRunner {
   protected StringBuffer errorBuffer = new StringBuffer();
   protected int exitCode = -1;
   private TimeMeasurement timeMeasurement = new TimeMeasurement();
-  private String command = "";
+  private String[] command = { "", "" };
   private Map<String, String> environmentVariables;
 
   public CommandRunner() {
   }
 
-  public CommandRunner(String command, String input) {
+  public CommandRunner(String[] command, String input) {
     this(command, input, null);
   }
 
-  public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
+  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables) {
     this.command = command;
     this.input = input;
     this.environmentVariables = environmentVariables;
   }
 
-  protected CommandRunner(String command, String input, int exitCode) {
+  protected CommandRunner(String[] command, String input, int exitCode) {
     this(command, input);
     this.exitCode = exitCode;
   }
@@ -116,11 +116,11 @@ public class CommandRunner {
     }
   }
 
-  protected void setCommand(String command) {
+  protected void setCommand(String[] command) {
     this.command = command;
   }
 
-  public String getCommand() {
+  public String[] getCommand() {
     return command;
   }
 
