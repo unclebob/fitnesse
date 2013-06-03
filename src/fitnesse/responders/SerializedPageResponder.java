@@ -69,9 +69,11 @@ public class SerializedPageResponder implements SecureResponder {
 
   private Object getObjectToSerialize(Request request, WikiPage page) {
     Object object;
-    if ("bones".equals(request.getInput("type")))
+    if ("bones".equals(request.getInput("type"))) {
       object = new ProxyPage(page);
-    else if ("meat".equals(request.getInput("type"))) {
+    } else if ("versions".equals(request.getInput("type"))) {
+      object = page.getVersions();
+    } else if ("meat".equals(request.getInput("type"))) {
       PageData originalData = page.getData();
       if (request.hasInput("version"))
         originalData = page.getDataVersion((String) request.getInput("version"));

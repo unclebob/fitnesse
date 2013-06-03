@@ -7,7 +7,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
 import static org.junit.Assert.assertEquals;

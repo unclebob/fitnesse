@@ -2,15 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.testsystems.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
-import fitnesse.wikitext.parser.*;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Paths;
+import fitnesse.wikitext.parser.See;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolTreeWalker;
+import fitnesse.wikitext.parser.VariableFinder;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
 import util.Maybe;
 import util.StringUtil;
-
-import java.io.Serializable;
-import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class PageData implements ReadOnlyPageData, Serializable {
@@ -61,7 +71,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   private transient WikiPage wikiPage;
   private String content;
   private WikiPageProperties properties = new WikiPageProperties();
-  private Set<VersionInfo> versions;
 
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
@@ -72,7 +81,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public PageData(WikiPage page) {
     wikiPage = page;
     initializeAttributes();
-    versions = new HashSet<VersionInfo>();
   }
 
   public PageData(WikiPage page, String content) {
@@ -83,7 +91,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public PageData(PageData data) {
     this(data.getWikiPage(), data.content);
     properties = new WikiPageProperties(data.properties);
-    versions.addAll(data.versions);
     parsedPage = data.parsedPage;
   }
 
@@ -227,14 +234,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
         });
         return xrefPages;
     }
-
-  public Set<VersionInfo> getVersions() {
-    return versions;
-  }
-
-  public void addVersions(Collection<VersionInfo> newVersions) {
-    versions.addAll(newVersions);
-  }
 
   public boolean isEmpty() {
     return getContent() == null || getContent().length() == 0;

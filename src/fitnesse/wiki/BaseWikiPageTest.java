@@ -2,9 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import junit.framework.TestCase;
 import util.FileUtil;
 
@@ -56,14 +57,6 @@ public class BaseWikiPageTest extends TestCase {
 
     assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
     assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
-  }
-
-  public void testExternalSymbolicLinkToNewDirectory() throws Exception {
-    FileUtil.createDir("testDir");
-    createLink("file://testDir/ExternalRoot");
-
-    checkExternalLink();
-    assertTrue(new File("testDir/ExternalRoot").exists());
   }
 
   private void createLink(String linkedPagePath) throws Exception {

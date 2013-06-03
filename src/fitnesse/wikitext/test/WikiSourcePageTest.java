@@ -1,6 +1,6 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;

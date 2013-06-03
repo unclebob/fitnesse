@@ -8,12 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import util.Clock;
-
 import fitnesse.http.ResponseParser;
+import util.Clock;
 
 public class ProxyPage extends CachingPage implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class ProxyPage extends CachingPage implements Serializable {
   private long lastLoadChildrenTime = 0;
 
   public ProxyPage(WikiPage original) {
-    super(original.getName(), null);
+    super(original.getName(), null, null);
     realPath = original.getPageCrawler().getFullPath(original);
 
     List<?> children = original.getChildren();
@@ -39,11 +39,11 @@ public class ProxyPage extends CachingPage implements Serializable {
   }
 
   protected ProxyPage(String name, WikiPage parent) {
-    super(name, parent);
+    super(name, parent, null);
   }
 
   public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path) {
-    super(name, parent);
+    super(name, parent, null);
     this.host = host;
     hostPort = port;
     realPath = path;
@@ -100,6 +100,11 @@ public class ProxyPage extends CachingPage implements Serializable {
     }
   }
 
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return (Collection<VersionInfo>) getObjectFromUrl(getThisPageUrl() + "?responder=proxy&type=versions");
+  }
+
   public void setTransientValues(String host, long lastLoadTime) {
     this.host = host;
     lastLoadChildrenTime = lastLoadTime;
@@ -134,16 +139,20 @@ public class ProxyPage extends CachingPage implements Serializable {
     urlString.append("?responder=proxy&type=meat");
     if (versionName != null)
       urlString.append("&version=").append(versionName);
-    URL url;
-    try {
-      url = new URL(urlString.toString());
-    } catch (MalformedURLException e) {
-      throw new RuntimeException(e);
-    }
-    PageData data = (PageData) getObjectFromUrl(url);
+    PageData data = (PageData) getObjectFromUrl(urlString.toString());
     if (data != null)
       data.setWikiPage(this);
     return data;
+  }
+
+  private static Object getObjectFromUrl(String urlString) {
+    URL url;
+    try {
+      url = new URL(urlString);
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+    return getObjectFromUrl(url);
   }
 
   private static Object getObjectFromUrl(URL url) {
@@ -184,14 +193,5 @@ public class ProxyPage extends CachingPage implements Serializable {
 
   public boolean isOpenInNewWindow() {
     return true;
-  }
-
-  //TODO-MdM these are not needed
-  // We expect this to go away when we do the checkout model
-  protected VersionInfo makeVersion() {
-    return null;
-  }
-
-  protected void doCommit(PageData data) {
   }
 }

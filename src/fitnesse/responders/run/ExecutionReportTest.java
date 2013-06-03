@@ -22,7 +22,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
