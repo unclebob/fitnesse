@@ -86,7 +86,7 @@ There are a few things to keep in mind when working from an IDE:
    you set the "post-compile" target from the build file, you won't have any trouble with
    cleaning, building and executing tests from your IDE.
 
-2. Apache Ivy is used for dependency management. You're IDE can be set up to support Ivy.
+2. Apache Ivy is used for dependency management. Your IDE can be set up to support Ivy.
     * In IntelliJ set IvyIDEA in "Project Structure" -> "Modules" -> "Dependencies".
     * In Eclipse, install IvyDE and set it up.
 
