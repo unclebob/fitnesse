@@ -18,6 +18,7 @@ public class SymbolicPageFactory {
   }
 
   public SymbolicPageFactory(FileSystem fileSystem) {
+    // FixMe: -AJM- this is a cyclic dependency: FileSystemPageFactory - FileSystemPage - SymbolicPageFactory
     wikiPageFactory = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem));
   }
 
