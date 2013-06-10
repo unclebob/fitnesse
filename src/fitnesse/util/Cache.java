@@ -15,6 +15,8 @@ public interface Cache<K, V> {
 
   V get(K key) throws Exception;
 
+  void put(K key, V value);
+
   void evict(K key);
 
   public interface Loader<K, V> {
@@ -50,15 +52,13 @@ public interface Cache<K, V> {
 
         @Override
         public V get(K key) throws Exception {
-          SoftReference<CachedValue<V>> ref = cacheMap.get(key);
-          CachedValue<V> cachedValue = ref != null ? ref.get() : null;
+          final SoftReference<CachedValue<V>> ref = cacheMap.get(key);
+          final CachedValue<V> cachedValue = ref != null ? ref.get() : null;
           V value;
           if (cachedValue == null || expirationPolicy.isExpired(key, cachedValue.value, cachedValue.lastModified)) {
             value = loader.fetch(key);
             if (value != null) {
-              cachedValue = new CachedValue<V>(value, Clock.currentTimeInMillis());
-              cacheMap.put(key, new SoftReference<CachedValue<V>>(cachedValue));
-              // TODO: implement cleanup cycle.
+              put(key, value);
             } else {
               cacheMap.remove(key);
             }
@@ -68,10 +68,17 @@ public interface Cache<K, V> {
           return value;
         }
 
+        public void put(K key, V value) {
+          CachedValue<V> cachedValue = new CachedValue<V>(value, Clock.currentTimeInMillis());
+          cacheMap.put(key, new SoftReference<CachedValue<V>>(cachedValue));
+        }
+
         @Override
         public void evict(K key) {
           cacheMap.remove(key);
         }
+
+
       };
     }
 
