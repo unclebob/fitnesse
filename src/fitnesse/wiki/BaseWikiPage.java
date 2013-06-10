@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wiki.fs.SymbolicPageFactory;
+
 import java.util.List;
 
 public abstract class BaseWikiPage implements WikiPage {

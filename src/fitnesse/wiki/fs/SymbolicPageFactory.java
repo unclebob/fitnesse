@@ -1,7 +1,8 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.File;
 
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;

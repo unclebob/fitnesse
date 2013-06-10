@@ -9,7 +9,6 @@ import java.util.List;
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.SymbolicPageFactory;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
