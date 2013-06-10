@@ -1,9 +1,9 @@
 package fitnesse.wiki.fs;
 
-import java.util.Collection;
-
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
+
+import java.util.Collection;
 
 public interface VersionsController {
 

@@ -3,23 +3,19 @@
 
 package fitnesse.wiki.fs;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.Clock;
 import util.FileUtil;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";

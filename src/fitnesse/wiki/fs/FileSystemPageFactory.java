@@ -1,12 +1,11 @@
 package fitnesse.wiki.fs;
 
-import java.util.Properties;
-
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 
-// TODO: Merge with WikiPageFactory
+import java.util.Properties;
+
 public class FileSystemPageFactory implements WikiPageFactory {
   private FileSystem fileSystem;
   private VersionsController versionsController;
@@ -19,7 +18,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
   public FileSystemPageFactory(Properties properties) {
     fileSystem = new DiskFileSystem();
     versionsController = (VersionsController) new ComponentFactory(properties).createComponent(
-            ComponentFactory.VERSIONS_CONTROLLER, ZipFileVersionsController.class);
+            ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
   }
 

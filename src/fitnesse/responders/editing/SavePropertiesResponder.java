@@ -7,7 +7,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -31,7 +30,7 @@ public class SavePropertiesResponder implements SecureResponder {
     saveAttributes(request, data);
     VersionInfo commitRecord = page.commit(data);
     response.addHeader("Current-Version", commitRecord.getName());
-    RecentChanges.updateRecentChanges(data);
+    context.recentChanges.updateRecentChanges(data);
     response.redirect(resource);
 
     return response;

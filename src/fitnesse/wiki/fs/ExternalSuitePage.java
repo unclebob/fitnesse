@@ -1,5 +1,8 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.*;
+import fitnesse.wikitext.parser.WikiWordPath;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

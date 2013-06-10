@@ -45,6 +45,13 @@ public class FileSystemPage extends BaseWikiPage {
     autoCommit = parent.autoCommit;
   }
 
+  public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, final VersionsController versionsController) {
+    super(name, parent, new SymbolicPageFactory(fileSystem));
+    path = null;
+    this.fileSystem = fileSystem;
+    this.versionsController = versionsController;
+  }
+
   @Override
   public void removeChildPage(final String name) {
     WikiPage childPage = getChildPage(name);
@@ -77,14 +84,14 @@ public class FileSystemPage extends BaseWikiPage {
     }
   }
 
-  private Boolean hasContentChild(String path) {
+  private boolean hasContentChild(String path) {
     for (String child : fileSystem.list(path)) {
       if (child.equals("content.txt")) return true;
     }
     return false;
   }
 
-  private Boolean hasHtmlChild(String path) {
+  private boolean hasHtmlChild(String path) {
     if (path.endsWith(".html")) return true;
     for (String child : fileSystem.list(path)) {
       if (hasHtmlChild(path + "/" + child)) return true;

@@ -1,37 +1,24 @@
 package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
-import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
-
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 import util.StreamReader;
 
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
+
+import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
+import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
+
 public class ZipFileVersionsController implements VersionsController {
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
-  private static long counter = 1;
 
   private int daysTillVersionsExpire = 14;
 

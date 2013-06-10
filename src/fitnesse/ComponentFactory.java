@@ -20,7 +20,9 @@ import fitnesse.wikitext.parser.SymbolType;
 
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
+
   public static final String PROPERTIES_FILE = "plugins.properties";
+
   public static final String WIKI_PAGE_FACTORY_CLASS = "WikiPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
@@ -28,9 +30,10 @@ public class ComponentFactory {
   public static final String SLIM_TABLES = "SlimTables";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
-  public static final String VERSIONS_CONTROLLER = "VersionsController";
-  public static final String VERSIONS_CONTROLLER_DAYS = VERSIONS_CONTROLLER + ".days";
+  public static final String VERSIONS_CONTROLLER_CLASS = "VersionsController";
+  public static final String VERSIONS_CONTROLLER_DAYS = VERSIONS_CONTROLLER_CLASS + ".days";
   public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
+  public static final String RECENT_CHANGES_CLASS = "RecentChanges";
   public static final String THEME = "Theme";
 
   private final Properties loadedProperties;

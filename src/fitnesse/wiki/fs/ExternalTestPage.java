@@ -1,5 +1,7 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.*;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;

@@ -1,11 +1,5 @@
 package fitnesse.wiki.fs;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Properties;
-
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
@@ -13,6 +7,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 public class FileSystemPageFactoryTest {
     private FileSystem fileSystem;
@@ -83,7 +83,7 @@ public class FileSystemPageFactoryTest {
   @Test
   public void testShouldUseSpecifiedRevisionController() throws Exception {
     Properties testProperties = new Properties();
-    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_CLASS, NullVersionsController.class.getName());
     fileSystemPageFactory = new FileSystemPageFactory(testProperties);
 
     VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
@@ -94,7 +94,7 @@ public class FileSystemPageFactoryTest {
   @Test
   public void testShouldUseSpecifiedRevisionControllerWithHistoryDepth() throws Exception {
     Properties testProperties = new Properties();
-    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_CLASS, NullVersionsController.class.getName());
     testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "42");
     fileSystemPageFactory = new FileSystemPageFactory(testProperties);
 

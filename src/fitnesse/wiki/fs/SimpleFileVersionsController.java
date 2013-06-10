@@ -1,6 +1,8 @@
 package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.VersionInfo.makeVersionInfo;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPageProperties;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 import util.Clock;
+import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
 

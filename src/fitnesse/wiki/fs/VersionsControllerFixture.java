@@ -1,20 +1,16 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.ComponentFactory;
+import fitnesse.wiki.*;
+import org.eclipse.jgit.api.InitCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import util.FileUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
-import fitnesse.ComponentFactory;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import org.eclipse.jgit.api.InitCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import util.FileUtil;
 
 public class VersionsControllerFixture {
   public static final String TEST_DIR = "TestDir";
@@ -28,13 +24,17 @@ public class VersionsControllerFixture {
 
   public VersionsControllerFixture(String versionsControllerClassName) {
     Properties properties = new Properties();
-    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, versionsControllerClassName);
+    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_CLASS, versionsControllerClassName);
 
     pageFactory = new FileSystemPageFactory(properties);
   }
 
   public void createWikiRoot() {
     rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
+  }
+
+  public WikiPage getRootPage() {
+    return rootPage;
   }
 
   public void cleanUp() {

@@ -1,17 +1,15 @@
 package fitnesse.wiki.fs;
 
-import static fitnesse.wiki.fs.ZipFileVersionInfo.COMPEX_NAME_PATTERN;
-import static fitnesse.wiki.fs.ZipFileVersionInfo.makeVersionInfo;
-import static fitnesse.wiki.fs.ZipFileVersionInfo.makeVersionTimeFormat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import fitnesse.wiki.VersionInfo;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
 import java.util.regex.Matcher;
 
-import fitnesse.wiki.VersionInfo;
-import org.junit.Test;
+import static fitnesse.wiki.fs.ZipFileVersionInfo.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ZipFileVersionInfoTest {
 
