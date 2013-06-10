@@ -19,7 +19,7 @@ import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
 
-  public static final int CACHE_TIMEOUT = 3000; // ms
+  public static final int CACHE_TIMEOUT = 300000; // ms
 
   public static final String contentFilename = "content.txt";
   public static final String propertiesFilename = "properties.xml";
