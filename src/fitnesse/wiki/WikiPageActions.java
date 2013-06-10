@@ -94,12 +94,6 @@ public class WikiPageActions {
     return null;
   }
 
-  public String getLocalOrRemotePageName() {
-    String localOrRemotePageName = getLocalPageName();
-
-    return localOrRemotePageName;
-  }
-
   public boolean isNewWindowIfRemote() {
     if (page != null) {
       return page.isOpenInNewWindow();
