@@ -97,9 +97,6 @@ public class WikiPageActions {
   public String getLocalOrRemotePageName() {
     String localOrRemotePageName = getLocalPageName();
 
-    if (page instanceof ProxyPage) {
-      localOrRemotePageName = ((ProxyPage) page).getThisPageUrl();
-    }
     return localOrRemotePageName;
   }
 
