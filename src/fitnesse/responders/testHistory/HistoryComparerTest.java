@@ -19,7 +19,7 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

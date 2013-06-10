@@ -30,6 +30,7 @@
 		<dependency org="org.json" name="json" rev="20090211" conf="standalone->default,default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
 		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="standalone->default,default"/>
+		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="2.3.1.201302201838-r" conf="standalone->default,default" transitive="false"/>
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-all" rev="1.9.5" conf="test->default" />
 		<dependency org="junit" name="junit" rev="4.11" conf="test->default" />

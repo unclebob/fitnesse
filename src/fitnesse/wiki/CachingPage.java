@@ -3,15 +3,17 @@
 
 package fitnesse.wiki;
 
-import util.TimeMeasurement;
-
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class CachingPage extends CommitingPage {
+import util.TimeMeasurement;
+
+@Deprecated
+// TODO: Do caching in WikiPageFactory
+public abstract class CachingPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   public static int cacheTime = 3000;
@@ -20,8 +22,8 @@ public abstract class CachingPage extends CommitingPage {
   private transient SoftReference<PageData> cachedData;
   private transient TimeMeasurement cachedTime;
 
-  public CachingPage(String name, WikiPage parent) {
-    super(name, parent);
+  public CachingPage(String name, WikiPage parent, SymbolicPageFactory symbolicPageFactory) {
+    super(name, parent, symbolicPageFactory);
   }
 
   protected abstract WikiPage createChildPage(String name);
@@ -99,9 +101,8 @@ public abstract class CachingPage extends CommitingPage {
 
   @Override
   public VersionInfo commit(PageData data) {
-    VersionInfo versionInfo = super.commit(data);
     setCachedData(makePageData());
-    return versionInfo;
+    return null;
   }
 
   private void setCachedData(PageData data) {

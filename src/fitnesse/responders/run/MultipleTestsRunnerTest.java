@@ -11,6 +11,8 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;

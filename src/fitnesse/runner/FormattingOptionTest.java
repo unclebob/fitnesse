@@ -12,7 +12,7 @@ import util.RegexTestCase;
 import fitnesse.http.Request;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class FormattingOptionTest extends RegexTestCase {
   private ByteArrayOutputStream output;

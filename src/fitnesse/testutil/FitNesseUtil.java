@@ -6,7 +6,8 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
@@ -76,6 +77,7 @@ public class FitNesseUtil {
     builder.rootDirectoryName = rootDirectoryName;
     builder.port = port;
     builder.authenticator = authenticator;
+    builder.recentChanges = new RecentChangesWikiPage();
     FitNesseContext context = builder.createFitNesseContext();
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)

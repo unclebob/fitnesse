@@ -12,7 +12,7 @@ import org.junit.Test;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

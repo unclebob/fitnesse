@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 public class FileUtil {
   public static final String ENDL = System.getProperty("line.separator");
-
+  
   public static File createFile(String path, String content) {
     String names[] = path.split("/");
     if (names.length == 1)
@@ -28,10 +28,19 @@ public class FileUtil {
   }
 
   public static File createFile(File file, String content) {
+    try {
+      return createFile(file, content.getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+    public static File createFile(File file, byte[] bytes) {
     FileOutputStream fileOutput = null;
     try {
       fileOutput = new FileOutputStream(file);
-      fileOutput.write(content.getBytes());
+      fileOutput.write(bytes);
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -110,7 +119,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input));
+    return new String(getFileBytes(input), "UTF-8");
   }
 
   public static byte[] getFileBytes(File input) throws IOException {

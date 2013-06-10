@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import org.w3c.dom.Document;
-
 import util.RegexTestCase;
 import util.XmlUtil;
 
@@ -207,9 +206,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertSubString("CDATA", marshaledValue);
     assertSubString("this is some content", marshaledValue);
 
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    properties.save(output);
-    String[] propertyLines = output.toString().split("\n");
+    String[] propertyLines = properties.toXml().split("\n");
     for (int i = 0; i < propertyLines.length; i++) {
       String propertyLine = propertyLines[i].trim();
       assertSubString(propertyLine, marshaledValue);

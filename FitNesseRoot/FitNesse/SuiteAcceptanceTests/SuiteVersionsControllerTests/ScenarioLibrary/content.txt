@@ -1,0 +1,16 @@
+!| scenario | Given a new wiki page |
+| create wiki root |
+| save page | TestPage | with content | test data |
+
+!| scenario | When the page is updated |
+| save page | TestPage | with content | new test data |
+
+!| scenario | Given a wiki page with history |
+| Given a new wiki page |
+| When the page is updated |
+
+!| scenario | When the page is deleted |
+| delete page | TestPage |
+
+!| scenario | Then the first version can be retrieved |
+| check | content for revision | 0 | test data |

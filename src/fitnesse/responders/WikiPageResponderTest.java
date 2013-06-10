@@ -11,6 +11,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
@@ -23,7 +24,6 @@ public class WikiPageResponderTest extends RegexTestCase {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
-    PageVersionPruner.daysTillVersionsExpire = 14;
   }
 
   public void testResponse() throws Exception {

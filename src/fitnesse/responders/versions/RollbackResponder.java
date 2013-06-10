@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -34,7 +33,7 @@ public class RollbackResponder implements SecureResponder {
 
     page.commit(data);
 
-    RecentChanges.updateRecentChanges(data);
+    context.recentChanges.updateRecentChanges(data);
     response.redirect(resource);
 
     return response;

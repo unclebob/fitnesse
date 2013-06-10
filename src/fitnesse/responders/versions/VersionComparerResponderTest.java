@@ -1,23 +1,20 @@
 package fitnesse.responders.versions;
 
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static util.RegexTestCase.assertHasRegexp;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import org.junit.Before;
+import org.junit.Test;
 
 public class VersionComparerResponderTest {
   private String firstVersion;
@@ -36,16 +33,15 @@ public class VersionComparerResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     page = root.getPageCrawler().addPage(root, PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
-    
+    firstVersion = page.commit(data).getName();
+
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
-    data = page.getData();
     data.setContent("new stuff");
-    firstVersion = page.commit(data).getName();
-    
-    data = page.getData();
-    data.setContent("even newer stuff");
     secondVersion = page.commit(data).getName();
+    
+    data.setContent("even newer stuff");
+    page.commit(data);
 
     request = new MockRequest();
     request.setResource("ComparedPage");

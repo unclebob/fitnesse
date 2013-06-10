@@ -1,6 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.parser.WikiWord;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;

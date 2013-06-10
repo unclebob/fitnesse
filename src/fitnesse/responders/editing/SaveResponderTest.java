@@ -7,7 +7,6 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 import static util.RegexTestCase.assertTrue;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.MockRequest;
@@ -15,7 +14,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -201,6 +200,6 @@ public class SaveResponderTest {
   @Test
   public void testHasVersionHeader() throws Exception {
     doSimpleEdit();
-    assertTrue("header missing", response.getHeader("Previous-Version") != null);
+    assertTrue("header missing", response.getHeader("Current-Version") != null);
   }
 }

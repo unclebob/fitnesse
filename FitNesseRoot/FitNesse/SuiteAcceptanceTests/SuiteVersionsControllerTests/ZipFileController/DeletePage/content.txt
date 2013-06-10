@@ -1,0 +1,5 @@
+!help
+!| script | versions controller fixture | ${VERSION_CONTROLLER_CLASS} |
+| Given a wiki page with history |
+| When the page is deleted |
+| check | history size | 0 |

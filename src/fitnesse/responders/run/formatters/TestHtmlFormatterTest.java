@@ -9,7 +9,7 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
