@@ -74,10 +74,6 @@ public abstract class BaseWikiPage implements WikiPage {
     return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
   }
 
-  public boolean isOpenInNewWindow() {
-    return false;
-  }
-  
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }

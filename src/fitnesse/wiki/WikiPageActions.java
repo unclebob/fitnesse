@@ -93,11 +93,4 @@ public class WikiPageActions {
     }
     return null;
   }
-
-  public boolean isNewWindowIfRemote() {
-    if (page != null) {
-      return page.isOpenInNewWindow();
-    }
-    return false;
-  }
 }
