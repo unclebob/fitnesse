@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.html.HtmlUtil;
 import fitnesse.slim.converters.VoidConverter;
 import org.junit.Before;
 import org.junit.Test;
@@ -111,7 +110,7 @@ public abstract class ListExecutorTestBase {
 
   @Test
   public void oneFunctionCallVerbose() throws Exception {
-    executor.setVerbose();
+    final String endl = System.getProperty("line.separator");    executor.setVerbose();
     PrintStream oldOut = System.out;
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     System.setOut(new PrintStream(os));
@@ -120,19 +119,19 @@ public abstract class ListExecutorTestBase {
     executor.execute(statements);
 
     System.setOut(oldOut);
-    assertEquals("!1 Instructions" + HtmlUtil.ENDL +
+    assertEquals("!1 Instructions" + endl +
       "[i1, import, fitnesse.slim.test]\n" +
-      HtmlUtil.ENDL +
-      "[i1, OK]" + HtmlUtil.ENDL +
-      "------" + HtmlUtil.ENDL +
+      endl +
+      "[i1, OK]" + endl +
+      "------" + endl +
       "[m1, make, testSlim, TestSlim]\n" +
-      HtmlUtil.ENDL +
-      "[m1, OK]" + HtmlUtil.ENDL +
-      "------" + HtmlUtil.ENDL +
+      endl +
+      "[m1, OK]" + endl +
+      "------" + endl +
       "[id, call, testSlim, returnString]\n" +
-      HtmlUtil.ENDL +
-      "[id, string]" + HtmlUtil.ENDL +
-      "------" + HtmlUtil.ENDL, os.toString());
+      endl +
+      "[id, string]" + endl +
+      "------" + endl, os.toString());
   }
 
 
