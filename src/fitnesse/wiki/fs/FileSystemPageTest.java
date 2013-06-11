@@ -34,7 +34,7 @@ public class FileSystemPageTest {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
     root = new FileSystemPage(defaultPath, "RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
   }
 
   @After

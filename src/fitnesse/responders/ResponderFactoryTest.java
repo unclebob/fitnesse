@@ -37,14 +37,12 @@ public class ResponderFactoryTest {
   private MockRequest request;
   private WikiPageDummy nonExistantPage;
   private WikiPage root;
-  private PageBuilder crawler;
 
   @Before
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     request = new MockRequest();
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
     nonExistantPage = new WikiPageDummy();
   }
 

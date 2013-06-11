@@ -30,7 +30,7 @@ public class UpdaterImplementationTest {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageBuilder crawler;
+  protected PageBuilder pageBuilder;
   private boolean updateDone = false;
 
   @Before
@@ -50,7 +50,7 @@ public class UpdaterImplementationTest {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(testDir, name);
     root.commit(root.getData());
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 

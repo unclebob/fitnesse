@@ -23,7 +23,7 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageBuilder.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
     pageBuilder.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");
     pageBuilder.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too\nThere is no life without death");

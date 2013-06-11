@@ -32,7 +32,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
     childPage = pageBuilder.addPage(root, PathParser.parse("PageOne.PageOneChild"),
         "PageChild is a child of PageOne");

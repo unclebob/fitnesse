@@ -72,7 +72,7 @@ public class RecentChangesWikiPage implements RecentChanges {
     PageCrawler crawler = data.getWikiPage().getPageCrawler();
     WikiPage root = crawler.getRoot(data.getWikiPage());
     if (!root.hasChildPage(RECENT_CHANGES))
-      crawler.addPage(root, PathParser.parse(RECENT_CHANGES), "");
+      new PageBuilder().addPage(root, PathParser.parse(RECENT_CHANGES), "");
   }
 
   private String makeRecentChangesLine(PageData data) {

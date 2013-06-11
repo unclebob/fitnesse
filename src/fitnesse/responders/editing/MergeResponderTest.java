@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import fitnesse.wiki.PageBuilder;
 import util.RegexTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -17,7 +18,7 @@ public class MergeResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     source = InMemoryPage.makeRoot("RooT");
-    source.getPageCrawler().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
+    new PageBuilder().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
     request = new MockRequest();
     request.setResource("SimplePage");
     request.addInput(EditResponder.TIME_STAMP, "");

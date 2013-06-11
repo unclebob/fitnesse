@@ -57,7 +57,7 @@ public class HtmlSlimResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = getSlimResponder();

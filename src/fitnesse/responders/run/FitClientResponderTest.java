@@ -31,7 +31,7 @@ public class FitClientResponderTest extends RegexTestCase {
   }
 
   public void buildSuite(WikiPage root) throws Exception {
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     suite = pageBuilder.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
     WikiPage page1 = pageBuilder.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
     WikiPage page2 = pageBuilder.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");

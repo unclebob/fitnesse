@@ -28,7 +28,7 @@ public class VersionComparerResponderTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     page = pageBuilder.addPage(root, PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();

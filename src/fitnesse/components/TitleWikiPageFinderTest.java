@@ -27,7 +27,7 @@ public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageBuilder.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
     pageBuilder.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
     pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");

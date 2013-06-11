@@ -43,7 +43,7 @@ public class MultipleTestsRunnerTest {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);

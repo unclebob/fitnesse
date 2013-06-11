@@ -13,12 +13,12 @@ import util.RegexTestCase;
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;
   private WikiPage root;
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    page = crawler.addPage(root, PathParser.parse("PagE"), "some content");
+    pageBuilder = new PageBuilder();
+    page = pageBuilder.addPage(root, PathParser.parse("PagE"), "some content");
   }
 
   public void tearDown() throws Exception {
@@ -33,7 +33,7 @@ public class PageDataTest extends RegexTestCase {
   public void testVariablesRenderedFirst() throws Exception {
     String text = "!define x {''italics''}\n${x}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), text);
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("SomePage"), text);
     String html = page.getData().getHtml();
     assertHasRegexp("''italics''", html);
     assertHasRegexp("<i>italics</i>", html);
@@ -42,7 +42,7 @@ public class PageDataTest extends RegexTestCase {
   public void testVariablesWithinVariablesAreResolved() throws Exception {
     String text = "!define x {b}\n!define y (a${x}c)\n${y}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), text);
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("SomePage"), text);
     String html = page.getData().getHtml();
     assertHasRegexp("abc", html);
     assertHasRegexp("variable defined: y=a\\$\\{x\\}c", html);
@@ -58,7 +58,7 @@ public class PageDataTest extends RegexTestCase {
 
   public void testLiteral() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
     String renderedContent = page.getData().getHtml();
     assertHasRegexp("literal", renderedContent);
     assertDoesntHaveRegexp("!-literal-!", renderedContent);
@@ -66,7 +66,7 @@ public class PageDataTest extends RegexTestCase {
 
   public void testClasspath() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
     List<?> paths = page.getData().getClasspaths();
     assertTrue(paths.contains("123"));
     assertTrue(paths.contains("abc"));
@@ -75,7 +75,7 @@ public class PageDataTest extends RegexTestCase {
   public void testClasspathWithVariable() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
 
-    WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
     List<?> paths = page.getData().getClasspaths();
     assertEquals("/my/path.jar", paths.get(0).toString());
 
@@ -83,76 +83,76 @@ public class PageDataTest extends RegexTestCase {
     data.setContent("!define PATH {/my/path}\n");
     root.commit(data);
 
-    page = crawler.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
+    page = pageBuilder.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
     paths = page.getData().getClasspaths();
     assertEquals("/my/path.jar", paths.get(0).toString());
   }
 
   public void testClasspathWithVariableDefinedInIncludedPage() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    crawler.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
+    pageBuilder.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
 
-    WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
     List<?> paths = page.getData().getClasspaths();
     assertEquals("/my/path.jar", paths.get(0).toString());
   }
 
   public void testVariableIgnoredInParentPreformatted() throws Exception {  //--variables in parent preformatted blocks must not recognize !define widgets.
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage parent = crawler.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
-    WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
+    WikiPage parent = pageBuilder.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
+    WikiPage child = pageBuilder.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
     String renderedContent = child.getData().getHtml();
     assertHasRegexp("undefined variable", renderedContent);
   }
 
   public void testGetCrossReferences() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
     List<?> xrefs = page.getData().getXrefPages();
     assertEquals("XrefPage", xrefs.get(0));
   }
 
   public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageExamples"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageExamples"));
     PageData data = new PageData(page);
     assertTrue(data.hasAttribute(SUITE.toString()));
   }
 
   public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ExamplePageExample"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ExamplePageExample"));
     PageData data = new PageData(page);
     assertTrue(data.hasAttribute(TEST.toString()));
   }
 
   public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageExample"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageExample"));
     PageData data = new PageData(page);
     assertTrue(data.hasAttribute(TEST.toString()));
   }
 
   public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
-    WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
+    WikiPage suitePage1 = pageBuilder.addPage(root, PathParser.parse("SuitePage"));
     PageData data = new PageData(suitePage1);
     assertFalse(data.hasAttribute(TEST.toString()));
     assertTrue(data.hasAttribute(SUITE.toString()));
   }
 
   public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
-    WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
+    WikiPage suitePage2 = pageBuilder.addPage(root, PathParser.parse("PageSuite"));
     PageData data = new PageData(suitePage2);
     assertFalse(data.hasAttribute(TEST.toString()));
     assertTrue(data.hasAttribute(SUITE.toString()));
   }
 
   public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
-    WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
+    WikiPage testPage1 = pageBuilder.addPage(root, PathParser.parse("TestPage"));
     PageData data = new PageData(testPage1);
     assertTrue(data.hasAttribute(TEST.toString()));
     assertFalse(data.hasAttribute(SUITE.toString()));
   }
 
   public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
-    WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
+    WikiPage testPage2 = pageBuilder.addPage(root, PathParser.parse("PageTest"));
     PageData data = new PageData(testPage2);
     assertTrue(data.hasAttribute(TEST.toString()));
     assertFalse(data.hasAttribute(SUITE.toString()));
@@ -160,11 +160,11 @@ public class PageDataTest extends RegexTestCase {
 
 
   public void testDefaultAttributes() throws Exception {
-    WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
-    WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
-    WikiPage errorLogsPage = crawler.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
-    WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SUITE_TEARDOWN_NAME));
+    WikiPage normalPage = pageBuilder.addPage(root, PathParser.parse("NormalPage"));
+    WikiPage suitePage3 = pageBuilder.addPage(root, PathParser.parse("TestPageSuite"));
+    WikiPage errorLogsPage = pageBuilder.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
+    WikiPage suiteSetupPage = pageBuilder.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
+    WikiPage suiteTearDownPage = pageBuilder.addPage(root, PathParser.parse(SUITE_TEARDOWN_NAME));
 
     PageData data = new PageData(normalPage);
     assertTrue(data.hasAttribute(PropertyEDIT));
@@ -201,10 +201,10 @@ public class PageDataTest extends RegexTestCase {
   public void testAllowsContentContainingCarriageReturns() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     String content = "|a|\n|table|";
-    WikiPage pageWithUnixLineEndings = crawler.addPage(root, PathParser.parse("PageName"), content);
+    WikiPage pageWithUnixLineEndings = pageBuilder.addPage(root, PathParser.parse("PageName"), content);
     
     String contentWithCarriageReturns = content.replaceAll("\n", "\r\n");
-    WikiPage pageWithDosLineEndings = crawler.addPage(root, PathParser.parse("PageName2"), contentWithCarriageReturns);
+    WikiPage pageWithDosLineEndings = pageBuilder.addPage(root, PathParser.parse("PageName2"), contentWithCarriageReturns);
     
     assertEquals(pageWithUnixLineEndings.getData().getHtml(), pageWithDosLineEndings.getData().getHtml());
   }

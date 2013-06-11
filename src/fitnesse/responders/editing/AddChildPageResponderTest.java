@@ -29,7 +29,7 @@ public class AddChildPageResponderTest {
     root = InMemoryPage.makeRoot("root");
     
     crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPage"));
+    new PageBuilder().addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
     childContent = "child content";
     pagetype = "";

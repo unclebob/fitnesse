@@ -19,7 +19,7 @@ public class SaveRecorderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     somePage = pageBuilder.addPage(root, PathParser.parse("SomePage"), "some page");
   }
 

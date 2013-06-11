@@ -19,7 +19,7 @@ public class EditResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new EditResponder();
   }

@@ -17,7 +17,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     builder = new ClassPathBuilder();
     somePagePath = PathParser.parse("SomePage");
   }

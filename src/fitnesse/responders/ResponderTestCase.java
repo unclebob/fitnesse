@@ -20,7 +20,7 @@ public abstract class ResponderTestCase extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = responderInstance();
     context = FitNesseUtil.makeTestContext(root);

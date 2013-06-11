@@ -26,13 +26,13 @@ public class SaveResponderTest {
   private Response response;
   public MockRequest request;
   public Responder responder;
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new SaveResponder();
     SaveResponder.contentFilter = null;
@@ -46,7 +46,7 @@ public class SaveResponderTest {
 
   @Test
   public void testResponse() throws Exception {
-    crawler.addPage(root, PathParser.parse("ChildPage"));
+    pageBuilder.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
 
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
@@ -69,7 +69,7 @@ public class SaveResponderTest {
 
   @Test
   public void testResponseWithRedirect() throws Exception {
-    crawler.addPage(root, PathParser.parse("ChildPage"));
+    pageBuilder.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
     request.addInput("redirect", "http://fitnesse.org:8080/SomePage");
 
@@ -165,7 +165,7 @@ public class SaveResponderTest {
         return false;
       }
     };
-    crawler.addPage(root, PathParser.parse("ChildPage"));
+    pageBuilder.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
 
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
@@ -176,7 +176,7 @@ public class SaveResponderTest {
   }
 
   private void createAndSaveANewPage(String pageName) throws Exception {
-    WikiPage simplePage = crawler.addPage(root, PathParser.parse(pageName));
+    WikiPage simplePage = pageBuilder.addPage(root, PathParser.parse(pageName));
 
     PageData data = simplePage.getData();
     SaveRecorder.pageSaved(data, 0);
@@ -184,7 +184,7 @@ public class SaveResponderTest {
   }
 
   private void doSimpleEdit() throws Exception {
-    crawler.addPage(root, PathParser.parse("EditPage"));
+    pageBuilder.addPage(root, PathParser.parse("EditPage"));
     addRequestParameters();
 
     response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);

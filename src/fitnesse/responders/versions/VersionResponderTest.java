@@ -22,7 +22,7 @@ public class VersionResponderTest extends RegexTestCase {
   private void makeTestResponse(String pageName) throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     page = pageBuilder.addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     

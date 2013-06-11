@@ -45,7 +45,7 @@ public class TraverseDirectiveTest {
     @Override
     public void traverse(TraversalListener<WikiPage> observer) {
       WikiPage root = InMemoryPage.makeRoot("root");
-      PageBuilder pageBuilder = root.getPageCrawler();
+      PageBuilder pageBuilder = new PageBuilder();
       observer.process(pageBuilder.addPage(root, PathParser.parse("PageOne"), "PageOne"));
       observer.process(pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
       observer.process(pageBuilder.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));

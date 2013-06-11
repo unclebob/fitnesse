@@ -71,7 +71,7 @@ public class TestResponderTest {
     File testDir = new File("TestDir");
     testDir.mkdir();
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     errorLogsParentPage = pageBuilder.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();

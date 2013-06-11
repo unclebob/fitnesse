@@ -21,7 +21,7 @@ public class TestPageTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     wikiPage = addPage("TestPage", "!define TEST_SYSTEM {slim}\n"+"the content");
     addPage("SetUp", "setup");
     addPage("TearDown", "teardown");

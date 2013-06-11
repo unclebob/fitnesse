@@ -31,7 +31,7 @@ public class SuiteSpecificationRunnerTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageBuilder.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
     WikiPage child = pageBuilder.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
     PageData data = child.getData();

@@ -21,7 +21,7 @@ public abstract class UpdateTestCase {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageBuilder crawler;
+  protected PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
@@ -29,10 +29,10 @@ public abstract class UpdateTestCase {
     context = FitNesseUtil.makeTestContext(root);
 
     FileUtil.makeDir(FitNesseUtil.base);
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
 
-    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
-    pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
+    pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "some content");
+    pageTwo = pageBuilder.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
     updater = new UpdaterBase(context);
     update = makeUpdate();

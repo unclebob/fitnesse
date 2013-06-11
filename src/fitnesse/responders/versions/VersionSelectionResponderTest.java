@@ -21,7 +21,7 @@ public class VersionSelectionResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     page = pageBuilder.addPage(root, PathParser.parse("PageOne"), "some content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();

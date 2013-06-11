@@ -24,7 +24,7 @@ public class SuiteContentsFinderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     PageData data = root.getData();
     root.commit(data);
     suite = pageBuilder.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");

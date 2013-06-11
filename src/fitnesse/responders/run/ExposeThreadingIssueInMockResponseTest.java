@@ -39,7 +39,7 @@ public class ExposeThreadingIssueInMockResponseTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new TestResponder();
     context = FitNesseUtil.makeTestContext(root, port);

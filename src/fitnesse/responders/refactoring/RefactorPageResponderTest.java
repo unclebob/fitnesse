@@ -17,13 +17,13 @@ public class RefactorPageResponderTest extends RegexTestCase {
   private MockRequest request;
   private Responder responder;
   private String childPage = "ChildPage";
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse(childPage));
+    pageBuilder = new PageBuilder();
+    pageBuilder.addPage(root, PathParser.parse(childPage));
 
     request = new MockRequest();
     request.setResource(childPage);

@@ -22,7 +22,7 @@ public class WikiPageResponderTest extends RegexTestCase {
   @Override
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root);
   }
 

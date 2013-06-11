@@ -27,7 +27,7 @@ public class FitNesseServerTest extends RegexTestCase {
   public void setUp() throws Exception {
     SampleFileUtility.makeSampleFiles();
     root = InMemoryPage.makeRoot("RootPage");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);

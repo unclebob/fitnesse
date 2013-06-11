@@ -14,17 +14,17 @@ import fitnesse.wiki.WikiPage;
 
 public class TestSystemBaseTest {
   private WikiPage root;
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
   }
 
   @Test
   public void buildFullySpecifiedTestSystemName() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"),
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"),
       "!define TEST_SYSTEM {system}\n" +
         "!define TEST_RUNNER {runner}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
@@ -33,21 +33,21 @@ public class TestSystemBaseTest {
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "");
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("fit:fit.FitServer", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsSlim() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("slim:fitnesse.slim.SlimService", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsUnknownDefaultsToFit() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }

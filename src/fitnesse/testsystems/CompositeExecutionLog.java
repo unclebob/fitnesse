@@ -6,11 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.responders.PageFactory;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class CompositeExecutionLog {
   private WikiPagePath errorLogPagePath;
@@ -32,7 +28,7 @@ public class CompositeExecutionLog {
   public void publish(PageFactory pageFactory) {
     String content = buildLogContent(pageFactory);
 
-    WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
+    WikiPage errorLogPage = new PageBuilder().addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
 
     if(root != null) {

@@ -113,7 +113,7 @@ public class TestSystemTest {
 
   WikiPage makeTestPage(String pageText) throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageBuilder crawler = root.getPageCrawler();
+    PageBuilder crawler = new PageBuilder();
     return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
   }
 

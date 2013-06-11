@@ -13,7 +13,7 @@ public class UpdaterTest extends UpdateTestCase {
   public void setUp() throws Exception {
     super.setUp();
     UpdaterImplementation.testing = true;
-    crawler.addPage(root, PathParser.parse("PageOne"));
+    pageBuilder.addPage(root, PathParser.parse("PageOne"));
   }
 
   @Test

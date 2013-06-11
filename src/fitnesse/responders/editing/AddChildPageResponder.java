@@ -42,7 +42,7 @@ public class AddChildPageResponder implements SecureResponder {
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     currentPagePath = PathParser.parse(request.getResource());
-    pageBuilder = context.root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     currentPage = pageCrawler.getPage(context.root, currentPagePath);
     childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);

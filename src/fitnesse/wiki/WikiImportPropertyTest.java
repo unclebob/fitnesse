@@ -94,11 +94,11 @@ public class WikiImportPropertyTest extends RegexTestCase {
 
   // Tests for the rendering of import specific page details
   private WikiPage root;
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   public void pageRenderingSetUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
   }
 
   private SimpleResponse requestPage(String name) throws Exception {
@@ -111,7 +111,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
   public void testImportedPageIndication() throws Exception {
     pageRenderingSetUp();
 
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    page = pageBuilder.addPage(root, PathParser.parse("SamplePage"));
     PageData data = page.getData();
     WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.addTo(data.getProperties());
@@ -125,7 +125,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
   public void testEditActions() throws Exception {
     pageRenderingSetUp();
 
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    page = pageBuilder.addPage(root, PathParser.parse("SamplePage"));
     PageData data = page.getData();
     page.commit(data);
     String content = getContentAfterSpecialImportHandling();

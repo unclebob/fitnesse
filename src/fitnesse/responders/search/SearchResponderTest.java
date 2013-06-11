@@ -22,7 +22,7 @@ public class SearchResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageBuilder.addPage(root, PathParser.parse("SomePage"), "has something in it");
     request = new MockRequest();
     request.addInput("searchString", "blah");

@@ -27,7 +27,7 @@ public class PacketResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new PacketResponder();
     context = FitNesseUtil.makeTestContext(root);

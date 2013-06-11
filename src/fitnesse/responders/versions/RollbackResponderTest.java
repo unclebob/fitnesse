@@ -18,7 +18,7 @@ public class RollbackResponderTest extends TestCase {
 
   public void setUp() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     page = pageBuilder.addPage(root, PathParser.parse("PageOne"), "original content");
     PageData data = page.getData();
     data.setContent("new stuff");

@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
-public interface PageCrawler extends PageBuilder {
+public interface PageCrawler {
   WikiPage getPage(WikiPage context, WikiPagePath path);
 
   void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);

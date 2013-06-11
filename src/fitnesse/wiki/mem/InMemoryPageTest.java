@@ -16,7 +16,7 @@ public class InMemoryPageTest extends TestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     page1 = pageBuilder.addPage(root, PathParser.parse("PageOne"), "page one");
     page2 = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "page two");
   }

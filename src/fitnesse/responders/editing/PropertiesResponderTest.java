@@ -17,7 +17,7 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   private WikiPage root;
 
-  private PageBuilder crawler;
+  private PageBuilder pageBuilder;
 
   private MockRequest request;
 
@@ -28,13 +28,13 @@ public class PropertiesResponderTest extends RegexTestCase {
   @Override
 public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
   }
 
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -72,7 +72,7 @@ public void setUp() throws Exception {
   }
 
   public void testJsonResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();

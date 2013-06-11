@@ -26,7 +26,7 @@ public class SearchReplaceResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pagePath = PathParser.parse("SomePage");
     somePage = pageBuilder.addPage(root, pagePath, "has something in it");
     responder = new SearchReplaceResponder();

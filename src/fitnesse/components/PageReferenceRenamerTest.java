@@ -18,7 +18,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     subWiki = pageBuilder.addPage(root, PathParser.parse("SubWiki"), "");
     subWiki_pageTwo = pageBuilder.addPage(subWiki, PathParser.parse("PageTwo"), "");
     subWiki_pageTwo_pageTwoChild = pageBuilder.addPage(subWiki_pageTwo, PathParser.parse("PageTwoChild"), "");

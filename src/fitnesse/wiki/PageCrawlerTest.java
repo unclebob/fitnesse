@@ -19,6 +19,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   private WikiPage child1;
   private WikiPage child2;
   private WikiPage grandChild1;
+  private PageBuilder pageBuider;
   private PageCrawlerImpl crawler;
   private WikiPagePath page1Path;
   private WikiPagePath child1FullPath;
@@ -28,17 +29,18 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    pageBuider = new PageBuilder();
     crawler = new PageCrawlerImpl();
 
     page1Path = PathParser.parse("PageOne");
     page2Path = PathParser.parse("PageTwo");
     child1FullPath = PathParser.parse("PageOne.ChildOne");
     grandChild1FullPath = PathParser.parse("PageOne.ChildOne.GrandChildOne");
-    page1 = crawler.addPage(root, page1Path);
-    page2 = crawler.addPage(root, page2Path);
-    child1 = crawler.addPage(page1, PathParser.parse("ChildOne"));
-    child2 = crawler.addPage(page1, PathParser.parse("ChildTwo"));
-    grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"));
+    page1 = pageBuider.addPage(root, page1Path);
+    page2 = pageBuider.addPage(root, page2Path);
+    child1 = pageBuider.addPage(page1, PathParser.parse("ChildOne"));
+    child2 = pageBuider.addPage(page1, PathParser.parse("ChildTwo"));
+    grandChild1 = pageBuider.addPage(child1, PathParser.parse("GrandChildOne"));
   }
 
   @Test
@@ -112,24 +114,24 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testAddPage() throws Exception {
-    WikiPage page = crawler.addPage(page1, PathParser.parse("SomePage"));
+    WikiPage page = pageBuider.addPage(page1, PathParser.parse("SomePage"));
     assertEquals(PathParser.parse("PageOne.SomePage"), crawler.getFullPath(page));
     assertEquals(page1, page.getParent());
   }
 
   @Test
   public void testRecursiveAddbyName() throws Exception {
-    crawler.addPage(root, PathParser.parse("AaAa"), "its content");
+    pageBuider.addPage(root, PathParser.parse("AaAa"), "its content");
     assertTrue(root.hasChildPage("AaAa"));
 
-    crawler.addPage(root, PathParser.parse("AaAa.BbBb"), "floop");
+    pageBuider.addPage(root, PathParser.parse("AaAa.BbBb"), "floop");
     assertTrue(crawler.pageExists(root, PathParser.parse("AaAa.BbBb")));
     assertEquals("floop", crawler.getPage(root, PathParser.parse("AaAa.BbBb")).getData().getContent());
   }
 
   @Test
   public void testAddChildPageWithMissingParent() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
+    WikiPage page = pageBuider.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
     assertNotNull(page);
     assertEquals("BadSubject0123", page.getName());
     assertEquals(PathParser.parse("WikiMail.BadSubject0123"), crawler.getFullPath(page));
@@ -147,7 +149,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   @Test
   public void testIsRoot() throws Exception {
     assertTrue(crawler.isRoot(root));
-    WikiPage page = crawler.addPage(root, page1Path);
+    WikiPage page = pageBuider.addPage(root, page1Path);
     assertFalse(crawler.isRoot(page));
   }
 
@@ -179,9 +181,9 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void canFindAllUncles() throws Exception {
-    WikiPage grandUnclePage = crawler.addPage(root, PathParser.parse("UnclePage"));
-    WikiPage unclePage = crawler.addPage(root, PathParser.parse("PageOne.UnclePage"));
-    WikiPage brotherPage = crawler.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
+    WikiPage grandUnclePage = pageBuider.addPage(root, PathParser.parse("UnclePage"));
+    WikiPage unclePage = pageBuider.addPage(root, PathParser.parse("PageOne.UnclePage"));
+    WikiPage brotherPage = pageBuider.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
     List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("UnclePage",grandChild1);
     assertTrue(uncles.contains(grandUnclePage));
     assertTrue(uncles.contains(unclePage));

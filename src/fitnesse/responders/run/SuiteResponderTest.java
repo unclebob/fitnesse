@@ -53,7 +53,7 @@ public class SuiteResponderTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);

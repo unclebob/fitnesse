@@ -276,7 +276,7 @@ public class HistoryComparerTest {
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     String pageText =
       "|myTable|\n" +
         "La la\n" +

@@ -21,7 +21,7 @@ public class WhereUsedResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageBuilder pageBuilder = root.getPageCrawler();
+    PageBuilder pageBuilder = new PageBuilder();
     pageBuilder.addPage(root, PathParser.parse("PageOne"), "PageOne");
     pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageOne");
     pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");

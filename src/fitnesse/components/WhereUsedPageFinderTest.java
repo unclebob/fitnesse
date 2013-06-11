@@ -26,7 +26,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = root.getPageCrawler();
+    pageBuilder = new PageBuilder();
     pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
     pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
     pageThree = pageBuilder.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
