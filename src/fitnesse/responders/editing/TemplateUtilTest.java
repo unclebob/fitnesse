@@ -1,4 +1,4 @@
-package util;
+package fitnesse.responders.editing;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.http.MockRequest;
-import fitnesse.responders.editing.EditResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;

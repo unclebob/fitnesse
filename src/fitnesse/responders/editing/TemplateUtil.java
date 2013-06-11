@@ -1,4 +1,4 @@
-package util;
+package fitnesse.responders.editing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
