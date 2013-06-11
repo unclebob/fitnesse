@@ -7,7 +7,7 @@ import fitnesse.components.TraversalListener;
 public interface PageCrawler {
   WikiPage getPage(WikiPage context, WikiPagePath path);
 
-  void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
+  WikiPage getPage(WikiPage context, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy);
 
   boolean pageExists(WikiPage context, WikiPagePath path);
 

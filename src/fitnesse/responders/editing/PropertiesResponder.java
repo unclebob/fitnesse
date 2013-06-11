@@ -38,9 +38,7 @@ public class PropertiesResponder implements SecureResponder {
     resource = request.getResource();
     path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path))
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-    page = crawler.getPage(context.root, path);
+    page = crawler.getPage(context.root, path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 

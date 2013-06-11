@@ -15,8 +15,7 @@ public abstract class SecurePageOperation implements SecureOperation {
   public boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception {
     WikiPagePath path = PathParser.parse(request.getResource());
     PageCrawler crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new MockingPageCrawler());
-    WikiPage page = crawler.getPage(context.root, path);
+    WikiPage page = crawler.getPage(context.root, path, new MockingPageCrawler());
     if (page == null)
       return false;
 

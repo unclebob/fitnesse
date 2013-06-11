@@ -9,12 +9,16 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PageCrawlerImpl implements PageCrawler {
-  private PageCrawlerDeadEndStrategy deadEndStrategy;
 
   protected PageCrawlerImpl() {
   }
 
   public WikiPage getPage(WikiPage context, WikiPagePath path) {
+    return getPage(context, path, null);
+  }
+
+  public WikiPage getPage(WikiPage context, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
+
     if (path == null)
       return null;
 
@@ -36,25 +40,21 @@ public class PageCrawlerImpl implements PageCrawler {
 
     WikiPage childPage = context.getChildPage(firstPathElement);
     if (childPage != null)
-      return getPage(childPage, restOfPath);
+      return getPage(childPage, restOfPath, deadEndStrategy);
     else
-      return getPageAfterDeadEnd(context, firstPathElement, restOfPath);
+      return getPageAfterDeadEnd(context, firstPathElement, restOfPath, deadEndStrategy);
   }
 
   private boolean isRoot(WikiPagePath path) {
     return path.isAbsolute() && path.isEmpty();
   }
 
-  protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest) {
+  protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest, PageCrawlerDeadEndStrategy deadEndStrategy) {
     rest.addNameToFront(first);
     if (deadEndStrategy != null)
       return deadEndStrategy.getPageAfterDeadEnd(context, rest, this);
     else
       return null;
-  }
-
-  public void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy) {
-    deadEndStrategy = strategy;
   }
 
   public boolean pageExists(WikiPage context, WikiPagePath path) {

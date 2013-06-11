@@ -85,8 +85,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
     data.setContent("!path " + path);
     root.commit(data);
     PageCrawler crawler = root.getPageCrawler();
-    crawler.setDeadEndStrategy(new MockingPageCrawler());
-    WikiPage page = crawler.getPage(root, somePagePath);
+    WikiPage page = crawler.getPage(root, somePagePath, new MockingPageCrawler());
     String classPath = builder.getClasspath(page);
     return classPath;
   }
