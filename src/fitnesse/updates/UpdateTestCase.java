@@ -4,8 +4,8 @@ package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
@@ -21,7 +21,7 @@ public abstract class UpdateTestCase {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageCrawler crawler;
+  protected PageBuilder crawler;
 
   @Before
   public void setUp() throws Exception {

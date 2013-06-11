@@ -29,7 +29,7 @@ public class MultipleTestsRunnerTest {
   private WikiPage root;
   private WikiPage suite;
   private WikiPage testPage;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private String suitePageName;
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
@@ -43,11 +43,11 @@ public class MultipleTestsRunnerTest {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    suite = crawler.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
+    suite = pageBuilder.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
     testPages = new LinkedList<WikiPage>();
     testPage = addTestPage(suite, "TestOne", "My test");
  }
@@ -80,8 +80,8 @@ public class MultipleTestsRunnerTest {
   @Test
   public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    WikiPage setUp = pageBuilder.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    WikiPage tearDown = pageBuilder.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
     
     testPages = new LinkedList<WikiPage>();
     testPages.add(setUp);
@@ -111,7 +111,7 @@ public class MultipleTestsRunnerTest {
 
   
   private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
-    WikiPage testPage = crawler.addPage(page, PathParser.parse(name), content);
+    WikiPage testPage = pageBuilder.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);

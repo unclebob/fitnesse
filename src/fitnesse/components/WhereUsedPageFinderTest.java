@@ -3,8 +3,8 @@ package fitnesse.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import util.RegexTestCase;
@@ -18,7 +18,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
   private WhereUsedPageFinder whereUsed;
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
 
   public void process(WikiPage page) {
     hits.add(page);
@@ -26,11 +26,11 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
-    pageThree = crawler.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
-    crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");
+    pageBuilder = root.getPageCrawler();
+    pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
+    pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
+    pageThree = pageBuilder.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
+    pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");
 
     whereUsed = new WhereUsedPageFinder(root, this);
 
@@ -60,14 +60,14 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
 
   public void testOnlyOneReferencePerPage() throws Exception {
     whereUsed = new WhereUsedPageFinder(pageThree, this);
-    WikiPage newPage = crawler.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
+    WikiPage newPage = pageBuilder.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
     List<WikiPage> resultList = whereUsed.search(root);
     assertEquals(1, resultList.size());
     assertEquals(newPage, resultList.get(0));
   }
 
   public void testWordsNotFoundInPreprocessedText() throws Exception {
-    crawler.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
+    pageBuilder.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
     List<WikiPage> resultList = whereUsed.search(pageThree);
     assertEquals(0, resultList.size());
   }

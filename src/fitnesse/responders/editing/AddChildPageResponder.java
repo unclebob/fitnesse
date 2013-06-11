@@ -14,7 +14,7 @@ import fitnesse.wikitext.parser.WikiWordPath;
 
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private String childName;
   private WikiPagePath currentPagePath;
   private WikiPagePath childPath;
@@ -42,8 +42,9 @@ public class AddChildPageResponder implements SecureResponder {
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     currentPagePath = PathParser.parse(request.getResource());
-    crawler = context.root.getPageCrawler();
-    currentPage = crawler.getPage(context.root, currentPagePath);
+    pageBuilder = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.root.getPageCrawler();
+    currentPage = pageCrawler.getPage(context.root, currentPagePath);
     childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
     pageType = (String) request.getInput(EditResponder.PAGE_TYPE);
     helpText = (String) request.getInput(EditResponder.HELP_TEXT);
@@ -57,7 +58,7 @@ public class AddChildPageResponder implements SecureResponder {
   private Response createChildPageAndMakeResponse(Request request) {
     createChildPage(request);
     SimpleResponse response = new SimpleResponse();
-    WikiPagePath fullPathOfCurrentPage = crawler.getFullPath(currentPage);
+    WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath(currentPage);
     response.redirect(fullPathOfCurrentPage.toString());
     return response;
   }
@@ -71,7 +72,7 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private void createChildPage(Request request) {
-    WikiPage childPage = crawler.addPage(currentPage, childPath, childContent);
+    WikiPage childPage = pageBuilder.addPage(currentPage, childPath, childContent);
     setAttributes(childPage);
     
   }

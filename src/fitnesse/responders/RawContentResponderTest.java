@@ -23,7 +23,7 @@ public class RawContentResponderTest extends ResponderTestCase {
   }
 
   private String getResultsUsing(String content) throws Exception {
-    crawler.addPage(root, PathParser.parse("SimplePage"), content);
+    pageBuilder.addPage(root, PathParser.parse("SimplePage"), content);
     request.setResource("SimplePage");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();

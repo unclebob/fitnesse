@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import fitnesse.wiki.PageBuilder;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -20,10 +21,10 @@ public class WhereUsedResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageCrawler crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
-    crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
+    PageBuilder pageBuilder = root.getPageCrawler();
+    pageBuilder.addPage(root, PathParser.parse("PageOne"), "PageOne");
+    pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+    pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
   }
 
   public void testResponse() throws Exception {

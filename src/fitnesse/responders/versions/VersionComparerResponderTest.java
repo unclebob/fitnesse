@@ -8,11 +8,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +28,8 @@ public class VersionComparerResponderTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    page = root.getPageCrawler().addPage(root, PathParser.parse("ComparedPage"), "original content");
+    PageBuilder pageBuilder = root.getPageCrawler();
+    page = pageBuilder.addPage(root, PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();
 

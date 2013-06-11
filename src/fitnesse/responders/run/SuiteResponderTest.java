@@ -19,12 +19,8 @@ import fitnesse.http.Response;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +40,7 @@ public class SuiteResponderTest {
   private WikiPage suite;
   private FitNesseContext context;
   private FitSocketReceiver receiver;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private String suitePageName;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
@@ -57,11 +53,11 @@ public class SuiteResponderTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    suite = crawler.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
+    suite = pageBuilder.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
     addTestToSuite("TestOne", fitPassFixture);
 
     request = new MockRequest();
@@ -85,7 +81,7 @@ public class SuiteResponderTest {
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
-    WikiPage testPage = crawler.addPage(page, PathParser.parse(name), content);
+    WikiPage testPage = pageBuilder.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);
@@ -169,13 +165,13 @@ public class SuiteResponderTest {
 
   @Test
   public void testSuiteWithEmptyPage() throws Exception {
-    suite = crawler.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
+    suite = pageBuilder.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
     addTestPage(suite, "TestThatIsEmpty", "");
     request.setResource("SuiteWithEmptyPage");
     runSuite();
 
     WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.SuiteWithEmptyPage");
-    WikiPage errorLog = crawler.getPage(root, errorLogPath);
+    WikiPage errorLog = root.getPageCrawler().getPage(root, errorLogPath);
     PageData data = errorLog.getData();
     String errorLogContent = data.getContent();
     assertNotSubString("Exception", errorLogContent);

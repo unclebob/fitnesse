@@ -14,11 +14,8 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +26,7 @@ public class SaveResponderTest {
   private Response response;
   public MockRequest request;
   public Responder responder;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   @Before
   public void setUp() throws Exception {

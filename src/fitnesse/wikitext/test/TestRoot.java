@@ -5,7 +5,7 @@ import fitnesse.wiki.mem.InMemoryPage;
 
 public class TestRoot {
     public WikiPage root;
-    private PageCrawler crawler;
+    private PageBuilder crawler;
 
     public TestRoot() {
         root = InMemoryPage.makeRoot("root");

@@ -4,8 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
-//TODO after extracting the WikiPageModel... rethink this class.  Lots of these methods might be able to go back into WikiPAge.
-public interface PageCrawler {
+public interface PageCrawler extends PageBuilder {
   WikiPage getPage(WikiPage context, WikiPagePath path);
 
   void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
@@ -16,17 +15,13 @@ public interface PageCrawler {
 
   WikiPagePath getFullPath(WikiPage page);
 
-  WikiPage addPage(WikiPage context, WikiPagePath path, String content);
-
-  WikiPage addPage(WikiPage context, WikiPagePath path);
-
   String getRelativeName(WikiPage base, WikiPage page);
 
   boolean isRoot(WikiPage page);
 
   WikiPage getRoot(WikiPage page);
 
-  void traverse(WikiPage root, TraversalListener<? super WikiPage> pageCrawlerTest);
+  void traverse(WikiPage root, TraversalListener<? super WikiPage> callback);
 
   WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
 

@@ -21,7 +21,7 @@ public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
   private static final File base = new File(defaultPath);
   private FileSystemPage root;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
 
   @BeforeClass
   public static void initialize() {
@@ -34,7 +34,7 @@ public class FileSystemPageTest {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
     root = new FileSystemPage(defaultPath, "RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
   }
 
   @After
@@ -49,15 +49,15 @@ public class FileSystemPageTest {
 
   @Test
   public void testCreateBase() throws Exception {
-    FileSystemPage levelA = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "");
+    FileSystemPage levelA = (FileSystemPage) pageBuilder.addPage(root, PathParser.parse("PageA"), "");
     assertEquals("./teststorage/RooT/PageA", levelA.getFileSystemPath());
     assertTrue(new File(defaultPath + "/RooT/PageA").exists());
   }
 
   @Test
   public void testTwoLevel() throws Exception {
-    WikiPage levelA = crawler.addPage(root, PathParser.parse("PageA"));
-    WikiPage page = crawler.addPage(levelA, PathParser.parse("PageB"));
+    WikiPage levelA = pageBuilder.addPage(root, PathParser.parse("PageA"));
+    WikiPage page = pageBuilder.addPage(levelA, PathParser.parse("PageB"));
     page.commit(page.getData());
     assertTrue(new File(defaultPath + "/RooT/PageA/PageB").exists());
   }
@@ -65,12 +65,12 @@ public class FileSystemPageTest {
   @Test
   public void testContent() throws Exception {
     WikiPagePath rootPath = PathParser.parse("root");
-    assertEquals("", crawler.getPage(root, rootPath).getData().getContent());
-    crawler.addPage(root, PathParser.parse("AaAa"), "A content");
+    assertEquals("", root.getPageCrawler().getPage(root, rootPath).getData().getContent());
+    pageBuilder.addPage(root, PathParser.parse("AaAa"), "A content");
     assertEquals("A content", root.getChildPage("AaAa").getData().getContent());
     WikiPagePath bPath = PathParser.parse("AaAa.BbBb");
-    crawler.addPage(root, bPath, "B content");
-    assertEquals("B content", crawler.getPage(root, bPath).getData().getContent());
+    pageBuilder.addPage(root, bPath, "B content");
+    assertEquals("B content", root.getPageCrawler().getPage(root, bPath).getData().getContent());
   }
 
   @Test
@@ -78,22 +78,22 @@ public class FileSystemPageTest {
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < 1000; i++)
       buffer.append("abcdefghijklmnopqrstuvwxyz");
-    crawler.addPage(root, PathParser.parse("BigPage"), buffer.toString());
+    pageBuilder.addPage(root, PathParser.parse("BigPage"), buffer.toString());
     String content = root.getChildPage("BigPage").getData().getContent();
     assertTrue(buffer.toString().equals(content));
   }
 
   @Test
   public void testPageExists() throws Exception {
-    crawler.addPage(root, PathParser.parse("AaAa"), "A content");
+    pageBuilder.addPage(root, PathParser.parse("AaAa"), "A content");
     assertTrue(root.hasChildPage("AaAa"));
   }
 
   @Test
   public void testGetChidren() throws Exception {
-    crawler.addPage(root, PathParser.parse("AaAa"), "A content");
-    crawler.addPage(root, PathParser.parse("BbBb"), "B content");
-    crawler.addPage(root, PathParser.parse("CcCc"), "C content");
+    pageBuilder.addPage(root, PathParser.parse("AaAa"), "A content");
+    pageBuilder.addPage(root, PathParser.parse("BbBb"), "B content");
+    pageBuilder.addPage(root, PathParser.parse("CcCc"), "C content");
     new File(defaultPath + "/root/someOtherDir").mkdir();
     List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
@@ -106,9 +106,9 @@ public class FileSystemPageTest {
 
   @Test
   public void testRemovePage() throws Exception {
-    WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
+    WikiPage levelOne = pageBuilder.addPage(root, PathParser.parse("LevelOne"));
     levelOne.commit(levelOne.getData());
-    crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
+    pageBuilder.addPage(levelOne, PathParser.parse("LevelTwo"));
     levelOne.removeChildPage("LevelTwo");
     File fileOne = new File(defaultPath + "/RooT/LevelOne");
     File fileTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
@@ -118,8 +118,8 @@ public class FileSystemPageTest {
 
   @Test
   public void testDelTree() throws Exception {
-    WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
-    WikiPage levelTwo = crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
+    WikiPage levelOne = pageBuilder.addPage(root, PathParser.parse("LevelOne"));
+    WikiPage levelTwo = pageBuilder.addPage(levelOne, PathParser.parse("LevelTwo"));
     levelOne.commit(levelOne.getData());
     levelTwo.commit(levelTwo.getData());
     File childOne = new File(defaultPath + "/RooT/LevelOne");
@@ -132,7 +132,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testDefaultAttributes() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "something");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageOne"), "something");
     assertTrue(page.getData().hasAttribute("Edit"));
     assertTrue(page.getData().hasAttribute("Search"));
     assertFalse(page.getData().hasAttribute("Test"));
@@ -141,7 +141,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testPersistentAttributes() throws Exception {
-    WikiPage createdPage = crawler.addPage(root, PathParser.parse("FrontPage"));
+    WikiPage createdPage = pageBuilder.addPage(root, PathParser.parse("FrontPage"));
     PageData data = createdPage.getData();
     data.setAttribute("Test", "true");
     data.setAttribute("Search", "true");
@@ -155,7 +155,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testCanFindExistingPages() throws Exception {
-    crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
+    pageBuilder.addPage(root, PathParser.parse("FrontPage"), "front page");
     WikiPage newRoot = new FileSystemPage(defaultPath, "RooT");
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
@@ -167,7 +167,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testLastModifiedTime() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("SomePage"), "some text");
     page.commit(page.getData());
     long now = Clock.currentTimeInMillis();
     Date lastModified = page.getData().getProperties().getLastModificationTime();
@@ -176,14 +176,14 @@ public class FileSystemPageTest {
 
   @Test
   public void testUnicodeCharacters() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "\uba80\uba81\uba82\uba83");
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("SomePage"), "\uba80\uba81\uba82\uba83");
     PageData data = page.getData();
     assertEquals("\uba80\uba81\uba82\uba83", data.getContent());
   }
 
   @Test
   public void testLoadChildrenWhenPageIsDeletedManualy() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+    WikiPage page = pageBuilder.addPage(root, PathParser.parse("TestPage"));
     page.getChildren();
     FileUtil.deleteFileSystemDirectory(((FileSystemPage) page).getFileSystemPath());
     try {

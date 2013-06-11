@@ -6,10 +6,7 @@ import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   private WikiPage pageA;
   private WikiPage pageTwo;
   private MovePageResponder moveResponder;
+  private PageCrawler crawler;
 
   protected Responder responderInstance() {
     return new MovePageResponder();
@@ -26,15 +24,16 @@ public class MovePageResponderTest extends ResponderTestCase {
   public void setUp() throws Exception {
     super.setUp();
     moveResponder = (MovePageResponder) responder;
-    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "^PageA");
-    pageA = crawler.addPage(pageOne, PathParser.parse("PageA"), "content");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"));
+    pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "^PageA");
+    pageA = pageBuilder.addPage(pageOne, PathParser.parse("PageA"), "content");
+    pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"));
+    crawler = root.getPageCrawler();
   }
 
   public void testIsChildOf() throws Exception {
-    WikiPage parent = crawler.addPage(root, PathParser.parse("TheParent"));
-    WikiPage child = crawler.addPage(parent, PathParser.parse("TheChild"));
-    WikiPage grandChild = crawler.addPage(child, PathParser.parse("TheGrandChild"));
+    WikiPage parent = pageBuilder.addPage(root, PathParser.parse("TheParent"));
+    WikiPage child = pageBuilder.addPage(parent, PathParser.parse("TheChild"));
+    WikiPage grandChild = pageBuilder.addPage(child, PathParser.parse("TheGrandChild"));
 
     assertIsAncestor(parent, child);
     assertIsAncestor(parent, grandChild);
@@ -54,7 +53,7 @@ public class MovePageResponderTest extends ResponderTestCase {
 
   private boolean isAncestor(WikiPage ancestor, WikiPage descendent) {
     return moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(ancestor),
-      crawler.getFullPath(descendent));
+            crawler.getFullPath(descendent));
   }
 
   public void testMovePage() throws Exception {
@@ -100,14 +99,14 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   public void testReferenceToSubPageChanged() throws Exception {
-    crawler.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
+    pageBuilder.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
     movePage("PageOne", "PageTwo", true);
     WikiPage referingPage = root.getChildPage("ReferingPage");
     assertEquals(".PageTwo.PageOne.PageA", referingPage.getData().getContent());
   }
 
   public void testReferenceToSubPageNotChangedWhenDisabled() throws Exception {
-    crawler.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
+    pageBuilder.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
     movePage("PageOne", "PageTwo", false);
     WikiPage referingPage = root.getChildPage("ReferingPage");
     assertEquals("PageOne.PageA", referingPage.getData().getContent());
@@ -122,7 +121,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   public void testCantReplaceExistingPage() throws Exception {
-    crawler.addPage(pageTwo, PathParser.parse("PageA"), "someContent");
+    pageBuilder.addPage(pageTwo, PathParser.parse("PageA"), "someContent");
     pageA.getData().setAttribute("someAttribute", "someValue");
     assertTrue(crawler.pageExists(root, PathParser.parse("PageTwo.PageA")));
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
@@ -154,9 +153,9 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPagePath destinationChildTwoPath = PathParser.parse(destinationChildTwo);
     WikiPagePath destinationGrandChildPath = PathParser.parse(destinationGrandChild);
 
-    crawler.addPage(root, sourceChildOnePath, "child1Content");
-    crawler.addPage(root, sourceChildTwoPath, "child2Content");
-    crawler.addPage(root, sourceGrandChildPath);
+    pageBuilder.addPage(root, sourceChildOnePath, "child1Content");
+    pageBuilder.addPage(root, sourceChildTwoPath, "child2Content");
+    pageBuilder.addPage(root, sourceGrandChildPath);
 
     movePage(parentToMove, destinationParent, true);
     WikiPage movedPage = crawler.getPage(root, destinationPagePath);
@@ -213,7 +212,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   public void testMovePageIntoItselfIsNotAllowed() throws Exception {
-    crawler.addPage(root, PathParser.parse("TestPage"));
+    pageBuilder.addPage(root, PathParser.parse("TestPage"));
     SimpleResponse response = movePage("TestPage", "TestPage", true);
 
     assertFalse(crawler.pageExists(root, PathParser.parse("TestPage.TestPage")));

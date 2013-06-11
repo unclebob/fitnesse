@@ -5,10 +5,7 @@ package fitnesse.responders.run;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,22 +17,22 @@ public class SuiteContentsFinderTest {
   private WikiPage root;
   private WikiPage suite;
   private WikiPage testPage;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private WikiPage testPage2;
   private WikiPage testChildPage;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     PageData data = root.getData();
     root.commit(data);
-    suite = crawler.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
+    suite = pageBuilder.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
     testPage = addTestPage(suite, "TestOne", "My test and has some content");
   }
   
   private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
-    WikiPage testPage = crawler.addPage(page, PathParser.parse(name), content);
+    WikiPage testPage = pageBuilder.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);
@@ -44,9 +41,9 @@ public class SuiteContentsFinderTest {
 
   @Test
   public void testGatherXRefTestPages() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
-    WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
+    WikiPage pageA = pageBuilder.addPage(root, PathParser.parse("PageA"));
+    WikiPage pageB = pageBuilder.addPage(root, PathParser.parse("PageB"));
     SuiteContentsFinder finder = new SuiteContentsFinder(testPage, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -56,9 +53,9 @@ public class SuiteContentsFinderTest {
 
   @Test
   public void shouldTestXRefsInSubSuites() throws Exception {
-    crawler.addPage(suite, PathParser.parse("SubSuite"), "!see .PageA\n!see .PageB");
-    WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
+    pageBuilder.addPage(suite, PathParser.parse("SubSuite"), "!see .PageA\n!see .PageB");
+    WikiPage pageA = pageBuilder.addPage(root, PathParser.parse("PageA"));
+    WikiPage pageB = pageBuilder.addPage(root, PathParser.parse("PageB"));
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -104,8 +101,8 @@ public class SuiteContentsFinderTest {
 
   @Test
   public void shouldTellIfItIsASpecificationsSuite() throws Exception {
-    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    pageBuilder.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    pageBuilder.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
     setUpForGetAllTestPages();
     String content = "|Suite|\n|Title|Test|\n|Content|.|\n";
     suite.commit(new PageData(suite,content));

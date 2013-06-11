@@ -115,7 +115,7 @@ public class SymbolicPageTest extends TestCase {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPage("testDir/ExternalRoot", "ExternalRoot");
-    PageCrawler externalCrawler = externalRoot.getPageCrawler();
+    PageBuilder externalCrawler = externalRoot.getPageCrawler();
     WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
     externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");

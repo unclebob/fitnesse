@@ -1736,7 +1736,7 @@ unit_test:
     [junit] util.GracefulNamerTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.GracefulNamerTest
     [junit] util.StreamReaderTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.StreamReaderTest
     [junit] util.StringUtilTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.StringUtilTest
-    [junit] util.TemplateUtilTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.TemplateUtilTest
+    [junit] fitnesse.responders.editing.TemplateUtilTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-fitnesse.responders.editing.TemplateUtilTest
     [junit] util.TimeMeasurementTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.TimeMeasurementTest
     [junit] util.WildcardTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.WildcardTest
     [junit] util.XmlUtilTest,/Users/unclebob/projects/FitNesseGit/test-results,TEST-util.XmlUtilTest
@@ -5315,7 +5315,7 @@ dropping /server/lib/catalina-ant.jar from path as it doesn't exist
     [junit] Testcase: testCombineArraysWithOneItemInEach took 0 sec
     [junit] Testcase: testCombineArraysWithMixedNumbers took 0 sec
     [junit] Testcase: testTrimAllSpacesStringResultsInEmptyString took 0 sec
-    [junit] Testsuite: util.TemplateUtilTest
+    [junit] Testsuite: fitnesse.responders.editing.TemplateUtilTest
     [junit] Tests run: 4, Failures: 0, Errors: 0, Time elapsed: 0.003 sec
     [junit] 
     [junit] Testcase: testGetTemplatesFromUncles took 0.001 sec

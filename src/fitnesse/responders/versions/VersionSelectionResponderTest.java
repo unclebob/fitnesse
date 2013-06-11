@@ -11,12 +11,8 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
 import util.RegexTestCase;
 
 public class VersionSelectionResponderTest extends RegexTestCase {
@@ -25,7 +21,8 @@ public class VersionSelectionResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "some content");
+    PageBuilder pageBuilder = root.getPageCrawler();
+    page = pageBuilder.addPage(root, PathParser.parse("PageOne"), "some content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES,"Page One tags");

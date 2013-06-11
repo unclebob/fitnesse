@@ -11,20 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> {
 
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
   private WikiPage page;
   private AttributeWikiPageFinder searcher;
 

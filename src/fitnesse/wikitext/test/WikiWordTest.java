@@ -17,7 +17,7 @@ public class WikiWordTest {
     private WikiPage pageOneTwoThree;
     private WikiPage pageOneThree;
     private WikiPage root2;
-    private PageCrawler crawler;
+    private PageBuilder crawler;
 
     @Before
     public void setUp() throws Exception {

@@ -17,7 +17,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
 
   private WikiPage page;
 
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   private WikiPage linker;
 

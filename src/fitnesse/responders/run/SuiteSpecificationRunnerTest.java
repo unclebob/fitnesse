@@ -23,7 +23,7 @@ public class SuiteSpecificationRunnerTest {
   private SuiteSpecificationRunner runner;
   private WikiPage root;
   private FitNesseContext context;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private String suitePageName;
 
 
@@ -31,13 +31,13 @@ public class SuiteSpecificationRunnerTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
-    WikiPage child = crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
+    pageBuilder = root.getPageCrawler();
+    pageBuilder.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
+    WikiPage child = pageBuilder.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
     PageData data = child.getData();
     data.setAttribute("Test");
     child.commit(data);
-    crawler.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
+    pageBuilder.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
     request = new MockRequest();
     request.setResource(suitePageName);
     context = FitNesseUtil.makeTestContext(root);
@@ -146,7 +146,7 @@ public class SuiteSpecificationRunnerTest {
 
   @Test
   public void shouldntIncludeSuitesInThePageList() throws Exception {
-    WikiPage testSuitePage = crawler.addPage(root,PathParser.parse("SuitePageOne"));
+    WikiPage testSuitePage = pageBuilder.addPage(root,PathParser.parse("SuitePageOne"));
     PageData data = testSuitePage.getData();
     data.setAttribute("Suite");
     testSuitePage.commit(data);

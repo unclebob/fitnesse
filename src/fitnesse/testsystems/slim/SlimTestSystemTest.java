@@ -8,8 +8,8 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SlimTestSystemTest {
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
   private TestSystemListener dummyListener = new DummyListener();
 
   @Before

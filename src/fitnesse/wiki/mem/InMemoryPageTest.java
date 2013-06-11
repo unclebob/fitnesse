@@ -5,24 +5,20 @@ package fitnesse.wiki.mem;
 import java.util.Collection;
 import java.util.Iterator;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
 public class InMemoryPageTest extends TestCase {
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private WikiPage page1;
   private WikiPage page2;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-    page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
+    pageBuilder = root.getPageCrawler();
+    page1 = pageBuilder.addPage(root, PathParser.parse("PageOne"), "page one");
+    page2 = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "page two");
   }
 
   public void tearDown() throws Exception {

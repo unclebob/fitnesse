@@ -19,18 +19,14 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
 public class HtmlSlimResponderTest {
   private WikiPage root;
-  private PageCrawler crawler;
   private FitNesseContext context;
   private MockRequest request;
   protected SlimResponder responder;
@@ -61,14 +57,14 @@ public class HtmlSlimResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
+    PageBuilder pageBuilder = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = getSlimResponder();
     responder.setFastTest(true);
     // Enforce the test runner here, to make sure we're talking to the right
     // system
-    testPage = crawler.addPage(root, PathParser.parse("TestPage"),
+    testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"),
         "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
     SlimTestSystem.SlimDescriptor.clearSlimPortOffset();
   }

@@ -1,7 +1,7 @@
 package fitnesse.components;
 
+import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import static org.junit.Assert.assertEquals;
@@ -17,16 +17,16 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
 
   WikiPage root;
   private List<WikiPage> hits = new ArrayList<WikiPage>();
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   SuiteSpecificationMatchFinder finder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
-    crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");
-    crawler.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too\nThere is no life without death");
+    pageBuilder = root.getPageCrawler();
+    pageBuilder.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
+    pageBuilder.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");
+    pageBuilder.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too\nThere is no life without death");
     hits.clear();
   }
 

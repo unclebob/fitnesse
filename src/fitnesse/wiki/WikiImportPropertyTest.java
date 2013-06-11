@@ -94,7 +94,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
 
   // Tests for the rendering of import specific page details
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   public void pageRenderingSetUp() throws Exception {
     root = InMemoryPage.makeRoot("root");

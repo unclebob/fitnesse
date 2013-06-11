@@ -42,8 +42,8 @@ public class VersionsControllerFixture {
   }
 
   public Object savePageWithContent(String pageName, String content) {
-    final PageCrawler pageCrawler = rootPage.getPageCrawler();
-    lastUsedPage = pageCrawler.addPage(rootPage, PathParser.parse(pageName));
+    final PageBuilder pageBuilder = rootPage.getPageCrawler();
+    lastUsedPage = pageBuilder.addPage(rootPage, PathParser.parse(pageName));
     final PageData data = lastUsedPage.getData();
     data.setContent(content);
     return lastUsedPage.commit(data);

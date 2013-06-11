@@ -20,8 +20,8 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
@@ -37,7 +37,7 @@ public class ResponderFactoryTest {
   private MockRequest request;
   private WikiPageDummy nonExistantPage;
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   @Before
   public void setUp() throws Exception {

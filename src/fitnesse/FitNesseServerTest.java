@@ -4,6 +4,7 @@ package fitnesse;
 
 import java.util.regex.Pattern;
 
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 import fitnesse.components.LogData;
 import fitnesse.http.MockRequest;
@@ -12,14 +13,9 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
 
 public class FitNesseServerTest extends RegexTestCase {
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private WikiPage root;
   private WikiPagePath pageOnePath;
   private WikiPagePath pageOneTwoPath;
@@ -31,7 +27,7 @@ public class FitNesseServerTest extends RegexTestCase {
   public void setUp() throws Exception {
     SampleFileUtility.makeSampleFiles();
     root = InMemoryPage.makeRoot("RootPage");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);
@@ -42,7 +38,7 @@ public class FitNesseServerTest extends RegexTestCase {
   }
 
   public void testSimple() throws Exception {
-    crawler.addPage(root, PathParser.parse("SomePage"), "some string");
+    pageBuilder.addPage(root, PathParser.parse("SomePage"), "some string");
     String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n", root);
     String statusLine = "HTTP/1.1 200 OK\r\n";
     assertTrue("Should have statusLine", Pattern.compile(statusLine, Pattern.MULTILINE).matcher(output).find());
@@ -63,15 +59,15 @@ public class FitNesseServerTest extends RegexTestCase {
   }
 
   public void testSomeOtherPage() throws Exception {
-    crawler.addPage(root, pageOnePath, "Page One Content");
+    pageBuilder.addPage(root, pageOnePath, "Page One Content");
     String output = getSocketOutput("GET /PageOne HTTP/1.1\r\n\r\n", root);
     String expected = "Page One Content";
     assertTrue("Should have page one", hasSubString(expected, output));
   }
 
   public void testSecondLevelPage() throws Exception {
-    crawler.addPage(root, pageOnePath, "Page One Content");
-    crawler.addPage(root, pageOneTwoPath, "Page Two Content");
+    pageBuilder.addPage(root, pageOnePath, "Page One Content");
+    pageBuilder.addPage(root, pageOneTwoPath, "Page Two Content");
     String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n", root);
 
     String expected = "Page Two Content";
@@ -79,14 +75,14 @@ public class FitNesseServerTest extends RegexTestCase {
   }
 
   public void testRelativeAndAbsoluteLinks() throws Exception {
-    crawler.addPage(root, pageOnePath, "PageOne");
-    crawler.addPage(root, pageOneTwoPath, "PageTwo");
+    pageBuilder.addPage(root, pageOnePath, "PageOne");
+    pageBuilder.addPage(root, pageOneTwoPath, "PageTwo");
     String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n", root);
     String expected = "href=\"PageOne.PageTwo\".*PageTwo";
     assertTrue("Should have relative link", hasSubString(expected, output));
 
-    crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo at root");
-    crawler.addPage(root, PathParser.parse("PageOne.PageThree"), "PageThree has link to .PageTwo at the root");
+    pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageTwo at root");
+    pageBuilder.addPage(root, PathParser.parse("PageOne.PageThree"), "PageThree has link to .PageTwo at the root");
     output = getSocketOutput("GET /PageOne.PageThree HTTP/1.1\r\n\r\n", root);
     expected = "href=\"PageTwo\".*[.]PageTwo";
     assertTrue("Should have absolute link", hasSubString(expected, output));

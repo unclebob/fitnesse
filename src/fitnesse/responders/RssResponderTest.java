@@ -134,7 +134,7 @@ public class RssResponderTest extends ResponderTestCase {
   }
 
   private NodeList getReportedItems(String recentChangesContent) throws Exception {
-    crawler.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
+    pageBuilder.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
     buildRssChannel();
     return channelElement.getElementsByTagName("item");
   }

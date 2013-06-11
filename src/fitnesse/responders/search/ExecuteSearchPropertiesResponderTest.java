@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.wiki.*;
 import org.junit.*;
 
 import util.RegexTestCase;
@@ -17,16 +18,10 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
 
 public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
 

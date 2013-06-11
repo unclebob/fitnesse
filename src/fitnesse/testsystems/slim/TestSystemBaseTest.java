@@ -2,19 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.wiki.PageBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemBaseTest {
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   @Before
   public void setUp() throws Exception {

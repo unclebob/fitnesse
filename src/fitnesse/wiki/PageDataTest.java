@@ -13,7 +13,7 @@ import util.RegexTestCase;
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");

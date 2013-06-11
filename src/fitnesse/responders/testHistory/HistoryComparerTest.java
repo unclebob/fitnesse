@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
+import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.After;
 import org.junit.Before;
@@ -20,10 +21,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;
@@ -279,14 +276,14 @@ public class HistoryComparerTest {
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {
-    PageCrawler crawler = root.getPageCrawler();
+    PageBuilder pageBuilder = root.getPageCrawler();
     String pageText =
       "|myTable|\n" +
         "La la\n" +
         "|NewTable|\n" +
         "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
-    WikiPage myPage = crawler.addPage(root, PathParser.parse("MyPage"), pageText);
+    WikiPage myPage = pageBuilder.addPage(root, PathParser.parse("MyPage"), pageText);
     PageData myData = myPage.getData();
     String html = myData.getHtml();
     return html;

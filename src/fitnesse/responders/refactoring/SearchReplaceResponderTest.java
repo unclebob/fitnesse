@@ -16,7 +16,7 @@ import fitnesse.testutil.FitNesseUtil;
 
 public class SearchReplaceResponderTest {
   private WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private SearchReplaceResponder responder;
   private MockRequest request;
   private FitNesseContext context;
@@ -26,9 +26,9 @@ public class SearchReplaceResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     pagePath = PathParser.parse("SomePage");
-    somePage = crawler.addPage(root, pagePath, "has something in it");
+    somePage = pageBuilder.addPage(root, pagePath, "has something in it");
     responder = new SearchReplaceResponder();
     request = new MockRequest();
     request.setResource("SomePage");
@@ -45,7 +45,7 @@ public class SearchReplaceResponderTest {
 
   @Test
   public void multipleReplacements() throws Exception {
-    crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has something too.");
+    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has something too.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, containsString("ChildPage"));
@@ -53,7 +53,7 @@ public class SearchReplaceResponderTest {
 
   @Test
   public void onlyReplacedPagesAreListed() throws Exception {
-    crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has nothing to replace.");
+    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has nothing to replace.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, not(containsString("ChildPage")));
@@ -62,7 +62,7 @@ public class SearchReplaceResponderTest {
   @Test
   public void testReplacement() throws Exception {
     getResponseContentUsingSearchReplaceString("something", "replacedthing");
-    WikiPage page = crawler.getPage(root, pagePath);
+    WikiPage page = root.getPageCrawler().getPage(root, pagePath);
     assertThat(page.getData().getContent(), containsString("has replacedthing in it"));
   }
 
@@ -76,7 +76,7 @@ public class SearchReplaceResponderTest {
   @Test
   public void onlySelectedPageAndChildrenAreSearched() throws Exception {
     request.setResource("SomePage.ChildPage");
-    crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
     assertThat(content, containsString("SomePage.ChildPage"));

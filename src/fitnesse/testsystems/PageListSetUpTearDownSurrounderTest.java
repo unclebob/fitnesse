@@ -6,7 +6,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 
 import fitnesse.wiki.mem.InMemoryPage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,28 +15,28 @@ public class PageListSetUpTearDownSurrounderTest {
   private WikiPage root;
   private WikiPage suite;
   private WikiPage testPage;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
 
   private PageListSetUpTearDownSurrounder surrounder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
+    pageBuilder = root.getPageCrawler();
     PageData data = root.getData();
     root.commit(data);
-    suite = crawler.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
-    testPage = crawler.addPage(suite, PathParser.parse("TestPage"), "My test and has some content");
+    suite = pageBuilder.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
+    testPage = pageBuilder.addPage(suite, PathParser.parse("TestPage"), "My test and has some content");
     surrounder = new PageListSetUpTearDownSurrounder(root);
   }
 
   @Test
   public void testPagesForTestSystemAreSurroundedByRespectiveSuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = crawler.addPage(testPage, PathParser.parse("SlimPageTest"));
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
-    WikiPage setUp2 = crawler.addPage(slimPage, PathParser.parse("SuiteSetUp"));
-    WikiPage tearDown2 = crawler.addPage(slimPage, PathParser.parse("SuiteTearDown"));
+    WikiPage slimPage = pageBuilder.addPage(testPage, PathParser.parse("SlimPageTest"));
+    WikiPage setUp = pageBuilder.addPage(root, PathParser.parse("SuiteSetUp"));
+    WikiPage tearDown = pageBuilder.addPage(root, PathParser.parse("SuiteTearDown"));
+    WikiPage setUp2 = pageBuilder.addPage(slimPage, PathParser.parse("SuiteSetUp"));
+    WikiPage tearDown2 = pageBuilder.addPage(slimPage, PathParser.parse("SuiteTearDown"));
 
     ArrayList<TestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
@@ -61,8 +60,8 @@ public class PageListSetUpTearDownSurrounderTest {
 
   @Test
   public void testSetUpAndTearDown() throws Exception {
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    WikiPage setUp = pageBuilder.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    WikiPage tearDown = pageBuilder.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
     ArrayList<TestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);

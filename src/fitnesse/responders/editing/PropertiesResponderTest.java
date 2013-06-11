@@ -7,15 +7,8 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
 import org.json.JSONObject;
 import util.RegexTestCase;
 
@@ -24,7 +17,7 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   private WikiPage root;
 
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   private MockRequest request;
 

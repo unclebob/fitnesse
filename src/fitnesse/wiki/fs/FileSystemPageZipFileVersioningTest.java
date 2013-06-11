@@ -14,7 +14,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   public FileSystemPage page;
   private VersionInfo firstVersion;
   private VersionInfo secondVersion;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
   private WikiPage root;
   private ZipFileVersionsController versionsController;
 

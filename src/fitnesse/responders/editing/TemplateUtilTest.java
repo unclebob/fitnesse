@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.wiki.PageBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.http.MockRequest;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
@@ -24,7 +24,7 @@ public class TemplateUtilTest {
   private WikiPage root;
   private MockRequest request;
   private EditResponder responder;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
 
   @Before public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");

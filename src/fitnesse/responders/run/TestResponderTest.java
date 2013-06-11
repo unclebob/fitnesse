@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,12 +48,6 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.Utils;
 
 public class TestResponderTest {
@@ -67,7 +62,7 @@ public class TestResponderTest {
   private String results;
   private FitSocketReceiver receiver;
   private WikiPage errorLogsParentPage;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
 
@@ -76,8 +71,8 @@ public class TestResponderTest {
     File testDir = new File("TestDir");
     testDir.mkdir();
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
+    pageBuilder = root.getPageCrawler();
+    errorLogsParentPage = pageBuilder.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
     responder.setFastTest(true);
@@ -128,7 +123,7 @@ public class TestResponderTest {
 
   private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
     String simpleRunPageName = "TestPage";
-    testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
+    testPage = pageBuilder.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     if (tags != null) {
       PageData pageData = testPage.getData();
       pageData.setAttribute(PageData.PropertySUITES, tags);
@@ -148,7 +143,7 @@ public class TestResponderTest {
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    testPage = crawler.addPage(root, PathParser.parse("EmptyTestPage"));
+    testPage = pageBuilder.addPage(root, PathParser.parse("EmptyTestPage"));
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
@@ -157,7 +152,7 @@ public class TestResponderTest {
     sender.sentData();
 
     WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.EmptyTestPage");
-    WikiPage errorLogPage = crawler.getPage(root, errorLogPath);
+    WikiPage errorLogPage = root.getPageCrawler().getPage(root, errorLogPath);
     String errorLogContent = errorLogPage.getData().getContent();
     assertNotSubString("Exception", errorLogContent);
   }
@@ -199,7 +194,7 @@ public class TestResponderTest {
   }
 
   private String doRunAndGetErrorLog(String content) throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), content);
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), content);
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -215,7 +210,7 @@ public class TestResponderTest {
 
   @Test
   public void testHasExitValueHeader() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + passFixtureTable());
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + passFixtureTable());
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -243,7 +238,7 @@ public class TestResponderTest {
   @Test
   public void testFixtureThatCrashes() throws Exception {
     responder.setFastTest(false);
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
+    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -262,8 +257,8 @@ public class TestResponderTest {
 
   @Test
   public void testResultsHaveHeaderAndFooter() throws Exception {
-    crawler.addPage(root, PathParser.parse("PageHeader"), "HEADER");
-    crawler.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
+    pageBuilder.addPage(root, PathParser.parse("PageHeader"), "HEADER");
+    pageBuilder.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
     doSimpleRun(passFixtureTable());
     assertSubString("HEADER", results);
     assertSubString("FOOTER", results);
@@ -510,17 +505,17 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
 
     PageData data = testPage.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
 
-    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -533,7 +528,7 @@ public class TestResponderTest {
     assertHasRegexp("ErrorLog", results);
     assertSubString("Test Page tags", results);
 
-    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);
     assertHasRegexp("Output of TestPage", errorLogContent);
@@ -543,12 +538,12 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    pageBuilder.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
 
-    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -557,7 +552,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
@@ -566,12 +561,12 @@ public class TestResponderTest {
   @Test
   public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
-    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
-    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -580,7 +575,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
@@ -589,14 +584,14 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
-    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
-    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    pageBuilder.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
-    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -605,7 +600,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");

@@ -5,25 +5,22 @@ package fitnesse.components;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class SaveRecorderTest {
   public WikiPage somePage;
   public WikiPage root;
-  private PageCrawler crawler;
+  private PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    somePage = crawler.addPage(root, PathParser.parse("SomePage"), "some page");
+    pageBuilder = root.getPageCrawler();
+    somePage = pageBuilder.addPage(root, PathParser.parse("SomePage"), "some page");
   }
 
   @Test
@@ -39,7 +36,7 @@ public class SaveRecorderTest {
 
   @Test
   public void testDefaultValues() throws Exception {
-    WikiPage neverSaved = crawler.addPage(root, PathParser.parse("NeverSaved"), "never saved");
+    WikiPage neverSaved = pageBuilder.addPage(root, PathParser.parse("NeverSaved"), "never saved");
     assertFalse(SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved.getData()));
   }
 

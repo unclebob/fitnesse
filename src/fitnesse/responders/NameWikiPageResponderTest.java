@@ -22,7 +22,7 @@ public class NameWikiPageResponderTest {
   private WikiPage root;
   private NameWikiPageResponder responder;
   private MockRequest request;
-  private PageCrawler crawler;
+  private PageBuilder crawler;
   private String pageOneName;
   private String pageTwoName;
   private String frontPageName;
