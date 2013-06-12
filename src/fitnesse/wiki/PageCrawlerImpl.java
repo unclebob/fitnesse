@@ -85,7 +85,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   public String getRelativeName(WikiPage page) {
     StringBuffer qualName = new StringBuffer();
-    for (WikiPage p = page; !isRoot(p) && !p.equals(context); p = p.getParent()) {
+    for (WikiPage p = page; !p.isRoot() && !p.equals(context); p = p.getParent()) {
       if (p != page)
         qualName.insert(0, ".");
       qualName.insert(0, p.getName());
@@ -104,21 +104,12 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
-  public boolean isRoot() {
-    return isRoot(context);
-  }
-
-  public boolean isRoot(WikiPage page) {
-    WikiPage parent = page.getParent();
-    return parent == null || parent == page;
-  }
-
   public WikiPage getRoot() {
     return getRoot(context);
   }
 
   private WikiPage getRoot(WikiPage page) {
-    if (isRoot(page))
+    if (page.isRoot())
       return page;
     else
       return getRoot(page.getParent());
@@ -171,7 +162,7 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public WikiPage findAncestorWithName(String name) {
-    for (WikiPage current = context.getParent(); !isRoot(current); current = current.getParent()) {
+    for (WikiPage current = context.getParent(); !current.isRoot(); current = current.getParent()) {
       if (current.getName().equals(name)) return current;
     }
     return null;
@@ -194,7 +185,7 @@ public class PageCrawlerImpl implements PageCrawler {
     do {
       parent = parent.getParent();
       ancestors.add(parent);
-    } while (!isRoot(parent));
+    } while (!parent.isRoot());
 
     return ancestors;
   }

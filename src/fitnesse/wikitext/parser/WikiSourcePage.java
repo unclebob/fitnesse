@@ -121,7 +121,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {
                 ancestors.add(new WikiSourcePage(ancestor));
-                if (ancestor.getPageCrawler().isRoot()) break;
+                if (ancestor.isRoot()) break;
             }
         }
         catch (Exception e) {

@@ -147,13 +147,6 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertEquals("ChildOne.GrandChildOne", page1.getPageCrawler().getRelativeName(grandChild1));
   }
 
-  @Test
-  public void testIsRoot() throws Exception {
-    assertTrue(crawler.isRoot(root));
-    WikiPage page = pageBuider.addPage(root, page1Path);
-    assertFalse(crawler.isRoot(page));
-  }
-
   Set<String> traversedPages = new HashSet<String>();
 
   @Test

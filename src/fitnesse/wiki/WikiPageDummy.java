@@ -45,6 +45,10 @@ public class WikiPageDummy implements WikiPage {
     this.parent = parent;
   }
 
+  public boolean isRoot() {
+    return parent == null;
+  }
+
   public PageData getData() {
     return pageData;
   }

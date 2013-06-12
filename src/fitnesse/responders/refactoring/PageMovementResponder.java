@@ -85,10 +85,10 @@ public abstract class PageMovementResponder implements SecureResponder {
   }
 
   protected String createRedirectionUrl(WikiPage newParent, String newName) {
-    PageCrawler crawler = newParent.getPageCrawler();
-    if(crawler.isRoot()) {
+    if(newParent.isRoot()) {
       return newName;
     }
+    PageCrawler crawler = newParent.getPageCrawler();
     return PathParser.render(crawler.getFullPath().addNameToEnd(newName));
   }
 

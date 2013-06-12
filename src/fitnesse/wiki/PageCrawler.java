@@ -19,9 +19,6 @@ public interface PageCrawler {
 
   String getRelativeName(WikiPage page);
 
-  // Should become a property of WIkiPage
-  boolean isRoot();
-
   WikiPage getRoot();
 
   void traverse(TraversalListener<? super WikiPage> callback);

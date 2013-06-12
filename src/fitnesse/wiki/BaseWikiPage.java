@@ -31,6 +31,12 @@ public abstract class BaseWikiPage implements WikiPage {
     return parent == null ? this : parent;
   }
 
+
+  public boolean isRoot() {
+    WikiPage parent = getParent();
+    return parent == null || parent == this;
+  }
+
   protected abstract List<WikiPage> getNormalChildren();
 
   public List<WikiPage> getChildren() {
