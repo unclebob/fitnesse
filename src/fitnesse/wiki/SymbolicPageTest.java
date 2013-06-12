@@ -63,7 +63,7 @@ public class SymbolicPageTest extends TestCase {
     assertNotNull(page);
     assertEquals(SymbolicPage.class, page.getClass());
     SymbolicPage symChild = (SymbolicPage) page;
-    assertSame(childPage, symChild.getRealPage());
+    assertEquals(childPage, symChild.getRealPage());
   }
 
   public void testGetChildren() throws Exception {

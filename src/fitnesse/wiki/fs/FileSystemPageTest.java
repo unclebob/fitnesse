@@ -141,8 +141,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testPersistentAttributes() throws Exception {
-    crawler.addPage(root, PathParser.parse("FrontPage"));
-    WikiPage createdPage = root.getChildPage("FrontPage");
+    WikiPage createdPage = crawler.addPage(root, PathParser.parse("FrontPage"));
     PageData data = createdPage.getData();
     data.setAttribute("Test", "true");
     data.setAttribute("Search", "true");
@@ -152,14 +151,6 @@ public class FileSystemPageTest {
     WikiPage page = root.getChildPage("FrontPage");
     assertTrue(page.getData().hasAttribute("Test"));
     assertTrue(page.getData().hasAttribute("Search"));
-  }
-
-  @Test
-  public void testCachedInfo() throws Exception {
-    WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-    WikiPage child1 = crawler.addPage(page1, PathParser.parse("ChildOne"), "child one");
-    WikiPage child = page1.getChildPage("ChildOne");
-    assertSame(child1, child);
   }
 
   @Test

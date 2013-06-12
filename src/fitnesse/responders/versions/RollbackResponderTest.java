@@ -14,6 +14,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import junit.framework.TestCase;
 
+import static fitnesse.responders.versions.VersionResponderTest.last;
+
 public class RollbackResponderTest extends TestCase {
   private WikiPage page;
   private Response response;
@@ -24,7 +26,7 @@ public class RollbackResponderTest extends TestCase {
     PageData data = page.getData();
     data.setContent("new stuff");
     data.setProperties(new WikiPageProperties());
-    VersionInfo commitRecord = page.getVersions().iterator().next();
+    VersionInfo commitRecord = last(page.getVersions());
     page.commit(data);
 
     MockRequest request = new MockRequest();

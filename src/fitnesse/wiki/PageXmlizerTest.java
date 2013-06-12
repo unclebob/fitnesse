@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wiki.mem.InMemoryPage;
@@ -246,4 +247,21 @@ public class PageXmlizerTest extends RegexTestCase {
     checkForLastModifiedTag(root, value);
     checkForLastModifiedTag(pageOne, value);
   }
+
+  public static class MockXmlizerPageHandler implements XmlizerPageHandler {
+    public List<String> handledPages = new LinkedList<String>();
+    public List<Date> modDates = new LinkedList<Date>();
+    public int exits = 0;
+
+    public void enterChildPage(WikiPage newPage, Date lastModified) {
+      handledPages.add(newPage.getName());
+      modDates.add(lastModified);
+      newPage.commit(newPage.getData());
+    }
+
+    public void exitPage() {
+      exits++;
+    }
+  }
+
 }

@@ -15,6 +15,8 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
+import java.util.Collection;
+
 public class VersionResponderTest extends RegexTestCase {
   private String oldVersion;
   private SimpleResponse response;
@@ -30,7 +32,7 @@ public class VersionResponderTest extends RegexTestCase {
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
     data.setContent("new stuff");
-    VersionInfo commitRecord = page.getVersions().iterator().next();
+    VersionInfo commitRecord = last(page.getVersions());
     oldVersion = commitRecord.getName();
     page.commit(data);
     MockRequest request = new MockRequest();
@@ -66,4 +68,14 @@ public class VersionResponderTest extends RegexTestCase {
     makeTestResponse("PageOne.PageTwo");
     assertSubString("PageOne.PageTwo?responder=", response.getContent());
   }
+
+  static VersionInfo last(Collection<VersionInfo> versions) {
+    VersionInfo last = null;
+    for (VersionInfo i : versions) {
+      last = i;
+    }
+    return last;
+  }
+
+
 }
