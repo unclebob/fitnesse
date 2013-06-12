@@ -5,12 +5,31 @@ package fitnesse.wiki;
 import fitnesse.components.TraversalListener;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
 public class PageCrawlerImpl implements PageCrawler {
 
   protected PageCrawlerImpl() {
+  }
+
+  public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) {
+    PageCrawler crawler = page.getPageCrawler();
+    LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
+    WikiPage parent = page;
+    do {
+      parent = parent.getParent();
+      ancestors.add(parent);
+    } while (!crawler.isRoot(parent));
+
+    return ancestors;
+  }
+
+  public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) {
+    LinkedList<WikiPage> ancestors = getAncestorsOf(page);
+    ancestors.addFirst(page);
+    return ancestors;
   }
 
   public WikiPage getPage(WikiPage context, WikiPagePath path) {
@@ -87,7 +106,7 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
-    List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(context);
+    List<WikiPage> ancestors = getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
       if (namedPage != null)
@@ -155,7 +174,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();
-    List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(nephew);
+    List<WikiPage> ancestors = getAncestorsStartingWith(nephew);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(uncleName);
       if (namedPage != null)

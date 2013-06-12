@@ -19,7 +19,7 @@ public abstract class SecurePageOperation implements SecureOperation {
     if (page == null)
       return false;
 
-    List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(page);
+    List<WikiPage> ancestors = PageCrawlerImpl.getAncestorsStartingWith(page);
     for (Iterator<WikiPage> iterator = ancestors.iterator(); iterator.hasNext();) {
       WikiPage ancestor = iterator.next();
       if (hasSecurityModeAttribute(ancestor))

@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
 import util.Wildcard;
 
 public class ClassPathBuilder {
@@ -18,7 +18,7 @@ public class ClassPathBuilder {
   private StringBuffer pathsString;
   private Set<String> addedPaths;
 
-  public String getClasspath(WikiPage page){
+  public String getClasspath(WikiPage page) {
     List<String> paths = getInheritedPathElements(page, new HashSet<WikiPage>());
     return createClassPathString(paths, getPathSeparator(page));
   }
@@ -153,7 +153,7 @@ public class ClassPathBuilder {
     List<String> items = new ArrayList<String>();
     addItemsFromPage(page, items);
 
-    List<WikiPage> ancestors = WikiPageUtil.getAncestorsOf(page);
+    List<WikiPage> ancestors = PageCrawlerImpl.getAncestorsOf(page);
     for (WikiPage ancestor : ancestors) {
       if (!visitedPages.contains(ancestor)) {
         visitedPages.add(ancestor);

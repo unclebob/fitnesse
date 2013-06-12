@@ -5,23 +5,6 @@ package fitnesse.wiki;
 import java.util.LinkedList;
 
 public class WikiPageUtil {
-  public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) {
-    PageCrawler crawler = page.getPageCrawler();
-    LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
-    WikiPage parent = page;
-    do {
-      parent = parent.getParent();
-      ancestors.add(parent);
-    } while (!crawler.isRoot(parent));
-
-    return ancestors;
-  }
-
-  public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) {
-    LinkedList<WikiPage> ancestors = getAncestorsOf(page);
-    ancestors.addFirst(page);
-    return ancestors;
-  }
 
   public static void setPageContents(WikiPage page, String pageContents) throws Exception {
     PageData pageData = page.getData();
