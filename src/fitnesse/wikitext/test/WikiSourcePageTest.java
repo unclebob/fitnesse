@@ -1,8 +1,7 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.WikiSourcePage;
@@ -34,12 +33,5 @@ public class WikiSourcePageTest {
     public void getsUrlForPage() {
         WikiPage test = new TestRoot().makePage("MyPage");
         assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
-    }
-
-    @Test
-    public void getsUrlForProxyPage() {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"));
-        assertEquals("http://host:9999/RealPage.WikiPath", new WikiSourcePage(virtualPage).makeUrl("WikiPath"));
     }
 }

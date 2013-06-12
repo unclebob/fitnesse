@@ -12,6 +12,7 @@ import fitnesse.responders.PageFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import util.Clock;
 import util.RegexTestCase;
 

@@ -7,7 +7,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -267,7 +267,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertSame(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
+    assertEquals(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
     request.setResource(page.getPageCrawler().getFullPath(page).toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();

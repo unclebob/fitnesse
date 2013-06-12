@@ -7,6 +7,7 @@ import static fitnesse.wiki.PageData.*;
 
 import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import util.RegexTestCase;
 
 public class PageDataTest extends RegexTestCase {

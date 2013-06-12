@@ -31,7 +31,7 @@ public class VersionSelectionResponder implements SecureResponder {
       return new NotFoundResponder().makeResponse(context, request);
 
     pageData = page.getData();
-    versions = getVersionsList(pageData);
+    versions = getVersionsList(page);
 
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
@@ -46,8 +46,8 @@ public class VersionSelectionResponder implements SecureResponder {
     return response;
   }
 
-  public static List<VersionInfo> getVersionsList(PageData data) {
-    List<VersionInfo> list = new ArrayList<VersionInfo>(data.getVersions());
+  public static List<VersionInfo> getVersionsList(WikiPage page) {
+    List<VersionInfo> list = new ArrayList<VersionInfo>(page.getVersions());
     Collections.sort(list);
     Collections.reverse(list);
     return list;

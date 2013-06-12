@@ -1,6 +1,7 @@
 package fitnesse.components;
 
 import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;

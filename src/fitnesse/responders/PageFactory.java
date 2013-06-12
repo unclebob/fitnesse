@@ -3,9 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.EscapeDirective;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.TraverseDirective;
+import fitnesse.responders.templateUtilities.*;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -49,7 +47,7 @@ public class PageFactory {
           String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName));
 
       properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
-          fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
+          ClasspathResourceLoader.class.getName());
       properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".base",
           String.format("/fitnesse/resources/%s/templates", context.pageTheme));
 
@@ -57,6 +55,9 @@ public class PageFactory {
           fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
           "/fitnesse/resources/templates");
+
+      properties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+              VelocityLogger.class.getName());
 
       velocityEngine = new VelocityEngine();
       velocityEngine.init(properties);

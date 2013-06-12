@@ -14,7 +14,7 @@ import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;

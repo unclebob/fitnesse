@@ -5,64 +5,43 @@ import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import util.TimeMeasurement;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
-@RunWith(Parameterized.class)
 public class TestFormatterTest {
-  private BaseFormatter formatter;
+    private WikiPage root = InMemoryPage.makeRoot("RooT");
+    private FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    private ChunkedResponse response = mock(ChunkedResponse.class);
+    private WikiPageDummy dummyPage = new WikiPageDummy("testPage", "testContent");
+    private XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);
 
-  public TestFormatterTest(BaseFormatter formatter) {
-    this.formatter = formatter;
-  }
-
-  @Parameterized.Parameters
-  public static Collection<Object[]> formatters() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    ChunkedResponse response = mock(ChunkedResponse.class);
-    WikiPageDummy page = new WikiPageDummy("testPage", "testContent");
-    XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);
-
-    TestTextFormatter testTextFormatter = new TestTextFormatter(response);
-    XmlFormatter xmlFormatter = new XmlFormatter(context, page, writerFactory) {
+    private TestTextFormatter testTextFormatter = new TestTextFormatter(response);
+    private XmlFormatter xmlFormatter = new XmlFormatter(context, dummyPage, writerFactory) {
       @Override
       protected void writeResults() {
       }
     };
-    InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, page) {
+    private InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, dummyPage) {
       @Override
       protected void writeData(String output) {
       }
     };
-    PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {
+    private PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, dummyPage, writerFactory) {
       protected void writeResults() {
       };
     };
-    return Arrays.asList(new Object[][]{
-      {testTextFormatter},
-      {xmlFormatter},
-      {testHtmlFormatter},
-      {pageHistoryFormatter},
-    });
-  }
 
   private TestPage page;
   private TestSummary right;
@@ -83,11 +62,30 @@ public class TestFormatterTest {
   }
   
   @Test
-  public void testComplete_shouldCountTestResults() throws Exception {
+  public void testComplete_shouldCountTestResultsForTestTextFormatter() throws Exception {
+    countTestResultsForFormatter(testTextFormatter);
+  }
+
+  @Test
+  public void testComplete_shouldCountTestResultsForXmlFormatter() throws Exception {
+    countTestResultsForFormatter(xmlFormatter);
+  }
+
+  @Test
+  public void testComplete_shouldCountTestResultsForHtmlFormatter() throws Exception {
+    countTestResultsForFormatter(testHtmlFormatter);
+  }
+
+  @Test
+  public void testComplete_shouldCountTestResultsForTestHistoryFormatter() throws Exception {
+    countTestResultsForFormatter(pageHistoryFormatter);
+  }
+
+  private void countTestResultsForFormatter(BaseFormatter formatter) throws Exception {
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when(timeMeasurement.startedAtDate()).thenReturn(new Date(0));
     when(timeMeasurement.elapsedSeconds()).thenReturn(0d);
-    
+
     formatter.announceNumberTestsToRun(3);
     formatter.testComplete(page, right, timeMeasurement);
     formatter.testComplete(page, wrong, timeMeasurement);
@@ -96,8 +94,8 @@ public class TestFormatterTest {
 
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);
-    if (!(formatter instanceof PageHistoryFormatter)) 
+    if (!(formatter instanceof PageHistoryFormatter))
       assertEquals(2, BaseFormatter.finalErrorCount);
   }
-  
+
 }

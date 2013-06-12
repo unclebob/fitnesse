@@ -3,10 +3,12 @@
 
 package fitnesse.wiki;
 
-import util.Clock;
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import util.Clock;
 
 public class WikiPageDummy implements WikiPage {
   private static final long serialVersionUID = 1L;
@@ -48,6 +50,11 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public ReadOnlyPageData readOnlyData() { return getData(); }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
+  }
 
   public VersionInfo commit(PageData data) {
     pageData = data;
@@ -91,13 +98,5 @@ public class WikiPageDummy implements WikiPage {
 
   public WikiPage getChildPage(String name) {
     return null;
-  }
-
-  public String getHelpText() {
-    return "Dummy help text";
-  }
-  
-  public boolean isOpenInNewWindow() {
-    return false;
   }
 }

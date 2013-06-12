@@ -1,4 +1,4 @@
-!2 Spring 2013
+!2 2013-05-30
  * Many improvements in the JUnit test runner
  * New: version comparator
  * Wiki: can set image width with -w option, border with -b and margin with -m: !-!img -b 2 -m 10 -w 600 http://files/someImage.png-!
@@ -6,12 +6,15 @@
  * Virtual Wiki functionality has finally been removed
  * Big refactoring of SLiM test system. Output is now XML compliant,  introduction of domain classes and caching of set up/tear down pages
  * Many fixes in the rich text editor: full-screen editing, more lenient parsing of wiki text, improved cut-and-paste
+ * Optimized wiki page parser performance
+ * Fixed issue with setting/reading the same field multiple times in a SLiM decision table
+ * Stack traces from SLiM server are enriched with class information
 
 !2 2012-11-16
  * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables.
 
 !2 2012-09-18
- * Added the concept of a !-TemplateLibrary-! and the ability to insert existing templates into the plain text editor.
+ * Added the concept of a !-TemplateLibrary-! and the ability to insert existing templates into the plain text editor.
 
 !2 2012-03-20
  * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!

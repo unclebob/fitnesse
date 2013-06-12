@@ -7,7 +7,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Test;
-import util.TestClock;
+import util.Clock;
 import util.TimeMeasurement;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -77,4 +77,13 @@ public class SuiteExecutionReportFormatterTest {
     assertThat(BaseFormatter.finalErrorCount, is(5));
 
   }
+
+  static class TestClock extends Clock {
+    public long currentTime;
+    @Override
+    protected long currentClockTimeInMillis() {
+      return currentTime;
+    }
+  }
+
 }

@@ -7,17 +7,14 @@ import java.io.ObjectInputStream;
 
 import util.FileUtil;
 import util.RegexTestCase;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
@@ -38,26 +35,6 @@ public class SerializedPageResponderTest extends RegexTestCase {
 
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(RootPath);
-  }
-
-  public void testWithInMemory() throws Exception {
-    Object obj = doSetUpWith(root, "bones");
-    doTestWith(obj);
-
-  }
-
-  public void testWithFileSystem() throws Exception {
-    root = new FileSystemPage(".", RootPath);
-    Object obj = doSetUpWith(root, "bones");
-    FileUtil.deleteFileSystemDirectory(RootPath);
-    doTestWith(obj);
-  }
-
-  private void doTestWith(Object obj) throws Exception {
-    assertNotNull(obj);
-    assertEquals(true, obj instanceof ProxyPage);
-    WikiPage page = (WikiPage) obj;
-    assertEquals("PageOne", page.getName());
   }
 
   private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {

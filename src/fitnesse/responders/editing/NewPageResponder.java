@@ -1,7 +1,7 @@
 package fitnesse.responders.editing;
 
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
-import util.TemplateUtil;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;

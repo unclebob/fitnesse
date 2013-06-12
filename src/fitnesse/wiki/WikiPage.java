@@ -4,6 +4,7 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
@@ -22,7 +23,10 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   String getName();
 
   PageData getData();
+
   ReadOnlyPageData readOnlyData();
+
+  Collection<VersionInfo> getVersions();
 
   PageData getDataVersion(String versionName);
 
@@ -33,8 +37,6 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getHeaderPage();
 
   WikiPage getFooterPage();
-
-  boolean isOpenInNewWindow();
 }
 
 

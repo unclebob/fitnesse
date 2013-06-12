@@ -3,7 +3,7 @@
 package fitnesse.fixtures;
 
 import junit.framework.TestCase;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 

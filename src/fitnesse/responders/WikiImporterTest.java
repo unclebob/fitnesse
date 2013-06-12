@@ -12,7 +12,7 @@ import util.Clock;
 import util.RegexTestCase;
 import util.XmlUtil;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -174,21 +174,9 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     addLocalPageWithImportProperty(localRoot, "PageThree", false);
     addLocalPageWithImportProperty(pageOne, "ChildTwo", false);
     addLocalPageWithImportProperty(childPageOne, "GrandChildOne", false);
-    localRoot.addChildPage("PageThatDoesntImport");
     addLocalPageWithImportProperty(localRoot, "OtherImportRoot", true);
 
     importer.importWiki(localRoot);
-  }
-
-  public void testOrphansAreRemoved() throws Exception {
-    performImportWithExtraLocalPages();
-
-    assertFalse(localRoot.hasChildPage("PageThree"));
-    assertFalse(pageOne.hasChildPage("ChildTwo"));
-    assertFalse(childPageOne.hasChildPage("GrandChildOne"));
-
-    assertTrue(localRoot.hasChildPage("PageThatDoesntImport"));
-    assertTrue(localRoot.hasChildPage("OtherImportRoot"));
   }
 
   public void testWholeTreeOrphaned() throws Exception {

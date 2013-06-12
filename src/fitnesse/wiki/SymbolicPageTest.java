@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import junit.framework.TestCase;
 import util.FileUtil;
 
@@ -24,7 +26,7 @@ public class SymbolicPageTest extends TestCase {
     crawler = root.getPageCrawler();
     pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
-    symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
+    symPage = new SymbolicPage("SymPage", pageTwo, pageOne, null);
   }
 
   public void tearDown() throws Exception {
@@ -61,7 +63,7 @@ public class SymbolicPageTest extends TestCase {
     assertNotNull(page);
     assertEquals(SymbolicPage.class, page.getClass());
     SymbolicPage symChild = (SymbolicPage) page;
-    assertSame(childPage, symChild.getRealPage());
+    assertEquals(childPage, symChild.getRealPage());
   }
 
   public void testGetChildren() throws Exception {
@@ -118,7 +120,7 @@ public class SymbolicPageTest extends TestCase {
     externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
 
-    symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
+    symPage = new SymbolicPage("SymPage", externalRoot, pageOne, null);
   }
 
   public void testCommittingToExternalRoot() throws Exception {

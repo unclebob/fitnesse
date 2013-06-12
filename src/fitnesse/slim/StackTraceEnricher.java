@@ -48,6 +48,11 @@ public class StackTraceEnricher {
       }
       sb.append("]");
     }
+    if (throwable.getCause() != null) {
+      Throwable cause = throwable.getCause();
+      sb.append("\nCaused by: ").append(cause.getClass().getName()).append(": ").append(cause.getMessage());
+      sb.append(getStackTraceAsString(cause));
+    }
     return sb.toString();
   }
 

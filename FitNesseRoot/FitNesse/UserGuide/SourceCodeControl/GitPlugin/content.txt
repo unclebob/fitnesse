@@ -1,7 +1,0 @@
-You can marry !-FitNesse-! to !style_code(git) simply by using the git plugin that ships with !-FitNesse-!.  See <SourceCodeControl for an explanation.
- * Start fitnesse with !style_code(!-java -DCM_SYSTEM=fitnesse.wiki.cmSystems.GitCmSystem -jar fitnesse.jar-!).
- * Or set the !style_code(CM_SYSTEM) environment variable to !style_code(!-fitnesse.wiki.cmSystems.GitCmSystem-!).
- * Or put !style_code(!-!define CM_SYSTEM {fitnesse.wiki.cmSystems.GitCmSystem}-!) at the top of the hierarchy that you want git to control.
-
-This plugin expects to find git in !style_code(/usr/local/bin/git).  If it's not there, then you'll have to change the source code of !style_code(!-GitCmSystem-!).
-

@@ -7,6 +7,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import util.RegexTestCase;
 
 public class SavePropertiesResponderTest extends RegexTestCase {

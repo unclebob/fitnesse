@@ -50,7 +50,7 @@ public class WikiPageActions {
   }
 
   public boolean isWithVersions() {
-    return hasAction("Versions") && PageVersionPruner.daysTillVersionsExpire > 0;
+    return hasAction("Versions");
   }
 
   public boolean isWithRecentChanges() {
@@ -92,21 +92,5 @@ public class WikiPageActions {
       return PathParser.render(localPagePath);
     }
     return null;
-  }
-
-  public String getLocalOrRemotePageName() {
-    String localOrRemotePageName = getLocalPageName();
-
-    if (page instanceof ProxyPage) {
-      localOrRemotePageName = ((ProxyPage) page).getThisPageUrl();
-    }
-    return localOrRemotePageName;
-  }
-
-  public boolean isNewWindowIfRemote() {
-    if (page != null) {
-      return page.isOpenInNewWindow();
-    }
-    return false;
   }
 }

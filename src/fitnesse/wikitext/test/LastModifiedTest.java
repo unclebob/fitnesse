@@ -1,13 +1,26 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wiki.PageData;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import util.SystemTimeKeeper;
-import util.TestTimeKeeper;
+import util.Clock;
+import util.DateAlteringClock;
 
 import java.util.GregorianCalendar;
 
 public class LastModifiedTest {
+
+    @Before
+    public void setUp() {
+        new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 5, 6, 7).getTime()).freeze();
+    }
+
+    @After
+    public void tearDown() {
+        Clock.restoreDefaultClock();
+    }
+
     @Test
     public void scansLastModified() {
         ParserTestHelper.assertScansTokenType("!lastmodified", "LastModified", true);
@@ -28,7 +41,6 @@ public class LastModifiedTest {
 
     @Test
     public void usesNowIfNoDate() throws Exception {
-        SystemTimeKeeper.instance = new TestTimeKeeper(new GregorianCalendar(2002, 2, 4, 5, 6, 7).getTime());
         TestSourcePage page = makeTestPage();
         ParserTestHelper.assertTranslatesTo(page, ParserTestHelper.metaHtml("Last modified anonymously on Mar 04, 2002 at 05:06:07 AM"));
     }
