@@ -86,8 +86,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return qualName.toString();
   }
 
-  //TODO: un-static this, add to interface
-  public static WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
+  public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
     List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);

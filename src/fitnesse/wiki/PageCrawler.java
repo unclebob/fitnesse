@@ -26,4 +26,6 @@ public interface PageCrawler {
   WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
 
   WikiPage findAncestorWithName(WikiPage page, String name);
+
+  WikiPage getClosestInheritedPage(WikiPage context, String pageName);
 }

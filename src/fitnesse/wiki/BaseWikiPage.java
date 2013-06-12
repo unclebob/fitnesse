@@ -67,11 +67,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public WikiPage getHeaderPage() {
-    return PageCrawlerImpl.getClosestInheritedPage(this, "PageHeader");
+    return getPageCrawler().getClosestInheritedPage(this, "PageHeader");
   }
 
   public WikiPage getFooterPage() {
-    return PageCrawlerImpl.getClosestInheritedPage(this, "PageFooter");
+    return getPageCrawler().getClosestInheritedPage(this, "PageFooter");
   }
 
   public String toString() {
