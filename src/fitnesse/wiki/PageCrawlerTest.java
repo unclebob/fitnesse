@@ -149,9 +149,9 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testIsRoot() throws Exception {
-    assertTrue(crawler.isRoot(root));
+    assertTrue(crawler._isRoot(root));
     WikiPage page = pageBuider.addPage(root, page1Path);
-    assertFalse(crawler.isRoot(page));
+    assertFalse(crawler._isRoot(page));
   }
 
   Set<String> traversedPages = new HashSet<String>();

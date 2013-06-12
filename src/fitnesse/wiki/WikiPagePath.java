@@ -45,8 +45,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   public WikiPagePath(WikiPage page) {
-    PageCrawler crawler = page.getPageCrawler();
-    while (!crawler.isRoot(page)) {
+    while (!page.getPageCrawler().isRoot(page)) {
       names.addFirst(page.getName());
       page = page.getParent();
     }

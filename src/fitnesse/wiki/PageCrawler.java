@@ -19,6 +19,7 @@ public interface PageCrawler {
 
   String getRelativeName(WikiPage base, WikiPage page);
 
+  // Should become a property of WIkiPage
   boolean isRoot(WikiPage page);
 
   WikiPage getRoot(WikiPage page);
@@ -31,7 +32,7 @@ public interface PageCrawler {
 
   WikiPage getClosestInheritedPage(WikiPage context, String pageName);
 
-  // TODO: make this use TraversalListener
+  // TODO: make these use TraversalListener
   List<WikiPage> getAllUncles(WikiPage context, String uncleName);
 
   List<WikiPage> getAncestorsOf(WikiPage page);

@@ -31,7 +31,7 @@ public class WikiWordReference {
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = currentPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+        for (WikiPage current = currentPage.getParent(); !current.getPageCrawler().isRoot(current); current = current.getParent()) {
           if (current.getName().equals(target)) {
             pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath(current));
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
