@@ -113,6 +113,7 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
+    assert context == this.context;
     List<WikiPage> ancestors = getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
@@ -153,6 +154,7 @@ public class PageCrawlerImpl implements PageCrawler {
      were relative to the parent instead of the page.
      */
   public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) {
+    assert page == this.context;
     PageCrawler crawler = page.getPageCrawler();
     if (pathRelativeToSibling.isSubPagePath()) {
       WikiPagePath relativePath = new WikiPagePath(pathRelativeToSibling);
@@ -172,12 +174,13 @@ public class PageCrawlerImpl implements PageCrawler {
     }
   }
 
-    public WikiPage findAncestorWithName(WikiPage page, String name) {
-        for (WikiPage current = page.getParent(); !isRoot(current); current = current.getParent()) {
-          if (current.getName().equals(name)) return current;
-        }
-        return null;
+  public WikiPage findAncestorWithName(WikiPage page, String name) {
+    assert page == this.context;
+    for (WikiPage current = page.getParent(); !isRoot(current); current = current.getParent()) {
+      if (current.getName().equals(name)) return current;
     }
+    return null;
+  }
 
   public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();

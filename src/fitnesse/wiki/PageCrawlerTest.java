@@ -77,9 +77,9 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testGetSiblingPage() throws Exception {
-    assertEquals(page2, crawler.getSiblingPage(page1, page2Path));
-    assertEquals(child1, crawler.getSiblingPage(page1, PathParser.parse(">ChildOne")));
-    assertEquals(child2, crawler.getSiblingPage(grandChild1, PathParser.parse("<PageOne.ChildTwo")));
+    assertEquals(page2, page1.getPageCrawler().getSiblingPage(page1, page2Path));
+    assertEquals(child1, page1.getPageCrawler().getSiblingPage(page1, PathParser.parse(">ChildOne")));
+    assertEquals(child2, grandChild1.getPageCrawler().getSiblingPage(grandChild1, PathParser.parse("<PageOne.ChildTwo")));
   }
 
   @Test
