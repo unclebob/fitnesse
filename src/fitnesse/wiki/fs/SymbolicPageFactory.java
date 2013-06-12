@@ -45,7 +45,7 @@ public class SymbolicPageFactory {
   protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, WikiPage parent) {
     WikiPagePath path = PathParser.parse(linkPath);
     WikiPage start = (path.isRelativePath()) ? parent.getParent() : parent;  //TODO -AcD- a better way?
-    WikiPage wikiPage = parent.getPageCrawler().getPage(start, path);
+    WikiPage wikiPage = start.getPageCrawler().getPage(start, path);
     if (wikiPage != null)
       wikiPage = new SymbolicPage(linkName, wikiPage, parent, this);
     return wikiPage;

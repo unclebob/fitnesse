@@ -64,12 +64,12 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testGetPage() throws Exception {
-    assertEquals(null, crawler.getPage(page1, page1Path));
+    assertEquals(null, page1.getPageCrawler().getPage(page1, page1Path));
     assertEquals(page1, crawler.getPage(root, page1Path));
     assertEquals(page2, crawler.getPage(root, page2Path));
-    assertEquals(page1, crawler.getPage(page1, PathParser.parse(".PageOne")));
-    assertEquals(page1, crawler.getPage(grandChild1, PathParser.parse(".PageOne")));
-    assertEquals(grandChild1, crawler.getPage(page1, PathParser.parse("ChildOne.GrandChildOne")));
+    assertEquals(page1, page1.getPageCrawler().getPage(page1, PathParser.parse(".PageOne")));
+    assertEquals(page1, grandChild1.getPageCrawler().getPage(grandChild1, PathParser.parse(".PageOne")));
+    assertEquals(grandChild1, page1.getPageCrawler().getPage(page1, PathParser.parse("ChildOne.GrandChildOne")));
     assertEquals(root, crawler.getPage(root, PathParser.parse("root")));
     assertEquals(root, crawler.getPage(root, PathParser.parse(".")));
     assertEquals(root, crawler.getPage(root, PathParser.parse("")));

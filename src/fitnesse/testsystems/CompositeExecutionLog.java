@@ -33,7 +33,7 @@ public class CompositeExecutionLog {
 
     if(root != null) {
       WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
-      WikiPage wikiPage = crawler.getPage(root, wpp);
+      WikiPage wikiPage = root.getPageCrawler().getPage(root, wpp);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         String tags = pageData.getAttribute(PageData.PropertySUITES);

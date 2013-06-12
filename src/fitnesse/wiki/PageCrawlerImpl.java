@@ -18,11 +18,11 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public WikiPage getPage(WikiPage context, WikiPagePath path) {
+    assert context == this.context;
     return getPage(context, path, null);
   }
 
   public WikiPage getPage(WikiPage context, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
-
     if (path == null)
       return null;
 
@@ -35,7 +35,7 @@ public class PageCrawlerImpl implements PageCrawler {
     if (path.isAbsolute()) {
       WikiPagePath relativeToRoot = new WikiPagePath(path);
       relativeToRoot.setPathMode(WikiPagePath.Mode.RELATIVE);
-      return getPage(_getRoot(context), relativeToRoot);
+      return getPage(_getRoot(context), relativeToRoot, deadEndStrategy);
     } else if (path.isBackwardSearchPath())
       return getSiblingPage(context, path);
 
@@ -160,14 +160,15 @@ public class PageCrawlerImpl implements PageCrawler {
     } else if (pathRelativeToSibling.isBackwardSearchPath()) {
       String target = pathRelativeToSibling.getFirst();
       WikiPage ancestor = findAncestorWithName(page, target);
-      if (ancestor != null) return getPage(ancestor, pathRelativeToSibling.getRest());
+      if (ancestor != null) return ancestor.getPageCrawler().getPage(ancestor, pathRelativeToSibling.getRest());
 
       WikiPagePath absolutePath = new WikiPagePath(pathRelativeToSibling);
       absolutePath.makeAbsolute();
-      return getPage(crawler.getRoot(page), absolutePath);
+      WikiPage root = crawler.getRoot(page);
+      return root.getPageCrawler().getPage(root, absolutePath);
     } else {
       WikiPage parent = page.getParent();
-      return getPage(parent, pathRelativeToSibling);
+      return parent.getPageCrawler().getPage(parent, pathRelativeToSibling);
     }
   }
 

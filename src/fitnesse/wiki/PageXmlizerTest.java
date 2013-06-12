@@ -139,8 +139,8 @@ public class PageXmlizerTest extends RegexTestCase {
     WikiPage greatGrandChildA = grandChildA.getChildPage("GreatGrandChildA");
     assertNotNull(greatGrandChildA);
 
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageB.ChildOneB.GrandChildB")));
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageC")));
+    assertNotNull(pageC.getPageCrawler().getPage(pageC, PathParser.parse("PageB.ChildOneB.GrandChildB")));
+    assertNotNull(pageC.getPageCrawler().getPage(pageC, PathParser.parse("PageC")));
   }
 
   public void testUsageOfHandler() throws Exception {
