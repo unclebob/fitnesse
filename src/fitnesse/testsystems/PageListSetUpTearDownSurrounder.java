@@ -53,7 +53,7 @@ public class PageListSetUpTearDownSurrounder {
 
   private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) {
     String path = null;
-    WikiPage suiteSetUpTearDown = PageCrawlerImpl.getClosestInheritedPage(setUpTearDownName, page);
+    WikiPage suiteSetUpTearDown = PageCrawlerImpl.getClosestInheritedPage(page, setUpTearDownName);
     if (suiteSetUpTearDown != null)
       path = suiteSetUpTearDown.getPageCrawler().getFullPath(suiteSetUpTearDown).toString();
     return path;

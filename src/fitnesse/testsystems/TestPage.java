@@ -159,7 +159,7 @@ public class TestPage {
   }
 
   protected WikiPage findInheritedPage(String pageName) {
-    return PageCrawlerImpl.getClosestInheritedPage(pageName, sourcePage);
+    return PageCrawlerImpl.getClosestInheritedPage(sourcePage, pageName);
   }
 
   private List<WikiPage> findScenarioLibraries() {
