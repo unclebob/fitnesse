@@ -38,7 +38,7 @@ public class PropertiesResponder implements SecureResponder {
     resource = request.getResource();
     path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path, new MockingPageCrawler());
+    page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -185,10 +185,10 @@ public class PropertiesResponder implements SecureResponder {
     if (wikiPagePath != null) {
       WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page;
       PageCrawler crawler = parent.getPageCrawler();
-      WikiPage target = crawler.getPage(parent, wikiPagePath);
+      WikiPage target = crawler.getPage(wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = target.getPageCrawler().getFullPath(target);
+        fullPath = target.getPageCrawler().getFullPath();
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();

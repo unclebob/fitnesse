@@ -36,7 +36,7 @@ public class SymbolicLinkResponder implements Responder {
     resource = request.getResource();
     this.context = context;
     crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, PathParser.parse(resource));
+    page = crawler.getPage(PathParser.parse(resource));
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -136,7 +136,7 @@ public class SymbolicLinkResponder implements Responder {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
-    return !start.getPageCrawler().pageExists(start, path);
+    return !start.getPageCrawler().pageExists(path);
   }
 
   private WikiPageProperty getSymLinkProperty(WikiPageProperties properties) {

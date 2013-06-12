@@ -3,7 +3,6 @@ package fitnesse.testsystems;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -111,7 +110,7 @@ public class TestPage {
   }
 
   private String getPathNameForPage(WikiPage page) {
-    WikiPagePath pagePath = page.getPageCrawler().getFullPath(page);
+    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
     return PathParser.render(pagePath);
   }
 
@@ -163,7 +162,7 @@ public class TestPage {
   private List<WikiPage> findScenarioLibraries() {
     List<WikiPage> uncles;
     if (isSlim()) {
-      uncles = sourcePage.getPageCrawler().getAllUncles(sourcePage, "ScenarioLibrary");
+      uncles = sourcePage.getPageCrawler().getAllUncles("ScenarioLibrary");
       Collections.reverse(uncles);
     } else {
       uncles = Collections.emptyList();

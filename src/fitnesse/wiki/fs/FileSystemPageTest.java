@@ -65,12 +65,12 @@ public class FileSystemPageTest {
   @Test
   public void testContent() throws Exception {
     WikiPagePath rootPath = PathParser.parse("root");
-    assertEquals("", root.getPageCrawler().getPage(root, rootPath).getData().getContent());
+    assertEquals("", root.getPageCrawler().getPage(rootPath).getData().getContent());
     pageBuilder.addPage(root, PathParser.parse("AaAa"), "A content");
     assertEquals("A content", root.getChildPage("AaAa").getData().getContent());
     WikiPagePath bPath = PathParser.parse("AaAa.BbBb");
     pageBuilder.addPage(root, bPath, "B content");
-    assertEquals("B content", root.getPageCrawler().getPage(root, bPath).getData().getContent());
+    assertEquals("B content", root.getPageCrawler().getPage(bPath).getData().getContent());
   }
 
   @Test

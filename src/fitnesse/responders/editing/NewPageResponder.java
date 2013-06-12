@@ -61,7 +61,7 @@ public class NewPageResponder implements Responder {
 
     //we need a pageBuilder to get the page from the path. The root has a pageBuilder we can use.
     PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage page = crawler.getPage(context.root, parentPath);
+    WikiPage page = crawler.getPage(parentPath);
     return page;
   }
 

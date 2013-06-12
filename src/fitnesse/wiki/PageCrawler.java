@@ -7,35 +7,35 @@ import fitnesse.components.TraversalListener;
 import java.util.List;
 
 public interface PageCrawler {
-  WikiPage getPage(WikiPage context, WikiPagePath path);
+  WikiPage getPage(WikiPagePath path);
 
-  WikiPage getPage(WikiPage context, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy);
+  WikiPage getPage(WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy);
 
-  boolean pageExists(WikiPage context, WikiPagePath path);
+  boolean pageExists(WikiPagePath path);
 
-  WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath);
+  WikiPagePath getFullPathOfChild(WikiPagePath childPath);
 
-  WikiPagePath getFullPath(WikiPage page);
+  WikiPagePath getFullPath();
 
-  String getRelativeName(WikiPage base, WikiPage page);
+  String getRelativeName(WikiPage page);
 
   // Should become a property of WIkiPage
-  boolean isRoot(WikiPage page);
+  boolean isRoot();
 
-  WikiPage getRoot(WikiPage page);
+  WikiPage getRoot();
 
-  void traverse(WikiPage root, TraversalListener<? super WikiPage> callback);
+  void traverse(TraversalListener<? super WikiPage> callback);
 
-  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
+  WikiPage getSiblingPage(WikiPagePath pathRelativeToSibling);
 
-  WikiPage findAncestorWithName(WikiPage page, String name);
+  WikiPage findAncestorWithName(String name);
 
   WikiPage getClosestInheritedPage(WikiPage context, String pageName);
 
   // TODO: make these use TraversalListener
-  List<WikiPage> getAllUncles(WikiPage context, String uncleName);
+  List<WikiPage> getAllUncles(String uncleName);
 
-  List<WikiPage> getAncestorsOf(WikiPage page);
+  List<WikiPage> getAncestorsOf();
 
-  List<WikiPage> getAncestorsStartingWith(WikiPage context);
+  List<WikiPage> getAncestorsStartingWith();
 }

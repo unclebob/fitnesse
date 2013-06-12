@@ -62,7 +62,7 @@ public class SearchReplaceResponderTest {
   @Test
   public void testReplacement() throws Exception {
     getResponseContentUsingSearchReplaceString("something", "replacedthing");
-    WikiPage page = root.getPageCrawler().getPage(root, pagePath);
+    WikiPage page = root.getPageCrawler().getPage(pagePath);
     assertThat(page.getData().getContent(), containsString("has replacedthing in it"));
   }
 

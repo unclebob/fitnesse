@@ -38,11 +38,11 @@ public class VersionResponder implements SecureResponder {
 
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath(page));
+    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath());
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();

@@ -44,7 +44,7 @@ public class AddChildPageResponder implements SecureResponder {
     currentPagePath = PathParser.parse(request.getResource());
     pageBuilder = new PageBuilder();
     PageCrawler pageCrawler = context.root.getPageCrawler();
-    currentPage = pageCrawler.getPage(context.root, currentPagePath);
+    currentPage = pageCrawler.getPage(currentPagePath);
     childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
     pageType = (String) request.getInput(EditResponder.PAGE_TYPE);
     helpText = (String) request.getInput(EditResponder.HELP_TEXT);
@@ -58,7 +58,7 @@ public class AddChildPageResponder implements SecureResponder {
   private Response createChildPageAndMakeResponse(Request request) {
     createChildPage(request);
     SimpleResponse response = new SimpleResponse();
-    WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath(currentPage);
+    WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
     response.redirect(fullPathOfCurrentPage.toString());
     return response;
   }

@@ -30,7 +30,7 @@ public class RecentChangesWikiPage implements RecentChanges {
 
   @Override
   public WikiPage toWikiPage(WikiPage root) {
-    return root.getPageCrawler().getRoot(root).getChildPage(RECENT_CHANGES);
+    return root.getPageCrawler().getRoot().getChildPage(RECENT_CHANGES);
   }
 
   public List<String> getRecentChangesLines(PageData recentChangesdata) {
@@ -49,7 +49,7 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   private void addCurrentPageToRecentChanges(PageData data) {
-    WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot(data.getWikiPage()).getChildPage(RECENT_CHANGES);
+    WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot().getChildPage(RECENT_CHANGES);
     String resource = resource(data);
     PageData recentChangesData = recentChanges.getData();
     List<String> lines = getRecentChangesLines(recentChangesData);
@@ -63,14 +63,14 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   private String resource(PageData data) {
-    WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath(data.getWikiPage());
+    WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath();
     String resource = PathParser.render(fullPath);
     return resource;
   }
 
   private void createRecentChangesIfNecessary(PageData data) {
     PageCrawler crawler = data.getWikiPage().getPageCrawler();
-    WikiPage root = crawler.getRoot(data.getWikiPage());
+    WikiPage root = crawler.getRoot();
     if (!root.hasChildPage(RECENT_CHANGES))
       new PageBuilder().addPage(root, PathParser.parse(RECENT_CHANGES), "");
   }

@@ -26,7 +26,7 @@ public class RollbackResponder implements SecureResponder {
       return new ErrorResponder("missing version").makeResponse(context, request);
 
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
     PageData data = page.getDataVersion(version);

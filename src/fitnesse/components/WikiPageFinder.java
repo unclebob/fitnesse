@@ -24,7 +24,7 @@ public abstract class WikiPageFinder implements TraversalListener<WikiPage>, Pag
 
   public List<WikiPage> search(WikiPage page) {
     hits = new ArrayList<WikiPage>();
-    page.getPageCrawler().traverse(page, this);
+    page.getPageCrawler().traverse(this);
     return hits;
   }
 }

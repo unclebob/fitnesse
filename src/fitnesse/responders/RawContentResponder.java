@@ -19,7 +19,7 @@ public class RawContentResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
     PageData pageData = page.getData();

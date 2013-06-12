@@ -12,6 +12,6 @@ public class PagePointer {
   }
 
   public WikiPage getPage() {
-    return root.getPageCrawler().getPage(root, path);
+    return root.getPageCrawler().getPage(path);
   }
 }

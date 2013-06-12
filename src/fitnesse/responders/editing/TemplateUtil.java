@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -13,7 +12,7 @@ import fitnesse.wiki.WikiPagePath;
 public class TemplateUtil {
   
   public static List<String> getTemplatesFromUncles(WikiPage page) {
-    List<WikiPage> wikiUncles = page.getPageCrawler().getAllUncles(page, "TemplateLibrary");
+    List<WikiPage> wikiUncles = page.getPageCrawler().getAllUncles("TemplateLibrary");
     List<String> templatePaths = new ArrayList<String>();
     for(WikiPage wikiUncle : wikiUncles){
       for(WikiPage template : wikiUncle.getChildren()){

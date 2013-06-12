@@ -46,7 +46,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
 
   private void getRequestedPage(Request request) {
     path = PathParser.parse(request.getResource());
-    page = getPageCrawler().getPage(root, path);
+    page = getPageCrawler().getPage(path);
   }
 
   protected PageCrawler getPageCrawler() {

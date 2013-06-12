@@ -43,7 +43,7 @@ public class RssResponder implements SecureResponder {
   private WikiPage getContextPage(FitNesseContext context, String resource) throws Exception {
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(resource);
-    return pageCrawler.getPage(context.root, resourcePath);
+    return pageCrawler.getPage(resourcePath);
   }
 
   protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, String resource)

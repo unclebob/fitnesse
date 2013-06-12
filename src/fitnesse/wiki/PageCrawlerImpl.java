@@ -17,76 +17,75 @@ public class PageCrawlerImpl implements PageCrawler {
     this.context = context;
   }
 
-  public WikiPage getPage(WikiPage context, WikiPagePath path) {
-    assert context == this.context;
-    return getPage(context, path, null);
+  public WikiPage getPage(WikiPagePath path) {
+    return getPage(path, null);
   }
 
-  public WikiPage getPage(WikiPage context, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
+  public WikiPage getPage(WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
+    return getPage(context, path, deadEndStrategy);
+  }
+
+  private  WikiPage getPage(WikiPage page, WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
     if (path == null)
       return null;
 
     if (isRoot(path))
-      return _getRoot(context);
+      return getRoot(page);
 
     if (path.isEmpty())
-      return context;
+      return page;
 
     if (path.isAbsolute()) {
       WikiPagePath relativeToRoot = new WikiPagePath(path);
       relativeToRoot.setPathMode(WikiPagePath.Mode.RELATIVE);
-      return getPage(_getRoot(context), relativeToRoot, deadEndStrategy);
+      return getPage(getRoot(page), relativeToRoot, deadEndStrategy);
     } else if (path.isBackwardSearchPath())
-      return getSiblingPage(context, path);
+      return getSiblingPage(page, path);
 
     String firstPathElement = path.getFirst();
     WikiPagePath restOfPath = path.getRest();
 
-    WikiPage childPage = context.getChildPage(firstPathElement);
+    WikiPage childPage = page.getChildPage(firstPathElement);
     if (childPage != null)
       return getPage(childPage, restOfPath, deadEndStrategy);
     else
-      return getPageAfterDeadEnd(context, firstPathElement, restOfPath, deadEndStrategy);
+      return getPageAfterDeadEnd(page, firstPathElement, restOfPath, deadEndStrategy);
   }
 
   private boolean isRoot(WikiPagePath path) {
     return path.isAbsolute() && path.isEmpty();
   }
 
-  protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest, PageCrawlerDeadEndStrategy deadEndStrategy) {
+  private WikiPage getPageAfterDeadEnd(WikiPage page, String first, WikiPagePath rest, PageCrawlerDeadEndStrategy deadEndStrategy) {
     rest.addNameToFront(first);
     if (deadEndStrategy != null)
-      return deadEndStrategy.getPageAfterDeadEnd(context, rest, this);
+      return deadEndStrategy.getPageAfterDeadEnd(page, rest, this);
     else
       return null;
   }
 
-  public boolean pageExists(WikiPage context, WikiPagePath path) {
-    assert context == this.context;
-    return getPage(context, path) != null;
+  public boolean pageExists(WikiPagePath path) {
+    return getPage(path) != null;
   }
 
-  public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) {
-    assert parent == this.context;
+  public WikiPagePath getFullPathOfChild(WikiPagePath childPath) {
     WikiPagePath fullPathOfChild;
     if (childPath.isAbsolute())
       fullPathOfChild = childPath.relativePath();
     else {
-      WikiPagePath absolutePathOfParent = new WikiPagePath(parent);
+      WikiPagePath absolutePathOfParent = new WikiPagePath(context);
       fullPathOfChild = absolutePathOfParent.append(childPath);
     }
     return fullPathOfChild;
   }
 
-  public WikiPagePath getFullPath(WikiPage page) {
-    assert page == this.context;
-    return new WikiPagePath(page);
+  public WikiPagePath getFullPath() {
+    return new WikiPagePath(context);
   }
 
-  public String getRelativeName(WikiPage base, WikiPage page) {
-    assert base == this.context;
+  public String getRelativeName(WikiPage page) {
     StringBuffer qualName = new StringBuffer();
-    for (WikiPage p = page; !_isRoot(p) && !p.equals(base); p = p.getParent()) {
+    for (WikiPage p = page; !isRoot(p) && !p.equals(context); p = p.getParent()) {
       if (p != page)
         qualName.insert(0, ".");
       qualName.insert(0, p.getName());
@@ -96,7 +95,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
     assert context == this.context;
-    List<WikiPage> ancestors = getAncestorsStartingWith(context);
+    List<WikiPage> ancestors = getAncestorsStartingWith();
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
       if (namedPage != null)
@@ -105,30 +104,27 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
-  public boolean isRoot(WikiPage page) {
-    assert page == this.context;
-    return _isRoot(page);
+  public boolean isRoot() {
+    return isRoot(context);
   }
 
-  public boolean _isRoot(WikiPage page) {
+  public boolean isRoot(WikiPage page) {
     WikiPage parent = page.getParent();
     return parent == null || parent == page;
   }
 
-  public WikiPage getRoot(WikiPage page) {
-    assert page == this.context;
-    return _getRoot(page);
+  public WikiPage getRoot() {
+    return getRoot(context);
   }
 
-  private WikiPage _getRoot(WikiPage page) {
-    if (_isRoot(page))
+  private WikiPage getRoot(WikiPage page) {
+    if (isRoot(page))
       return page;
     else
-      return _getRoot(page.getParent());
+      return getRoot(page.getParent());
   }
 
-  public void traverse(WikiPage context, TraversalListener<? super WikiPage> listener) {
-    assert context == this.context;
+  public void traverse(TraversalListener<? super WikiPage> listener) {
     _traverse(context, listener);
   }
 
@@ -150,40 +146,40 @@ public class PageCrawlerImpl implements PageCrawler {
      It was a gross error to have the whole wiki know that references
      were relative to the parent instead of the page.
      */
-  public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) {
-    assert page == this.context;
-    PageCrawler crawler = page.getPageCrawler();
+  public WikiPage getSiblingPage(WikiPagePath pathRelativeToSibling) {
+    return getSiblingPage(context, pathRelativeToSibling);
+  }
+
+  private WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) {
     if (pathRelativeToSibling.isSubPagePath()) {
       WikiPagePath relativePath = new WikiPagePath(pathRelativeToSibling);
       relativePath.setPathMode(WikiPagePath.Mode.RELATIVE);
-      return getPage(page, relativePath);
+      return getPage(relativePath);
     } else if (pathRelativeToSibling.isBackwardSearchPath()) {
       String target = pathRelativeToSibling.getFirst();
-      WikiPage ancestor = findAncestorWithName(page, target);
-      if (ancestor != null) return ancestor.getPageCrawler().getPage(ancestor, pathRelativeToSibling.getRest());
+      WikiPage ancestor = findAncestorWithName(target);
+      if (ancestor != null) return getPage(ancestor, pathRelativeToSibling.getRest(), null);
 
       WikiPagePath absolutePath = new WikiPagePath(pathRelativeToSibling);
       absolutePath.makeAbsolute();
-      WikiPage root = crawler.getRoot(page);
-      return root.getPageCrawler().getPage(root, absolutePath);
+      WikiPage root = getRoot(page);
+      return getPage(root, absolutePath, null);
     } else {
       WikiPage parent = page.getParent();
-      return parent.getPageCrawler().getPage(parent, pathRelativeToSibling);
+      return getPage(parent, pathRelativeToSibling, null);
     }
   }
 
-  public WikiPage findAncestorWithName(WikiPage page, String name) {
-    assert page == this.context;
-    for (WikiPage current = page.getParent(); !_isRoot(current); current = current.getParent()) {
+  public WikiPage findAncestorWithName(String name) {
+    for (WikiPage current = context.getParent(); !isRoot(current); current = current.getParent()) {
       if (current.getName().equals(name)) return current;
     }
     return null;
   }
 
-  public List<WikiPage> getAllUncles(WikiPage context, String uncleName) {
-    assert context == this.context;
+  public List<WikiPage> getAllUncles(String uncleName) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();
-    List<WikiPage> ancestors = getAncestorsStartingWith(context);
+    List<WikiPage> ancestors = getAncestorsStartingWith();
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(uncleName);
       if (namedPage != null)
@@ -192,22 +188,20 @@ public class PageCrawlerImpl implements PageCrawler {
     return uncles;
   }
 
-  public List<WikiPage> getAncestorsOf(WikiPage page) {
-    assert page == this.context;
+  public List<WikiPage> getAncestorsOf() {
     LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
-    WikiPage parent = page;
+    WikiPage parent = context;
     do {
       parent = parent.getParent();
       ancestors.add(parent);
-    } while (!_isRoot(parent));
+    } while (!isRoot(parent));
 
     return ancestors;
   }
 
-  public List<WikiPage> getAncestorsStartingWith(WikiPage page) {
-    assert page == this.context;
-    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>)getAncestorsOf(page);
-    ancestors.addFirst(page);
+  public List<WikiPage> getAncestorsStartingWith() {
+    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>)getAncestorsOf();
+    ancestors.addFirst(context);
     return ancestors;
   }
 }

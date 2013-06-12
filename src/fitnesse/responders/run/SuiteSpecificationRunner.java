@@ -78,7 +78,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   private void getSearchRoot(Table table, int rowIndex) {
     if (table.getCellContents(1, rowIndex) != null) {
       String searchRootPath = table.getCellContents(1, rowIndex);
-      searchRoot = crawler.getPage(root, PathParser.parse(searchRootPath));
+      searchRoot = crawler.getPage(PathParser.parse(searchRootPath));
     }
   }
 

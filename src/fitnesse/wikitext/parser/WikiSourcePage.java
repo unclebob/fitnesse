@@ -17,7 +17,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getFullName() {
         try {
-            return page.getPageCrawler().getFullPath(page).toString();
+            return page.getPageCrawler().getFullPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -26,7 +26,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getPath() {
         try {
-            return page.getPageCrawler().getFullPath(page).parentPath().toString();
+            return page.getPageCrawler().getFullPath().parentPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -35,7 +35,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getFullPath() {
         try {
-            return page.getPageCrawler().getFullPath(page).toString();
+            return page.getPageCrawler().getFullPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -55,7 +55,7 @@ public class WikiSourcePage implements SourcePage {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         try {
             WikiPage parentPage = page.getParent();
-            return parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord) != null;
+            return parentPage.getPageCrawler().getPage(pathOfWikiWord) != null;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class WikiSourcePage implements SourcePage {
         if (pathOfWikiWord == null) throw new IllegalArgumentException("Can't parse path: " + wikiWordPath);
         try {
             WikiPage parentPage = page.getParent();
-            return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord));
+            return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(pathOfWikiWord));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -81,9 +81,9 @@ public class WikiSourcePage implements SourcePage {
         String target = pathElements[0];
         PageCrawler crawler = page.getPageCrawler();
         try {
-            WikiPage ancestor = crawler.findAncestorWithName(page, target);
+            WikiPage ancestor = crawler.findAncestorWithName(target);
             if (ancestor != null) {
-                pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath(ancestor));
+                pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
                 return "." + StringUtil.join(Arrays.asList(pathElements), ".");
             }
         } catch (Exception e) {
@@ -100,7 +100,7 @@ public class WikiSourcePage implements SourcePage {
           return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
         }
         try {
-            WikiPage includedPage = crawler.getSiblingPage(page, pagePath);
+            WikiPage includedPage = crawler.getSiblingPage(pagePath);
             if (includedPage == null) {
                 return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
             }
@@ -121,7 +121,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {
                 ancestors.add(new WikiSourcePage(ancestor));
-                if (ancestor.getPageCrawler().isRoot(ancestor)) break;
+                if (ancestor.getPageCrawler().isRoot()) break;
             }
         }
         catch (Exception e) {

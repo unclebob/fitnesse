@@ -64,13 +64,13 @@ public class RenamePageResponderTest extends ResponderTestCase {
 
     PageCrawler crawler = root.getPageCrawler();
     pageBuilder.addPage(root, originalPath, "Content");
-    assertTrue(crawler.pageExists(root, originalPath));
-    assertFalse(crawler.pageExists(root, renamedPath));
+    assertTrue(crawler.pageExists(originalPath));
+    assertFalse(crawler.pageExists(renamedPath));
 
     doRename(originalName, renamedName, true);
 
-    assertTrue(crawler.pageExists(root, renamedPath));
-    assertFalse(crawler.pageExists(root, originalPath));
+    assertTrue(crawler.pageExists(renamedPath));
+    assertFalse(crawler.pageExists(originalPath));
   }
 
   public void testReferencesChanged() throws Exception {
@@ -106,8 +106,8 @@ public class RenamePageResponderTest extends ResponderTestCase {
 
     Response response = doRename(pageOneName, pageTwoName, true);
     PageCrawler crawler = root.getPageCrawler();
-    assertTrue(crawler.pageExists(root, pageOnePath));
-    assertTrue(crawler.pageExists(root, pageTwoPath));
+    assertTrue(crawler.pageExists(pageOnePath));
+    assertTrue(crawler.pageExists(pageTwoPath));
     assertEquals("Page two content", root.getChildPage(pageTwoName).getData().getContent());
     assertSubString("Cannot rename", getResponseContent(response));
   }
@@ -121,14 +121,14 @@ public class RenamePageResponderTest extends ResponderTestCase {
 
     WikiPagePath path = PathParser.parse("PageTwo.ChildPage");
     PageCrawler crawler = root.getPageCrawler();
-    assertTrue(crawler.pageExists(root, path));
-    WikiPage page = crawler.getPage(root, path);
+    assertTrue(crawler.pageExists(path));
+    WikiPage page = crawler.getPage(path);
     assertNotNull(page);
     assertEquals("child page", page.getData().getContent());
 
     WikiPagePath grandChildPath = PathParser.parse("PageTwo.ChildPage.GrandChild");
-    assertTrue(crawler.pageExists(root, grandChildPath));
-    page = crawler.getPage(root, grandChildPath);
+    assertTrue(crawler.pageExists(grandChildPath));
+    page = crawler.getPage(grandChildPath);
     assertNotNull(page);
     assertEquals("grand child", page.getData().getContent());
   }

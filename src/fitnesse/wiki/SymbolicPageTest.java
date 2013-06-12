@@ -84,11 +84,11 @@ public class SymbolicPageTest extends TestCase {
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageOnePath);
     pageTwo.commit(data);
     PageCrawler pageCrawler = root.getPageCrawler();
-    WikiPage deepPage = pageCrawler.getPage(root, PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
     List<?> children = deepPage.getChildren();
     assertEquals(1, children.size());
 
-    deepPage = pageCrawler.getPage(root, PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
+    deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
     children = deepPage.getChildren();
     assertEquals(1, children.size());
   }

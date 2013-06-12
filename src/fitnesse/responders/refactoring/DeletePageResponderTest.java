@@ -37,7 +37,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
   public void testDeletePage() throws Exception {
     WikiPage level1 = this.pageBuilder.addPage(this.root, this.level1Path);
     this.pageBuilder.addPage(level1, this.level2Path);
-    assertTrue(this.root.getPageCrawler().pageExists(this.root, this.level1Path));
+    assertTrue(this.root.getPageCrawler().pageExists(this.level1Path));
     MockRequest request = new MockRequest();
     request.setResource(this.level1Name);
     request.addInput("confirmed", "yes");
@@ -47,7 +47,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     assertNotSubString("Are you sure you want to delete", page);
     assertEquals(303, response.getStatus());
     assertEquals("root", response.getHeader("Location"));
-    assertFalse(this.root.getPageCrawler().pageExists(this.root, PathParser.parse(this.level1Name)));
+    assertFalse(this.root.getPageCrawler().pageExists(PathParser.parse(this.level1Name)));
 
     List<?> children = this.root.getChildren();
     assertEquals(0, children.size());

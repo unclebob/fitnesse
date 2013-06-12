@@ -129,7 +129,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   private boolean isErrorLogsPage() {
-    WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
+    WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
     return ExecutionLog.ErrorLogName.equals(pagePath.getFirst());
   }
 

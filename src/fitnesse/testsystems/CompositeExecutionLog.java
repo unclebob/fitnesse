@@ -15,8 +15,8 @@ public class CompositeExecutionLog {
 
   public CompositeExecutionLog(WikiPage testPage) {
     crawler = testPage.getPageCrawler();
-    root = crawler.getRoot(testPage);
-    errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
+    root = crawler.getRoot();
+    errorLogPagePath = crawler.getFullPath().addNameToFront(ExecutionLog.ErrorLogName);
   }
 
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
@@ -33,7 +33,7 @@ public class CompositeExecutionLog {
 
     if(root != null) {
       WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
-      WikiPage wikiPage = root.getPageCrawler().getPage(root, wpp);
+      WikiPage wikiPage = root.getPageCrawler().getPage(wpp);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         String tags = pageData.getAttribute(PageData.PropertySUITES);

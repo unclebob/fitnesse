@@ -14,7 +14,6 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -93,7 +92,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
     super.newTestStarted(testPage, timeMeasurement);
 
-    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath(testPage.getSourcePage());
+    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
 
     announceStartNewTest(getRelativeName(), fullPathName);

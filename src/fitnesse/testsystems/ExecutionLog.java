@@ -30,7 +30,7 @@ public class ExecutionLog {
     runner = client;
 
     crawler = testPage.getPageCrawler();
-    errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ErrorLogName);
+    errorLogPagePath = crawler.getFullPath().addNameToFront(ErrorLogName);
     errorLogPageName = PathParser.render(errorLogPagePath);
   }
 
@@ -42,7 +42,7 @@ public class ExecutionLog {
     VelocityContext context = new VelocityContext();
 
     context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
-    context.put("testPage", "." + PathParser.render(crawler.getFullPath(testPage)));
+    context.put("testPage", "." + PathParser.render(crawler.getFullPath()));
     context.put("runner", runner);
     exceptions.addAll(runner.getExceptions());
     context.put("exceptions", exceptions);

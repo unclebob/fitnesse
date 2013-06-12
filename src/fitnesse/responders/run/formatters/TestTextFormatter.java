@@ -33,7 +33,7 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   private String getPath(WikiPage page) {
-    return PathParser.render(page.getPageCrawler().getFullPath(page));
+    return PathParser.render(page.getPageCrawler().getFullPath());
   }
 
   public void testOutputChunk(String output) {

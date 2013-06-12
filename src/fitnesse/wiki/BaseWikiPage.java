@@ -93,7 +93,7 @@ public abstract class BaseWikiPage implements WikiPage {
     if (!(o instanceof WikiPage))
       return false;
     try {
-      return getPageCrawler().getFullPath(this).equals(((WikiPage) o).getPageCrawler().getFullPath(((WikiPage) o)));
+      return getPageCrawler().getFullPath().equals(((WikiPage) o).getPageCrawler().getFullPath());
     }
     catch (Exception e) {
       return false;
@@ -102,7 +102,7 @@ public abstract class BaseWikiPage implements WikiPage {
 
   public int hashCode() {
     try {
-      return getPageCrawler().getFullPath(this).hashCode();
+      return getPageCrawler().getFullPath().hashCode();
     }
     catch (Exception e) {
       return 0;

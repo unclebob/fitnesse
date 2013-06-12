@@ -260,8 +260,8 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertEquals(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    assertEquals(page, context.root.getPageCrawler().getPage(PathParser.parse(".SomePage")));
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -276,7 +276,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Test");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -291,7 +291,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Prune");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);

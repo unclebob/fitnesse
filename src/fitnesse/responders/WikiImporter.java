@@ -17,7 +17,6 @@ import util.XmlUtil;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageXmlizer;
 import fitnesse.wiki.PathParser;
@@ -79,7 +78,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   private void removeOrphans(WikiPage context) {
     for (WikiPagePath orphan : orphans) {
       WikiPagePath path = orphan;
-      WikiPage wikiPage = context.getPageCrawler().getPage(context, path);
+      WikiPage wikiPage = context.getPageCrawler().getPage(path);
       if (wikiPage != null)
         wikiPage.getParent().removeChildPage(wikiPage.getName());
     }
@@ -88,7 +87,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   private void filterOrphans(WikiPage context) {
     for (WikiPagePath aPageCatalog : pageCatalog) {
       WikiPagePath wikiPagePath = aPageCatalog;
-      WikiPage unrecognizedPage = context.getPageCrawler().getPage(context, wikiPagePath);
+      WikiPage unrecognizedPage = context.getPageCrawler().getPage(wikiPagePath);
       PageData data = unrecognizedPage.getData();
       WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
 
@@ -99,9 +98,9 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   private void catalogLocalTree(WikiPage page) {
-    contextPath = page.getPageCrawler().getFullPath(page);
+    contextPath = page.getPageCrawler().getFullPath();
     pageCatalog = new HashSet<WikiPagePath>();
-    page.getPageCrawler().traverse(page, this);
+    page.getPageCrawler().traverse(this);
     WikiPagePath relativePathOfContext = contextPath.subtractFromFront(contextPath);
     pageCatalog.remove(relativePathOfContext);
   }
@@ -146,7 +145,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   private WikiPagePath relativePath(WikiPage childPage) {
-    return childPage.getPageCrawler().getFullPath(childPage).subtractFromFront(contextPath);
+    return childPage.getPageCrawler().getFullPath().subtractFromFront(contextPath);
   }
 
   protected void importRemotePageContent(WikiPage localPage) {

@@ -35,7 +35,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
 
   public List<WikiPage> search(WikiPage page) {
     hits.clear();
-    page.getPageCrawler().traverse(page, this);
+    page.getPageCrawler().traverse(this);
     return hits;
   }
 

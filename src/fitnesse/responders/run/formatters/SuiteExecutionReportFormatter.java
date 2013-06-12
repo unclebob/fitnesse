@@ -37,7 +37,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
 
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
-    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath(test.getSourcePage()));
+    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
   }
 

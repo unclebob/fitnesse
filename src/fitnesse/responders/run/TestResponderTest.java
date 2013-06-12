@@ -152,7 +152,7 @@ public class TestResponderTest {
     sender.sentData();
 
     WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.EmptyTestPage");
-    WikiPage errorLogPage = root.getPageCrawler().getPage(root, errorLogPath);
+    WikiPage errorLogPage = root.getPageCrawler().getPage(errorLogPath);
     String errorLogContent = errorLogPage.getData().getContent();
     assertNotSubString("Exception", errorLogContent);
   }
@@ -515,7 +515,7 @@ public class TestResponderTest {
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
 
-    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -528,7 +528,7 @@ public class TestResponderTest {
     assertHasRegexp("ErrorLog", results);
     assertSubString("Test Page tags", results);
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);
     assertHasRegexp("Output of TestPage", errorLogContent);
@@ -543,7 +543,7 @@ public class TestResponderTest {
     pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
     pageBuilder.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
 
-    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -552,7 +552,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
@@ -566,7 +566,7 @@ public class TestResponderTest {
     pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
     pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
-    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -575,7 +575,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
@@ -591,7 +591,7 @@ public class TestResponderTest {
     pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
     pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
-    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath(testPage);
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
     request.setResource(resource);
 
@@ -600,7 +600,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(errorLogsParentPage, testPagePath);
+    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
     String errorLogContent = errorLog.getData().getContent();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");

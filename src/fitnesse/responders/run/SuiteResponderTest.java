@@ -171,7 +171,7 @@ public class SuiteResponderTest {
     runSuite();
 
     WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.SuiteWithEmptyPage");
-    WikiPage errorLog = root.getPageCrawler().getPage(root, errorLogPath);
+    WikiPage errorLog = root.getPageCrawler().getPage(errorLogPath);
     PageData data = errorLog.getData();
     String errorLogContent = data.getContent();
     assertNotSubString("Exception", errorLogContent);

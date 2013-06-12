@@ -59,7 +59,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
                     "!path path 3");
     pageBuilder.addPage(root, PathParser.parse("ProjectOne.TesT"), "!path path1");
     PageCrawler pageCrawler = root.getPageCrawler();
-    String cp = builder.getClasspath(pageCrawler.getPage(root, PathParser.parse("ProjectOne.TesT")));
+    String cp = builder.getClasspath(pageCrawler.getPage(PathParser.parse("ProjectOne.TesT")));
     assertSubString("path1", cp);
     assertSubString("path2", cp);
     assertSubString("\"path 3\"", cp);
@@ -85,7 +85,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
     data.setContent("!path " + path);
     root.commit(data);
     PageCrawler crawler = root.getPageCrawler();
-    WikiPage page = crawler.getPage(root, somePagePath, new MockingPageCrawler());
+    WikiPage page = crawler.getPage(somePagePath, new MockingPageCrawler());
     String classPath = builder.getClasspath(page);
     return classPath;
   }
@@ -93,7 +93,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
   public void testThatPathsWithSpacesGetQuoted() throws Exception {
     pageBuilder.addPage(root, somePagePath, "!path Some File.jar");
     PageCrawler crawler = root.getPageCrawler();
-    WikiPage page = crawler.getPage(root, somePagePath);
+    WikiPage page = crawler.getPage(somePagePath);
 
     assertEquals("\"Some File.jar\"", builder.getClasspath(page));
 

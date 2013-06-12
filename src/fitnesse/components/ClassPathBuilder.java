@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import util.Wildcard;
@@ -153,7 +152,7 @@ public class ClassPathBuilder {
     List<String> items = new ArrayList<String>();
     addItemsFromPage(page, items);
 
-    List<WikiPage> ancestors = page.getPageCrawler().getAncestorsOf(page);
+    List<WikiPage> ancestors = page.getPageCrawler().getAncestorsOf();
     for (WikiPage ancestor : ancestors) {
       if (!visitedPages.contains(ancestor)) {
         visitedPages.add(ancestor);

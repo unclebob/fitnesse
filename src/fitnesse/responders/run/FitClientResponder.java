@@ -49,10 +49,10 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     WikiPagePath pagePath = PathParser.parse(resource);
     try {
       PageCrawler crawler = context.root.getPageCrawler();
-      if (!crawler.pageExists(context.root, pagePath))
+      if (!crawler.pageExists(pagePath))
         FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
       else {
-        page = crawler.getPage(context.root, pagePath);
+        page = crawler.getPage(pagePath);
         PageData data = page.getData();
 
       	if (data.hasAttribute("Suite"))
@@ -98,7 +98,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   private void sendPage(TestPage testPage, FitClient client) throws IOException, InterruptedException {
-    String pageName = page.getPageCrawler().getRelativeName(page, testPage.getSourcePage());
+    String pageName = page.getPageCrawler().getRelativeName(testPage.getSourcePage());
     String testableHtml = testPage.getDecoratedData().getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);

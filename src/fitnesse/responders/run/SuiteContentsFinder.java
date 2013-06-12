@@ -65,8 +65,8 @@ public class SuiteContentsFinder {
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
         try {
-          WikiPagePath path1 = p1.getPageCrawler().getFullPath(p1);
-          WikiPagePath path2 = p2.getPageCrawler().getFullPath(p2);
+          WikiPagePath path1 = p1.getPageCrawler().getFullPath();
+          WikiPagePath path2 = p2.getPageCrawler().getFullPath();
 
           return path1.compareTo(path2);
         }
@@ -116,11 +116,11 @@ public class SuiteContentsFinder {
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
     ReadOnlyPageData data = thePage.readOnlyData();
     List<String> pageReferences = data.getXrefPages();
-    WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath(thePage);
-    WikiPage parent = wikiRootPage.getPageCrawler().getPage(wikiRootPage, testPagePath.parentPath());
+    WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath();
+    WikiPage parent = wikiRootPage.getPageCrawler().getPage(testPagePath.parentPath());
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = parent.getPageCrawler().getPage(parent, path);
+      WikiPage referencedPage = parent.getPageCrawler().getPage(path);
       if (referencedPage != null)
         pages.add(referencedPage);
     }
