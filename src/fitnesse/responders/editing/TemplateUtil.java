@@ -13,7 +13,7 @@ import fitnesse.wiki.WikiPagePath;
 public class TemplateUtil {
   
   public static List<String> getTemplatesFromUncles(WikiPage page) {
-    List<WikiPage> wikiUncles = PageCrawlerImpl.getAllUncles("TemplateLibrary", page);
+    List<WikiPage> wikiUncles = page.getPageCrawler().getAllUncles(page, "TemplateLibrary");
     List<String> templatePaths = new ArrayList<String>();
     for(WikiPage wikiUncle : wikiUncles){
       for(WikiPage template : wikiUncle.getChildren()){

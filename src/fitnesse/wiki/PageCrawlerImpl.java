@@ -17,24 +17,6 @@ public class PageCrawlerImpl implements PageCrawler {
     this.context = context;
   }
 
-  public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) {
-    PageCrawler crawler = page.getPageCrawler();
-    LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
-    WikiPage parent = page;
-    do {
-      parent = parent.getParent();
-      ancestors.add(parent);
-    } while (!crawler.isRoot(parent));
-
-    return ancestors;
-  }
-
-  public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) {
-    LinkedList<WikiPage> ancestors = getAncestorsOf(page);
-    ancestors.addFirst(page);
-    return ancestors;
-  }
-
   public WikiPage getPage(WikiPage context, WikiPagePath path) {
     return getPage(context, path, null);
   }
@@ -164,7 +146,7 @@ public class PageCrawlerImpl implements PageCrawler {
       String target = pathRelativeToSibling.getFirst();
       WikiPage ancestor = findAncestorWithName(page, target);
       if (ancestor != null) return getPage(ancestor, pathRelativeToSibling.getRest());
-        
+
       WikiPagePath absolutePath = new WikiPagePath(pathRelativeToSibling);
       absolutePath.makeAbsolute();
       return getPage(crawler.getRoot(page), absolutePath);
@@ -182,14 +164,33 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
-  public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) {
+  public List<WikiPage> getAllUncles(WikiPage context, String uncleName) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();
-    List<WikiPage> ancestors = getAncestorsStartingWith(nephew);
+    List<WikiPage> ancestors = getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(uncleName);
       if (namedPage != null)
         uncles.add(namedPage);
     }
     return uncles;
+  }
+
+  public List<WikiPage> getAncestorsOf(WikiPage page) {
+    assert page == this.context;
+    PageCrawler crawler = page.getPageCrawler();
+    LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
+    WikiPage parent = page;
+    do {
+      parent = parent.getParent();
+      ancestors.add(parent);
+    } while (!crawler.isRoot(parent));
+
+    return ancestors;
+  }
+
+  public List<WikiPage> getAncestorsStartingWith(WikiPage page) {
+    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>)getAncestorsOf(page);
+    ancestors.addFirst(page);
+    return ancestors;
   }
 }

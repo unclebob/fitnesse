@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
+import java.util.List;
+
 public interface PageCrawler {
   WikiPage getPage(WikiPage context, WikiPagePath path);
 
@@ -28,4 +30,11 @@ public interface PageCrawler {
   WikiPage findAncestorWithName(WikiPage page, String name);
 
   WikiPage getClosestInheritedPage(WikiPage context, String pageName);
+
+  // TODO: make this use TraversalListener
+  List<WikiPage> getAllUncles(WikiPage context, String uncleName);
+
+  List<WikiPage> getAncestorsOf(WikiPage page);
+
+  List<WikiPage> getAncestorsStartingWith(WikiPage context);
 }

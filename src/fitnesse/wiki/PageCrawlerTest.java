@@ -185,7 +185,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage grandUnclePage = pageBuider.addPage(root, PathParser.parse("UnclePage"));
     WikiPage unclePage = pageBuider.addPage(root, PathParser.parse("PageOne.UnclePage"));
     WikiPage brotherPage = pageBuider.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
-    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("UnclePage",grandChild1);
+    List<WikiPage> uncles = grandChild1.getPageCrawler().getAllUncles(grandChild1, "UnclePage");
     assertTrue(uncles.contains(grandUnclePage));
     assertTrue(uncles.contains(unclePage));
     assertTrue(uncles.contains(brotherPage));

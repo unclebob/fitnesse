@@ -153,7 +153,7 @@ public class ClassPathBuilder {
     List<String> items = new ArrayList<String>();
     addItemsFromPage(page, items);
 
-    List<WikiPage> ancestors = PageCrawlerImpl.getAncestorsOf(page);
+    List<WikiPage> ancestors = page.getPageCrawler().getAncestorsOf(page);
     for (WikiPage ancestor : ancestors) {
       if (!visitedPages.contains(ancestor)) {
         visitedPages.add(ancestor);
