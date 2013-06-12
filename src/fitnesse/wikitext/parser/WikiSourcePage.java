@@ -102,20 +102,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             WikiPage includedPage = crawler.getSiblingPage(page, pagePath);
             if (includedPage == null) {
-                if (page instanceof ProxyPage) {
-                    ProxyPage proxy = (ProxyPage) page;
-                    String host = proxy.getHost();
-                    int port = proxy.getHostPort();
-                    try {
-                        ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
-                        return new Maybe<SourcePage>(new WikiSourcePage(remoteIncludedPage));
-                    }
-                    catch (Exception e) {
-                        return Maybe.nothingBecause("Remote page \" + host + \":\" + port + \"/\" + pageName + \" does not exist.\n");
-                    }
-                } else {
-                    return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
-                }
+                return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
             }
             else if (isParentOf(includedPage))
                return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
@@ -180,15 +167,7 @@ public class WikiSourcePage implements SourcePage {
     }
 
     public String makeUrl(String wikiWordPath) {
-        if (!(page instanceof ProxyPage))
-            return makeFullPathOfTarget(wikiWordPath) ;
-
-        ProxyPage proxy = (ProxyPage) page;
-        String remoteURLOfPage = proxy.getThisPageUrl();
-        String nameOfThisPage = proxy.getName();
-        int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
-        String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
-        return remoteURLOfParent + wikiWordPath;
+        return makeFullPathOfTarget(wikiWordPath) ;
     }
 
     private boolean isParentOf(WikiPage possibleParent) {

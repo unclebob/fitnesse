@@ -11,13 +11,11 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
-  //private HtmlPage htmlPage;
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
 
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    //htmlPage = context.pageFactory.newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
       protected void writeData(String output) {

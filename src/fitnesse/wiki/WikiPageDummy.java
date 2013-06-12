@@ -99,8 +99,4 @@ public class WikiPageDummy implements WikiPage {
   public WikiPage getChildPage(String name) {
     return null;
   }
-
-  public boolean isOpenInNewWindow() {
-    return false;
-  }
 }

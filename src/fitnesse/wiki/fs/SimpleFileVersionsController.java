@@ -4,19 +4,43 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
+import fitnesse.util.Cache;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPageProperties;
+import util.Clock;
 import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
+
+  public static final int CACHE_TIMEOUT = 300000; // ms
 
   public static final String contentFilename = "content.txt";
   public static final String propertiesFilename = "properties.xml";
 
   private final FileSystem fileSystem;
+
+  private final Cache<String, String> fileCache = new Cache.Builder<String, String>()
+          .withLoader(new Cache.Loader<String, String>() {
+            @Override
+            public String fetch(String fileName) throws Exception {
+              return fileSystem.exists(fileName) ? fileSystem.getContent(fileName) : null;
+            }
+          })
+          .withExpirationPolicy(new Cache.ExpirationPolicy<String, String>() {
+            @Override
+            public boolean isExpired(String key, String value, long lastModified) {
+              return !fileSystem.exists(key)
+                      || (lastModified - Clock.currentTimeInMillis() > CACHE_TIMEOUT);
+            }
+          })
+          .build();
 
   public SimpleFileVersionsController(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
@@ -87,6 +111,7 @@ public class SimpleFileVersionsController implements VersionsController {
     content = content.replaceAll("\n", separator);
 
     String contentPath = page.getFileSystemPath() + "/" + contentFilename;
+    fileCache.evict(contentPath);
     try {
       fileSystem.makeFile(contentPath, content);
     } catch (IOException e) {
@@ -99,6 +124,7 @@ public class SimpleFileVersionsController implements VersionsController {
     String propertiesFilePath = "<unknown>";
     try {
       propertiesFilePath = page.getFileSystemPath() + "/" + propertiesFilename;
+      fileCache.evict(propertiesFilePath);
       WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
       removeAlwaysChangingProperties(propertiesToSave);
       fileSystem.makeFile(propertiesFilePath, propertiesToSave.toXml());
@@ -113,30 +139,27 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   private void loadContent(final FileSystemPage page, final PageData data) {
-    String content = "";
     final String name = page.getFileSystemPath() + "/" + contentFilename;
     try {
-      if (fileSystem.exists(name)) {
-        content = fileSystem.getContent(name);
-      }
-      data.setContent(content);
-    } catch (IOException e) {
+      String content = fileCache.get(name);
+      data.setContent(content != null ? content : "");
+    } catch (Exception e) {
       throw new RuntimeException("Error while loading content", e);
     }
   }
 
   private void loadAttributes(final FileSystemPage page, final PageData data) {
     final String path = page.getFileSystemPath() + "/" + propertiesFilename;
-    if (fileSystem.exists(path)) {
-      try {
+    try {
+      String propertiesXml = fileCache.get(path);
+      if (propertiesXml != null) {
         long lastModifiedTime = getLastModifiedTime(page);
-        String propertiesXml = fileSystem.getContent(path);
         final WikiPageProperties props = parsePropertiesXml(propertiesXml, lastModifiedTime);
         data.setProperties(props);
-      } catch (final Exception e) {
-        System.err.println("Could not read properties file:" + path);
-        e.printStackTrace();
       }
+    } catch (final Exception e) {
+      System.err.println("Could not read properties file: " + path);
+      e.printStackTrace();
     }
   }
 

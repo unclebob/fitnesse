@@ -2,12 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
-import java.util.Collection;
-
-public class FileSystemPage extends CachingPage {
+public class FileSystemPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   // Only used for root page:
@@ -15,9 +21,10 @@ public class FileSystemPage extends CachingPage {
 
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
+  private boolean autoCommit;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, null, new SymbolicPageFactory());
+    super(name, null, new SymbolicPageFactory(fileSystem));
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
@@ -29,15 +36,19 @@ public class FileSystemPage extends CachingPage {
     this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
   }
 
+  public FileSystemPage(final String name, final FileSystemPage parent) {
+    super(name, parent, new SymbolicPageFactory(parent.fileSystem));
+    path = null;
+    fileSystem = parent.fileSystem;
+    versionsController = parent.versionsController;
+    autoCommit = parent.autoCommit;
+  }
+
   public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, parent, new SymbolicPageFactory());
+    super(name, parent, new SymbolicPageFactory(fileSystem));
     path = null;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
-  }
-
-  public FileSystemPage(final String name, final FileSystemPage parent) {
-    this(name, parent, parent.fileSystem, parent.versionsController);
   }
 
   @Override
@@ -45,7 +56,6 @@ public class FileSystemPage extends CachingPage {
     WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
       versionsController.delete((FileSystemPage) childPage);
-      super.removeChildPage(name);
     }
   }
 
@@ -60,14 +70,16 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Override
-  protected WikiPage createChildPage(final String name) {
+  public WikiPage addChildPage(String name) {
     String path = getFileSystemPath() + "/" + name;
     if (hasContentChild(path)) {
       return new FileSystemPage(name, this);
     } else if (hasHtmlChild(path)) {
       return new ExternalSuitePage(path, name, this, fileSystem);
     } else {
-      return new FileSystemPage(name, this);
+      FileSystemPage page = new FileSystemPage(name, this);
+      if (autoCommit) page.commit(page.getData());
+      return page;
     }
   }
 
@@ -88,16 +100,38 @@ public class FileSystemPage extends CachingPage {
 
 
   @Override
-  protected void loadChildren() {
+  public List<WikiPage> getNormalChildren() {
     final String thisDir = getFileSystemPath();
+    final List<WikiPage> children = new ArrayList<WikiPage>();
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
       for (final String subFile : subFiles) {
-        if (fileIsValid(subFile, thisDir) && !this.children.containsKey(subFile)) {
-          this.children.put(subFile, getChildPage(subFile));
+        if (fileIsValid(subFile, thisDir)) {
+          children.add(getChildPage(subFile));
         }
       }
     }
+    return children;
+  }
+
+  @Override
+  protected WikiPage getNormalChildPage(String pageName) {
+    final String file = getFileSystemPath() + "/" + pageName;
+    if (fileSystem.exists(file)) {
+      return addChildPage(pageName);
+    }
+    return null;
+  }
+
+  @Override
+  public PageData getData() {
+    PageData pageData = versionsController.getRevisionData(this, null);
+    return new PageData(pageData);
+  }
+
+  @Override
+  public ReadOnlyPageData readOnlyData() {
+    return getData();
   }
 
   private boolean fileIsValid(final String filename, final String dir) {
@@ -119,14 +153,9 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   public VersionInfo commit(final PageData data) {
+    // Note: RecentChanges is not handled by the versionsController?
     VersionInfo versionInfo = versionsController.makeVersion(this, data);
-    super.commit(data);
     return versionInfo;
-  }
-
-  @Override
-  protected PageData makePageData() {
-    return versionsController.getRevisionData(this, null);
   }
 
   @Override
@@ -146,5 +175,9 @@ public class FileSystemPage extends CachingPage {
     } catch (final Exception e) {
       return super.toString();
     }
+  }
+
+  public void autoCommit(boolean autoCommit) {
+    this.autoCommit = autoCommit;
   }
 }

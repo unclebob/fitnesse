@@ -97,8 +97,7 @@ public class WikiImportProperty extends WikiPageProperty {
       html.setBodyClass("imported");
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       html.put("sourceUrl", importProperty.getSourceUrl());
-    } else if (page instanceof ProxyPage)
-      html.setBodyClass("virtual");
+    }
   }
 
   public static String makeRemoteEditQueryParameters() {

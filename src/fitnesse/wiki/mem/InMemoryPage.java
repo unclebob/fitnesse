@@ -13,7 +13,9 @@ public class InMemoryPage {
   public static WikiPage makeRoot(String name) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem));
-    return factory.makeRootPage(null, name);
+    FileSystemPage page = (FileSystemPage) factory.makeRootPage(null, name);
+    page.autoCommit(true);
+    return page;
   }
 
   public static WikiPage createChildPage(String name, FileSystemPage parent) {

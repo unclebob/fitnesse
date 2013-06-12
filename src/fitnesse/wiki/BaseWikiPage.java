@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wiki.fs.SymbolicPageFactory;
+
 import java.util.List;
 
 public abstract class BaseWikiPage implements WikiPage {
@@ -72,10 +74,6 @@ public abstract class BaseWikiPage implements WikiPage {
     return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
   }
 
-  public boolean isOpenInNewWindow() {
-    return false;
-  }
-  
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }

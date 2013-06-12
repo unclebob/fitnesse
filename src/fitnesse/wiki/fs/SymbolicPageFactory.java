@@ -1,7 +1,8 @@
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.File;
 
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
@@ -13,7 +14,11 @@ public class SymbolicPageFactory {
   private final WikiPageFactory wikiPageFactory;
 
   public SymbolicPageFactory() {
-    FileSystem fileSystem = new DiskFileSystem();
+    this(new DiskFileSystem());
+  }
+
+  public SymbolicPageFactory(FileSystem fileSystem) {
+    // FixMe: -AJM- this is a cyclic dependency: FileSystemPageFactory - FileSystemPage - SymbolicPageFactory
     wikiPageFactory = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem));
   }
 

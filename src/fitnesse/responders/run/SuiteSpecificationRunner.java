@@ -116,7 +116,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
 
   public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
-      if (hit == page)
+      if (hit.equals(page))
         return;
     }
     if (page.getData().hasAttribute("Test"))
