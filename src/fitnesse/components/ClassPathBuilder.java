@@ -8,12 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import util.Wildcard;
 
-public class ClassPathBuilder extends InheritedItemBuilder {
+public class ClassPathBuilder {
   private List<String> allPaths;
   private StringBuffer pathsString;
   private Set<String> addedPaths;
@@ -147,6 +147,26 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   private void addSeparatorIfNecessary(StringBuffer pathsString, String separator) {
     if (pathsString.length() > 0)
       pathsString.append(separator);
+  }
+
+  protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) {
+    List<String> items = new ArrayList<String>();
+    addItemsFromPage(page, items);
+
+    List<WikiPage> ancestors = WikiPageUtil.getAncestorsOf(page);
+    for (WikiPage ancestor : ancestors) {
+      if (!visitedPages.contains(ancestor)) {
+        visitedPages.add(ancestor);
+        addItemsFromPage(ancestor, items);
+      }
+
+    }
+    return items;
+  }
+
+  private void addItemsFromPage(WikiPage itemPage, List<String> items) {
+    List<String> itemsOnThisPage = getItemsFromPage(itemPage);
+    items.addAll(itemsOnThisPage);
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {
