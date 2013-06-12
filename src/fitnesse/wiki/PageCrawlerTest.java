@@ -30,7 +30,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     pageBuider = new PageBuilder();
-    crawler = new PageCrawlerImpl();
+    crawler = new PageCrawlerImpl(root);
 
     page1Path = PathParser.parse("PageOne");
     page2Path = PathParser.parse("PageTwo");
@@ -45,20 +45,21 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testPageExists() throws Exception {
-    assertTrue(crawler.pageExists(page1, PathParser.parse("ChildOne")));
-    assertFalse(crawler.pageExists(page1, PathParser.parse("BlahBlah")));
+    assertTrue(page1.getPageCrawler().pageExists(page1, PathParser.parse("ChildOne")));
+    assertFalse(page1.getPageCrawler().pageExists(page1, PathParser.parse("BlahBlah")));
   }
 
   @Test
   public void testPageExistsUsingPath() throws Exception {
-    assertTrue(crawler.pageExists(page1, PathParser.parse("ChildOne")));
+    PageCrawler page1Crawler = new PageCrawlerImpl(page1);
+    assertTrue(page1Crawler.pageExists(page1, PathParser.parse("ChildOne")));
     assertTrue(crawler.pageExists(root, child1FullPath));
     assertTrue(crawler.pageExists(root, grandChild1FullPath));
     assertTrue(crawler.pageExists(root, PathParser.parse(".PageOne")));
     assertTrue(crawler.pageExists(root, PathParser.parse(".PageOne.ChildOne.GrandChildOne")));
 
-    assertFalse(crawler.pageExists(page1, PathParser.parse("BlahBlah")));
-    assertFalse(crawler.pageExists(page1, PathParser.parse("PageOne.BlahBlah")));
+    assertFalse(page1Crawler.pageExists(page1, PathParser.parse("BlahBlah")));
+    assertFalse(page1Crawler.pageExists(page1, PathParser.parse("PageOne.BlahBlah")));
   }
 
   @Test
@@ -83,10 +84,10 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testGetFullPath() throws Exception {
-    assertEquals(page1Path, crawler.getFullPath(page1));
-    assertEquals(page2Path, crawler.getFullPath(page2));
-    assertEquals(child1FullPath, crawler.getFullPath(child1));
-    assertEquals(grandChild1FullPath, crawler.getFullPath(grandChild1));
+    assertEquals(page1Path, page1.getPageCrawler().getFullPath(page1));
+    assertEquals(page2Path, page2.getPageCrawler().getFullPath(page2));
+    assertEquals(child1FullPath, child1.getPageCrawler().getFullPath(child1));
+    assertEquals(grandChild1FullPath, grandChild1.getPageCrawler().getFullPath(grandChild1));
     assertEquals(PathParser.parse(""), crawler.getFullPath(root));
   }
 
@@ -100,7 +101,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPagePath pageOneFullPath = crawler.getFullPathOfChild(root, pageOnePath);
     assertEquals("PageOne", PathParser.render(pageOneFullPath));
 
-    WikiPagePath SomePageChildFullPath = crawler.getFullPathOfChild(child1, somePagePath);
+    WikiPagePath SomePageChildFullPath = child1.getPageCrawler().getFullPathOfChild(child1, somePagePath);
     assertEquals("PageOne.ChildOne.SomePage", PathParser.render(SomePageChildFullPath));
 
     WikiPagePath otherPagePath = PathParser.parse("SomePage.OtherPage");
@@ -108,14 +109,14 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertEquals("SomePage.OtherPage", PathParser.render(otherPageFullPath));
 
     WikiPagePath somePageAbsolutePath = PathParser.parse(".SomePage");
-    WikiPagePath somePageAbsoluteFullPath = crawler.getFullPathOfChild(child1, somePageAbsolutePath);
+    WikiPagePath somePageAbsoluteFullPath = child1.getPageCrawler().getFullPathOfChild(child1, somePageAbsolutePath);
     assertEquals("SomePage", PathParser.render(somePageAbsoluteFullPath));
   }
 
   @Test
   public void testAddPage() throws Exception {
     WikiPage page = pageBuider.addPage(page1, PathParser.parse("SomePage"));
-    assertEquals(PathParser.parse("PageOne.SomePage"), crawler.getFullPath(page));
+    assertEquals(PathParser.parse("PageOne.SomePage"), page.getPageCrawler().getFullPath(page));
     assertEquals(page1, page.getParent());
   }
 
@@ -134,16 +135,16 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage page = pageBuider.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
     assertNotNull(page);
     assertEquals("BadSubject0123", page.getName());
-    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), crawler.getFullPath(page));
+    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), page.getPageCrawler().getFullPath(page));
   }
 
   @Test
   public void testGetRelativePageName() throws Exception {
     assertEquals("PageOne", crawler.getRelativeName(root, page1));
     assertEquals("PageOne.ChildOne", crawler.getRelativeName(root, child1));
-    assertEquals("ChildOne", crawler.getRelativeName(page1, child1));
-    assertEquals("GrandChildOne", crawler.getRelativeName(child1, grandChild1));
-    assertEquals("ChildOne.GrandChildOne", crawler.getRelativeName(page1, grandChild1));
+    assertEquals("ChildOne", page1.getPageCrawler().getRelativeName(page1, child1));
+    assertEquals("GrandChildOne", child1.getPageCrawler().getRelativeName(child1, grandChild1));
+    assertEquals("ChildOne.GrandChildOne", page1.getPageCrawler().getRelativeName(page1, grandChild1));
   }
 
   @Test

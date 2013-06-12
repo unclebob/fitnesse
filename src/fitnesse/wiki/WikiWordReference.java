@@ -33,7 +33,7 @@ public class WikiWordReference {
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
         for (WikiPage current = currentPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath(current));
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }
@@ -103,7 +103,8 @@ public class WikiWordReference {
     }
 
     private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) throws Exception {
-        WikiPagePath parentPath = currentPage.getPageCrawler().getFullPath(currentPage.getParent());
+      WikiPage parent = currentPage.getParent();
+      WikiPagePath parentPath = parent.getPageCrawler().getFullPath(parent);
       parentPath.makeAbsolute();
 
       if (wikiWordText.startsWith("."))

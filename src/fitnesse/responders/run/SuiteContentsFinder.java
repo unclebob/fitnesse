@@ -65,9 +65,8 @@ public class SuiteContentsFinder {
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
         try {
-          PageCrawler crawler = p1.getPageCrawler();
-          WikiPagePath path1 = crawler.getFullPath(p1);
-          WikiPagePath path2 = crawler.getFullPath(p2);
+          WikiPagePath path1 = p1.getPageCrawler().getFullPath(p1);
+          WikiPagePath path2 = p2.getPageCrawler().getFullPath(p2);
 
           return path1.compareTo(path2);
         }

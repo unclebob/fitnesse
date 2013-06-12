@@ -152,7 +152,7 @@ public class FitNesseSuite extends ParentRunner<String> {
 
     List<String> testPages = new ArrayList<String>();
     for (WikiPage wp : pages) {
-      testPages.add(crawler.getFullPath(wp).toString());
+      testPages.add(wp.getPageCrawler().getFullPath(wp).toString());
     }
     return testPages;
   }

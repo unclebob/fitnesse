@@ -77,7 +77,7 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
   public WikiPage getHeaderPage() {

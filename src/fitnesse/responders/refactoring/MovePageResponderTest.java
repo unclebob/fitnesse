@@ -52,8 +52,8 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   private boolean isAncestor(WikiPage ancestor, WikiPage descendent) {
-    return moveResponder.pageIsAncestorOfNewParent(crawler.getFullPath(ancestor),
-            crawler.getFullPath(descendent));
+    return moveResponder.pageIsAncestorOfNewParent(ancestor.getPageCrawler().getFullPath(ancestor),
+            descendent.getPageCrawler().getFullPath(descendent));
   }
 
   public void testMovePage() throws Exception {
@@ -182,7 +182,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPage movedPage = root.getChildPage(pageA.getName());
     assertFalse(crawler.pageExists(root, originalPath));
     assertEquals("content", movedPage.getData().getContent());
-    assertEquals(PathParser.parse("PageA"), crawler.getFullPath(movedPage));
+    assertEquals(PathParser.parse("PageA"), movedPage.getPageCrawler().getFullPath(movedPage));
     pageOne = root.getChildPage(pageOne.getName());
     assertEquals(".PageA", pageOne.getData().getContent());
   }
@@ -193,7 +193,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPage movedPage = pageTwo.getChildPage("PageOne");
     assertFalse(crawler.pageExists(root, PathParser.parse("PageOne")));
     assertEquals(".PageTwo.PageOne.PageA", movedPage.getData().getContent());
-    assertEquals("PageTwo.PageOne", PathParser.render(crawler.getFullPath(movedPage)));
+    assertEquals("PageTwo.PageOne", PathParser.render(movedPage.getPageCrawler().getFullPath(movedPage)));
   }
 
   public void testRedirection() throws Exception {

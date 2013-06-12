@@ -183,16 +183,12 @@ public class PropertiesResponder implements SecureResponder {
     WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
     if (wikiPagePath != null) {
-      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page; // TODO
-                                                                                 // -AcD-
-                                                                                 // a
-                                                                                 // better
-                                                                                 // way?
+      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page;
       PageCrawler crawler = parent.getPageCrawler();
       WikiPage target = crawler.getPage(parent, wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = crawler.getFullPath(target);
+        fullPath = target.getPageCrawler().getFullPath(target);
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();

@@ -112,8 +112,7 @@ public class TestPage {
   }
 
   private String getPathNameForPage(WikiPage page) {
-    PageCrawler pageCrawler = getSourcePage().getPageCrawler();
-    WikiPagePath pagePath = pageCrawler.getFullPath(page);
+    WikiPagePath pagePath = page.getPageCrawler().getFullPath(page);
     return PathParser.render(pagePath);
   }
 

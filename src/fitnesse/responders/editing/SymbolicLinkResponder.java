@@ -136,7 +136,7 @@ public class SymbolicLinkResponder implements Responder {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
-    return !crawler.pageExists(start, path);
+    return !start.getPageCrawler().pageExists(start, path);
   }
 
   private WikiPageProperty getSymLinkProperty(WikiPageProperties properties) {

@@ -42,7 +42,7 @@ public class VersionResponder implements SecureResponder {
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    String fullPathName = PathParser.render(pageCrawler.getFullPath(page));
+    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath(page));
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();

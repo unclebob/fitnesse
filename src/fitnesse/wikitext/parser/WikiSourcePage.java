@@ -83,7 +83,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             WikiPage ancestor = crawler.findAncestorWithName(page, target);
             if (ancestor != null) {
-                pathElements[0] = PathParser.render(crawler.getFullPath(ancestor));
+                pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath(ancestor));
                 return "." + StringUtil.join(Arrays.asList(pathElements), ".");
             }
         } catch (Exception e) {

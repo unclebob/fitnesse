@@ -40,10 +40,8 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
-    PageCrawler crawler = oldRefactoredPage.getPageCrawler();
-
-    WikiPagePath pageToBeMovedPath = crawler.getFullPath(oldRefactoredPage);
-    WikiPagePath newParentPath = crawler.getFullPath(newParentPage);
+    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getPageCrawler().getFullPath(oldRefactoredPage);
+    WikiPagePath newParentPath = newParentPage.getPageCrawler().getFullPath(newParentPage);
 
     return !pageToBeMovedPath.equals(newParentPath) &&
     !selfPage(pageToBeMovedPath, newParentPath) &&

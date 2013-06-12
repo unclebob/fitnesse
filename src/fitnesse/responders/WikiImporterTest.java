@@ -237,7 +237,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     WikiPage page = parentPage.addChildPage(pageName);
     PageData data = page.getData();
 
-    WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
+    WikiPagePath pagePath = page.getPageCrawler().getFullPath(page);
     WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/" + PathParser.render(pagePath));
     if (isRoot)
       importProps.setRoot(true);

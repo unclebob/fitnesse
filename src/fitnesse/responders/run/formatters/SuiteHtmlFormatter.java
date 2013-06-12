@@ -93,8 +93,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
     super.newTestStarted(testPage, timeMeasurement);
 
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(testPage.getSourcePage());
+    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath(testPage.getSourcePage());
     String fullPathName = PathParser.render(fullPath);
 
     announceStartNewTest(getRelativeName(), fullPathName);

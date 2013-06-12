@@ -11,7 +11,10 @@ import java.util.ArrayList;
 
 public class PageCrawlerImpl implements PageCrawler {
 
-  protected PageCrawlerImpl() {
+  private final WikiPage context;
+
+  protected PageCrawlerImpl(WikiPage context) {
+    this.context = context;
   }
 
   public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) {
@@ -77,10 +80,12 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public boolean pageExists(WikiPage context, WikiPagePath path) {
+    assert context == this.context;
     return getPage(context, path) != null;
   }
 
   public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) {
+    assert parent == this.context;
     WikiPagePath fullPathOfChild;
     if (childPath.isAbsolute())
       fullPathOfChild = childPath.relativePath();
@@ -92,10 +97,12 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public WikiPagePath getFullPath(WikiPage page) {
+    assert page == this.context;
     return new WikiPagePath(page);
   }
 
   public String getRelativeName(WikiPage base, WikiPage page) {
+    assert base == this.context;
     StringBuffer qualName = new StringBuffer();
     for (WikiPage p = page; !isRoot(p) && !p.equals(base); p = p.getParent()) {
       if (p != page)

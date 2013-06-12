@@ -24,7 +24,7 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
   public WikiPage getParent() {
@@ -93,8 +93,7 @@ public abstract class BaseWikiPage implements WikiPage {
     if (!(o instanceof WikiPage))
       return false;
     try {
-      PageCrawler crawler = getPageCrawler();
-      return crawler.getFullPath(this).equals(crawler.getFullPath(((WikiPage) o)));
+      return getPageCrawler().getFullPath(this).equals(((WikiPage) o).getPageCrawler().getFullPath(((WikiPage) o)));
     }
     catch (Exception e) {
       return false;

@@ -34,7 +34,7 @@ public class WikiWordBuilder {
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
         for (WikiPage current = wikiPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath(current));
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }

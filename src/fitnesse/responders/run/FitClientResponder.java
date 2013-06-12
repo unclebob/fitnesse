@@ -29,7 +29,6 @@ import fitnesse.wiki.WikiPagePath;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
   private FitNesseContext context;
-  private PageCrawler crawler;
   private String resource;
   private WikiPage page;
   private boolean shouldIncludePaths;
@@ -38,7 +37,6 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
-    crawler = context.root.getPageCrawler();
     resource = request.getResource();
     shouldIncludePaths = request.hasInput("includePaths");
     suiteFilter = (String) request.getInput("suiteFilter");
@@ -50,6 +48,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     Socket socket = sender.getSocket();
     WikiPagePath pagePath = PathParser.parse(resource);
     try {
+      PageCrawler crawler = context.root.getPageCrawler();
       if (!crawler.pageExists(context.root, pagePath))
         FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
       else {
@@ -99,7 +98,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   private void sendPage(TestPage testPage, FitClient client) throws IOException, InterruptedException {
-    String pageName = crawler.getRelativeName(page, testPage.getSourcePage());
+    String pageName = page.getPageCrawler().getRelativeName(page, testPage.getSourcePage());
     String testableHtml = testPage.getDecoratedData().getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);
