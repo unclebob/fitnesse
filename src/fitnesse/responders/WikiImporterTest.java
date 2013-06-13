@@ -48,10 +48,9 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
   public WikiPage createRemoteRoot() throws Exception {
     remoteRoot = InMemoryPage.makeRoot("RooT");
-    PageBuilder pageBuilder = new PageBuilder();
-    pageBuilder.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
-    pageBuilder.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
-    pageBuilder.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
     return remoteRoot;
   }
 

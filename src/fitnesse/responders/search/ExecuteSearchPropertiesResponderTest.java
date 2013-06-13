@@ -21,7 +21,6 @@ import fitnesse.wiki.mem.InMemoryPage;
 
 public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageBuilder pageBuilder;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
 
@@ -29,7 +28,6 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseUtil.makeTestContext(root);
-    pageBuilder = new PageBuilder();
     responder = new ExecuteSearchPropertiesResponder();
     context = FitNesseUtil.makeTestContext(root);
   }
@@ -82,7 +80,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequest() throws Exception {
-    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -196,7 +194,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequestForObsoletePage() throws Exception {
-    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ObsoletePage"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties1 = data.getProperties();

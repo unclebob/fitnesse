@@ -14,18 +14,15 @@ public class EditResponderTest extends RegexTestCase {
   private WikiPage root;
   private MockRequest request;
   private EditResponder responder;
-  private PageBuilder pageBuilder;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new EditResponder();
   }
 
   public void testResponse() throws Exception {
-    WikiPage page= pageBuilder.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPage page= WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Edit Page tags");
@@ -76,7 +73,7 @@ public class EditResponderTest extends RegexTestCase {
   }
 
   public void testRedirectToRefererEffect() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("ChildPage");
     request.addInput("redirectToReferer", true);
     request.addInput("redirectAction", "boom");
@@ -90,11 +87,11 @@ public class EditResponderTest extends RegexTestCase {
   }
   
   public void testTemplateListPopulates() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
     
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
-    pageBuilder.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
 
     SimpleResponse response = makeResponse();
     assertEquals(200, response.getStatus());

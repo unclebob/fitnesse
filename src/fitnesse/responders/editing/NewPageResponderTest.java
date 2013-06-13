@@ -1,6 +1,6 @@
 package fitnesse.responders.editing;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import util.RegexTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,12 +14,10 @@ public class NewPageResponderTest extends RegexTestCase {
   private WikiPage root;
   private MockRequest request;
   private NewPageResponder responder;
-  private PageBuilder pageBuilder;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new NewPageResponder();
   }
@@ -42,11 +40,11 @@ public class NewPageResponderTest extends RegexTestCase {
   }
 
   public void testTemplateListPopulates() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
 
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
-    pageBuilder.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
-    pageBuilder.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
 
     request.setResource("ChildPage");
 

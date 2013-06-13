@@ -70,12 +70,11 @@ public class WikiPagePathTest extends TestCase {
 
   public void testConstructorWithPage() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageBuilder pageBuilder = new PageBuilder();
     WikiPagePath abcdPath = PathParser.parse("AaA.BbB.CcC.DdD");
     WikiPagePath grandchildPath = PathParser.parse("PageOne.ChildOne.GrandChildOne");
 
-    WikiPage page1 = pageBuilder.addPage(root, abcdPath);
-    WikiPage page2 = pageBuilder.addPage(root, grandchildPath);
+    WikiPage page1 = WikiPageUtil.addPage(root, abcdPath);
+    WikiPage page2 = WikiPageUtil.addPage(root, grandchildPath);
 
     WikiPagePath page1Path = new WikiPagePath(page1);
     assertEquals(abcdPath, page1Path);

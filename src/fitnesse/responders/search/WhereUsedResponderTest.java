@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -10,9 +10,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class WhereUsedResponderTest extends RegexTestCase {
   private WikiPage root;
@@ -21,10 +18,9 @@ public class WhereUsedResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageBuilder pageBuilder = new PageBuilder();
-    pageBuilder.addPage(root, PathParser.parse("PageOne"), "PageOne");
-    pageTwo = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "PageOne");
-    pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "PageOne");
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
   }
 
   public void testResponse() throws Exception {

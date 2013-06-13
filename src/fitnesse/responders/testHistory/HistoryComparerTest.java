@@ -276,14 +276,13 @@ public class HistoryComparerTest {
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {
-    PageBuilder pageBuilder = new PageBuilder();
     String pageText =
       "|myTable|\n" +
         "La la\n" +
         "|NewTable|\n" +
         "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
-    WikiPage myPage = pageBuilder.addPage(root, PathParser.parse("MyPage"), pageText);
+    WikiPage myPage = WikiPageUtil.addPage(root, PathParser.parse("MyPage"), pageText);
     PageData myData = myPage.getData();
     String html = myData.getHtml();
     return html;

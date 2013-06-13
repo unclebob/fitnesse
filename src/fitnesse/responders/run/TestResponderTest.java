@@ -62,7 +62,6 @@ public class TestResponderTest {
   private String results;
   private FitSocketReceiver receiver;
   private WikiPage errorLogsParentPage;
-  private PageBuilder pageBuilder;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
 
@@ -71,8 +70,7 @@ public class TestResponderTest {
     File testDir = new File("TestDir");
     testDir.mkdir();
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    errorLogsParentPage = pageBuilder.addPage(root, PathParser.parse("ErrorLogs"));
+    errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
     responder.setFastTest(true);
@@ -123,7 +121,7 @@ public class TestResponderTest {
 
   private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
     String simpleRunPageName = "TestPage";
-    testPage = pageBuilder.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
+    testPage = WikiPageUtil.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     if (tags != null) {
       PageData pageData = testPage.getData();
       pageData.setAttribute(PageData.PropertySUITES, tags);
@@ -143,7 +141,7 @@ public class TestResponderTest {
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    testPage = pageBuilder.addPage(root, PathParser.parse("EmptyTestPage"));
+    testPage = WikiPageUtil.addPage(root, PathParser.parse("EmptyTestPage"));
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
@@ -194,7 +192,7 @@ public class TestResponderTest {
   }
 
   private String doRunAndGetErrorLog(String content) throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), content);
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), content);
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -210,7 +208,7 @@ public class TestResponderTest {
 
   @Test
   public void testHasExitValueHeader() throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + passFixtureTable());
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + passFixtureTable());
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -238,7 +236,7 @@ public class TestResponderTest {
   @Test
   public void testFixtureThatCrashes() throws Exception {
     responder.setFastTest(false);
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
@@ -257,8 +255,8 @@ public class TestResponderTest {
 
   @Test
   public void testResultsHaveHeaderAndFooter() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("PageHeader"), "HEADER");
-    pageBuilder.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "HEADER");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
     doSimpleRun(passFixtureTable());
     assertSubString("HEADER", results);
     assertSubString("FOOTER", results);
@@ -505,10 +503,10 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
 
     PageData data = testPage.getData();
     WikiPageProperties properties = data.getProperties();
@@ -538,10 +536,10 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    pageBuilder.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
 
     WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
@@ -561,10 +559,10 @@ public class TestResponderTest {
   @Test
   public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
-    pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
     WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);
@@ -584,12 +582,12 @@ public class TestResponderTest {
   @Test
   public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
     responder.setFastTest(false);
-    WikiPage suitePage = pageBuilder.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
-    WikiPage testPage = pageBuilder.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    pageBuilder.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
-    pageBuilder.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
-    pageBuilder.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    WikiPageUtil.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
 
     WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
     String resource = PathParser.render(testPagePath);

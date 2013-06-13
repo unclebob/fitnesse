@@ -40,7 +40,6 @@ public class SuiteResponderTest {
   private WikiPage suite;
   private FitNesseContext context;
   private FitSocketReceiver receiver;
-  private PageBuilder pageBuilder;
   private String suitePageName;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
@@ -53,11 +52,10 @@ public class SuiteResponderTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    suite = pageBuilder.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
+    suite = WikiPageUtil.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
     addTestToSuite("TestOne", fitPassFixture);
 
     request = new MockRequest();
@@ -81,7 +79,7 @@ public class SuiteResponderTest {
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
-    WikiPage testPage = pageBuilder.addPage(page, PathParser.parse(name), content);
+    WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);
@@ -165,7 +163,7 @@ public class SuiteResponderTest {
 
   @Test
   public void testSuiteWithEmptyPage() throws Exception {
-    suite = pageBuilder.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
+    suite = WikiPageUtil.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
     addTestPage(suite, "TestThatIsEmpty", "");
     request.setResource("SuiteWithEmptyPage");
     runSuite();

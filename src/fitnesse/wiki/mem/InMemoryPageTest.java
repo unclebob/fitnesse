@@ -10,15 +10,13 @@ import junit.framework.TestCase;
 
 public class InMemoryPageTest extends TestCase {
   private WikiPage root;
-  private PageBuilder pageBuilder;
   private WikiPage page1;
   private WikiPage page2;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    page1 = pageBuilder.addPage(root, PathParser.parse("PageOne"), "page one");
-    page2 = pageBuilder.addPage(root, PathParser.parse("PageTwo"), "page two");
+    page1 = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "page one");
+    page2 = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "page two");
   }
 
   public void tearDown() throws Exception {

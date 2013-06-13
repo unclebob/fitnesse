@@ -57,15 +57,14 @@ public class HtmlSlimResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    PageBuilder pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = getSlimResponder();
     responder.setFastTest(true);
     // Enforce the test runner here, to make sure we're talking to the right
     // system
-    testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"),
-        "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
+    testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
     SlimTestSystem.SlimDescriptor.clearSlimPortOffset();
   }
 

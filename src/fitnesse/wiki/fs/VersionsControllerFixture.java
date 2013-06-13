@@ -42,8 +42,7 @@ public class VersionsControllerFixture {
   }
 
   public Object savePageWithContent(String pageName, String content) {
-    final PageBuilder pageBuilder = new PageBuilder();
-    lastUsedPage = pageBuilder.addPage(rootPage, PathParser.parse(pageName));
+    lastUsedPage = WikiPageUtil.addPage(rootPage, PathParser.parse(pageName));
     final PageData data = lastUsedPage.getData();
     data.setContent(content);
     return lastUsedPage.commit(data);

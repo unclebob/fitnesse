@@ -17,7 +17,6 @@ public class WikiWordTest {
     private WikiPage pageOneTwoThree;
     private WikiPage pageOneThree;
     private WikiPage root2;
-    private PageBuilder pageBuilder;
 
     @Before
     public void setUp() throws Exception {
@@ -27,7 +26,6 @@ public class WikiWordTest {
         pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");
         pageOneThree = root.makePage(pageOne, "PageThree");
         root2 = InMemoryPage.makeRoot("RooT");
-        pageBuilder = new PageBuilder();
     }
 
     @Test
@@ -88,7 +86,7 @@ public class WikiWordTest {
     }
 
     private WikiPage addPage(WikiPage parent, String childName) throws Exception {
-        return pageBuilder.addPage(parent, PathParser.parse(childName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(childName));
     }
 
     private String wikiLink(String link, String text) {

@@ -16,13 +16,11 @@ import fitnesse.wiki.mem.InMemoryPage;
 
 public class SerializedPageResponderTest extends RegexTestCase {
   private final String RootPath = "TestRooT";
-  private PageBuilder pageBuilder;
   private WikiPage root;
   private MockRequest request;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
   }
 
@@ -31,11 +29,11 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {
-    WikiPage page1 = pageBuilder.addPage(root, PathParser.parse("PageOne"), "this is page one");
+    WikiPage page1 = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "this is page one");
     PageData data = page1.getData();
     data.setAttribute("Attr1", "true");
     page1.commit(data);
-    pageBuilder.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
+    WikiPageUtil.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
 
     request.addInput("type", proxyType);
     request.setResource("PageOne");
@@ -64,7 +62,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetVersionOfPageData() throws Exception {
-    WikiPage page = pageBuilder.addPage(root, PathParser.parse("PageOne"), "some content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "some content");
     VersionInfo commitRecord = page.commit(page.getData());
 
     request.addInput("type", "meat");
@@ -78,9 +76,9 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetPageHieratchyAsXml() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("PageOne"));
-    pageBuilder.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    pageBuilder.addPage(root, PathParser.parse("PageTwo"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
 
     request.setResource("root");
     request.addInput("type", "pages");
@@ -95,9 +93,9 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
-    WikiPage pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"));
-    pageBuilder.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    pageBuilder.addPage(root, PathParser.parse("PageTwo"));
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
 
     PageData data = pageOne.getData();
     WikiPageProperties properties = data.getProperties();
@@ -119,7 +117,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetDataAsHtml() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("TestPageOne"), "test page");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPageOne"), "test page");
 
     request.setResource("TestPageOne");
     request.addInput("type", "data");

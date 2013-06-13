@@ -28,7 +28,7 @@ public class CompositeExecutionLog {
   public void publish(PageFactory pageFactory) {
     String content = buildLogContent(pageFactory);
 
-    WikiPage errorLogPage = new PageBuilder().addPage(root, errorLogPagePath);
+    WikiPage errorLogPage = WikiPageUtil.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
 
     if(root != null) {

@@ -14,13 +14,11 @@ import fitnesse.wiki.mem.InMemoryPage;
 public class SaveRecorderTest {
   public WikiPage somePage;
   public WikiPage root;
-  private PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    somePage = pageBuilder.addPage(root, PathParser.parse("SomePage"), "some page");
+    somePage = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "some page");
   }
 
   @Test
@@ -36,7 +34,7 @@ public class SaveRecorderTest {
 
   @Test
   public void testDefaultValues() throws Exception {
-    WikiPage neverSaved = pageBuilder.addPage(root, PathParser.parse("NeverSaved"), "never saved");
+    WikiPage neverSaved = WikiPageUtil.addPage(root, PathParser.parse("NeverSaved"), "never saved");
     assertFalse(SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved.getData()));
   }
 

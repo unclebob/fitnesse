@@ -16,7 +16,6 @@ import fitnesse.testutil.FitNesseUtil;
 
 public class SearchReplaceResponderTest {
   private WikiPage root;
-  private PageBuilder pageBuilder;
   private SearchReplaceResponder responder;
   private MockRequest request;
   private FitNesseContext context;
@@ -26,9 +25,8 @@ public class SearchReplaceResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     pagePath = PathParser.parse("SomePage");
-    somePage = pageBuilder.addPage(root, pagePath, "has something in it");
+    somePage = WikiPageUtil.addPage(root, pagePath, "has something in it");
     responder = new SearchReplaceResponder();
     request = new MockRequest();
     request.setResource("SomePage");
@@ -45,7 +43,7 @@ public class SearchReplaceResponderTest {
 
   @Test
   public void multipleReplacements() throws Exception {
-    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has something too.");
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something too.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, containsString("ChildPage"));
@@ -53,7 +51,7 @@ public class SearchReplaceResponderTest {
 
   @Test
   public void onlyReplacedPagesAreListed() throws Exception {
-    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has nothing to replace.");
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has nothing to replace.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, not(containsString("ChildPage")));
@@ -76,7 +74,7 @@ public class SearchReplaceResponderTest {
   @Test
   public void onlySelectedPageAndChildrenAreSearched() throws Exception {
     request.setResource("SomePage.ChildPage");
-    pageBuilder.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
     assertThat(content, containsString("SomePage.ChildPage"));

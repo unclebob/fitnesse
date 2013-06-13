@@ -97,7 +97,7 @@ public class SaveResponder implements SecureResponder {
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
-      page = new PageBuilder().addPage(context.root, PathParser.parse(resource));
+      page = WikiPageUtil.addPage(context.root, PathParser.parse(resource));
     return page;
   }
 

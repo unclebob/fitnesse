@@ -21,7 +21,7 @@ public class
       }
       WikiPage root = FitnesseFixtureContext.root;
       WikiPagePath pagePath = PathParser.parse(pageName);
-      WikiPage thePage = new fitnesse.wiki.PageBuilder().addPage(root, pagePath, pageContents);
+      WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
       if (!"".equals(pageAttributes)) {
         PageData data = thePage.getData();
         setAttributes(data);

@@ -192,7 +192,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private void addPage(String path, String content) throws Exception {
-    new PageBuilder().addPage(root, PathParser.parse(path), content);
+    WikiPageUtil.addPage(root, PathParser.parse(path), content);
   }
 
   public void testXmlizingData() throws Exception {

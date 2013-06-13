@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageBuilder;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
@@ -30,7 +29,6 @@ public class UpdaterImplementationTest {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageBuilder pageBuilder;
   private boolean updateDone = false;
 
   @Before
@@ -50,7 +48,6 @@ public class UpdaterImplementationTest {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(testDir, name);
     root.commit(root.getData());
-    pageBuilder = new PageBuilder();
     context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 

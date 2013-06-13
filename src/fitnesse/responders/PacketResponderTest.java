@@ -2,7 +2,7 @@ package fitnesse.responders;
 
 import static org.junit.Assert.assertEquals;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,14 +20,12 @@ public class PacketResponderTest {
   protected WikiPage root;
   protected MockRequest request;
   protected Responder responder;
-  protected PageBuilder pageBuilder;
   protected FitNesseContext context;
   private SimpleResponse response;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new PacketResponder();
     context = FitNesseUtil.makeTestContext(root);
@@ -38,7 +36,7 @@ public class PacketResponderTest {
   }
 
   private void assertPageWithTableResponseWith(String table, String expected) throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("TablePage"), table);
+    WikiPageUtil.addPage(root, PathParser.parse("TablePage"), table);
     request.setResource("TablePage");
     SimpleResponse response = makeResponse();
     assertEquals(expected, response.getContent());
@@ -53,7 +51,7 @@ public class PacketResponderTest {
 
   @Test
   public void pageWithNoTables() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("SimplePage"), "simple content");
+    WikiPageUtil.addPage(root, PathParser.parse("SimplePage"), "simple content");
     request.setResource("SimplePage");
     SimpleResponse response = makeResponse();
     assertEquals(200, response.getStatus());

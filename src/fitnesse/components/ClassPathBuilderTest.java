@@ -11,19 +11,17 @@ public class ClassPathBuilderTest extends RegexTestCase {
   private WikiPage root;
   private ClassPathBuilder builder;
   String pathSeparator = System.getProperty("path.separator");
-  private PageBuilder pageBuilder;
   private WikiPagePath somePagePath;
   private static final String TEST_DIR = "testDir";
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     builder = new ClassPathBuilder();
     somePagePath = PathParser.parse("SomePage");
   }
 
   public void testGetClasspath() throws Exception {
-    pageBuilder.addPage(root, PathParser.parse("TestPage"),
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!path fitnesse.jar\n" +
                     "!path my.jar");
     String expected = "fitnesse.jar" + pathSeparator + "my.jar";
@@ -31,10 +29,10 @@ public class ClassPathBuilderTest extends RegexTestCase {
   }
 
   public void testPathSeparatorVariable() throws Exception {
-    WikiPage page = pageBuilder.addPage(root, PathParser.parse("TestPage"),
-      "!define PATH_SEPARATOR {|}\n" +
-      "!path fitnesse.jar\n" +
-        "!path my.jar");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define PATH_SEPARATOR {|}\n" +
+                    "!path fitnesse.jar\n" +
+                    "!path my.jar");
     PageData data = page.getData();
     page.commit(data);
 
@@ -47,17 +45,17 @@ public class ClassPathBuilderTest extends RegexTestCase {
       "!path aPath\n" +
       "end of conent\n";
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = pageBuilder.addPage(root, PathParser.parse("ClassPath"), pageContent);
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), pageContent);
     String path = builder.getClasspath(page);
     assertEquals("aPath", path);
   }
 
   public void testGetClassPathMultiLevel() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    pageBuilder.addPage(root, PathParser.parse("ProjectOne"),
+    WikiPageUtil.addPage(root, PathParser.parse("ProjectOne"),
             "!path path2\n" +
                     "!path path 3");
-    pageBuilder.addPage(root, PathParser.parse("ProjectOne.TesT"), "!path path1");
+    WikiPageUtil.addPage(root, PathParser.parse("ProjectOne.TesT"), "!path path1");
     PageCrawler pageCrawler = root.getPageCrawler();
     String cp = builder.getClasspath(pageCrawler.getPage(PathParser.parse("ProjectOne.TesT")));
     assertSubString("path1", cp);
@@ -67,8 +65,8 @@ public class ClassPathBuilderTest extends RegexTestCase {
 
   public void testLinearClassPath() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage superPage = pageBuilder.addPage(root, PathParser.parse("SuperPage"), "!path superPagePath");
-    WikiPage subPage = pageBuilder.addPage(superPage, PathParser.parse("SubPage"), "!path subPagePath");
+    WikiPage superPage = WikiPageUtil.addPage(root, PathParser.parse("SuperPage"), "!path superPagePath");
+    WikiPage subPage = WikiPageUtil.addPage(superPage, PathParser.parse("SubPage"), "!path subPagePath");
     String cp = builder.getClasspath(subPage);
     assertEquals("subPagePath" + pathSeparator + "superPagePath", cp);
 
@@ -91,13 +89,13 @@ public class ClassPathBuilderTest extends RegexTestCase {
   }
 
   public void testThatPathsWithSpacesGetQuoted() throws Exception {
-    pageBuilder.addPage(root, somePagePath, "!path Some File.jar");
+    WikiPageUtil.addPage(root, somePagePath, "!path Some File.jar");
     PageCrawler crawler = root.getPageCrawler();
     WikiPage page = crawler.getPage(somePagePath);
 
     assertEquals("\"Some File.jar\"", builder.getClasspath(page));
 
-    pageBuilder.addPage(root, somePagePath, "!path somefile.jar\n!path Some Dir/someFile.jar");
+    WikiPageUtil.addPage(root, somePagePath, "!path somefile.jar\n!path Some Dir/someFile.jar");
     assertEquals("somefile.jar" + pathSeparator + "\"Some Dir/someFile.jar\"", builder.getClasspath(page));
   }
 

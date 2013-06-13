@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import util.RegexTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -18,7 +18,7 @@ public class PageDataWikiPageResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageOne = new PageBuilder().addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
   }
 
   public void testGetPageData() throws Exception {

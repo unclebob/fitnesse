@@ -20,7 +20,6 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   private WikiPage pageOne;
   private WikiPage childPage;
   private WikiPage virtualPage;
-  private PageBuilder pageBuilder;
 
   List<WikiPage> foundPages = new ArrayList<WikiPage>();
   private WikiPageFinder pageFinder;
@@ -32,12 +31,11 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    pageOne = pageBuilder.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
-    childPage = pageBuilder.addPage(root, PathParser.parse("PageOne.PageOneChild"),
-        "PageChild is a child of PageOne");
-    virtualPage = pageBuilder.addPage(root, PathParser.parse("PageTwo"),
-        "PageTwo has a bit of content too\n^PageOneChild");
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
+    childPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.PageOneChild"),
+            "PageChild is a child of PageOne");
+    virtualPage = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"),
+            "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = virtualPage.getData();
     virtualPage.commit(data);
     foundPages.clear();

@@ -11,6 +11,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class DeletePageResponderTest extends ResponderTestCase {
   private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
 
   public void testDeleteConfirmation() throws Exception {
-    WikiPage level1 = this.pageBuilder.addPage(this.root, this.level1Path);
-    this.pageBuilder.addPage(level1, this.level2Path);
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
+    WikiPageUtil.addPage(level1, this.level2Path);
     MockRequest request = new MockRequest();
     request.setResource(this.qualifiedLevel2Name);
     request.addInput("deletePage", "");
@@ -35,8 +36,8 @@ public class DeletePageResponderTest extends ResponderTestCase {
   }
 
   public void testDeletePage() throws Exception {
-    WikiPage level1 = this.pageBuilder.addPage(this.root, this.level1Path);
-    this.pageBuilder.addPage(level1, this.level2Path);
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
+    WikiPageUtil.addPage(level1, this.level2Path);
     assertTrue(this.root.getPageCrawler().pageExists(this.level1Path));
     MockRequest request = new MockRequest();
     request.setResource(this.level1Name);
@@ -54,7 +55,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
   }
 
   public void testDontDeleteFrontPage() throws Exception {
-    this.pageBuilder.addPage(this.root, PathParser.parse("FrontPage"), "Content");
+    WikiPageUtil.addPage(this.root, PathParser.parse("FrontPage"), "Content");
     this.request.setResource("FrontPage");
     this.request.addInput("confirmed", "yes");
     Response response = this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), this.request);

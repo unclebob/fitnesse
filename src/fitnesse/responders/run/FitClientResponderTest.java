@@ -18,7 +18,6 @@ public class FitClientResponderTest extends RegexTestCase {
   private FitNesseContext context;
   private Response response;
   private MockResponseSender sender;
-  private PageBuilder pageBuilder;
   private WikiPage suite;
 
   public void setUp() throws Exception {
@@ -31,14 +30,13 @@ public class FitClientResponderTest extends RegexTestCase {
   }
 
   public void buildSuite(WikiPage root) throws Exception {
-    pageBuilder = new PageBuilder();
-    suite = pageBuilder.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
-    WikiPage page1 = pageBuilder.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
-    WikiPage page2 = pageBuilder.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
-    WikiPage page3 = pageBuilder.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
-    pageBuilder.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
-    pageBuilder.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
-    pageBuilder.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
+    suite = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
+    WikiPage page1 = WikiPageUtil.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
+    WikiPage page2 = WikiPageUtil.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
+    WikiPage page3 = WikiPageUtil.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
 
     PageData data1 = page1.getData();
     PageData data2 = page2.getData();
@@ -110,7 +108,7 @@ public class FitClientResponderTest extends RegexTestCase {
   }
 
   public void testWithClasspathOnTestInSuite() throws Exception {
-    pageBuilder.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
     String result = getResultFor("SuitePage.TestPage", true);
 
     assertSubString("classes", result);

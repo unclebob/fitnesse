@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 
 import fitnesse.wiki.mem.InMemoryPage;
@@ -21,7 +21,6 @@ public class CompositePageFinderTestCase {
   protected PageFinder delegate;
   protected CompositePageFinder sut;
   protected WikiPage page;
-  protected PageBuilder pageBuilder;
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected WikiPage pageThree;
@@ -34,11 +33,10 @@ public class CompositePageFinderTestCase {
   public void init() throws Exception {
     delegate = mock(PageFinder.class);
     page = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    pageOne = pageBuilder.addPage(page, PathParser.parse("PageOne"), "this is page one ^ChildPage");
-    pageTwo = pageBuilder.addPage(page, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
-    pageThree = pageBuilder.addPage(page, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
-    pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");
+    pageOne = WikiPageUtil.addPage(page, PathParser.parse("PageOne"), "this is page one ^ChildPage");
+    pageTwo = WikiPageUtil.addPage(page, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
+    pageThree = WikiPageUtil.addPage(page, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");
   }
 
   protected void setupMockWithEmptyReturnValue() throws Exception {

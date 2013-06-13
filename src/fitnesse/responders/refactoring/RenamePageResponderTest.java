@@ -7,10 +7,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class RenamePageResponderTest extends ResponderTestCase {
   private WikiPagePath pageOnePath;
@@ -33,7 +30,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
   public void testInvalidName() throws Exception {
     String invalidName = "FirstName.SecondName";
     String pageName = "MyPage";
-    pageBuilder.addPage(root, PathParser.parse(pageName), "content");
+    WikiPageUtil.addPage(root, PathParser.parse(pageName), "content");
     Response response = doRename(pageName, invalidName, true);
 
     assertHasRegexp("Cannot rename", getResponseContent(response));
@@ -41,15 +38,15 @@ public class RenamePageResponderTest extends ResponderTestCase {
 
   public void testDontRenameFrontPage() throws Exception {
     String frontPageName = "FrontPage";
-    pageBuilder.addPage(root, PathParser.parse(frontPageName), "Content");
+    WikiPageUtil.addPage(root, PathParser.parse(frontPageName), "Content");
     Response response = doRename(frontPageName, "ReNamed", true);
     assertNotNull(response);
     assertSubString("Cannot rename", getResponseContent(response));
   }
 
   public void testPageRedirection() throws Exception {
-    WikiPage pageOne = pageBuilder.addPage(root, PathParser.parse("OneOne"), "Content");
-    pageBuilder.addPage(pageOne, PathParser.parse("TwoOne"));
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("OneOne"), "Content");
+    WikiPageUtil.addPage(pageOne, PathParser.parse("TwoOne"));
     Response response = doRename("OneOne.TwoOne", "ReName", true);
     assertNotNull(response);
     assertEquals(303, response.getStatus());
@@ -63,7 +60,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     WikiPagePath renamedPath = PathParser.parse(renamedName);
 
     PageCrawler crawler = root.getPageCrawler();
-    pageBuilder.addPage(root, originalPath, "Content");
+    WikiPageUtil.addPage(root, originalPath, "Content");
     assertTrue(crawler.pageExists(originalPath));
     assertFalse(crawler.pageExists(renamedPath));
 
@@ -74,8 +71,8 @@ public class RenamePageResponderTest extends ResponderTestCase {
   }
 
   public void testReferencesChanged() throws Exception {
-    pageBuilder.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
-    pageBuilder.addPage(root, pageTwoPath, "Page two content");
+    WikiPageUtil.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
+    WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
 
     doRename(pageTwoName, "PageThree", true);
     WikiPage pageOne = root.getChildPage(pageOneName);
@@ -83,17 +80,17 @@ public class RenamePageResponderTest extends ResponderTestCase {
   }
 
   public void testBackSearchReferencesChanged() throws Exception {
-    WikiPage topPage = pageBuilder.addPage(root, PathParser.parse("TopPage"), "");
-    WikiPage pageOne = pageBuilder.addPage(topPage, pageOnePath, "Line one\n<TopPage.PageTwo\nLine three");
-    pageBuilder.addPage(topPage, pageTwoPath, "Page two content");
+    WikiPage topPage = WikiPageUtil.addPage(root, PathParser.parse("TopPage"), "");
+    WikiPage pageOne = WikiPageUtil.addPage(topPage, pageOnePath, "Line one\n<TopPage.PageTwo\nLine three");
+    WikiPageUtil.addPage(topPage, pageTwoPath, "Page two content");
 
     doRename("TopPage.PageTwo", "PageThree", true);
     assertEquals("Line one\n<TopPage.PageThree\nLine three", pageOne.getData().getContent());
   }
 
   public void testReferencesNotChangedWhenDisabled() throws Exception {
-    pageBuilder.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
-    pageBuilder.addPage(root, pageTwoPath, "Page two content");
+    WikiPageUtil.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
+    WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
 
     doRename(pageTwoName, "PageThree", false);
     WikiPage pageOne = root.getChildPage(pageOneName);
@@ -101,8 +98,8 @@ public class RenamePageResponderTest extends ResponderTestCase {
   }
 
   public void testDontRenameToExistingPage() throws Exception {
-    pageBuilder.addPage(root, pageOnePath, "Page one content");
-    pageBuilder.addPage(root, pageTwoPath, "Page two content");
+    WikiPageUtil.addPage(root, pageOnePath, "Page one content");
+    WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
 
     Response response = doRename(pageOneName, pageTwoName, true);
     PageCrawler crawler = root.getPageCrawler();
@@ -113,9 +110,9 @@ public class RenamePageResponderTest extends ResponderTestCase {
   }
 
   public void testChildPagesStayIntactWhenParentIsRenamed() throws Exception {
-    pageBuilder.addPage(root, pageOnePath, "page one");
-    pageBuilder.addPage(root, PathParser.parse("PageOne.ChildPage"), "child page");
-    pageBuilder.addPage(root, PathParser.parse("PageOne.ChildPage.GrandChild"), "grand child");
+    WikiPageUtil.addPage(root, pageOnePath, "page one");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildPage"), "child page");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildPage.GrandChild"), "grand child");
 
     doRename(pageOneName, pageTwoName, true);
 

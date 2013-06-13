@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,25 +24,23 @@ public class TemplateUtilTest {
   private WikiPage root;
   private MockRequest request;
   private EditResponder responder;
-  private PageBuilder pageBuilder;
 
   @Before public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = new EditResponder();
   }
   
   @Test public void testGetTemplatesFromUncles() {
-    pageBuilder.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
-    pageBuilder.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
+    WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
+    WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
     
-    pageBuilder.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
-    pageBuilder.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary"), "template library 2");
-    pageBuilder.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary.TemplateOne"), "template 1");
+    WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
+    WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary"), "template library 2");
+    WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary.TemplateOne"), "template 1");
     
-    WikiPage childPage = pageBuilder.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
+    WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
     
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
     
@@ -51,12 +49,12 @@ public class TemplateUtilTest {
   }
   
   @Test public void testGetTemplatesFromUnclesDoesntTakeTemplatesChildren() {
-    pageBuilder.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
-    pageBuilder.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
-    pageBuilder.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot.TemplateFromRootChild"), "template from root child");
+    WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
+    WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
+    WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot.TemplateFromRootChild"), "template from root child");
     
-    pageBuilder.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
-    WikiPage childPage = pageBuilder.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
+    WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
+    WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
     
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
     

@@ -14,14 +14,12 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   WikiPage subWiki_pageTwo_pageTwoChild;
 
   PageReferenceRenamer renamer;
-  private PageBuilder pageBuilder;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    subWiki = pageBuilder.addPage(root, PathParser.parse("SubWiki"), "");
-    subWiki_pageTwo = pageBuilder.addPage(subWiki, PathParser.parse("PageTwo"), "");
-    subWiki_pageTwo_pageTwoChild = pageBuilder.addPage(subWiki_pageTwo, PathParser.parse("PageTwoChild"), "");
+    subWiki = WikiPageUtil.addPage(root, PathParser.parse("SubWiki"), "");
+    subWiki_pageTwo = WikiPageUtil.addPage(subWiki, PathParser.parse("PageTwo"), "");
+    subWiki_pageTwo_pageTwoChild = WikiPageUtil.addPage(subWiki_pageTwo, PathParser.parse("PageTwoChild"), "");
   }
 
   public void testReferencesOnPageOne_1() throws Exception {
@@ -84,7 +82,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   }
 
   private void checkChangesOnPageOne(String beforeText, String expectedAfterText) throws Exception {
-    subWiki_pageOne = pageBuilder.addPage(subWiki, PathParser.parse("PageOne"), beforeText);
+    subWiki_pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), beforeText);
     renamer = new PageReferenceRenamer(root, subWiki_pageTwo, "PageThree");
     renamer.renameReferences();
     subWiki_pageOne = subWiki.getChildPage("PageOne");
@@ -103,7 +101,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   }
 
   public void testSubPageReferenceUnchangedWhenParentRenamed() throws Exception {
-    WikiPage pageOne = pageBuilder.addPage(subWiki, PathParser.parse("PageOne"), "gunk ^SubPage gunk");
+    WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk ^SubPage gunk");
     renamer = new PageReferenceRenamer(root, subWiki, "RenamedSubWiki");
     renamer.renameReferences();
     String updatedContent = pageOne.getData().getContent();
@@ -111,7 +109,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   }
 
   public void testRenameParentWithSubPageReferenceOnSibling() throws Exception {
-    WikiPage pageOne = pageBuilder.addPage(subWiki, PathParser.parse("PageOne"), "gunk PageTwo gunk");
+    WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk PageTwo gunk");
     renamer = new PageReferenceRenamer(root, subWiki, "RenamedSubWiki");
     renamer.renameReferences();
     String updatedContent = pageOne.getData().getContent();
@@ -119,8 +117,8 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   }
 
   public void testRenameSiblingOfRoot() throws Exception {
-    WikiPage source = pageBuilder.addPage(root, PathParser.parse("SourcePage"), "gunk TargetPage gunk");
-    WikiPage target = pageBuilder.addPage(root, PathParser.parse("TargetPage"));
+    WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk TargetPage gunk");
+    WikiPage target = WikiPageUtil.addPage(root, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(root, target, "RenamedPage");
     renamer.renameReferences();
     String updatedSourceContent = source.getData().getContent();
@@ -128,8 +126,8 @@ public class PageReferenceRenamerTest extends RegexTestCase {
   }
 
   public void testRenameSubpageOfRoot() throws Exception {
-    WikiPage source = pageBuilder.addPage(root, PathParser.parse("SourcePage"), "gunk ^TargetPage gunk");
-    WikiPage target = pageBuilder.addPage(source, PathParser.parse("TargetPage"));
+    WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk ^TargetPage gunk");
+    WikiPage target = WikiPageUtil.addPage(source, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(root, target, "RenamedPage");
     renamer.renameReferences();
     String updatedSourceContent = source.getData().getContent();

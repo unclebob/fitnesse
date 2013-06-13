@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.wiki.PageBuilder;
+import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,40 +14,38 @@ import fitnesse.wiki.WikiPage;
 
 public class TestSystemBaseTest {
   private WikiPage root;
-  private PageBuilder pageBuilder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
   }
 
   @Test
   public void buildFullySpecifiedTestSystemName() throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"),
-      "!define TEST_SYSTEM {system}\n" +
-        "!define TEST_RUNNER {runner}\n");
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define TEST_SYSTEM {system}\n" +
+                    "!define TEST_RUNNER {runner}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("system:runner", testSystemName);
   }
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "");
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("fit:fit.FitServer", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsSlim() throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("slim:fitnesse.slim.SlimService", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsUnknownDefaultsToFit() throws Exception {
-    WikiPage testPage = pageBuilder.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
     String testSystemName = TestSystem.getDescriptor(testPage, null, false).getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }

@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.wiki.PageBuilder;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -15,12 +14,10 @@ public abstract class ResponderTestCase extends RegexTestCase {
   protected WikiPage root;
   protected MockRequest request;
   protected Responder responder;
-  protected PageBuilder pageBuilder;
   protected FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
     request = new MockRequest();
     responder = responderInstance();
     context = FitNesseUtil.makeTestContext(root);

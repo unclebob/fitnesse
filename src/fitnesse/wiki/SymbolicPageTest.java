@@ -10,7 +10,6 @@ import junit.framework.TestCase;
 import util.FileUtil;
 
 public class SymbolicPageTest extends TestCase {
-  private PageBuilder pageBuilder;
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage pageTwo;
@@ -23,9 +22,8 @@ public class SymbolicPageTest extends TestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    pageBuilder = new PageBuilder();
-    pageOne = pageBuilder.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
-    pageTwo = pageBuilder.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne, null);
   }
 
@@ -58,7 +56,7 @@ public class SymbolicPageTest extends TestCase {
   }
 
   public void testGetChild() throws Exception {
-    WikiPage childPage = pageBuilder.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
+    WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
     WikiPage page = symPage.getChildPage("ChildPage");
     assertNotNull(page);
     assertEquals(SymbolicPage.class, page.getClass());
@@ -67,8 +65,8 @@ public class SymbolicPageTest extends TestCase {
   }
 
   public void testGetChildren() throws Exception {
-    pageBuilder.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
-    pageBuilder.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
     List<?> children = symPage.getChildren();
     assertEquals(2, children.size());
     assertEquals(SymbolicPage.class, children.get(0).getClass());
@@ -115,9 +113,9 @@ public class SymbolicPageTest extends TestCase {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPage("testDir/ExternalRoot", "ExternalRoot");
-    WikiPage externalPageOne = pageBuilder.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
-    pageBuilder.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
-    pageBuilder.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
+    WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
+    WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
+    WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
 
     symPage = new SymbolicPage("SymPage", externalRoot, pageOne, null);
   }
