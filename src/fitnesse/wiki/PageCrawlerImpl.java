@@ -95,7 +95,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
     assert context == this.context;
-    List<WikiPage> ancestors = getAncestorsStartingWith();
+    List<WikiPage> ancestors = getPageAndAncestors();
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
       if (namedPage != null)
@@ -170,7 +170,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   public List<WikiPage> getAllUncles(String uncleName) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();
-    List<WikiPage> ancestors = getAncestorsStartingWith();
+    List<WikiPage> ancestors = getPageAndAncestors();
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(uncleName);
       if (namedPage != null)
@@ -179,7 +179,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return uncles;
   }
 
-  public List<WikiPage> getAncestorsOf() {
+  public List<WikiPage> getAncestors() {
     LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
     WikiPage parent = context;
     do {
@@ -190,8 +190,8 @@ public class PageCrawlerImpl implements PageCrawler {
     return ancestors;
   }
 
-  public List<WikiPage> getAncestorsStartingWith() {
-    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>)getAncestorsOf();
+  public List<WikiPage> getPageAndAncestors() {
+    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>) getAncestors();
     ancestors.addFirst(context);
     return ancestors;
   }

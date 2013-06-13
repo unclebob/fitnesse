@@ -32,7 +32,7 @@ public interface PageCrawler {
   // TODO: make these use TraversalListener
   List<WikiPage> getAllUncles(String uncleName);
 
-  List<WikiPage> getAncestorsOf();
+  List<WikiPage> getAncestors();
 
-  List<WikiPage> getAncestorsStartingWith();
+  List<WikiPage> getPageAndAncestors();
 }
