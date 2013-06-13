@@ -23,8 +23,6 @@ public interface PageCrawler {
 
   void traverse(TraversalListener<? super WikiPage> callback);
 
-  void traverseAncestors(TraversalListener<? super WikiPage> callback);
-
   void traversePageAndAncestors(TraversalListener<? super WikiPage> callback);
 
   void traverseUncles(String uncleName, TraversalListener<? super WikiPage> callback);

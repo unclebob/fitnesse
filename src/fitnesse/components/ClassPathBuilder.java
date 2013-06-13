@@ -18,29 +18,36 @@ public class ClassPathBuilder {
   private Set<String> addedPaths;
 
   public String getClasspath(WikiPage page) {
-    List<String> paths = getInheritedPathElements(page, new HashSet<WikiPage>());
+    List<String> paths = getInheritedPathElements(page);
     return createClassPathString(paths, getPathSeparator(page));
   }
 
-  public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) {
-    return getInheritedItems(page, visitedPages);
+  public List<String> getInheritedPathElements(WikiPage page) {
+    final List<String> items = new ArrayList<String>();
+
+    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage p) {
+        addItemsFromPage(p, items);
+      }
+    });
+    return items;
   }
 
   public String buildClassPath(List<WikiPage> testPages) {
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = getPathSeparator(testPages.get(0));
     List<String> classPathElements = new ArrayList<String>();
-    Set<WikiPage> visitedPages = new HashSet<WikiPage>();
 
     for (WikiPage testPage : testPages) {
-      addClassPathElements(testPage, classPathElements, visitedPages);
+      addClassPathElements(testPage, classPathElements);
     }
 
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
   }
 
-  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) {
-    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
+  private void addClassPathElements(WikiPage page, List<String> classPathElements) {
+    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page);
     classPathElements.addAll(pathElements);
   }
 
@@ -146,22 +153,6 @@ public class ClassPathBuilder {
   private void addSeparatorIfNecessary(StringBuffer pathsString, String separator) {
     if (pathsString.length() > 0)
       pathsString.append(separator);
-  }
-
-  protected List<String> getInheritedItems(WikiPage page, final Set<WikiPage> visitedPages) {
-    final List<String> items = new ArrayList<String>();
-    addItemsFromPage(page, items);
-
-    page.getPageCrawler().traverseAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage ancestor) {
-        if (!visitedPages.contains(ancestor)) {
-          visitedPages.add(ancestor);
-          addItemsFromPage(ancestor, items);
-        }
-      }
-    });
-    return items;
   }
 
   private void addItemsFromPage(WikiPage itemPage, List<String> items) {

@@ -179,16 +179,13 @@ public class PageCrawlerImpl implements PageCrawler {
     });
   }
 
-  public void traverseAncestors(TraversalListener<? super WikiPage> callback) {
-    WikiPage parent = context;
-    do {
-      parent = parent.getParent();
-      callback.process(parent);
-    } while (!parent.isRoot());
-  }
-
   public void traversePageAndAncestors(TraversalListener<? super WikiPage> callback) {
-    callback.process(context);
-    traverseAncestors(callback);
+    WikiPage page = context;
+    while (!page.isRoot()) {
+      callback.process(page);
+      page = page.getParent();
+    }
+    // Call once more for root page.
+    callback.process(page);
   }
 }
