@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -176,7 +177,13 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage grandUnclePage = WikiPageUtil.addPage(root, PathParser.parse("UnclePage"));
     WikiPage unclePage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.UnclePage"));
     WikiPage brotherPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
-    List<WikiPage> uncles = grandChild1.getPageCrawler().getAllUncles("UnclePage");
+    final List<WikiPage> uncles = new ArrayList<WikiPage>();
+    grandChild1.getPageCrawler().traverseUncles("UnclePage", new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage page) {
+        uncles.add(page);
+      }
+    });
     assertTrue(uncles.contains(grandUnclePage));
     assertTrue(uncles.contains(unclePage));
     assertTrue(uncles.contains(brotherPage));

@@ -5,9 +5,7 @@ package fitnesse.wiki;
 import fitnesse.components.TraversalListener;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 public class PageCrawlerImpl implements PageCrawler {
 
@@ -93,15 +91,17 @@ public class PageCrawlerImpl implements PageCrawler {
     return qualName.toString();
   }
 
-  public WikiPage getClosestInheritedPage(WikiPage context, String pageName) {
-    assert context == this.context;
-    List<WikiPage> ancestors = getPageAndAncestors();
-    for (WikiPage ancestor : ancestors) {
-      WikiPage namedPage = ancestor.getChildPage(pageName);
-      if (namedPage != null)
-        return namedPage;
-    }
-    return null;
+  public WikiPage getClosestInheritedPage(WikiPage context, final String pageName) {
+    final WikiPage[] foundPage = new WikiPage[1];
+    traversePageAndAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage page) {
+        WikiPage namedPage = page.getChildPage(pageName);
+        if (namedPage != null && foundPage[0] == null)
+          foundPage[0] = namedPage;
+      }
+    });
+    return foundPage[0];
   }
 
   public WikiPage getRoot() {
@@ -168,31 +168,27 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
-  public List<WikiPage> getAllUncles(String uncleName) {
-    List<WikiPage> uncles = new ArrayList<WikiPage>();
-    List<WikiPage> ancestors = getPageAndAncestors();
-    for (WikiPage ancestor : ancestors) {
-      WikiPage namedPage = ancestor.getChildPage(uncleName);
-      if (namedPage != null)
-        uncles.add(namedPage);
-    }
-    return uncles;
+  public void traverseUncles(final String uncleName, final TraversalListener<? super WikiPage> callback) {
+    traversePageAndAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage page) {
+        WikiPage namedPage = page.getChildPage(uncleName);
+        if (namedPage != null)
+          callback.process(namedPage);
+      }
+    });
   }
 
-  public List<WikiPage> getAncestors() {
-    LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
+  public void traverseAncestors(TraversalListener<? super WikiPage> callback) {
     WikiPage parent = context;
     do {
       parent = parent.getParent();
-      ancestors.add(parent);
+      callback.process(parent);
     } while (!parent.isRoot());
-
-    return ancestors;
   }
 
-  public List<WikiPage> getPageAndAncestors() {
-    LinkedList<WikiPage> ancestors = (LinkedList<WikiPage>) getAncestors();
-    ancestors.addFirst(context);
-    return ancestors;
+  public void traversePageAndAncestors(TraversalListener<? super WikiPage> callback) {
+    callback.process(context);
+    traverseAncestors(callback);
   }
 }

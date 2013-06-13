@@ -1,8 +1,10 @@
 package fitnesse.testsystems;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -160,12 +162,14 @@ public class TestPage {
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    List<WikiPage> uncles;
+    final LinkedList<WikiPage> uncles = new LinkedList<WikiPage>();
     if (isSlim()) {
-      uncles = sourcePage.getPageCrawler().getAllUncles("ScenarioLibrary");
-      Collections.reverse(uncles);
-    } else {
-      uncles = Collections.emptyList();
+      sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
+        @Override
+        public void process(WikiPage page) {
+          uncles.addFirst(page);
+        }
+      });
     }
     return uncles;
   }

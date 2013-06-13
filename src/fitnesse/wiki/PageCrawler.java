@@ -23,16 +23,15 @@ public interface PageCrawler {
 
   void traverse(TraversalListener<? super WikiPage> callback);
 
+  void traverseAncestors(TraversalListener<? super WikiPage> callback);
+
+  void traversePageAndAncestors(TraversalListener<? super WikiPage> callback);
+
+  void traverseUncles(String uncleName, TraversalListener<? super WikiPage> callback);
+
   WikiPage getSiblingPage(WikiPagePath pathRelativeToSibling);
 
   WikiPage findAncestorWithName(String name);
 
   WikiPage getClosestInheritedPage(WikiPage context, String pageName);
-
-  // TODO: make these use TraversalListener
-  List<WikiPage> getAllUncles(String uncleName);
-
-  List<WikiPage> getAncestors();
-
-  List<WikiPage> getPageAndAncestors();
 }

@@ -1,10 +1,8 @@
 package fitnesse.responders.editing;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -12,15 +10,18 @@ import fitnesse.wiki.WikiPagePath;
 public class TemplateUtil {
   
   public static List<String> getTemplatesFromUncles(WikiPage page) {
-    List<WikiPage> wikiUncles = page.getPageCrawler().getAllUncles("TemplateLibrary");
-    List<String> templatePaths = new ArrayList<String>();
-    for(WikiPage wikiUncle : wikiUncles){
-      for(WikiPage template : wikiUncle.getChildren()){
-        WikiPagePath templatePath = new WikiPagePath(template);
-        templatePath.makeAbsolute();
-        templatePaths.add(PathParser.render(templatePath));
+    List<WikiPage> wikiUncles = new LinkedList<WikiPage>();
+    final List<String> templatePaths = new ArrayList<String>();
+    page.getPageCrawler().traverseUncles("TemplateLibrary", new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage uncle) {
+        for (WikiPage template : uncle.getChildren()) {
+          WikiPagePath templatePath = new WikiPagePath(template);
+          templatePath.makeAbsolute();
+          templatePaths.add(PathParser.render(templatePath));
+        }
       }
-    }
+    });
     return templatePaths;
   }
   

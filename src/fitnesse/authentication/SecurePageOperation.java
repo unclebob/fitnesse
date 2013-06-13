@@ -3,11 +3,9 @@
 package fitnesse.authentication;
 
 import fitnesse.FitNesseContext;
+import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.wiki.*;
-
-import java.util.Iterator;
-import java.util.List;
 
 public abstract class SecurePageOperation implements SecureOperation {
   protected abstract String getSecurityMode();
@@ -19,16 +17,18 @@ public abstract class SecurePageOperation implements SecureOperation {
     if (page == null)
       return false;
 
-    List<WikiPage> ancestors = page.getPageCrawler().getPageAndAncestors();
-    for (Iterator<WikiPage> iterator = ancestors.iterator(); iterator.hasNext();) {
-      WikiPage ancestor = iterator.next();
-      if (hasSecurityModeAttribute(ancestor))
-        return true;
-    }
-    return false;
+    final boolean[] found = new boolean[1];
+    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage page) {
+        if (hasSecurityModeAttribute(page))
+          found[0] = true;
+      }
+    });
+    return found[0];
   }
 
-  private boolean hasSecurityModeAttribute(WikiPage ancestor) throws Exception {
+  private boolean hasSecurityModeAttribute(WikiPage ancestor) {
     PageData data = ancestor.getData();
     boolean hasSecurityMode = data.hasAttribute(getSecurityMode());
     return hasSecurityMode;

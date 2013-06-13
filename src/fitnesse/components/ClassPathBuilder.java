@@ -148,18 +148,19 @@ public class ClassPathBuilder {
       pathsString.append(separator);
   }
 
-  protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) {
-    List<String> items = new ArrayList<String>();
+  protected List<String> getInheritedItems(WikiPage page, final Set<WikiPage> visitedPages) {
+    final List<String> items = new ArrayList<String>();
     addItemsFromPage(page, items);
 
-    List<WikiPage> ancestors = page.getPageCrawler().getAncestors();
-    for (WikiPage ancestor : ancestors) {
-      if (!visitedPages.contains(ancestor)) {
-        visitedPages.add(ancestor);
-        addItemsFromPage(ancestor, items);
+    page.getPageCrawler().traverseAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage ancestor) {
+        if (!visitedPages.contains(ancestor)) {
+          visitedPages.add(ancestor);
+          addItemsFromPage(ancestor, items);
+        }
       }
-
-    }
+    });
     return items;
   }
 
