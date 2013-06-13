@@ -82,13 +82,13 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public String getRelativeName(WikiPage page) {
-    StringBuffer qualName = new StringBuffer();
+    StringBuffer name = new StringBuffer();
     for (WikiPage p = page; !p.isRoot() && !p.equals(context); p = p.getParent()) {
       if (p != page)
-        qualName.insert(0, ".");
-      qualName.insert(0, p.getName());
+        name.insert(0, ".");
+      name.insert(0, p.getName());
     }
-    return qualName.toString();
+    return name.toString();
   }
 
   public WikiPage getClosestInheritedPage(WikiPage context, final String pageName) {
@@ -116,18 +116,17 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   public void traverse(TraversalListener<? super WikiPage> listener) {
-    _traverse(context, listener);
+    traverse(context, listener);
   }
 
-  public void _traverse(WikiPage context, TraversalListener<? super WikiPage> listener) {
-    if (context.getClass() == SymbolicPage.class)
+  private void traverse(WikiPage page, TraversalListener<? super WikiPage> listener) {
+    if (page.getClass() == SymbolicPage.class)
       return;
-    //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.
-    listener.process(context);
-    List<?> children = context.getChildren();
+    listener.process(page);
+    List<?> children = page.getChildren();
     for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
       WikiPage wikiPage = (WikiPage) iterator.next();
-      _traverse(wikiPage, listener);
+      traverse(wikiPage, listener);
     }
   }
 
