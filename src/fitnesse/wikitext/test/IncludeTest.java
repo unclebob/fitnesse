@@ -3,6 +3,7 @@ package fitnesse.wikitext.test;
 import static fitnesse.wikitext.test.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -22,6 +23,7 @@ public class IncludeTest {
     assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Meta[Text]], Text]");
     assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
     assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+    assertParses("!include -h PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
   }
 
   @Test
@@ -122,6 +124,19 @@ public class IncludeTest {
     root.makePage("PageTwo", "two");
 
     ParserTestHelper.assertTranslatesTo(includingPage, "two");
+  }
+  
+  @Test
+  public void translatesHelp() throws Exception {
+    TestRoot root = new TestRoot();
+    WikiPage includingPage = root.makePage("PageOne", "!include -h PageTwo");
+    
+    WikiPage pageWithHelp = root.makePage("PageTwo", "two");
+    PageData pageData = pageWithHelp.getData();
+    pageData.setAttribute(PageData.PropertyHELP, "help me");
+    pageWithHelp.commit(pageData);
+
+    ParserTestHelper.assertTranslatesTo(includingPage, "help me");
   }
 
   @Test
