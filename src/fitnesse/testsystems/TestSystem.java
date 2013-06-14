@@ -122,8 +122,8 @@ public abstract class TestSystem implements TestSystemListener {
     this.log = log;
   }
 
-  public static Descriptor getDescriptor(WikiPage page, PageFactory pageFactory, boolean isRemoteDebug) {
-    return new Descriptor(page, pageFactory, isRemoteDebug);
+  public static Descriptor getDescriptor(WikiPage page, boolean isRemoteDebug) {
+    return new Descriptor(page, isRemoteDebug);
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
@@ -138,28 +138,25 @@ public abstract class TestSystem implements TestSystemListener {
   public static class Descriptor {
     private final WikiPage page;
     private final ReadOnlyPageData data;
-    private final PageFactory pageFactory;
     private final boolean remoteDebug;
     private final String classPath;
 
-    public Descriptor(WikiPage page, PageFactory pageFactory,
-        boolean remoteDebug) {
-       this(page, pageFactory, remoteDebug,
+    public Descriptor(WikiPage page, boolean remoteDebug) {
+       this(page, remoteDebug,
                new ClassPathBuilder().getClasspath(page.getData().getWikiPage()));
     }
 
     public Descriptor(Descriptor descriptor) {
-      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug, descriptor.classPath);
+      this(descriptor.page, descriptor.remoteDebug, descriptor.classPath);
     }
 
     public Descriptor(Descriptor descriptor, String classPath) {
-      this(descriptor.page, descriptor.pageFactory, descriptor.remoteDebug, classPath);
+      this(descriptor.page, descriptor.remoteDebug, classPath);
     }
 
-    public Descriptor(WikiPage page, PageFactory pageFactory, boolean remoteDebug, String classPath) {
+    public Descriptor(WikiPage page, boolean remoteDebug, String classPath) {
       this.page = page;
       this.data = page.readOnlyData();
-      this.pageFactory = pageFactory;
       this.remoteDebug = remoteDebug;
       this.classPath = classPath;
     }

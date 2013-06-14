@@ -103,7 +103,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected TestSystem.Descriptor getDescriptor() {
-    return TestSystem.getDescriptor(page, context.pageFactory, false);
+    return TestSystem.getDescriptor(page, false);
   }
 
   protected abstract SlimTestSystem getTestSystem();
