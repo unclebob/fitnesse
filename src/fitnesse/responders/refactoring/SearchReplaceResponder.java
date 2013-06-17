@@ -1,6 +1,6 @@
 package fitnesse.responders.refactoring;
 
-import fitnesse.components.ContentReplacingSearchObserver;
+import fitnesse.refactoring.ContentReplacingSearchObserver;
 import fitnesse.pagefinder.PageFinder;
 import fitnesse.pagefinder.RegularExpressionWikiPageFinder;
 import fitnesse.components.TraversalListener;
