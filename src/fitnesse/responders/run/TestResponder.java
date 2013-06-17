@@ -15,6 +15,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.CompositeFormatter;
 import fitnesse.responders.run.formatters.PageHistoryFormatter;
@@ -30,7 +31,6 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
@@ -92,7 +92,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
 
-    WikiImportProperty.handleImportProperties(htmlPage, page);
+    WikiImportingResponder.handleImportProperties(htmlPage, page);
 
     return htmlPage;
   }

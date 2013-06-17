@@ -5,8 +5,6 @@ package fitnesse.wiki;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.responders.templateUtilities.HtmlPage;
-
 public class WikiImportProperty extends WikiPageProperty {
   private static final long serialVersionUID = 1L;
 
@@ -91,16 +89,4 @@ public class WikiImportProperty extends WikiPageProperty {
     return date;
   }
 
-  public static void handleImportProperties(HtmlPage html, WikiPage page) {
-    PageData pageData = page.getData();
-    if (isImported(pageData)) {
-      html.setBodyClass("imported");
-      WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-      html.put("sourceUrl", importProperty.getSourceUrl());
-    }
-  }
-
-  public static String makeRemoteEditQueryParameters() {
-    return "responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView";
-  }
 }

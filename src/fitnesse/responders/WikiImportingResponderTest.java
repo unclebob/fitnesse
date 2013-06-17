@@ -319,7 +319,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   private String getContentAfterSpecialImportHandling() {
     HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
-    WikiImportProperty.handleImportProperties(html, page);
+    WikiImportingResponder.handleImportProperties(html, page);
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
     return html.html();
