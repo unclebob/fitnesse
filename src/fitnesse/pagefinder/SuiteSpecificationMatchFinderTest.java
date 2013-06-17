@@ -1,5 +1,6 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;

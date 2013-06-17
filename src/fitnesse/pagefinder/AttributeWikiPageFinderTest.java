@@ -1,4 +1,4 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
 

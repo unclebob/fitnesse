@@ -1,4 +1,4 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 import static fitnesse.wiki.PageData.*;
 
@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.components.TraversalListener;
+import fitnesse.pagefinder.WikiPageFinder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;

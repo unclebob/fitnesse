@@ -1,4 +1,4 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 public interface CompositePageFinder extends PageFinder {
 

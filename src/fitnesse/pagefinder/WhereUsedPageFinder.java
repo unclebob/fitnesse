@@ -1,5 +1,6 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;

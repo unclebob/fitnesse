@@ -1,4 +1,4 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 import java.util.ArrayList;
 import java.util.List;

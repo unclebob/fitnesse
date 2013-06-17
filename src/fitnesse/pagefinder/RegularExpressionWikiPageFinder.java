@@ -1,8 +1,9 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
 public class RegularExpressionWikiPageFinder extends WikiPageFinder {

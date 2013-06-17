@@ -1,8 +1,9 @@
-package fitnesse.components;
+package fitnesse.pagefinder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
