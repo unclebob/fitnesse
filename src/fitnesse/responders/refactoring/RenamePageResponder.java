@@ -3,8 +3,8 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
-import fitnesse.refactoring.PageReferenceRenamer;
-import fitnesse.refactoring.ReferenceRenamer;
+import fitnesse.wiki.refactoring.PageReferenceRenamer;
+import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

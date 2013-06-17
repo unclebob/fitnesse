@@ -1,4 +1,4 @@
-package fitnesse.refactoring;
+package fitnesse.wiki.refactoring;
 
 import static org.junit.Assert.*;
 
