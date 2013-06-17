@@ -14,7 +14,7 @@ import fitnesse.testsystems.PageListSetUpTearDownSurrounder;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystem.Descriptor;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystemGroup;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -88,7 +88,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Map.Entry<TestSystem.Descriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
+    for (Map.Entry<Descriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
       startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
     }
 
@@ -103,7 +103,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return false;
   }
 
-  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -249,6 +249,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 }
 
-class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<TestPage>> {
+class PagesByTestSystem extends HashMap<Descriptor, LinkedList<TestPage>> {
   private static final long serialVersionUID = 1L;
 }

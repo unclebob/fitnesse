@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -62,10 +63,10 @@ public class MultipleTestsRunnerTest {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
 
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
+    Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
+    Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);
 
@@ -88,9 +89,9 @@ public class MultipleTestsRunnerTest {
     testPages.add(tearDown);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
+    Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
+    Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
 
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);

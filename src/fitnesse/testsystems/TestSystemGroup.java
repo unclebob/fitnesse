@@ -12,7 +12,7 @@ import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
-  private Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();
+  private Map<Descriptor, TestSystem> testSystems = new HashMap<Descriptor, TestSystem>();
   private FitNesseContext context;
   private WikiPage page;
   private TestSystemListener testSystemListener;
@@ -52,10 +52,10 @@ public class TestSystemGroup {
     return true;
   }
 
-  public TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
+  public TestSystem startTestSystem(Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
-      testSystem = makeTestSystem(new TestSystem.Descriptor(descriptor, classPath));
+      testSystem = makeTestSystem(new Descriptor(descriptor, classPath));
       testSystem.setFastTest(fastTest);
       testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
@@ -67,7 +67,7 @@ public class TestSystemGroup {
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) {
+  private TestSystem makeTestSystem(Descriptor descriptor) {
     if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.getTestSystemName())))
       return new HtmlSlimTestSystem(page, descriptor, testSystemListener);
     else

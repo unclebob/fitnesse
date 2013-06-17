@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
@@ -88,7 +89,7 @@ public class SlimTestSystemTest {
     final int slimServerPort = 10258;
     ServerSocket slimSocket = new ServerSocket(slimServerPort);
     try {
-      TestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(root, false);
+      Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(root, false);
       SlimTestSystem sys = new HtmlSlimTestSystem(root, descriptor, dummyListener);
       String slimArguments = String.format("%s %d", "", slimServerPort);
       sys.createSlimService(slimArguments);

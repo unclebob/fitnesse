@@ -12,10 +12,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
@@ -76,7 +73,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
     public String render() {
 
-      TestSystem.Descriptor descriptor = getDescriptor();
+      Descriptor descriptor = getDescriptor();
       try {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
@@ -102,7 +99,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     }
   }
 
-  protected TestSystem.Descriptor getDescriptor() {
+  protected Descriptor getDescriptor() {
     return TestSystem.getDescriptor(page, false);
   }
 

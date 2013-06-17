@@ -8,10 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Map;
 
 import fitnesse.components.SocketDealer;
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.MockCommandRunner;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
@@ -194,10 +191,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private Thread fastFitServer;
-    private final TestSystem.Descriptor testDescriptor;
+    private final Descriptor testDescriptor;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(TestSystem.Descriptor testDescriptor) {
+    public InProcessCommandRunner(Descriptor testDescriptor) {
       this.testDescriptor = testDescriptor;
     }
 

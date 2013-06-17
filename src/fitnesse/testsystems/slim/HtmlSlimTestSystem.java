@@ -2,12 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import fitnesse.slim.SlimError;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;

@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 
 public class FitTestSystem extends TestSystem {

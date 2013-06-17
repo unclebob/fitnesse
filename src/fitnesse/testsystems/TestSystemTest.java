@@ -6,7 +6,6 @@ import java.io.File;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
