@@ -33,7 +33,7 @@ public class MergeResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     existingContent = page.getData().getContent();
     newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 

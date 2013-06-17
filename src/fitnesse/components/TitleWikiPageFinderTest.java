@@ -17,7 +17,6 @@ public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   private WikiPage pageTwo;
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
-  private PageCrawler crawler;
   private TitleWikiPageFinder searcher;
 
   public void process(WikiPage page) {
@@ -27,10 +26,9 @@ public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
-    crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = pageTwo.getData();
     pageTwo.commit(data);
     hits.clear();

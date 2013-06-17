@@ -15,7 +15,7 @@ public abstract class ReferenceRenamer implements TraversalListener<WikiPage>, S
   }
 
   public void renameReferences() {
-    root.getPageCrawler().traverse(root, this);
+    root.getPageCrawler().traverse(this);
   }
 
   public void process(WikiPage currentPage) {

@@ -14,7 +14,6 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   public FileSystemPage page;
   private VersionInfo firstVersion;
   private VersionInfo secondVersion;
-  private PageCrawler crawler;
   private WikiPage root;
   private ZipFileVersionsController versionsController;
 
@@ -22,8 +21,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   public void setUp() throws Exception {
     versionsController = new ZipFileVersionsController();
     root = new FileSystemPage("TestDir", "RooT", new DiskFileSystem(), versionsController);
-    crawler = root.getPageCrawler();
-    page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
+    page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
     firstVersion = VersionInfo.makeVersionInfo(data);
@@ -60,7 +58,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testSubWikisDontInterfere() throws Exception {
-    crawler.addPage(page, PathParser.parse("SubPage"), "sub page content");
+    WikiPageUtil.addPage(page, PathParser.parse("SubPage"), "sub page content");
     try {
       page.commit(page.getData());
     } catch (Exception e) {
@@ -118,7 +116,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testGetContent() throws Exception {
     WikiPagePath alpha = PathParser.parse("AlphaAlpha");
-    WikiPage a = crawler.addPage(root, alpha, "a");
+    WikiPage a = WikiPageUtil.addPage(root, alpha, "a");
 
     PageData data = a.getData();
     assertEquals("a", data.getContent());
@@ -126,7 +124,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testReplaceContent() throws Exception {
     WikiPagePath alpha = PathParser.parse("AlphaAlpha");
-    WikiPage page = crawler.addPage(root, alpha, "a");
+    WikiPage page = WikiPageUtil.addPage(root, alpha, "a");
 
     PageData data = page.getData();
     data.setContent("b");
@@ -147,7 +145,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testSimpleVersionTasks() throws Exception {
     WikiPagePath path = PathParser.parse("MyPageOne");
-    WikiPage page = crawler.addPage(root, path, "old content");
+    WikiPage page = WikiPageUtil.addPage(root, path, "old content");
     PageData data = page.getData();
     data.setContent("new content");
     VersionInfo previousVersion = page.commit(data);
@@ -163,7 +161,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testUserNameIsInVersionName() throws Exception {
     WikiPagePath testPagePath = PathParser.parse("TestPage");
-    WikiPage testPage = crawler.addPage(root, testPagePath, "version1");
+    WikiPage testPage = WikiPageUtil.addPage(root, testPagePath, "version1");
 
     PageData data = testPage.getData();
     data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
@@ -174,7 +172,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   public void testNoVersionException() throws Exception {
     WikiPagePath pageOnePath = PathParser.parse("PageOne");
-    WikiPage page = crawler.addPage(root, pageOnePath, "old content");
+    WikiPage page = WikiPageUtil.addPage(root, pageOnePath, "old content");
     try {
       page.getDataVersion("abc");
       fail("a NoSuchVersionException should have been thrown");
@@ -184,7 +182,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testUnicodeInVersions() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "\uba80\uba81\uba82\uba83");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "\uba80\uba81\uba82\uba83");
     PageData data = page.getData();
     data.setContent("blah");
     VersionInfo info = page.commit(data);
@@ -197,7 +195,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
   }
 
   public void testVersionedPropertiedLoadedProperly() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     PageData data = page.getData();
     WikiPageProperties oldProps = data.getProperties();
     WikiPageProperties props = new WikiPageProperties();

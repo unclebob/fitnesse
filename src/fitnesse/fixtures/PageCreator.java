@@ -5,10 +5,7 @@ package fitnesse.fixtures;
 import java.util.StringTokenizer;
 
 import fit.ColumnFixture;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class
   PageCreator extends ColumnFixture {
@@ -24,7 +21,7 @@ public class
       }
       WikiPage root = FitnesseFixtureContext.root;
       WikiPagePath pagePath = PathParser.parse(pageName);
-      WikiPage thePage = root.getPageCrawler().addPage(root, pagePath, pageContents);
+      WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
       if (!"".equals(pageAttributes)) {
         PageData data = thePage.getData();
         setAttributes(data);

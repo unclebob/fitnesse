@@ -55,12 +55,8 @@ public class EditResponder implements SecureResponder {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(root, path)) {
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-      page = crawler.getPage(root, path);
-    } else
-      page = crawler.getPage(root, path);
 
+    page = crawler.getPage(path, new MockingPageCrawler());
     pageData = page.getData();
     content = createPageContent();
 

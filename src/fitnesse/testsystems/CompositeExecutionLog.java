@@ -6,11 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.responders.PageFactory;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class CompositeExecutionLog {
   private WikiPagePath errorLogPagePath;
@@ -19,8 +15,8 @@ public class CompositeExecutionLog {
 
   public CompositeExecutionLog(WikiPage testPage) {
     crawler = testPage.getPageCrawler();
-    root = crawler.getRoot(testPage);
-    errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
+    root = crawler.getRoot();
+    errorLogPagePath = crawler.getFullPath().addNameToFront(ExecutionLog.ErrorLogName);
   }
 
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
@@ -32,12 +28,12 @@ public class CompositeExecutionLog {
   public void publish(PageFactory pageFactory) {
     String content = buildLogContent(pageFactory);
 
-    WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
+    WikiPage errorLogPage = WikiPageUtil.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
 
     if(root != null) {
       WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
-      WikiPage wikiPage = crawler.getPage(root, wpp);
+      WikiPage wikiPage = root.getPageCrawler().getPage(wpp);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         String tags = pageData.getAttribute(PageData.PropertySUITES);

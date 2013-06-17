@@ -16,18 +16,16 @@ import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
   private FitNesseContext context;
 
   @Override
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
   }
 
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Wiki Page tags");
@@ -52,8 +50,8 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testAttributeButtons() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"));
-    final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
+    final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"));
     for (final String attribute : PageData.NON_SECURITY_ATTRIBUTES) {
       final PageData data = noButtonsPage.getData();
       data.removeAttribute(attribute);
@@ -76,14 +74,14 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testHeadersAndFooters() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
-    crawler.addPage(root, PathParser.parse("TestPage"), "test page");
-    crawler.addPage(root, PathParser.parse("PageHeader"), "header");
-    crawler.addPage(root, PathParser.parse("PageFooter"), "footer");
-    crawler.addPage(root, PathParser.parse("SetUp"), "setup");
-    crawler.addPage(root, PathParser.parse("TearDown"), "teardown");
-    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
-    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "normal");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "test page");
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "header");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer");
+    WikiPageUtil.addPage(root, PathParser.parse("SetUp"), "setup");
+    WikiPageUtil.addPage(root, PathParser.parse("TearDown"), "teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
 
     SimpleResponse response = requestPage("NormalPage");
     String content = response.getContent();
@@ -114,7 +112,7 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testImportedPageIndication() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.addTo(data.getProperties());
@@ -126,7 +124,7 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testImportedPageIndicationNotOnRoot() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.setRoot(true);

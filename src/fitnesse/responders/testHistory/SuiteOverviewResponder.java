@@ -22,9 +22,9 @@ public class SuiteOverviewResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     WikiPage root = context.root;
-    WikiPage page = root.getPageCrawler().getPage(root, PathParser.parse(request.getResource()));
+    WikiPage page = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
 
-    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
+    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
 
     List<WikiPage> pagelist = suiteTestFinder.makePageList();

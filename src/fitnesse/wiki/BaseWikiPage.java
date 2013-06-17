@@ -24,11 +24,17 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
   public WikiPage getParent() {
     return parent == null ? this : parent;
+  }
+
+
+  public boolean isRoot() {
+    WikiPage parent = getParent();
+    return parent == null || parent == this;
   }
 
   protected abstract List<WikiPage> getNormalChildren();
@@ -67,11 +73,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public WikiPage getHeaderPage() {
-    return PageCrawlerImpl.getClosestInheritedPage("PageHeader", this);
+    return getPageCrawler().getClosestInheritedPage(this, "PageHeader");
   }
 
   public WikiPage getFooterPage() {
-    return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
+    return getPageCrawler().getClosestInheritedPage(this, "PageFooter");
   }
 
   public String toString() {
@@ -93,8 +99,7 @@ public abstract class BaseWikiPage implements WikiPage {
     if (!(o instanceof WikiPage))
       return false;
     try {
-      PageCrawler crawler = getPageCrawler();
-      return crawler.getFullPath(this).equals(crawler.getFullPath(((WikiPage) o)));
+      return getPageCrawler().getFullPath().equals(((WikiPage) o).getPageCrawler().getFullPath());
     }
     catch (Exception e) {
       return false;
@@ -103,7 +108,7 @@ public abstract class BaseWikiPage implements WikiPage {
 
   public int hashCode() {
     try {
-      return getPageCrawler().getFullPath(this).hashCode();
+      return getPageCrawler().getFullPath().hashCode();
     }
     catch (Exception e) {
       return 0;

@@ -34,7 +34,7 @@ public class PacketResponder implements SecureResponder {
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
-    page = pageCrawler.getPage(context.root, resourcePath);
+    page = pageCrawler.getPage(resourcePath);
 
     if (page == null)
       response.setStatus(404);

@@ -45,6 +45,10 @@ public class WikiPageDummy implements WikiPage {
     this.parent = parent;
   }
 
+  public boolean isRoot() {
+    return parent == null;
+  }
+
   public PageData getData() {
     return pageData;
   }
@@ -77,7 +81,7 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
   public WikiPage getHeaderPage() {

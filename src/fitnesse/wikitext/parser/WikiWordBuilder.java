@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlText;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -32,9 +31,9 @@ public class WikiWordBuilder {
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = wikiPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+        for (WikiPage current = wikiPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }

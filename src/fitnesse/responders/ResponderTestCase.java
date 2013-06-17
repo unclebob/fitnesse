@@ -8,19 +8,16 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
 public abstract class ResponderTestCase extends RegexTestCase {
   protected WikiPage root;
   protected MockRequest request;
   protected Responder responder;
-  protected PageCrawler crawler;
   protected FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = responderInstance();
     context = FitNesseUtil.makeTestContext(root);

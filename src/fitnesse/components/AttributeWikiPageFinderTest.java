@@ -11,20 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> {
 
   private WikiPage root;
-  private PageCrawler crawler;
   private WikiPage page;
   private AttributeWikiPageFinder searcher;
 
@@ -37,10 +32,9 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     searcher = new AttributeWikiPageFinder(this, Arrays.asList(TEST),
         new HashMap<String, Boolean>(), new ArrayList<String>());
-    page = crawler.addPage(root, PathParser.parse("TestPage"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     hits.clear();
   }
 
@@ -122,16 +116,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString());
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertTrue(searcher.pageMatches(page));
   }
 
@@ -145,16 +139,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString());
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertFalse(searcher.pageMatches(page));
   }
 
@@ -168,16 +162,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString());
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertFalse(searcher.pageMatches(page));
   }
 
@@ -191,16 +185,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString());
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertTrue(searcher.pageMatches(page));
   }
 
@@ -274,16 +268,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(STATIC), attributes);
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertTrue(searcher.pageMatches(page));
   }
 
@@ -299,16 +293,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertTrue(searcher.pageMatches(page));
   }
 
@@ -324,16 +318,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertFalse(searcher.pageMatches(page));
   }
 
@@ -349,16 +343,16 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     assertTrue(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("TearDown"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
     assertFalse(searcher.pageMatches(page));
 
-    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
     assertFalse(searcher.pageMatches(page));
   }
 

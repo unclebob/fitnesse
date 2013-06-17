@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -53,9 +52,9 @@ public class PageListSetUpTearDownSurrounder {
 
   private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) {
     String path = null;
-    WikiPage suiteSetUpTearDown = PageCrawlerImpl.getClosestInheritedPage(setUpTearDownName, page);
+    WikiPage suiteSetUpTearDown = page.getPageCrawler().getClosestInheritedPage(page, setUpTearDownName);
     if (suiteSetUpTearDown != null)
-      path = suiteSetUpTearDown.getPageCrawler().getFullPath(suiteSetUpTearDown).toString();
+      path = suiteSetUpTearDown.getPageCrawler().getFullPath().toString();
     return path;
   }
 
@@ -73,7 +72,7 @@ public class PageListSetUpTearDownSurrounder {
 
   private void insertSetUpForThisGroup(String setUpAndTearDown) {
     String setUpPath = setUpAndTearDown.split(",")[0];
-    WikiPage setUpPage = root.getPageCrawler().getPage(root, PathParser.parse(setUpPath));
+    WikiPage setUpPage = root.getPageCrawler().getPage(PathParser.parse(setUpPath));
     if (setUpPage != null)
       pageList.add(new TestPage(setUpPage));
   }
@@ -85,7 +84,7 @@ public class PageListSetUpTearDownSurrounder {
 
   private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) {
     String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
-    WikiPage tearDownPage = root.getPageCrawler().getPage(root, PathParser.parse(tearDownPath));
+    WikiPage tearDownPage = root.getPageCrawler().getPage(PathParser.parse(tearDownPath));
     if (tearDownPage != null)
       pageList.add(new TestPage(tearDownPage));
   }

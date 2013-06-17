@@ -8,8 +8,8 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -113,8 +113,7 @@ public class TestSystemTest {
 
   WikiPage makeTestPage(String pageText) throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = root.getPageCrawler();
-    return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
+    return WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageText);
   }
 
   @Test

@@ -4,6 +4,8 @@ package fitnesse.updates;
 
 import fitnesse.wiki.PathParser;
 import static org.junit.Assert.*;
+
+import fitnesse.wiki.WikiPageUtil;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,7 +15,7 @@ public class UpdaterTest extends UpdateTestCase {
   public void setUp() throws Exception {
     super.setUp();
     UpdaterImplementation.testing = true;
-    crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
   }
 
   @Test

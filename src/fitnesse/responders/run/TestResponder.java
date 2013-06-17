@@ -78,7 +78,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   private HtmlPage makeHtml() {
     PageCrawler pageCrawler = page.getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(page);
+    WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle() + ": " + fullPathName);

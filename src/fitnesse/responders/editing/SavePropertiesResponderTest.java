@@ -17,17 +17,12 @@ public class SavePropertiesResponderTest extends RegexTestCase {
 
   private WikiPage page;
 
-  private PageCrawler crawler;
-
-  private WikiPage linker;
-
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
   }
 
   private void createRequest() throws Exception {
-    page = crawler.addPage(root, PathParser.parse("PageOne"));
+    page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
 
     request = new MockRequest();
     request.addInput("PageType", "Test");
