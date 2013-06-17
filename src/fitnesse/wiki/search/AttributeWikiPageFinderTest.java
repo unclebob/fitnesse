@@ -1,4 +1,4 @@
-package fitnesse.pagefinder;
+package fitnesse.wiki.search;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

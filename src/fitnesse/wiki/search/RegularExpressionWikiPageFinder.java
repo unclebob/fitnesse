@@ -1,4 +1,4 @@
-package fitnesse.pagefinder;
+package fitnesse.wiki.search;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package fitnesse.pagefinder;
+package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;

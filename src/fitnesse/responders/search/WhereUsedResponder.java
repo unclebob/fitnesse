@@ -3,7 +3,7 @@
 package fitnesse.responders.search;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.pagefinder.WhereUsedPageFinder;
+import fitnesse.wiki.search.WhereUsedPageFinder;
 
 public class WhereUsedResponder extends ResultResponder {
 

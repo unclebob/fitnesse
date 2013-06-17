@@ -1,7 +1,6 @@
-package fitnesse.pagefinder;
+package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.pagefinder.WikiPageFinder;
 import fitnesse.wiki.WikiPage;
 
 import java.util.regex.Matcher;

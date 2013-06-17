@@ -1,4 +1,4 @@
-package fitnesse.pagefinder;
+package fitnesse.wiki.search;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
