@@ -10,8 +10,6 @@ import fitnesse.wiki.WikiPage;
 public class HtmlSlimResponder extends SlimResponder {
 
   protected SlimTestSystem getTestSystem() {
-    SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(getPage(), getContext().pageFactory, false);
-
     return new HtmlSlimTestSystem(getPage(), getDescriptor(), this);
   }
 }

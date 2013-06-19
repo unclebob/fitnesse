@@ -14,8 +14,8 @@ import java.util.Map;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.components.AttributeWikiPageFinder;
-import fitnesse.components.PageFinder;
+import fitnesse.wiki.search.AttributeWikiPageFinder;
+import fitnesse.wiki.search.PageFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;

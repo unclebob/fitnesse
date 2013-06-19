@@ -5,8 +5,8 @@ package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.MovedPageReferenceRenamer;
-import fitnesse.components.ReferenceRenamer;
+import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
+import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;

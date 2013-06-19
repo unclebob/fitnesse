@@ -94,7 +94,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {
-    WikiImportProperty.handleImportProperties(html, page);
+    WikiImportingResponder.handleImportProperties(html, page);
   }
 
   public SecureOperation getSecureOperation() {

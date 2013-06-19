@@ -1,9 +1,10 @@
-package fitnesse.components;
+package fitnesse.wiki.search;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

@@ -7,7 +7,7 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;

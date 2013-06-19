@@ -8,7 +8,7 @@ import static util.RegexTestCase.assertSubString;
 import static util.RegexTestCase.assertTrue;
 
 import fitnesse.Responder;
-import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;

@@ -1,6 +1,7 @@
-package fitnesse.components;
+package fitnesse.wiki.search;
 
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
