@@ -1,7 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.wiki.refactoring;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
@@ -15,7 +16,7 @@ public abstract class ReferenceRenamer implements TraversalListener<WikiPage>, S
   }
 
   public void renameReferences() {
-    root.getPageCrawler().traverse(root, this);
+    root.getPageCrawler().traverse(this);
   }
 
   public void process(WikiPage currentPage) {

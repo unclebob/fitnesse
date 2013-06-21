@@ -24,6 +24,15 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   private WikiImporter importer = new WikiImporter();
   private TraversalListener<Object> traversalListener;
 
+  public static void handleImportProperties(HtmlPage html, WikiPage page) {
+    PageData pageData = page.getData();
+    if (WikiImportProperty.isImported(pageData)) {
+      html.setBodyClass("imported");
+      WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+      html.put("sourceUrl", importProperty.getSourceUrl());
+    }
+  }
+
   public void setImporter(WikiImporter importer) {
     this.importer = importer;
   }

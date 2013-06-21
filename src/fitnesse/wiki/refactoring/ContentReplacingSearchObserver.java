@@ -1,7 +1,8 @@
-package fitnesse.components;
+package fitnesse.wiki.refactoring;
 
 import java.util.regex.Pattern;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 

@@ -1,5 +1,6 @@
-package fitnesse.components;
+package fitnesse.wiki.search;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public abstract class WikiPageFinder implements TraversalListener<WikiPage>, Pag
 
   public List<WikiPage> search(WikiPage page) {
     hits = new ArrayList<WikiPage>();
-    page.getPageCrawler().traverse(page, this);
+    page.getPageCrawler().traverse(this);
     return hits;
   }
 }

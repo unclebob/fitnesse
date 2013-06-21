@@ -38,7 +38,7 @@ public class SuiteOverviewTree {
     
     for (WikiPage aPage : wikiPagelist)  {
       try {
-        allPages.add(aPage.getPageCrawler().getFullPath(aPage).toString());
+        allPages.add(aPage.getPageCrawler().getFullPath().toString());
       } catch (Exception e) {
         allPages.add("There was also a probem getting the path of one page.");
       }

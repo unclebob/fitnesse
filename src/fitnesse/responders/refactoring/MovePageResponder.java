@@ -5,8 +5,8 @@ package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.MovedPageReferenceRenamer;
-import fitnesse.components.ReferenceRenamer;
+import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
+import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -25,7 +25,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
       return false;
 
     newParentPath = PathParser.parse(newParentName);
-    newParentPage = crawler.getPage(context.root, newParentPath);
+    newParentPage = crawler.getPage(newParentPath);
 
     return (newParentPage != null);
   }
@@ -40,10 +40,8 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
-    PageCrawler crawler = oldRefactoredPage.getPageCrawler();
-
-    WikiPagePath pageToBeMovedPath = crawler.getFullPath(oldRefactoredPage);
-    WikiPagePath newParentPath = crawler.getFullPath(newParentPage);
+    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getPageCrawler().getFullPath();
+    WikiPagePath newParentPath = newParentPage.getPageCrawler().getFullPath();
 
     return !pageToBeMovedPath.equals(newParentPath) &&
     !selfPage(pageToBeMovedPath, newParentPath) &&

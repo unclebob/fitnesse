@@ -1,4 +1,4 @@
-package fitnesse.components;
+package fitnesse.wiki.search;
 
 import java.util.List;
 

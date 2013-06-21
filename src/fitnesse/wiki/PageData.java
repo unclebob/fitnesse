@@ -129,10 +129,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   private boolean isErrorLogsPage() {
-    PageCrawler crawler = wikiPage.getPageCrawler();
-    String relativePagePath = crawler.getRelativeName(
-        crawler.getRoot(wikiPage), wikiPage);
-    return relativePagePath.startsWith(ExecutionLog.ErrorLogName);
+    WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
+    return ExecutionLog.ErrorLogName.equals(pagePath.getFirst());
   }
 
   // TODO: Should be written to a real logger, but it doesn't like FitNesse's

@@ -49,7 +49,7 @@ public class SuiteResponder extends TestResponder {
   }
 
   protected void performExecution() {
-    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
+    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());

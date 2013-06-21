@@ -5,6 +5,7 @@ package fitnesse.responders;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import fitnesse.wiki.WikiPageUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -134,7 +135,7 @@ public class RssResponderTest extends ResponderTestCase {
   }
 
   private NodeList getReportedItems(String recentChangesContent) throws Exception {
-    crawler.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
+    WikiPageUtil.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
     buildRssChannel();
     return channelElement.getElementsByTagName("item");
   }

@@ -30,7 +30,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
   @Override
   public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
+    String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName))
       relativeName = String.format("(%s)", testPage.getName());
     processTestResults(relativeName, testSummary, timeMeasurement);

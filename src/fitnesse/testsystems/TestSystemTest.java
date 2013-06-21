@@ -8,8 +8,8 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSystem.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -29,10 +29,10 @@ public class TestSystemTest {
     String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", defaultDescriptor2.getCommandPattern());
 
-    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, true);
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage, true);
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", defaultDescriptor3.getCommandPattern());
   }
 
@@ -43,11 +43,11 @@ public class TestSystemTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor defaultDescriptor = TestSystem.getDescriptor(page, context.pageFactory, false);
+    Descriptor defaultDescriptor = TestSystem.getDescriptor(page, false);
     String sep = System.getProperty("path.separator");
     assertEquals("java -cp fitnesse.jar" + sep + "%p %m", defaultDescriptor.getCommandPattern());
 
-    Descriptor debugDescriptor = TestSystem.getDescriptor(page, context.pageFactory, true);
+    Descriptor debugDescriptor = TestSystem.getDescriptor(page, true);
     assertEquals(
         "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
         debugDescriptor.getCommandPattern());
@@ -56,10 +56,10 @@ public class TestSystemTest {
         + "!define REMOTE_DEBUG_COMMAND {java -remoteDebug -cp %p %m}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals("java -specialParam -cp %p %m", defaultDescriptor2.getCommandPattern());
 
-    Descriptor debugDescriptor2 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, true);
+    Descriptor debugDescriptor2 = TestSystem.getDescriptor(specifiedPage, true);
     assertEquals("java -remoteDebug -cp %p %m", debugDescriptor2.getCommandPattern());
   }
 
@@ -69,7 +69,7 @@ public class TestSystemTest {
         + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals("rubyslim %p %m", myDescriptor.getCommandPattern());
   }
 
@@ -79,7 +79,7 @@ public class TestSystemTest {
         + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals("rubyslim.rb", myDescriptor.getTestRunner());
   }
 
@@ -88,9 +88,9 @@ public class TestSystemTest {
     String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", defaultDescriptor2.getTestRunner());
-    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage, context.pageFactory, true);
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage, true);
     assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", defaultDescriptor3.getTestRunner());
   }
 
@@ -99,22 +99,21 @@ public class TestSystemTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(page, context.pageFactory, false);
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(page, false);
     assertEquals("fitnesse.slim.SlimService", defaultDescriptor2.getTestRunner());
-    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(page, context.pageFactory, true);
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(page, true);
     assertEquals("fitnesse.slim.SlimService", defaultDescriptor3.getTestRunner());
 
     String specifiedPageText = "!define REMOTE_DEBUG_RUNNER {Different runner}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor specifiedDescriptor = TestSystem.getDescriptor(specifiedPage, context.pageFactory, true);
+    Descriptor specifiedDescriptor = TestSystem.getDescriptor(specifiedPage,  true);
     assertEquals("Different runner", specifiedDescriptor.getTestRunner());
   }
 
   WikiPage makeTestPage(String pageText) throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = root.getPageCrawler();
-    return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
+    return WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageText);
   }
 
   @Test
@@ -126,7 +125,7 @@ public class TestSystemTest {
     String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, context.pageFactory, false);
+    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage, false);
     assertEquals(fitnesseRootpath + "/rubyslim.rb", myDescriptor.getTestRunner());
   }
 

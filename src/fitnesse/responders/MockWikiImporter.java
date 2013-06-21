@@ -27,8 +27,10 @@ public class MockWikiImporter extends WikiImporter {
 
   public void importWiki(WikiPage page) {
     PageCrawler pageCrawler = page.getPageCrawler();
-    for (Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext();)
-      pageCrawler.traverse((WikiPage) iterator.next(), this);
+    for (Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext();) {
+      WikiPage next = (WikiPage) iterator.next();
+      next.getPageCrawler().traverse(this);
+    }
   }
 
   public void process(WikiPage page) {

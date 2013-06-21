@@ -44,7 +44,7 @@ public class VersionComparerResponder implements Responder {
     resource = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -123,7 +123,7 @@ public class VersionComparerResponder implements Responder {
     if(context.root != null){
       WikiPagePath path = PathParser.parse(resource);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

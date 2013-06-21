@@ -29,7 +29,7 @@ public class AddChildPageResponderTest {
     root = InMemoryPage.makeRoot("root");
     
     crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
     childContent = "child content";
     pagetype = "";
@@ -58,9 +58,9 @@ public class AddChildPageResponderTest {
     String suites = "tag";
     request.addInput("helpText", helpText);
     request.addInput("suites", suites);
-    assertTrue(crawler.getPage(root, path) == null);
+    assertTrue(crawler.getPage(path) == null);
     responder.makeResponse(context, request);
-    assertTrue(crawler.getPage(root, path) != null);
+    assertTrue(crawler.getPage(path) != null);
     getChildPage(childName);
     assertEquals(suites, childPageData.getAttribute("Suites"));
     assertEquals(helpText, childPageData.getAttribute("Help"));
@@ -69,9 +69,9 @@ public class AddChildPageResponderTest {
   @Test
   public void noPageIsMadeIfNameIsNull() throws Exception {
     request.addInput("pageName", "");
-    assertTrue(crawler.getPage(root, path) == null);
+    assertTrue(crawler.getPage(path) == null);
     responder.makeResponse(context, request);
-    assertTrue(crawler.getPage(root, path) == null);
+    assertTrue(crawler.getPage(path) == null);
   }
 
   @Test
@@ -168,7 +168,7 @@ public class AddChildPageResponderTest {
 
 
   private void getChildPage(String childName) throws Exception {
-    childPage = crawler.getPage(root, PathParser.parse("TestPage."+ childName));
+    childPage = crawler.getPage(PathParser.parse("TestPage."+ childName));
     childPageData = childPage.getData();
   }
 }

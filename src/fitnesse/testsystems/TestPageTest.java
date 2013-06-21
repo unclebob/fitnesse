@@ -4,15 +4,14 @@ package fitnesse.testsystems;
 
 import static util.RegexTestCase.*;
 
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
 public class TestPageTest {
-  private PageCrawler crawler;
   private WikiPage root;
   private WikiPage wikiPage;
   private WikiPage subPage;
@@ -21,22 +20,21 @@ public class TestPageTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     wikiPage = addPage("TestPage", "!define TEST_SYSTEM {slim}\n"+"the content");
     addPage("SetUp", "setup");
     addPage("TearDown", "teardown");
     addPage("SuiteSetUp", "suiteSetUp");
     addPage("SuiteTearDown", "suiteTearDown");
 
-    subPage = crawler.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
-    crawler.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
+    subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
+    WikiPageUtil.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
-    subTestPage = crawler.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
-    crawler.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
+    subTestPage = WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
+    WikiPageUtil.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
   }
 
   private WikiPage addPage(String pageName, String content) throws Exception {
-    return crawler.addPage(root, PathParser.parse(pageName), content);
+    return WikiPageUtil.addPage(root, PathParser.parse(pageName), content);
   }
 
   @Test

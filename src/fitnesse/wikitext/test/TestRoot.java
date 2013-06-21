@@ -5,11 +5,9 @@ import fitnesse.wiki.mem.InMemoryPage;
 
 public class TestRoot {
     public WikiPage root;
-    private PageCrawler crawler;
 
     public TestRoot() {
         root = InMemoryPage.makeRoot("root");
-        crawler = root.getPageCrawler();
     }
 
     public WikiPage makePage(String pageName) {
@@ -17,7 +15,7 @@ public class TestRoot {
     }
 
     public WikiPage makePage(WikiPage parent, String pageName) {
-        return crawler.addPage(parent, PathParser.parse(pageName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(pageName));
     }
 
     public WikiPage makePage(String pageName, String content) {

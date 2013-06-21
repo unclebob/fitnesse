@@ -7,18 +7,13 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
   public static ContentFilter contentFilter;
@@ -100,9 +95,9 @@ public class SaveResponder implements SecureResponder {
   private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler pageCrawler = context.root.getPageCrawler();
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
-      page = pageCrawler.addPage(context.root, PathParser.parse(resource));
+      page = WikiPageUtil.addPage(context.root, PathParser.parse(resource));
     return page;
   }
 

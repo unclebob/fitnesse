@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.responders.editing;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class SaveRecorder {
   public static long pageSaved(PageData data, long ticketNumber) {
     long timeStamp = timeStamp();
     WikiPage page = data.getWikiPage();
-    String name = page.getPageCrawler().getFullPath(page).toString();
+    String name = page.getPageCrawler().getFullPath().toString();
     ticketRegistry.put(name, ticketNumber);
     saveTime.put(name, timeStamp);
     return timeStamp;
@@ -53,7 +53,7 @@ public class SaveRecorder {
       this.thisEditTime = thisEditTime;
       this.ticket = ticket;
       page = data.getWikiPage();
-      fullPageName = page.getPageCrawler().getFullPath(page).toString();
+      fullPageName = page.getPageCrawler().getFullPath().toString();
     }
 
     public boolean shouldMerge() {

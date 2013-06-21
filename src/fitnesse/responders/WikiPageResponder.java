@@ -34,7 +34,7 @@ public class WikiPageResponder implements SecureResponder {
     } else {
       WikiPagePath path = PathParser.parse(pageName);
       PageCrawler crawler = context.root.getPageCrawler();
-      page = crawler.getPage(context.root, path);
+      page = crawler.getPage(path);
     }
     return page;
   }
@@ -62,7 +62,7 @@ public class WikiPageResponder implements SecureResponder {
   public String makeHtml(FitNesseContext context, WikiPage page) {
     PageData pageData = page.getData();
     HtmlPage html = context.pageFactory.newPage();
-    WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
+    WikiPagePath fullPath = page.getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
     
@@ -94,7 +94,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {
-    WikiImportProperty.handleImportProperties(html, page);
+    WikiImportingResponder.handleImportProperties(html, page);
   }
 
   public SecureOperation getSecureOperation() {

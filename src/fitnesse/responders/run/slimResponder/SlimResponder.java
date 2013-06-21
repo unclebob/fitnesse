@@ -59,7 +59,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path);
+    page = crawler.getPage(path);
     if (page != null)
       pageData = page.getData();
   }
@@ -103,7 +103,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected TestSystem.Descriptor getDescriptor() {
-    return TestSystem.getDescriptor(page, context.pageFactory, false);
+    return TestSystem.getDescriptor(page, false);
   }
 
   protected abstract SlimTestSystem getTestSystem();

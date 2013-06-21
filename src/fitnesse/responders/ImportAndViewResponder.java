@@ -36,7 +36,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
   protected void loadPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path);
+    page = crawler.getPage(path);
   }
 
   protected void loadPageData() throws MalformedURLException {

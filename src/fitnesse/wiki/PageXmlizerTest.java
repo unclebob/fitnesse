@@ -139,8 +139,8 @@ public class PageXmlizerTest extends RegexTestCase {
     WikiPage greatGrandChildA = grandChildA.getChildPage("GreatGrandChildA");
     assertNotNull(greatGrandChildA);
 
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageB.ChildOneB.GrandChildB")));
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageC")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageB.ChildOneB.GrandChildB")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageC")));
   }
 
   public void testUsageOfHandler() throws Exception {
@@ -166,7 +166,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private WikiPage getPage(String pathName) throws Exception {
-    return crawler.getPage(root, PathParser.parse(pathName));
+    return crawler.getPage(PathParser.parse(pathName));
   }
 
   private void checkPageWasHandledWithRightDate(int i, WikiPage page, MockXmlizerPageHandler handler) throws Exception {
@@ -192,7 +192,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private void addPage(String path, String content) throws Exception {
-    crawler.addPage(root, PathParser.parse(path), content);
+    WikiPageUtil.addPage(root, PathParser.parse(path), content);
   }
 
   public void testXmlizingData() throws Exception {

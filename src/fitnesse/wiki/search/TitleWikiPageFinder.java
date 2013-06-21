@@ -1,5 +1,6 @@
-package fitnesse.components;
+package fitnesse.wiki.search;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
 public class TitleWikiPageFinder extends WikiPageFinder {

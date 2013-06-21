@@ -5,7 +5,7 @@ import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.ReferenceRenamer;
+import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -64,12 +64,11 @@ public abstract class PageMovementResponder implements SecureResponder {
   }
 
   protected boolean getAndValidateRefactoredPage(FitNesseContext context, Request request) {
-    PageCrawler crawler = context.root.getPageCrawler();
 
     oldNameOfPageToBeMoved = request.getResource();
 
     WikiPagePath path = PathParser.parse(oldNameOfPageToBeMoved);
-    oldRefactoredPage = crawler.getPage(context.root, path);
+    oldRefactoredPage = context.root.getPageCrawler().getPage(path);
     return (oldRefactoredPage != null);
   }
 
@@ -86,11 +85,11 @@ public abstract class PageMovementResponder implements SecureResponder {
   }
 
   protected String createRedirectionUrl(WikiPage newParent, String newName) {
-    PageCrawler crawler = newParent.getPageCrawler();
-    if(crawler.isRoot(newParent)) {
+    if(newParent.isRoot()) {
       return newName;
     }
-    return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(newName));
+    PageCrawler crawler = newParent.getPageCrawler();
+    return PathParser.render(crawler.getFullPath().addNameToEnd(newName));
   }
 
   protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) throws RefactorException {
@@ -141,10 +140,10 @@ public abstract class PageMovementResponder implements SecureResponder {
     WikiPagePath fullPath;
     if (isChildOf(referencedPage, oldRefactoredPage)) {
       // Watch out: the referenced page will also be moved
-      WikiPagePath relativePath = PathParser.parse(oldRefactoredPage.getPageCrawler().getRelativeName(oldRefactoredPage.getParent(), referencedPage));
-      fullPath = newParentPage.getPageCrawler().getFullPathOfChild(this.newParentPage, relativePath);
+      WikiPagePath relativePath = PathParser.parse(oldRefactoredPage.getParent().getPageCrawler().getRelativeName(referencedPage));
+      fullPath = this.newParentPage.getPageCrawler().getFullPathOfChild(relativePath);
     } else {
-      fullPath = referencedPage.getPageCrawler().getFullPath(referencedPage);
+      fullPath = referencedPage.getPageCrawler().getFullPath();
     }
     fullPath.makeAbsolute();
     symLinks.set(pageName, PathParser.render(fullPath));
@@ -154,9 +153,8 @@ public abstract class PageMovementResponder implements SecureResponder {
 
 
   private boolean isChildOf(WikiPage childPage, WikiPage parentPage) {
-	  PageCrawler crawler = parentPage.getPageCrawler();
-	  String childPath = PathParser.render(crawler.getFullPath(childPage));
-	  String parentPath = PathParser.render(crawler.getFullPath(parentPage));
+	  String childPath = PathParser.render(childPage.getPageCrawler().getFullPath());
+	  String parentPath = PathParser.render(parentPage.getPageCrawler().getFullPath());
 	  return childPath.startsWith(parentPath);
   }
 

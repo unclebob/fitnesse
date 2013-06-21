@@ -1,10 +1,10 @@
 package fitnesse.testsystems;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -112,8 +112,7 @@ public class TestPage {
   }
 
   private String getPathNameForPage(WikiPage page) {
-    PageCrawler pageCrawler = getSourcePage().getPageCrawler();
-    WikiPagePath pagePath = pageCrawler.getFullPath(page);
+    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
     return PathParser.render(pagePath);
   }
 
@@ -159,16 +158,18 @@ public class TestPage {
   }
 
   protected WikiPage findInheritedPage(String pageName) {
-    return PageCrawlerImpl.getClosestInheritedPage(pageName, sourcePage);
+    return sourcePage.getPageCrawler().getClosestInheritedPage(sourcePage, pageName);
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    List<WikiPage> uncles;
+    final LinkedList<WikiPage> uncles = new LinkedList<WikiPage>();
     if (isSlim()) {
-      uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", sourcePage);
-      Collections.reverse(uncles);
-    } else {
-      uncles = Collections.emptyList();
+      sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
+        @Override
+        public void process(WikiPage page) {
+          uncles.addFirst(page);
+        }
+      });
     }
     return uncles;
   }

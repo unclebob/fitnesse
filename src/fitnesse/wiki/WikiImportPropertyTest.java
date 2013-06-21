@@ -2,23 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import fitnesse.Responder;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.WikiPageResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import util.Clock;
 import util.RegexTestCase;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class WikiImportPropertyTest extends RegexTestCase {
   private WikiImportProperty property;
-  private WikiPage page;
 
   public void setUp() {
     property = new WikiImportProperty("");
@@ -90,65 +81,6 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals("some source", importProperty2.getSourceUrl());
     assertTrue(importProperty2.isRoot());
     assertTrue(importProperty2.isAutoUpdate());
-  }
-
-  // Tests for the rendering of import specific page details
-  private WikiPage root;
-  private PageCrawler crawler;
-
-  public void pageRenderingSetUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
-  }
-
-  private SimpleResponse requestPage(String name) throws Exception {
-    MockRequest request = new MockRequest();
-    request.setResource(name);
-    Responder responder = new WikiPageResponder();
-    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-  }
-
-  public void testImportedPageIndication() throws Exception {
-    pageRenderingSetUp();
-
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
-    PageData data = page.getData();
-    WikiImportProperty importProperty = new WikiImportProperty("blah");
-    importProperty.addTo(data.getProperties());
-    page.commit(data);
-
-    String content = getContentAfterSpecialImportHandling();
-
-    assertSubString("<body class=\"imported\">", content);
-  }
-
-  public void testEditActions() throws Exception {
-    pageRenderingSetUp();
-
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
-    PageData data = page.getData();
-    page.commit(data);
-    String content = getContentAfterSpecialImportHandling();
-
-    assertNotSubString("Edit Locally", content);
-    assertNotSubString("Edit Remotely", content);
-
-    WikiImportProperty importProperty = new WikiImportProperty("blah");
-    importProperty.addTo(data.getProperties());
-    page.commit(data);
-    content = getContentAfterSpecialImportHandling();
-
-    assertTrue(WikiImportProperty.isImported(data));
-    assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
-    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
-  }
-
-  private String getContentAfterSpecialImportHandling() throws Exception {
-    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
-    WikiImportProperty.handleImportProperties(html, page);
-    html.setNavTemplate("wikiNav.vm");
-    html.put("actions", new WikiPageActions(page));
-    return html.html();
   }
 
 }

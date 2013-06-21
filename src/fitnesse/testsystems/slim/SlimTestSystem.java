@@ -324,8 +324,8 @@ public abstract class SlimTestSystem extends TestSystem {
     private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
     private final int slimPort;
 
-    public SlimDescriptor(WikiPage page, PageFactory pageFactory, boolean remoteDebug) {
-      super(page, pageFactory, remoteDebug);
+    public SlimDescriptor(WikiPage page, boolean remoteDebug) {
+      super(page, remoteDebug);
       slimPort = getNextSlimPort();
     }
 

@@ -6,6 +6,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPageUtil;
 
 public class RawContentResponderTest extends ResponderTestCase {
   protected Responder responderInstance() {
@@ -23,7 +24,7 @@ public class RawContentResponderTest extends ResponderTestCase {
   }
 
   private String getResultsUsing(String content) throws Exception {
-    crawler.addPage(root, PathParser.parse("SimplePage"), content);
+    WikiPageUtil.addPage(root, PathParser.parse("SimplePage"), content);
     request.setResource("SimplePage");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();

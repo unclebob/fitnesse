@@ -60,11 +60,6 @@
 <script src="/files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
-#if($!isNewPage)
-  document.f.pageName.focus();
-#else
-  document.f.pageContent.focus();
-#end
 
   var editors = Wysiwyg.initialize();
   if (editors) {
@@ -109,5 +104,12 @@ $(function () {
 
   /* Tags */
   $('#suites').tagsInput();
+
+  #if($!isNewPage)
+    document.f.pageName.focus();
+  #else
+    document.f.pageContent.focus();
+  #end
+
 });
 </script>
