@@ -47,9 +47,10 @@ public class FitTestSystem extends TestSystem {
 
   public void start() {
     String command = buildCommand(descriptor);
+    String testRunner = descriptor.getTestRunner();
     Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
     CommandRunningFitClient.CommandRunningStrategy runningStrategy = fastTest ?
-            new CommandRunningFitClient.InProcessCommandRunner(descriptor) :
+            new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
     this.client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);

@@ -191,18 +191,18 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private Thread fastFitServer;
-    private final Descriptor testDescriptor;
+    private final String testRunner;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(Descriptor testDescriptor) {
-      this.testDescriptor = testDescriptor;
+    public InProcessCommandRunner(String testRunner) {
+      this.testRunner = testRunner;
     }
 
     @Override
     public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
       String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
       String[] arguments = ("-x " + fitArguments).trim().split(" ");
-      this.fastFitServer = createTestRunnerThread(testDescriptor.getTestRunner(), arguments);
+      this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
       this.commandRunner = new MockCommandRunner();
       return commandRunner;
