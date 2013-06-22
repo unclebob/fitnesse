@@ -4,10 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.mockito.Mockito.*;
@@ -65,8 +62,8 @@ public class MultipleTestsRunnerTest {
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
 
-    Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
+    Descriptor fitDescriptor = ClientBuilder.getDescriptor(testPage, false);
+    Descriptor slimDescriptor = ClientBuilder.getDescriptor(slimPage, false);
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);
 
@@ -90,8 +87,8 @@ public class MultipleTestsRunnerTest {
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
-    Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
+    Descriptor fitDescriptor = ClientBuilder.getDescriptor(testPage, false);
+    Descriptor slimDescriptor = ClientBuilder.getDescriptor(slimPage, false);
 
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);

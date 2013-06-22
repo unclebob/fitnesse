@@ -3,6 +3,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.slim.SlimClient;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
@@ -19,6 +20,6 @@ public class HtmlSlimResponder extends SlimResponder {
     builder.setFastTest(fastTest);
     builder.start();
     SlimClient slimClient = builder.getSlimClient();
-    return new HtmlSlimTestSystem(getPage(), slimClient, this);
+    return new HtmlSlimTestSystem(slimClient, this, new ExecutionLog(page, slimClient.getTestRunner()));
   }
 }

@@ -29,21 +29,28 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
-public abstract class SlimTestSystem extends TestSystem {
+public abstract class SlimTestSystem implements TestSystem {
   public static final SlimTable START_OF_TEST = null;
   public static final SlimTable END_OF_TEST = null;
 
-  private SlimClient slimClient;
+  private final SlimClient slimClient;
+  private final TestSystemListener testSystemListener;
+  private final ExecutionLog log;
 
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
 
 
-  public SlimTestSystem(WikiPage page, SlimClient slimClient, TestSystemListener listener) {
-    super(page, listener);
+  public SlimTestSystem(SlimClient slimClient, TestSystemListener listener, ExecutionLog executionLog) {
     this.slimClient = slimClient;
-    setExecutionLog(new ExecutionLog(page, slimClient.getTestRunner()));
+    this.testSystemListener = listener;
+    this.log = executionLog;
+  }
+
+  @Override
+  public ExecutionLog getExecutionLog() {
+    return log;
   }
 
   public SlimTestContext getTestContext() {
@@ -220,6 +227,27 @@ public abstract class SlimTestSystem extends TestSystem {
   private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
     ExceptionResult exceptionResult = new ExceptionResult(resultKey, resultString);
     return exceptionResult;
+  }
+
+  public void testOutputChunk(String output) throws IOException {
+    testSystemListener.testOutputChunk(output);
+  }
+
+  public void testComplete(TestSummary testSummary) throws IOException {
+    testSystemListener.testComplete(testSummary);
+  }
+
+  public void exceptionOccurred(Throwable e) {
+    log.addException(e);
+    testSystemListener.exceptionOccurred(e);
+  }
+
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    testSystemListener.testAssertionVerified(assertion, testResult);
+  }
+
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
 }

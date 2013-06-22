@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.testsystems.ClientBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,28 +26,28 @@ public class TestSystemBaseTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
       "!define TEST_SYSTEM {system}\n" +
         "!define TEST_RUNNER {runner}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage, false).getTestSystemName();
+    String testSystemName = ClientBuilder.getDescriptor(testPage, false).getTestSystemName();
     Assert.assertEquals("system:runner", testSystemName);
   }
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
-    String testSystemName = TestSystem.getDescriptor(testPage, false).getTestSystemName();
+    String testSystemName = ClientBuilder.getDescriptor(testPage, false).getTestSystemName();
     Assert.assertEquals("fit:fit.FitServer", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsSlim() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage, false).getTestSystemName();
+    String testSystemName = ClientBuilder.getDescriptor(testPage, false).getTestSystemName();
     Assert.assertEquals("slim:fitnesse.slim.SlimService", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsUnknownDefaultsToFit() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
-    String testSystemName = TestSystem.getDescriptor(testPage, false).getTestSystemName();
+    String testSystemName = ClientBuilder.getDescriptor(testPage, false).getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }
 

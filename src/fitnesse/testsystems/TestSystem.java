@@ -12,51 +12,15 @@ import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 
-public abstract class TestSystem extends ClientBuilder implements TestSystemListener {
+public interface TestSystem {
 
-  protected final TestSystemListener testSystemListener;
+  void bye() throws IOException, InterruptedException;
 
-  public TestSystem(WikiPage page, TestSystemListener testSystemListener) {
-    super(page);
-    this.testSystemListener = testSystemListener;
-  }
+  void kill() throws IOException;
 
-  @Override
-  public void testOutputChunk(String output) throws IOException {
-    testSystemListener.testOutputChunk(output);
-  }
+  void runTests(TestPage pageToTest) throws IOException, InterruptedException;
 
-  @Override
-  public void testComplete(TestSummary testSummary) throws IOException {
-    testSystemListener.testComplete(testSummary);
-  }
+  ExecutionLog getExecutionLog();
 
-  @Override
-  public void exceptionOccurred(Throwable e) {
-    log.addException(e);
-    testSystemListener.exceptionOccurred(e);
-  }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    testSystemListener.testAssertionVerified(assertion, testResult);
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    testSystemListener.testExceptionOccurred(assertion, exceptionResult);
-  }
-
-  public abstract void bye() throws IOException, InterruptedException;
-
-  public abstract boolean isSuccessfullyStarted();
-
-  public abstract void kill() throws IOException;
-
-  public abstract void runTests(TestPage pageToTest) throws IOException, InterruptedException;
-
-  public static Descriptor getDescriptor(WikiPage page, boolean isRemoteDebug) {
-    return new Descriptor(page, isRemoteDebug);
-  }
-
+  boolean isSuccessfullyStarted();
 }

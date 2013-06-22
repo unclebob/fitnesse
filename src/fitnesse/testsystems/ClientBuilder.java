@@ -6,13 +6,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-/**
- * Created with IntelliJ IDEA.
- * User: arjan
- * Date: 6/22/13
- * Time: 8:44 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ClientBuilder {
   public static final String DEFAULT_COMMAND_PATTERN =
     "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
@@ -24,7 +17,6 @@ public class ClientBuilder {
   protected final WikiPage page;
   protected boolean fastTest;
   protected boolean manualStart;
-  protected ExecutionLog log;
 
   public ClientBuilder(WikiPage page) {
     this.page = page;
@@ -72,14 +64,6 @@ public class ClientBuilder {
     this.manualStart = manualStart;
   }
 
-  public final ExecutionLog getExecutionLog() {
-    return log;
-  }
-
-  protected final void setExecutionLog(final ExecutionLog log) {
-    this.log = log;
-  }
-
   protected Map<String, String> createClasspathEnvironment(String classPath) {
     String classpathProperty = page.readOnlyData().getVariable("CLASSPATH_PROPERTY");
     Map<String, String> environmentVariables = null;
@@ -87,5 +71,9 @@ public class ClientBuilder {
       environmentVariables = Collections.singletonMap(classpathProperty, classPath);
     }
     return environmentVariables;
+  }
+
+  public static Descriptor getDescriptor(WikiPage page, boolean isRemoteDebug) {
+    return new Descriptor(page, isRemoteDebug);
   }
 }

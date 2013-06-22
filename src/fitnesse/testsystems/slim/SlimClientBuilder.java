@@ -42,8 +42,6 @@ public class SlimClientBuilder extends ClientBuilder {
     } else {
       slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
-    setExecutionLog(new ExecutionLog(page, slimRunner));
-
     slimRunner.asynchronousStart();
 
     slimClient = new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);

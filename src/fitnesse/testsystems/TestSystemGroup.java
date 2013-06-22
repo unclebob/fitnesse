@@ -47,13 +47,6 @@ public class TestSystemGroup {
     this.manualStart = manualStart;
   }
 
-  public boolean isSuccessfullyStarted() {
-    for (TestSystem testSystem : testSystems.values())
-      if (testSystem.isSuccessfullyStarted() == false)
-        return false;
-    return true;
-  }
-
   public TestSystem startTestSystem(Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
@@ -65,7 +58,7 @@ public class TestSystemGroup {
   }
 
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
-    if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.getTestSystemName())))
+    if ("slim".equalsIgnoreCase(ClientBuilder.getTestSystemType(descriptor.getTestSystemName())))
       return createHtmlSlimTestSystem(descriptor);
     else
       return createFitTestSystem(descriptor);
@@ -78,10 +71,7 @@ public class TestSystemGroup {
     builder.start();
     SlimClient slimClient = builder.getSlimClient();
 
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(page, slimClient, testSystemListener);
-    // TODO: get rid of those:
-    testSystem.setFastTest(fastTest);
-    testSystem.setManualStart(manualStart);
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(slimClient, testSystemListener, new ExecutionLog(page, slimClient.getTestRunner()));
 
     testSystems.put(descriptor, testSystem);
 

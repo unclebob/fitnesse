@@ -34,7 +34,7 @@ public class ExecutionLog {
     errorLogPageName = PathParser.render(errorLogPagePath);
   }
 
-  void addException(Throwable e) {
+  public void addException(Throwable e) {
     exceptions.add(e);
   }
 

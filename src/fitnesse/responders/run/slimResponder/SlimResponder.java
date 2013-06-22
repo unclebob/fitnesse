@@ -98,7 +98,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected Descriptor getDescriptor() {
-    return TestSystem.getDescriptor(page, false);
+    return ClientBuilder.getDescriptor(page, false);
   }
 
   protected abstract SlimTestSystem getTestSystem() throws IOException;

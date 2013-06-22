@@ -10,13 +10,7 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.testsystems.PageListSetUpTearDownSurrounder;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.TestSystemGroup;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -158,7 +152,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
-    Descriptor descriptor = TestSystem.getDescriptor(wikiPage, isRemoteDebug);
+    Descriptor descriptor = ClientBuilder.getDescriptor(wikiPage, isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
