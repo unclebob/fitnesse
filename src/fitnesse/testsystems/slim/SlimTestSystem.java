@@ -55,22 +55,12 @@ public abstract class SlimTestSystem extends TestSystem {
   }
 
   public void kill() throws IOException {
-    CommandRunner slimRunner = slimClient.getTestRunner();
-    if (slimRunner != null)
-      slimRunner.kill();
     if (slimClient != null)
       slimClient.close();
   }
 
   public void bye() throws IOException {
     slimClient.sendBye();
-    CommandRunner slimRunner = slimClient.getTestRunner();
-    if (!fastTest && !manualStart) {
-      slimRunner.join();
-    }
-    if (fastTest) {
-      slimRunner.kill();
-    }
   }
 
   @Override

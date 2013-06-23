@@ -46,7 +46,7 @@ public class SlimClientBuilder extends ClientBuilder {
 
     slimRunner.asynchronousStart();
 
-    slimClient = new SlimClient(slimRunner, determineSlimHost(), getSlimPort());
+    slimClient = new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
 
     waitForConnection();
     started = true;

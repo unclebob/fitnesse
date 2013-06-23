@@ -23,7 +23,9 @@ import static util.ListUtility.list;
 public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
-  private final CommandRunner testRunner;
+  private final CommandRunner slimRunner;
+  private final boolean manualStart;
+  private final boolean fastTest;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -34,15 +36,19 @@ public class SlimClient {
 
 
   public void close() throws IOException {
+    if (slimRunner != null)
+      slimRunner.kill();
     reader.close();
     writer.close();
     client.close();
   }
 
-  public SlimClient(CommandRunner slimRunner, String hostName, int port) {
-    this.testRunner = slimRunner;
+  public SlimClient(CommandRunner slimRunner, String hostName, int port, boolean fastTest, boolean manualStart) {
+    this.slimRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
+    this.fastTest = fastTest;
+    this.manualStart = manualStart;
   }
 
   public void connect() throws IOException {
@@ -102,7 +108,7 @@ private void validateConnection() {
   }
 
   public CommandRunner getTestRunner() {
-    return testRunner;
+    return slimRunner;
   }
 
   private interface ToListExecutor extends InstructionExecutor {
@@ -174,6 +180,13 @@ private void validateConnection() {
 
   public void sendBye() throws IOException {
     writeString("bye");
+    if (!fastTest && !manualStart) {
+      slimRunner.join();
+    }
+    if (fastTest) {
+      slimRunner.kill();
+    }
+
   }
 
   public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {
