@@ -4,6 +4,7 @@ package fitnesse.testsystems.slim;
 
 import java.util.List;
 
+import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestPage;
@@ -20,8 +21,8 @@ import org.htmlparser.util.ParserException;
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private HtmlTableScanner tableScanner;
 
-  public HtmlSlimTestSystem(WikiPage page, Descriptor descriptor, TestSystemListener listener) {
-    super(page, descriptor, listener);
+  public HtmlSlimTestSystem(WikiPage page, SlimClient slimClient, TestSystemListener listener) {
+    super(page, slimClient, listener);
   }
 
   @Override

@@ -6,6 +6,7 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.MockCommandRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public abstract class SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimClient("localhost", 8099);
+    slimClient = new SlimClient(new MockCommandRunner(), "localhost", 8099);
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }

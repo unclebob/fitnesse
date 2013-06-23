@@ -130,30 +130,30 @@ public class TestSystemTest {
 
   @Test
   public void shouldReplaceMarkWithValue() {
-    assertEquals("Hello world", TestSystem.replace("Hello %p", "%p", "world"));
-    assertEquals("/path/to/somewhere", TestSystem.replace("/path/%p/somewhere", "%p", "to"));
-    assertEquals("/path/to/somewhere", TestSystem.replace("/path%p", "%p", "/to/somewhere"));
-    assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path\\%p\\somewhere", "%p", "to"));
-    assertEquals("\\path\\to\\somewhere", TestSystem.replace("\\path%p", "%p", "\\to\\somewhere"));
+    assertEquals("Hello world", ClientBuilder.replace("Hello %p", "%p", "world"));
+    assertEquals("/path/to/somewhere", ClientBuilder.replace("/path/%p/somewhere", "%p", "to"));
+    assertEquals("/path/to/somewhere", ClientBuilder.replace("/path%p", "%p", "/to/somewhere"));
+    assertEquals("\\path\\to\\somewhere", ClientBuilder.replace("\\path\\%p\\somewhere", "%p", "to"));
+    assertEquals("\\path\\to\\somewhere", ClientBuilder.replace("\\path%p", "%p", "\\to\\somewhere"));
   }
 
   @Test
   public void shouldIncludeStandaloneJarByDefault() {
-    assertEquals("fitnesse.jar", TestSystem.fitnesseJar("fitnesse.jar"));
+    assertEquals("fitnesse.jar", ClientBuilder.fitnesseJar("fitnesse.jar"));
     assertEquals("fitnesse-20121220.jar",
-            TestSystem.fitnesseJar("fitnesse-20121220.jar"));
+            ClientBuilder.fitnesseJar("fitnesse-20121220.jar"));
     assertEquals("fitnesse-standalone.jar",
-            TestSystem.fitnesseJar("fitnesse-standalone.jar"));
+            ClientBuilder.fitnesseJar("fitnesse-standalone.jar"));
     assertEquals("fitnesse-standalone-20121220.jar",
-            TestSystem.fitnesseJar("fitnesse-standalone-20121220.jar"));
+            ClientBuilder.fitnesseJar("fitnesse-standalone-20121220.jar"));
     assertEquals("fitnesse.jar",
-            TestSystem.fitnesseJar("fitnesse-book.jar"));
+            ClientBuilder.fitnesseJar("fitnesse-book.jar"));
     assertEquals(
             "fitnesse-standalone-20121220.jar",
-            TestSystem.fitnesseJar(String
+            ClientBuilder.fitnesseJar(String
                     .format("irrelevant.jar%1$sfitnesse-book.jar%1$sfitnesse-standalone-20121220.jar",
                             System.getProperty("path.separator"))));
     assertEquals(String.format("lib%sfitnesse-standalone.jar", File.separator),
-            TestSystem.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
+            ClientBuilder.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
   }
 }

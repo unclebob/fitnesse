@@ -30,7 +30,7 @@ responders in general.
 */
 public abstract class SlimResponder implements Responder, TestSystemListener {
   private boolean slimOpen = false;
-  private boolean fastTest = false;
+  protected boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
   private PageData pageData;
@@ -77,8 +77,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       try {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
-        testSystem.start();
-        testSystem.setFastTest(fastTest);
         testSystem.runTests(new TestPage(pageData));
       } catch (IOException e) {
         slimException = e;
@@ -103,7 +101,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     return TestSystem.getDescriptor(page, false);
   }
 
-  protected abstract SlimTestSystem getTestSystem();
+  protected abstract SlimTestSystem getTestSystem() throws IOException;
 
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
@@ -142,10 +140,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-  }
-
-  public String getCommandLine() {
-    return testSystem.buildCommand();
   }
 }
 

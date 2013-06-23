@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
+import fitnesse.slim.SlimClient;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
@@ -56,22 +58,44 @@ public class TestSystemGroup {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
       testSystem = makeTestSystem(new Descriptor(descriptor, classPath));
-      testSystem.setFastTest(fastTest);
-      testSystem.setManualStart(manualStart);
-      testSystems.put(descriptor, testSystem);
-
-      testSystem.start();
 
       log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
     }
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(Descriptor descriptor) {
+  private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
     if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.getTestSystemName())))
-      return new HtmlSlimTestSystem(page, descriptor, testSystemListener);
+      return createHtmlSlimTestSystem(descriptor);
     else
-      return new FitTestSystem(context, page, descriptor, testSystemListener);
+      return createFitTestSystem(descriptor);
+  }
+
+  private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
+    SlimClientBuilder builder = new SlimClientBuilder(page, descriptor);
+    builder.setFastTest(fastTest);
+    builder.setManualStart(manualStart);
+    builder.start();
+    SlimClient slimClient = builder.getSlimClient();
+
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(page, slimClient, testSystemListener);
+    // TODO: get rid of those:
+    testSystem.setFastTest(fastTest);
+    testSystem.setManualStart(manualStart);
+
+    testSystems.put(descriptor, testSystem);
+
+    return testSystem;
+  }
+
+  private FitTestSystem createFitTestSystem(Descriptor descriptor) {
+    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor, testSystemListener);
+    testSystem.setFastTest(fastTest);
+    testSystem.setManualStart(manualStart);
+    testSystems.put(descriptor, testSystem);
+
+    testSystem.start();
+    return testSystem;
   }
 
 }

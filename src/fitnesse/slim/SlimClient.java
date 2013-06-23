@@ -5,6 +5,7 @@ package fitnesse.slim;
 import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.testsystems.CommandRunner;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -22,6 +23,7 @@ import static util.ListUtility.list;
 public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
+  private final CommandRunner testRunner;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -30,13 +32,15 @@ public class SlimClient {
   private String hostName;
   private int port;
 
+
   public void close() throws IOException {
     reader.close();
     writer.close();
     client.close();
   }
 
-  public SlimClient(String hostName, int port) {
+  public SlimClient(CommandRunner slimRunner, String hostName, int port) {
+    this.testRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
   }
@@ -95,6 +99,10 @@ private void validateConnection() {
     // resultList is a list: [tag, resultValue]
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
+  }
+
+  public CommandRunner getTestRunner() {
+    return testRunner;
   }
 
   private interface ToListExecutor extends InstructionExecutor {

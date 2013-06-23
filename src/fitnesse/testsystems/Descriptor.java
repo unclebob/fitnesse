@@ -49,9 +49,9 @@ public class Descriptor extends DescriptorBase {
     String program = data.getVariable("REMOTE_DEBUG_RUNNER");
     if (program == null) {
       program = getTestRunnerNormal();
-      if (program.toLowerCase().contains(TestSystem.DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
-        program = program.toLowerCase().replace(TestSystem.DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
-          TestSystem.DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
+      if (program.toLowerCase().contains(ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
+        program = program.toLowerCase().replace(ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
+          ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
     }
     return program;
   }
@@ -64,7 +64,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   String defaultTestRunner() {
-    String testSystemType = TestSystem.getTestSystemType(getTestSystem());
+    String testSystemType = ClientBuilder.getTestSystemType(getTestSystem());
     if ("slim".equalsIgnoreCase(testSystemType))
       return "fitnesse.slim.SlimService";
     else
@@ -84,7 +84,7 @@ public class Descriptor extends DescriptorBase {
     if (testRunner == null) {
       testRunner = data.getVariable(PageData.COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
-        testRunner = TestSystem.DEFAULT_JAVA_DEBUG_COMMAND;
+        testRunner = ClientBuilder.DEFAULT_JAVA_DEBUG_COMMAND;
       }
     }
     return testRunner;
@@ -93,7 +93,7 @@ public class Descriptor extends DescriptorBase {
   private String getNormalCommandPattern() {
     String testRunner = data.getVariable(PageData.COMMAND_PATTERN);
     if (testRunner == null)
-      testRunner = TestSystem.DEFAULT_COMMAND_PATTERN;
+      testRunner = ClientBuilder.DEFAULT_COMMAND_PATTERN;
     return testRunner;
   }
 
