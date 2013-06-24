@@ -1,6 +1,5 @@
 package fitnesse.testsystems;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
@@ -17,15 +16,19 @@ public abstract class ClientBuilder {
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
 
-  protected final WikiPage page;
+  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
+  public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
+  public static final String TEST_RUNNER = "TEST_RUNNER";
+  public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
+  public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
+
   private final ReadOnlyPageData data;
   protected boolean fastTest;
   protected boolean manualStart;
   protected boolean remoteDebug;
 
-  public ClientBuilder(WikiPage page) {
-    this.page = page;
-    this.data = page.getData();
+  public ClientBuilder(ReadOnlyPageData data) {
+    this.data = data;
   }
 
   protected static String fitnesseJar(String classpath) {
@@ -78,7 +81,7 @@ public abstract class ClientBuilder {
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
-    String classpathProperty = page.readOnlyData().getVariable("CLASSPATH_PROPERTY");
+    String classpathProperty = getVariable(CLASSPATH_PROPERTY);
     Map<String, String> environmentVariables = null;
     if (classpathProperty != null) {
       environmentVariables = Collections.singletonMap(classpathProperty, classPath);
@@ -95,7 +98,7 @@ public abstract class ClientBuilder {
   }
 
   private String getTestRunnerDebug() {
-    String program = getVariable("REMOTE_DEBUG_RUNNER");
+    String program = getVariable(REMOTE_DEBUG_RUNNER);
     if (program == null) {
       program = getTestRunnerNormal();
       if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
@@ -106,7 +109,7 @@ public abstract class ClientBuilder {
   }
 
   public String getTestRunnerNormal() {
-    String program = getVariable(PageData.TEST_RUNNER);
+    String program = getVariable(TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner();
     return program;
@@ -122,9 +125,9 @@ public abstract class ClientBuilder {
   }
 
   private String getRemoteDebugCommandPattern() {
-    String testRunner = getVariable("REMOTE_DEBUG_COMMAND");
+    String testRunner = getVariable(REMOTE_DEBUG_COMMAND);
     if (testRunner == null) {
-      testRunner = getVariable(PageData.COMMAND_PATTERN);
+      testRunner = getVariable(COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
         testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
       }
@@ -133,7 +136,7 @@ public abstract class ClientBuilder {
   }
 
   private String getNormalCommandPattern() {
-    String testRunner = getVariable(PageData.COMMAND_PATTERN);
+    String testRunner = getVariable(COMMAND_PATTERN);
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;

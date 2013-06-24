@@ -1,7 +1,6 @@
 package fitnesse.testsystems;
 
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
@@ -57,7 +56,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   public String getTestRunnerNormal() {
-    String program = data.getVariable(PageData.TEST_RUNNER);
+    String program = data.getVariable(ClientBuilder.TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner();
     return program;
@@ -82,7 +81,7 @@ public class Descriptor extends DescriptorBase {
   private String getRemoteDebugCommandPattern() {
     String testRunner = data.getVariable("REMOTE_DEBUG_COMMAND");
     if (testRunner == null) {
-      testRunner = data.getVariable(PageData.COMMAND_PATTERN);
+      testRunner = data.getVariable(ClientBuilder.COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
         testRunner = ClientBuilder.DEFAULT_JAVA_DEBUG_COMMAND;
       }
@@ -91,7 +90,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getNormalCommandPattern() {
-    String testRunner = data.getVariable(PageData.COMMAND_PATTERN);
+    String testRunner = data.getVariable(ClientBuilder.COMMAND_PATTERN);
     if (testRunner == null)
       testRunner = ClientBuilder.DEFAULT_COMMAND_PATTERN;
     return testRunner;

@@ -72,8 +72,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   private String content;
   private WikiPageProperties properties = new WikiPageProperties();
 
-  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
   private transient ParsedPage parsedPage;

@@ -6,6 +6,7 @@ import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimService;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -18,13 +19,10 @@ public class SlimClientBuilder extends ClientBuilder {
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
   private final int slimPort;
   private final Descriptor descriptor;
-  private final PageData data;
   private SlimClient slimClient;
-  private boolean started;
 
-  public SlimClientBuilder(WikiPage page, Descriptor descriptor) {
-    super(page);
-    this.data = page.getData();
+  public SlimClientBuilder(ReadOnlyPageData data, Descriptor descriptor) {
+    super(data);
     this.descriptor = descriptor;
     slimPort = getNextSlimPort();
   }
@@ -52,7 +50,6 @@ public class SlimClientBuilder extends ClientBuilder {
     slimClient = new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
 
     waitForConnection();
-    started = true;
   }
 
   public String buildCommand() {
@@ -153,7 +150,7 @@ public class SlimClientBuilder extends ClientBuilder {
   private int getSlimPortBase() {
     int base = 8085;
     try {
-      String slimPort = data.getVariable("SLIM_PORT");
+      String slimPort = getVariable("SLIM_PORT");
       if (slimPort != null) {
         int slimPortInt = Integer.parseInt(slimPort);
         base = slimPortInt;
@@ -164,12 +161,12 @@ public class SlimClientBuilder extends ClientBuilder {
   }
 
   String determineSlimHost() {
-    String slimHost = data.getVariable("SLIM_HOST");
+    String slimHost = getVariable("SLIM_HOST");
     return slimHost == null ? "localhost" : slimHost;
   }
 
   String getSlimFlags() {
-    String slimFlags = data.getVariable("SLIM_FLAGS");
+    String slimFlags = getVariable("SLIM_FLAGS");
     if (slimFlags == null)
       slimFlags = "";
     return slimFlags;
