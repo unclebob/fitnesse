@@ -18,11 +18,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
   private final int slimPort;
-  private final Descriptor descriptor;
+  private final String classPath;
 
-  public SlimClientBuilder(ReadOnlyPageData data, Descriptor descriptor) {
+  public SlimClientBuilder(ReadOnlyPageData data, String classPath) {
     super(data);
-    this.descriptor = descriptor;
+    this.classPath = classPath;
     slimPort = getNextSlimPort();
   }
 
@@ -33,7 +33,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
 
   @Override
   public SlimClient build() throws IOException {
-    final String classPath = descriptor.getClassPath();
     final String slimArguments = buildArguments();
     CommandRunner slimRunner;
     if (fastTest) {
@@ -50,7 +49,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
 
   public String buildCommand() {
     String slimArguments = buildArguments();
-    String slimCommandPrefix = super.buildCommand(descriptor);
+    String slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), classPath);
     return String.format("%s %s", slimCommandPrefix, slimArguments);
   }
 

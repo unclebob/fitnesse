@@ -70,7 +70,7 @@ public class TestSystemGroup {
   }
 
   private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimClient slimClient = new SlimClientBuilder(page.getData(), descriptor)
+    SlimClient slimClient = new SlimClientBuilder(page.getData(), descriptor.getClassPath())
             .withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)
