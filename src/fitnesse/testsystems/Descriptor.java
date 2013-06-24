@@ -9,26 +9,11 @@ public class Descriptor extends DescriptorBase {
   private final WikiPage page;
   private final ReadOnlyPageData data;
   private final boolean remoteDebug;
-  private final String classPath;
 
   public Descriptor(WikiPage page, boolean remoteDebug) {
-     this(page, remoteDebug,
-             new ClassPathBuilder().getClasspath(page.getData().getWikiPage()));
-  }
-
-  public Descriptor(Descriptor descriptor) {
-    this(descriptor.page, descriptor.remoteDebug, descriptor.classPath);
-  }
-
-  public Descriptor(Descriptor descriptor, String classPath) {
-    this(descriptor.page, descriptor.remoteDebug, classPath);
-  }
-
-  public Descriptor(WikiPage page, boolean remoteDebug, String classPath) {
     this.page = page;
     this.data = page.readOnlyData();
     this.remoteDebug = remoteDebug;
-    this.classPath = classPath;
   }
 
   public String getTestSystem() {
@@ -101,13 +86,5 @@ public class Descriptor extends DescriptorBase {
       return getRemoteDebugCommandPattern();
     else
       return getNormalCommandPattern();
-  }
-
-  public String getClassPath() {
-    return classPath;
-  }
-
-  protected ReadOnlyPageData getPageData() {
-    return data;
   }
 }

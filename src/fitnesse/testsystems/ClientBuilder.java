@@ -59,10 +59,6 @@ public abstract class ClientBuilder<T> {
     return parts[0];
   }
 
-  protected String buildCommand(Descriptor descriptor) {
-    return buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
-  }
-
   protected String buildCommand(String commandPattern, String testRunner, String classPath) {
     String command = replace(commandPattern, "%p", classPath);
     command = replace(command, "%m", testRunner);

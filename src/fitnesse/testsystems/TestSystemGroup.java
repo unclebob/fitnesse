@@ -55,22 +55,22 @@ public class TestSystemGroup {
   public TestSystem startTestSystem(Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
-      testSystem = makeTestSystem(new Descriptor(descriptor, classPath));
+      testSystem = makeTestSystem(descriptor, classPath);
 
       log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
     }
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
+  private TestSystem makeTestSystem(Descriptor descriptor, String classPath) throws IOException {
     if ("slim".equalsIgnoreCase(ClientBuilder.getTestSystemType(descriptor.getTestSystemName())))
-      return createHtmlSlimTestSystem(descriptor);
+      return createHtmlSlimTestSystem(descriptor, classPath);
     else
-      return createFitTestSystem(descriptor);
+      return createFitTestSystem(descriptor, classPath);
   }
 
-  private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimClient slimClient = new SlimClientBuilder(page.getData(), descriptor.getClassPath())
+  private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor, String classPath) throws IOException {
+    SlimClient slimClient = new SlimClientBuilder(page.getData(), classPath)
             .withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)
@@ -84,8 +84,8 @@ public class TestSystemGroup {
     return testSystem;
   }
 
-  private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
-    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor.getClassPath(), testSystemListener);
+  private FitTestSystem createFitTestSystem(Descriptor descriptor, String classPath) throws IOException {
+    FitTestSystem testSystem = new FitTestSystem(context, page, classPath, testSystemListener);
     testSystem.withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)

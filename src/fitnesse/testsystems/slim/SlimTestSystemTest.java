@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
@@ -29,10 +30,14 @@ public class SlimTestSystemTest {
     SlimClientBuilder.clearSlimPortOffset();
   }
 
+  private String getClassPath(WikiPage page) {
+    return new ClassPathBuilder().getClasspath(page);
+  }
+
   @Test
   public void portRotates() throws Exception {
     for (int i = 1; i < 15; i++) {
-      SlimClientBuilder descriptor = new SlimClientBuilder(root.getData(), ClientBuilder.getDescriptor(root, false).getClassPath());
+      SlimClientBuilder descriptor = new SlimClientBuilder(root.getData(), getClassPath(root));
       assertEquals(8085 + (i % 10), descriptor.getSlimPort());
     }
   }
@@ -41,7 +46,7 @@ public class SlimTestSystemTest {
   public void portStartsAtSlimPortVariable() throws Exception {
     WikiPage pageWithSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
     for (int i = 1; i < 15; i++) {
-      SlimClientBuilder descriptor = new SlimClientBuilder(pageWithSlimPortDefined.getData(), ClientBuilder.getDescriptor(pageWithSlimPortDefined, false).getClassPath());
+      SlimClientBuilder descriptor = new SlimClientBuilder(pageWithSlimPortDefined.getData(), getClassPath(pageWithSlimPortDefined));
       assertEquals(9000 + (i % 10), descriptor.getSlimPort());
     }
   }
@@ -50,19 +55,19 @@ public class SlimTestSystemTest {
   public void badSlimPortVariableDefaults() throws Exception {
     WikiPage pageWithBadSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
     for (int i = 1; i < 15; i++)
-      assertEquals(8085 + (i % 10), new SlimClientBuilder(pageWithBadSlimPortDefined.getData(), ClientBuilder.getDescriptor(pageWithBadSlimPortDefined, false).getClassPath()).getSlimPort());
+      assertEquals(8085 + (i % 10), new SlimClientBuilder(pageWithBadSlimPortDefined.getData(), getClassPath(pageWithBadSlimPortDefined)).getSlimPort());
   }
 
   @Test
   public void slimHostDefaultsTolocalhost() throws Exception {
     WikiPage pageWithoutSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
-    assertEquals("localhost", new SlimClientBuilder(pageWithoutSlimHostVariable.getData(), ClientBuilder.getDescriptor(pageWithoutSlimHostVariable, false).getClassPath()).determineSlimHost());
+    assertEquals("localhost", new SlimClientBuilder(pageWithoutSlimHostVariable.getData(), getClassPath(pageWithoutSlimHostVariable)).determineSlimHost());
   }
 
   @Test
   public void slimHostVariableSetsTheHost() throws Exception {
     WikiPage pageWithSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
-    assertEquals("somehost", new SlimClientBuilder(pageWithSlimHostVariable.getData(), ClientBuilder.getDescriptor(pageWithSlimHostVariable, false).getClassPath()).determineSlimHost());
+    assertEquals("somehost", new SlimClientBuilder(pageWithSlimHostVariable.getData(), getClassPath(pageWithSlimHostVariable)).determineSlimHost());
   }
 
   @Test
@@ -86,8 +91,7 @@ public class SlimTestSystemTest {
     final int slimServerPort = 10258;
     ServerSocket slimSocket = new ServerSocket(slimServerPort);
     try {
-      Descriptor descriptor = ClientBuilder.getDescriptor(root, false);
-      SlimClientBuilder sys = new SlimClientBuilder(root.getData(), descriptor.getClassPath());
+      SlimClientBuilder sys = new SlimClientBuilder(root.getData(), getClassPath(root));
       String slimArguments = String.format("%s %d", "", slimServerPort);
       sys.createSlimService(slimArguments);
     } finally {
