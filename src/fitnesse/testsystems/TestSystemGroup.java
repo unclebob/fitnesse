@@ -21,6 +21,7 @@ public class TestSystemGroup {
   private CompositeExecutionLog log;
   private boolean fastTest = false;
   private boolean manualStart = false;
+  private boolean remoteDebug;
 
   public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) {
     this.context = context;
@@ -47,6 +48,10 @@ public class TestSystemGroup {
     this.manualStart = manualStart;
   }
 
+  public void setRemoteDebug(boolean remoteDebug) {
+    this.remoteDebug = remoteDebug;
+  }
+
   public TestSystem startTestSystem(Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
@@ -68,6 +73,7 @@ public class TestSystemGroup {
     SlimClientBuilder builder = new SlimClientBuilder(page, descriptor);
     builder.setFastTest(fastTest);
     builder.setManualStart(manualStart);
+    builder.setRemoteDebug(remoteDebug);
     builder.start();
     SlimClient slimClient = builder.getSlimClient();
 
@@ -82,6 +88,7 @@ public class TestSystemGroup {
     FitTestSystem testSystem = new FitTestSystem(context, page, descriptor, testSystemListener);
     testSystem.setFastTest(fastTest);
     testSystem.setManualStart(manualStart);
+    testSystem.setRemoteDebug(remoteDebug);
     testSystems.put(descriptor, testSystem);
 
     testSystem.start();

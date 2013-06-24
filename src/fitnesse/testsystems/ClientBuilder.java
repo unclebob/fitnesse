@@ -1,12 +1,14 @@
 package fitnesse.testsystems;
 
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class ClientBuilder {
+public abstract class ClientBuilder {
   public static final String DEFAULT_COMMAND_PATTERN =
     "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
       System.getProperty("path.separator") +
@@ -15,11 +17,14 @@ public class ClientBuilder {
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   protected final WikiPage page;
+  private final ReadOnlyPageData data;
   protected boolean fastTest;
   protected boolean manualStart;
+  protected boolean remoteDebug;
 
   public ClientBuilder(WikiPage page) {
     this.page = page;
+    this.data = page.getData();
   }
 
   protected static String fitnesseJar(String classpath) {
@@ -50,9 +55,12 @@ public class ClientBuilder {
   }
 
   protected String buildCommand(Descriptor descriptor) {
-    String commandPattern = descriptor.getCommandPattern();
-    String command = replace(commandPattern, "%p", descriptor.getClassPath());
-    command = replace(command, "%m", descriptor.getTestRunner());
+    return buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
+  }
+
+  protected String buildCommand(String commandPattern, String testRunner, String classPath) {
+    String command = replace(commandPattern, "%p", classPath);
+    command = replace(command, "%m", testRunner);
     return command;
   }
 
@@ -62,6 +70,10 @@ public class ClientBuilder {
 
   public void setManualStart(boolean manualStart) {
     this.manualStart = manualStart;
+  }
+
+  public void setRemoteDebug(boolean remoteDebug) {
+    this.remoteDebug = remoteDebug;
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
