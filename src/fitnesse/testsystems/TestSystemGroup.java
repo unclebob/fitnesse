@@ -91,7 +91,7 @@ public class TestSystemGroup {
     testSystem.setRemoteDebug(remoteDebug);
     testSystems.put(descriptor, testSystem);
 
-    testSystem.start(descriptor);
+    testSystem.start();
     return testSystem;
   }
 

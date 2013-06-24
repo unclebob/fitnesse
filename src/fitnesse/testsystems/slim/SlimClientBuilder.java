@@ -29,6 +29,11 @@ public class SlimClientBuilder extends ClientBuilder {
     slimPort = getNextSlimPort();
   }
 
+  @Override
+  protected String defaultTestRunner() {
+    return "fitnesse.slim.SlimService";
+  }
+
   public void start() throws IOException {
     final String classPath = descriptor.getClassPath();
     final String slimArguments = buildArguments();

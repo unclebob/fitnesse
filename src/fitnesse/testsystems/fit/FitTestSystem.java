@@ -2,16 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
-import java.io.IOException;
-import java.util.Map;
-
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class FitTestSystem extends ClientBuilder implements TestSystem, TestSystemListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
@@ -19,7 +20,6 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
   private final WikiPage page;
   private final TestSystemListener testSystemListener;
   private ExecutionLog log;
-  private final PageData data;
   private CommandRunningFitClient client;
   private FitNesseContext context;
   private final String classPath;
@@ -31,13 +31,18 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
     this.context = context;
     this.page = page;
     this.testSystemListener = listener;
-    this.data = page.getData();
     this.context = context;
   }
 
   protected final void setExecutionLog(final ExecutionLog log) {
     this.log = log;
   }
+
+  @Override
+  protected String defaultTestRunner() {
+    return "fit.FitServer";
+  }
+
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
@@ -96,9 +101,9 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
     return client.isSuccessfullyStarted();
   }
 
-  public void start(Descriptor descriptor) {
-    String testRunner = descriptor.getTestRunner();
-    String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
+  public void start() {
+    String testRunner = getTestRunner();
+    String command = buildCommand(getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy = fastTest ?
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
@@ -108,4 +113,6 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
     setExecutionLog(new ExecutionLog(page, client.commandRunner));
     client.start();
   }
+
+
 }
