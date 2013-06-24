@@ -14,7 +14,7 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SlimClientBuilder extends ClientBuilder {
+public class SlimClientBuilder extends ClientBuilder<SlimClient> {
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
   private final int slimPort;
@@ -31,6 +31,7 @@ public class SlimClientBuilder extends ClientBuilder {
     return "fitnesse.slim.SlimService";
   }
 
+  @Override
   public SlimClient build() throws IOException {
     final String classPath = descriptor.getClassPath();
     final String slimArguments = buildArguments();

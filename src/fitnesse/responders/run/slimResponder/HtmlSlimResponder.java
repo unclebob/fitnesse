@@ -16,7 +16,7 @@ public class HtmlSlimResponder extends SlimResponder {
   protected SlimTestSystem getTestSystem() throws IOException {
     WikiPage page = getPage();
     SlimClientBuilder builder = new SlimClientBuilder(page.getData(), getDescriptor());
-    builder.setFastTest(fastTest);
+    builder.withFastTest(fastTest);
     SlimClient slimClient = builder.build();
     return new HtmlSlimTestSystem(slimClient, this, new ExecutionLog(page, slimClient.getTestRunner()));
   }

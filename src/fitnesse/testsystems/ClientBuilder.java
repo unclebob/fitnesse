@@ -3,11 +3,12 @@ package fitnesse.testsystems;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public abstract class ClientBuilder {
+public abstract class ClientBuilder<T> {
   public static final String DEFAULT_COMMAND_PATTERN =
     "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
       System.getProperty("path.separator") +
@@ -68,17 +69,22 @@ public abstract class ClientBuilder {
     return command;
   }
 
-  public void setFastTest(boolean fastTest) {
+  public ClientBuilder<T> withFastTest(boolean fastTest) {
     this.fastTest = fastTest;
+    return this;
   }
 
-  public void setManualStart(boolean manualStart) {
+  public ClientBuilder<T> withManualStart(boolean manualStart) {
     this.manualStart = manualStart;
+    return this;
   }
 
-  public void setRemoteDebug(boolean remoteDebug) {
+  public ClientBuilder<T> withRemoteDebug(boolean remoteDebug) {
     this.remoteDebug = remoteDebug;
+    return this;
   }
+
+  public abstract T build() throws IOException;
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
     String classpathProperty = getVariable(CLASSPATH_PROPERTY);

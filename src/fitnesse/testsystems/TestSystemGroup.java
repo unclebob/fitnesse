@@ -70,11 +70,11 @@ public class TestSystemGroup {
   }
 
   private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimClientBuilder builder = new SlimClientBuilder(page.getData(), descriptor);
-    builder.setFastTest(fastTest);
-    builder.setManualStart(manualStart);
-    builder.setRemoteDebug(remoteDebug);
-    SlimClient slimClient = builder.build();
+    SlimClient slimClient = new SlimClientBuilder(page.getData(), descriptor)
+            .withFastTest(fastTest)
+            .withManualStart(manualStart)
+            .withRemoteDebug(remoteDebug)
+            .build();
 
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(slimClient, testSystemListener, new ExecutionLog(page, slimClient.getTestRunner()));
 
@@ -84,11 +84,12 @@ public class TestSystemGroup {
     return testSystem;
   }
 
-  private FitTestSystem createFitTestSystem(Descriptor descriptor) {
+  private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
     FitTestSystem testSystem = new FitTestSystem(context, page, descriptor.getClassPath(), testSystemListener);
-    testSystem.setFastTest(fastTest);
-    testSystem.setManualStart(manualStart);
-    testSystem.setRemoteDebug(remoteDebug);
+    testSystem.withFastTest(fastTest)
+            .withManualStart(manualStart)
+            .withRemoteDebug(remoteDebug)
+            .build();
 
     testSystems.put(descriptor, testSystem);
     testSystem.start();

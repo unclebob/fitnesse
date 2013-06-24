@@ -12,7 +12,7 @@ import fitnesse.wiki.WikiPage;
 import java.io.IOException;
 import java.util.Map;
 
-public class FitTestSystem extends ClientBuilder implements TestSystem, TestSystemListener {
+public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, TestSystemListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private final FitNesseContext context;
@@ -40,6 +40,11 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
     return "fit.FitServer";
   }
 
+
+  @Override
+  public void start() {
+    client.start();
+  }
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
@@ -94,11 +99,13 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
 
   // Remove from here and below: this has all to do with client creation.
 
+  @Override
   public boolean isSuccessfullyStarted() {
     return client.isSuccessfullyStarted();
   }
 
-  public void start() {
+  @Override
+  public FitClient build() {
     String testRunner = getTestRunner();
     String command = buildCommand(getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
@@ -106,10 +113,10 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
-    this.client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+    client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
     setExecutionLog(new ExecutionLog(page, client.commandRunner));
-    client.start();
-  }
 
+    return client;
+  }
 
 }
