@@ -22,12 +22,12 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
   private final PageData data;
   private CommandRunningFitClient client;
   private FitNesseContext context;
-  private final Descriptor descriptor;
+  private final String classPath;
 
-  public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
+  public FitTestSystem(FitNesseContext context, WikiPage page, String classPath,
                        TestSystemListener listener) {
     super(page);
-    this.descriptor = descriptor;
+    this.classPath = classPath;
     this.context = context;
     this.page = page;
     this.testSystemListener = listener;
@@ -96,10 +96,10 @@ public class FitTestSystem extends ClientBuilder implements TestSystem, TestSyst
     return client.isSuccessfullyStarted();
   }
 
-  public void start() {
-    String command = buildCommand(descriptor);
+  public void start(Descriptor descriptor) {
     String testRunner = descriptor.getTestRunner();
-    Map<String, String> environmentVariables = createClasspathEnvironment(descriptor.getClassPath());
+    String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
+    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy = fastTest ?
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);

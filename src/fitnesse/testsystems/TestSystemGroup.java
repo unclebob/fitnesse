@@ -85,13 +85,13 @@ public class TestSystemGroup {
   }
 
   private FitTestSystem createFitTestSystem(Descriptor descriptor) {
-    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor, testSystemListener);
+    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor.getClassPath(), testSystemListener);
     testSystem.setFastTest(fastTest);
     testSystem.setManualStart(manualStart);
     testSystem.setRemoteDebug(remoteDebug);
     testSystems.put(descriptor, testSystem);
 
-    testSystem.start();
+    testSystem.start(descriptor);
     return testSystem;
   }
 
