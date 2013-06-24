@@ -19,7 +19,6 @@ public class SlimClientBuilder extends ClientBuilder {
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
   private final int slimPort;
   private final Descriptor descriptor;
-  private SlimClient slimClient;
 
   public SlimClientBuilder(ReadOnlyPageData data, Descriptor descriptor) {
     super(data);
@@ -32,7 +31,7 @@ public class SlimClientBuilder extends ClientBuilder {
     return "fitnesse.slim.SlimService";
   }
 
-  public void start() throws IOException {
+  public SlimClient build() throws IOException {
     final String classPath = descriptor.getClassPath();
     final String slimArguments = buildArguments();
     CommandRunner slimRunner;
@@ -45,11 +44,7 @@ public class SlimClientBuilder extends ClientBuilder {
     } else {
       slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
-    slimRunner.asynchronousStart();
-
-    slimClient = new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
-
-    waitForConnection();
+    return new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
   }
 
   public String buildCommand() {
@@ -84,24 +79,6 @@ public class SlimClientBuilder extends ClientBuilder {
       throw e;
     } catch (Exception e) {
       e.printStackTrace();
-      return false;
-    }
-  }
-
-  void waitForConnection() {
-    while (!isConnected())
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-  }
-
-  private boolean isConnected() {
-    try {
-      slimClient.connect();
-      return true;
-    } catch (Exception e) {
       return false;
     }
   }
@@ -172,8 +149,4 @@ public class SlimClientBuilder extends ClientBuilder {
     return slimFlags;
   }
 
-
-  public SlimClient getSlimClient() {
-    return slimClient;
-  }
 }

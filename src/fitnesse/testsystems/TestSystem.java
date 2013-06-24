@@ -14,6 +14,8 @@ import fitnesse.wiki.WikiPage;
 
 public interface TestSystem {
 
+  void start() throws IOException;
+
   void bye() throws IOException, InterruptedException;
 
   void kill() throws IOException;

@@ -7,7 +7,6 @@ import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -18,8 +17,7 @@ public class HtmlSlimResponder extends SlimResponder {
     WikiPage page = getPage();
     SlimClientBuilder builder = new SlimClientBuilder(page.getData(), getDescriptor());
     builder.setFastTest(fastTest);
-    builder.start();
-    SlimClient slimClient = builder.getSlimClient();
+    SlimClient slimClient = builder.build();
     return new HtmlSlimTestSystem(slimClient, this, new ExecutionLog(page, slimClient.getTestRunner()));
   }
 }

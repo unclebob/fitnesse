@@ -51,10 +51,34 @@ public class SlimClient {
     this.manualStart = manualStart;
   }
 
-  public void connect() throws IOException {
+  public void start() throws IOException {
+    slimRunner.asynchronousStart();
+    waitUntilStarted();
+  }
+
+  void waitUntilStarted() {
+    while (!isStarted())
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+  }
+
+  private boolean isStarted() {
+    try {
+      connect();
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+
+  void connect() throws IOException {
     for (int tries = 0; tryConnect() == false; tries++) {
       if (tries > 100)
-        throw new SlimError("Could not start Slim.");
+        throw new SlimError("Could not build Slim.");
       try {
         Thread.sleep(50);
       } catch (InterruptedException e) {
@@ -67,15 +91,15 @@ public class SlimClient {
     validateConnection();
   }
 
-private void validateConnection() {
-	if (isConnected()) {
-		slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
-	}
-	else {
-		slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
-		System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
-	}
-}
+  private void validateConnection() {
+    if (isConnected()) {
+      slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
+    }
+    else {
+      slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
+      System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
+    }
+  }
 
   private boolean tryConnect() {
     try {

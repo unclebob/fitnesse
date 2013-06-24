@@ -61,6 +61,10 @@ public abstract class SlimTestSystem implements TestSystem {
     return true;
   }
 
+  public void start() throws IOException {
+    slimClient.start();
+  }
+
   public void kill() throws IOException {
     if (slimClient != null)
       slimClient.close();

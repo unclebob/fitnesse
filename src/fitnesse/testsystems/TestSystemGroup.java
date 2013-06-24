@@ -74,12 +74,12 @@ public class TestSystemGroup {
     builder.setFastTest(fastTest);
     builder.setManualStart(manualStart);
     builder.setRemoteDebug(remoteDebug);
-    builder.start();
-    SlimClient slimClient = builder.getSlimClient();
+    SlimClient slimClient = builder.build();
 
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(slimClient, testSystemListener, new ExecutionLog(page, slimClient.getTestRunner()));
 
     testSystems.put(descriptor, testSystem);
+    testSystem.start();
 
     return testSystem;
   }
@@ -89,9 +89,10 @@ public class TestSystemGroup {
     testSystem.setFastTest(fastTest);
     testSystem.setManualStart(manualStart);
     testSystem.setRemoteDebug(remoteDebug);
-    testSystems.put(descriptor, testSystem);
 
+    testSystems.put(descriptor, testSystem);
     testSystem.start();
+
     return testSystem;
   }
 
