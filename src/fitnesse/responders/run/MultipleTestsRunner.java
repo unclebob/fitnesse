@@ -2,12 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.testsystems.*;
@@ -16,6 +10,12 @@ import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -190,6 +190,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
+  @Override
   public void testOutputChunk(String output) throws IOException {
     TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
@@ -205,6 +206,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }
 
+  @Override
   public void testComplete(TestSummary testSummary) throws IOException {
     TestPage testPage = processingQueue.removeFirst();
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
