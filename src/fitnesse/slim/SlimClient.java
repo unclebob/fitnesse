@@ -24,8 +24,6 @@ public class SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   private final CommandRunner slimRunner;
-  private final boolean manualStart;
-  private final boolean fastTest;
   private final String testRunner;
   private Socket client;
   private StreamReader reader;
@@ -36,13 +34,11 @@ public class SlimClient {
   private int port;
 
 
-  public SlimClient(String testRunner, CommandRunner slimRunner, String hostName, int port, boolean fastTest, boolean manualStart) {
+  public SlimClient(String testRunner, CommandRunner slimRunner, String hostName, int port) {
     this.testRunner = testRunner;
     this.slimRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
-    this.fastTest = fastTest;
-    this.manualStart = manualStart;
   }
 
   public void start() throws IOException {
@@ -202,7 +198,7 @@ public class SlimClient {
 	return length;
   }
 
-  private void writeString(String string) throws IOException {
+  protected void writeString(String string) throws IOException {
     String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
     writer.write(packet);
     writer.flush();
@@ -210,13 +206,7 @@ public class SlimClient {
 
   public void sendBye() throws IOException {
     writeString("bye");
-    if (!fastTest && !manualStart) {
-      slimRunner.join();
-    }
-    if (fastTest) {
-      slimRunner.kill();
-    }
-
+    slimRunner.join();
   }
 
   public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {

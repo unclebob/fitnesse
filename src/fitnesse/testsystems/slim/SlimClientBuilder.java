@@ -1,9 +1,6 @@
 package fitnesse.testsystems.slim;
 
-import fitnesse.slim.JavaSlimFactory;
-import fitnesse.slim.SlimClient;
-import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimService;
+import fitnesse.slim.*;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -33,10 +30,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
 
   @Override
   public SlimClient build() throws IOException {
-    final String slimArguments = buildArguments();
     CommandRunner commandRunner;
+
     if (fastTest) {
       commandRunner = new MockCommandRunner();
+      final String slimArguments = buildArguments();
       createSlimService(slimArguments);
     }
     else if (manualStart) {
@@ -44,7 +42,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
-    return new SlimClient(getTestRunner(), commandRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
+    return new SlimClient(getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
   public String buildCommand() {
