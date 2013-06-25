@@ -62,8 +62,12 @@ public abstract class SlimTestSystem implements TestSystem {
 
 
   public void start() throws IOException {
-    slimClient.start();
-    testSystemListener.testSystemStarted(this, testSystemName, slimClient.getTestRunner());
+    try {
+      slimClient.start();
+      testSystemListener.testSystemStarted(this, testSystemName, slimClient.getTestRunner());
+    } catch (SlimError e) {
+      exceptionOccurred(e);
+    }
   }
 
   public void kill() throws IOException {
@@ -78,39 +82,12 @@ public abstract class SlimTestSystem implements TestSystem {
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
     initializeTest();
-    checkForAndReportVersionMismatch(pageToTest.getDecoratedData());
     processAllTablesOnPage(pageToTest);
     testComplete(testContext.getTestSummary());
   }
 
   private void initializeTest() {
     testContext = new SlimTestContextImpl();
-  }
-
-  private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
-    double expectedVersionNumber = getExpectedSlimVersion(pageData);
-    double serverVersionNumber = slimClient.getServerVersion();
-    if (serverVersionNumber == SlimCommandRunningClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
-    	exceptionOccurred(new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number."));
-    }
-    else {
-      if (serverVersionNumber < expectedVersionNumber) {
-        exceptionOccurred(new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber)));
-      }
-    }
-  }
-
-  private double getExpectedSlimVersion(ReadOnlyPageData pageData) {
-    double expectedVersionNumber = SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION;
-    String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
-    if (pageSpecificSlimVersion != null) {
-      try {
-        double pageSpecificSlimVersionDouble = Double.parseDouble(pageSpecificSlimVersion);
-        expectedVersionNumber = pageSpecificSlimVersionDouble;
-      } catch (NumberFormatException e) {
-      }
-    }
-    return expectedVersionNumber;
   }
 
   protected abstract List<SlimTable> createSlimTables(TestPage pageTotest);

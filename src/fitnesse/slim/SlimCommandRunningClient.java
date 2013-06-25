@@ -23,6 +23,7 @@ import static util.ListUtility.list;
 public class SlimCommandRunningClient implements SlimClient {
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
+
   private final CommandRunner slimRunner;
   private final String testRunner;
   private Socket client;
@@ -45,6 +46,7 @@ public class SlimCommandRunningClient implements SlimClient {
   public void start() throws IOException {
     slimRunner.asynchronousStart();
     waitUntilStarted();
+    checkForVersionMismatch();
   }
 
   void waitUntilStarted() {
@@ -62,6 +64,16 @@ public class SlimCommandRunningClient implements SlimClient {
       return true;
     } catch (Exception e) {
       return false;
+    }
+  }
+
+  private void checkForVersionMismatch() {
+    double serverVersionNumber = getServerVersion();
+    if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
+      throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
+    }
+    else if (serverVersionNumber < MINIMUM_REQUIRED_SLIM_VERSION) {
+      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", MINIMUM_REQUIRED_SLIM_VERSION, serverVersionNumber));
     }
   }
 

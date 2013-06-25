@@ -15,7 +15,5 @@ public interface SlimClient {
 
   void sendBye() throws IOException;
 
-  double getServerVersion();
-
   String getTestRunner();
 }

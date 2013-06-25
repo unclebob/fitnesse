@@ -8,6 +8,7 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.slim.SlimError;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
