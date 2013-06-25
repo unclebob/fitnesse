@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 public abstract class SlimServiceTestBase {
   protected List<Instruction> statements;
-  protected SlimClient slimClient;
+  protected SlimCommandRunningClient slimClient;
 
   protected abstract void startSlimService() throws Exception;
 
@@ -38,7 +38,7 @@ public abstract class SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimClient("SlimServer", new MockCommandRunner(), "localhost", 8099);
+    slimClient = new SlimCommandRunningClient("SlimServer", new MockCommandRunner(), "localhost", 8099);
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }

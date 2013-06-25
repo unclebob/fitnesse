@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
@@ -337,14 +337,14 @@ public class HtmlSlimResponderTest {
   //       Had to fix this with the introduction of JUnit 4.11 since the
   //       ordering is different.
   public void versionMismatchIsReported() throws Exception {
-    double oldVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
-    SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = 1000.0; // I doubt will ever get
+    double oldVersionNumber = SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION;
+    SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION = 1000.0; // I doubt will ever get
                                                        // here.
     try {
       getResultsForPageContents("");
       assertTestResultsContain("Slim Protocol Version Error");
     } finally {
-      SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = oldVersionNumber;
+      SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION = oldVersionNumber;
     }
   }
 

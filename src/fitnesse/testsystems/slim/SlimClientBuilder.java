@@ -2,16 +2,14 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.slim.*;
 import fitnesse.testsystems.*;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SlimClientBuilder extends ClientBuilder<SlimClient> {
+public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
   private final int slimPort;
@@ -29,7 +27,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
   }
 
   @Override
-  public SlimClient build() throws IOException {
+  public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
 
     if (fastTest) {
@@ -42,7 +40,9 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
-    return new SlimClient(getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+
+    // TODO: provide version:
+    return new SlimCommandRunningClient(getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
   public String buildCommand() {

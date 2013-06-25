@@ -5,8 +5,8 @@ package fitnesse.testsystems.slim;
 import java.util.List;
 
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimError;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;

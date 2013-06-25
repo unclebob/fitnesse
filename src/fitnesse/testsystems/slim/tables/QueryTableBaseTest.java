@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -72,10 +72,10 @@ public abstract class QueryTableBaseTest {
   @SuppressWarnings("unchecked")
   protected void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(list(
-      list("queryTable_id_0", "OK"),
-      list("queryTable_id_1", "blah"),
-      list("queryTable_id_2", queryResults)
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(list(
+            list("queryTable_id_0", "OK"),
+            list("queryTable_id_1", "blah"),
+            list("queryTable_id_2", queryResults)
     ));
     Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(table, qt.getTable().toString());
@@ -258,16 +258,16 @@ public abstract class QueryTableBaseTest {
   public void variablesAreReplacedInMatch() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "4");
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("queryTable_id_0", "OK"),
-        list("queryTable_id_1", VoidConverter.VOID_TAG),
-        list("queryTable_id_2",
-          list(
-            list(list("n", "2"), list("2n", "4"))
-          )
-        )
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("queryTable_id_0", "OK"),
+                    list("queryTable_id_1", VoidConverter.VOID_TAG),
+                    list("queryTable_id_2",
+                            list(
+                                    list(list("n", "2"), list("2n", "4"))
+                            )
+                    )
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
@@ -284,16 +284,16 @@ public abstract class QueryTableBaseTest {
   public void variablesAreReplacedInExpected() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "5");
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("queryTable_id_0", "OK"),
-        list("queryTable_id_1", VoidConverter.VOID_TAG),
-        list("queryTable_id_2",
-          list(
-            list(list("n", "2"), list("2n", "4"))
-          )
-        )
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("queryTable_id_0", "OK"),
+                    list("queryTable_id_1", VoidConverter.VOID_TAG),
+                    list("queryTable_id_2",
+                            list(
+                                    list(list("n", "2"), list("2n", "4"))
+                            )
+                    )
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
@@ -310,15 +310,15 @@ public abstract class QueryTableBaseTest {
   public void variablesAreReplacedInMissing() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|3|$V|\n");
     qt.setSymbol("V", "5");
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("queryTable_id_0", "OK"),
-        list("queryTable_id_1", VoidConverter.VOID_TAG),
-        list("queryTable_id_2",
-          list(
-          )
-        )
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("queryTable_id_0", "OK"),
+                    list("queryTable_id_1", VoidConverter.VOID_TAG),
+                    list("queryTable_id_2",
+                            list(
+                            )
+                    )
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(

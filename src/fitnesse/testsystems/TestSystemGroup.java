@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
-import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -73,7 +73,7 @@ public class TestSystemGroup {
   }
 
   private HtmlSlimTestSystem createHtmlSlimTestSystem(String testSystemName, String classPath) throws IOException {
-    SlimClient slimClient = new SlimClientBuilder(page.getData(), classPath)
+    SlimCommandRunningClient slimClient = new SlimClientBuilder(page.getData(), classPath)
             .withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)

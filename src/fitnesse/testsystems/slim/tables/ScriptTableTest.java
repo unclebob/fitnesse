@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
@@ -60,7 +60,7 @@ public class ScriptTableTest {
     buildInstructionsFor(scriptStatements);
     List<List<?>> resultList = ListUtility.<List<?>>list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
   }

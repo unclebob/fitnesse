@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.*;
@@ -89,7 +90,7 @@ public abstract class SlimTestSystem implements TestSystem {
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
-    if (serverVersionNumber == SlimClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
+    if (serverVersionNumber == SlimCommandRunningClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
     	exceptionOccurred(new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number."));
     }
     else {
@@ -100,7 +101,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   private double getExpectedSlimVersion(ReadOnlyPageData pageData) {
-    double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
+    double expectedVersionNumber = SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION;
     String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
     if (pageSpecificSlimVersion != null) {
       try {

@@ -42,8 +42,8 @@ public abstract class ListExecutorTestBase {
   protected void respondsWith(List<?> expected) {
     expectedResults.addAll(expected);
     List<Object> result = executor.execute(statements);
-    Map<String, Object> expectedMap = SlimClient.resultToMap(expectedResults);
-    Map<String, Object> resultMap = SlimClient.resultToMap(result);
+    Map<String, Object> expectedMap = SlimCommandRunningClient.resultToMap(expectedResults);
+    Map<String, Object> resultMap = SlimCommandRunningClient.resultToMap(result);
     assertEquals(expectedMap, resultMap);
   }
 
@@ -66,7 +66,7 @@ public abstract class ListExecutorTestBase {
   }
 
   private void assertExceptionReturned(String message, String returnTag) {
-    Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
+    Map<String, Object> results = SlimCommandRunningClient.resultToMap(executor.execute(statements));
     SlimException result = (SlimException) results.get(returnTag);
     assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().indexOf
         (message) != -1);
