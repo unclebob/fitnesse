@@ -2,21 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 
+import java.io.IOException;
+
 public interface TestSystemListener {
-  public void testOutputChunk(String output) throws IOException;
+  void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner);
 
-  public void testComplete(TestSummary testSummary) throws IOException;
+  void testOutputChunk(String output) throws IOException;
 
-  public void exceptionOccurred(Throwable e);
+  void testComplete(TestSummary testSummary) throws IOException;
 
-  public void testAssertionVerified(Assertion assertion, TestResult testResult);
+  void exceptionOccurred(Throwable e);
 
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
+  void testAssertionVerified(Assertion assertion, TestResult testResult);
 
+  void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
 }

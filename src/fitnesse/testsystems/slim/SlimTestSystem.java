@@ -7,18 +7,15 @@ import static fitnesse.slim.SlimServer.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
-import fitnesse.slim.SlimService;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
@@ -27,7 +24,6 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 
 public abstract class SlimTestSystem implements TestSystem {
   public static final SlimTable START_OF_TEST = null;
@@ -36,13 +32,15 @@ public abstract class SlimTestSystem implements TestSystem {
   private final SlimClient slimClient;
   private final TestSystemListener testSystemListener;
   private final ExecutionLog log;
+  private final String testSystemName;
 
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
 
 
-  public SlimTestSystem(SlimClient slimClient, TestSystemListener listener, ExecutionLog executionLog) {
+  public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener, ExecutionLog executionLog) {
+    this.testSystemName = testSystemName;
     this.slimClient = slimClient;
     this.testSystemListener = listener;
     this.log = executionLog;
@@ -61,8 +59,10 @@ public abstract class SlimTestSystem implements TestSystem {
     return true;
   }
 
+
   public void start() throws IOException {
     slimClient.start();
+    testSystemListener.testSystemStarted(this, testSystemName, slimClient.getTestRunner());
   }
 
   public void kill() throws IOException {

@@ -34,17 +34,17 @@ public class SlimClientBuilder extends ClientBuilder<SlimClient> {
   @Override
   public SlimClient build() throws IOException {
     final String slimArguments = buildArguments();
-    CommandRunner slimRunner;
+    CommandRunner commandRunner;
     if (fastTest) {
-      slimRunner = new MockCommandRunner();
+      commandRunner = new MockCommandRunner();
       createSlimService(slimArguments);
     }
     else if (manualStart) {
-      slimRunner = new MockCommandRunner();
+      commandRunner = new MockCommandRunner();
     } else {
-      slimRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
+      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(classPath));
     }
-    return new SlimClient(slimRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
+    return new SlimClient(getTestRunner(), commandRunner, determineSlimHost(), getSlimPort(), fastTest, manualStart);
   }
 
   public String buildCommand() {

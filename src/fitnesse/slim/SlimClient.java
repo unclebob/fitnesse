@@ -26,6 +26,7 @@ public class SlimClient {
   private final CommandRunner slimRunner;
   private final boolean manualStart;
   private final boolean fastTest;
+  private final String testRunner;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -35,15 +36,8 @@ public class SlimClient {
   private int port;
 
 
-  public void close() throws IOException {
-    if (slimRunner != null)
-      slimRunner.kill();
-    reader.close();
-    writer.close();
-    client.close();
-  }
-
-  public SlimClient(CommandRunner slimRunner, String hostName, int port, boolean fastTest, boolean manualStart) {
+  public SlimClient(String testRunner, CommandRunner slimRunner, String hostName, int port, boolean fastTest, boolean manualStart) {
+    this.testRunner = testRunner;
     this.slimRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
@@ -72,6 +66,14 @@ public class SlimClient {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  public void close() throws IOException {
+    if (slimRunner != null)
+      slimRunner.kill();
+    reader.close();
+    writer.close();
+    client.close();
   }
 
 
@@ -131,7 +133,11 @@ public class SlimClient {
     return resultToMap(resultList);
   }
 
-  public CommandRunner getTestRunner() {
+  public String getTestRunner() {
+    return testRunner;
+  }
+
+  public CommandRunner getCommandRunner() {
     return slimRunner;
   }
 

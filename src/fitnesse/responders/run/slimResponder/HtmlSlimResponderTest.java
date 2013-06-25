@@ -10,6 +10,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.slim.SlimClient;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -368,6 +369,10 @@ public class HtmlSlimResponderTest {
   }
 
   private static class DummyListener implements TestSystemListener {
+    @Override
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+    }
+
     @Override
     public void testOutputChunk(String output) {
     }

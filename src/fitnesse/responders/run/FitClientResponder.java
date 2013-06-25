@@ -10,14 +10,11 @@ import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.fit.FitClient;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -121,6 +118,10 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 
   private String notFoundMessage() {
     return "The page " + resource + " was not found.";
+  }
+
+  @Override
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   @Override

@@ -14,18 +14,24 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  public CommandRunner commandRunner;
+  private final String testRunner;
+  public final CommandRunner commandRunner;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
   private final CommandRunningStrategy commandRunningStrategy;
 
-  public CommandRunningFitClient(TestSystemListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
+  public CommandRunningFitClient(String testRunner, TestSystemListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
     super(listener);
+    this.testRunner = testRunner;
     this.commandRunningStrategy = commandRunningStrategy;
     int ticketNumber = socketDealer.seekingSocket(this);
     String hostName = getLocalhostName();
     this.commandRunner = commandRunningStrategy.init(this, hostName, port, ticketNumber);
+  }
+
+  public String getTestRunner() {
+    return testRunner;
   }
 
   public void start() {

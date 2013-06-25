@@ -55,6 +55,11 @@ public abstract class ClientBuilder<T> {
     return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
   }
 
+  public static String getTestSystemType(String testSystemName) {
+    String parts[] = testSystemName.split(":");
+    return parts[0];
+  }
+
   protected String buildCommand(String commandPattern, String testRunner, String classPath) {
     String command = replace(commandPattern, "%p", classPath);
     command = replace(command, "%m", testRunner);

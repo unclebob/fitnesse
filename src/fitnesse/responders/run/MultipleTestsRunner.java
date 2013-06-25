@@ -104,7 +104,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       if (!isStopped) {
         testSystem = testSystemGroup.startTestSystem(descriptor,
                 new ClassPathBuilder().buildClassPath(testPagesToRun));
-        resultsListener.testSystemStarted(testSystem, descriptor.getTestSystem(), descriptor.getTestRunner());
       }
 
       if (testSystem != null) {
@@ -184,6 +183,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
     resultsListener.announceNumberTestsToRun(tests);
     totalTestTime = new TimeMeasurement().start();
+  }
+
+  @Override
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+    resultsListener.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
   public void testOutputChunk(String output) throws IOException {

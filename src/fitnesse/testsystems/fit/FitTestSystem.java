@@ -19,12 +19,14 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   private final WikiPage page;
   private final String classPath;
   private final TestSystemListener testSystemListener;
+  private final String testSystemName;
   private ExecutionLog log;
   private CommandRunningFitClient client;
 
-  public FitTestSystem(FitNesseContext context, WikiPage page, String classPath,
+  public FitTestSystem(String testSystemName, FitNesseContext context, WikiPage page, String classPath,
                        TestSystemListener listener) {
     super(page.getData());
+    this.testSystemName = testSystemName;
     this.context = context;
     this.page = page;
     this.classPath = classPath;
@@ -40,10 +42,10 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     return "fit.FitServer";
   }
 
-
   @Override
   public void start() {
     client.start();
+    testSystemStarted(this, testSystemName, client.getTestRunner());
   }
 
   @Override
@@ -69,6 +71,11 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public void kill() {
     client.kill();
+  }
+
+  @Override
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+    testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
   @Override
@@ -113,7 +120,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
-    client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+    client = new CommandRunningFitClient(testRunner, this, context.port, context.socketDealer, runningStrategy);
     setExecutionLog(new ExecutionLog(page, client.commandRunner));
 
     return client;
