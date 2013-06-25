@@ -9,11 +9,11 @@ import java.util.Map;
 public interface SlimClient {
   void start() throws IOException;
 
-  void close() throws IOException;
-
   Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException;
 
-  void sendBye() throws IOException;
+  void bye() throws IOException;
+
+  void kill() throws IOException;
 
   String getTestRunner();
 }

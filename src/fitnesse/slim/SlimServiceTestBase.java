@@ -63,8 +63,8 @@ public abstract class SlimServiceTestBase {
   }
 
   protected void teardown() throws Exception {
-    slimClient.sendBye();
-    slimClient.close();
+    slimClient.bye();
+    slimClient.kill();
     closeSlimService();
   }
 

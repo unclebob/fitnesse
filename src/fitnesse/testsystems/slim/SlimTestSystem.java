@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.SlimClient;
-import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.*;
@@ -24,7 +23,6 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-import fitnesse.wiki.ReadOnlyPageData;
 
 public abstract class SlimTestSystem implements TestSystem {
   public static final SlimTable START_OF_TEST = null;
@@ -72,11 +70,11 @@ public abstract class SlimTestSystem implements TestSystem {
 
   public void kill() throws IOException {
     if (slimClient != null)
-      slimClient.close();
+      slimClient.kill();
   }
 
   public void bye() throws IOException {
-    slimClient.sendBye();
+    slimClient.bye();
   }
 
   @Override

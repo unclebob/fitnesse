@@ -78,7 +78,7 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public void close() throws IOException {
+  public void kill() throws IOException {
     if (slimRunner != null)
       slimRunner.kill();
     reader.close();
@@ -220,7 +220,7 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public void sendBye() throws IOException {
+  public void bye() throws IOException {
     writeString("bye");
     slimRunner.join();
   }
