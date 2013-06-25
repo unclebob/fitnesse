@@ -22,6 +22,7 @@ public abstract class ClientBuilder<T> {
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
   public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
+  public static final String TEST_SYSTEM = "TEST_SYSTEM";
 
   private final ReadOnlyPageData data;
   protected boolean fastTest;
@@ -52,11 +53,6 @@ public abstract class ClientBuilder<T> {
 
   protected static String replace(String value, String mark, String replacement) {
     return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
-  }
-
-  public static String getTestSystemType(String testSystemName) {
-    String parts[] = testSystemName.split(":");
-    return parts[0];
   }
 
   protected String buildCommand(String commandPattern, String testRunner, String classPath) {
@@ -91,8 +87,8 @@ public abstract class ClientBuilder<T> {
     return environmentVariables;
   }
 
-  public static Descriptor getDescriptor(WikiPage page, boolean isRemoteDebug) {
-    return new Descriptor(page, isRemoteDebug);
+  public static Descriptor getDescriptor(WikiPage page, boolean remoteDebug) {
+    return new Descriptor(page.readOnlyData(), remoteDebug);
   }
 
   protected String getVariable(String name) {

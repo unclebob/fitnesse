@@ -63,7 +63,7 @@ public class TestSystemGroup {
   }
 
   private TestSystem makeTestSystem(Descriptor descriptor, String classPath) throws IOException {
-    if ("slim".equalsIgnoreCase(ClientBuilder.getTestSystemType(descriptor.getTestSystemName())))
+    if ("slim".equalsIgnoreCase(descriptor.getTestSystem()))
       return createHtmlSlimTestSystem(descriptor, classPath);
     else
       return createFitTestSystem(descriptor, classPath);

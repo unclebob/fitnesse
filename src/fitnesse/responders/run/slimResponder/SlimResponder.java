@@ -73,7 +73,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
     public String render() {
 
-      Descriptor descriptor = getDescriptor();
       try {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
@@ -96,10 +95,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       }
       return exceptionString + output.toString();
     }
-  }
-
-  protected Descriptor getDescriptor() {
-    return ClientBuilder.getDescriptor(page, false);
   }
 
   protected abstract SlimTestSystem getTestSystem() throws IOException;

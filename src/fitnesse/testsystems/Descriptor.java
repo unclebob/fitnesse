@@ -1,23 +1,19 @@
 package fitnesse.testsystems;
 
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 
 @Deprecated
 public class Descriptor extends DescriptorBase {
-  private final WikiPage page;
   private final ReadOnlyPageData data;
   private final boolean remoteDebug;
 
-  public Descriptor(WikiPage page, boolean remoteDebug) {
-    this.page = page;
-    this.data = page.readOnlyData();
+  public Descriptor(ReadOnlyPageData data, boolean remoteDebug) {
+    this.data = data;
     this.remoteDebug = remoteDebug;
   }
 
   public String getTestSystem() {
-    String testSystemName = data.getVariable("TEST_SYSTEM");
+    String testSystemName = data.getVariable(ClientBuilder.TEST_SYSTEM);
     if (testSystemName == null)
       return "fit";
     return testSystemName;
@@ -30,7 +26,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getTestRunnerDebug() {
-    String program = data.getVariable("REMOTE_DEBUG_RUNNER");
+    String program = data.getVariable(ClientBuilder.REMOTE_DEBUG_RUNNER);
     if (program == null) {
       program = getTestRunnerNormal();
       if (program.toLowerCase().contains(ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
@@ -48,7 +44,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   String defaultTestRunner() {
-    String testSystemType = ClientBuilder.getTestSystemType(getTestSystem());
+    String testSystemType = getTestSystem();
     if ("slim".equalsIgnoreCase(testSystemType))
       return "fitnesse.slim.SlimService";
     else
@@ -64,7 +60,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getRemoteDebugCommandPattern() {
-    String testRunner = data.getVariable("REMOTE_DEBUG_COMMAND");
+    String testRunner = data.getVariable(ClientBuilder.REMOTE_DEBUG_COMMAND);
     if (testRunner == null) {
       testRunner = data.getVariable(ClientBuilder.COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
