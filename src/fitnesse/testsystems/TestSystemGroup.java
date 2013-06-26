@@ -11,6 +11,9 @@ import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
@@ -59,8 +62,6 @@ public class TestSystemGroup {
 
       testSystems.put(descriptor, testSystem);
       testSystem.start();
-
-      log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
     }
     return testSystem;
   }
@@ -79,7 +80,9 @@ public class TestSystemGroup {
             .withRemoteDebug(remoteDebug)
             .build();
 
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystem(), slimClient, testSystemListener, new ExecutionLog(page, slimClient.getCommandRunner()));
+    ExecutionLogListener listener = new ExecutionLogListener(page, slimClient.getCommandRunner(), testSystemListener);
+    log.add(descriptor.getTestSystemName(), listener.getExecutionLog());
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystem(), slimClient, listener);
 
     return testSystem;
   }
@@ -91,7 +94,55 @@ public class TestSystemGroup {
             .withRemoteDebug(remoteDebug)
             .build();
 
+
+    log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
+
     return testSystem;
   }
 
+  static class ExecutionLogListener implements TestSystemListener {
+
+    private final ExecutionLog log;
+    private final TestSystemListener testSystemListener;
+
+    ExecutionLogListener(WikiPage page, CommandRunner commandRunner, TestSystemListener testSystemListener) {
+      this.log = new ExecutionLog(page, commandRunner);
+      this.testSystemListener = testSystemListener;
+    }
+
+    public ExecutionLog getExecutionLog() {
+      return log;
+    }
+
+    @Override
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+      testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
+    }
+
+    @Override
+    public void testOutputChunk(String output) throws IOException {
+      testSystemListener.testOutputChunk(output);
+    }
+
+    @Override
+    public void testComplete(TestSummary testSummary) throws IOException {
+      testSystemListener.testComplete(testSummary);
+    }
+
+    @Override
+    public void exceptionOccurred(Throwable e) {
+      log.addException(e);
+      testSystemListener.exceptionOccurred(e);
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+      testSystemListener.testAssertionVerified(assertion, testResult);
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+      testSystemListener.testExceptionOccurred(assertion, exceptionResult);
+    }
+  }
 }

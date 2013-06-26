@@ -19,7 +19,7 @@ public class HtmlSlimResponder extends SlimResponder {
     SlimCommandRunningClient slimClient = new SlimClientBuilder(getDescriptor())
             .withFastTest(fastTest)
             .build();
-    return new HtmlSlimTestSystem("slim", slimClient, this, new ExecutionLog(getPage(), slimClient.getCommandRunner()));
+    return new HtmlSlimTestSystem("slim", slimClient, this);
   }
 
 }

@@ -22,8 +22,8 @@ import org.htmlparser.util.ParserException;
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private HtmlTableScanner tableScanner;
 
-  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener, ExecutionLog executionLog) {
-    super(testSystemName, slimClient, listener, executionLog);
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
+    super(testSystemName, slimClient, listener);
   }
 
   @Override

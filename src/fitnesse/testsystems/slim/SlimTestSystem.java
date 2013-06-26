@@ -30,7 +30,6 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private final SlimClient slimClient;
   private final TestSystemListener testSystemListener;
-  private final ExecutionLog log;
   private final String testSystemName;
 
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
@@ -38,16 +37,10 @@ public abstract class SlimTestSystem implements TestSystem {
   private boolean stopTestCalled;
 
 
-  public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener, ExecutionLog executionLog) {
+  public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
     this.testSystemName = testSystemName;
     this.slimClient = slimClient;
     this.testSystemListener = listener;
-    this.log = executionLog;
-  }
-
-  @Override
-  public ExecutionLog getExecutionLog() {
-    return log;
   }
 
   public SlimTestContext getTestContext() {
@@ -218,7 +211,6 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   public void exceptionOccurred(Throwable e) {
-    log.addException(e);
     testSystemListener.exceptionOccurred(e);
   }
 

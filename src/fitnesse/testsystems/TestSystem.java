@@ -22,7 +22,5 @@ public interface TestSystem {
 
   void runTests(TestPage pageToTest) throws IOException, InterruptedException;
 
-  ExecutionLog getExecutionLog();
-
   boolean isSuccessfullyStarted();
 }

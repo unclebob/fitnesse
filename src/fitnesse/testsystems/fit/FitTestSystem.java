@@ -52,7 +52,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
       client.send(html);
   }
 
-  @Override
   public ExecutionLog getExecutionLog() {
     return log;
   }
