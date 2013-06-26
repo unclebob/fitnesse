@@ -16,20 +16,19 @@ import util.Clock;
 
 public class ExecutionLog {
   public static final String ErrorLogName = "ErrorLogs";
-  private PageCrawler crawler;
 
   private final String errorLogPageName;
   private final WikiPagePath errorLogPagePath;
 
-  private final WikiPage testPage;
+  private final String testPage;
   private final CommandRunner runner;
   private final List<Throwable> exceptions = new LinkedList<Throwable>();
 
-  public ExecutionLog(WikiPage testPage, CommandRunner client) {
-    this.testPage = testPage;
+  public ExecutionLog(WikiPage page, CommandRunner client) {
+    PageCrawler crawler = page.getPageCrawler();
     runner = client;
 
-    crawler = testPage.getPageCrawler();
+    testPage = "." + PathParser.render(crawler.getFullPath());
     errorLogPagePath = crawler.getFullPath().addNameToFront(ErrorLogName);
     errorLogPageName = PathParser.render(errorLogPagePath);
   }
@@ -42,7 +41,7 @@ public class ExecutionLog {
     VelocityContext context = new VelocityContext();
 
     context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
-    context.put("testPage", "." + PathParser.render(crawler.getFullPath()));
+    context.put("testPage", testPage);
     context.put("runner", runner);
     exceptions.addAll(runner.getExceptions());
     context.put("exceptions", exceptions);
