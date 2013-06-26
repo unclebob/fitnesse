@@ -62,8 +62,8 @@ public class MultipleTestsRunnerTest {
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
 
-    Descriptor fitDescriptor = ClientBuilder.getDescriptor(testPage, false);
-    Descriptor slimDescriptor = ClientBuilder.getDescriptor(slimPage, false);
+    Descriptor fitDescriptor = new Descriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new Descriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);
 
@@ -87,8 +87,8 @@ public class MultipleTestsRunnerTest {
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
-    Descriptor fitDescriptor = ClientBuilder.getDescriptor(testPage, false);
-    Descriptor slimDescriptor = ClientBuilder.getDescriptor(slimPage, false);
+    Descriptor fitDescriptor = new Descriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new Descriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
 
     List<TestPage> fitList = map.get(fitDescriptor);
     List<TestPage> slimList = map.get(slimDescriptor);

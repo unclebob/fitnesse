@@ -2,9 +2,14 @@ package fitnesse.testsystems;
 
 import fitnesse.wiki.ReadOnlyPageData;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.regex.Matcher;
 
-public class Descriptor extends DescriptorBase {
+/**
+ * Define a (hashable) extract of the test page, to be used as input for building the test system.
+ */
+public class Descriptor {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String DEFAULT_COMMAND_PATTERN =
     "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
@@ -18,12 +23,19 @@ public class Descriptor extends DescriptorBase {
   public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
   public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
+
   private final ReadOnlyPageData data;
   private final boolean remoteDebug;
+  private final String classPath;
 
-  public Descriptor(ReadOnlyPageData data, boolean remoteDebug) {
+  public Descriptor(ReadOnlyPageData data, boolean remoteDebug, String classPath) {
     this.data = data;
     this.remoteDebug = remoteDebug;
+    this.classPath = classPath;
+  }
+
+  public Descriptor(Descriptor descriptor, String classPath) {
+    this(descriptor.data, descriptor.remoteDebug, classPath);
   }
 
   protected static String fitnesseJar(String classpath) {
@@ -54,7 +66,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   public String getTestSystem() {
-    String testSystemName = data.getVariable(TEST_SYSTEM);
+    String testSystemName = getVariable(TEST_SYSTEM);
     if (testSystemName == null)
       return "fit";
     return testSystemName;
@@ -67,7 +79,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getTestRunnerDebug() {
-    String program = data.getVariable(REMOTE_DEBUG_RUNNER);
+    String program = getVariable(REMOTE_DEBUG_RUNNER);
     if (program == null) {
       program = getTestRunnerNormal();
       if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
@@ -78,7 +90,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   public String getTestRunnerNormal() {
-    String program = data.getVariable(TEST_RUNNER);
+    String program = getVariable(TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner();
     return program;
@@ -101,9 +113,9 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getRemoteDebugCommandPattern() {
-    String testRunner = data.getVariable(REMOTE_DEBUG_COMMAND);
+    String testRunner = getVariable(REMOTE_DEBUG_COMMAND);
     if (testRunner == null) {
-      testRunner = data.getVariable(COMMAND_PATTERN);
+      testRunner = getVariable(COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
         testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
       }
@@ -112,7 +124,7 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getNormalCommandPattern() {
-    String testRunner = data.getVariable(COMMAND_PATTERN);
+    String testRunner = getVariable(COMMAND_PATTERN);
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
@@ -123,6 +135,24 @@ public class Descriptor extends DescriptorBase {
       return getRemoteDebugCommandPattern();
     else
       return getNormalCommandPattern();
+  }
+
+  public Map<String, String> createClasspathEnvironment(String classPath) {
+    String classpathProperty = getVariable(Descriptor.CLASSPATH_PROPERTY);
+    Map<String, String> environmentVariables = null;
+    if (classpathProperty != null) {
+      environmentVariables = Collections.singletonMap(classpathProperty, classPath);
+    }
+    return environmentVariables;
+  }
+
+  public String getClassPath() {
+    return classPath;
+  }
+
+  // Generic entry point for everything the test system needs to know.
+  public String getVariable(String name) {
+    return data.getVariable(name);
   }
 
   @Override

@@ -17,19 +17,15 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   private final FitNesseContext context;
   private final WikiPage page;
-  private final String classPath;
   private final TestSystemListener testSystemListener;
-  private final String testSystemName;
   private ExecutionLog log;
   private CommandRunningFitClient client;
 
-  public FitTestSystem(String testSystemName, FitNesseContext context, WikiPage page, String classPath,
+  public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
                        TestSystemListener listener) {
-    super(page.getData());
-    this.testSystemName = testSystemName;
+    super(descriptor);
     this.context = context;
     this.page = page;
-    this.classPath = classPath;
     this.testSystemListener = listener;
   }
 
@@ -37,15 +33,14 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     this.log = log;
   }
 
-  @Override
-  protected String defaultTestRunner() {
+  public static String defaultTestRunner() {
     return "fit.FitServer";
   }
 
   @Override
   public void start() {
     client.start();
-    testSystemStarted(this, testSystemName, client.getTestRunner());
+    testSystemStarted(this, descriptor.getTestSystem(), descriptor.getTestRunner());
   }
 
   @Override
@@ -113,9 +108,10 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public FitClient build() {
-    String testRunner = getTestRunner();
-    String command = buildCommand(getCommandPattern(), testRunner, classPath);
-    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
+    String testRunner = descriptor.getTestRunner();
+    String classPath = descriptor.getClassPath();
+    String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
+    Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy = fastTest ?
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);

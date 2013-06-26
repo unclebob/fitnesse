@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -67,6 +68,10 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   public WikiPage getPage() {
     return page;
+  }
+
+  protected Descriptor getDescriptor() {
+    return new Descriptor(page.readOnlyData(), false, new ClassPathBuilder().getClasspath(page));
   }
 
   public class SlimRenderer {

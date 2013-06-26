@@ -4,6 +4,7 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -15,10 +16,10 @@ import java.io.IOException;
 public class HtmlSlimResponder extends SlimResponder {
 
   protected SlimTestSystem getTestSystem() throws IOException {
-    WikiPage page = getPage();
-    SlimCommandRunningClient slimClient = new SlimClientBuilder(page.getData(), new ClassPathBuilder().getClasspath(page))
+    SlimCommandRunningClient slimClient = new SlimClientBuilder(getDescriptor())
             .withFastTest(fastTest)
             .build();
-    return new HtmlSlimTestSystem("slim", slimClient, this, new ExecutionLog(page, slimClient.getCommandRunner()));
+    return new HtmlSlimTestSystem("slim", slimClient, this, new ExecutionLog(getPage(), slimClient.getCommandRunner()));
   }
+
 }

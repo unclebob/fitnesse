@@ -52,10 +52,10 @@ public class TestSystemGroup {
     this.remoteDebug = remoteDebug;
   }
 
-  public TestSystem startTestSystem(Descriptor descriptor, String classPath) throws IOException {
+  public TestSystem startTestSystem(Descriptor descriptor) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
-      testSystem = makeTestSystem(descriptor, classPath);
+      testSystem = makeTestSystem(descriptor);
 
       testSystems.put(descriptor, testSystem);
       testSystem.start();
@@ -65,27 +65,27 @@ public class TestSystemGroup {
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(Descriptor descriptor, String classPath) throws IOException {
+  private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
     if ("slim".equalsIgnoreCase(Descriptor.getTestSystemType(descriptor.getTestSystemName())))
-      return createHtmlSlimTestSystem(descriptor.getTestSystem(), classPath);
+      return createHtmlSlimTestSystem(descriptor);
     else
-      return createFitTestSystem(descriptor.getTestSystem(), classPath);
+      return createFitTestSystem(descriptor);
   }
 
-  private HtmlSlimTestSystem createHtmlSlimTestSystem(String testSystemName, String classPath) throws IOException {
-    SlimCommandRunningClient slimClient = new SlimClientBuilder(page.getData(), classPath)
+  private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
+    SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor)
             .withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)
             .build();
 
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(testSystemName, slimClient, testSystemListener, new ExecutionLog(page, slimClient.getCommandRunner()));
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystem(), slimClient, testSystemListener, new ExecutionLog(page, slimClient.getCommandRunner()));
 
     return testSystem;
   }
 
-  private FitTestSystem createFitTestSystem(String testSystemName, String classPath) throws IOException {
-    FitTestSystem testSystem = new FitTestSystem(testSystemName, context, page, classPath, testSystemListener);
+  private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
+    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor, testSystemListener);
     testSystem.withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)

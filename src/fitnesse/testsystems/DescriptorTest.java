@@ -1,10 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testsystems.slim;
+package fitnesse.testsystems;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.testsystems.ClientBuilder;
@@ -21,7 +22,7 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-public class SlimClientBuilderTest {
+public class DescriptorTest {
 
   private String getClassPath(WikiPage page) {
     return new ClassPathBuilder().getClasspath(page);
@@ -32,11 +33,11 @@ public class SlimClientBuilderTest {
     String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder.getCommandPattern());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", descriptor.getCommandPattern());
 
-    ClientBuilder clientBuilder1 = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage)).withRemoteDebug(true);
-    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder1.getCommandPattern());
+    Descriptor descriptor1 = new Descriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", descriptor1.getCommandPattern());
   }
 
 
@@ -46,14 +47,14 @@ public class SlimClientBuilderTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(page.readOnlyData(), getClassPath(page));
+    Descriptor descriptor = new Descriptor(page.readOnlyData(), false, getClassPath(page));
     String sep = System.getProperty("path.separator");
-    assertEquals("java -cp fitnesse.jar" + sep + "%p %m", clientBuilder.getCommandPattern());
+    assertEquals("java -cp fitnesse.jar" + sep + "%p %m", descriptor.getCommandPattern());
 
-    ClientBuilder debugClientBuilder = new SlimClientBuilder(page.readOnlyData(), getClassPath(page)).withRemoteDebug(true);
+    Descriptor debugDescriptor = new Descriptor(page.readOnlyData(), true, getClassPath(page));
     assertEquals(
             "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
-            debugClientBuilder.getCommandPattern());
+            debugDescriptor.getCommandPattern());
   }
 
   @Test
@@ -62,11 +63,11 @@ public class SlimClientBuilderTest {
             + "!define REMOTE_DEBUG_COMMAND {java -remoteDebug -cp %p %m}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals("java -specialParam -cp %p %m", clientBuilder.getCommandPattern());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals("java -specialParam -cp %p %m", descriptor.getCommandPattern());
 
-    ClientBuilder debugClientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage)).withRemoteDebug(true);
-    assertEquals("java -remoteDebug -cp %p %m", debugClientBuilder.getCommandPattern());
+    Descriptor debugDescriptor = new Descriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    assertEquals("java -remoteDebug -cp %p %m", debugDescriptor.getCommandPattern());
   }
 
   @Test
@@ -75,8 +76,8 @@ public class SlimClientBuilderTest {
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals("rubyslim %p %m", clientBuilder.getCommandPattern());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals("rubyslim %p %m", descriptor.getCommandPattern());
   }
 
   @Test
@@ -85,8 +86,8 @@ public class SlimClientBuilderTest {
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals("rubyslim.rb", clientBuilder.getTestRunner());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals("rubyslim.rb", descriptor.getTestRunner());
   }
 
   @Test
@@ -94,10 +95,10 @@ public class SlimClientBuilderTest {
     String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", clientBuilder.getTestRunner());
-    ClientBuilder debugClientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage)).withRemoteDebug(true);
-    assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", debugClientBuilder.getTestRunner());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", descriptor.getTestRunner());
+    Descriptor debugDescriptor = new Descriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", debugDescriptor.getTestRunner());
   }
 
   @Test
@@ -105,10 +106,10 @@ public class SlimClientBuilderTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(page.readOnlyData(), getClassPath(page));
-    assertEquals("fitnesse.slim.SlimService", clientBuilder.getTestRunner());
-    ClientBuilder debugClientBuilder = new SlimClientBuilder(page.readOnlyData(), getClassPath(page)).withRemoteDebug(true);
-    assertEquals("fitnesse.slim.SlimService", debugClientBuilder.getTestRunner());
+    Descriptor descriptor = new Descriptor(page.readOnlyData(), false, getClassPath(page));
+    assertEquals("fitnesse.slim.SlimService", descriptor.getTestRunner());
+    Descriptor debugDescriptor = new Descriptor(page.readOnlyData(), true, getClassPath(page));
+    assertEquals("fitnesse.slim.SlimService", debugDescriptor.getTestRunner());
   }
 
   @Test
@@ -116,8 +117,8 @@ public class SlimClientBuilderTest {
     String specifiedPageText = "!define REMOTE_DEBUG_RUNNER {Different runner}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage)).withRemoteDebug(true);
-    assertEquals("Different runner", clientBuilder.getTestRunner());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    assertEquals("Different runner", descriptor.getTestRunner());
   }
 
   WikiPage makeTestPage(String pageText) {
@@ -134,8 +135,8 @@ public class SlimClientBuilderTest {
     String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    ClientBuilder clientBuilder = new SlimClientBuilder(specifiedPage.readOnlyData(), getClassPath(specifiedPage));
-    assertEquals(fitnesseRootpath + "/rubyslim.rb", clientBuilder.getTestRunner());
+    Descriptor descriptor = new Descriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    assertEquals(fitnesseRootpath + "/rubyslim.rb", descriptor.getTestRunner());
   }
 
 }

@@ -102,8 +102,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = testSystemGroup.startTestSystem(descriptor,
-                new ClassPathBuilder().buildClassPath(testPagesToRun));
+        testSystem = testSystemGroup.startTestSystem(new Descriptor(descriptor,
+                new ClassPathBuilder().buildClassPath(testPagesToRun)));
       }
 
       if (testSystem != null) {
@@ -152,7 +152,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
-    Descriptor descriptor = ClientBuilder.getDescriptor(wikiPage, isRemoteDebug);
+    Descriptor descriptor = new Descriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
