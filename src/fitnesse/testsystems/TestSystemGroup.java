@@ -8,7 +8,6 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimCommandRunningClient;
-import fitnesse.slim.SlimError;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -67,7 +66,7 @@ public class TestSystemGroup {
   }
 
   private TestSystem makeTestSystem(Descriptor descriptor, String classPath) throws IOException {
-    if ("slim".equalsIgnoreCase(ClientBuilder.getTestSystemType(descriptor.getTestSystemName())))
+    if ("slim".equalsIgnoreCase(Descriptor.getTestSystemType(descriptor.getTestSystemName())))
       return createHtmlSlimTestSystem(descriptor.getTestSystem(), classPath);
     else
       return createFitTestSystem(descriptor.getTestSystem(), classPath);

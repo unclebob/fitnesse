@@ -53,30 +53,30 @@ public class ClientBuilderTest {
 
   @Test
   public void shouldReplaceMarkWithValue() {
-    assertEquals("Hello world", ClientBuilder.replace("Hello %p", "%p", "world"));
-    assertEquals("/path/to/somewhere", ClientBuilder.replace("/path/%p/somewhere", "%p", "to"));
-    assertEquals("/path/to/somewhere", ClientBuilder.replace("/path%p", "%p", "/to/somewhere"));
-    assertEquals("\\path\\to\\somewhere", ClientBuilder.replace("\\path\\%p\\somewhere", "%p", "to"));
-    assertEquals("\\path\\to\\somewhere", ClientBuilder.replace("\\path%p", "%p", "\\to\\somewhere"));
+    assertEquals("Hello world", Descriptor.replace("Hello %p", "%p", "world"));
+    assertEquals("/path/to/somewhere", Descriptor.replace("/path/%p/somewhere", "%p", "to"));
+    assertEquals("/path/to/somewhere", Descriptor.replace("/path%p", "%p", "/to/somewhere"));
+    assertEquals("\\path\\to\\somewhere", Descriptor.replace("\\path\\%p\\somewhere", "%p", "to"));
+    assertEquals("\\path\\to\\somewhere", Descriptor.replace("\\path%p", "%p", "\\to\\somewhere"));
   }
 
   @Test
   public void shouldIncludeStandaloneJarByDefault() {
-    assertEquals("fitnesse.jar", ClientBuilder.fitnesseJar("fitnesse.jar"));
+    assertEquals("fitnesse.jar", Descriptor.fitnesseJar("fitnesse.jar"));
     assertEquals("fitnesse-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-20121220.jar"));
+            Descriptor.fitnesseJar("fitnesse-20121220.jar"));
     assertEquals("fitnesse-standalone.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone.jar"));
+            Descriptor.fitnesseJar("fitnesse-standalone.jar"));
     assertEquals("fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone-20121220.jar"));
+            Descriptor.fitnesseJar("fitnesse-standalone-20121220.jar"));
     assertEquals("fitnesse.jar",
-            ClientBuilder.fitnesseJar("fitnesse-book.jar"));
+            Descriptor.fitnesseJar("fitnesse-book.jar"));
     assertEquals(
             "fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar(String
+            Descriptor.fitnesseJar(String
                     .format("irrelevant.jar%1$sfitnesse-book.jar%1$sfitnesse-standalone-20121220.jar",
                             System.getProperty("path.separator"))));
     assertEquals(String.format("lib%sfitnesse-standalone.jar", File.separator),
-            ClientBuilder.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
+            Descriptor.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
   }
 }

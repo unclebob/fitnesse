@@ -2,8 +2,22 @@ package fitnesse.testsystems;
 
 import fitnesse.wiki.ReadOnlyPageData;
 
-@Deprecated
+import java.util.regex.Matcher;
+
 public class Descriptor extends DescriptorBase {
+  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
+  public static final String DEFAULT_COMMAND_PATTERN =
+    "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
+      System.getProperty("path.separator") +
+      "%p %m";
+  public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
+  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
+  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
+  public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
+  public static final String TEST_RUNNER = "TEST_RUNNER";
+  public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
+  public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
+  public static final String TEST_SYSTEM = "TEST_SYSTEM";
   private final ReadOnlyPageData data;
   private final boolean remoteDebug;
 
@@ -12,8 +26,35 @@ public class Descriptor extends DescriptorBase {
     this.remoteDebug = remoteDebug;
   }
 
+  protected static String fitnesseJar(String classpath) {
+    for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
+      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
+      String jarFile = paths[paths.length-1];
+      if ("fitnesse-standalone.jar".equals(jarFile)) {
+        return pathEntry;
+      }
+      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
+        return pathEntry;
+      }
+      if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
+        return pathEntry;
+      }
+    }
+
+    return "fitnesse.jar";
+  }
+
+  protected static String replace(String value, String mark, String replacement) {
+    return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
+  }
+
+  public static String getTestSystemType(String testSystemName) {
+    String parts[] = testSystemName.split(":");
+    return parts[0];
+  }
+
   public String getTestSystem() {
-    String testSystemName = data.getVariable(ClientBuilder.TEST_SYSTEM);
+    String testSystemName = data.getVariable(TEST_SYSTEM);
     if (testSystemName == null)
       return "fit";
     return testSystemName;
@@ -26,18 +67,18 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getTestRunnerDebug() {
-    String program = data.getVariable(ClientBuilder.REMOTE_DEBUG_RUNNER);
+    String program = data.getVariable(REMOTE_DEBUG_RUNNER);
     if (program == null) {
       program = getTestRunnerNormal();
-      if (program.toLowerCase().contains(ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
-        program = program.toLowerCase().replace(ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
-          ClientBuilder.DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
+      if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
+        program = program.toLowerCase().replace(DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
+          DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
     }
     return program;
   }
 
   public String getTestRunnerNormal() {
-    String program = data.getVariable(ClientBuilder.TEST_RUNNER);
+    String program = data.getVariable(TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner();
     return program;
@@ -60,20 +101,20 @@ public class Descriptor extends DescriptorBase {
   }
 
   private String getRemoteDebugCommandPattern() {
-    String testRunner = data.getVariable(ClientBuilder.REMOTE_DEBUG_COMMAND);
+    String testRunner = data.getVariable(REMOTE_DEBUG_COMMAND);
     if (testRunner == null) {
-      testRunner = data.getVariable(ClientBuilder.COMMAND_PATTERN);
+      testRunner = data.getVariable(COMMAND_PATTERN);
       if (testRunner == null || testRunner.toLowerCase().contains("java")) {
-        testRunner = ClientBuilder.DEFAULT_JAVA_DEBUG_COMMAND;
+        testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
       }
     }
     return testRunner;
   }
 
   private String getNormalCommandPattern() {
-    String testRunner = data.getVariable(ClientBuilder.COMMAND_PATTERN);
+    String testRunner = data.getVariable(COMMAND_PATTERN);
     if (testRunner == null)
-      testRunner = ClientBuilder.DEFAULT_COMMAND_PATTERN;
+      testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
   }
 
@@ -83,4 +124,21 @@ public class Descriptor extends DescriptorBase {
     else
       return getNormalCommandPattern();
   }
+
+  @Override
+  public int hashCode() {
+    return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+
+    Descriptor descriptor = (Descriptor) obj;
+    return descriptor.getTestSystemName().equals(getTestSystemName()) &&
+            descriptor.getTestRunner().equals(getTestRunner()) &&
+            descriptor.getCommandPattern().equals(getCommandPattern());
+  }
+
 }
