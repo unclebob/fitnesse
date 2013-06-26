@@ -83,7 +83,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Map.Entry<Descriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
+    for (Map.Entry<WikiPageDescriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
       startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
     }
 
@@ -98,11 +98,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return false;
   }
 
-  private void startTestSystemAndExecutePages(Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = testSystemGroup.startTestSystem(new Descriptor(descriptor,
+        testSystem = testSystemGroup.startTestSystem(new WikiPageDescriptor(descriptor,
                 new ClassPathBuilder().buildClassPath(testPagesToRun)));
       }
 
@@ -152,11 +152,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
-    Descriptor descriptor = new Descriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
-  private LinkedList<TestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, Descriptor descriptor) {
+  private LinkedList<TestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPageDescriptor descriptor) {
     LinkedList<TestPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
       pagesForTestSystem = new LinkedList<TestPage>();
@@ -250,6 +250,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 }
 
-class PagesByTestSystem extends HashMap<Descriptor, LinkedList<TestPage>> {
+class PagesByTestSystem extends HashMap<WikiPageDescriptor, LinkedList<TestPage>> {
   private static final long serialVersionUID = 1L;
 }

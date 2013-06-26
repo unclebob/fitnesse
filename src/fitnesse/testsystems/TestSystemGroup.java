@@ -66,7 +66,7 @@ public class TestSystemGroup {
   }
 
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
-    if ("slim".equalsIgnoreCase(Descriptor.getTestSystemType(descriptor.getTestSystemName())))
+    if ("slim".equalsIgnoreCase(WikiPageDescriptor.getTestSystemType(descriptor.getTestSystemName())))
       return createHtmlSlimTestSystem(descriptor);
     else
       return createFitTestSystem(descriptor);

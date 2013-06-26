@@ -71,7 +71,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected Descriptor getDescriptor() {
-    return new Descriptor(page.readOnlyData(), false, new ClassPathBuilder().getClasspath(page));
+    return new WikiPageDescriptor(page.readOnlyData(), false, new ClassPathBuilder().getClasspath(page));
   }
 
   public class SlimRenderer {

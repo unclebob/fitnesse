@@ -1,11 +1,6 @@
 package fitnesse.testsystems;
 
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
-
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
 
 public abstract class ClientBuilder<T> {
 
@@ -19,8 +14,8 @@ public abstract class ClientBuilder<T> {
   }
 
   protected String buildCommand(String commandPattern, String testRunner, String classPath) {
-    String command = Descriptor.replace(commandPattern, "%p", classPath);
-    command = Descriptor.replace(command, "%m", testRunner);
+    String command = WikiPageDescriptor.replace(commandPattern, "%p", classPath);
+    command = WikiPageDescriptor.replace(command, "%m", testRunner);
     return command;
   }
 
