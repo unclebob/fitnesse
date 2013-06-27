@@ -78,11 +78,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     commandRunningStrategy.kill();
   }
 
-  public void exceptionOccurred(Exception e) {
-    commandRunner.exceptionOccurred(e);
-    super.exceptionOccurred(e);
-  }
-
   public interface CommandRunningStrategy {
     CommandRunner init(CommandRunningFitClient fitClient, String hostname, int port, int ticketNumber);
 

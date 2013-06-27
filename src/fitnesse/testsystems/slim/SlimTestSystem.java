@@ -146,6 +146,7 @@ public abstract class SlimTestSystem implements TestSystem {
     }
   }
 
+  // TODO: Move to SlimClient
   static String translateExceptionMessage(String exceptionMessage) {
     String tokens[] = exceptionMessage.split(" ");
     if (tokens[0].equals(COULD_NOT_INVOKE_CONSTRUCTOR))

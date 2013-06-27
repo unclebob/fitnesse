@@ -14,7 +14,7 @@ public class CommandRunnerTest extends RegexTestCase {
   }
 
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!");
+    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!", null);
     runner.run();
     assertHasRegexp("echo this!", runner.getOutput());
     assertEquals("", runner.getError());
@@ -23,7 +23,7 @@ public class CommandRunnerTest extends RegexTestCase {
   }
 
   public void testClassNotFound() throws Exception {
-    CommandRunner runner = new CommandRunner("java BadClass", null);
+    CommandRunner runner = new CommandRunner("java BadClass", "", null);
     runner.run();
     assertHasRegexp("Error", runner.getError());
     assertEquals("", runner.getOutput());
