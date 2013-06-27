@@ -2,17 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import static fitnesse.slim.SlimServer.*;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
@@ -21,8 +10,17 @@ import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
-import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
   public static final SlimTable START_OF_TEST = null;
@@ -32,7 +30,6 @@ public abstract class SlimTestSystem implements TestSystem {
   private final TestSystemListener testSystemListener;
   private final String testSystemName;
 
-  private SlimTableFactory slimTableFactory = new SlimTableFactory();
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
 
@@ -91,32 +88,9 @@ public abstract class SlimTestSystem implements TestSystem {
     testContext = new SlimTestContextImpl();
   }
 
-  protected abstract List<SlimTable> createSlimTables(TestPage pageTotest);
+  protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
-  protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
-
-  void processAllTablesOnPage(TestPage pageToTest) throws IOException {
-    List<SlimTable> allTables = createSlimTables(pageToTest);
-
-    if (allTables.size() == 0) {
-      String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
-      testOutputChunk(html);
-    } else {
-      List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
-      for (int index = 0; index < allTables.size(); index++) {
-        SlimTable theTable = allTables.get(index);
-        SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
-        SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
-
-        processTable(theTable);
-
-        String html = createHtmlResults(startWithTable, nextTable);
-        testOutputChunk(html);
-      }
-    }
-  }
-
-  private void processTable(SlimTable table) throws IOException {
+  protected void processTable(SlimTable table) throws IOException {
     List<Assertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
     if (!stopTestCalled) {
@@ -140,23 +114,6 @@ public abstract class SlimTestSystem implements TestSystem {
     return assertions;
   }
 
-  protected List<SlimTable> createSlimTables(TableScanner<? extends Table> tableScanner) {
-    List<SlimTable> allTables = new LinkedList<SlimTable>();
-    for (Table table : tableScanner)
-      createSlimTable(allTables, table);
-
-    return allTables;
-  }
-
-  private void createSlimTable(List<SlimTable> allTables, Table table) {
-    String tableId = "" + allTables.size();
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, testContext);
-    if (slimTable != null) {
-      allTables.add(slimTable);
-    }
-  }
-
-  // TODO: Move to SlimClient
   static String translateExceptionMessage(String exceptionMessage) {
     String tokens[] = exceptionMessage.split(" ");
     if (tokens[0].equals(COULD_NOT_INVOKE_CONSTRUCTOR))
