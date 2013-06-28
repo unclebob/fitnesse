@@ -2,21 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.*;
+import org.apache.velocity.VelocityContext;
+import util.Clock;
 
 public class CompositeExecutionLog {
+  public static final String ErrorLogName = "ErrorLogs";
+
+  private final WikiPage testPage;
+  private final String testPagePath;
   private WikiPagePath errorLogPagePath;
-  private PageCrawler crawler;
-  private WikiPage root;
 
   public CompositeExecutionLog(WikiPage testPage) {
-    crawler = testPage.getPageCrawler();
-    root = crawler.getRoot();
-    errorLogPagePath = crawler.getFullPath().addNameToFront(ExecutionLog.ErrorLogName);
+    this.testPage = testPage;
+    PageCrawler crawler = testPage.getPageCrawler();
+    testPagePath = "." + crawler.getFullPath();
+    errorLogPagePath = crawler.getFullPath().addNameToFront(ErrorLogName);
   }
 
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
@@ -27,6 +33,8 @@ public class CompositeExecutionLog {
 
   public void publish(PageFactory pageFactory) {
     String content = buildLogContent(pageFactory);
+    PageCrawler crawler = testPage.getPageCrawler();
+    WikiPage root = crawler.getRoot();
 
     WikiPage errorLogPage = WikiPageUtil.addPage(root, errorLogPagePath);
     PageData data = errorLogPage.getData();
@@ -51,9 +59,19 @@ public class CompositeExecutionLog {
     StringBuffer logContent = new StringBuffer();
     for (String testSystemName : logs.keySet()) {
       logContent.append(String.format("!3 !-%s-!\n", testSystemName));
-      logContent.append(logs.get(testSystemName).buildLogContent(pageFactory));
+      logContent.append(buildLogContent(logs.get(testSystemName), pageFactory));
     }
     return logContent.toString();
+  }
+
+  String buildLogContent(ExecutionLog log, PageFactory pageFactory) {
+    VelocityContext context = new VelocityContext();
+
+    context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
+    context.put("testPage", testPagePath);
+    context.put("log", log);
+
+    return pageFactory.render(context, "executionLog.vm");
   }
 
   public String getErrorLogPageName() {
@@ -72,5 +90,10 @@ public class CompositeExecutionLog {
       if (log.hasCapturedOutput())
         return true;
     return false;
+  }
+
+  private SimpleDateFormat makeDateFormat() {
+    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
+    return new SimpleDateFormat("h:mm:ss a (z) 'on' EEEE, MMMM d, yyyy");
   }
 }

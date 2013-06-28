@@ -3,6 +3,7 @@
 package fitnesse.testsystems;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,63 +16,50 @@ import org.apache.velocity.VelocityContext;
 import util.Clock;
 
 public class ExecutionLog {
-  public static final String ErrorLogName = "ErrorLogs";
 
-  private final String errorLogPageName;
-  private final WikiPagePath errorLogPagePath;
-
-  private final String testPage;
   private final CommandRunner runner;
   private final List<Throwable> exceptions = new LinkedList<Throwable>();
 
-  public ExecutionLog(WikiPage page, CommandRunner client) {
-    PageCrawler crawler = page.getPageCrawler();
+  public ExecutionLog(CommandRunner client) {
     runner = client;
-
-    testPage = "." + PathParser.render(crawler.getFullPath());
-    errorLogPagePath = crawler.getFullPath().addNameToFront(ErrorLogName);
-    errorLogPageName = PathParser.render(errorLogPagePath);
   }
 
   public void addException(Throwable e) {
     exceptions.add(e);
   }
 
-  String buildLogContent(PageFactory pageFactory) {
-    VelocityContext context = new VelocityContext();
-
-    context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
-    context.put("testPage", testPage);
-    context.put("runner", runner);
-    exceptions.addAll(runner.getExceptions());
-    context.put("exceptions", exceptions);
-
-    return pageFactory.render(context, "executionLog.vm");
-  }
-
   int exceptionCount() {
-    return exceptions.size();
+    return exceptions.size() + runner.getExceptions().size();
   }
 
-  String getErrorLogPageName() {
-    return errorLogPageName;
+  public List<Throwable> getExceptions() {
+    List<Throwable> exc = new ArrayList<Throwable>(exceptions);
+    exc.addAll(runner.getExceptions());
+    return exc;
   }
 
   boolean hasCapturedOutput() {
     return runner.wroteToErrorStream() || runner.wroteToOutputStream();
   }
 
+  public String getCommand() {
+    return runner.getCommand();
+  }
+
+  public long getExecutionTime() {
+    return runner.getExecutionTime();
+  }
 
   public int getExitCode() {
     return runner.getExitCode();
   }
 
-  public CommandRunner getCommandRunner() {
-    return runner;
+  public String getCapturedOutput() {
+    return runner.getOutput();
   }
 
-  private SimpleDateFormat makeDateFormat() {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("h:mm:ss a (z) 'on' EEEE, MMMM d, yyyy");
+  public String getCapturedError() {
+    return runner.getError();
   }
+
 }

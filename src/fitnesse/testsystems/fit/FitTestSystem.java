@@ -115,8 +115,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
             new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
-    setExecutionLog(new ExecutionLog(page, client.commandRunner));
     client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+    setExecutionLog(new ExecutionLog(client.commandRunner));
 
     return client;
   }

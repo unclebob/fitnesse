@@ -80,7 +80,7 @@ public class TestSystemGroup {
             .withRemoteDebug(remoteDebug)
             .build();
 
-    ExecutionLogListener listener = new ExecutionLogListener(page, slimClient.getCommandRunner(), testSystemListener);
+    ExecutionLogListener listener = new ExecutionLogListener(slimClient.getCommandRunner(), testSystemListener);
     log.add(descriptor.getTestSystemName(), listener.getExecutionLog());
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystem(), slimClient, listener);
 
@@ -105,8 +105,8 @@ public class TestSystemGroup {
     private final ExecutionLog log;
     private final TestSystemListener testSystemListener;
 
-    ExecutionLogListener(WikiPage page, CommandRunner commandRunner, TestSystemListener testSystemListener) {
-      this.log = new ExecutionLog(page, commandRunner);
+    ExecutionLogListener(CommandRunner commandRunner, TestSystemListener testSystemListener) {
+      this.log = new ExecutionLog(commandRunner);
       this.testSystemListener = testSystemListener;
     }
 

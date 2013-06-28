@@ -15,6 +15,7 @@ public interface TestSystemListener {
 
   void testComplete(TestSummary testSummary) throws IOException;
 
+  // TODO: replace with: void testSystemStopped(Throwable throwable /* may be null */);
   void exceptionOccurred(Throwable e);
 
   void testAssertionVerified(Assertion assertion, TestResult testResult);

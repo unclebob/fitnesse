@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
+import static fitnesse.testsystems.CompositeExecutionLog.ErrorLogName;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertSubString;
 
@@ -16,12 +18,17 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
 public class CompositeExecutionLogTest {
-  private static final String ErrorLogName = ExecutionLog.ErrorLogName;
   private WikiPage testPage;
   private MockCommandRunner runner;
   private CompositeExecutionLog log;
   private WikiPage root;
   private FitNesseContext context;
+
+
+  @Test
+  public void testNoErrorLogPageToBeginWith() throws Exception {
+    assertFalse(root.hasChildPage(ErrorLogName));
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -38,8 +45,8 @@ public class CompositeExecutionLogTest {
 
   @Test
   public void publish() throws Exception {
-    log.add("testSystem1", new ExecutionLog(testPage, runner));
-    log.add("testSystem2", new ExecutionLog(testPage, runner));
+    log.add("testSystem1", new ExecutionLog(runner));
+    log.add("testSystem2", new ExecutionLog(runner));
     log.publish(context.pageFactory);
     WikiPage errorLogPage = root.getChildPage(ErrorLogName);
     assertNotNull(errorLogPage);
