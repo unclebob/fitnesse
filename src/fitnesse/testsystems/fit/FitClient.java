@@ -14,8 +14,8 @@ import fitnesse.testsystems.TestSystemListener;
 
 public class FitClient {
 
-  protected TestSystemListener listener;
-  protected Socket fitSocket;
+  private TestSystemListener listener;
+  private Socket fitSocket;
   private OutputStream fitInput;
   private StreamReader fitOutput;
 
@@ -88,14 +88,14 @@ public class FitClient {
     }
   }
 
-  private void attemptToListenToFit() throws Exception {
+  private void attemptToListenToFit() throws IOException {
     while (!finishedReading()) {
       int size;
       size = FitProtocol.readSize(fitOutput);
       if (size != 0) {
         String readValue = fitOutput.read(size);
         if (fitOutput.byteCount() < size)
-          throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+          throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
         listener.testOutputChunk(readValue);
       } else {
         Counts counts = FitProtocol.readCounts(fitOutput);
