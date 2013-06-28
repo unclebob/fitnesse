@@ -124,11 +124,11 @@ public class MultipleTestsRunnerTest {
   @Test
   public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    TestPage page = new TestPage(mock(WikiPage.class));
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+    TestPage page = new TestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
     
     runner.startingNewTest(page);
     verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
@@ -147,11 +147,11 @@ public class MultipleTestsRunnerTest {
   @Test
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    TestPage page = new TestPage(mock(WikiPage.class));
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+    TestPage page = new TestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
     runner.addToProcessingQueue(page);
     
     TestSummary testSummary = mock(TestSummary.class);
@@ -174,10 +174,9 @@ public class MultipleTestsRunnerTest {
   @Test
   public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
     
     runner.announceTotalTestsToRun(new PagesByTestSystem());
     verify(resultsListener).announceNumberTestsToRun(0);
@@ -187,10 +186,9 @@ public class MultipleTestsRunnerTest {
   @Test
   public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
     runner.announceTotalTestsToRun(new PagesByTestSystem());
     
     runner.allTestingComplete();
