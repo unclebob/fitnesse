@@ -31,7 +31,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
 
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
-    client = new CommandRunningFitClient("fit.FitServer", this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
         "java -cp classes fit.FitServer -v", null));
     receiver = new CustomFitSocketReceiver(port);
   }
@@ -102,7 +102,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient("blah", this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.start();
     Thread.sleep(100);
     client.join();
@@ -113,7 +113,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient("blah", this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.start();
     Thread.sleep(50);
     client.join();
