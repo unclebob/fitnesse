@@ -80,36 +80,6 @@ public class FitClient {
       throw new InterruptedException("FitClient was killed");
   }
 
-  private void listenToFit() {
-    try {
-      attemptToListenToFit();
-    } catch (Exception e) {
-      exceptionOccurred(e);
-    }
-  }
-
-  private void attemptToListenToFit() throws IOException {
-    while (!finishedReading()) {
-      int size;
-      size = FitProtocol.readSize(fitOutput);
-      if (size != 0) {
-        String readValue = fitOutput.read(size);
-        if (fitOutput.byteCount() < size)
-          throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-        listener.testOutputChunk(readValue);
-      } else {
-        Counts counts = FitProtocol.readCounts(fitOutput);
-        TestSummary summary = new TestSummary();
-        summary.right = counts.right;
-        summary.wrong = counts.wrong;
-        summary.ignores = counts.ignores;
-        summary.exceptions = counts.exceptions;
-        listener.testComplete(summary);
-        received++;
-      }
-    }
-  }
-
   private boolean finishedReading() {
     while (stateIndeterminate())
       shortSleep();
@@ -138,6 +108,37 @@ public class FitClient {
   private class FitListeningRunnable implements Runnable {
     public void run() {
       listenToFit();
+    }
+
+
+    private void listenToFit() {
+      try {
+        attemptToListenToFit();
+      } catch (Exception e) {
+        exceptionOccurred(e);
+      }
+    }
+
+    private void attemptToListenToFit() throws IOException {
+      while (!finishedReading()) {
+        int size;
+        size = FitProtocol.readSize(fitOutput);
+        if (size != 0) {
+          String readValue = fitOutput.read(size);
+          if (fitOutput.byteCount() < size)
+            throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+          listener.testOutputChunk(readValue);
+        } else {
+          Counts counts = FitProtocol.readCounts(fitOutput);
+          TestSummary summary = new TestSummary();
+          summary.right = counts.right;
+          summary.wrong = counts.wrong;
+          summary.ignores = counts.ignores;
+          summary.exceptions = counts.exceptions;
+          listener.testComplete(summary);
+          received++;
+        }
+      }
     }
   }
 
