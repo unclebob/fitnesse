@@ -55,21 +55,12 @@ public class CompositeExecutionLog {
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent(PageFactory pageFactory) {
-    StringBuffer logContent = new StringBuffer();
-    for (String testSystemName : logs.keySet()) {
-      logContent.append(String.format("!3 !-%s-!\n", testSystemName));
-      logContent.append(buildLogContent(logs.get(testSystemName), pageFactory));
-    }
-    return logContent.toString();
-  }
-
-  String buildLogContent(ExecutionLog log, PageFactory pageFactory) {
+  String buildLogContent(PageFactory pageFactory) {
     VelocityContext context = new VelocityContext();
 
     context.put("currentDate", makeDateFormat().format(Clock.currentDate()));
     context.put("testPage", testPagePath);
-    context.put("log", log);
+    context.put("logs", logs);
 
     return pageFactory.render(context, "executionLog.vm");
   }

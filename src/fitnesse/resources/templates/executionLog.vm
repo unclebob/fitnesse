@@ -1,3 +1,8 @@
+
+#foreach( $entry in $logs.entrySet() )
+#set( $testSystemName = $entry.key)
+#set( $log = $entry.value)
+!3 !-${testSystemName}-!
 |'''Date: '''| $currentDate |
 |'''Test Page: '''|$testPage|
 |'''Command: '''| !-${log.command}-! |
@@ -20,5 +25,6 @@
 '''Internal Exception#if( $log.exceptionCount() > 1)s#end:'''
 #foreach( $exception in $log.exceptions)
 {{{ $exception.message }}}
+#end
 #end
 #end
