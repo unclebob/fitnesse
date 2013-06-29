@@ -9,6 +9,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
@@ -383,6 +384,10 @@ public class HtmlSlimResponderTest {
 
     @Override
     public void exceptionOccurred(Throwable e) {
+    }
+
+    @Override
+    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
     }
 
     @Override

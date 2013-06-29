@@ -116,6 +116,10 @@ public class SlimTestSystemTest {
     }
 
     @Override
+    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    }
+
+    @Override
     public void testAssertionVerified(Assertion assertion, TestResult testResult) {
     }
 

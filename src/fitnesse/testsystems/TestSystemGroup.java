@@ -21,7 +21,6 @@ public class TestSystemGroup {
   private FitNesseContext context;
   private WikiPage page;
   private TestSystemListener testSystemListener;
-  private CompositeExecutionLog log;
   private boolean fastTest = false;
   private boolean manualStart = false;
   private boolean remoteDebug;
@@ -30,11 +29,6 @@ public class TestSystemGroup {
     this.context = context;
     this.page = page;
     this.testSystemListener = listener;
-    log = new CompositeExecutionLog(page);
-  }
-
-  public CompositeExecutionLog getExecutionLog() {
-    return log;
   }
 
   public void kill() throws IOException {
@@ -80,8 +74,6 @@ public class TestSystemGroup {
             .withRemoteDebug(remoteDebug)
             .build();
 
-    ExecutionLogListener listener = new ExecutionLogListener(slimClient.getCommandRunner(), testSystemListener);
-    log.add(descriptor.getTestSystemName(), listener.getExecutionLog());
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
     return testSystem;
@@ -94,55 +86,6 @@ public class TestSystemGroup {
             .withRemoteDebug(remoteDebug)
             .build();
 
-
-    log.add(descriptor.getTestSystemName(), testSystem.getExecutionLog());
-
     return testSystem;
-  }
-
-  static class ExecutionLogListener implements TestSystemListener {
-
-    private final ExecutionLog log;
-    private final TestSystemListener testSystemListener;
-
-    ExecutionLogListener(CommandRunner commandRunner, TestSystemListener testSystemListener) {
-      this.log = new ExecutionLog(commandRunner);
-      this.testSystemListener = testSystemListener;
-    }
-
-    public ExecutionLog getExecutionLog() {
-      return log;
-    }
-
-    @Override
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-      testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
-    }
-
-    @Override
-    public void testOutputChunk(String output) throws IOException {
-      testSystemListener.testOutputChunk(output);
-    }
-
-    @Override
-    public void testComplete(TestSummary testSummary) throws IOException {
-      testSystemListener.testComplete(testSummary);
-    }
-
-    @Override
-    public void exceptionOccurred(Throwable e) {
-      log.addException(e);
-      testSystemListener.exceptionOccurred(e);
-    }
-
-    @Override
-    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-      testSystemListener.testAssertionVerified(assertion, testResult);
-    }
-
-    @Override
-    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-      testSystemListener.testExceptionOccurred(assertion, exceptionResult);
-    }
   }
 }

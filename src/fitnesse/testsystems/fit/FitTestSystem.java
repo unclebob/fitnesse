@@ -18,7 +18,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   private final FitNesseContext context;
   private final WikiPage page;
   private final TestSystemListener testSystemListener;
-  private ExecutionLog log;
   private CommandRunningFitClient client;
 
   public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
@@ -27,10 +26,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     this.context = context;
     this.page = page;
     this.testSystemListener = listener;
-  }
-
-  protected final void setExecutionLog(final ExecutionLog log) {
-    this.log = log;
   }
 
   public static String defaultTestRunner() {
@@ -57,19 +52,17 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
       client.send(html);
   }
 
-  public ExecutionLog getExecutionLog() {
-    return log;
-  }
-
   @Override
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
+    testSystemStopped(this, new ExecutionLog(client.commandRunner), null);
   }
 
   @Override
   public void kill() {
     client.kill();
+    testSystemStopped(this, new ExecutionLog(client.commandRunner), null);
   }
 
   @Override
@@ -89,8 +82,16 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void exceptionOccurred(Throwable e) {
-    log.addException(e);
     testSystemListener.exceptionOccurred(e);
+    ExecutionLog log = new ExecutionLog(client.commandRunner);
+    log.addException(e);
+    client.kill();
+    testSystemStopped(this, log, e);
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    testSystemListener.testSystemStopped(this, executionLog, throwable);
   }
 
   @Override
@@ -121,7 +122,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
     client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
-    setExecutionLog(new ExecutionLog(client.commandRunner));
 
     return client;
   }

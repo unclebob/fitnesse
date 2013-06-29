@@ -140,6 +140,11 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    slimException = throwable;
+  }
+
+  @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
   }
 

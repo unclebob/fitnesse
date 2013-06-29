@@ -137,6 +137,10 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+  }
+
+  @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
   }
 

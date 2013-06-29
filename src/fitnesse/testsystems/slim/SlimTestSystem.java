@@ -71,11 +71,13 @@ public abstract class SlimTestSystem implements TestSystem {
   public void kill() throws IOException {
     if (slimClient != null)
       slimClient.kill();
+    testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
   }
 
   @Override
   public void bye() throws IOException {
     slimClient.bye();
+    testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
   }
 
   @Override
@@ -221,6 +223,14 @@ public abstract class SlimTestSystem implements TestSystem {
 
   public void exceptionOccurred(Throwable e) {
     testSystemListener.exceptionOccurred(e);
+    try {
+      slimClient.kill();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+    ExecutionLog log = slimClient.getExecutionLog();
+    log.addException(e);
+    testSystemListener.testSystemStopped(this, log, e);
   }
 
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {

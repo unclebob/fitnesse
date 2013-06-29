@@ -15,8 +15,10 @@ public interface TestSystemListener {
 
   void testComplete(TestSummary testSummary) throws IOException;
 
-  // TODO: replace with: void testSystemStopped(Throwable throwable /* may be null */);
+  @Deprecated
   void exceptionOccurred(Throwable e);
+
+  void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable /* may be null */);
 
   void testAssertionVerified(Assertion assertion, TestResult testResult);
 

@@ -34,6 +34,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
+  private CompositeExecutionLog log;
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
@@ -44,6 +45,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     this.page = page;
     this.fitNesseContext = fitNesseContext;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
+    log = new CompositeExecutionLog(page);
   }
 
   public void setDebug(boolean isDebug) {
@@ -79,7 +81,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     testSystemGroup.setManualStart(useManualStartForTestSystem());
     testSystemGroup.setRemoteDebug(isRemoteDebug);
 
-    resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
+    resultsListener.setExecutionLogAndTrackingId(stopId, log);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
@@ -212,6 +214,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 
+  @Override
   public void exceptionOccurred(Throwable e) {
     try {
       resultsListener.errorOccured();
@@ -221,6 +224,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         e1.printStackTrace();
       }
     }
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    log.add(testSystem.getName(), executionLog);
   }
 
   @Override
@@ -237,6 +245,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return !isStopped;
   }
 
+  @Override
   public void stop() throws IOException {
     boolean wasNotStopped = isNotStopped();
     isStopped = true;

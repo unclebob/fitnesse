@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
@@ -73,6 +74,11 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     } catch (Exception e1) {
       e1.printStackTrace();
     }
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    exceptionOccurred(throwable);
   }
 
   @Override
