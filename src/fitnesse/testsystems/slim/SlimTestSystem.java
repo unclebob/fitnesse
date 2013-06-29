@@ -47,11 +47,17 @@ public abstract class SlimTestSystem implements TestSystem {
     return testContext;
   }
 
+  @Override
+  public String getName() {
+    return testSystemName;
+  }
+
+  @Override
   public boolean isSuccessfullyStarted() {
     return true;
   }
 
-
+  @Override
   public void start() throws IOException {
     try {
       slimClient.start();
@@ -61,11 +67,13 @@ public abstract class SlimTestSystem implements TestSystem {
     }
   }
 
+  @Override
   public void kill() throws IOException {
     if (slimClient != null)
       slimClient.kill();
   }
 
+  @Override
   public void bye() throws IOException {
     slimClient.bye();
   }

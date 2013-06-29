@@ -174,9 +174,9 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
   @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    testSystemFullName = (testSystemName + ":" + testRunner).replaceAll("\\\\", "/");
+    testSystemFullName = testSystemName;
     testSummariesId = "test-system-" + testSystemName;
-    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemFullName, testSummariesId);
+    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
 

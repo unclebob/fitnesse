@@ -92,7 +92,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.testOutputChunk("starting");
     formatter.testOutputChunk(" output");
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
-    formatter.testSystemStarted(null, "Slim", "very.slim");
+    formatter.testSystemStarted(null, "Slim:very.slim", "very.slim");
     formatter.announceStartNewTest("NewRelativeName", "NewFullName");
     formatter.testOutputChunk("second");
     formatter.testOutputChunk(" test");

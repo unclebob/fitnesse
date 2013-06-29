@@ -82,7 +82,7 @@ public class TestSystemGroup {
 
     ExecutionLogListener listener = new ExecutionLogListener(slimClient.getCommandRunner(), testSystemListener);
     log.add(descriptor.getTestSystemName(), listener.getExecutionLog());
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystem(), slimClient, listener);
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
     return testSystem;
   }

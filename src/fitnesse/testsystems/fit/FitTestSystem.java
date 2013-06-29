@@ -38,9 +38,14 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   @Override
+  public String getName() {
+    return descriptor.getTestSystemName();
+  }
+
+  @Override
   public void start() {
     client.start();
-    testSystemStarted(this, descriptor.getTestSystem(), descriptor.getTestRunner());
+    testSystemStarted(this, descriptor.getTestSystemName(), descriptor.getTestRunner());
   }
 
   @Override
