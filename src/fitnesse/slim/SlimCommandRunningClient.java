@@ -6,6 +6,7 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.CommandRunnerExecutionLog;
 import fitnesse.testsystems.ExecutionLog;
 import util.ListUtility;
 import util.StreamReader;
@@ -151,7 +152,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public ExecutionLog getExecutionLog() {
-    return new ExecutionLog(slimRunner);
+    return new CommandRunnerExecutionLog(slimRunner);
   }
 
   private interface ToListExecutor extends InstructionExecutor {

@@ -46,13 +46,13 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
-    testSystemStopped(new ExecutionLog(client.commandRunner), null);
+    testSystemStopped(client.getExecutionLog(), null);
   }
 
   @Override
   public void kill() {
     client.kill();
-    testSystemStopped(new ExecutionLog(client.commandRunner), null);
+    testSystemStopped(client.getExecutionLog(), null);
   }
 
   @Override
@@ -67,7 +67,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void exceptionOccurred(Exception e) {
-    ExecutionLog log = new ExecutionLog(client.commandRunner);
+    ExecutionLog log = client.getExecutionLog();
     log.addException(e);
     try {
       client.kill();

@@ -96,7 +96,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
-    assertSubString("Error", client.commandRunner.getError());
+    assertSubString("Error", client.getExecutionLog().getCapturedError());
   }
 
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {

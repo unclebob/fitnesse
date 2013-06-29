@@ -14,7 +14,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  public final CommandRunner commandRunner;
+  private final CommandRunner commandRunner;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
@@ -36,6 +36,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     } catch (Exception e) {
       exceptionOccurred(e);
     }
+  }
+
+  public ExecutionLog getExecutionLog() {
+    return new CommandRunnerExecutionLog(commandRunner);
   }
 
   public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {

@@ -72,7 +72,7 @@ public class CompositeExecutionLog {
   public int exceptionCount() {
     int count = 0;
     for (ExecutionLog log : logs.values())
-      count += log.exceptionCount();
+      count += log.getExceptions().size();
     return count;
   }
 
