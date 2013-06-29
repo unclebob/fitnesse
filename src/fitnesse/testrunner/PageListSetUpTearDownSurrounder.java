@@ -1,10 +1,11 @@
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

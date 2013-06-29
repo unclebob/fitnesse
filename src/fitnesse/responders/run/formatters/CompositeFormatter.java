@@ -1,7 +1,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;

@@ -9,7 +9,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;

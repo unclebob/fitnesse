@@ -6,7 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.testsystems.TestPage;
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;

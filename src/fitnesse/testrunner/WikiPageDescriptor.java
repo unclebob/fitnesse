@@ -1,5 +1,6 @@
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
+import fitnesse.testsystems.Descriptor;
 import fitnesse.wiki.ReadOnlyPageData;
 
 import java.util.Collections;
@@ -54,10 +55,6 @@ public class WikiPageDescriptor implements Descriptor {
     }
 
     return "fitnesse.jar";
-  }
-
-  protected static String replace(String value, String mark, String replacement) {
-    return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
   }
 
   public static String getTestSystemType(String testSystemName) {

@@ -1,10 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
@@ -57,15 +58,6 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
     String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, "").getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
-  }
-
-  @Test
-  public void shouldReplaceMarkWithValue() {
-    assertEquals("Hello world", WikiPageDescriptor.replace("Hello %p", "%p", "world"));
-    assertEquals("/path/to/somewhere", WikiPageDescriptor.replace("/path/%p/somewhere", "%p", "to"));
-    assertEquals("/path/to/somewhere", WikiPageDescriptor.replace("/path%p", "%p", "/to/somewhere"));
-    assertEquals("\\path\\to\\somewhere", WikiPageDescriptor.replace("\\path\\%p\\somewhere", "%p", "to"));
-    assertEquals("\\path\\to\\somewhere", WikiPageDescriptor.replace("\\path%p", "%p", "\\to\\somewhere"));
   }
 
   @Test

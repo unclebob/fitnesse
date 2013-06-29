@@ -1,12 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.responders.PageFactory;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
 import util.Clock;

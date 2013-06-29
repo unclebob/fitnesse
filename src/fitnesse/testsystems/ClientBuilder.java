@@ -1,6 +1,9 @@
 package fitnesse.testsystems;
 
+import fitnesse.testrunner.WikiPageDescriptor;
+
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 public abstract class ClientBuilder<T> {
 
@@ -14,9 +17,14 @@ public abstract class ClientBuilder<T> {
   }
 
   protected String buildCommand(String commandPattern, String testRunner, String classPath) {
-    String command = WikiPageDescriptor.replace(commandPattern, "%p", classPath);
-    command = WikiPageDescriptor.replace(command, "%m", testRunner);
+    String command = replace(commandPattern, "%p", classPath);
+    command = replace(command, "%m", testRunner);
     return command;
+  }
+
+
+  protected static String replace(String value, String mark, String replacement) {
+    return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
   }
 
   public ClientBuilder<T> withFastTest(boolean fastTest) {

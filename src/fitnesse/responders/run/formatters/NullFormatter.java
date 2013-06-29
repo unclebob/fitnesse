@@ -6,7 +6,7 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;

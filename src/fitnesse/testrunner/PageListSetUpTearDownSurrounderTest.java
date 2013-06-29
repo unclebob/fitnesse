@@ -1,6 +1,7 @@
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
 import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.*;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;

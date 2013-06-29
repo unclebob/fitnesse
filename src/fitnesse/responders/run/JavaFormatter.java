@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

@@ -4,6 +4,9 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.PageListSetUpTearDownSurrounder;
+import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;

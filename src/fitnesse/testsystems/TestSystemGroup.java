@@ -8,12 +8,10 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;

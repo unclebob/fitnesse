@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PathParser;

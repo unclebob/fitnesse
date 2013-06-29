@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;

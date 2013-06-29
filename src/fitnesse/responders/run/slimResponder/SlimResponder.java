@@ -13,6 +13,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;

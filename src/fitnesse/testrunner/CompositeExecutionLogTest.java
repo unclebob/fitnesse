@@ -1,12 +1,14 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
-import static fitnesse.testsystems.CompositeExecutionLog.ErrorLogName;
+import static fitnesse.testrunner.CompositeExecutionLog.ErrorLogName;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertSubString;
 
+import fitnesse.testsystems.CommandRunnerExecutionLog;
+import fitnesse.testsystems.MockCommandRunner;
 import org.junit.Before;
 import org.junit.Test;
 
