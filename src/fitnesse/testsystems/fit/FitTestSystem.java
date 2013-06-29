@@ -67,11 +67,13 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void exceptionOccurred(Exception e) {
-    testSystemListener.exceptionOccurred(e);
     ExecutionLog log = new ExecutionLog(client.commandRunner);
     log.addException(e);
-    client.kill();
-    testSystemStopped(log, e);
+    try {
+      client.kill();
+    } finally {
+      testSystemStopped(log, e);
+    }
   }
 
   private void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {

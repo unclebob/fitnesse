@@ -112,10 +112,6 @@ public class SlimTestSystemTest {
     }
 
     @Override
-    public void exceptionOccurred(Throwable e) {
-    }
-
-    @Override
     public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
     }
 

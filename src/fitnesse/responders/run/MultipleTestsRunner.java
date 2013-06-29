@@ -63,7 +63,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     } catch (Exception exception) {
       //hoped to write exceptions to log file but will take some work.
       exception.printStackTrace(System.out);
-      exceptionOccurred(exception);
+      errorOccurred(exception);
     }
   }
 
@@ -214,8 +214,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 
-  @Override
-  public void exceptionOccurred(Throwable e) {
+  private void errorOccurred(Throwable e) {
     try {
       resultsListener.errorOccured();
       stop();
@@ -227,8 +226,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
     log.add(testSystem.getName(), executionLog);
+    if (cause != null) {
+      errorOccurred(cause);
+    }
   }
 
   @Override

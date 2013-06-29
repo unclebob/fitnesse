@@ -222,7 +222,6 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   public void exceptionOccurred(Throwable e) {
-    testSystemListener.exceptionOccurred(e);
     try {
       slimClient.kill();
     } catch (IOException e1) {
