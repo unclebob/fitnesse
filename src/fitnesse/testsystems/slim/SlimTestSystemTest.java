@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 
 public class SlimTestSystemTest {
   private WikiPage root;
-  private TestSystemListener dummyListener = new DummyListener();
 
   @Before
   public void setUp() throws Exception {
@@ -104,13 +103,20 @@ public class SlimTestSystemTest {
     public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     }
 
+    @Override
     public void testOutputChunk(String output) {
     }
 
+    @Override
     public void testComplete(TestSummary testSummary) {
     }
 
+    @Override
     public void exceptionOccurred(Throwable e) {
+    }
+
+    @Override
+    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
     }
 
     @Override
