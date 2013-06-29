@@ -80,7 +80,7 @@ public class TestSystemGroup {
   }
 
   private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
-    FitTestSystem testSystem = new FitTestSystem(context, page, descriptor, testSystemListener);
+    FitTestSystem testSystem = new FitTestSystem(context, descriptor, testSystemListener);
     testSystem.withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)

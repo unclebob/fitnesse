@@ -4,10 +4,6 @@ package fitnesse.testsystems.fit;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.util.Map;
@@ -16,20 +12,14 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private final FitNesseContext context;
-  private final WikiPage page;
   private final TestSystemListener testSystemListener;
   private CommandRunningFitClient client;
 
-  public FitTestSystem(FitNesseContext context, WikiPage page, Descriptor descriptor,
+  public FitTestSystem(FitNesseContext context, Descriptor descriptor,
                        TestSystemListener listener) {
     super(descriptor);
     this.context = context;
-    this.page = page;
     this.testSystemListener = listener;
-  }
-
-  public static String defaultTestRunner() {
-    return "fit.FitServer";
   }
 
   @Override
