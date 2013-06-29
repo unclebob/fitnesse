@@ -7,6 +7,7 @@ import fitnesse.responders.run.formatters.CachingSuiteXmlFormatter;
 import fitnesse.responders.run.formatters.PageHistoryFormatter;
 import fitnesse.responders.run.formatters.SuiteHistoryFormatter;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
+import fitnesse.testrunner.MultipleTestsRunner;
 
 public class SuiteResponder extends TestResponder {
   private boolean includeHtml;

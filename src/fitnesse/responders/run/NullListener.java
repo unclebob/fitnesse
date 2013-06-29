@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import java.io.IOException;
 
 import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

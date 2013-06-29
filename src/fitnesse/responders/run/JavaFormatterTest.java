@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestPage;
 import org.junit.Before;
 import org.junit.Test;

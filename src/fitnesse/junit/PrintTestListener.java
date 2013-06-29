@@ -1,7 +1,7 @@
 package fitnesse.junit;
 
-import fitnesse.responders.run.*;
 import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

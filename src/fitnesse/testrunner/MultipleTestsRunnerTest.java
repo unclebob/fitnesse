@@ -1,10 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;

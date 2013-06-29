@@ -1,12 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.testrunner.CompositeExecutionLog;
-import fitnesse.testrunner.PageListSetUpTearDownSurrounder;
-import fitnesse.testrunner.WikiPageDescriptor;
+import fitnesse.responders.run.Stoppable;
+import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
