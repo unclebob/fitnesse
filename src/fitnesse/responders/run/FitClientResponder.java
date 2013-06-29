@@ -15,6 +15,7 @@ import fitnesse.testsystems.fit.FitClient;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.testsystems.fit.FitClientListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -24,7 +25,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
+public class FitClientResponder implements Responder, ResponsePuppeteer, FitClientListener {
   private FitNesseContext context;
   private String resource;
   private WikiPage page;
@@ -121,10 +122,6 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-  }
-
-  @Override
   public void testOutputChunk(String output) {
   }
 
@@ -133,18 +130,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Exception e) {
   }
 
-  @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
-  }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-  }
 }

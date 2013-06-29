@@ -14,7 +14,7 @@ import fitnesse.testsystems.TestSystemListener;
 
 public class FitClient {
 
-  private TestSystemListener listener;
+  private FitClientListener listener;
   private Socket fitSocket;
   private OutputStream fitInput;
   private StreamReader fitOutput;
@@ -22,10 +22,10 @@ public class FitClient {
   private volatile int sent = 0;
   private volatile int received = 0;
   private volatile boolean isDoneSending = false;
-  protected volatile boolean killed = false;
-  protected Thread fitListeningThread;
+  private volatile boolean killed = false;
+  private Thread fitListeningThread;
 
-  public FitClient(TestSystemListener listener) {
+  public FitClient(FitClientListener listener) {
     this.listener = listener;
   }
 

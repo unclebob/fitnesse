@@ -12,7 +12,7 @@ import fitnesse.wiki.WikiPage;
 import java.io.IOException;
 import java.util.Map;
 
-public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, TestSystemListener {
+public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private final FitNesseContext context;
@@ -56,18 +56,13 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
-    testSystemStopped(this, new ExecutionLog(client.commandRunner), null);
+    testSystemStopped(new ExecutionLog(client.commandRunner), null);
   }
 
   @Override
   public void kill() {
     client.kill();
-    testSystemStopped(this, new ExecutionLog(client.commandRunner), null);
-  }
-
-  @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
+    testSystemStopped(new ExecutionLog(client.commandRunner), null);
   }
 
   @Override
@@ -81,27 +76,20 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Exception e) {
     testSystemListener.exceptionOccurred(e);
     ExecutionLog log = new ExecutionLog(client.commandRunner);
     log.addException(e);
     client.kill();
-    testSystemStopped(this, log, e);
+    testSystemStopped(log, e);
   }
 
-  @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+  private void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+    testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
+  }
+
+  private void testSystemStopped(ExecutionLog executionLog, Throwable throwable) {
     testSystemListener.testSystemStopped(this, executionLog, throwable);
-  }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    testSystemListener.testAssertionVerified(assertion, testResult);
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
   // Remove from here and below: this has all to do with client creation.

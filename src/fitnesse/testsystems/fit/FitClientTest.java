@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FitClientTest extends RegexTestCase implements TestSystemListener {
+public class FitClientTest extends RegexTestCase implements FitClientListener {
   private List<String> outputs = new ArrayList<String>();
   private List<TestSummary> counts = new ArrayList<TestSummary>();
   private CommandRunningFitClient client;
@@ -53,10 +53,6 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-  }
-
-  @Override
   public void testOutputChunk(String output) {
     outputs.add(output);
   }
@@ -67,26 +63,13 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Exception e) {
     exceptionOccurred = true;
     try {
       client.kill();
     } catch (Exception e1) {
       e1.printStackTrace();
     }
-  }
-
-  @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
-    exceptionOccurred(throwable);
-  }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   public void testOneRunUsage() throws Exception {
