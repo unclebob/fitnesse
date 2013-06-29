@@ -17,15 +17,13 @@ import fitnesse.wiki.WikiPage;
 public class TestSystemGroup {
   private Map<Descriptor, TestSystem> testSystems = new HashMap<Descriptor, TestSystem>();
   private FitNesseContext context;
-  private WikiPage page;
   private TestSystemListener testSystemListener;
   private boolean fastTest = false;
   private boolean manualStart = false;
   private boolean remoteDebug;
 
-  public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) {
+  public TestSystemGroup(FitNesseContext context, TestSystemListener listener) {
     this.context = context;
-    this.page = page;
     this.testSystemListener = listener;
   }
 

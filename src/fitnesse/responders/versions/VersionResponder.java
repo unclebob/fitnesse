@@ -19,6 +19,7 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -109,7 +110,7 @@ public class VersionResponder implements SecureResponder {
     public String render() {
       PageData data;
       if (isTestPage(pageData)) {
-        TestPage testPage = new TestPage(pageData);
+        WikiTestPage testPage = new WikiTestPage(pageData);
         data = testPage.getDecoratedData();
       } else {
         data = pageData;

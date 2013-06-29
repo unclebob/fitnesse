@@ -2,9 +2,9 @@ package fitnesse.junit;
 
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testrunner.CompositeExecutionLog;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -37,13 +37,13 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
     if (test.isTestPage()) {
       notifier.fireTestStarted(descriptionFor(test));
     }
   }
 
-  private Description descriptionFor(TestPage test) {
+  private Description descriptionFor(WikiTestPage test) {
     return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
   }
 
@@ -52,7 +52,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
       if (test.isTestPage()) {
         notifier.fireTestFinished(descriptionFor(test));

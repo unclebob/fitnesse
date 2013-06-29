@@ -60,12 +60,12 @@ public class MultipleTestsRunnerTest {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<WikiPageDescriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
-    List<TestPage> fitList = map.get(fitDescriptor);
-    List<TestPage> slimList = map.get(slimDescriptor);
+    List<WikiTestPage> fitList = map.get(fitDescriptor);
+    List<WikiTestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(1, fitList.size());
     assertEquals(1, slimList.size());
@@ -86,12 +86,12 @@ public class MultipleTestsRunnerTest {
     testPages.add(tearDown);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<WikiPageDescriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
 
-    List<TestPage> fitList = map.get(fitDescriptor);
-    List<TestPage> slimList = map.get(slimDescriptor);
+    List<WikiTestPage> fitList = map.get(fitDescriptor);
+    List<WikiTestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
@@ -125,7 +125,7 @@ public class MultipleTestsRunnerTest {
   public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    TestPage page = new TestPage(slimPage);
+    WikiTestPage page = new WikiTestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
@@ -148,7 +148,7 @@ public class MultipleTestsRunnerTest {
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    TestPage page = new TestPage(slimPage);
+    WikiTestPage page = new WikiTestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);

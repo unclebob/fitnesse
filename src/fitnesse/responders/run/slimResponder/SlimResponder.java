@@ -14,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testrunner.WikiPageDescriptor;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -83,7 +84,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.start();
-        testSystem.runTests(new TestPage(pageData));
+        testSystem.runTests(new WikiTestPage(pageData));
       } catch (IOException e) {
         slimException = e;
       } finally {

@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import fitnesse.testrunner.WikiTestPage;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -15,13 +15,13 @@ import fitnesse.wiki.WikiPage;
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
-  private TestPage page;
+  private WikiTestPage page;
   private WikiPage root;
   private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    page = new TestPage(root.addChildPage("NewPage"));
+    page = new WikiTestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
     context = FitNesseUtil.makeTestContext();
 

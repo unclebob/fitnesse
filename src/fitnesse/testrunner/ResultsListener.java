@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.testrunner.CompositeExecutionLog;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;
@@ -23,7 +21,7 @@ public interface ResultsListener {
 
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner);
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException;
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException;
 
   public void testOutputChunk(String output) throws IOException;
 
@@ -31,7 +29,7 @@ public interface ResultsListener {
 
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException;
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException;
   
   public void errorOccured();
 }

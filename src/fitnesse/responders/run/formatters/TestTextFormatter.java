@@ -3,9 +3,9 @@ package fitnesse.responders.run.formatters;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -29,7 +29,7 @@ public class TestTextFormatter extends BaseFormatter {
     response.add(String.format("\nStarting Test System: %s using %s.\n", testSystemName, testRunner));
   }
 
-  public void newTestStarted(TestPage page, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage page, TimeMeasurement timeMeasurement) {
   }
 
   private String getPath(WikiPage page) {
@@ -39,7 +39,7 @@ public class TestTextFormatter extends BaseFormatter {
   public void testOutputChunk(String output) {
   }
 
-  public void testComplete(TestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(page, summary, timeMeasurement);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",

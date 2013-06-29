@@ -2,9 +2,9 @@ package fitnesse.junit;
 
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -26,7 +26,7 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
   }
 
   @Override
@@ -34,7 +34,7 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
         + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");

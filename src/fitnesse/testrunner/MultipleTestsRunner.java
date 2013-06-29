@@ -29,7 +29,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private boolean isRemoteDebug = false;
 
   private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
-  private TestPage currentTest = null;
+  private WikiTestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
   private volatile boolean isStopped = false;
@@ -76,7 +76,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
+    testSystemGroup = new TestSystemGroup(fitNesseContext, this);
     stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
 
     testSystemGroup.setFastTest(isFastTest);
@@ -87,7 +87,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Map.Entry<WikiPageDescriptor, LinkedList<TestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
+    for (Map.Entry<WikiPageDescriptor, LinkedList<WikiTestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
       startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
     }
 
@@ -102,7 +102,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return false;
   }
 
-  private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -123,7 +123,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+  private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       testSystem.runTests(testPage);
@@ -155,15 +155,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
-    TestPage testPage = new TestPage(wikiPage);
+    WikiTestPage testPage = new WikiTestPage(wikiPage);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
-  private LinkedList<TestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPageDescriptor descriptor) {
-    LinkedList<TestPage> pagesForTestSystem;
+  private LinkedList<WikiTestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPageDescriptor descriptor) {
+    LinkedList<WikiTestPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<TestPage>();
+      pagesForTestSystem = new LinkedList<WikiTestPage>();
       pagesByTestSystem.put(descriptor, pagesForTestSystem);
     } else {
       pagesForTestSystem = pagesByTestSystem.get(descriptor);
@@ -174,7 +174,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) {
     if (testPagesToRun.size() == 0)
       return pagesByTestSystem;
-    for (LinkedList<TestPage> pagesForTestSystem : pagesByTestSystem.values())
+    for (LinkedList<WikiTestPage> pagesForTestSystem : pagesByTestSystem.values())
       surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
 
     return pagesByTestSystem;
@@ -182,7 +182,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
     int tests = 0;
-    for (LinkedList<TestPage> listOfPagesToRun : pagesByTestSystem.values()) {
+    for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
     resultsListener.announceNumberTestsToRun(tests);
@@ -205,7 +205,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   void startingNewTest(TestPage test) throws IOException {
-    currentTest = test;
+    currentTest = (WikiTestPage) test;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }
@@ -213,7 +213,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   @Override
   public void testComplete(TestSummary testSummary) throws IOException {
     TestPage testPage = processingQueue.removeFirst();
-    resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
+    resultsListener.testComplete((WikiTestPage) testPage, testSummary, currentTestTime.stop());
   }
 
   private void errorOccurred(Throwable e) {
@@ -263,6 +263,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 }
 
-class PagesByTestSystem extends HashMap<WikiPageDescriptor, LinkedList<TestPage>> {
+class PagesByTestSystem extends HashMap<WikiPageDescriptor, LinkedList<WikiTestPage>> {
   private static final long serialVersionUID = 1L;
 }

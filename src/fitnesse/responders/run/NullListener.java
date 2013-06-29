@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -26,7 +26,7 @@ public class NullListener implements ResultsListener {
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {}
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {}
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {}
 
   @Override
   public void testOutputChunk(String output) throws IOException {}
@@ -38,7 +38,7 @@ public class NullListener implements ResultsListener {
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {}
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {}
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {}
 
   @Override
   public void errorOccured() {}

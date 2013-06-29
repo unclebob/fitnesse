@@ -2,13 +2,13 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.ExecutionStatus;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
@@ -40,7 +40,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 	  return relativeName;
   }
 
-  protected String getRelativeName(TestPage testPage) {
+  protected String getRelativeName(WikiTestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName)) {
@@ -78,7 +78,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement)
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement)
 		throws IOException {
     relativeName = getRelativeName(testPage);
   }

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -144,7 +144,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
-    TestPage firstPage = new TestPage(new WikiPageDummy("page1", "content"));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     formatter.newTestStarted(firstPage, timeMeasurement.start());
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
@@ -157,8 +157,8 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     TimeMeasurement secondTimeMeasurement = newConstantElapsedTimeMeasurement(890);
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(2);
-    TestPage firstPage = new TestPage(new WikiPageDummy("page1", "content"));
-    TestPage secondPage = new TestPage(new WikiPageDummy("page2", "content"));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
+    WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
     formatter.newTestStarted(firstPage, firstTimeMeasurement.start());
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), firstTimeMeasurement.stop());
     formatter.newTestStarted(secondPage, secondTimeMeasurement.start());

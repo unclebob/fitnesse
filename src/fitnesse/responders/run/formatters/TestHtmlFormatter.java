@@ -6,9 +6,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.TagGroup;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import util.TimeMeasurement;
@@ -29,7 +29,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
 	super.newTestStarted(testPage, timeMeasurement);
     writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
@@ -39,7 +39,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
 

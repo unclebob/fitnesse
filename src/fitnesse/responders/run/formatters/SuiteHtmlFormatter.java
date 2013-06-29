@@ -6,14 +6,12 @@ import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.*;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -89,7 +87,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
 
   @Override
-  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
     super.newTestStarted(testPage, timeMeasurement);
 
     WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
@@ -159,7 +157,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
 

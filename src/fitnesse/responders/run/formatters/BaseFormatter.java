@@ -2,8 +2,8 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.ResultsListener;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -53,7 +53,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;

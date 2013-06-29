@@ -2,7 +2,7 @@ package fitnesse.responders.run;
 
 import java.io.IOException;
 
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -28,7 +28,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName))

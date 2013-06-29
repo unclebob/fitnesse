@@ -14,7 +14,8 @@ import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestPageWithSuiteSetUpAndTearDown;
+import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
@@ -79,8 +80,8 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (TestPage.isTestPage(pageData)) {
-      TestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
+    if (WikiTestPage.isTestPage(pageData)) {
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
     } else {
       html.put("content", new WikiPageRenderer(page.getData()));

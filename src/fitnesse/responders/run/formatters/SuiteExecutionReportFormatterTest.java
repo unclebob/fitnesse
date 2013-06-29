@@ -2,8 +2,8 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
 
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
@@ -58,7 +58,7 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetFailedCount() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
 
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);

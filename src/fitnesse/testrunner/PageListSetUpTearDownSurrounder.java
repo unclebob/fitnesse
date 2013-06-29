@@ -5,41 +5,40 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public class PageListSetUpTearDownSurrounder {
   private WikiPage root;
-  private List<TestPage> pageList;
+  private List<WikiTestPage> pageList;
 
   public PageListSetUpTearDownSurrounder(WikiPage root) {
     this.root = root;
   }
 
-  public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<TestPage> pageList) {
+  public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiTestPage> pageList) {
     this.pageList = pageList;
-    Map<String, LinkedList<TestPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<TestPage>>();
+    Map<String, LinkedList<WikiTestPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<WikiTestPage>>();
     createPageSetUpTearDownGroups(pageSetUpTearDownGroups);
     pageList.clear();
     reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
   }
 
-  private void createPageSetUpTearDownGroups(Map<String, LinkedList<TestPage>> pageSetUpTearDownGroups) {
-    for (TestPage page : pageList) {
+  private void createPageSetUpTearDownGroups(Map<String, LinkedList<WikiTestPage>> pageSetUpTearDownGroups) {
+    for (WikiTestPage page : pageList) {
       makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
     }
   }
 
-  private void makeSetUpTearDownPageGroupForPage(TestPage page, Map<String, LinkedList<TestPage>> pageSetUpTearDownGroups) {
+  private void makeSetUpTearDownPageGroupForPage(WikiTestPage page, Map<String, LinkedList<WikiTestPage>> pageSetUpTearDownGroups) {
     String group = getSetUpTearDownGroup(page.getSourcePage());
-    LinkedList<TestPage> pageGroup;
+    LinkedList<WikiTestPage> pageGroup;
     if (pageSetUpTearDownGroups.get(group) != null) {
       pageGroup = pageSetUpTearDownGroups.get(group);
       pageGroup.add(page);
     } else {
-      pageGroup = new LinkedList<TestPage>();
+      pageGroup = new LinkedList<WikiTestPage>();
       pageGroup.add(page);
       pageSetUpTearDownGroups.put(group, pageGroup);
     }
@@ -59,13 +58,13 @@ public class PageListSetUpTearDownSurrounder {
     return path;
   }
 
-  private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<TestPage>> pageSetUpTearDownGroups) {
-    for (Map.Entry<String, LinkedList<TestPage>> entry : pageSetUpTearDownGroups.entrySet()) {
+  private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<WikiTestPage>> pageSetUpTearDownGroups) {
+    for (Map.Entry<String, LinkedList<WikiTestPage>> entry : pageSetUpTearDownGroups.entrySet()) {
       insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue());
     }
   }
 
-  private void insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<TestPage> pageGroup) {
+  private void insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<WikiTestPage> pageGroup) {
     insertSetUpForThisGroup(setUpAndTearDownGroupKey);
     insertPagesOfThisGroup(pageGroup);
     insertTearDownForThisGroup(setUpAndTearDownGroupKey);
@@ -75,18 +74,17 @@ public class PageListSetUpTearDownSurrounder {
     String setUpPath = setUpAndTearDown.split(",")[0];
     WikiPage setUpPage = root.getPageCrawler().getPage(PathParser.parse(setUpPath));
     if (setUpPage != null)
-      pageList.add(new TestPage(setUpPage));
+      pageList.add(new WikiTestPage(setUpPage));
   }
 
-  private void insertPagesOfThisGroup(LinkedList<TestPage> pageGroup) {
-    for (TestPage page : pageGroup)
-      pageList.add(page);
+  private void insertPagesOfThisGroup(LinkedList<WikiTestPage> pageGroup) {
+      pageList.addAll(pageGroup);
   }
 
   private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) {
     String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
     WikiPage tearDownPage = root.getPageCrawler().getPage(PathParser.parse(tearDownPath));
     if (tearDownPage != null)
-      pageList.add(new TestPage(tearDownPage));
+      pageList.add(new WikiTestPage(tearDownPage));
   }
 }

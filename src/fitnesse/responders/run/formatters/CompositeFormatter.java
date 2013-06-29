@@ -1,9 +1,9 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.testsystems.TestPage;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -54,7 +54,7 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.newTestStarted(test, timeMeasurement);
   }
@@ -64,7 +64,7 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
