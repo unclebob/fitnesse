@@ -2,24 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
-import fitnesse.components.SocketDealer;
-import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.fit.CommandRunningFitClient;
-import fitnesse.testsystems.fit.FitSocketReceiver;
-import fitnesse.testsystems.fit.SimpleSocketDoner;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.util.MockSocket;
-import util.RegexTestCase;
-import util.TimeMeasurement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.util.MockSocket;
+import util.RegexTestCase;
+import util.TimeMeasurement;
 
 public class FitClientTest extends RegexTestCase implements FitClientListener {
   private List<String> outputs = new ArrayList<String>();

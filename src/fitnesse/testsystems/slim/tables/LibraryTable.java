@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
 
 public class LibraryTable extends SlimTable {
 

@@ -8,11 +8,9 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimCommandRunningClient;
-import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClientBuilder;
-import fitnesse.wiki.WikiPage;
 
 public class TestSystemGroup {
   private Map<Descriptor, TestSystem> testSystems = new HashMap<Descriptor, TestSystem>();
@@ -25,6 +23,11 @@ public class TestSystemGroup {
   public TestSystemGroup(FitNesseContext context, TestSystemListener listener) {
     this.context = context;
     this.testSystemListener = listener;
+  }
+
+  public static String getTestSystemType(String testSystemName) {
+    String parts[] = testSystemName.split(":");
+    return parts[0];
   }
 
   public void kill() throws IOException {
@@ -57,7 +60,7 @@ public class TestSystemGroup {
   }
 
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
-    if ("slim".equalsIgnoreCase(WikiPageDescriptor.getTestSystemType(descriptor.getTestSystemName())))
+    if ("slim".equalsIgnoreCase(getTestSystemType(descriptor.getTestSystemName())))
       return createHtmlSlimTestSystem(descriptor);
     else
       return createFitTestSystem(descriptor);

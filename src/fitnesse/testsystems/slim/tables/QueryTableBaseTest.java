@@ -1,8 +1,5 @@
 package fitnesse.testsystems.slim.tables;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -19,13 +16,16 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public abstract class QueryTableBaseTest {
   private WikiPage root;

@@ -1,9 +1,9 @@
 package fitnesse.testsystems;
 
-import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
-
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
+
+import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 public class TestSummaryTest {
   @Test

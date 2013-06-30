@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
+import util.StreamReader;
 
 public class FitClient {
 

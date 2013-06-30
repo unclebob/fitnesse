@@ -57,11 +57,6 @@ public class WikiPageDescriptor implements Descriptor {
     return "fitnesse.jar";
   }
 
-  public static String getTestSystemType(String testSystemName) {
-    String parts[] = testSystemName.split(":");
-    return parts[0];
-  }
-
   @Override
   public String getTestSystem() {
     String testSystemName = getVariable(TEST_SYSTEM);

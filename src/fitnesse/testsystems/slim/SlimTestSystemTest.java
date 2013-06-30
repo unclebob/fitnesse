@@ -2,25 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.components.ClassPathBuilder;
-import fitnesse.testrunner.WikiPageDescriptor;
-import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.net.ServerSocket;
-import java.net.SocketException;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SlimTestSystemTest {
 

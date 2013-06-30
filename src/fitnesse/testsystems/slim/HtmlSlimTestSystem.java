@@ -3,18 +3,16 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.wiki.*;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wikitext.parser.ParsedPage;
 import org.htmlparser.Parser;
 import org.htmlparser.lexer.Lexer;

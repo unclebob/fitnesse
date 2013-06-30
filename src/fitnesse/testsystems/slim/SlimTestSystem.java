@@ -2,16 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.slim.SlimClient;
-import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimServer;
-import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.testsystems.slim.tables.SlimTable;
-import fitnesse.testsystems.slim.tables.SyntaxError;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -19,6 +9,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimServer;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 
 import static fitnesse.slim.SlimServer.*;
 

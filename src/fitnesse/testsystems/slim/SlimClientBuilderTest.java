@@ -1,11 +1,11 @@
 package fitnesse.testsystems.slim;
 
+import java.net.ServerSocket;
+import java.net.SocketException;
+
 import fitnesse.testsystems.Descriptor;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.net.ServerSocket;
-import java.net.SocketException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

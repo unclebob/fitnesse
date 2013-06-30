@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.TestResult;
-
-import java.util.Collections;
-import java.util.List;
 
 public class SlimErrorTable extends SlimTable {
   public SlimErrorTable(Table table, String id, SlimTestContext testContext) {

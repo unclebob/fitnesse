@@ -3,14 +3,6 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.regex.Matcher;
-
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.wiki.WikiPage;
 
 public interface TestSystem {
 

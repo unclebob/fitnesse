@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
+import org.junit.Test;
+
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 
 public class ComparatorUtilTest {
 

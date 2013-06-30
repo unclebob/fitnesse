@@ -2,11 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
-import fitnesse.FitNesseContext;
-import fitnesse.testsystems.*;
-
 import java.io.IOException;
 import java.util.Map;
+
+import fitnesse.FitNesseContext;
+import fitnesse.testsystems.ClientBuilder;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
 
 public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";

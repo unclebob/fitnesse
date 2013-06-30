@@ -8,7 +8,10 @@ import java.net.UnknownHostException;
 import java.util.Map;
 
 import fitnesse.components.SocketDealer;
-import fitnesse.testsystems.*;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.CommandRunnerExecutionLog;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.MockCommandRunner;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;

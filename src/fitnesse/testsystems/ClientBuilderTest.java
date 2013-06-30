@@ -1,6 +1,5 @@
 package fitnesse.testsystems;
 
-import fitnesse.testrunner.WikiPageDescriptor;
 import org.junit.Test;
 
 import static fitnesse.testsystems.ClientBuilder.replace;

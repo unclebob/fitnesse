@@ -1,13 +1,17 @@
 package fitnesse.testsystems.slim;
 
-import fitnesse.slim.*;
-import fitnesse.testsystems.*;
-import fitnesse.wiki.ReadOnlyPageData;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import fitnesse.slim.JavaSlimFactory;
+import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.slim.SlimService;
+import fitnesse.testsystems.ClientBuilder;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.MockCommandRunner;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 

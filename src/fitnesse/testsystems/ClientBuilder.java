@@ -1,7 +1,5 @@
 package fitnesse.testsystems;
 
-import fitnesse.testrunner.WikiPageDescriptor;
-
 import java.io.IOException;
 import java.util.regex.Matcher;
 

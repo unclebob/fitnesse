@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.instructions.Instruction;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.slim.instructions.Instruction;
 
 public class Assertion {
   private final Instruction instruction;
