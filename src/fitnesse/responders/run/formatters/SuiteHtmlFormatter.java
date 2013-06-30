@@ -21,7 +21,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private int currentTest = 0;
-  private String testSystemFullName = null;
+  private String testSystemName = null;
   private boolean printedTestOutput = false;
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
@@ -77,11 +77,11 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   private void maybeWriteTestSystem() {
-    if (testSystemFullName != null) {
-      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
+    if (testSystemName != null) {
+      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
       writeData(systemTitle.html());
       // once we write it out we don't need it any more
-      testSystemFullName = null;
+      testSystemName = null;
     }
   }
 
@@ -171,8 +171,8 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    testSystemFullName = testSystemName;
+  public void testSystemStarted(TestSystem testSystem) {
+    testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
     String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);

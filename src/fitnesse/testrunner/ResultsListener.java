@@ -19,7 +19,7 @@ public interface ResultsListener {
 
   public void announceNumberTestsToRun(int testsToRun);
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner);
+  public void testSystemStarted(TestSystem testSystem);
 
   public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException;
 

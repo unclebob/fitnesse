@@ -30,7 +30,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testSystemStarted(TestSystem testSystem) {
   }
 
   @Override

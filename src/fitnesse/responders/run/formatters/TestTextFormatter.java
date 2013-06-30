@@ -22,13 +22,16 @@ public class TestTextFormatter extends BaseFormatter {
   public void writeHead(String pageType) {
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    response.add(String.format("\nStarting Test System: %s using %s.\n", testSystemName, testRunner));
+  @Override
+  public void testSystemStarted(TestSystem testSystem) {
+    response.add(String.format("\nStarting Test System: %s.\n", testSystem.getName()));
   }
 
+  @Override
   public void newTestStarted(WikiTestPage page, TimeMeasurement timeMeasurement) {
   }
 
@@ -36,9 +39,11 @@ public class TestTextFormatter extends BaseFormatter {
     return PathParser.render(page.getPageCrawler().getFullPath());
   }
 
+  @Override
   public void testOutputChunk(String output) {
   }
 
+  @Override
   public void testComplete(WikiTestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(page, summary, timeMeasurement);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());

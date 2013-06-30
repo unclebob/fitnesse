@@ -76,6 +76,6 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testSystemStarted(TestSystem testSystem) {
   }
 }

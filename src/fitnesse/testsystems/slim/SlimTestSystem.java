@@ -58,7 +58,7 @@ public abstract class SlimTestSystem implements TestSystem {
   public void start() throws IOException {
     try {
       slimClient.start();
-      testSystemListener.testSystemStarted(this, testSystemName, slimClient.getTestRunner());
+      testSystemListener.testSystemStarted(this);
     } catch (SlimError e) {
       exceptionOccurred(e);
     }

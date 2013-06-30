@@ -77,7 +77,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   private void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    testSystemListener.testSystemStarted(testSystem, testSystemName, testRunner);
+    testSystemListener.testSystemStarted(testSystem);
   }
 
   private void testSystemStopped(ExecutionLog executionLog, Throwable throwable) {

@@ -3,12 +3,16 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageDummy;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
   private SuiteHtmlFormatter formatter;
@@ -86,13 +90,18 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testResultsHtml() throws Exception {
-    formatter.testSystemStarted(null, "Fit", "laughing.fit");
+    TestSystem fitMock = mock(TestSystem.class);
+    when(fitMock.getName()).thenReturn("Fit:laughing.fit");
+    TestSystem slimMock = mock(TestSystem.class);
+    when(slimMock.getName()).thenReturn("Slim:very.slim");
+
+    formatter.testSystemStarted(fitMock);
     formatter.announceNumberTestsToRun(2);
     formatter.announceStartNewTest("RelativeName", "FullName");
     formatter.testOutputChunk("starting");
     formatter.testOutputChunk(" output");
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
-    formatter.testSystemStarted(null, "Slim:very.slim", "very.slim");
+    formatter.testSystemStarted(slimMock);
     formatter.announceStartNewTest("NewRelativeName", "NewFullName");
     formatter.testOutputChunk("second");
     formatter.testOutputChunk(" test");
@@ -113,7 +122,10 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
   
   public void testTestingProgressIndicator() throws Exception {
-    formatter.testSystemStarted(null, "Fit", "laughing.fit");
+    TestSystem fitMock = mock(TestSystem.class);
+    when(fitMock.getName()).thenReturn("Fit:laughing.fit");
+
+    formatter.testSystemStarted(fitMock);
     formatter.announceNumberTestsToRun(20);
     formatter.announceStartNewTest("RelativeName", "FullName");
 

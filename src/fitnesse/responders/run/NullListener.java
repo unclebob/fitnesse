@@ -23,7 +23,7 @@ public class NullListener implements ResultsListener {
   public void announceNumberTestsToRun(int testsToRun) {}
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {}
+  public void testSystemStarted(TestSystem testSystem) {}
 
   @Override
   public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {}

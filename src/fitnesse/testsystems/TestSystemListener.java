@@ -9,7 +9,7 @@ import fitnesse.testsystems.slim.tables.Assertion;
 import java.io.IOException;
 
 public interface TestSystemListener {
-  void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner);
+  void testSystemStarted(TestSystem testSystem);
 
   void testOutputChunk(String output) throws IOException;
 
