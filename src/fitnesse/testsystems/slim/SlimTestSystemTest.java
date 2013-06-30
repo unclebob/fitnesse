@@ -19,56 +19,10 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SlimTestSystemTest {
-  private WikiPage root;
-
-  @Before
-  public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    // Enforce the test runner here, to make sure we're talking to the right system
-    SlimClientBuilder.clearSlimPortOffset();
-  }
-
-  private String getClassPath(WikiPage page) {
-    return new ClassPathBuilder().getClasspath(page);
-  }
-
-  @Test
-  public void portRotates() throws Exception {
-    for (int i = 1; i < 15; i++) {
-      SlimClientBuilder clientBuilder = new SlimClientBuilder(new WikiPageDescriptor(root.getData(), false, getClassPath(root)));
-      assertEquals(8085 + (i % 10), clientBuilder.getSlimPort());
-    }
-  }
-
-  @Test
-  public void portStartsAtSlimPortVariable() throws Exception {
-    WikiPage pageWithSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
-    for (int i = 1; i < 15; i++) {
-      SlimClientBuilder descriptor = new SlimClientBuilder(new WikiPageDescriptor(pageWithSlimPortDefined.getData(), false, getClassPath(pageWithSlimPortDefined)));
-      assertEquals(9000 + (i % 10), descriptor.getSlimPort());
-    }
-  }
-
-  @Test
-  public void badSlimPortVariableDefaults() throws Exception {
-    WikiPage pageWithBadSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
-    for (int i = 1; i < 15; i++)
-      assertEquals(8085 + (i % 10), new SlimClientBuilder(new WikiPageDescriptor(pageWithBadSlimPortDefined.getData(), false, getClassPath(pageWithBadSlimPortDefined))).getSlimPort());
-  }
-
-  @Test
-  public void slimHostDefaultsTolocalhost() throws Exception {
-    WikiPage pageWithoutSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
-    assertEquals("localhost", new SlimClientBuilder(new WikiPageDescriptor(pageWithoutSlimHostVariable.getData(), false, getClassPath(pageWithoutSlimHostVariable))).determineSlimHost());
-  }
-
-  @Test
-  public void slimHostVariableSetsTheHost() throws Exception {
-    WikiPage pageWithSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
-    assertEquals("somehost", new SlimClientBuilder(new WikiPageDescriptor(pageWithSlimHostVariable.getData(), false, getClassPath(pageWithSlimHostVariable))).determineSlimHost());
-  }
 
   @Test
   public void translateExceptionMessage() throws Exception {
@@ -81,47 +35,9 @@ public class SlimTestSystemTest {
     assertTranslatedException("The instruction [a, b, c] is malformed", "MALFORMED_INSTRUCTION [a, b, c]");
   }
 
+
   private void assertTranslatedException(String expected, String message) {
     assertEquals(expected, SlimTestSystem.translateExceptionMessage(message));
   }
 
-
-  @Test(expected = SocketException.class)
-  public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
-    final int slimServerPort = 10258;
-    ServerSocket slimSocket = new ServerSocket(slimServerPort);
-    try {
-      SlimClientBuilder sys = new SlimClientBuilder(new WikiPageDescriptor(root.getData(), false, getClassPath(root)));
-      String slimArguments = String.format("%s %d", "", slimServerPort);
-      sys.createSlimService(slimArguments);
-    } finally {
-      slimSocket.close();
-    }
-  }
-
-  static class DummyListener implements TestSystemListener {
-    @Override
-    public void testSystemStarted(TestSystem testSystem) {
-    }
-
-    @Override
-    public void testOutputChunk(String output) {
-    }
-
-    @Override
-    public void testComplete(TestSummary testSummary) {
-    }
-
-    @Override
-    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
-    }
-
-    @Override
-    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    }
-
-    @Override
-    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    }
-  }
 }
