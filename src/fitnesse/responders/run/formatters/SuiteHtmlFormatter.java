@@ -130,7 +130,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
       tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
 
-    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterupted()));
+    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterrupted()));
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }

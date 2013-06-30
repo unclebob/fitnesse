@@ -15,8 +15,8 @@ public enum ExecutionResult {
 	  return getExecutionResult(relativeName, testSummary, false);
   }
   
-  public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterupted) {
-    if (testSummary.getWrong() > 0 || wasInterupted) {
+  public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterrupted) {
+    if (testSummary.getWrong() > 0 || wasInterrupted) {
       return FAIL;
     } else if (testSummary.getExceptions() > 0) {
 	  return ERROR;

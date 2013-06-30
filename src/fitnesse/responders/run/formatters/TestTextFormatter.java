@@ -19,9 +19,6 @@ public class TestTextFormatter extends BaseFormatter {
     this.response = response;
   }
 
-  public void writeHead(String pageType) {
-  }
-
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }

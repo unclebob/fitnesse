@@ -103,7 +103,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     pageBuffer.setLength(0);
     formatter.errorOccured();
     //assert stop button added
-    assertSubString("Testing was interupted", pageBuffer.toString());
+    assertSubString("Testing was interrupted", pageBuffer.toString());
     //assert stop button removed
     assertSubString("className = \"ignore\"", pageBuffer.toString());
   }

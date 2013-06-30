@@ -17,9 +17,9 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class InteractiveFormatter extends BaseFormatter {
 
-  private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>&nbsp;";
+  private static final String TESTING_INTERRUPTED = "<strong>Testing was interrupted and results are incomplete.</strong>&nbsp;";
 
-  private boolean wasInterupted = false;
+  private boolean wasInterrupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
   private CompositeExecutionLog log;
@@ -67,13 +67,13 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     return assertionCounts;
   }
 
-  public boolean wasInterupted() {
-    return wasInterupted;
+  public boolean wasInterrupted() {
+    return wasInterrupted;
   }
 
   @Override
   public void errorOccured() {
-    wasInterupted = true;
+    wasInterrupted = true;
     super.errorOccured();
   }
 
@@ -84,7 +84,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   public String testSummary() {
-    String summaryContent = (wasInterupted()) ? TESTING_INTERUPTED : "";
+    String summaryContent = (wasInterrupted()) ? TESTING_INTERRUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
