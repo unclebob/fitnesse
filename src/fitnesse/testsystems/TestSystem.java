@@ -243,7 +243,7 @@ public abstract class TestSystem implements TestSystemListener {
 
     @Override
     public int hashCode() {
-      return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode() ^ getPageData().hashCode();
+      return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode();
     }
 
     @Override
@@ -254,8 +254,7 @@ public abstract class TestSystem implements TestSystemListener {
       Descriptor descriptor = (Descriptor) obj;
       return descriptor.getTestSystemName().equals(getTestSystemName()) &&
         descriptor.getTestRunner().equals(getTestRunner()) &&
-        descriptor.getCommandPattern().equals(getCommandPattern()) &&
-        descriptor.getPageData().equals(getPageData());
+        descriptor.getCommandPattern().equals(getCommandPattern());
     }
   }
 }
