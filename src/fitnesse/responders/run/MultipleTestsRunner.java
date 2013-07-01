@@ -3,7 +3,7 @@
 package fitnesse.responders.run;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -249,6 +249,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 }
 
-class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<TestPage>> {
+class PagesByTestSystem extends LinkedHashMap<Descriptor, LinkedList<TestPage>> {
   private static final long serialVersionUID = 1L;
 }
