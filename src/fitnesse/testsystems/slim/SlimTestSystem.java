@@ -90,6 +90,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private void initializeTest() {
     testContext = new SlimTestContextImpl();
+    stopTestCalled = false;
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
