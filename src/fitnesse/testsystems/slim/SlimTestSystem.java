@@ -170,6 +170,7 @@ public abstract class SlimTestSystem extends TestSystem {
 
   private void initializeTest() {
     testContext = new SlimTestContextImpl();
+    stopTestCalled = false;
   }
 
   private void checkForAndReportVersionMismatch(ReadOnlyPageData pageData) {
