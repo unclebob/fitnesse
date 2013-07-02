@@ -24,6 +24,11 @@ The class specified must extend the ''fitnesse.html.!-HtmlPageFactory-!'' class 
 
 The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to gerenate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the .RecentChanges page.
 
+!4 Disabled Responder
+The !-DisabledResponder-! is provided as a way to turn off at a very deep level other responders.  Using the Responders property in the !style_code(plugins.properties), you can disable any existing responder by defining it to use the !-DisabledResponder-! instead.  For example, the following line, will disable the addChild and new responders.
+
+Responders =addChild:fitnesse.responders.DisabledResponder,new:org.fitnesse.responders.DisabledResponder
+
 !3 Authenticator
 ''required property:'' '''!-Authenticator-! = <class name>'''
 
