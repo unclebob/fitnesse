@@ -63,12 +63,6 @@ public class QueryTable extends SlimTable {
     return list(make, ti, qi);
   }
 
-  public boolean shouldIgnoreException(String resultKey, String resultString) {
-    boolean isTableInstruction = resultKey.equals(tableInstruction);
-    boolean isNoMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);
-    return isTableInstruction && isNoMethodException;
-  }
-
   private void assignColumns() {
     int cols = table.getColumnCountInRow(1);
     for (int col = 0; col < cols; col++)

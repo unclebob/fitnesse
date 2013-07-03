@@ -256,7 +256,7 @@ public class HtmlTable implements Table {
 
   class Cell {
     private final TableColumn columnNode;
-    private String originalContent;
+    private final String originalContent;
     private TestResult testResult;
     private ExceptionResult exceptionResult;
 
@@ -306,7 +306,6 @@ public class HtmlTable implements Table {
                 originalContent,
                 exceptionResult.getExecutionResult().toString(),
                 Utils.escapeHTML(exceptionResult.getMessage())));
-
       }
     }
 
