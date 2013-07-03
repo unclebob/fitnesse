@@ -4,7 +4,7 @@ import static org.mockito.Mockito.*;
 
 import java.text.SimpleDateFormat;
 
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import org.junit.Test;
 
 import util.TimeMeasurement;
@@ -17,7 +17,7 @@ public class TestTextFormatterTest {
 
   @Test
   public void testCompleteShouldAddPageAndSummaryAndTimingToResponse() throws Exception {
-    TestPage page = new TestPage(new WikiPageDummy("page", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("page", "content"));
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     String startTime = "11:12:13";

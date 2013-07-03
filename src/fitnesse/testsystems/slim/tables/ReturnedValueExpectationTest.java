@@ -6,7 +6,6 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-
 import fitnesse.testsystems.slim.results.TestResult;
 import org.junit.Before;
 import org.junit.Test;

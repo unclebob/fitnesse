@@ -440,7 +440,7 @@ public class TestResponderTest {
     new Thread(makeStopTestsRunnable(semaphore)).start();
 
     doSimpleRun(createAndWaitFixture(semaphoreName));
-    assertHasRegexp("Testing was interupted", results);
+    assertHasRegexp("Testing was interrupted", results);
     semaphore.delete();
   }
 

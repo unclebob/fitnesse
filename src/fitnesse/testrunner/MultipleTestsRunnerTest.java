@@ -1,12 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.mockito.Mockito.*;
@@ -62,12 +60,12 @@ public class MultipleTestsRunnerTest {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
-    List<TestPage> fitList = map.get(fitDescriptor);
-    List<TestPage> slimList = map.get(slimDescriptor);
+    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
+    List<WikiTestPage> fitList = map.get(fitDescriptor);
+    List<WikiTestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(1, fitList.size());
     assertEquals(1, slimList.size());
@@ -88,12 +86,12 @@ public class MultipleTestsRunnerTest {
     testPages.add(tearDown);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage, false);
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage, false);
+    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
+    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
 
-    List<TestPage> fitList = map.get(fitDescriptor);
-    List<TestPage> slimList = map.get(slimDescriptor);
+    List<WikiTestPage> fitList = map.get(fitDescriptor);
+    List<WikiTestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
@@ -126,11 +124,11 @@ public class MultipleTestsRunnerTest {
   @Test
   public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    TestPage page = new TestPage(mock(WikiPage.class));
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+    WikiTestPage page = new WikiTestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
     
     runner.startingNewTest(page);
     verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
@@ -149,11 +147,11 @@ public class MultipleTestsRunnerTest {
   @Test
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    TestPage page = new TestPage(mock(WikiPage.class));
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+    WikiTestPage page = new WikiTestPage(slimPage);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
     runner.addToProcessingQueue(page);
     
     TestSummary testSummary = mock(TestSummary.class);
@@ -176,10 +174,9 @@ public class MultipleTestsRunnerTest {
   @Test
   public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
     
     runner.announceTotalTestsToRun(new PagesByTestSystem());
     verify(resultsListener).announceNumberTestsToRun(0);
@@ -189,10 +186,9 @@ public class MultipleTestsRunnerTest {
   @Test
   public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
-    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
     runner.announceTotalTestsToRun(new PagesByTestSystem());
     
     runner.allTestingComplete();

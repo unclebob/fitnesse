@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -72,8 +72,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   private String content;
   private WikiPageProperties properties = new WikiPageProperties();
 
-  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
   private transient ParsedPage parsedPage;
@@ -130,7 +128,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   private boolean isErrorLogsPage() {
     WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
-    return ExecutionLog.ErrorLogName.equals(pagePath.getFirst());
+    return CompositeExecutionLog.ErrorLogName.equals(pagePath.getFirst());
   }
 
   // TODO: Should be written to a real logger, but it doesn't like FitNesse's

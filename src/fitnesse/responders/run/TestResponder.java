@@ -26,6 +26,7 @@ import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;

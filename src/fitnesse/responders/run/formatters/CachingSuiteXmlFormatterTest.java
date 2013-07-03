@@ -19,8 +19,8 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.TestResultRecord;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -29,7 +29,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import util.DateTimeUtil;
@@ -40,7 +39,7 @@ public class CachingSuiteXmlFormatterTest {
   private FitNesseContext context;
   private WikiPage root;
   private TestSummary testSummary;
-  private TestPage testPage;
+  private WikiTestPage testPage;
   private long testTime;
   private StringWriter writer;
 
@@ -49,7 +48,7 @@ public class CachingSuiteXmlFormatterTest {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     testSummary = new TestSummary(1,2,3,4);
-    testPage = new TestPage(root.addChildPage("TestPage"));
+    testPage = new WikiTestPage(root.addChildPage("TestPage"));
     writer = new StringWriter();
     formatter = new CachingSuiteXmlFormatter(context,root, writer);
     testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");

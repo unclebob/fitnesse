@@ -2,7 +2,7 @@ package fitnesse.junit;
 
 import fitnesse.Arguments;
 import fitnesse.responders.run.JavaFormatter;
-import fitnesse.responders.run.ResultsListener;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesseMain.FitNesseMain;
 

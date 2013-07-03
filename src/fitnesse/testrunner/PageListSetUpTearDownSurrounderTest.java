@@ -1,4 +1,4 @@
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wiki.*;
@@ -36,7 +36,7 @@ public class PageListSetUpTearDownSurrounderTest {
     WikiPage setUp2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteSetUp"));
     WikiPage tearDown2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteTearDown"));
 
-    ArrayList<TestPage> testPages = MakeTestPageList();
+    ArrayList<WikiTestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
 
     assertEquals(6, testPages.size());
@@ -49,10 +49,10 @@ public class PageListSetUpTearDownSurrounderTest {
     assertEquals(tearDown, testPages.get(5).getSourcePage());
   }
 
-    private ArrayList<TestPage> MakeTestPageList() throws Exception {
+    private ArrayList<WikiTestPage> MakeTestPageList() throws Exception {
         SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-        ArrayList<TestPage> testPages = new ArrayList<TestPage>();
-        for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(new TestPage(page));
+        ArrayList<WikiTestPage> testPages = new ArrayList<WikiTestPage>();
+        for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(new WikiTestPage(page));
         return testPages;
     }
 
@@ -61,7 +61,7 @@ public class PageListSetUpTearDownSurrounderTest {
     WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    ArrayList<TestPage> testPages = MakeTestPageList();
+    ArrayList<WikiTestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
     assertEquals(3, testPages.size());
     assertEquals(setUp, testPages.get(0).getSourcePage());

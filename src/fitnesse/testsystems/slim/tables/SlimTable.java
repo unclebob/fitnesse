@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +17,11 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
+
+import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.toUpperCase;
+import static util.ListUtility.list;
 
 public abstract class SlimTable {
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");

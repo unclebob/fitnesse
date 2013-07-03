@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
+import java.util.List;
+
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-
-import java.util.List;
 
 public class SubsetQueryTable extends QueryTable {
 

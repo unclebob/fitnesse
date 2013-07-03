@@ -2,24 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
-import fitnesse.components.SocketDealer;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.fit.CommandRunningFitClient;
-import fitnesse.testsystems.fit.FitSocketReceiver;
-import fitnesse.testsystems.fit.SimpleSocketDoner;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.util.MockSocket;
-import util.RegexTestCase;
-import util.TimeMeasurement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FitClientTest extends RegexTestCase implements TestSystemListener {
+import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.util.MockSocket;
+import util.RegexTestCase;
+import util.TimeMeasurement;
+
+public class FitClientTest extends RegexTestCase implements FitClientListener {
   private List<String> outputs = new ArrayList<String>();
   private List<TestSummary> counts = new ArrayList<TestSummary>();
   private CommandRunningFitClient client;
@@ -61,21 +54,13 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Exception e) {
     exceptionOccurred = true;
     try {
       client.kill();
     } catch (Exception e1) {
       e1.printStackTrace();
     }
-  }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
 
   public void testOneRunUsage() throws Exception {
@@ -102,7 +87,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
-    assertSubString("Error", client.commandRunner.getError());
+    assertSubString("Error", client.getExecutionLog().getCapturedError());
   }
 
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {

@@ -2,70 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.net.ServerSocket;
-import java.net.SocketException;
 
 import static org.junit.Assert.assertEquals;
 
 public class SlimTestSystemTest {
-  private WikiPage root;
-  private TestSystemListener dummyListener = new DummyListener();
-
-  @Before
-  public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    // Enforce the test runner here, to make sure we're talking to the right system
-    SlimTestSystem.SlimDescriptor.clearSlimPortOffset();
-  }
-
-  @Test
-  public void portRotates() throws Exception {
-    for (int i = 1; i < 15; i++) {
-      SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(root, false));
-      assertEquals(8085 + (i % 10), descriptor.getSlimPort());
-    }
-  }
-
-  @Test
-  public void portStartsAtSlimPortVariable() throws Exception {
-    WikiPage pageWithSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
-    for (int i = 1; i < 15; i++) {
-      SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithSlimPortDefined, false));
-      assertEquals(9000 + (i % 10), descriptor.getSlimPort());
-    }
-  }
-
-  @Test
-  public void badSlimPortVariableDefaults() throws Exception {
-    WikiPage pageWithBadSlimPortDefined = WikiPageUtil.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
-    for (int i = 1; i < 15; i++)
-      assertEquals(8085 + (i % 10), new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithBadSlimPortDefined, false)).getSlimPort());
-  }
-
-  @Test
-  public void slimHostDefaultsTolocalhost() throws Exception {
-    WikiPage pageWithoutSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
-    assertEquals("localhost", new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithoutSlimHostVariable, false)).determineSlimHost());
-  }
-
-  @Test
-  public void slimHostVariableSetsTheHost() throws Exception {
-    WikiPage pageWithSlimHostVariable = WikiPageUtil.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
-    assertEquals("somehost", new SlimTestSystem.SlimDescriptor(TestSystem.getDescriptor(pageWithSlimHostVariable, false)).determineSlimHost());
-  }
 
   @Test
   public void translateExceptionMessage() throws Exception {
@@ -78,41 +19,9 @@ public class SlimTestSystemTest {
     assertTranslatedException("The instruction [a, b, c] is malformed", "MALFORMED_INSTRUCTION [a, b, c]");
   }
 
+
   private void assertTranslatedException(String expected, String message) {
     assertEquals(expected, SlimTestSystem.translateExceptionMessage(message));
   }
 
-
-  @Test(expected = SocketException.class)
-  public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
-    final int slimServerPort = 10258;
-    ServerSocket slimSocket = new ServerSocket(slimServerPort);
-    try {
-      TestSystem.Descriptor descriptor = HtmlSlimTestSystem.getDescriptor(root, false);
-      SlimTestSystem sys = new HtmlSlimTestSystem(root, descriptor, dummyListener);
-      String slimArguments = String.format("%s %d", "", slimServerPort);
-      sys.createSlimService(slimArguments);
-    } finally {
-      slimSocket.close();
-    }
-  }
-
-  static class DummyListener implements TestSystemListener {
-    public void testOutputChunk(String output) {
-    }
-
-    public void testComplete(TestSummary testSummary) {
-    }
-
-    public void exceptionOccurred(Throwable e) {
-    }
-
-    @Override
-    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    }
-
-    @Override
-    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    }
-  }
 }

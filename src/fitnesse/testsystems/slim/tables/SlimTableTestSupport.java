@@ -1,17 +1,21 @@
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.slim.*;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import org.junit.Before;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.TableScanner;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
 
 /**
  * Test support class for testing slim tables. Class provides

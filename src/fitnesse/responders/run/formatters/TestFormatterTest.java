@@ -2,8 +2,8 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.ChunkedResponse;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -43,14 +43,14 @@ public class TestFormatterTest {
       };
     };
 
-  private TestPage page;
+  private WikiTestPage page;
   private TestSummary right;
   private TestSummary wrong;
   private TestSummary exception;
 
   @Before
   public void setUp() throws Exception {
-    page = new TestPage(new WikiPageDummy("page", "content"));
+    page = new WikiTestPage(new WikiPageDummy("page", "content"));
     right = new TestSummary(1, 0, 0, 0);
     wrong = new TestSummary(0, 1, 0, 0);
     exception = new TestSummary(0, 0, 0, 1);

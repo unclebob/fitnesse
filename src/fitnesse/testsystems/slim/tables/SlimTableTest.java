@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.testsystems.slim.SlimTestContextImpl;
-import org.junit.Test;
-
 import java.util.Collections;
 import java.util.List;
+
+import fitnesse.testsystems.slim.SlimTestContextImpl;
+import org.junit.Test;
 
 import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
 import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;

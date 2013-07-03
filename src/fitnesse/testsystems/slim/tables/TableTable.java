@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
@@ -9,9 +12,6 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static util.ListUtility.list;
 

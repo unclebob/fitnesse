@@ -1,9 +1,10 @@
-package fitnesse.testsystems;
+package fitnesse.testrunner;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class TestPageWithSuiteSetUpAndTearDown extends TestPage {
+public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
 
   private WikiPage suiteSetUp;
   private WikiPage suiteTearDown;

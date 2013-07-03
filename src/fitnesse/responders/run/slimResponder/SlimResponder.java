@@ -8,14 +8,14 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testrunner.WikiPageDescriptor;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
@@ -33,7 +33,7 @@ responders in general.
 */
 public abstract class SlimResponder implements Responder, TestSystemListener {
   private boolean slimOpen = false;
-  private boolean fastTest = false;
+  protected boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
   private PageData pageData;
@@ -72,17 +72,19 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     return page;
   }
 
+  protected Descriptor getDescriptor() {
+    return new WikiPageDescriptor(page.readOnlyData(), false, new ClassPathBuilder().getClasspath(page));
+  }
+
   public class SlimRenderer {
 
     public String render() {
 
-      TestSystem.Descriptor descriptor = getDescriptor();
       try {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.start();
-        testSystem.setFastTest(fastTest);
-        testSystem.runTests(new TestPage(pageData));
+        testSystem.runTests(new WikiTestPage(pageData));
       } catch (IOException e) {
         slimException = e;
       } finally {
@@ -102,11 +104,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     }
   }
 
-  protected TestSystem.Descriptor getDescriptor() {
-    return TestSystem.getDescriptor(page, false);
-  }
-
-  protected abstract SlimTestSystem getTestSystem();
+  protected abstract SlimTestSystem getTestSystem() throws IOException;
 
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
@@ -125,6 +123,10 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
+  public void testSystemStarted(TestSystem testSystem) {
+  }
+
+  @Override
   public void testOutputChunk(String output) {
     this.output.append(output);
   }
@@ -135,8 +137,8 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
-    slimException = e;
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    slimException = throwable;
   }
 
   @Override
@@ -145,10 +147,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-  }
-
-  public String getCommandLine() {
-    return testSystem.buildCommand();
   }
 }
 

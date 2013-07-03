@@ -18,22 +18,12 @@ public class CommandRunner {
   private Process process;
   private String input = "";
   protected List<Throwable> exceptions = new ArrayList<Throwable>();
-  private OutputStream stdin;
-  private InputStream stdout;
-  private InputStream stderr;
   protected StringBuffer outputBuffer = new StringBuffer();
   protected StringBuffer errorBuffer = new StringBuffer();
   protected int exitCode = -1;
   private TimeMeasurement timeMeasurement = new TimeMeasurement();
   private String command = "";
   private Map<String, String> environmentVariables;
-
-  public CommandRunner() {
-  }
-
-  public CommandRunner(String command, String input) {
-    this(command, input, null);
-  }
 
   public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
     this.command = command;
@@ -42,7 +32,7 @@ public class CommandRunner {
   }
 
   protected CommandRunner(String command, String input, int exitCode) {
-    this(command, input);
+    this(command, input, null);
     this.exitCode = exitCode;
   }
 
@@ -51,14 +41,14 @@ public class CommandRunner {
     timeMeasurement.start();
     String[] environmentVariables = determineEnvironment();
     process = rt.exec(command, environmentVariables);
-    stdin = process.getOutputStream();
-    stdout = process.getInputStream();
-    stderr = process.getErrorStream();
+    OutputStream stdin = process.getOutputStream();
+    InputStream stdout = process.getInputStream();
+    InputStream stderr = process.getErrorStream();
 
     new Thread(new OutputReadingRunnable(stdout, outputBuffer), "CommandRunner stdout").start();
     new Thread(new OutputReadingRunnable(stderr, errorBuffer), "CommandRunner error").start();
 
-    sendInput();
+    sendInput(stdin);
   }
 
   private String[] determineEnvironment() {
@@ -74,7 +64,7 @@ public class CommandRunner {
     return systemVariableAssignments.toArray(new String[systemVariableAssignments.size()]);
   }
 
-  public void run() throws Exception {
+  public void run() throws IOException {
     asynchronousStart();
     join();
   }
@@ -152,6 +142,7 @@ public class CommandRunner {
     return exitCode;
   }
 
+  // Used to catch exceptions thrown from the read and write threads.
   public void exceptionOccurred(Exception e) {
     exceptions.add(e);
   }
@@ -160,28 +151,17 @@ public class CommandRunner {
     return timeMeasurement.elapsed();
   }
 
-  protected void sendInput() {
-    Thread thread = new Thread() {
-      public void run() {
-        try {
-          stdin.write(input.getBytes("UTF-8"));
-          stdin.flush();
-        } catch (Exception e) {
-          exceptionOccurred(e);
-        } finally {
-          try {
-            stdin.close();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    };
-    thread.start();
+  protected void sendInput(OutputStream stdin) throws IOException {
     try {
-      thread.join();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      stdin.write(input.getBytes("UTF-8"));
+      stdin.flush();
+    } finally {
+      try {
+        stdin.close();
+      } catch (IOException e) {
+        // TODO: log at debug level
+        e.printStackTrace();
+      }
     }
   }
 
