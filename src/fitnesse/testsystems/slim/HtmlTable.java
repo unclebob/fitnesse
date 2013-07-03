@@ -313,7 +313,9 @@ public class HtmlTable implements Table {
       if (testResult.getExecutionResult() == null) {
         return testResult.getMessage() != null ? Utils.escapeHTML(testResult.getMessage()) : null;
       }
-      final String message = testResult.hasMessage() ? Utils.escapeHTML(testResult.getMessage()) : originalContent;
+      final String message = testResult.hasMessage() && !testResult.getMessage().equals(originalContent)
+              ? Utils.escapeHTML(testResult.getMessage())
+              : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
           return String.format("<span class=\"pass\">%s</span>", message);
