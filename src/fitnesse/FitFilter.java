@@ -69,7 +69,6 @@ public class FitFilter {
 
   protected void exit() {
     output.close();
-//    System.exit(fixture.counts.wrong + fixture.counts.exceptions);
     System.exit(dispatcher.counts.wrong + dispatcher.counts.exceptions);
   }
 

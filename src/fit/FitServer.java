@@ -29,7 +29,7 @@ public class FitServer {
   private boolean sentinel;
 
   public FitServer(String host, int port, boolean verbose) {
-	this();
+    this();
     this.host = host;
     this.port = port;
     this.verbose = verbose;
