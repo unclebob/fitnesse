@@ -22,119 +22,21 @@ import fit.exception.CouldNotParseFitFailureException;
 import fit.exception.FitFailureException;
 import fit.exception.FitMatcherException;
 
-// TODO-RcM Figure out how to make me smaller.
 public class Fixture {
   public Map<String, Object> summary = new HashMap<String, Object>();
-
   public Counts counts = new Counts();
-
-  public FixtureListener listener = new NullFixtureListener();
 
   protected String[] args;
 
   private static final Map<String, Object> symbols = new HashMap<String, Object>();
-  private static boolean forcedAbort = false;  //Semaphores
 
-  public static void setForcedAbort(boolean state) {
-    forcedAbort = state;
-  }  //Semaphores
-
+  
   protected Class<?> getTargetClass() {
     return getClass();
   }
 
-  public class RunTime {
-    long start = System.currentTimeMillis();
-
-    long elapsed = 0;
-
-    public String toString() {
-      elapsed = System.currentTimeMillis() - start;
-      if (elapsed > 600000) {
-        return d(3600000) + ":" + d(600000) + d(60000) + ":" + d(10000) + d(1000);
-      } else {
-        return d(60000) + ":" + d(10000) + d(1000) + "." + d(100) + d(10);
-      }
-    }
-
-    String d(long scale) {
-      long report = elapsed / scale;
-      elapsed -= report * scale;
-      return Long.toString(report);
-    }
-  }
-
-  // Traversal //////////////////////////
-
-  /* Altered by Rick to dispatch on the first Fixture */
-
-  public void doTables(Parse tables) {
-    summary.put("run date", new Date());
-    summary.put("run elapsed time", new RunTime());
-    if (tables != null) {
-      Parse heading = tables.at(0, 0, 0);
-      if (heading != null) {
-        try {
-          Fixture fixture = getLinkedFixtureWithArgs(tables);
-          fixture.listener = listener;
-          fixture.interpretTables(tables);
-        } catch (Throwable e) {
-          exception(heading, e);
-          interpretFollowingTables(tables);
-        }
-      }
-    }
-    listener.tablesFinished(counts);
-    ClearSymbols();
-    SemaphoreFixture.ClearSemaphores(); //Semaphores:  clear all at end
-  }
-
   public static void ClearSymbols() {
     symbols.clear();
-  }
-
-  /* Added by Rick to allow a dispatch into DoFixture */
-  protected void interpretTables(Parse tables) {
-    try { // Don't create the first fixture again, because creation may do something important.
-      getArgsForTable(tables); // get them again for the new fixture object
-      doTable(tables);
-    } catch (Exception ex) {
-      exception(tables.at(0, 0, 0), ex);
-      listener.tableFinished(tables);
-      return;
-    }
-    interpretFollowingTables(tables);
-  }
-
-  /* Added by Rick */
-  private void interpretFollowingTables(Parse tables) {
-    listener.tableFinished(tables);
-    tables = tables.more;
-    while (tables != null) {
-      Parse heading = tables.at(0, 0, 0);
-
-      if (forcedAbort) ignore(heading);  //Semaphores: ignore on failed lock
-      else if (heading != null) {
-        try {
-          Fixture fixture = getLinkedFixtureWithArgs(tables);
-          fixture.doTable(tables);
-        } catch (Throwable e) {
-          exception(heading, e);
-        }
-      }
-      listener.tableFinished(tables);
-      tables = tables.more;
-    }
-  }
-
-  /* Added by Rick */
-  protected Fixture getLinkedFixtureWithArgs(Parse tables) throws Throwable {
-    Parse header = tables.at(0, 0, 0);
-    Fixture fixture = loadFixture(header.text());
-    fixture.counts = counts;
-    fixture.summary = summary;
-    fixture.getArgsForTable(tables);
-    return fixture;
   }
 
   public static Fixture loadFixture(String fixtureName) throws Throwable {
@@ -224,10 +126,6 @@ public class Fixture {
 
   // Utility //////////////////////////////////
 
-  public String counts() {
-    return counts.toString();
-  }
-
   public static String label(String string) {
     return " <span class=\"fit_label\">" + string + "</span>";
   }
@@ -260,8 +158,7 @@ public class Fixture {
     b.append(t.nextToken());
     while (t.hasMoreTokens()) {
       String token = t.nextToken();
-      b.append(token.substring(0, 1).toUpperCase()); // replace spaces with
-      // camelCase
+      b.append(token.substring(0, 1).toUpperCase()); // replace spaces with camelCase
       b.append(token.substring(1));
     }
     return b.toString();

@@ -83,6 +83,6 @@ public class ScoreGameTest {
         "</tr>" +
         "</table>");
     sg.doTable(table);
-    Assert.assertEquals("10 right, 0 wrong, 0 ignored, 0 exceptions",sg.counts());
+    Assert.assertEquals("10 right, 0 wrong, 0 ignored, 0 exceptions",sg.counts.toString());
   }
 }

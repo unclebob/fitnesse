@@ -17,10 +17,12 @@ import java.util.Date;
 public class FileRunner {
 
   public String input;
-  public Parse tables;
-  public Fixture fixture = new Fixture();
-  public PrintWriter output;
+  
+  protected Parse tables;
+  protected Dispatcher dispatcher = new Dispatcher();
+  protected PrintWriter output;
 
+  
   public static void main(String argv[]) {
     new FileRunner().run(argv);
   }
@@ -34,7 +36,7 @@ public class FileRunner {
   public void process() {
     try {
       tables = new Parse(input);
-      fixture.doTables(tables);
+      dispatcher.doTables(tables);
     } catch (Exception e) {
       exception(e);
     }
@@ -48,9 +50,9 @@ public class FileRunner {
     }
     File in = new File(argv[0]);
     File out = new File(argv[1]);
-    fixture.summary.put("input file", in.getAbsolutePath());
-    fixture.summary.put("input update", new Date(in.lastModified()));
-    fixture.summary.put("output file", out.getAbsolutePath());
+    dispatcher.summary.put("input file", in.getAbsolutePath());
+    dispatcher.summary.put("input update", new Date(in.lastModified()));
+    dispatcher.summary.put("output file", out.getAbsolutePath());
     try {
       input = read(in);
       output = new PrintWriter(new BufferedWriter(new FileWriter(out)));
@@ -70,13 +72,13 @@ public class FileRunner {
 
   protected void exception(Exception e) {
     tables = new Parse("body", "Unable to parse input. Input ignored.", null, null);
-    fixture.exception(tables, e);
+    dispatcher.exception(tables, e);
   }
 
   protected void exit() {
     output.close();
-    System.err.println(fixture.counts());
-    System.exit(fixture.counts.wrong + fixture.counts.exceptions);
+    System.err.println(dispatcher.counts.toString());
+    System.exit(dispatcher.counts.wrong + dispatcher.counts.exceptions);
   }
 
 }
