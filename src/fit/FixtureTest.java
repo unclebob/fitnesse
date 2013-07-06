@@ -137,8 +137,8 @@ public class FixtureTest extends RegexTestCase {
   public static Parse executeFixture(String[][] table) throws ParseException {
     String pageString = makeFixtureTable(table);
     Parse page = new Parse(pageString);
-    Dispatcher dispatcher = new Dispatcher();
-    dispatcher.doTables(page);
+    Fixture fixture = new Fixture();
+    fixture.doTables(page);
     return page;
   }
 

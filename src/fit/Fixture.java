@@ -22,21 +22,101 @@ import fit.exception.CouldNotParseFitFailureException;
 import fit.exception.FitFailureException;
 import fit.exception.FitMatcherException;
 
+
 public class Fixture {
   public Map<String, Object> summary = new HashMap<String, Object>();
+
   public Counts counts = new Counts();
+
+  @Deprecated
+  public FixtureListener listener = new NullFixtureListener();
 
   protected String[] args;
 
   private static final Map<String, Object> symbols = new HashMap<String, Object>();
 
-  
+
+  @Deprecated
+  public static void setForcedAbort(boolean state) {
+    Dispatcher.setForcedAbort(state);
+  }  //Semaphores
+
   protected Class<?> getTargetClass() {
     return getClass();
   }
 
+  @Deprecated
+  public class RunTime extends Dispatcher.RunTime { }
+
+  // Traversal //////////////////////////
+  @Deprecated
+  public void doTables(Parse tables) {
+    summary.put("run date", new Date());
+    summary.put("run elapsed time", new RunTime());
+    if (tables != null) {
+      Parse heading = tables.at(0, 0, 0);
+      if (heading != null) {
+        try {
+          Fixture fixture = getLinkedFixtureWithArgs(tables);
+          fixture.listener = listener;
+          fixture.interpretTables(tables);
+        } catch (Throwable e) {
+          exception(heading, e);
+          interpretFollowingTables(tables);
+        }
+      }
+    }
+    listener.tablesFinished(counts);
+    ClearSymbols();
+    SemaphoreFixture.ClearSemaphores(); //Semaphores:  clear all at end
+  }
+
   public static void ClearSymbols() {
     symbols.clear();
+  }
+
+  @Deprecated
+  protected void interpretTables(Parse tables) {
+    try { // Don't create the first fixture again, because creation may do something important.
+      getArgsForTable(tables); // get them again for the new fixture object
+      doTable(tables);
+    } catch (Exception ex) {
+      exception(tables.at(0, 0, 0), ex);
+      listener.tableFinished(tables);
+      return;
+    }
+    interpretFollowingTables(tables);
+  }
+
+  @Deprecated
+  private void interpretFollowingTables(Parse tables) {
+    listener.tableFinished(tables);
+    tables = tables.more;
+    while (tables != null) {
+      Parse heading = tables.at(0, 0, 0);
+
+      if (Dispatcher.aborting()) ignore(heading);  //Semaphores: ignore on failed lock
+      else if (heading != null) {
+        try {
+          Fixture fixture = getLinkedFixtureWithArgs(tables);
+          fixture.doTable(tables);
+        } catch (Throwable e) {
+          exception(heading, e);
+        }
+      }
+      listener.tableFinished(tables);
+      tables = tables.more;
+    }
+  }
+
+  @Deprecated
+  protected Fixture getLinkedFixtureWithArgs(Parse tables) throws Throwable {
+    Parse header = tables.at(0, 0, 0);
+    Fixture fixture = loadFixture(header.text());
+    fixture.counts = counts;
+    fixture.summary = summary;
+    fixture.getArgsForTable(tables);
+    return fixture;
   }
 
   public static Fixture loadFixture(String fixtureName) throws Throwable {
@@ -125,6 +205,11 @@ public class Fixture {
   }
 
   // Utility //////////////////////////////////
+
+  @Deprecated
+  public String counts() {
+    return counts.toString();
+  }
 
   public static String label(String string) {
     return " <span class=\"fit_label\">" + string + "</span>";

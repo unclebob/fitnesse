@@ -10,9 +10,9 @@ import java.util.Map;
 import fit.exception.FitFailureException;
 
 
-public final class Dispatcher {
-	public Counts counts;
+public class Dispatcher {
 	public final Map<String, Object> summary;
+	public Counts counts;
 
 	private final FixtureListener listener;
 	
@@ -39,6 +39,7 @@ public final class Dispatcher {
 		}
 	}
 
+	
 	public Dispatcher(FixtureListener listener) {
 		counts  = new Counts();
 		summary = new HashMap<String, Object>();
@@ -49,10 +50,17 @@ public final class Dispatcher {
 		this(new NullFixtureListener());
 	}
 
+	
 	public static void setForcedAbort(boolean state) {
 		forcedAbort = state;
 	}  //Semaphores
 
+	@Deprecated
+	public static boolean aborting() {
+		return forcedAbort;
+	}  //Semaphores
+
+	
 	public void doTables(Parse tables) {
 		summary.put("run date", new Date());
 		summary.put("run elapsed time", new RunTime());
