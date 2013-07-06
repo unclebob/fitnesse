@@ -15,7 +15,6 @@ public class FitFilter {
 
   public String input;
   public Parse tables;
-//  public Fixture fixture = new Fixture();
   public Dispatcher dispatcher = new Dispatcher();
   public PrintWriter output;
 

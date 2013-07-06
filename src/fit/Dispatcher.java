@@ -39,7 +39,6 @@ public class Dispatcher {
 		}
 	}
 
-	
 	public Dispatcher(FixtureListener listener) {
 		counts  = new Counts();
 		summary = new HashMap<String, Object>();
@@ -50,7 +49,6 @@ public class Dispatcher {
 		this(new NullFixtureListener());
 	}
 
-	
 	public static void setForcedAbort(boolean state) {
 		forcedAbort = state;
 	}  //Semaphores
@@ -60,7 +58,6 @@ public class Dispatcher {
 		return forcedAbort;
 	}  //Semaphores
 
-	
 	public void doTables(Parse tables) {
 		summary.put("run date", new Date());
 		summary.put("run elapsed time", new RunTime());
@@ -84,7 +81,7 @@ public class Dispatcher {
 			ignore(heading);  //Semaphores: ignore on failed lock
 		} else if (heading != null) {
 			try {
-				Fixture fixture = getLinkedFixtureWithArgs(table);
+				BaseFixture fixture = getLinkedFixtureWithArgs(table);
 				fixture.doTable(table);
 			} catch (Throwable e) {
 				exception(heading, e);
@@ -99,21 +96,25 @@ public class Dispatcher {
 		counts.ignores++;
 	}
 	
-	private Fixture getLinkedFixtureWithArgs(Parse tables) throws Throwable {
+	private BaseFixture getLinkedFixtureWithArgs(Parse tables) throws Throwable {
 		Parse header    = tables.at(0, 0, 0);
-		Fixture fixture = Fixture.loadFixture(header.text());
+		BaseFixture fixture = loadFixture(header.text());
 		fixture.counts  = counts;
 		fixture.summary = summary;
 		fixture.getArgsForTable(tables);
 		return fixture;
 	}
 	
+    public static BaseFixture loadFixture(String fixtureName) throws Throwable {
+      return FixtureLoader.instance().disgraceThenLoad(fixtureName);
+    }
+
 	public void exception(Parse cell, Throwable exception) {
 		while (exception.getClass().equals(InvocationTargetException.class)) {
 			exception = ((InvocationTargetException) exception).getTargetException();
 		}
 		if (isFriendlyException(exception)) {
-			cell.addToBody("<hr/>" + Fixture.label(exception.getMessage()));
+			cell.addToBody("<hr/>" + BaseFixture.label(exception.getMessage()));
 		} else {
 			final StringWriter buf = new StringWriter();
 			exception.printStackTrace(new PrintWriter(buf));
