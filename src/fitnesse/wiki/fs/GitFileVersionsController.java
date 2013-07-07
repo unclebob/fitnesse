@@ -169,7 +169,10 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     assert pagePath.startsWith(workTreePath);
 
     // Add 1 for trailing '/' (not included in abs. path)
-    return pagePath.substring(workTreePath.length() + 1);
+    pagePath = pagePath.substring(workTreePath.length() + 1);
+    // git stores paths unix-style
+    pagePath = pagePath.replace(File.separatorChar, '/');
+    return pagePath;
   }
 
   private VersionInfo getCurrentVersion(FileSystemPage page, Repository repository) {
