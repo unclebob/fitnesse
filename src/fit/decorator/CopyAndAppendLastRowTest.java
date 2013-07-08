@@ -2,7 +2,6 @@ package fit.decorator;
 
 import java.text.ParseException;
 
-import fit.Dispatcher;
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
@@ -38,8 +37,7 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
 
   public void testShouldLeaveTableAsItIsIfCounterValueIsZero() throws Exception {
     String fitPage = "<table>" + FIRST_HTML_ROW + "<tr><td>fit.decorator.TestFixture</td></tr></table>";
-    Dispatcher dispatcher = new Dispatcher();
-    dispatcher.doTables(new Parse(fitPage));
+    decorator.doTable(new Parse(fitPage));
     TestCaseHelper.assertCounts(TestCaseHelper.counts(0, 0, 0, 0), decorator.counts);
   }
 
@@ -48,18 +46,16 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
       + "</td><td>times</td></tr><tr><td>eg.Division</td></tr>"
       + "<tr><td>numerator</td><td>denominator</td><td>quotient()</td></tr>"
       + "<tr><td>10</td><td>2</td><td>5</td></tr></table>";
-    Dispatcher dispatcher = new Dispatcher();
-    dispatcher.doTables(new Parse(fitPage));
-    TestCaseHelper.assertCounts(TestCaseHelper.counts(2, 0, 0, 0), dispatcher.counts);
+    decorator.doTable(new Parse(fitPage));
+    TestCaseHelper.assertCounts(TestCaseHelper.counts(2, 0, 0, 0), decorator.counts);
   }
 
   public void testShouldLeaveTableAsItIsIfTotalRowsAreLessThanThree() throws Exception {
     String fitPage = "<table><tr><td>" + CopyAndAppendLastRow.class.getName() + "</td>"
       + "<td>0</td><td>times</td></tr><tr><td>eg.Division</td></tr>"
       + "<tr><td>numerator</td><td>denominator</td><td>quotient()</td></tr></table>";
-    Dispatcher dispatcher = new Dispatcher();
-    dispatcher.doTables(new Parse(fitPage));
-    TestCaseHelper.assertCounts(TestCaseHelper.counts(0, 0, 0, 0), dispatcher.counts);
+    decorator.doTable(new Parse(fitPage));
+    TestCaseHelper.assertCounts(TestCaseHelper.counts(0, 0, 0, 0), decorator.counts);
   }
 
   public void testShouldAppendLastRowCounterNumberOfTimes() throws Exception {
