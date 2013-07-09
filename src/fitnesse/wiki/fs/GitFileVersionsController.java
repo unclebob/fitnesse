@@ -161,7 +161,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     }
   }
 
-  // Paths we feed to Git should be relative to the git repo. Absolute paths are not appreciated.
+  // Paths we feed to Git should be relative to the git repo. Absolute paths are not appreciated, neither are \ windows file separators.
   private String getPath(FileSystemPage page, Repository repository) {
     String workTreePath = repository.getWorkTree().getAbsolutePath();
     String pagePath = new File(page.getFileSystemPath()).getAbsolutePath();
@@ -169,7 +169,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     assert pagePath.startsWith(workTreePath);
 
     // Add 1 for trailing '/' (not included in abs. path)
-    return pagePath.substring(workTreePath.length() + 1);
+    return pagePath.substring(workTreePath.length() + 1).replace('\\', '/');
   }
 
   private VersionInfo getCurrentVersion(FileSystemPage page, Repository repository) {
