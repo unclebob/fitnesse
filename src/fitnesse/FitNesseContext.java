@@ -101,19 +101,6 @@ public class FitNesseContext {
     responderFactory = new ResponderFactory(getRootPagePath());
   }
 
-  public String toString() {
-    String endl = System.getProperty("line.separator");
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("\t").append("port:              ").append(port).append(endl);
-    buffer.append("\t").append("root page:         ").append(root).append(endl);
-    buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
-    buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
-    buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
-    buffer.append("\t").append("page theme:        ").append(pageTheme).append(endl);
-
-    return buffer.toString();
-  }
-
   public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
   }

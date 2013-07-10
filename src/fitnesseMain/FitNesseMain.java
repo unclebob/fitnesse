@@ -26,7 +26,8 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 public class FitNesseMain {
-  private static String extraOutput = "";
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+
   public static boolean dontExitAfterSingleCommand;
 
   public static void main(String[] args) throws Exception {
@@ -64,7 +65,6 @@ public class FitNesseMain {
     if (!arguments.isInstallOnly()) {
       boolean started = fitnesse.start();
       if (started) {
-        printStartMessage(arguments, context);
         if (arguments.getCommand() != null) {
           executeSingleCommand(arguments, fitnesse, context);
         }
@@ -74,17 +74,17 @@ public class FitNesseMain {
 
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
-    System.out.println("Executing command: " + arguments.getCommand());
+    LOG.info("Executing command: " + arguments.getCommand());
 
     OutputStream os;
 
     boolean outputRedirectedToFile = arguments.getOutput() != null;
 
     if (outputRedirectedToFile) {
-      System.out.println("-----Command Output redirected to " + arguments.getOutput() + "-----");
+      LOG.info("-----Command Output redirected to " + arguments.getOutput() + "-----");
       os = new FileOutputStream(arguments.getOutput());
     } else {
-      System.out.println("-----Command Output-----");
+      LOG.info("-----Command Output-----");
       os = System.out;
     }
 
@@ -94,7 +94,7 @@ public class FitNesseMain {
     if (outputRedirectedToFile) {
       os.close();
     } else {
-      System.out.println("-----Command Complete-----");
+      LOG.info("-----Command Complete-----");
     }
 
     if (shouldExitAfterSingleCommand()) {
@@ -125,9 +125,6 @@ public class FitNesseMain {
     builder.defaultNewPageContent = properties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
-    // This should be done before the root wiki page is created:
-    //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
-
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
             builder.rootDirectoryName);
 
@@ -140,12 +137,11 @@ public class FitNesseMain {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    extraOutput += pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
-    extraOutput += pluginsLoader.loadResponders(context.responderFactory);
-    extraOutput += pluginsLoader.loadSymbolTypes(symbolProvider);
-    extraOutput += pluginsLoader.loadContentFilter();
-    extraOutput += pluginsLoader.loadSlimTables();
-
+    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadSymbolTypes(symbolProvider);
+    pluginsLoader.loadContentFilter();
+    pluginsLoader.loadSlimTables();
 
     WikiImportTestEventListener.register();
 
@@ -223,12 +219,5 @@ public class FitNesseMain {
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
     System.err.println("\t-b <filename> redirect command output.");
-  }
-
-  private static void printStartMessage(Arguments args, FitNesseContext context) {
-    System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
-    System.out.print(context.toString());
-    if (extraOutput != null)
-      System.out.print(extraOutput);
   }
 }
