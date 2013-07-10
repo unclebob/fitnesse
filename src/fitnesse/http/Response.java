@@ -102,7 +102,9 @@ public abstract class Response {
   public final String makeHttpHeaders() {
     if (!withHttpHeaders)
       return "";
-    addStandardHeaders();
+    if (status != 304) {
+      addStandardHeaders();
+    }
     StringBuffer text = new StringBuffer();
     if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
