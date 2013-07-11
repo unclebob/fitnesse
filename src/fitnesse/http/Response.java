@@ -103,7 +103,7 @@ public abstract class Response {
     if (!withHttpHeaders)
       return "";
     if (status != 304) {
-      addStandardHeaders();
+      addContentHeaders();
     }
     StringBuffer text = new StringBuffer();
     if (!Format.TEXT.contentType.equals(contentType)) {
