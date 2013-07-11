@@ -5,10 +5,13 @@ package fitnesse.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
+
+import util.Clock;
 
 public abstract class Response {
   public enum Format {
@@ -83,6 +86,10 @@ public abstract class Response {
     return Format.JAVA.contentType.equals(contentType);
   }
 
+  public boolean hasContent() {
+    return contentType != null;
+  }
+
   public abstract void sendTo(ResponseSender sender) throws IOException;
 
   public abstract int getContentSize();
@@ -102,7 +109,7 @@ public abstract class Response {
   public final String makeHttpHeaders() {
     if (!withHttpHeaders)
       return "";
-    if (status != 304) {
+    if (hasContent()) {
       addContentHeaders();
     }
     StringBuffer text = new StringBuffer();
@@ -123,6 +130,10 @@ public abstract class Response {
     contentType = type;
   }
 
+  private void noContent() {
+    contentType = null;
+  }
+
   public void setContentType(Format format) {
     contentType = format.getContentType();
   }
@@ -130,6 +141,15 @@ public abstract class Response {
   public void redirect(String location) {
     status = 303;
     addHeader("Location", location);
+  }
+
+  public void notModified(Date lastModified, Date date) {
+    status = 304;
+    noContent();
+    SimpleDateFormat httpDateFormat = makeStandardHttpDateFormat();
+    addHeader("Date", httpDateFormat.format(date));
+    setLastModifiedHeader(httpDateFormat.format(lastModified));
+    addHeader("Cache-Control", "private");
   }
 
   public void setMaxAge(int age) {
@@ -167,7 +187,7 @@ public abstract class Response {
     }
   }
 
-  protected void addStandardHeaders() {
+  protected void addContentHeaders() {
     addHeader("Content-Type", getContentType());
   }
 

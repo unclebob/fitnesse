@@ -129,10 +129,7 @@ public class FileResponder implements Responder {
 
   private Response createNotModifiedResponse() {
     Response response = new SimpleResponse();
-    response.setStatus(304);
-    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(Clock.currentDate()));
-    response.addHeader("Cache-Control", "private");
-    response.setLastModifiedHeader(lastModifiedDateString);
+    response.notModified(lastModifiedDate, Clock.currentDate());
     return response;
   }
 
