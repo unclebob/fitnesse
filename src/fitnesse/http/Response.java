@@ -148,7 +148,7 @@ public abstract class Response {
     noContent();
     SimpleDateFormat httpDateFormat = makeStandardHttpDateFormat();
     addHeader("Date", httpDateFormat.format(date));
-    setLastModifiedHeader(httpDateFormat.format(lastModified));
+    setLastModifiedHeader(lastModified);
     addHeader("Cache-Control", "private");
   }
 
@@ -156,12 +156,8 @@ public abstract class Response {
     addHeader("Cache-Control", "max-age=" + age);
   }
 
-  public void setLastModifiedHeader(String date) {
-    addHeader("Last-Modified", date);
-  }
-
-  public void setExpiresHeader(String date) {
-    addHeader("Expires", date);
+  public void setLastModifiedHeader(Date date) {
+    addHeader("Last-Modified", makeStandardHttpDateFormat().format(date));
   }
 
   public void addHeader(String key, String value) {

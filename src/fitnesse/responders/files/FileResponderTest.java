@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertHasRegexp;
@@ -128,6 +129,7 @@ public class FileResponderTest {
     assertEquals("", notModifiedResponse.getContent());
     assertMatches(HTTP_DATE_REGEXP, notModifiedResponse.getHeader("Date"));
     assertNotNull(notModifiedResponse.getHeader("Cache-Control"));
+    assertNull(notModifiedResponse.getHeader("Content-Type"));
   }
 
   @Test
