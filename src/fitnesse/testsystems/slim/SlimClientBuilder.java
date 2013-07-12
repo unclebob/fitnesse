@@ -36,12 +36,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
 
-    if (fastTest) {
-      commandRunner = new MockCommandRunner();
-      final String slimArguments = buildArguments();
-      createSlimService(slimArguments);
-    }
-    else if (manualStart) {
+    if (manualStart) {
       commandRunner = new MockCommandRunner();
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
@@ -50,13 +45,13 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
-  public String buildCommand() {
+  protected String buildCommand() {
     String slimArguments = buildArguments();
     String slimCommandPrefix = super.buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
     return String.format("%s %s", slimCommandPrefix, slimArguments);
   }
 
-  private String buildArguments() {
+  protected String buildArguments() {
     int slimSocket = getSlimPort();
     String slimFlags = getSlimFlags();
     return String.format("%s %d", slimFlags, slimSocket);

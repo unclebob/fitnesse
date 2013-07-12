@@ -9,7 +9,9 @@ import java.util.Map;
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.InProcessFitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 
 public class TestSystemGroup {
@@ -23,11 +25,6 @@ public class TestSystemGroup {
   public TestSystemGroup(FitNesseContext context, TestSystemListener listener) {
     this.context = context;
     this.testSystemListener = listener;
-  }
-
-  public static String getTestSystemType(String testSystemName) {
-    String parts[] = testSystemName.split(":");
-    return parts[0];
   }
 
   public void kill() throws IOException {
@@ -61,14 +58,18 @@ public class TestSystemGroup {
 
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
     if ("slim".equalsIgnoreCase(getTestSystemType(descriptor.getTestSystemName())))
-      return createHtmlSlimTestSystem(descriptor);
+      return fastTest ? createInProcessHtmlSlimTestSystem(descriptor) : createHtmlSlimTestSystem(descriptor);
     else
-      return createFitTestSystem(descriptor);
+      return fastTest ? createInProcessFitTestSystem(descriptor) : createFitTestSystem(descriptor);
+  }
+
+  private String getTestSystemType(String testSystemName) {
+    String parts[] = testSystemName.split(":");
+    return parts[0];
   }
 
   private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
     SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor)
-            .withFastTest(fastTest)
             .withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)
             .build();
@@ -78,13 +79,28 @@ public class TestSystemGroup {
     return testSystem;
   }
 
+  private HtmlSlimTestSystem createInProcessHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
+    SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
+
+    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
+
+    return testSystem;
+  }
+
   private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
     FitTestSystem testSystem = new FitTestSystem(context, descriptor, testSystemListener);
-    testSystem.withFastTest(fastTest)
-            .withManualStart(manualStart)
+    testSystem.withManualStart(manualStart)
             .withRemoteDebug(remoteDebug)
             .build();
 
     return testSystem;
   }
+
+  private FitTestSystem createInProcessFitTestSystem(Descriptor descriptor) throws IOException {
+    FitTestSystem testSystem = new InProcessFitTestSystem(context, descriptor, testSystemListener);
+    testSystem.build();
+
+    return testSystem;
+  }
+
 }

@@ -7,6 +7,7 @@ import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.wiki.WikiPage;
@@ -16,9 +17,13 @@ import java.io.IOException;
 public class HtmlSlimResponder extends SlimResponder {
 
   protected SlimTestSystem getTestSystem() throws IOException {
-    SlimCommandRunningClient slimClient = new SlimClientBuilder(getDescriptor())
-            .withFastTest(fastTest)
-            .build();
+
+    SlimCommandRunningClient slimClient;
+    if (fastTest) {
+      slimClient = new InProcessSlimClientBuilder(getDescriptor()).build();
+    } else {
+      slimClient = new SlimClientBuilder(getDescriptor()).build();
+    }
     return new HtmlSlimTestSystem("slim", slimClient, this);
   }
 
