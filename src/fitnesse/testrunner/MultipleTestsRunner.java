@@ -81,7 +81,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     testSystemGroup.setFastTest(isFastTest);
     testSystemGroup.setManualStart(useManualStartForTestSystem());
-    testSystemGroup.setRemoteDebug(isRemoteDebug);
 
     resultsListener.setExecutionLogAndTrackingId(stopId, log);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();

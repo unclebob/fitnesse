@@ -22,10 +22,16 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
   private final int slimPort;
+  protected boolean manualStart;
 
   public SlimClientBuilder(Descriptor descriptor) {
     super(descriptor);
     slimPort = getNextSlimPort();
+  }
+
+  public ClientBuilder<SlimCommandRunningClient> withManualStart(boolean manualStart) {
+    this.manualStart = manualStart;
+    return this;
   }
 
   public static String defaultTestRunner() {
