@@ -80,7 +80,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
 
     testSystemGroup.setFastTest(isFastTest);
-    testSystemGroup.setManualStart(useManualStartForTestSystem());
 
     resultsListener.setExecutionLogAndTrackingId(stopId, log);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
@@ -91,14 +90,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
 
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
-  }
-
-  private boolean useManualStartForTestSystem() {
-    if (isRemoteDebug) {
-      String useManualStart = page.readOnlyData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
-      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
-    }
-    return false;
   }
 
   private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {

@@ -18,20 +18,15 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
+  public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
   private final int slimPort;
-  protected boolean manualStart;
 
   public SlimClientBuilder(Descriptor descriptor) {
     super(descriptor);
     slimPort = getNextSlimPort();
-  }
-
-  public ClientBuilder<SlimCommandRunningClient> withManualStart(boolean manualStart) {
-    this.manualStart = manualStart;
-    return this;
   }
 
   public static String defaultTestRunner() {
@@ -42,7 +37,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
 
-    if (manualStart) {
+    if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner();
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
@@ -150,6 +145,14 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   String getSlimFlags() {
     String slimFlags = descriptor.getVariable(SLIM_FLAGS);
     return slimFlags == null ? "" : slimFlags;
+  }
+
+  private boolean useManualStartForTestSystem() {
+    if (descriptor.isDebug()) {
+      String useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
+    }
+    return false;
   }
 
 }

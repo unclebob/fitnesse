@@ -148,6 +148,11 @@ public class WikiPageDescriptor implements Descriptor {
     return classPath;
   }
 
+  @Override
+  public boolean isDebug() {
+    return remoteDebug;
+  }
+
   // Generic entry point for everything the test system needs to know.
   @Override
   public String getVariable(String name) {

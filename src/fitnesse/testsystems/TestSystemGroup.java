@@ -19,7 +19,6 @@ public class TestSystemGroup {
   private FitNesseContext context;
   private TestSystemListener testSystemListener;
   private boolean fastTest = false;
-  private boolean manualStart = false;
 
   public TestSystemGroup(FitNesseContext context, TestSystemListener listener) {
     this.context = context;
@@ -34,10 +33,6 @@ public class TestSystemGroup {
 
   public void setFastTest(boolean fastTest) {
     this.fastTest = fastTest;
-  }
-
-  public void setManualStart(boolean manualStart) {
-    this.manualStart = manualStart;
   }
 
   public TestSystem startTestSystem(Descriptor descriptor) throws IOException {
@@ -64,10 +59,7 @@ public class TestSystemGroup {
   }
 
   private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor)
-            .withManualStart(manualStart)
-            .build();
-
+    SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
     return testSystem;
@@ -75,7 +67,6 @@ public class TestSystemGroup {
 
   private HtmlSlimTestSystem createInProcessHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
     SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-
     HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
     return testSystem;
