@@ -99,13 +99,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getNextSlimPort() {
-    int base;
-
-    if (System.getProperty("slim.port") != null) {
-      base = Integer.parseInt(System.getProperty("slim.port"));
-    } else {
-      base = getSlimPortBase();
-    }
+    int base = getSlimPortBase();
 
     if (base == 0) {
       return findFreePort();
@@ -124,17 +118,20 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getSlimPortBase() {
-    int base = 8085;
     try {
-      String slimPort = descriptor.getVariable(SLIM_PORT);
-      if (slimPort != null) {
-        int slimPortInt = Integer.parseInt(slimPort);
-        base = slimPortInt;
+      String port = descriptor.getVariable("slim.port");
+      if (port != null) {
+        return Integer.parseInt(port);
+      }
+
+      port = descriptor.getVariable(SLIM_PORT);
+      if (port != null) {
+        return Integer.parseInt(port);
       }
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return base;
+    return 8085;
   }
 
   String determineSlimHost() {
