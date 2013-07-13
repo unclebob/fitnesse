@@ -20,6 +20,7 @@
     ($suiteExecutionReport.totalRunTimeInMillis ms)
     #end
   </div>
+  <input type="checkbox" id="hideGreenTests" onClick="$('tr.pass').toggle();";>Hide passed tests</input>
 </div>
 #end
 <p/>

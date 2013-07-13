@@ -5,6 +5,7 @@
   <input type="hidden" value="compareHistory" name="responder"/>
   <input type="submit" value="Compare" />
   <a class="button" href="$viewLocation">Cancel</a>
+  <input type="checkbox" id="hideGreenTests" onClick="$('td:nth-child(5)').filter('.pass').parent().toggle();";>Hide passed tests</input>
  </fieldset>
  <table>
   <tr>
