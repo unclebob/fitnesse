@@ -21,7 +21,7 @@ In FitNesse, tests are expressed as tables of '''input''' data and '''expected o
 This style of FitNesse test table is called a [[Decision Table][SliM.DecisionTable]], each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells FitNesse that this is our column of expected outputs. Notice our "10/2 = 5.0" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 
 !3 Running our test table: Click the Test button
-Before we do another thing, let's run this test table. See the little blue and white '''Test''' button in the upper-left, just below the !-FitNesse-! logo? Click it and see what happens.
+If you are reading this page on a local copy of FitNesse, run this test table. See the '''Test''' button in the upper-right corner? Click it and see what happens.
 
 Ah, color! In the green cells, we got back the expected values from our code. When we divided 10 by 2, we expected and got back 5. When we divided 12.6 by 3, we expected and got back 4.2.
 
