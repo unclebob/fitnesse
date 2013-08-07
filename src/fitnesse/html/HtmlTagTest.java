@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class HtmlTagTest {
-  public static String endl = HtmlElement.endl;
+  public static final String endl = HtmlElement.endl;
   private HtmlTag tag;
 
   @Before
@@ -115,11 +115,5 @@ public class HtmlTagTest {
     tag.add("original");
     tag.use("new");
     assertEquals("<aTag>new</aTag>" + endl, tag.html());
-  }
-
-  @Test
-  public void comment() throws Exception {
-    HtmlComment comment = new HtmlComment("the comment");
-    assertEquals("<!--the comment-->" +endl, comment.html());
   }
 }

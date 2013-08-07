@@ -2,11 +2,14 @@ package fitnesse.responders.run;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.formatters.XmlFormatter;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
 
 public class SuiteXmlFormatter extends XmlFormatter {
 
@@ -25,9 +28,9 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
+    String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName))
       relativeName = String.format("(%s)", testPage.getName());
     processTestResults(relativeName, testSummary, timeMeasurement);

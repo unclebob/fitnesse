@@ -25,13 +25,13 @@ public class SuiteFilter {
   final private boolean andStrategy;
   final private String startWithTest;
   
-  public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
+  public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
   
-  public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
+  public static final SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
 
   SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
@@ -51,7 +51,14 @@ public class SuiteFilter {
         getAndTagFilters(request),
         getSuiteFirstTest(request, suitePath));
   }
-  
+
+  public SuiteFilter(String suiteFilter, String excludeSuiteFilter) {
+    matchTags = new SuiteTagMatcher(suiteFilter, true);
+    notMatchTags = new SuiteTagMatcher(excludeSuiteFilter, false);
+    andStrategy = false;
+    startWithTest = null;
+  }
+
   private static String getOrTagFilter(Request request) {
     return request != null ? getOrFilterString(request) : null;
   }
@@ -107,7 +114,7 @@ public class SuiteFilter {
       return true;
     }
     PageCrawler crawler = testPage.getPageCrawler();
-    WikiPagePath pageName = crawler.getFullPath(testPage);
+    WikiPagePath pageName = crawler.getFullPath();
     return (pageName.toString().compareTo(startWithTest) >= 0);
   }
 

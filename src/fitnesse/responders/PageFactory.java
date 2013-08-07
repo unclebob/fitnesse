@@ -2,17 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Properties;
-
+import fitnesse.FitNesseContext;
+import fitnesse.responders.templateUtilities.*;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.TraverseDirective;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Properties;
 
 public class PageFactory {
 
@@ -49,7 +47,7 @@ public class PageFactory {
           String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName));
 
       properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
-          fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
+          ClasspathResourceLoader.class.getName());
       properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".base",
           String.format("/fitnesse/resources/%s/templates", context.pageTheme));
 
@@ -58,10 +56,14 @@ public class PageFactory {
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
           "/fitnesse/resources/templates");
 
+      properties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+              VelocityLogger.class.getName());
+
       velocityEngine = new VelocityEngine();
       velocityEngine.init(properties);
 
       velocityEngine.loadDirective(TraverseDirective.class.getName());
+      velocityEngine.loadDirective(EscapeDirective.class.getName());
     }
     return velocityEngine;
   }

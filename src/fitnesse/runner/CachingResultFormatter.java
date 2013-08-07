@@ -12,7 +12,7 @@ import java.util.List;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.components.ContentBuffer;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class CachingResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;

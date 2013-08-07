@@ -19,7 +19,11 @@ import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.ResultFormatter;
 import fitnesse.runner.XmlResultFormatter;
+import fitnesse.testsystems.TestSummary;
 
+/**
+ * This responder works in conjunction with the {@link fitnesse.runner.FormattingOption} class.
+ */
 public class TestResultFormattingResponder implements Responder {
   public ResultFormatter formatter = new MockResultFormatter();
   public Counts finalCounts;

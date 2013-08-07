@@ -1,10 +1,14 @@
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import fitnesse.testrunner.ResultsListener;
+import fitnesse.testrunner.WikiTestPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {
@@ -24,19 +28,19 @@ public class JavaFormatterTest {
   }
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
-    TestPage wp = buildNestedTestPage();
+    WikiTestPage wp = buildNestedTestPage();
     assertEquals(nestedPageName, jf.getFullPath(wp.getSourcePage()));
   }
-  private TestPage buildNestedTestPage() throws Exception {
+  private WikiTestPage buildNestedTestPage() throws Exception {
     WikiPageDummy wp=new WikiPageDummy("ChildTest",null);
     WikiPageDummy parent=new WikiPageDummy("ParentTest",null);
     wp.setParent(parent);
     parent.setParent(new WikiPageDummy("root"));
-    return new TestPage(wp);
+    return new WikiTestPage(wp);
   }
   @Test
   public void newTestStarted_SwitchesResultRepositoryToCurrentTest() throws Exception{
-    TestPage wp=buildNestedTestPage();
+    WikiTestPage wp=buildNestedTestPage();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     jf.newTestStarted(wp, timeMeasurement.start());
     verify(mockResultsRepository).open(nestedPageName);
@@ -55,13 +59,16 @@ public class JavaFormatterTest {
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8), timeMeasurement.stop());
     WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
     secondPage.setParent(new WikiPageDummy("root", null));
-    jf.testComplete(new TestPage(secondPage), new TestSummary(11,12,13,14), timeMeasurement.stop());
+    jf.testComplete(new WikiTestPage(secondPage), new TestSummary(11,12,13,14), timeMeasurement.stop());
     jf.writeSummary("SummaryPageName");
+    String expectedOutput = new StringBuffer()
+            .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_HEADER)
+            .append(new JavaFormatter.TestResultsSummaryTableRow(nestedPageName, new TestSummary(5,6,7,8)).toString())
+            .append(new JavaFormatter.TestResultsSummaryTableRow("SecondPage", new TestSummary(11,12,13,14)).toString())
+            .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_FOOTER)
+            .toString();
     verify(mockResultsRepository).open("SummaryPageName");
-    verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_HEADER);
-    verify(mockResultsRepository, times(1)).write(jf.summaryRow(nestedPageName, new TestSummary(5,6,7,8)));
-    verify(mockResultsRepository, times(1)).write(jf.summaryRow("SecondPage", new TestSummary(11,12,13,14)));
-    verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_FOOTER);
+    verify(mockResultsRepository, times(1)).write(expectedOutput);
   }
   @Test
   public void testComplete_clones_TestSummary_Objects() throws Exception{
@@ -72,20 +79,20 @@ public class JavaFormatterTest {
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(buildNestedTestPage(), ts, timeMeasurement.stop());
     ts.right=11; ts.wrong=12; ts.ignores=13; ts.exceptions=14;
-    jf.testComplete(new TestPage(secondPage), ts, timeMeasurement.stop());
+    jf.testComplete(new WikiTestPage(secondPage), ts, timeMeasurement.stop());
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }
   @Test
   public void summaryRowFormatsTestOutputRows(){
-    assertEquals("pass, no errors or exceptions", 
-        "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,0,0,0)));
+    assertEquals("pass, no errors or exceptions",
+            "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
+            new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 0, 0, 0)).toString());
     assertEquals("red, 1 error ", 
         "<tr class=\"fail\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>1</td><td>0</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,1,0,0)));
-    assertEquals("error,exceptions", 
-        "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
-        jf.summaryRow("TestName", new TestSummary(5,6,0,7)));
+        new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5,1,0,0)).toString());
+    assertEquals("error,exceptions",
+            "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
+            new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 6, 0, 7)).toString());
   }
   @Test
   public void testOutputChunk_forwardsWriteToResultRepository() throws Exception{
@@ -116,7 +123,7 @@ public class JavaFormatterTest {
   @Test
   public void ifListenerIsSet_newTestStartedFiresTestStarted() throws Exception{
     jf.setListener(listener);
-    TestPage page=buildNestedTestPage();
+    WikiTestPage page=buildNestedTestPage();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     jf.newTestStarted(page, timeMeasurement.start());
     verify(listener).newTestStarted(page, timeMeasurement);
@@ -124,7 +131,7 @@ public class JavaFormatterTest {
   @Test
   public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{
     jf.setListener(listener);
-    TestPage page=buildNestedTestPage();
+    WikiTestPage page=buildNestedTestPage();
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(page, new TestSummary(1,2,3,4), timeMeasurement.stop());
     verify(listener).testComplete(page, new TestSummary(1,2,3,4), timeMeasurement);

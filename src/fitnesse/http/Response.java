@@ -5,10 +5,13 @@ package fitnesse.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
+
+import util.Clock;
 
 public abstract class Response {
   public enum Format {
@@ -43,6 +46,7 @@ public abstract class Response {
   private int status = 200;
   private HashMap<String, String> headers = new HashMap<String, String>(17);
   private String contentType = Format.HTML.contentType;
+  private boolean withHttpHeaders = true;
 
   public Response(String formatString) {
     Format format;
@@ -82,6 +86,10 @@ public abstract class Response {
     return Format.JAVA.contentType.equals(contentType);
   }
 
+  public boolean hasContent() {
+    return contentType != null;
+  }
+
   public abstract void sendTo(ResponseSender sender) throws IOException;
 
   public abstract int getContentSize();
@@ -94,7 +102,16 @@ public abstract class Response {
     status = s;
   }
 
-  public String makeHttpHeaders() {
+  public void withoutHttpHeaders() {
+    this.withHttpHeaders = false;
+  }
+
+  public final String makeHttpHeaders() {
+    if (!withHttpHeaders)
+      return "";
+    if (hasContent()) {
+      addContentHeaders();
+    }
     StringBuffer text = new StringBuffer();
     if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
@@ -113,6 +130,10 @@ public abstract class Response {
     contentType = type;
   }
 
+  private void noContent() {
+    contentType = null;
+  }
+
   public void setContentType(Format format) {
     contentType = format.getContentType();
   }
@@ -122,16 +143,21 @@ public abstract class Response {
     addHeader("Location", location);
   }
 
+  public void notModified(Date lastModified, Date date) {
+    status = 304;
+    noContent();
+    SimpleDateFormat httpDateFormat = makeStandardHttpDateFormat();
+    addHeader("Date", httpDateFormat.format(date));
+    setLastModifiedHeader(lastModified);
+    addHeader("Cache-Control", "private");
+  }
+
   public void setMaxAge(int age) {
     addHeader("Cache-Control", "max-age=" + age);
   }
 
-  public void setLastModifiedHeader(String date) {
-    addHeader("Last-Modified", date);
-  }
-
-  public void setExpiresHeader(String date) {
-    addHeader("Expires", date);
+  public void setLastModifiedHeader(Date date) {
+    addHeader("Last-Modified", makeStandardHttpDateFormat().format(date));
   }
 
   public void addHeader(String key, String value) {
@@ -157,7 +183,7 @@ public abstract class Response {
     }
   }
 
-  protected void addStandardHeaders() {
+  protected void addContentHeaders() {
     addHeader("Content-Type", getContentType());
   }
 
@@ -165,7 +191,7 @@ public abstract class Response {
     return getReasonPhrase(status);
   }
 
-  private static Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {
+  private static final Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {
     private static final long serialVersionUID = 1L;
 
     {

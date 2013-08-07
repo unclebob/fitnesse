@@ -93,5 +93,4 @@
  </ul>
  <hr/>
 #end
-$importer.autoUpdateSetting
-<p>Automatic Update turned#if( $importer.autoUpdateSetting ) ON#else OFF#end</p>
+<p>Automatic Update turned#if( $importer.autoUpdateSetting ) ON#else OFF#end.</p>

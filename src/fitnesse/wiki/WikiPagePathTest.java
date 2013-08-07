@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import junit.framework.TestCase;
 
 public class WikiPagePathTest extends TestCase {
@@ -69,12 +70,11 @@ public class WikiPagePathTest extends TestCase {
 
   public void testConstructorWithPage() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = root.getPageCrawler();
     WikiPagePath abcdPath = PathParser.parse("AaA.BbB.CcC.DdD");
     WikiPagePath grandchildPath = PathParser.parse("PageOne.ChildOne.GrandChildOne");
 
-    WikiPage page1 = crawler.addPage(root, abcdPath);
-    WikiPage page2 = crawler.addPage(root, grandchildPath);
+    WikiPage page1 = WikiPageUtil.addPage(root, abcdPath);
+    WikiPage page2 = WikiPageUtil.addPage(root, grandchildPath);
 
     WikiPagePath page1Path = new WikiPagePath(page1);
     assertEquals(abcdPath, page1Path);

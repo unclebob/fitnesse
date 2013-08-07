@@ -21,7 +21,7 @@ In FitNesse, tests are expressed as tables of '''input''' data and '''expected o
 This style of FitNesse test table is called a [[Decision Table][SliM.DecisionTable]], each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells FitNesse that this is our column of expected outputs. Notice our "10/2 = 5.0" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 
 !3 Running our test table: Click the Test button
-Before we do another thing, let's run this test table. See the little blue and white '''Test''' button in the upper-left, just below the !-FitNesse-! logo? Click it and see what happens.
+If you are reading this page on a local copy of FitNesse, run this test table. See the '''Test''' button in the upper-right corner? Click it and see what happens.
 
 Ah, color! In the green cells, we got back the expected values from our code. When we divided 10 by 2, we expected and got back 5. When we divided 12.6 by 3, we expected and got back 4.2.
 
@@ -34,7 +34,7 @@ How did we put that test table on this page in the first place? Well, we used Fi
 
 FitNesse is a [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]], which is a style of web server that allows any visitor to make any edits, including changing existing pages and creating new pages. A simple markup language lets you easily create headings, make text bold, underline, and italic, create bulleted lists, and do other kinds of simple formatting. You can read more about it on EditingFitNessePages.
 
-Once you download FitNesse to your own computer, you can edit any page simply by clicking on the Edit button on the left (just below the Test button). If you are reading this page on your own copy of FitNesse on your own machine, you can click the Edit button and see for yourself. (To learn more, see DownloadingAndInstallingFitNesse.)
+Once you download FitNesse to your own computer, you can edit any page simply by clicking on the Edit button on the left (just below the Test button). If you are reading this page on your own copy of FitNesse on your own machine, you can click the Edit button and see for yourself.
 
 The wiki markup for our table above (with some omissions) looks like this:{{{|eg.Division|
 |numerator|denominator|quotient?|
@@ -54,7 +54,7 @@ FitNesse test tables live on test pages (such as this one). There are several Te
 How shall you spend the next few minutes? It's up to you.
 
 !3 More Technical Detail...
-If you are more interested in learning how to create the code that makes test tables work, see FixtureCode. If you want to start diving into installing and running FitNesse, check out DownloadingAndInstallingFitNesse.
+If you are more interested in learning how to create the code that makes test tables work, see FixtureCode. If you want to start diving into installing and running FitNesse, check out [[fitnesse.org][http://fitnesse.org/FitNesseDownload]].
 
 !3 More Usage Detail...
 If you are more interested in why and how to get teams to use FitNesse, see AcceptanceTests.  If you want to learn how to create and run FitNesse tests, check out EditingFitNessePages, CreatingTestTables, and TestTableStyles.

@@ -11,6 +11,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import fitnesse.testsystems.TestSummary;
+
 import java.util.Date;
 
 public class SuiteExecutionReportTest {

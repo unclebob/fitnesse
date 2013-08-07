@@ -6,19 +6,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 
 import util.Clock;
 import util.RegexTestCase;
 import util.XmlUtil;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class WikiImporterTest extends RegexTestCase implements WikiImporterClient {
   public WikiPage pageOne;
@@ -53,10 +48,9 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
   public WikiPage createRemoteRoot() throws Exception {
     remoteRoot = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = remoteRoot.getPageCrawler();
-    crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
-    crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
-    crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
+    WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
     return remoteRoot;
   }
 
@@ -174,21 +168,9 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     addLocalPageWithImportProperty(localRoot, "PageThree", false);
     addLocalPageWithImportProperty(pageOne, "ChildTwo", false);
     addLocalPageWithImportProperty(childPageOne, "GrandChildOne", false);
-    localRoot.addChildPage("PageThatDoesntImport");
     addLocalPageWithImportProperty(localRoot, "OtherImportRoot", true);
 
     importer.importWiki(localRoot);
-  }
-
-  public void testOrphansAreRemoved() throws Exception {
-    performImportWithExtraLocalPages();
-
-    assertFalse(localRoot.hasChildPage("PageThree"));
-    assertFalse(pageOne.hasChildPage("ChildTwo"));
-    assertFalse(childPageOne.hasChildPage("GrandChildOne"));
-
-    assertTrue(localRoot.hasChildPage("PageThatDoesntImport"));
-    assertTrue(localRoot.hasChildPage("OtherImportRoot"));
   }
 
   public void testWholeTreeOrphaned() throws Exception {
@@ -254,7 +236,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     WikiPage page = parentPage.addChildPage(pageName);
     PageData data = page.getData();
 
-    WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
+    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
     WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/" + PathParser.render(pagePath));
     if (isRoot)
       importProps.setRoot(true);

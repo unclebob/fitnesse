@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import org.w3c.dom.Document;
-
 import util.RegexTestCase;
 import util.XmlUtil;
 
@@ -139,8 +139,8 @@ public class PageXmlizerTest extends RegexTestCase {
     WikiPage greatGrandChildA = grandChildA.getChildPage("GreatGrandChildA");
     assertNotNull(greatGrandChildA);
 
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageB.ChildOneB.GrandChildB")));
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageC")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageB.ChildOneB.GrandChildB")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageC")));
   }
 
   public void testUsageOfHandler() throws Exception {
@@ -166,7 +166,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private WikiPage getPage(String pathName) throws Exception {
-    return crawler.getPage(root, PathParser.parse(pathName));
+    return crawler.getPage(PathParser.parse(pathName));
   }
 
   private void checkPageWasHandledWithRightDate(int i, WikiPage page, MockXmlizerPageHandler handler) throws Exception {
@@ -192,7 +192,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private void addPage(String path, String content) throws Exception {
-    crawler.addPage(root, PathParser.parse(path), content);
+    WikiPageUtil.addPage(root, PathParser.parse(path), content);
   }
 
   public void testXmlizingData() throws Exception {
@@ -207,9 +207,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertSubString("CDATA", marshaledValue);
     assertSubString("this is some content", marshaledValue);
 
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    properties.save(output);
-    String[] propertyLines = output.toString().split("\n");
+    String[] propertyLines = properties.toXml().split("\n");
     for (int i = 0; i < propertyLines.length; i++) {
       String propertyLine = propertyLines[i].trim();
       assertSubString(propertyLine, marshaledValue);
@@ -249,4 +247,21 @@ public class PageXmlizerTest extends RegexTestCase {
     checkForLastModifiedTag(root, value);
     checkForLastModifiedTag(pageOne, value);
   }
+
+  public static class MockXmlizerPageHandler implements XmlizerPageHandler {
+    public List<String> handledPages = new LinkedList<String>();
+    public List<Date> modDates = new LinkedList<Date>();
+    public int exits = 0;
+
+    public void enterChildPage(WikiPage newPage, Date lastModified) {
+      handledPages.add(newPage.getName());
+      modDates.add(lastModified);
+      newPage.commit(newPage.getData());
+    }
+
+    public void exitPage() {
+      exits++;
+    }
+  }
+
 }

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class MockResultFormatter implements ResultFormatter {
   public List<PageResult> results = new LinkedList<PageResult>();

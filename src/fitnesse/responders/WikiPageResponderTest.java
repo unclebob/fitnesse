@@ -10,32 +10,22 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtensionTest;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
   private FitNesseContext context;
 
   @Override
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
-    PageVersionPruner.daysTillVersionsExpire = 14;
   }
 
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Wiki Page tags");
@@ -60,8 +50,8 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testAttributeButtons() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"));
-    final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
+    final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"));
     for (final String attribute : PageData.NON_SECURITY_ATTRIBUTES) {
       final PageData data = noButtonsPage.getData();
       data.removeAttribute(attribute);
@@ -84,14 +74,14 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testHeadersAndFooters() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
-    crawler.addPage(root, PathParser.parse("TestPage"), "test page");
-    crawler.addPage(root, PathParser.parse("PageHeader"), "header");
-    crawler.addPage(root, PathParser.parse("PageFooter"), "footer");
-    crawler.addPage(root, PathParser.parse("SetUp"), "setup");
-    crawler.addPage(root, PathParser.parse("TearDown"), "teardown");
-    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
-    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "normal");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "test page");
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "header");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer");
+    WikiPageUtil.addPage(root, PathParser.parse("SetUp"), "setup");
+    WikiPageUtil.addPage(root, PathParser.parse("TearDown"), "teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
 
     SimpleResponse response = requestPage("NormalPage");
     String content = response.getContent();
@@ -121,35 +111,8 @@ public class WikiPageResponderTest extends RegexTestCase {
     return (SimpleResponse) responder.makeResponse(context, request);
   }
 
-  public void testShouldGetVirtualPage() throws Exception {
-    final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
-    crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
-    final WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
-    FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
-    final SimpleResponse response = requestPage("LinkerPage.ChildPage");
-
-    assertSubString("child content", response.getContent());
-  }
-
-  public void testVirtualPageIndication() throws Exception {
-    final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
-    crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-    final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-    VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.PORT + "/TargetPage");
-
-    FitNesseUtil.startFitnesse(root);
-    SimpleResponse response = null;
-    try {
-      response = requestPage("LinkPage.ChildPage");
-    } finally {
-      FitNesseUtil.stopFitnesse();
-    }
-
-    assertSubString("<body class=\"virtual\">", response.getContent());
-  }
-
   public void testImportedPageIndication() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.addTo(data.getProperties());
@@ -161,7 +124,7 @@ public class WikiPageResponderTest extends RegexTestCase {
   }
 
   public void testImportedPageIndicationNotOnRoot() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.setRoot(true);

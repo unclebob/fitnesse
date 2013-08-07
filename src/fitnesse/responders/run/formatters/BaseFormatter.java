@@ -1,13 +1,16 @@
 package fitnesse.responders.run.formatters;
 
-import java.io.IOException;
-
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testrunner.ResultsListener;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
+import util.TimeMeasurement;
+
+import java.io.IOException;
 
 public abstract class BaseFormatter implements ResultsListener {
 
@@ -50,7 +53,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;
@@ -67,5 +70,12 @@ public abstract class BaseFormatter implements ResultsListener {
     return 0;
   }
 
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  }
 }
 

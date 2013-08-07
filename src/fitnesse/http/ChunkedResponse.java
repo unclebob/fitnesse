@@ -21,14 +21,13 @@ public class ChunkedResponse extends Response {
 
   public void sendTo(ResponseSender sender) {
     this.sender = sender;
-    addStandardHeaders();
     sender.send(makeHttpHeaders().getBytes());
     chunckedDataProvider.startSending();
   }
 
   @Override
-  protected void addStandardHeaders() {
-    super.addStandardHeaders();
+  protected void addContentHeaders() {
+    super.addContentHeaders();
     if (!dontChunk)
       addHeader("Transfer-Encoding", "chunked");
   }
@@ -57,16 +56,22 @@ public class ChunkedResponse extends Response {
   }
 
   public void addTrailingHeader(String key, String value) {
-    String header = key + ": " + value + CRLF;
-    sender.send(header.getBytes());
+    if (!dontChunk) {
+      String header = key + ": " + value + CRLF;
+      sender.send(header.getBytes());
+    }
   }
 
   public void closeChunks() {
-    sender.send(("0" + CRLF).getBytes());
+    if (!dontChunk) {
+      sender.send(("0" + CRLF).getBytes());
+    }
   }
 
   public void closeTrailer() {
-    sender.send(CRLF.getBytes());
+    if (!dontChunk) {
+      sender.send(CRLF.getBytes());
+    }
   }
 
   public void close() {

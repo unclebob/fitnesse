@@ -11,9 +11,9 @@ public class ListUtility {
     return new LinkedList<Object>();
   }
 
-  public static List<Object> list(Object... objects) {
-    List<Object> list = new ArrayList<Object>();
-    for (Object object : objects)
+  public static <T> List<T> list(T... objects) {
+    List<T> list = new ArrayList<T>();
+    for (T object : objects)
       list.add(object);
     return list;
   }

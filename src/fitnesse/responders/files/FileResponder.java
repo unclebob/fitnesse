@@ -25,12 +25,14 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements Responder {
+  // 1000-trick: remove milliseconds.
+  private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
+
   private static final int RESOURCE_SIZE_LIMIT = 262144;
-  private static FileNameMap fileNameMap = URLConnection.getFileNameMap();
+  private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
   final public String resource;
   final public File requestedFile;
   public Date lastModifiedDate;
-  public String lastModifiedDateString;
 
   public static Responder makeResponder(Request request, String rootPath) {
     String resource = request.getResource();
@@ -70,6 +72,12 @@ public class FileResponder implements Responder {
   }
 
   private Response makeClasspathResponse(FitNesseContext context, Request request) throws IOException {
+
+    determineLastModifiedInfo(LAST_MODIFIED_FOR_RESOURCES);
+
+    if (isNotModified(request))
+      return createNotModifiedResponse();
+
     String classpathResource = "/fitnesse/resources/" + resource.substring("files/fitnesse/".length());
     
     InputStream input = getClass().getResourceAsStream(classpathResource);
@@ -82,20 +90,22 @@ public class FileResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     response.setContent(content);
     setContentType(classpathResource, response);
-    
+    lastModifiedDate = LAST_MODIFIED_FOR_RESOURCES;
+    response.setLastModifiedHeader(lastModifiedDate);
+
     return response;
   }
 
   private Response makeFileResponse(FitNesseContext context, Request request) throws FileNotFoundException {
     InputStreamResponse response = new InputStreamResponse();
-    determineLastModifiedInfo();
+    determineLastModifiedInfo(new Date(requestedFile.lastModified()));
 
     if (isNotModified(request))
       return createNotModifiedResponse();
     else {
       response.setBody(requestedFile);
       setContentType(requestedFile.getName(), response);
-      response.setLastModifiedHeader(lastModifiedDateString);
+      response.setLastModifiedHeader(lastModifiedDate);
     }
     return response;
   }
@@ -104,7 +114,7 @@ public class FileResponder implements Responder {
     if (request.hasHeader("If-Modified-Since")) {
       String queryDateString = (String) request.getHeader("If-Modified-Since");
       try {
-        Date queryDate = SimpleResponse.makeStandardHttpDateFormat().parse(queryDateString);
+        Date queryDate = Response.makeStandardHttpDateFormat().parse(queryDateString);
         if (!queryDate.before(lastModifiedDate))
           return true;
       }
@@ -118,24 +128,13 @@ public class FileResponder implements Responder {
 
   private Response createNotModifiedResponse() {
     Response response = new SimpleResponse();
-    response.setStatus(304);
-    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(Clock.currentDate()));
-    response.addHeader("Cache-Control", "private");
-    response.setLastModifiedHeader(lastModifiedDateString);
+    response.notModified(lastModifiedDate, Clock.currentDate());
     return response;
   }
 
-  private void determineLastModifiedInfo() {
-    lastModifiedDate = new Date(requestedFile.lastModified());
-    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
-
-    try  // remove milliseconds
-    {
-      lastModifiedDate = SimpleResponse.makeStandardHttpDateFormat().parse(lastModifiedDateString);
-    }
-    catch (java.text.ParseException jtpe) {
-      jtpe.printStackTrace();
-    }
+  private void determineLastModifiedInfo(Date lastModified) {
+    // remove milliseconds
+    lastModifiedDate = new Date((lastModified.getTime() / 1000) * 1000);
   }
 
   private void setContentType(String filename, Response response) {

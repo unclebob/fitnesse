@@ -1,0 +1,4 @@
+!include -seamless .FitNesse.SuiteAcceptanceTests.SuiteVersionsControllerTests.SetUp
+
+| script | versions controller fixture |
+| initialise git repository |

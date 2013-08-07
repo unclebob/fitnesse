@@ -56,13 +56,10 @@
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 </form>
+<script src="/files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
-#if($!isNewPage)
-  document.f.pageName.focus();
-#else
-  document.f.pageContent.focus();
-#end
 
   var editors = Wysiwyg.initialize();
   if (editors) {
@@ -103,7 +100,16 @@ $(function () {
     var h = $('#save_buttons').position().top;
     rte.height(h - rte.position().top - 1);
     textarea.height(h - textarea.position().top - 1);
-    console.log('textarea', textarea.height(), 'rte', rte.height());
   }).resize();
+
+  /* Tags */
+  $('#suites').tagsInput();
+
+  #if($!isNewPage)
+    document.f.pageName.focus();
+  #else
+    document.f.pageContent.focus();
+  #end
+
 });
 </script>

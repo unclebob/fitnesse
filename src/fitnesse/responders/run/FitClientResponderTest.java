@@ -2,17 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class FitClientResponderTest extends RegexTestCase {
   private WikiPage root;
@@ -21,8 +18,7 @@ public class FitClientResponderTest extends RegexTestCase {
   private FitNesseContext context;
   private Response response;
   private MockResponseSender sender;
-  private static PageCrawler crawler;
-  private static WikiPage suite;
+  private WikiPage suite;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
@@ -33,15 +29,14 @@ public class FitClientResponderTest extends RegexTestCase {
     buildSuite(root);
   }
 
-  public static void buildSuite(WikiPage root) throws Exception {
-    crawler = root.getPageCrawler();
-    suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
-    WikiPage page1 = crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
-    WikiPage page2 = crawler.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
-    WikiPage page3 = crawler.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
-    crawler.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
-    crawler.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
-    crawler.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
+  public void buildSuite(WikiPage root) throws Exception {
+    suite = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
+    WikiPage page1 = WikiPageUtil.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
+    WikiPage page2 = WikiPageUtil.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
+    WikiPage page3 = WikiPageUtil.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
 
     PageData data1 = page1.getData();
     PageData data2 = page2.getData();
@@ -113,7 +108,7 @@ public class FitClientResponderTest extends RegexTestCase {
   }
 
   public void testWithClasspathOnTestInSuite() throws Exception {
-    crawler.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
+    WikiPageUtil.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
     String result = getResultFor("SuitePage.TestPage", true);
 
     assertSubString("classes", result);

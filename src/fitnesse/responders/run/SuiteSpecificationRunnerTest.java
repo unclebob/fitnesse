@@ -2,11 +2,13 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.junit.Assert.*;
+
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +23,6 @@ public class SuiteSpecificationRunnerTest {
   private SuiteSpecificationRunner runner;
   private WikiPage root;
   private FitNesseContext context;
-  private PageCrawler crawler;
   private String suitePageName;
 
 
@@ -29,13 +30,12 @@ public class SuiteSpecificationRunnerTest {
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
-    WikiPage child = crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
+    WikiPage child = WikiPageUtil.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
     PageData data = child.getData();
     data.setAttribute("Test");
     child.commit(data);
-    crawler.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
     request = new MockRequest();
     request.setResource(suitePageName);
     context = FitNesseUtil.makeTestContext(root);
@@ -144,7 +144,7 @@ public class SuiteSpecificationRunnerTest {
 
   @Test
   public void shouldntIncludeSuitesInThePageList() throws Exception {
-    WikiPage testSuitePage = crawler.addPage(root,PathParser.parse("SuitePageOne"));
+    WikiPage testSuitePage = WikiPageUtil.addPage(root, PathParser.parse("SuitePageOne"));
     PageData data = testSuitePage.getData();
     data.setAttribute("Suite");
     testSuitePage.commit(data);

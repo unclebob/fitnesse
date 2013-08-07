@@ -8,26 +8,24 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContext.Builder;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiPagePath;
 import junit.framework.AssertionFailedError;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
-
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
-import fitnesse.WikiPageFactory;
-import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 public class FitNesseSuite extends ParentRunner<String> {
 
@@ -144,17 +142,16 @@ public class FitNesseSuite extends ParentRunner<String> {
   private List<String> initChildren(FitNesseContext context) {
     WikiPagePath path = PathParser.parse(this.suiteName);
     PageCrawler crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-    WikiPage suiteRoot = crawler.getPage(context.root, path);
+    WikiPage suiteRoot = crawler.getPage(path);
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
-    WikiPage root = crawler.getPage(context.root, PathParser.parse("."));
-    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, null, root).getAllPagesToRunForThisSuite();
+    WikiPage root = crawler.getPage(PathParser.parse("."));
+    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.responders.run.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
 
     List<String> testPages = new ArrayList<String>();
     for (WikiPage wp : pages) {
-      testPages.add(crawler.getFullPath(wp).toString());
+      testPages.add(wp.getPageCrawler().getFullPath().toString());
     }
     return testPages;
   }
@@ -170,7 +167,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getFitnesseDir(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     if (fitnesseDirAnnotation == null) {
       throw new InitializationError("There must be a @FitnesseDir annotation");
@@ -179,7 +176,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getSuiteFilter(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
     if (suiteFilterAnnotation == null) {
       return null;
@@ -188,7 +185,7 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   static String getExcludeSuiteFilter(Class<?> klass)
-      throws InitializationError {
+          throws InitializationError {
     ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
     if (excludeSuiteFilterAnnotation == null) {
       return null;
@@ -218,7 +215,7 @@ public class FitNesseSuite extends ParentRunner<String> {
       return outputDir.getAbsolutePath();
     }
     throw new InitializationError(
-        "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
+            "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
   }
 
   public static boolean useDebugMode(Class<?> klass) {
@@ -286,7 +283,7 @@ public class FitNesseSuite extends ParentRunner<String> {
 
   private static FitNesseContext initContext(String rootPath, int port) throws Exception {
     Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
     ComponentFactory componentFactory = new ComponentFactory(rootPath);
 
     builder.port = port;
@@ -295,10 +292,10 @@ public class FitNesseSuite extends ParentRunner<String> {
 
     builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
     builder.defaultNewPageContent = componentFactory
-        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+            .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-        builder.rootDirectoryName, componentFactory);
+        builder.rootDirectoryName);
 
     builder.logger = null;
     builder.authenticator = new PromiscuousAuthenticator();

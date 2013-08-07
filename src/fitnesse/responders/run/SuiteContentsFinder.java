@@ -2,18 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.wiki.*;
 
-public class SuiteContentsFinder {
+import java.util.*;
 
-  public static final String SUITE_SETUP_NAME = "SuiteSetUp";
-  public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
+public class SuiteContentsFinder {
 
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
@@ -72,9 +65,8 @@ public class SuiteContentsFinder {
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
         try {
-          PageCrawler crawler = p1.getPageCrawler();
-          WikiPagePath path1 = crawler.getFullPath(p1);
-          WikiPagePath path2 = crawler.getFullPath(p2);
+          WikiPagePath path1 = p1.getPageCrawler().getFullPath();
+          WikiPagePath path2 = p2.getPageCrawler().getFullPath();
 
           return path1.compareTo(path2);
         }
@@ -105,17 +97,7 @@ public class SuiteContentsFinder {
 	  private static List<WikiPage> getChildren(WikiPage page) {
 	    List<WikiPage> children = new ArrayList<WikiPage>();
 	    children.addAll(page.getChildren());
-	    addVirtualChildrenIfAny(page, children);
 	    return children;
-	  }
-
-	  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) {
-	    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-	      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-	        VirtualCouplingExtension.NAME
-	      );
-	      children.addAll(extension.getVirtualCoupling().getChildren());
-	    }
 	  }
 
   protected List<WikiPage> gatherCrossReferencedTestPages() {
@@ -134,12 +116,11 @@ public class SuiteContentsFinder {
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
     ReadOnlyPageData data = thePage.readOnlyData();
     List<String> pageReferences = data.getXrefPages();
-    PageCrawler crawler = thePage.getPageCrawler();
-    WikiPagePath testPagePath = crawler.getFullPath(thePage);
-    WikiPage parent = crawler.getPage(wikiRootPage, testPagePath.parentPath());
+    WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath();
+    WikiPage parent = wikiRootPage.getPageCrawler().getPage(testPagePath.parentPath());
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = crawler.getPage(parent, path);
+      WikiPage referencedPage = parent.getPageCrawler().getPage(path);
       if (referencedPage != null)
         pages.add(referencedPage);
     }
@@ -147,7 +128,7 @@ public class SuiteContentsFinder {
 
   public static boolean isSuiteSetupOrTearDown(WikiPage testPage) {
     String name = testPage.getName();
-    return (SUITE_SETUP_NAME.equals(name) || SUITE_TEARDOWN_NAME.equals(name));
+    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
 
 }

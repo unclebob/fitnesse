@@ -32,6 +32,7 @@ label {
 
 .breadcrumb {
   padding: 8px 40px;
+  margin: 0;
   #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
   background-color: transparent;
   .border-radius(0);
@@ -305,6 +306,16 @@ tr.scenario.closed > td:first-child {
 .editPage #helptext {
     margin-bottom: 0.5em;
     .input-xxlarge;
+}
+
+.tagsinput .tag {
+    .badge;
+    background-color: @infoText;
+    border: none;
+}
+
+.tagsinput .tag a {
+    color: @errorText;
 }
 
 body.editing {

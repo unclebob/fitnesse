@@ -12,10 +12,10 @@ import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.authentication.Authenticator;
-import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {

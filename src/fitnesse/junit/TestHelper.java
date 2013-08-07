@@ -2,8 +2,8 @@ package fitnesse.junit;
 
 import fitnesse.Arguments;
 import fitnesse.responders.run.JavaFormatter;
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testrunner.ResultsListener;
+import fitnesse.testsystems.TestSummary;
 import fitnesseMain.FitNesseMain;
 
 public class TestHelper {
@@ -42,7 +42,7 @@ public class TestHelper {
   }
   public  TestSummary run(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter, int port) throws Exception{
     JavaFormatter testFormatter=JavaFormatter.getInstance(pageName);
-    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath,fitNesseRootPath));
+    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath));
     testFormatter.setListener(resultListener);
     Arguments arguments=new Arguments();
     arguments.setDaysTillVersionsExpire("0");
@@ -67,8 +67,8 @@ public class TestHelper {
     return command;
   }
 
-  private static String COMMON_ARGS = "&nohistory=true&format=java";
-  private static String DEBUG_ARG = "&debug=true";
+  private static final String COMMON_ARGS = "&nohistory=true&format=java";
+  private static final String DEBUG_ARG = "&debug=true";
   private String getCommandArgs() {
     if (debug) {
       return DEBUG_ARG + COMMON_ARGS;

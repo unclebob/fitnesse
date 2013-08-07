@@ -1,0 +1,5 @@
+!help 
+!| script | versions controller fixture | ${VERSION_CONTROLLER_CLASS} |
+| Given a new wiki page |
+| When the page is updated |
+| check | history size | 2 |

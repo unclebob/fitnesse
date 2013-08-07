@@ -1,48 +1,56 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.run.TestPage;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Before;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.VelocityEngine;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.InMemoryPage;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.TestResultRecord;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
-
-import java.io.Writer;
-import java.io.File;
-import java.util.Date;
 
 public class CachingSuiteXmlFormatterTest {
   private CachingSuiteXmlFormatter formatter;
   private FitNesseContext context;
   private WikiPage root;
   private TestSummary testSummary;
-  private TestPage testPage;
+  private WikiTestPage testPage;
   private long testTime;
+  private StringWriter writer;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     testSummary = new TestSummary(1,2,3,4);
-    testPage = new TestPage(root.addChildPage("TestPage"));
-    formatter = new CachingSuiteXmlFormatter(context,root, null);
+    testPage = new WikiTestPage(root.addChildPage("TestPage"));
+    writer = new StringWriter();
+    formatter = new CachingSuiteXmlFormatter(context,root, writer);
     testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
   }
   
@@ -148,7 +156,7 @@ public class CachingSuiteXmlFormatterTest {
   @Test
   public void formatterShouldKnowVersionAndRootPage() throws Exception {
     assertEquals("RooT", formatter.page.getName());
-    assertEquals(new FitNesseVersion().toString(), new FitNesseVersion().toString());
+    assertEquals(new FitNesseVersion().toString(), formatter.getFitNesseVersion().toString());
   }
 
   @Test
@@ -162,5 +170,41 @@ public class CachingSuiteXmlFormatterTest {
     formatter.newTestStarted(testPage, timeMeasurement.start());
     formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0), timeMeasurement.stop()); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
+  }
+
+  @Test
+  public void shouldIncludeEscapedHtmlIfIncludeHtmlFlagIsSet() throws IOException, SAXException {
+    // Note: HTML should be escaped, since FIT(-library) does not output XML compliant HTML
+    final TimeMeasurement timeMeasurement = new TimeMeasurement();
+    final TestHistory testHistory = mock(TestHistory.class);
+    final TestResultRecord testResultRecord = mock(TestResultRecord.class);
+    final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
+    final File file = mock(File.class);
+    final List<TestExecutionReport.TestResult> testResults = new ArrayList<TestExecutionReport.TestResult>();
+    TestExecutionReport.TestResult testResult = new TestExecutionReport.TestResult();
+    testResults.add(testResult);
+    testResult.content = "<html>blah\" <a class=unquoted>link</a>";
+    CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), writer) {
+      @Override
+      TestExecutionReport makeTestExecutionReport() {
+        return expectedReport;
+      }
+    };
+    PageHistory pageHistory = mock(PageHistory.class);
+    when(testHistory.getPageHistory(anyString())).thenReturn(pageHistory);
+    when(pageHistory.get(any(Date.class))).thenReturn(testResultRecord);
+    when(testResultRecord.getFile()).thenReturn(file);
+    when(expectedReport.read(file)).thenReturn(expectedReport);
+    when(expectedReport.getResults()).thenReturn(testResults);
+
+    formatter.setTestHistoryForTests(testHistory);
+    formatter.includeHtml();
+    formatter.newTestStarted(testPage, timeMeasurement.start());
+    formatter.testOutputChunk("<html>blah\" <a class=unquoted");
+    formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0), timeMeasurement.stop());
+
+    formatter.allTestingComplete(timeMeasurement.stop());
+    String output = writer.toString();
+    assertTrue(output, output.contains("&lt;html&gt;blah\" &lt;a class=unquoted"));
   }
 }

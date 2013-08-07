@@ -2,19 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import util.XmlUtil;
-import util.XmlWriter;
-
 import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.text.ParsePosition;
@@ -26,12 +13,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.FitNesseContext;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.wiki.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import util.XmlUtil;
+import util.XmlWriter;
+
 public class RssResponder implements SecureResponder {
   private RssFeed feed;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage contextPage = getContextPage(context, request.getResource());
-    WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
+    WikiPage recentChangesPage = context.root.getChildPage(RecentChanges.RECENT_CHANGES);
 
     feed = new RssFeed(getConfiguredRssLinkPrefixFrom(contextPage));
 
@@ -43,7 +43,7 @@ public class RssResponder implements SecureResponder {
   private WikiPage getContextPage(FitNesseContext context, String resource) throws Exception {
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(resource);
-    return pageCrawler.getPage(context.root, resourcePath);
+    return pageCrawler.getPage(resourcePath);
   }
 
   protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, String resource)

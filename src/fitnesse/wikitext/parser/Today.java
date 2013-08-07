@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Clock;
 import util.Maybe;
-import util.SystemTimeKeeper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,7 +57,7 @@ public class Today extends SymbolType implements Rule, Translation {
                 increment.startsWith("-") ? - Integer.parseInt(increment.substring(1)) :
                 0;
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(SystemTimeKeeper.now());
+        calendar.setTime(Clock.currentDate());
         calendar.add(Calendar.DAY_OF_MONTH, incrementDays);
         return new SimpleDateFormat(
                 makeFormat(symbol.getProperty(Today.Format)))

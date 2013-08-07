@@ -1,19 +1,14 @@
 package fitnesse.wikitext.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.parser.WikiWord;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class WikiWordTest {
     private TestRoot root;
@@ -22,7 +17,6 @@ public class WikiWordTest {
     private WikiPage pageOneTwoThree;
     private WikiPage pageOneThree;
     private WikiPage root2;
-    private PageCrawler crawler;
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +26,6 @@ public class WikiWordTest {
         pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");
         pageOneThree = root.makePage(pageOne, "PageThree");
         root2 = InMemoryPage.makeRoot("RooT");
-        crawler = root2.getPageCrawler();
     }
 
     @Test
@@ -47,7 +40,7 @@ public class WikiWordTest {
     @Test
     public void translatesMissingWikiWords() throws Exception {
         ParserTestHelper.assertTranslatesTo(pageOne, "PageNine",
-          "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
+          "PageNine<a title=\"create page\" href=\"PageNine?edit&amp;nonExistent=true\">[?]</a>");
     }
 
     @Test
@@ -93,7 +86,7 @@ public class WikiWordTest {
     }
 
     private WikiPage addPage(WikiPage parent, String childName) throws Exception {
-        return crawler.addPage(parent, PathParser.parse(childName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(childName));
     }
 
     private String wikiLink(String link, String text) {

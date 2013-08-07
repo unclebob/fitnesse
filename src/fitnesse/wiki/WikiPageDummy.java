@@ -4,6 +4,8 @@
 package fitnesse.wiki;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import util.Clock;
@@ -15,9 +17,6 @@ public class WikiPageDummy implements WikiPage {
   protected String location;
   private PageData pageData;
   private WikiPage parent;
-  protected WikiPage parentForVariables;
-
-  public static final int daysTillVersionsExpire = 14;
 
   public WikiPageDummy(String name, String content) {
     this.name = name;
@@ -42,16 +41,12 @@ public class WikiPageDummy implements WikiPage {
     return parent;
   }
 
-  public void setParentForVariables(WikiPage parent) {
-    parentForVariables = parent;
-  }
-
-  public WikiPage getParentForVariables() {
-    return parentForVariables == null ? this : parentForVariables;
-  }
-
   public void setParent(WikiPage parent) {
-    this.parent = this.parentForVariables = parent;
+    this.parent = parent;
+  }
+
+  public boolean isRoot() {
+    return parent == null;
   }
 
   public PageData getData() {
@@ -59,6 +54,11 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public ReadOnlyPageData readOnlyData() { return getData(); }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return Collections.emptySet();
+  }
 
   public VersionInfo commit(PageData data) {
     pageData = data;
@@ -81,7 +81,7 @@ public class WikiPageDummy implements WikiPage {
   }
 
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
   public WikiPage getHeaderPage() {
@@ -102,21 +102,5 @@ public class WikiPageDummy implements WikiPage {
 
   public WikiPage getChildPage(String name) {
     return null;
-  }
-
-  public boolean hasExtension(String extensionName) {
-    return false;
-  }
-
-  public Extension getExtension(String extensionName) {
-    return null;
-  }
-
-  public String getHelpText() {
-    return "Dummy help text";
-  }
-  
-  public boolean isOpenInNewWindow() {
-    return false;
   }
 }

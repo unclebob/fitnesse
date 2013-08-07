@@ -4,7 +4,7 @@ import fitnesse.html.HtmlText;
 import util.GracefulNamer;
 
 public class WikiWord extends SymbolType implements Translation {
-    public static WikiWord symbolType = new WikiWord(null);
+    public static final WikiWord symbolType = new WikiWord(null);
 
     public static final String REGRACE_LINK = "REGRACE_LINK";
     public static final String WITH_EDIT = "WITH_EDIT";

@@ -2,12 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import util.TemplateUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -56,12 +55,8 @@ public class EditResponder implements SecureResponder {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(root, path)) {
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-      page = crawler.getPage(root, path);
-    } else
-      page = crawler.getPage(root, path);
 
+    page = crawler.getPage(path, new MockingPageCrawler());
     pageData = page.getData();
     content = createPageContent();
 

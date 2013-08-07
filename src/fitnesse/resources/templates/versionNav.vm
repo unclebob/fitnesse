@@ -1,8 +1,8 @@
 <ul>
- #if( $nextVersionNavigable )
+ #if( $!nextVersion )
  <li ><a href="$localPath?responder=viewVersion&version=$nextVersion">Next</a></li>
  #end
- #if( $previousVersionNavigable )
+ #if( $!previousVersion )
  <li ><a href="$localPath?responder=viewVersion&version=$previousVersion">Previous</a></li>
  #end
  <li ><a href="$localPath?responder=rollback&version=$rollbackVersion">Rollback</a></li>

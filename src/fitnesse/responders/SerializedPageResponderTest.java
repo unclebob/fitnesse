@@ -5,34 +5,22 @@ package fitnesse.responders;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
+import fitnesse.wiki.*;
 import util.FileUtil;
 import util.RegexTestCase;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class SerializedPageResponderTest extends RegexTestCase {
   private final String RootPath = "TestRooT";
-  private PageCrawler crawler;
   private WikiPage root;
   private MockRequest request;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     request = new MockRequest();
   }
 
@@ -40,32 +28,12 @@ public class SerializedPageResponderTest extends RegexTestCase {
     FileUtil.deleteFileSystemDirectory(RootPath);
   }
 
-  public void testWithInMemory() throws Exception {
-    Object obj = doSetUpWith(root, "bones");
-    doTestWith(obj);
-
-  }
-
-  public void testWithFileSystem() throws Exception {
-    root = new FileSystemPage(".", RootPath);
-    Object obj = doSetUpWith(root, "bones");
-    FileUtil.deleteFileSystemDirectory(RootPath);
-    doTestWith(obj);
-  }
-
-  private void doTestWith(Object obj) throws Exception {
-    assertNotNull(obj);
-    assertEquals(true, obj instanceof ProxyPage);
-    WikiPage page = (WikiPage) obj;
-    assertEquals("PageOne", page.getName());
-  }
-
   private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {
-    WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one");
+    WikiPage page1 = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "this is page one");
     PageData data = page1.getData();
     data.setAttribute("Attr1", "true");
     page1.commit(data);
-    crawler.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
+    WikiPageUtil.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
 
     request.addInput("type", proxyType);
     request.setResource("PageOne");
@@ -94,7 +62,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetVersionOfPageData() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "some content");
     VersionInfo commitRecord = page.commit(page.getData());
 
     request.addInput("type", "meat");
@@ -108,9 +76,9 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetPageHieratchyAsXml() throws Exception {
-    crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
 
     request.setResource("root");
     request.addInput("type", "pages");
@@ -125,9 +93,9 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
-    WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
 
     PageData data = pageOne.getData();
     WikiPageProperties properties = data.getProperties();
@@ -149,7 +117,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testGetDataAsHtml() throws Exception {
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPageOne"), "test page");
 
     request.setResource("TestPageOne");
     request.addInput("type", "data");

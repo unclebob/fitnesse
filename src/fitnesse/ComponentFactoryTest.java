@@ -2,18 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.TableColumn;
-import org.htmlparser.tags.TableRow;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
-
-import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.ResponderFactory;
@@ -21,19 +12,15 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.slimTables.HtmlTable;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.SlimTableFactory;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTable;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wikitext.parser.ParseSpecification;
 import fitnesse.wikitext.parser.ScanString;
 import fitnesse.wikitext.parser.SymbolMatch;
@@ -41,6 +28,12 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolStream;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableRow;
+import org.htmlparser.tags.TableTag;
+import org.htmlparser.util.NodeList;
+import util.RegexTestCase;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -51,53 +44,21 @@ public class ComponentFactoryTest extends RegexTestCase {
   public void setUp() throws Exception {
     testProperties = new Properties();
     testProvider = new SymbolProvider(new SymbolType[] {});
-    factory = new ComponentFactory(testProperties, testProvider);
-  }
-
-  @Override
-  public void tearDown() throws Exception {
-    final File file = new File(ComponentFactory.PROPERTIES_FILE);
-    FileOutputStream out = new FileOutputStream(file);
-    out.write("".getBytes());
-    out.close();
-  }
-
-  public void testRootPageCreation() throws Exception {
-    testProperties.setProperty(ComponentFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
-
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    factory.loadWikiPage(wikiPageFactory);
-    assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
-
-    WikiPage page = wikiPageFactory.makeRootPage(null, "", factory);
-    assertNotNull(page);
-    assertEquals(InMemoryPage.class, page.getClass());
-  }
-
-  public void testDefaultRootPage() throws Exception {
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
-    factory.loadWikiPage(wikiPageFactory);
-    assertEquals(FileSystemPage.class, wikiPageFactory.getWikiPageClass());
-
-    WikiPage page = wikiPageFactory.makeRootPage("testPath", "TestRoot", factory);
-    assertNotNull(page);
-    assertEquals(FileSystemPage.class, page.getClass());
-    assertEquals("TestRoot", page.getName());
+    factory = new ComponentFactory(testProperties);
   }
 
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
 
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    FileSystemPageFactory wikiPageFactory = new FileSystemPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
 
     assertMatch("!today", false);
 
-    String output = factory.loadPlugins(responderFactory, wikiPageFactory);
+    String output = factory.loadPlugins(responderFactory, testProvider);
 
     assertSubString(DummyPlugin.class.getName(), output);
 
-    assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
     assertMatch("!today", true);
@@ -126,7 +87,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     String symbolValues = Today.class.getName();
     testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
 
-    String output = factory.loadSymbolTypes();
+    String output = factory.loadSymbolTypes(testProvider);
 
     assertSubString(Today.class.getName(), output);
 
@@ -162,29 +123,29 @@ public class ComponentFactoryTest extends RegexTestCase {
   public void testSlimTablesCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
-  
+
   public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
-    
+
     assertTrue(content.contains("test:"));
     assertTrue(content.contains("TestSlimTable"));
-    
+
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new MockSlimTestContext());
+    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   private HtmlTable makeMockTable(String tableIdentifier) {
-    // Create just enough "table" to test if 
+    // Create just enough "table" to test if
     TableTag tableTag = new TableTag();
     TableRow tableRow = new TableRow();
     TableColumn tableColumn = new TableColumn();
@@ -192,18 +153,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     tableRow.setChildren(new NodeList(tableColumn));
     tableTag.setChildren(new NodeList(tableRow));
     return new HtmlTable(tableTag);
-  }
-
-  public void testShouldUseZipFileRevisionControllerAsDefault() throws Exception {
-    VersionsController defaultRevisionController = factory.loadVersionsController();
-    assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
-  }
-
-  public void testShouldUseSpecifiedRevisionController() throws Exception {
-    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
-
-    VersionsController defaultRevisionController = factory.loadVersionsController();
-    assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
   }
 
   public static class TestContentFilter implements ContentFilter {
@@ -217,9 +166,6 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   static class DummyPlugin {
-    public static void registerWikiPage(WikiPageFactory factory) {
-      factory.setWikiPageClass(InMemoryPage.class);
-    }
 
     public static void registerResponders(ResponderFactory factory) {
       factory.addResponder("custom1", WikiPageResponder.class);
@@ -230,7 +176,7 @@ public class ComponentFactoryTest extends RegexTestCase {
         provider.add(new Today());
     }
   }
-  
+
   public static class TestSlimTable extends SlimTable {
 
     public TestSlimTable(Table table, String id, SlimTestContext testContext) {
@@ -243,13 +189,8 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     @Override
-    public void appendInstructions() {
+    public List<Assertion> getAssertions() {
+      return null;
     }
-
-    @Override
-    public void evaluateReturnValues(Map<String, Object> returnValues)
-        throws Exception {
-    }
-    
   }
 }

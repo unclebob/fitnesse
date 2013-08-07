@@ -2,6 +2,7 @@ package fitnesse.responders.templateUtilities;
 
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +11,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class TraverseDirectiveTest {
 
@@ -44,10 +42,9 @@ public class TraverseDirectiveTest {
     @Override
     public void traverse(TraversalListener<WikiPage> observer) {
       WikiPage root = InMemoryPage.makeRoot("root");
-      PageCrawler crawler = root.getPageCrawler();
-      observer.process(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));
-      observer.process(crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
-      observer.process(crawler.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
+      observer.process(WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "PageOne"));
+      observer.process(WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
+      observer.process(WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
     }
   }
 }

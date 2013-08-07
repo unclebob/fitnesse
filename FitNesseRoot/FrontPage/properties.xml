@@ -3,13 +3,11 @@
 	<AddChild/>
 	<Edit/>
 	<Files/>
-	<Help></Help>
 	<Properties/>
 	<Prune/>
 	<RecentChanges/>
 	<Search/>
 	<Static/>
-	<Suites/>
 	<Versions/>
 	<WhereUsed/>
 </properties>

@@ -2,7 +2,7 @@
 
 FitNesse is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Before you can begin CreatingTestTables, you need to know a bit about how a wiki works.
 
-A wiki allows any authorized user to make changes to any edit-enabled page, or to create new pages, simply by using their Web browser. If you are working with a copy of FitNesse on your own machine, you are probably authorized to make such changes. (If you have not yet installed FitNesse on your own machine, it's easy do to. You can read about it on DownloadingAndInstallingFitNesse.)
+A wiki allows any authorized user to make changes to any edit-enabled page, or to create new pages, simply by using their Web browser. If you are working with a copy of FitNesse on your own machine, you are probably authorized to make such changes.
 
 !3 Editing a Page
 Once you are on a page your want to change, hit the '''Edit''' button in the upper left. (If the button does not appear, then the page is not edit-enabled.)

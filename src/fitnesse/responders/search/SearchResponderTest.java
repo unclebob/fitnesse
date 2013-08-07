@@ -2,28 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import fitnesse.wiki.WikiPageUtil;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public class SearchResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
   private SearchResponder responder;
   private MockRequest request;
   private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
+    WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "has something in it");
     request = new MockRequest();
     request.addInput("searchString", "blah");
     request.addInput("searchType", "blah");

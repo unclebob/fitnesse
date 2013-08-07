@@ -11,7 +11,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class SummaryFixture extends Fixture {
-  public static String countsKey = "counts";
+  public static final String countsKey = "counts";
 
   public void doTable(Parse table) {
     summary.put(countsKey, counts());

@@ -1,25 +1,30 @@
 <h2>Select a version</h2>
-<table>
- <thead>
-  <tr>
-   <th>Name</th>
-   <th>Author</th>
-   <th>Age</th>
-   <th>&nbsp;</th>
-  </tr>
- </thead>
- <tbody>
-  #foreach( $version in $versions )
-  <tr>
-   <td>$version.name</td>
-   <td>$version.author</td>
-   <td>$version.age</td>
-   <td><a href="?responder=viewVersion&amp;version=$version.name">view</a></td>
-  </tr>
-  #end
- </tbody>
-</table>
-
-<fieldset>
- <a class="button" href="$viewLocation">Cancel</a>
-</fieldset>
+<form action= "" method="get" name="compareVersions">
+ <fieldset class="buttons">
+  <input type="hidden" value="compareVersions" name="responder"/>
+  <input type="submit" value="Compare" />
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
+ <table>
+  <thead>
+   <tr>
+    <th>Compare</th>
+    <th>Name</th>
+    <th>Author</th>
+    <th>Age</th>
+    <th>&nbsp;</th>
+   </tr>
+  </thead>
+  <tbody>
+   #foreach( $version in $versions )
+   <tr>
+    <td><input type="checkbox" name="Version_$version.name"/></td>
+    <td>$version.name</td>
+    <td>$version.author</td>
+    <td>$version.age</td>
+    <td><a href="?responder=viewVersion&amp;version=$version.name">view</a></td>
+   </tr>
+   #end
+  </tbody>
+ </table>
+</form>

@@ -17,7 +17,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getFullName() {
         try {
-            return page.getPageCrawler().getFullPath(page).toString();
+            return page.getPageCrawler().getFullPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -26,7 +26,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getPath() {
         try {
-            return page.getPageCrawler().getFullPath(page).parentPath().toString();
+            return page.getPageCrawler().getFullPath().parentPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -35,7 +35,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String getFullPath() {
         try {
-            return page.getPageCrawler().getFullPath(page).toString();
+            return page.getPageCrawler().getFullPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -55,7 +55,7 @@ public class WikiSourcePage implements SourcePage {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         try {
             WikiPage parentPage = page.getParent();
-            return parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord) != null;
+            return parentPage.getPageCrawler().getPage(pathOfWikiWord) != null;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class WikiSourcePage implements SourcePage {
         if (pathOfWikiWord == null) throw new IllegalArgumentException("Can't parse path: " + wikiWordPath);
         try {
             WikiPage parentPage = page.getParent();
-            return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord));
+            return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(pathOfWikiWord));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -81,9 +81,9 @@ public class WikiSourcePage implements SourcePage {
         String target = pathElements[0];
         PageCrawler crawler = page.getPageCrawler();
         try {
-            WikiPage ancestor = crawler.findAncestorWithName(page, target);
+            WikiPage ancestor = crawler.findAncestorWithName(target);
             if (ancestor != null) {
-                pathElements[0] = PathParser.render(crawler.getFullPath(ancestor));
+                pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
                 return "." + StringUtil.join(Arrays.asList(pathElements), ".");
             }
         } catch (Exception e) {
@@ -95,28 +95,14 @@ public class WikiSourcePage implements SourcePage {
 
     public Maybe<SourcePage> findIncludedPage(String pageName) {
         PageCrawler crawler = page.getPageCrawler();
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
           return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
         }
         try {
-            WikiPage includedPage = crawler.getSiblingPage(page, pagePath);
+            WikiPage includedPage = crawler.getSiblingPage(pagePath);
             if (includedPage == null) {
-                if (page instanceof ProxyPage) {
-                    ProxyPage proxy = (ProxyPage) page;
-                    String host = proxy.getHost();
-                    int port = proxy.getHostPort();
-                    try {
-                        ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
-                        return new Maybe<SourcePage>(new WikiSourcePage(remoteIncludedPage));
-                    }
-                    catch (Exception e) {
-                        return Maybe.nothingBecause("Remote page \" + host + \":\" + port + \"/\" + pageName + \" does not exist.\n");
-                    }
-                } else {
-                    return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
-                }
+                return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
             }
             else if (isParentOf(includedPage))
                return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
@@ -135,7 +121,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {
                 ancestors.add(new WikiSourcePage(ancestor));
-                if (ancestor.getPageCrawler().isRoot(ancestor)) break;
+                if (ancestor.isRoot()) break;
             }
         }
         catch (Exception e) {
@@ -150,13 +136,6 @@ public class WikiSourcePage implements SourcePage {
         try {
             for (WikiPage child: page.getChildren()) {
                 children.add(new WikiSourcePage(child));
-            }
-            if (page.hasExtension(VirtualCouplingExtension.NAME)) {
-                VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
-                WikiPage virtualCoupling = extension.getVirtualCoupling();
-                for (WikiPage child: virtualCoupling.getChildren()) {
-                    children.add(new WikiSourcePage(child));
-                }
             }
         }
         catch (Exception e) {
@@ -188,15 +167,7 @@ public class WikiSourcePage implements SourcePage {
     }
 
     public String makeUrl(String wikiWordPath) {
-        if (!(page instanceof ProxyPage))
-            return makeFullPathOfTarget(wikiWordPath) ;
-
-        ProxyPage proxy = (ProxyPage) page;
-        String remoteURLOfPage = proxy.getThisPageUrl();
-        String nameOfThisPage = proxy.getName();
-        int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
-        String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
-        return remoteURLOfParent + wikiWordPath;
+        return makeFullPathOfTarget(wikiWordPath) ;
     }
 
     private boolean isParentOf(WikiPage possibleParent) {

@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 import util.RegexTestCase;
 import util.StreamReader;
 import util.XmlUtil;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public class XmlResultFormatterTest extends RegexTestCase {
   private XmlResultFormatter formatter;

@@ -2,10 +2,10 @@ package fitnesse.responders.run;
 
 import java.util.LinkedList;
 
-import fitnesse.components.SuiteSpecificationMatchFinder;
+import fitnesse.wiki.search.SuiteSpecificationMatchFinder;
 import fitnesse.components.TraversalListener;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -78,7 +78,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   private void getSearchRoot(Table table, int rowIndex) {
     if (table.getCellContents(1, rowIndex) != null) {
       String searchRootPath = table.getCellContents(1, rowIndex);
-      searchRoot = crawler.getPage(root, PathParser.parse(searchRootPath));
+      searchRoot = crawler.getPage(PathParser.parse(searchRootPath));
     }
   }
 
@@ -116,7 +116,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
 
   public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
-      if (hit == page)
+      if (hit.equals(page))
         return;
     }
     if (page.getData().hasAttribute("Test"))

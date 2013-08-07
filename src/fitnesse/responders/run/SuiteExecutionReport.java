@@ -1,6 +1,9 @@
 package fitnesse.responders.run;
 
 import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

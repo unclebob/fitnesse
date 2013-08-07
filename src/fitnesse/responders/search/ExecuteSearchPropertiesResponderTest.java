@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.wiki.*;
 import org.junit.*;
 
 import util.RegexTestCase;
@@ -16,17 +17,10 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
 
@@ -34,7 +28,6 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
     context = FitNesseUtil.makeTestContext(root);
   }
@@ -87,7 +80,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequest() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -201,7 +194,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequestForObsoletePage() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ObsoletePage"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties1 = data.getProperties();

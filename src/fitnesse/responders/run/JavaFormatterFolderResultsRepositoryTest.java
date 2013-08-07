@@ -1,25 +1,18 @@
 package fitnesse.responders.run;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
+import fitnesse.responders.run.JavaFormatter.FolderResultsRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.xml.sax.InputSource;
 
-import fitnesse.responders.run.JavaFormatter.FolderResultsRepository;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+import java.io.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JavaFormatterFolderResultsRepositoryTest {
  
@@ -33,7 +26,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
   @Before
   public void prepareFolder() throws Exception {
     String tempDir = temporaryFolder.getRoot().getAbsolutePath();
-    repository = new JavaFormatter.FolderResultsRepository(tempDir, ".");
+    repository = new JavaFormatter.FolderResultsRepository(tempDir);
   }
 
   @Test
@@ -41,7 +34,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
     repository.open(TEST_NAME);
     repository.close();
     
-    String heading = evaluateXPathAgainstOutputHtml("/html/body/h2/text()");
+    String heading = evaluateXPathAgainstOutputHtml("/html/body/header/h2/text()");
     assertEquals(TEST_NAME, heading);
   }
 
@@ -74,8 +67,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
 
   private InputStream getHtmlOutputStream() throws FileNotFoundException {
     File outputHtml = new File(temporaryFolder.getRoot(), TEST_NAME + ".html");
-    InputStream outputHtmlStream = new FileInputStream(outputHtml);
-    return outputHtmlStream;
+    return new FileInputStream(outputHtml);
   }
 
 }

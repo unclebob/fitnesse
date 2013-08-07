@@ -19,7 +19,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageXmlizer;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -69,9 +68,9 @@ public class SerializedPageResponder implements SecureResponder {
 
   private Object getObjectToSerialize(Request request, WikiPage page) {
     Object object;
-    if ("bones".equals(request.getInput("type")))
-      object = new ProxyPage(page);
-    else if ("meat".equals(request.getInput("type"))) {
+    if ("versions".equals(request.getInput("type"))) {
+      object = page.getVersions();
+    } else if ("meat".equals(request.getInput("type"))) {
       PageData originalData = page.getData();
       if (request.hasInput("version"))
         originalData = page.getDataVersion((String) request.getInput("version"));
@@ -86,7 +85,7 @@ public class SerializedPageResponder implements SecureResponder {
   private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     return page;
   }
 

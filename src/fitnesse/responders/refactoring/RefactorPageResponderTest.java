@@ -6,8 +6,8 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import util.RegexTestCase;
@@ -17,13 +17,11 @@ public class RefactorPageResponderTest extends RegexTestCase {
   private MockRequest request;
   private Responder responder;
   private String childPage = "ChildPage";
-  private PageCrawler crawler;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse(childPage));
+    WikiPageUtil.addPage(root, PathParser.parse(childPage));
 
     request = new MockRequest();
     request.setResource(childPage);

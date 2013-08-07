@@ -7,15 +7,8 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.json.JSONObject;
 import util.RegexTestCase;
 
@@ -23,8 +16,6 @@ public class PropertiesResponderTest extends RegexTestCase {
   private FitNesseContext context;
 
   private WikiPage root;
-
-  private PageCrawler crawler;
 
   private MockRequest request;
 
@@ -35,19 +26,17 @@ public class PropertiesResponderTest extends RegexTestCase {
   @Override
 public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
   }
 
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Page Tags");
     properties.set("Test", "true");
-    properties.set(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
     page.commit(data);
 
     MockRequest request = new MockRequest();
@@ -59,7 +48,6 @@ public void setUp() throws Exception {
 
     String content = response.getContent();
     assertSubString("PageOne", content);
-    assertSubString("value=\"http://www.fitnesse.org\"", content);
     assertDoesntHaveRegexp("textarea name=\"extensionXml\"", content);
     assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
@@ -81,7 +69,7 @@ public void setUp() throws Exception {
   }
 
   public void testJsonResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -111,16 +99,6 @@ public void setUp() throws Exception {
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
-  }
-
-  public void testGetVirtualWikiValue() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
-    PageData data = page.getData();
-
-    assertEquals("", PropertiesResponder.getVirtualWikiValue(data));
-
-    data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.objectmentor.com");
-    assertEquals("http://www.objectmentor.com", PropertiesResponder.getVirtualWikiValue(data));
   }
 
   public void testUsernameDisplayed() throws Exception {
@@ -279,8 +257,8 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertSame(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    assertEquals(page, context.root.getPageCrawler().getPage(PathParser.parse(".SomePage")));
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -295,7 +273,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Test");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -310,7 +288,7 @@ public void setUp() throws Exception {
     PageData data = page.getData();
     data.setAttribute("Prune");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);

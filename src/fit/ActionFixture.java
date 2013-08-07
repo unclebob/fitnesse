@@ -12,8 +12,8 @@ import fit.exception.NoSuchMethodFitFailureException;
 
 public class ActionFixture extends Fixture {
   protected Parse cells;
-  public static Fixture actor;
-  protected static Class<?> empty[] = {};
+  private Fixture actor;
+  protected static final Class<?> empty[] = {};
 
   // Traversal ////////////////////////////////
 
@@ -35,6 +35,10 @@ public class ActionFixture extends Fixture {
     if (fixture == null)
       throw new FitFailureException("You must specify a fixture to start.");
     actor = loadFixture(fixture.text());
+  }
+
+  public Fixture getActor() {
+    return this.actor;
   }
 
   public void enter() throws Exception {

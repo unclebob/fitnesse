@@ -2,11 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.UnsupportedEncodingException;
@@ -161,4 +162,15 @@ public class ChunkedResponseTest implements ResponseSender {
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }
 
+  @Test
+  public void testTurnOffChunking() {
+    response.turnOffChunking();
+
+    response.add("one");
+    response.add("two");
+
+    response.closeAll();
+
+    assertMatches("onetwo$", buffer.toString());
+  }
 }

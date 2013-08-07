@@ -19,11 +19,11 @@ import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.ExecutionReport;
-import fitnesse.responders.run.ExecutionResult;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -168,7 +168,7 @@ public class PageHistoryResponder implements SecureResponder {
     if (context.root != null){
       WikiPagePath path = PathParser.parse(pageName);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

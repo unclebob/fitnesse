@@ -1,0 +1,12 @@
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+| decision table execute throws |
+| x? |
+| 1 |
+-! |
+| test results for page | TestPage | should contain | __EXCEPTION__:fitnesse.slim.SlimError: EXECUTE_THROWS |
+| ensure | content contains | at fitnesse.slim.test.DecisionTableExecuteThrows |

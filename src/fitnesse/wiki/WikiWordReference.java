@@ -18,7 +18,7 @@ public class WikiWordReference {
     public WikiPage getReferencedPage() throws Exception {
         String theWord = expandPrefix(wikiWord);
         WikiPage parentPage = currentPage.getParent();
-        return parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(theWord));
+        return parentPage.getPageCrawler().getPage(PathParser.parse(theWord));
     }
     
     private String expandPrefix(String theWord) throws Exception {
@@ -31,9 +31,9 @@ public class WikiWordReference {
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = currentPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+        for (WikiPage current = currentPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }
@@ -43,7 +43,7 @@ public class WikiWordReference {
     }
 
     public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
-      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath(pageToBeMoved);
+      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
       String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
@@ -67,7 +67,7 @@ public class WikiWordReference {
       WikiPagePath expandedPath = PathParser.parse(pathName);
       if (expandedPath == null)
         return wikiWordText;
-      WikiPagePath fullPath = currentPage.getParent().getPageCrawler().getFullPathOfChild(currentPage.getParent(), expandedPath);
+      WikiPagePath fullPath = currentPage.getParent().getPageCrawler().getFullPathOfChild(expandedPath);
       return "." + PathParser.render(fullPath); //todo rcm 2/6/05 put that '.' into pathParser.  Perhaps WikiPagePath.setAbsolute()
     }
 
@@ -77,7 +77,7 @@ public class WikiWordReference {
 
     public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) throws Exception {
       String fullPathToReferent = getQualifiedWikiWord(wikiWord.getContent());
-      WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath(pageToRename);
+      WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath();
       pathToPageBeingRenamed.makeAbsolute();
       String absolutePathToPageBeingRenamed = PathParser.render(pathToPageBeingRenamed);
 
@@ -103,7 +103,8 @@ public class WikiWordReference {
     }
 
     private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) throws Exception {
-        WikiPagePath parentPath = currentPage.getPageCrawler().getFullPath(currentPage.getParent());
+      WikiPage parent = currentPage.getParent();
+      WikiPagePath parentPath = parent.getPageCrawler().getFullPath();
       parentPath.makeAbsolute();
 
       if (wikiWordText.startsWith("."))

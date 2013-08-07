@@ -10,50 +10,52 @@ import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.FitClient;
-import fitnesse.html.SetupTeardownAndLibraryIncluder;
+import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.*;
+import fitnesse.testsystems.fit.FitClient;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.testsystems.fit.FitClientListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
+public class FitClientResponder implements Responder, ResponsePuppeteer, FitClientListener {
   private FitNesseContext context;
-  private PageCrawler crawler;
   private String resource;
   private WikiPage page;
   private boolean shouldIncludePaths;
   private String suiteFilter;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
-    crawler = context.root.getPageCrawler();
-    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     resource = request.getResource();
     shouldIncludePaths = request.hasInput("includePaths");
     suiteFilter = (String) request.getInput("suiteFilter");
     return new PuppetResponse(this);
   }
 
+  @Override
   public void readyToSend(ResponseSender sender) {
     Socket socket = sender.getSocket();
     WikiPagePath pagePath = PathParser.parse(resource);
     try {
-      if (!crawler.pageExists(context.root, pagePath))
-	      FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
+      PageCrawler crawler = context.root.getPageCrawler();
+      if (!crawler.pageExists(pagePath))
+        FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
       else {
-	      page = crawler.getPage(context.root, pagePath);
-	      PageData data = page.getData();
+        page = crawler.getPage(pagePath);
+        PageData data = page.getData();
 
       	if (data.hasAttribute("Suite"))
       	  handleSuitePage(socket, page, context.root);
       	else if (data.hasAttribute("Test"))
-      	  handleTestPage(socket, data);
+      	  handleTestPage(socket, page);
       	else
       	  FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
       }
@@ -63,7 +65,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     sender.close();
   }
 
-  private void handleTestPage(Socket socket, PageData data) throws IOException, InterruptedException {
+  private void handleTestPage(Socket socket, WikiPage testPage) throws IOException, InterruptedException {
     FitClient client = startClient(socket);
 
     if (shouldIncludePaths) {
@@ -71,7 +73,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
       client.send(classpath);
     }
 
-    sendPage(data, client, true);
+    sendPage(new TestPageWithSuiteSetUpAndTearDown(testPage), client);
     closeClient(client);
   }
 
@@ -82,22 +84,19 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     List<WikiPage> testPages = suiteTestFinder.makePageList();
 
     if (shouldIncludePaths) {
-      MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null);
-      String classpath = runner.buildClassPath();
+      String classpath = new ClassPathBuilder().buildClassPath(testPages);
       client.send(classpath);
     }
 
     for (WikiPage testPage : testPages) {
-      PageData testPageData = testPage.getData();
-      sendPage(testPageData, client, false);
+      sendPage(new WikiTestPage(testPage), client);
     }
     closeClient(client);
   }
 
-  private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws IOException, InterruptedException {
-    String pageName = crawler.getRelativeName(page, data.getWikiPage());
-    SetupTeardownAndLibraryIncluder.includeInto(data, includeSuiteSetup);
-    String testableHtml = data.getHtml();
+  private void sendPage(WikiTestPage testPage, FitClient client) throws IOException, InterruptedException {
+    String pageName = page.getPageCrawler().getRelativeName(testPage.getSourcePage());
+    String testableHtml = testPage.getDecoratedData().getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);
   }
@@ -121,12 +120,16 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     return "The page " + resource + " was not found.";
   }
 
-  public void acceptOutputFirst(String output) {
+  @Override
+  public void testOutputChunk(String output) {
   }
 
+  @Override
   public void testComplete(TestSummary testSummary) {
   }
 
-  public void exceptionOccurred(Throwable e) {
+  @Override
+  public void exceptionOccurred(Exception e) {
   }
+
 }

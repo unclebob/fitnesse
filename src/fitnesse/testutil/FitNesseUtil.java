@@ -6,9 +6,8 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.VirtualCouplingPage;
+import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
@@ -35,11 +34,6 @@ public class FitNesseUtil {
   public static void stopFitnesse() throws IOException {
     instance.stop();
     FileUtil.deleteFileSystemDirectory("TestDir");
-  }
-
-  public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) {
-    VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
-    ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
 
   public static FitNesseContext makeTestContext() {
@@ -83,6 +77,7 @@ public class FitNesseUtil {
     builder.rootDirectoryName = rootDirectoryName;
     builder.port = port;
     builder.authenticator = authenticator;
+    builder.recentChanges = new RecentChangesWikiPage();
     FitNesseContext context = builder.createFitNesseContext();
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import fitnesse.wiki.WikiPageUtil;
 import util.RegexTestCase;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
@@ -18,7 +18,7 @@ public class MergeResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     source = InMemoryPage.makeRoot("RooT");
-    source.getPageCrawler().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
+    WikiPageUtil.addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
     request = new MockRequest();
     request.setResource("SimplePage");
     request.addInput(EditResponder.TIME_STAMP, "");

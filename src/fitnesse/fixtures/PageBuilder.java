@@ -7,11 +7,7 @@ import java.io.StringWriter;
 import java.util.StringTokenizer;
 
 import fit.Fixture;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class PageBuilder extends Fixture {
   private PrintWriter writer;
@@ -34,9 +30,8 @@ public class PageBuilder extends Fixture {
 
   public void page(String name) throws Exception {
     String content = stringWriter.toString();
-    PageCrawler crawler = FitnesseFixtureContext.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(name);
-    WikiPage page = crawler.addPage(FitnesseFixtureContext.root, path, content);
+    WikiPage page = WikiPageUtil.addPage(FitnesseFixtureContext.root, path, content);
     if (pageAttributes != null) {
       PageData data = page.getData();
       setAttributes(data);

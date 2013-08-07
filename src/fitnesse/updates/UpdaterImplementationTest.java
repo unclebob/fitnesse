@@ -1,22 +1,21 @@
 package fitnesse.updates;
 
-import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.WikiPage;
-import org.junit.After;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import util.FileUtil;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.WikiPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
 public class UpdaterImplementationTest {
   private File updateList;
@@ -30,12 +29,11 @@ public class UpdaterImplementationTest {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageCrawler crawler;
   private boolean updateDone = false;
 
   @Before
   public void setUp() throws Exception {
-    setTheContext();
+    setTheContext(rootName);
     root = setTheRoot();
     createFakeJarFileResources();
     createFakeUpdateListFiles();
@@ -46,11 +44,11 @@ public class UpdaterImplementationTest {
     return root;
   }
 
-  private void setTheContext() {
+  private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPage(testDir, rootName);
-    crawler = root.getPageCrawler();
-    context = FitNesseUtil.makeTestContext(root, testDir, rootName, 80);
+    root = new FileSystemPage(testDir, name);
+    root.commit(root.getData());
+    context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 
   private void createFakeUpdateListFiles() {
@@ -111,10 +109,10 @@ public class UpdaterImplementationTest {
   }
 
   @Test
-  @Ignore
   public void shouldReplaceFitNesseRootWithDirectoryRoot() throws Exception {
     String filePath = "FitNesseRoot/someFolder/someFile";
-    //context.rootDirectoryName = "MyNewRoot";
+    setTheContext("MyNewRoot");
+    updater = new UpdaterImplementation(context);
     String updatedPath = updater.getCorrectPathForTheDestination(filePath);
     assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
   }

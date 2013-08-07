@@ -1,0 +1,2 @@
+!contents -R2 -g -p -f -h
+!define VERSION_CONTROLLER_CLASS {!-fitnesse.wiki.fs.ZipFileVersionsController-!}

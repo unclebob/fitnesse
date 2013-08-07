@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+
 import fitnesse.Arguments;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
@@ -12,16 +20,9 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
-import static org.junit.matchers.JUnitMatchers.*;
 import util.FileUtil;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
 
 public class FitNesseMainTest {
 
@@ -129,7 +130,7 @@ public class FitNesseMainTest {
   @Test
   public void canRunSingleCommandWithAuthentication() throws Exception {
     String response = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
-    assertThat(response, containsString("HTTP/1.1 200 OK"));
+    assertThat(response, containsString("fitnesse.authentication.OneUserAuthenticator"));
   }
 
   private String runFitnesseMainWith(String... args) throws Exception {

@@ -3,9 +3,9 @@ package fitnesse.wikitext;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.slim.ListDeserializer;
+import fitnesse.slim.protocol.SlimDeserializer;
 
-import fitnesse.slim.ListSerializer;
+import fitnesse.slim.protocol.SlimSerializer;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
@@ -58,10 +58,10 @@ public class PerformanceTest {
       for (int i = 0; i < 10000; i++) {
         objects.add(new String("This is string " + i));
       }
-      final String serializedList = ListSerializer.serialize(objects);
+      final String serializedList = SlimSerializer.serialize(objects);
 
       long start = System.currentTimeMillis();
-      List<Object> result = ListDeserializer.deserialize(serializedList);
+      List<Object> result = SlimDeserializer.deserialize(serializedList);
       System.out.println(System.currentTimeMillis() - start);
 
       assertEquals(objects, result);

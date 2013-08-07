@@ -2,16 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageType.*;
-
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -22,17 +12,18 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
 
 public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
@@ -47,9 +38,7 @@ public class PropertiesResponder implements SecureResponder {
     resource = request.getResource();
     path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path))
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-    page = crawler.getPage(context.root, path);
+    page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -142,7 +131,6 @@ public class PropertiesResponder implements SecureResponder {
     makeTestActionCheckboxesHtml(pageData);
     makeNavigationCheckboxesHtml(pageData);
     makeSecurityCheckboxesHtml(pageData);
-    makeVirtualWikiHtml();
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -157,10 +145,6 @@ public class PropertiesResponder implements SecureResponder {
         return attributes[i];
     }
     return attributes[0];
-  }
-
-  private void makeVirtualWikiHtml() {
-    html.put("virtualWikiValue", getVirtualWikiValue(pageData));
   }
 
   private void makeImportForm() {
@@ -199,30 +183,18 @@ public class PropertiesResponder implements SecureResponder {
     WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
     if (wikiPagePath != null) {
-      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page; // TODO
-                                                                                 // -AcD-
-                                                                                 // a
-                                                                                 // better
-                                                                                 // way?
+      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page;
       PageCrawler crawler = parent.getPageCrawler();
-      WikiPage target = crawler.getPage(parent, wikiPagePath);
+      WikiPage target = crawler.getPage(wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = crawler.getFullPath(target);
+        fullPath = target.getPageCrawler().getFullPath();
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();
       return fullPath.toString();
     }
     return null;
-  }
-
-  public static String getVirtualWikiValue(PageData data) {
-    String value = data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
-    if (value == null)
-      return "";
-    else
-      return value;
   }
 
   public SecureOperation getSecureOperation() {

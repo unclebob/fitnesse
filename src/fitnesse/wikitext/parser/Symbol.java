@@ -1,26 +1,41 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 import util.Maybe;
 
 public class Symbol {
+    private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
+
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
     private SymbolType type;
     private String content = "";
-    private List<Symbol> children = new ArrayList<Symbol>();
-    private Properties variables;
-    private Properties properties;
+    private List<Symbol> children;
+    private Map<String,String> variables;
+    private Map<String,String> properties;
 
-    public Symbol(SymbolType type) { this.type = type; }
+    public Symbol(SymbolType type) { this(type, 0); }
 
     public Symbol(SymbolType type, String content) {
+        this(type, 0);
         this.content = content;
+    }
+
+    public Symbol(SymbolType type, int childrenCapacity) {
         this.type = type;
+        if (childrenCapacity > 0) {
+            this.children = new ArrayList<Symbol>(childrenCapacity);
+        } else {
+            this.children = type.matchesFor(SymbolType.SymbolList)
+                            ? new ArrayList<Symbol>()
+                            : NO_CHILDREN;
+        }
     }
 
     public SymbolType getType() { return type; }
@@ -39,21 +54,25 @@ public class Symbol {
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
 
+    private List<Symbol> children() {
+        if (children == NO_CHILDREN) {
+            children = new ArrayList<Symbol>(1);
+        }
+        return children;
+    }
+
     public Symbol addToFront(Symbol child) {
-        ArrayList<Symbol> newChildren = new ArrayList<Symbol>();
-        newChildren.add(child);
-        newChildren.addAll(children);
-        children = newChildren;
+        children().add(0, child);
         return this;
     }
 
     public Symbol add(Symbol child) {
-        children.add(child);
+        children().add(child);
         return this;
     }
 
     public Symbol add(String text) {
-        children.add(new Symbol(SymbolType.Text, text));
+        children().add(new Symbol(SymbolType.Text, text));
         return this;
     }
 
@@ -83,7 +102,7 @@ public class Symbol {
     }
 
     public void evaluateVariables(String[] names, VariableSource source) {
-        if (variables == null) variables = new Properties();
+        if (variables == null) variables = new HashMap<String,String>(names.length);
         for (String name: names) {
             Maybe<String> value = source.findVariable(name);
             if (!value.isNothing()) variables.put(name, value.getValue());
@@ -91,11 +110,11 @@ public class Symbol {
     }
 
     public String getVariable(String name, String defaultValue) {
-        return variables != null && variables.containsKey(name) ? variables.getProperty(name) : defaultValue;
+        return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
     }
 
     public Symbol putProperty(String key, String value) {
-        if (properties == null) properties = new Properties();
+        if (properties == null) properties = new HashMap<String,String>(1);
         properties.put(key, value);
         return this;
     }
@@ -105,7 +124,7 @@ public class Symbol {
     }
 
     public String getProperty(String key, String defaultValue) {
-        return properties != null && properties.containsKey(key) ? properties.getProperty(key) : defaultValue;
+        return properties != null && properties.containsKey(key) ? properties.get(key) : defaultValue;
     }
 
     public String getProperty(String key) {

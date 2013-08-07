@@ -26,12 +26,12 @@ public class VersionSelectionResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    page = context.root.getPageCrawler().getPage(context.root, path);
+    page = context.root.getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
     pageData = page.getData();
-    versions = getVersionsList(pageData);
+    versions = getVersionsList(page);
 
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
@@ -46,8 +46,8 @@ public class VersionSelectionResponder implements SecureResponder {
     return response;
   }
 
-  public static List<VersionInfo> getVersionsList(PageData data) {
-    List<VersionInfo> list = new ArrayList<VersionInfo>(data.getVersions());
+  public static List<VersionInfo> getVersionsList(WikiPage page) {
+    List<VersionInfo> list = new ArrayList<VersionInfo>(page.getVersions());
     Collections.sort(list);
     Collections.reverse(list);
     return list;

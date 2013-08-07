@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.components.Base64;
+import fitnesse.util.Base64;
 import util.StreamReader;
 
 import java.io.*;
@@ -25,7 +25,10 @@ public class Request {
   private static final Pattern multipartHeaderPattern = Pattern
   .compile("([^ =]+)=\\\"([^\"]*)\\\"");
 
-  private static Collection<String> allowedMethods = buildAllowedMethodList();
+  private static final Collection<String> allowedMethods = buildAllowedMethodList();
+
+  /** input key to suppress chunking. */
+  public static final String NOCHUNK = "nochunk";
 
   protected StreamReader input;
   protected String requestURI;

@@ -2,20 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import java.util.ArrayList;
-
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.mem.InMemoryPage;
+
+import java.util.Collection;
 
 public class VersionResponderTest extends RegexTestCase {
   private String oldVersion;
@@ -26,15 +22,15 @@ public class VersionResponderTest extends RegexTestCase {
   private void makeTestResponse(String pageName) throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
+    page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
     data.setContent("new stuff");
-    VersionInfo commitRecord = page.commit(data);
+    VersionInfo commitRecord = last(page.getVersions());
     oldVersion = commitRecord.getName();
-
+    page.commit(data);
     MockRequest request = new MockRequest();
     request.setResource(pageName);
     request.addInput("version", oldVersion);
@@ -68,69 +64,14 @@ public class VersionResponderTest extends RegexTestCase {
     makeTestResponse("PageOne.PageTwo");
     assertSubString("PageOne.PageTwo?responder=", response.getContent());
   }
-  
-  public void testPageWithMultipleVersionsForNavigationButtons() throws Exception {
-    String pageName = "MultiVersionPage";
-    
-    root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original base content");
-    PageData data = page.getData();
-    
-    VersionInfo base = new ArrayList<VersionInfo>(page.getData().getVersions()).get(0);
-    
-    data.setContent("updated content");
-    VersionInfo update1 = page.commit(data);
 
-    data.setContent("futher update to content");
-    VersionInfo update2 = page.commit(data);
-
-    data.setContent("latest content");
-    VersionInfo update3 = page.commit(data);
-
-    // check base version has next but no previous button
-    MockRequest request = new MockRequest();
-    request.setResource(pageName);
-    request.addInput("version", base.getName());
-
-    Responder responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(context, request);
-    
-    assertHasRegexp(">Next</a>", response.getContent());
-    assertDoesntHaveRegexp(">Previous</a>", response.getContent());
-
-    // check 'updated content' version has both next and previous button
-    request = new MockRequest();
-    request.setResource(pageName);
-    request.addInput("version", update1.getName());
-
-    responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(context, request);
-    
-    assertHasRegexp(">Next</a>", response.getContent());
-    assertHasRegexp(">Previous</a>", response.getContent());
-
-    // check 'further updated to content' version has both next and previous button
-    request = new MockRequest();
-    request.setResource(pageName);
-    request.addInput("version", update2.getName());
-
-    responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(context, request);
-    
-    assertHasRegexp(">Next</a>", response.getContent());
-    assertHasRegexp(">Previous</a>", response.getContent());
-
-    // check 'latest content' version has both next and previous button
-    request = new MockRequest();
-    request.setResource(pageName);
-    request.addInput("version", update3.getName());
-
-    responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(context, request);
-    
-    assertDoesntHaveRegexp(">Next</a>", response.getContent());
-    assertHasRegexp(">Previous</a>", response.getContent());
+  static VersionInfo last(Collection<VersionInfo> versions) {
+    VersionInfo last = null;
+    for (VersionInfo i : versions) {
+      last = i;
+    }
+    return last;
   }
+
 
 }

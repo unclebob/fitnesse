@@ -15,7 +15,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected HashMap<String, WikiPageProperty> children;
+  protected HashMap<String, WikiPageProperty> children = new HashMap<String, WikiPageProperty>();
 
   public WikiPageProperty() {
   }
@@ -33,8 +33,6 @@ public class WikiPageProperty implements Serializable {
   }
 
   public void set(String name, WikiPageProperty child) {
-    if (children == null)
-      children = new HashMap<String, WikiPageProperty>();
     children.put(name, child);
   }
 

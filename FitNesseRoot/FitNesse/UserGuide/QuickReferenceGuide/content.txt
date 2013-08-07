@@ -26,6 +26,7 @@
 !define BUTTONend {!- </span>-!}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+!define FitNesseCHARACTERSET (${OPT}'''-Dfile.encoding=UTF-8'''${OPTend})
 !define FitNesseOptCLASSPATH ('''-cp fitnesse.jar'''${OPT}''';'''${NUL}''other.jar.or.path''${OPTend}...)
 !define FitNesseOptEXPIRE ('''-e''' ''days'')
 !define FitNesseOptOMIT ('''-o''')
@@ -172,7 +173,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 !anchor FitNesseCommandLINE
 ----
 !2 !-FitNesse-! Command Line and Options ${TopOfPAGE}
-| ${CODE} ${OPT}''path/to/java/''${OPTend}'''java''' ${FitNesseOptCLASSPATH} '''fitnesse.${FitNESSE}''' ${OPT}${FitNesseOptOMIT}${OPTend} ${OPT}${FitNesseOptPORT}${OPTend} ${OPT}${FitNesseOptDIR}${OPTend} ${OPT}${FitNesseOptROOT}${OPTend} ${OPT}${FitNesseOptEXPIRE}${OPTend} ${OPT}${FitNesseOptLOG}${OPTend} ${OPT}'''-a''' ''{''${FitNesseOptOneAUTH} ${OR} ${FitNesseOptFileAUTH}''}''${OPTend} ${OPT}''other arguments''${OPTend} ${CODEend} |
+| ${CODE} ${OPT}''path/to/java/''${OPTend}'''java''' ${FitNesseCHARACTERSET} ${FitNesseOptCLASSPATH} '''fitnesse.${FitNESSE}''' ${OPT}${FitNesseOptOMIT}${OPTend} ${OPT}${FitNesseOptPORT}${OPTend} ${OPT}${FitNesseOptDIR}${OPTend} ${OPT}${FitNesseOptROOT}${OPTend} ${OPT}${FitNesseOptEXPIRE}${OPTend} ${OPT}${FitNesseOptLOG}${OPTend} ${OPT}'''-a''' ''{''${FitNesseOptOneAUTH} ${OR} ${FitNesseOptFileAUTH}''}''${OPTend} ${OPT}''other arguments''${OPTend} ${CODEend} |
 | ''' ''option'' ''' | ''' ''default'' ''' | ''' ''description'' ''' |
 | ${CODE}'''-a''' ${FitNesseOptOneAUTH}${CODEend} | ${CODE} ''no auth''     ${CODEend} | Enforces access for one user |
 | ${CODE}'''-a''' ${FitNesseOptFileAUTH}${CODEend} | ${CODE} ''no auth''     ${CODEend} | Enforces access for a file of users with encrypted passwords |
@@ -182,6 +183,8 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE}${FitNesseOptOMIT}${CODEend} | ${CODE} ''update''      ${CODEend} | Prevents (omits) updating from fitnesse.org |
 | ${CODE}${FitNesseOptPORT}${CODEend} | ${CODE} '''80'''        ${CODEend} | Port for ${FitNESSE} to listen on |
 | ${CODE}${FitNesseOptROOT}${CODEend} | ${CODE} '''${FitNESSE}Root''' ${CODEend} | Name of root folder in the fitnesse ''wiki'' home or ''-d'' path |
+| ${CODE}${FitNesseCHARACTERSET}${CODEend} | ${CODE} ''off'' ${CODEend} | Unicode characters support in Test History Page |
+
 
 #---------------------------------------------------------------------------------------------
 
@@ -233,6 +236,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | Define "in-page" label | ${CODE} ${BANG}'''anchor''' ${LabelNAME} ${CODEend} | a.k.a. anchor |
 | Jump to "in-page" label | ${JumpTO} |
 | External Links | ${ExternalLINKS} |
+!note Link texts containing !-WikiText-! may be escaped. E.g. ''!-[[-!'''${BANG}-'''!-FitNesse-!'''-${BANG}'''!-][http://fitnesse.org]]-!''.
 
 #---------------------------------------------------------------------------------------------
 
@@ -277,7 +281,6 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} SLIM_VERSION ${CODEend} | !c nil | !c string | '' The minimum Slim Protocol Version required for this page.  Used to turn off slim protocol error messages.'' |
 | ${CODE} MANUALLY_START_TEST_RUNNER_ON_DEBUG ${CODEend} | !c false | !c true${BAR}false | '' When set to true, and a page is run in debug mode then fitnesse will not create it's own slim runner, and will instead connect to an existing runner on port ${CODE} SLIM_PORT ${CODEend}.'' |
 | ${CODE} CLASSPATH_PROPERTY ${CODEend} | !c nil | !c ''an environment variable'' | '' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.'' |
-| ${CODE} CM_SYSTEM ${CODEend} | !c nil | !c java class | '' Selects the class that will handle CM system events.'' |
 | ${CODE} COLLAPSE_SETUP ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-SetUps-! '' |
 | ${CODE} COLLAPSE_TEARDOWN ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-TearDowns-! '' |
 | ${CODE} FILTER_TOC ${CODEend} | !c false | !c true${BAR}false | '' Append suite fiters to TOC '' |

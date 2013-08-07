@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.MockRequest;
@@ -9,25 +13,22 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.MockSocket;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.util.MockSocket;
+import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import util.RegexTestCase;
-
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 public class FitNesseExpediterTest extends RegexTestCase {
   private FitNesseExpediter expediter;
   private MockSocket socket;
   private FitNesseContext context;
-  private InMemoryPage root;
+  private WikiPage root;
   private PipedInputStream clientInput;
   private PipedOutputStream clientOutput;
   private ResponseParser response;
 
   public void setUp() throws Exception {
-    root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
+    root = InMemoryPage.makeRoot("RooT");
     root.addChildPage("FrontPage");
     socket = new MockSocket();
     context = FitNesseUtil.makeTestContext(root);

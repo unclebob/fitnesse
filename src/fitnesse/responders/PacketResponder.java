@@ -7,9 +7,9 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
-import fitnesse.slimTables.TableScanner;
+import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -34,7 +34,7 @@ public class PacketResponder implements SecureResponder {
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
-    page = pageCrawler.getPage(context.root, resourcePath);
+    page = pageCrawler.getPage(resourcePath);
 
     if (page == null)
       response.setStatus(404);

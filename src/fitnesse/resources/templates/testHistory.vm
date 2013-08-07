@@ -36,13 +36,7 @@
     <td class="$failClass">$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
     #foreach($passFail in $barGraph.passFailArray())
-    #if($passFail.Pass)
-
-    <td class="pass"><a href="$page?pageHistory&resultDate=$passFail.Date">+</a></td>
-    #else
-
-    <td class="fail"><a href="$page?pageHistory&resultDate=$passFail.Date">-</a></td>
-    #end
+    <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
     #end
 
   </tr>

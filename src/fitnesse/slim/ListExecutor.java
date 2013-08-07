@@ -2,10 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionFactory;
+import fitnesse.slim.instructions.InstructionResult;
 import util.ListUtility;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.
@@ -41,7 +46,15 @@ public class ListExecutor {
     }
 
     public Object executeStatement(Object statement) {
-      return new Statement(asStatementList(statement), methodNameTranslator).execute(executor);
+      Instruction instruction = InstructionFactory.createInstruction(asStatementList(statement), methodNameTranslator);
+      InstructionResult result = instruction.execute(executor);
+      Object resultObject;
+      if (result.hasResult() || result.hasError()) {
+        resultObject = result.getResult();
+      } else {
+        resultObject = null;
+      }
+      return asList(instruction.getId(), resultObject);
     }
 
     public void finalizeExecution() {
@@ -72,7 +85,6 @@ public class ListExecutor {
     e.finalizeExecution();
     return result;
   }
-
 
   private List<Object> asStatementList(Object statement) {
     return ListUtility.uncheckedCast(Object.class, statement);

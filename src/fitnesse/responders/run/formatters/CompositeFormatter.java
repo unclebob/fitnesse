@@ -1,15 +1,18 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.WikiPage;
+import util.TimeMeasurement;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import util.TimeMeasurement;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.wiki.WikiPage;
 
 public class CompositeFormatter extends BaseFormatter {
   List<BaseFormatter> formatters = new ArrayList<BaseFormatter>();
@@ -41,27 +44,32 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.addMessageForBlankHtml();
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     for (BaseFormatter formatter : formatters)
       formatter.setExecutionLogAndTrackingId(stopResponderId, log);
   }
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  @Override
+  public void testSystemStarted(TestSystem testSystem) {
     for (BaseFormatter formatter : formatters)
-      formatter.testSystemStarted(testSystem, testSystemName, testRunner);
+      formatter.testSystemStarted(testSystem);
   }
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  @Override
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.newTestStarted(test, timeMeasurement);
   }
 
+  @Override
   public void testOutputChunk(String output) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  @Override
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
@@ -73,6 +81,7 @@ public class CompositeFormatter extends BaseFormatter {
     }
   }
 
+  @Override
   public int getErrorCount() {
     int exitCode = 0;
     for (BaseFormatter formatter : formatters)
@@ -80,4 +89,16 @@ public class CompositeFormatter extends BaseFormatter {
     return exitCode;
   }
 
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    for (BaseFormatter formatter : formatters)
+      formatter.testAssertionVerified(assertion, testResult);
+
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    for (BaseFormatter formatter : formatters)
+      formatter.testExceptionOccurred(assertion, exceptionResult);
+  }
 }

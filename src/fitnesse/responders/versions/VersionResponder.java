@@ -18,7 +18,14 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -32,11 +39,11 @@ public class VersionResponder implements SecureResponder {
 
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    String fullPathName = PathParser.render(pageCrawler.getFullPath(page));
+    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath());
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();
@@ -55,14 +62,12 @@ public class VersionResponder implements SecureResponder {
     html.put("rollbackVersion", version);
     html.put("localPath", name);
 
-    List<VersionInfo> versions = new ArrayList<VersionInfo>(page.getData().getVersions());
+    List<VersionInfo> versions = new ArrayList<VersionInfo>(page.getVersions());
     Collections.sort(versions);
     Collections.reverse(versions);
     String nextVersion = selectNextVersion(versions, version);
-    html.put("nextVersionNavigable", nextVersion!=null);
     html.put("nextVersion", nextVersion);
     String previousVersion = selectPreviousVersion(versions, version);
-    html.put("previousVersionNavigable", previousVersion!=null);
     html.put("previousVersion", previousVersion);
 
     html.setMainTemplate("wikiPage");
@@ -93,17 +98,29 @@ public class VersionResponder implements SecureResponder {
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
-  
+
   public class VersionRenderer {
     private PageData pageData;
-    
+
     public VersionRenderer(PageData pageData) {
       super();
       this.pageData = pageData;
     }
 
     public String render() {
-      return HtmlUtil.makeNormalWikiPageContent(pageData);
+      PageData data;
+      if (isTestPage(pageData)) {
+        WikiTestPage testPage = new WikiTestPage(pageData);
+        data = testPage.getDecoratedData();
+      } else {
+        data = pageData;
+      }
+      return HtmlUtil.makePageHtml(data);
+
+    }
+
+    private boolean isTestPage(PageData pageData) {
+      return pageData.hasAttribute("Test");
     }
   }
 }

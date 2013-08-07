@@ -10,10 +10,10 @@ import fitnesse.wiki.WikiPageUtil;
 public class HtmlUtil {
   public static final String BRtag = "<br/>";
   public static final String HRtag = "<hr/>";
-  public static HtmlElement BR = new RawHtml(BRtag);
-  public static HtmlElement HR = new RawHtml(HRtag);
-  public static HtmlElement NBSP = new RawHtml("&nbsp;");
-  public static HtmlElement P = new RawHtml("<p>");
+  public static final HtmlElement BR = new RawHtml(BRtag);
+  public static final HtmlElement HR = new RawHtml(HRtag);
+  public static final HtmlElement NBSP = new RawHtml("&nbsp;");
+  public static final HtmlElement P = new RawHtml("<p>");
   public static final boolean NO_NEW_WINDOW = false;
   public static final String ENDL = System.getProperty("line.separator");
 
@@ -51,11 +51,6 @@ public class HtmlUtil {
     link.addAttribute("href", href);
     link.add(content);
     return link;
-  }
-
-  public static String makeNormalWikiPageContent(PageData pageData) {
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    return makePageHtml(pageData);
   }
 
   public static String makePageHtml(PageData pageData) {

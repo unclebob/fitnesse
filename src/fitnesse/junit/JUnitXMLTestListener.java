@@ -1,13 +1,19 @@
 package fitnesse.junit;
 
+import fitnesse.testrunner.ResultsListener;
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import fitnesse.responders.run.*;
-import util.TimeMeasurement;
-
-import fitnesse.wiki.WikiPagePath;
 
 public class JUnitXMLTestListener implements ResultsListener {
   
@@ -57,7 +63,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
   }
 
   @Override
@@ -65,7 +71,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     recordTestResult(new WikiPagePath(test.getSourcePage()).toString(), testSummary, timeMeasurement.elapsed());
   }
 
@@ -74,6 +80,14 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  }
+
+  @Override
+  public void testSystemStarted(TestSystem testSystem) {
   }
 }

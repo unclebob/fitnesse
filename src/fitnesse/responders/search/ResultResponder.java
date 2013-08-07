@@ -35,7 +35,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.setMainTemplate("searchResults");
 
     if (page == null)
-      page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
+      page = context.root.getPageCrawler().getPage(PathParser.parse("FrontPage"));
     if (request.getQueryString() == null || request.getQueryString().equals(""))
       htmlPage.put("request", request.getBody());
     else

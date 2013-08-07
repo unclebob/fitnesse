@@ -2,27 +2,32 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static util.ListUtility.list;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.MockCommandRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
 
 public abstract class SlimServiceTestBase {
-  protected List<Object> statements;
-  protected SlimClient slimClient;
+  protected List<Instruction> statements;
+  protected SlimCommandRunningClient slimClient;
 
   protected abstract void startSlimService() throws Exception;
+
+  protected abstract void closeSlimService() throws Exception;
 
   protected abstract String getImport();
 
@@ -31,19 +36,19 @@ public abstract class SlimServiceTestBase {
   protected abstract String expectedStopTestExceptionMessage();
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimClient("localhost", 8099);
-    statements = new ArrayList<Object>();
+    slimClient = new SlimCommandRunningClient("SlimServer", new MockCommandRunner(), "localhost", 8099);
+    statements = new ArrayList<Instruction>();
     slimClient.connect();
   }
 
-  protected void createSlimService() throws Exception {
+  protected void createSlimService() throws InterruptedException {
     while (!tryCreateSlimService())
       Thread.sleep(10);
   }
 
-  private boolean tryCreateSlimService() throws Exception {
+  private boolean tryCreateSlimService() {
     try {
       startSlimService();
       return true;
@@ -58,8 +63,9 @@ public abstract class SlimServiceTestBase {
   }
 
   protected void teardown() throws Exception {
-    slimClient.sendBye();
-    slimClient.close();
+    slimClient.bye();
+    slimClient.kill();
+    closeSlimService();
   }
 
   @Test
@@ -82,12 +88,12 @@ public abstract class SlimServiceTestBase {
   }
 
   private void addEchoInt(String id, String number) {
-    statements.add(list(id, "call", "testSlim", "echoInt", number));
+    statements.add(new CallInstruction(id, "testSlim", "echoInt", new Object[] { number }));
   }
 
   private void addImportAndMake() {
-    statements.add(list("i1", "import", getImport()));
-    statements.add(list("m1", "make", "testSlim", "TestSlim"));
+    statements.add(new ImportInstruction("i1", getImport()));
+    statements.add(new MakeInstruction("m1", "testSlim", "TestSlim"));
   }
 
   @Test
@@ -103,7 +109,7 @@ public abstract class SlimServiceTestBase {
   @Test
   public void callWithLineBreakInStringArgument() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "testSlim", "echoString", "hello\nworld\n"));
+    statements.add(new CallInstruction("id", "testSlim", "echoString", new Object[] { "hello\nworld\n" }));
     Map<String, Object> result = slimClient.invokeAndGetResponse(statements);
     assertEquals("hello\nworld\n", result.get("id"));
   }
@@ -111,7 +117,7 @@ public abstract class SlimServiceTestBase {
   @Test
   public void callWithMultiByteChar() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "testSlim", "echoString", "K\u00f6ln"));
+    statements.add(new CallInstruction("id", "testSlim", "echoString", new Object[] { "K\u00f6ln" }));
     Map<String, Object> result = slimClient.invokeAndGetResponse(statements);
     assertEquals("K\u00f6ln", result.get("id"));
   }
@@ -132,7 +138,7 @@ public abstract class SlimServiceTestBase {
   @Test
   public void callFunctionThatDoesntExist() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "testSlim", "noSuchFunction"));
+    statements.add(new CallInstruction("id", "testSlim", "noSuchFunction"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("message:<<NO_METHOD_IN_CLASS", "id", results);
   }
@@ -145,7 +151,7 @@ public abstract class SlimServiceTestBase {
 
   @Test
   public void makeClassThatDoesntExist() throws Exception {
-    statements.add(list("m1", "make", "me", "NoSuchClass"));
+    statements.add(new MakeInstruction("m1", "me", "NoSuchClass"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR", "m1", results);
   }
@@ -153,7 +159,7 @@ public abstract class SlimServiceTestBase {
   @Test
   public void useInstanceThatDoesntExist() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "noInstance", "f"));
+    statements.add(new CallInstruction("id", "noInstance", "f"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("message:<<NO_INSTANCE", "id", results);
   }
@@ -168,8 +174,8 @@ public abstract class SlimServiceTestBase {
   @Test
   public void notStopTestExceptionThrown() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "testSlim", "throwNormal"));
-    statements.add(list("id2", "call", "testSlim", "throwNormal"));
+    statements.add(new CallInstruction("id", "testSlim", "throwNormal"));
+    statements.add(new CallInstruction("id2", "testSlim", "throwNormal"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("__EXCEPTION__:" + expectedExceptionMessage(), "id", results);
     assertContainsException("__EXCEPTION__:" + expectedExceptionMessage(), "id2", results);
@@ -178,8 +184,8 @@ public abstract class SlimServiceTestBase {
   @Test
   public void stopTestExceptionThrown() throws Exception {
     addImportAndMake();
-    statements.add(list("id", "call", "testSlim", "throwStopping"));
-    statements.add(list("id2", "call", "testSlim", "throwNormal"));
+    statements.add(new CallInstruction("id", "testSlim", "throwStopping"));
+    statements.add(new CallInstruction("id2", "testSlim", "throwNormal"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("__EXCEPTION__:" + expectedStopTestExceptionMessage(), "id", results);
     assertNull(results.get("id2"));

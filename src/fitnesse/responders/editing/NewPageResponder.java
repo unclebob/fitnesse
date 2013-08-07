@@ -1,7 +1,7 @@
 package fitnesse.responders.editing;
 
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
-import util.TemplateUtil;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -59,9 +59,9 @@ public class NewPageResponder implements Responder {
     //the request resource is already th parent path.
     WikiPagePath parentPath = PathParser.parse(request.getResource());
 
-    //we need a crawler to get the page from the path. The root has a crawler we can use.
+    //we need a pageBuilder to get the page from the path. The root has a pageBuilder we can use.
     PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage page = crawler.getPage(context.root, parentPath);
+    WikiPage page = crawler.getPage(parentPath);
     return page;
   }
 

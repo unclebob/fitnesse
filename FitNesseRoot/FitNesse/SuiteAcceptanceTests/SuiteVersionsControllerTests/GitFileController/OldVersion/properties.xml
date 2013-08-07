@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<properties>
+	<Edit>true</Edit>
+	<Files>true</Files>
+	<Help>Retrieve an old version from git</Help>
+	<Properties>true</Properties>
+	<RecentChanges>true</RecentChanges>
+	<Refactor>true</Refactor>
+	<Search>true</Search>
+	<Suites></Suites>
+	<Test/>
+	<Versions>true</Versions>
+	<WhereUsed>true</WhereUsed>
+</properties>

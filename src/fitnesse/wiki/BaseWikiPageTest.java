@@ -2,17 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import junit.framework.TestCase;
+import org.junit.Test;
 import util.FileUtil;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BaseWikiPageTest extends TestCase {
   private WikiPage linkingPage;
+  private BaseWikiPage root;
 
   public void setUp() throws Exception {
-    BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
+    root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
     root.addChildPage("LinkedPage");
     linkingPage = root.addChildPage("LinkingPage");
     linkingPage.addChildPage("ChildPage");
@@ -58,14 +64,6 @@ public class BaseWikiPageTest extends TestCase {
     assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
   }
 
-  public void testExternalSymbolicLinkToNewDirectory() throws Exception {
-    FileUtil.createDir("testDir");
-    createLink("file://testDir/ExternalRoot");
-
-    checkExternalLink();
-    assertTrue(new File("testDir/ExternalRoot").exists());
-  }
-
   private void createLink(String linkedPagePath) throws Exception {
     PageData data = linkingPage.getData();
     WikiPageProperties properties = data.getProperties();
@@ -80,4 +78,12 @@ public class BaseWikiPageTest extends TestCase {
     assertEquals("SymLink", symPage.getName());
     assertEquals("LinkedPage", symPage.getRealPage().getName());
   }
+
+  @Test
+  public void testIsRoot() throws Exception {
+    assertTrue(root.isRoot());
+    assertFalse(linkingPage.isRoot());
+  }
+
+
 }

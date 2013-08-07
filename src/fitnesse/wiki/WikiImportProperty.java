@@ -5,44 +5,47 @@ package fitnesse.wiki;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.responders.templateUtilities.HtmlPage;
-
 public class WikiImportProperty extends WikiPageProperty {
   private static final long serialVersionUID = 1L;
 
   public static final String PROPERTY_NAME = "WikiImport";
+  
+  private static final String SOURCE = "Source";
+  private static final String IS_ROOT = "IsRoot";
+  private static final String LAST_REMOTE_MODIFICATION = "LastRemoteModification";
+  private static final String AUTO_UPDATE = "AutoUpdate";
 
   private WikiImportProperty() {
   }
 
   public WikiImportProperty(String source) {
-    set("Source", source);
+    set(SOURCE, source);
   }
 
   public String getSourceUrl() {
-    return get("Source");
+    return get(SOURCE);
   }
 
   public boolean isRoot() {
-    return has("IsRoot");
+    return has(IS_ROOT);
   }
 
   public void setRoot(boolean value) {
     if (value)
-      set("IsRoot");
+      set(IS_ROOT);
     else
-      remove("IsRoot");
+      remove(IS_ROOT);
   }
 
   public boolean isAutoUpdate() {
-    return has("AutoUpdate");
+    return has(AUTO_UPDATE);
   }
 
   public void setAutoUpdate(boolean value) {
     if (value)
-      set("AutoUpdate");
+      set(AUTO_UPDATE);
     else
-      remove("AutoUpdate");
+      remove(AUTO_UPDATE);
   }
 
   public static boolean isImported(PageData pageData) {
@@ -58,12 +61,12 @@ public class WikiImportProperty extends WikiPageProperty {
     if (property.has(PROPERTY_NAME)) {
       WikiImportProperty importProperty = new WikiImportProperty();
       WikiPageProperty rawImportProperty = property.getProperty(PROPERTY_NAME);
-      importProperty.set("Source", rawImportProperty.getProperty("Source"));
-      importProperty.set("LastRemoteModification", rawImportProperty.getProperty("LastRemoteModification"));
-      if (rawImportProperty.has("IsRoot"))
-        importProperty.set("IsRoot", rawImportProperty.getProperty("IsRoot"));
-      if (rawImportProperty.has("AutoUpdate"))
-        importProperty.set("AutoUpdate", rawImportProperty.getProperty("AutoUpdate"));
+      importProperty.set(SOURCE, rawImportProperty.getProperty(SOURCE));
+      importProperty.set(LAST_REMOTE_MODIFICATION, rawImportProperty.getProperty(LAST_REMOTE_MODIFICATION));
+      if (rawImportProperty.has(IS_ROOT))
+        importProperty.set(IS_ROOT, rawImportProperty.getProperty(IS_ROOT));
+      if (rawImportProperty.has(AUTO_UPDATE))
+        importProperty.set(AUTO_UPDATE, rawImportProperty.getProperty(AUTO_UPDATE));
 
       return importProperty;
     } else
@@ -75,12 +78,12 @@ public class WikiImportProperty extends WikiPageProperty {
   }
 
   public void setLastRemoteModificationTime(Date date) {
-    set("LastRemoteModification", getTimeFormat().format(date));
+    set(LAST_REMOTE_MODIFICATION, getTimeFormat().format(date));
   }
 
   public Date getLastRemoteModificationTime() {
     Date date = new Date(0);
-    String strValue = get("LastRemoteModification");
+    String strValue = get(LAST_REMOTE_MODIFICATION);
     if (strValue != null) {
       try {
         date = getTimeFormat().parse(strValue);
@@ -91,16 +94,4 @@ public class WikiImportProperty extends WikiPageProperty {
     return date;
   }
 
-  public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) {
-    if (isImported(pageData)) {
-      html.setBodyClass("imported");
-      WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-      html.put("sourceUrl", importProperty.getSourceUrl());
-    } else if (page instanceof ProxyPage)
-      html.setBodyClass("virtual");
-  }
-
-  public static String makeRemoteEditQueryParameters() {
-    return "responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView";
-  }
 }

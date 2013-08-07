@@ -1,20 +1,30 @@
 package fitnesseMain;
 
-import fitnesse.*;
+import fitnesse.Arguments;
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
+import fitnesse.Updater;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.wiki.RecentChanges;
+import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
-import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class FitNesseMain {
   private static String extraOutput;
@@ -36,8 +46,6 @@ public class FitNesseMain {
     Updater updater = null;
     if (!arguments.isOmittingUpdates())
       updater = new UpdaterImplementation(context);
-    PageVersionPruner.daysTillVersionsExpire = arguments
-      .getDaysTillVersionsExpire();
     FitNesse fitnesse = new FitNesse(context, updater);
     update(arguments, fitnesse);
     launch(arguments, context, fitnesse);
@@ -68,10 +76,28 @@ public class FitNesseMain {
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
-    System.out.println("-----Command Output-----");
-    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
-    System.out.println("-----Command Complete-----");
+
+    OutputStream os;
+
+    boolean outputRedirectedToFile = arguments.getOutput() != null;
+
+    if (outputRedirectedToFile) {
+      System.out.println("-----Command Output redirected to " + arguments.getOutput() + "-----");
+      os = new FileOutputStream(arguments.getOutput());
+    } else {
+      System.out.println("-----Command Output-----");
+      os = System.out;
+    }
+
+    fitnesse.executeSingleCommand(arguments.getCommand(), os);
     fitnesse.stop();
+
+    if (outputRedirectedToFile) {
+      os.close();
+    } else {
+      System.out.println("-----Command Complete-----");
+    }
+
     if (shouldExitAfterSingleCommand()) {
       System.exit(TestTextFormatter.finalErrorCount);
     }
@@ -84,8 +110,12 @@ public class FitNesseMain {
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
     Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new WikiPageFactory();
     ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
+
+    // Enrich properties with command line values:
+    componentFactory.getProperties().setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+
+    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     builder.port = arguments.getPort();
     builder.rootPath = arguments.getRootPath();
@@ -94,9 +124,13 @@ public class FitNesseMain {
     builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
     builder.defaultNewPageContent = componentFactory
         .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+
+    // This should be done before the root wiki page is created:
+    //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-      builder.rootDirectoryName, componentFactory);
+      builder.rootDirectoryName);
 
     builder.logger = makeLogger(arguments);
     builder.authenticator = makeAuthenticator(arguments.getUserpass(),
@@ -104,11 +138,11 @@ public class FitNesseMain {
 
     FitNesseContext context = builder.createFitNesseContext();
 
-    extraOutput = componentFactory.loadPlugins(context.responderFactory,
-        wikiPageFactory);
-    extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
+    SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
+
+    extraOutput += componentFactory.loadPlugins(context.responderFactory, symbolProvider);
     extraOutput += componentFactory.loadResponders(context.responderFactory);
-    extraOutput += componentFactory.loadSymbolTypes();
+    extraOutput += componentFactory.loadSymbolTypes(symbolProvider);
     extraOutput += componentFactory.loadContentFilter();
     extraOutput += componentFactory.loadSlimTables();
 
@@ -120,7 +154,7 @@ public class FitNesseMain {
 
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
+      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -138,6 +172,8 @@ public class FitNesseMain {
         arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
       if (commandLine.hasOption("c"))
         arguments.setCommand(commandLine.getOptionArgument("c", "command"));
+      if (commandLine.hasOption("b"))
+        arguments.setOutput(commandLine.getOptionArgument("b", "output"));
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
@@ -165,7 +201,7 @@ public class FitNesseMain {
   }
 
   private static void printUsage() {
-    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
+    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoab]");
     System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
       + "}");
@@ -179,13 +215,12 @@ public class FitNesseMain {
       .println("\t-a {user:pwd | user-file-name} enable authentication.");
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
+    System.err.println("\t-b <filename> redirect command output.");
   }
 
   private static void printStartMessage(Arguments args, FitNesseContext context) {
     System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
     System.out.print(context.toString());
-    System.out.println("\tpage version expiration set to "
-      + args.getDaysTillVersionsExpire() + " days.");
     if (extraOutput != null)
       System.out.print(extraOutput);
   }

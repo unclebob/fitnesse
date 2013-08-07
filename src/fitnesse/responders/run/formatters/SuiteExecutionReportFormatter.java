@@ -3,6 +3,9 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.*;
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PathParser;
 
@@ -27,12 +30,12 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testSystemStarted(TestSystem testSystem) {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
-    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath(test.getSourcePage()));
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
+    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
   }
 
@@ -49,7 +52,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);

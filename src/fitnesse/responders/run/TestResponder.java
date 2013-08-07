@@ -3,8 +3,8 @@
 package fitnesse.responders.run;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +15,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.CompositeFormatter;
 import fitnesse.responders.run.formatters.PageHistoryFormatter;
@@ -25,17 +26,19 @@ import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
-  private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
+  private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
   protected CompositeFormatter formatters;
   protected boolean isInteractive = false;
@@ -76,7 +79,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   private HtmlPage makeHtml() {
     PageCrawler pageCrawler = page.getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(page);
+    WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
@@ -90,7 +93,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
 
-    WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
+    WikiImportingResponder.handleImportProperties(htmlPage, page);
 
     return htmlPage;
   }
@@ -257,7 +260,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();
       File resultFile = new File(resultDirectory, resultPath.getName());
-      return new FileWriter(resultFile);
+      return new PrintWriter(resultFile, "UTF-8");
     }
   }
 }

@@ -2,16 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import java.io.IOException;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.util.Arrays;
-
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import util.CommandLine;
-import fitnesse.socketservice.SocketService;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Arrays;
 
 public class SlimService {
 	static boolean verbose;
@@ -20,8 +17,9 @@ public class SlimService {
 
 	private final ServerSocket serverSocket;
 	private final SlimServer slimServer;
+  static Thread service;
 
-	public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
 		if (parseCommandLine(args)) {
 			startWithFactory(new JavaSlimFactory());
 		} else {
@@ -40,17 +38,33 @@ public class SlimService {
 	}
 
 	public static void startWithFactoryAsync(SlimFactory slimFactory) throws IOException {
-		final SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
-		new Thread() {
-			public void run() {
-				try {
-					slimservice.accept();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}.start();
+      if (service != null && service.isAlive()) {
+        System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+        service.interrupt();
+        throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      }
+      final SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
+      service = new Thread() {
+          public void run() {
+              try {
+                  slimservice.accept();
+              } catch (IOException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+      };
+      service.start();
 	}
+
+  // For testing, mainly.
+  public static void waitForServiceToStopAsync() throws InterruptedException {
+    // wait for service to close.
+    for (int i = 0; i < 1000; i++) {
+      if (!service.isAlive())
+        break;
+      Thread.sleep(50);
+    }
+  }
 
 	public static boolean parseCommandLine(String[] args) {
 		CommandLine commandLine = new CommandLine(

@@ -2,34 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import fitnesse.wiki.*;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class EditResponderTest extends RegexTestCase {
   private WikiPage root;
   private MockRequest request;
   private EditResponder responder;
-  private PageCrawler crawler;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new EditResponder();
   }
 
   public void testResponse() throws Exception {
-    WikiPage page=crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPage page= WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Edit Page tags");
@@ -80,7 +73,7 @@ public class EditResponderTest extends RegexTestCase {
   }
 
   public void testRedirectToRefererEffect() throws Exception {
-    crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("ChildPage");
     request.addInput("redirectToReferer", true);
     request.addInput("redirectAction", "boom");
@@ -94,11 +87,11 @@ public class EditResponderTest extends RegexTestCase {
   }
   
   public void testTemplateListPopulates() throws Exception {
-    crawler.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
     
-    crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
-    crawler.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
-    crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
+    WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
 
     SimpleResponse response = makeResponse();
     assertEquals(200, response.getStatus());

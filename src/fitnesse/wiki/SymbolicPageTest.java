@@ -4,11 +4,12 @@ package fitnesse.wiki;
 
 import java.util.List;
 
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import junit.framework.TestCase;
 import util.FileUtil;
 
 public class SymbolicPageTest extends TestCase {
-  private PageCrawler crawler;
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage pageTwo;
@@ -21,10 +22,9 @@ public class SymbolicPageTest extends TestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
-    pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
-    symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
+    symPage = new SymbolicPage("SymPage", pageTwo, pageOne, null);
   }
 
   public void tearDown() throws Exception {
@@ -56,17 +56,17 @@ public class SymbolicPageTest extends TestCase {
   }
 
   public void testGetChild() throws Exception {
-    WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
+    WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
     WikiPage page = symPage.getChildPage("ChildPage");
     assertNotNull(page);
     assertEquals(SymbolicPage.class, page.getClass());
     SymbolicPage symChild = (SymbolicPage) page;
-    assertSame(childPage, symChild.getRealPage());
+    assertEquals(childPage, symChild.getRealPage());
   }
 
   public void testGetChildren() throws Exception {
-    crawler.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
-    crawler.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
     List<?> children = symPage.getChildren();
     assertEquals(2, children.size());
     assertEquals(SymbolicPage.class, children.get(0).getClass());
@@ -81,12 +81,12 @@ public class SymbolicPageTest extends TestCase {
     data = pageTwo.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageOnePath);
     pageTwo.commit(data);
-
-    WikiPage deepPage = crawler.getPage(root, PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
     List<?> children = deepPage.getChildren();
     assertEquals(1, children.size());
 
-    deepPage = crawler.getPage(root, PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
+    deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
     children = deepPage.getChildren();
     assertEquals(1, children.size());
   }
@@ -113,12 +113,11 @@ public class SymbolicPageTest extends TestCase {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPage("testDir/ExternalRoot", "ExternalRoot");
-    PageCrawler externalCrawler = externalRoot.getPageCrawler();
-    WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
-    externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
-    externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
+    WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
+    WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
+    WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
 
-    symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
+    symPage = new SymbolicPage("SymPage", externalRoot, pageOne, null);
   }
 
   public void testCommittingToExternalRoot() throws Exception {

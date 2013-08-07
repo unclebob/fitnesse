@@ -4,6 +4,9 @@ package fitnesse.responders;
 
 import java.io.IOException;
 
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.wiki.*;
+import fitnesse.wiki.mem.InMemoryPage;
 import util.RegexTestCase;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
@@ -11,12 +14,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
 
 public class WikiImportingResponderTest extends RegexTestCase {
   private WikiImportingResponder responder;
@@ -274,4 +271,59 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
     assertSubString("Automatic Update turned OFF", content);
   }
+
+  // Tests for the rendering of import specific page details
+  private WikiPage root;
+  private WikiPage page;
+  private PageCrawler crawler;
+
+  public void pageRenderingSetUp() throws Exception {
+    root = InMemoryPage.makeRoot("root");
+    crawler = root.getPageCrawler();
+  }
+
+  public void testImportedPageIndication() throws Exception {
+    pageRenderingSetUp();
+
+    page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
+    PageData data = page.getData();
+    WikiImportProperty importProperty = new WikiImportProperty("blah");
+    importProperty.addTo(data.getProperties());
+    page.commit(data);
+
+    String content = getContentAfterSpecialImportHandling();
+
+    assertSubString("<body class=\"imported\">", content);
+  }
+
+  public void testEditActions() throws Exception {
+    pageRenderingSetUp();
+
+    page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
+    PageData data = page.getData();
+    page.commit(data);
+    String content = getContentAfterSpecialImportHandling();
+
+    assertNotSubString("Edit Locally", content);
+    assertNotSubString("Edit Remotely", content);
+
+    WikiImportProperty importProperty = new WikiImportProperty("blah");
+    importProperty.addTo(data.getProperties());
+    page.commit(data);
+    content = getContentAfterSpecialImportHandling();
+
+    assertTrue(WikiImportProperty.isImported(data));
+    assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
+    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
+  }
+
+  private String getContentAfterSpecialImportHandling() {
+    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
+    WikiImportingResponder.handleImportProperties(html, page);
+    html.setNavTemplate("wikiNav.vm");
+    html.put("actions", new WikiPageActions(page));
+    return html.html();
+  }
+
+
 }

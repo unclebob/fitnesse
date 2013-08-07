@@ -79,6 +79,14 @@ article .centered {
   border-left: 1px solid #BF8660;
 }
 
+table {
+	border: 1px solid #EEEEEE;
+	border-collapse:collapse;
+}
+td, th {
+	border: thin solid #777777;
+	padding: 0.25em 0.5em;
+}
 table.plain_text_table {
   border-top: none;
   border-right: none;
@@ -94,9 +102,6 @@ table.plain_text_table th {
 /** !style_* */
 .error {
   background-color: #ffffaa;
-  padding: 0px 0px 0px 20px;
-  background-image: url("../images/exception.png");
-  background-repeat: no-repeat;
 }
 .pass {
   background-color: #AAFFAA;
@@ -193,3 +198,40 @@ table.fit_table tr td {border: solid 1px grey; padding: 2px 2px 2px 2px;}
 .fit_keyword {color: #1010A0;}
 .fit_member {color: #208080;}
 .fit_SUT {color: #808020;}
+
+/* Diff styling */
+
+table.diff_table tr td {border: 0px; padding: 0px 0px 0px 0px;}
+
+.diff_table {
+  margin: 0px;
+  padding: 0px;
+  border: 1px;
+  border-spacing: 0px;
+  font-family: monospace;
+  font-size: 125%;
+}
+
+.diff_line {
+  padding-bottom: 0px;
+  padding-top: 0px;
+  white-space: pre;
+  background: #D6D0D2;
+}
+
+.diff_chunk_header {
+  background: #C0C0C0;
+  font-weight: bold;
+}
+
+.diff_line_added {
+  background: #B3FCC1;
+  color: #000000;
+  font-weight: bold;
+}
+
+.diff_line_removed {
+  background: #FFCBDB;
+  color: #CC5478;
+  font-weight: bold;
+}

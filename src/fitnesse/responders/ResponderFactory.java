@@ -38,6 +38,7 @@ import fitnesse.responders.testHistory.PurgeHistoryResponder;
 import fitnesse.responders.testHistory.SuiteOverviewResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
+import fitnesse.responders.versions.VersionComparerResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wiki.WikiPage;
@@ -97,6 +98,7 @@ public class ResponderFactory {
     addResponder("compareHistory", HistoryComparerResponder.class);
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
+    addResponder("compareVersions", VersionComparerResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {

@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import java.io.IOException;
 
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
 
 public interface ResultHandler {
   void acceptResult(PageResult result) throws IOException;

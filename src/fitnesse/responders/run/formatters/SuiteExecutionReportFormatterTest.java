@@ -2,12 +2,12 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.responders.run.TestPage;
-import fitnesse.responders.run.TestSummary;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Test;
-import util.TestClock;
+import util.Clock;
 import util.TimeMeasurement;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,7 +21,7 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
 
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
@@ -58,7 +58,7 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetFailedCount() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
 
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
@@ -77,4 +77,13 @@ public class SuiteExecutionReportFormatterTest {
     assertThat(BaseFormatter.finalErrorCount, is(5));
 
   }
+
+  static class TestClock extends Clock {
+    public long currentTime;
+    @Override
+    protected long currentClockTimeInMillis() {
+      return currentTime;
+    }
+  }
+
 }
