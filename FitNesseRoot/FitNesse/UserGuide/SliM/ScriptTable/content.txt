@@ -3,6 +3,7 @@
 | check | login message | Bob logged in. |
 | reject | login with username | Bob | and password | bad password |
 | check | login message | Bob not logged in. |
+| check not | login message | Bob logged in. |
 | ensure | login with username | Bob | and password | xyzzy |
 | note | this is a comment |
 | show | number of login attempts |
