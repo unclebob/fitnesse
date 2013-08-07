@@ -2,4 +2,4 @@ language: java
 
 install: ant build
 
-script: ant unit_tests
+script: ant release
