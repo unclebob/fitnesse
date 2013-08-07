@@ -1,4 +1,4 @@
-# [FitNesse](http://fitnesse.org/)
+# [FitNesse](http://fitnesse.org/)  [![Build Status](https://travis-ci.org/unclebob/fitnesse.png)](https://travis-ci.org/unclebob/fitnesse)
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
