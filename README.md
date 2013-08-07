@@ -46,6 +46,13 @@ $ ant
 
 which builds the `all` target. 
 
+### Running
+
+To start the FitNesse wiki locally, for example to browse the local version of the User Guide
+
+```
+$ ant run
+```
 
 ### Testing
 
