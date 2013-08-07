@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
+import java.util.List;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -12,8 +20,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-
-import java.util.List;
+import org.junit.Test;
 
 public class DeletePageResponderTest extends ResponderTestCase {
   private final String level1Name = "LevelOne";
@@ -23,6 +30,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
   private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
   private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
 
+  @Test
   public void testDeleteConfirmation() throws Exception {
     WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
     WikiPageUtil.addPage(level1, this.level2Path);
@@ -35,6 +43,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
   }
 
+  @Test
   public void testDeletePage() throws Exception {
     WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
     WikiPageUtil.addPage(level1, this.level2Path);
@@ -54,6 +63,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     assertEquals(0, children.size());
   }
 
+  @Test
   public void testDontDeleteFrontPage() throws Exception {
     WikiPageUtil.addPage(this.root, PathParser.parse("FrontPage"), "Content");
     this.request.setResource("FrontPage");

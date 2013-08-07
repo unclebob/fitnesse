@@ -1,5 +1,9 @@
 package fitnesse.responders;
 
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
@@ -11,13 +15,16 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.RegexTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
+public class WikiImportingResponderAuthenticationTest {
   private WikiImportingResponder responder;
   private String baseUrl;
   private WikiImporterTest testData;
 
+  @Before
   public void setUp() throws Exception {
     testData = new WikiImporterTest();
     testData.createRemoteRoot();
@@ -40,6 +47,7 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
     responder.getImporter().setDeleteOrphanOption(false);
   }
 
+  @After
   public void tearDown() throws Exception {
     FitNesseUtil.stopFitnesse();
   }
@@ -77,6 +85,7 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
     return response;
   }
 
+  @Test
   public void testUnauthorizedResponse() throws Exception {
     makeSecurePage(testData.remoteRoot);
 
@@ -87,6 +96,7 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
     checkRemoteLoginForm(content);
   }
 
+  @Test
   public void testUnauthorizedResponseFromNonRoot() throws Exception {
     WikiPage childPage = testData.remoteRoot.getChildPage("PageOne");
     makeSecurePage(childPage);
@@ -99,6 +109,7 @@ public class WikiImportingResponderAuthenticationTest extends RegexTestCase {
     assertSubString("<form", content);
   }
 
+  @Test
   public void testImportingFromSecurePageWithCredentials() throws Exception {
     makeSecurePage(testData.remoteRoot);
 

@@ -2,25 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.Clock;
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WikiImportPropertyTest extends RegexTestCase {
+import org.junit.Before;
+import org.junit.Test;
+import util.Clock;
+
+public class WikiImportPropertyTest {
   private WikiImportProperty property;
 
+  @Before
   public void setUp() {
     property = new WikiImportProperty("");
   }
 
+  @Test
   public void testSource() throws Exception {
     property = new WikiImportProperty("import source");
     assertEquals("import source", property.getSourceUrl());
     assertEquals("import source", property.get("Source"));
   }
 
+  @Test
   public void testIsRoot() throws Exception {
     assertFalse(property.isRoot());
     assertFalse(property.has("IsRoot"));
@@ -31,6 +40,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertTrue(property.has("IsRoot"));
   }
 
+  @Test
   public void testAutoUpdate() throws Exception {
     assertFalse(property.isAutoUpdate());
     assertFalse(property.has("AutoUpdate"));
@@ -41,6 +51,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertTrue(property.has("AutoUpdate"));
   }
 
+  @Test
   public void testLastUpdated() throws Exception {
     SimpleDateFormat format = WikiPageProperty.getTimeFormat();
     Date date = Clock.currentDate();
@@ -51,10 +62,12 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals(format.format(date), property.get("LastRemoteModification"));
   }
 
+  @Test
   public void testFailedCreateFromProperty() throws Exception {
     assertNull(WikiImportProperty.createFrom(new WikiPageProperty()));
   }
 
+  @Test
   public void testCreateFromProperty() throws Exception {
     WikiPageProperty rawImportProperty = property.set(WikiImportProperty.PROPERTY_NAME);
     rawImportProperty.set("IsRoot");
@@ -71,6 +84,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals(format.format(date), format.format(importProperty.getLastRemoteModificationTime()));
   }
 
+  @Test
   public void testAddtoProperty() throws Exception {
     WikiImportProperty importProperty = new WikiImportProperty("some source");
     importProperty.setRoot(true);

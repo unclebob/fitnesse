@@ -2,6 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -33,20 +39,22 @@ import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ComponentFactoryTest extends RegexTestCase {
+public class ComponentFactoryTest {
   private Properties testProperties;
   private ComponentFactory factory;
   private SymbolProvider testProvider;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     testProperties = new Properties();
     testProvider = new SymbolProvider(new SymbolType[] {});
     factory = new ComponentFactory(testProperties);
   }
 
+  @Test
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
 
@@ -64,12 +72,13 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertMatch("!today", true);
   }
 
-    private void assertMatch(String input, boolean expected) {
-        SymbolMatch match = new ParseSpecification().provider(testProvider).findMatch(new ScanString(input, 0), 0, new SymbolStream());
-        assertEquals(match.isMatch(), expected);
-    }
+  private void assertMatch(String input, boolean expected) {
+    SymbolMatch match = new ParseSpecification().provider(testProvider).findMatch(new ScanString(input, 0), 0, new SymbolStream());
+    assertEquals(match.isMatch(), expected);
+  }
 
-    public void testAddResponderPlugins() throws Exception {
+  @Test
+  public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
@@ -83,6 +92,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
   }
 
+  @Test
   public void testWikiWidgetPlugins() throws Exception {
     String symbolValues = Today.class.getName();
     testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
@@ -94,12 +104,14 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertMatch("!today", true);
   }
 
+  @Test
   public void testAuthenticatorDefaultCreation() throws Exception {
     Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
     assertEquals(PromiscuousAuthenticator.class, authenticator.getClass());
   }
 
+  @Test
   public void testAuthenticatorCustomCreation() throws Exception {
     testProperties.setProperty(ComponentFactory.AUTHENTICATOR, SimpleAuthenticator.class.getName());
 
@@ -108,6 +120,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(SimpleAuthenticator.class, authenticator.getClass());
   }
 
+  @Test
   public void testContentFilterCreation() throws Exception {
     assertEquals("", factory.loadContentFilter());
     assertEquals(null, SaveResponder.contentFilter);
@@ -120,6 +133,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
   }
 
+  @Test
   public void testSlimTablesCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
@@ -132,6 +146,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
+  @Test
   public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     String content = factory.loadSlimTables();
@@ -173,7 +188,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     public static void registerSymbolTypes(SymbolProvider provider) {
-        provider.add(new Today());
+      provider.add(new Today());
     }
   }
 

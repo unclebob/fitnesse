@@ -1,19 +1,22 @@
 package fit.decorator.util;
 
-import junit.framework.TestCase;
-import fit.decorator.exceptions.InvalidInputException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class DeltaTest extends TestCase {
+import fit.decorator.exceptions.InvalidInputException;
+import org.junit.Test;
+
+public class DeltaTest {
 
   private static final String INT_DATA_TYPE = "int";
   private static final String DOUBLE_DATA_TYPE = "double";
   private static final String STRING_DATA_TYPE = "string";
 
+  @Test
   public void testConstructorDoesNotLeaveTheObjectInAnUnstableState() throws Exception {
     assertInvalidInputException(INT_DATA_TYPE, "xyz");
     assertInvalidInputException(INT_DATA_TYPE, "1.2");
     assertInvalidInputException(DOUBLE_DATA_TYPE, "1.2E");
-
   }
 
   private void assertInvalidInputException(String dataType, String value) {
@@ -24,6 +27,7 @@ public class DeltaTest extends TestCase {
     }
   }
 
+  @Test
   public void testDeltaShouldEncapsulateTheValueAndDataType() throws Exception {
     Delta expectedDelta = new Delta(INT_DATA_TYPE, "5");
     assertEquals(expectedDelta, expectedDelta);
@@ -46,6 +50,7 @@ public class DeltaTest extends TestCase {
     assertFalse(expectedDelta.equals(delta));
   }
 
+  @Test
   public void testAdd() throws Exception {
     Delta int5 = new Delta(INT_DATA_TYPE, "5");
     assertEquals("10", int5.addTo("5", 1));
@@ -62,6 +67,7 @@ public class DeltaTest extends TestCase {
     assertEquals("XYZABC", stringABC.addTo("XYZ", 1));
   }
 
+  @Test
   public void testToString() throws Exception {
     aasertToString("5.3", DOUBLE_DATA_TYPE);
     aasertToString("5.3", STRING_DATA_TYPE);

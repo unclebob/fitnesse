@@ -2,14 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.mem.InMemoryPage;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
-public class SymbolicPageTest extends TestCase {
+public class SymbolicPageTest {
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage pageTwo;
@@ -20,6 +26,7 @@ public class SymbolicPageTest extends TestCase {
   private String pageTwoContent = "page two";
   private WikiPage externalRoot;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
@@ -27,24 +34,29 @@ public class SymbolicPageTest extends TestCase {
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne, null);
   }
 
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testDir");
   }
 
+  @Test
   public void testCreation() throws Exception {
     assertEquals("SymPage", symPage.getName());
   }
 
+  @Test
   public void testLinkage() throws Exception {
     assertSame(pageTwo, symPage.getRealPage());
   }
 
+  @Test
   public void testInternalData() throws Exception {
     PageData data = symPage.getData();
     assertEquals(pageTwoContent, data.getContent());
     assertSame(symPage, data.getWikiPage());
   }
 
+  @Test
   public void testCommitInternal() throws Exception {
     commitNewContent(symPage);
 
@@ -55,6 +67,7 @@ public class SymbolicPageTest extends TestCase {
     assertEquals("new content", data.getContent());
   }
 
+  @Test
   public void testGetChild() throws Exception {
     WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
     WikiPage page = symPage.getChildPage("ChildPage");
@@ -64,6 +77,7 @@ public class SymbolicPageTest extends TestCase {
     assertEquals(childPage, symChild.getRealPage());
   }
 
+  @Test
   public void testGetChildren() throws Exception {
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
@@ -73,6 +87,7 @@ public class SymbolicPageTest extends TestCase {
     assertEquals(SymbolicPage.class, children.get(1).getClass());
   }
 
+  @Test
   public void testCyclicSymbolicLinks() throws Exception {
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
@@ -91,6 +106,7 @@ public class SymbolicPageTest extends TestCase {
     assertEquals(1, children.size());
   }
 
+  @Test
   public void testSymbolicPageUsingExternalDirectory() throws Exception {
     CreateExternalRoot();
 
@@ -120,6 +136,7 @@ public class SymbolicPageTest extends TestCase {
     symPage = new SymbolicPage("SymPage", externalRoot, pageOne, null);
   }
 
+  @Test
   public void testCommittingToExternalRoot() throws Exception {
     CreateExternalRoot();
 

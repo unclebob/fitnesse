@@ -3,18 +3,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class BindingTest extends RegexTestCase {
+public class BindingTest {
   private TestFixture fixture;
   private Parse cell1;
   private Parse cell2;
   private Parse cell3;
   private Parse cell4;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     fixture = new TestFixture();
     Parse table = new Parse("<table><tr><td>123</td><td>321</td><td>abc</td><td></td></tr></table>");
     cell1 = table.parts.parts;
@@ -23,6 +30,7 @@ public class BindingTest extends RegexTestCase {
     cell4 = table.parts.parts.more.more.more;
   }
 
+  @Test
   public void testConstruction() throws Throwable {
     assertEquals(Binding.QueryBinding.class, Binding.create(fixture, "intMethod()").getClass());
     assertEquals(Binding.QueryBinding.class, Binding.create(fixture, "intMethod?").getClass());
@@ -57,6 +65,7 @@ public class BindingTest extends RegexTestCase {
     }
   }
 
+  @Test
   public void testQueryBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "intMethod()");
     binding.doCell(fixture, cell1);
@@ -67,6 +76,7 @@ public class BindingTest extends RegexTestCase {
     assertEquals(1, fixture.counts.right);
   }
 
+  @Test
   public void testSetBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "intField");
     binding.doCell(fixture, cell1);
@@ -76,6 +86,7 @@ public class BindingTest extends RegexTestCase {
     assertEquals(321, fixture.intField);
   }
 
+  @Test
   public void testPrivateSetBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "privateIntField");
     binding.doCell(fixture, cell1);
@@ -85,18 +96,21 @@ public class BindingTest extends RegexTestCase {
     assertEquals(321, fixture.getPrivateIntField());
   }
 
+  @Test
   public void testQueryBindingWithBlankCell() throws Throwable {
     Binding binding = Binding.create(fixture, "intField");
     binding.doCell(fixture, cell4);
     assertSubString("0", cell4.text());
   }
 
+  @Test
   public void testPrivateQueryBindingWithBlankCell() throws Throwable {
     Binding binding = Binding.create(fixture, "privateIntField");
     binding.doCell(fixture, cell4);
     assertSubString("0", cell4.text());
   }
 
+  @Test
   public void testSaveBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "=intMethod()");
     binding.doCell(fixture, cell1);
@@ -108,6 +122,7 @@ public class BindingTest extends RegexTestCase {
     assertEquals("999", Fixture.getSymbol("321"));
   }
 
+  @Test
   public void testSaveBindingWithNull() throws Throwable {
     Binding binding = Binding.create(fixture, "=integerMethodIsNull()");
     fixture.integerField = null;
@@ -119,6 +134,7 @@ public class BindingTest extends RegexTestCase {
     assertEquals("null", Fixture.getSymbol("321"));
   }
 
+  @Test
   public void testRecallBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "intField=");
     Fixture.setSymbol("123", "999");
@@ -129,6 +145,7 @@ public class BindingTest extends RegexTestCase {
     assertSubString("No such symbol: abc", cell3.text());
   }
 
+  @Test
   public void testPrivateRecallBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "privateIntField=");
     Fixture.setSymbol("123", "999");
@@ -140,6 +157,7 @@ public class BindingTest extends RegexTestCase {
   }
 
   // -AcD- Found this while testing with nulls
+  @Test
   public void testRecallBindingWithNull() throws Throwable {
     Binding binding = Binding.create(fixture, "integerField=");
     Fixture.setSymbol("123", null);
@@ -147,6 +165,7 @@ public class BindingTest extends RegexTestCase {
     assertEquals(null, fixture.integerField);
   }
 
+  @Test
   public void testRecallBindingSymbolTableText() throws Throwable {
     Binding binding = Binding.create(fixture, "intField=");
     Fixture.setSymbol("123", "999");
@@ -154,13 +173,15 @@ public class BindingTest extends RegexTestCase {
     assertEquals("123  = 999", cell1.text());
   }
 
-    public void testPrivateRecallBindingSymbolTableText() throws Throwable {
+  @Test
+  public void testPrivateRecallBindingSymbolTableText() throws Throwable {
     Binding binding = Binding.create(fixture, "privateIntField=");
     Fixture.setSymbol("123", "999");
     binding.doCell(fixture, cell1);
     assertEquals("123  = 999", cell1.text());
   }
 
+  @Test
   public void testUseOfGracefulNamingForMethods() throws Throwable {
     checkForMethodBinding("intMethod()", true);
     checkForMethodBinding("int Method?", true);
@@ -170,6 +191,7 @@ public class BindingTest extends RegexTestCase {
     checkForMethodBinding("IntMethod?", false);
   }
 
+  @Test
   public void testUseOfGracefulNamingForFields() throws Throwable {
     checkForFieldBinding("intField", true);
     checkForFieldBinding("int Field", true);
@@ -179,6 +201,7 @@ public class BindingTest extends RegexTestCase {
     checkForFieldBinding("IntField", false);
   }
 
+  @Test
   public void testUseOfGracefulNamingForPrivateFields() throws Throwable {
     checkForPrivateFieldBinding("privateIntField", true);
     checkForPrivateFieldBinding("private int Field", true);

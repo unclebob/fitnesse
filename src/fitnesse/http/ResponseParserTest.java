@@ -2,21 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ResponseParserTest extends TestCase {
+public class ResponseParserTest {
   private String response;
   private InputStream input;
 
-  public void setUp() throws Exception {
-  }
-
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testParsing() throws Exception {
     response = "HTTP/1.1 200 OK\r\n" +
       "Content-Type: text/html\r\n" +
@@ -32,6 +29,7 @@ public class ResponseParserTest extends TestCase {
     assertEquals("some content", parser.getBody());
   }
 
+  @Test
   public void testChunkedResponse() throws Exception {
     response = "HTTP/1.1 200 OK\r\n" +
       "Content-Type: text/html\r\n" +

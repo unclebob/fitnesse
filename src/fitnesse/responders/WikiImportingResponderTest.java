@@ -2,24 +2,43 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.IOException;
 
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
-import util.RegexTestCase;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WikiImportingResponderTest extends RegexTestCase {
+public class WikiImportingResponderTest {
   private WikiImportingResponder responder;
   private String baseUrl;
   private WikiImporterTest testData;
 
+  @Before
   public void setUp() throws Exception {
     testData = new WikiImporterTest();
     testData.createRemoteRoot();
@@ -40,10 +59,12 @@ public class WikiImportingResponderTest extends RegexTestCase {
     responder.getImporter().setDeleteOrphanOption(false);
   }
 
+  @After
   public void tearDown() throws Exception {
     FitNesseUtil.stopFitnesse();
   }
 
+  @Test
   public void testActionsOfMakeResponse() throws Exception {
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
@@ -64,6 +85,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertEquals("child one", importedChildOne.getData().getContent());
   }
 
+  @Test
   public void testImportingFromNonRootPageUpdatesPageContent() throws Exception {
     PageData data = testData.pageTwo.getData();
     WikiImportProperty importProperty = new WikiImportProperty(baseUrl + "PageOne");
@@ -81,6 +103,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertFalse(WikiImportProperty.createFrom(data.getProperties()).isRoot());
   }
 
+  @Test
   public void testImportPropertiesGetAdded() throws Exception {
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
@@ -123,6 +146,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     return content;
   }
 
+  @Test
   public void testHtmlOfMakeResponse() throws IOException {
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
@@ -142,6 +166,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("3 pages were imported.", content);
   }
 
+  @Test
   public void testHtmlOfMakeResponseWithNoModifications() throws Exception {
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
@@ -186,6 +211,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     return request;
   }
 
+  @Test
   public void testMakeResponseImportingNonRootPage() throws Exception {
     MockRequest request = makeRequest(baseUrl + "PageOne");
 
@@ -199,6 +225,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("ChildOne", content);
   }
 
+  @Test
   public void testRemoteUrlNotFound() throws Exception {
     String remoteUrl = baseUrl + "PageDoesntExist";
     Response response = makeSampleResponse(remoteUrl);
@@ -209,6 +236,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("The remote resource, " + remoteUrl + ", was not found.", content);
   }
 
+  @Test
   public void testErrorMessageForBadUrlProvided() throws Exception {
     String remoteUrl = baseUrl + "blah";
     Response response = makeSampleResponse(remoteUrl);
@@ -219,7 +247,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
   }
 
-
+  @Test
   public void testListOfOrphanedPages() throws Exception {
     WikiImporter importer = new WikiImporter();
 
@@ -242,6 +270,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("PageOne.ChildOne", content);
   }
 
+  @Test
   public void testAutoUpdatingTurnedOn() throws Exception {
     MockRequest request = makeRequest(baseUrl);
     responder.setRequest(request);
@@ -255,6 +284,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertTrue(responder.getImporter().getAutoUpdateSetting());
   }
 
+  @Test
   public void testAutoUpdateSettingDisplayed() throws Exception {
     WikiImporter importer = new MockWikiImporter();
 
@@ -282,6 +312,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     crawler = root.getPageCrawler();
   }
 
+  @Test
   public void testImportedPageIndication() throws Exception {
     pageRenderingSetUp();
 
@@ -296,6 +327,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("<body class=\"imported\">", content);
   }
 
+  @Test
   public void testEditActions() throws Exception {
     pageRenderingSetUp();
 
@@ -324,6 +356,5 @@ public class WikiImportingResponderTest extends RegexTestCase {
     html.put("actions", new WikiPageActions(page));
     return html.html();
   }
-
 
 }

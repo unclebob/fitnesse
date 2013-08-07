@@ -2,6 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -10,20 +17,27 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WikiPageResponderTest extends RegexTestCase {
+public class WikiPageResponderTest {
   private WikiPage root;
   private FitNesseContext context;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
   }
 
+  @Test
   public void testResponse() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
     PageData data = page.getData();
@@ -49,6 +63,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("<h5> Wiki Page tags</h5>", body);
   }
 
+  @Test
   public void testAttributeButtons() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
     final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"));
@@ -73,6 +88,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertNotSubString(">Test</a>", response.getContent());
   }
 
+  @Test
   public void testHeadersAndFooters() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "normal");
     WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "test page");
@@ -111,6 +127,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     return (SimpleResponse) responder.makeResponse(context, request);
   }
 
+  @Test
   public void testImportedPageIndication() throws Exception {
     final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
@@ -123,6 +140,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("<body class=\"imported\">", content);
   }
 
+  @Test
   public void testImportedPageIndicationNotOnRoot() throws Exception {
     final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
@@ -136,6 +154,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertNotSubString("<body class=\"imported\">", content);
   }
 
+  @Test
   public void testResponderIsSecureReadOperation() throws Exception {
     final Responder responder = new WikiPageResponder();
     assertTrue(responder instanceof SecureResponder);

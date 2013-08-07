@@ -2,18 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 
 import fit.Parse;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RowEntryFixtureTest extends TestCase {
+public class RowEntryFixtureTest {
   private RowEntryFixture fixture;
   private Parse simpleTable;
   private String ERROR_MESSAGE = "bad input";
 
   @SuppressWarnings("unused")
-  protected void setUp() throws ParseException {
+  @Before
+  public void setUp() throws ParseException {
     fixture = new RowEntryFixture() {
       public int a = 0;
       public int b = 0;
@@ -25,6 +30,7 @@ public class RowEntryFixtureTest extends TestCase {
     simpleTable = new Parse("<table><tr><td>a</td></tr><tr><td>b</td></tr></table>");
   }
 
+  @Test
   public void testExplore() {
     assertEquals("<table>", simpleTable.tag);
     assertEquals("<tr>", simpleTable.parts.tag);
@@ -36,6 +42,7 @@ public class RowEntryFixtureTest extends TestCase {
     assertEquals("b", simpleTable.parts.more.parts.body);
   }
 
+  @Test
   public void testInsertRowAfter() {
     Parse errorCell = new Parse("td", "error", null, null);
     Parse row = new Parse("tr", null, errorCell, null);
@@ -45,6 +52,7 @@ public class RowEntryFixtureTest extends TestCase {
     assertEquals("error", simpleTable.parts.more.more.parts.body);
   }
 
+  @Test
   public void testInsertRowBetween() {
     Parse errorCell = new Parse("td", "error", null, null);
     Parse row = new Parse("tr", null, errorCell, null);
@@ -57,6 +65,7 @@ public class RowEntryFixtureTest extends TestCase {
     assertEquals("b", simpleTable.parts.more.more.parts.body);
   }
 
+  @Test
   public void testBadInput() throws ParseException {
     Parse table = new Parse("<table>" +
       "<tr><td>Fixture</td></tr>" +
@@ -67,6 +76,7 @@ public class RowEntryFixtureTest extends TestCase {
     assertTrue(table.at(0, 3, 1).body.contains(ERROR_MESSAGE));
   }
 
+  @Test
   public void testMessageFormat() throws ParseException {
     Parse table = new Parse("<table>" +
       "<tr><td>Fixture</td></tr>" +

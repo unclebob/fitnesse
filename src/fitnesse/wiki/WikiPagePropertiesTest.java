@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -11,10 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
+import org.junit.Before;
+import org.junit.Test;
 import util.Clock;
-import util.RegexTestCase;
 
-public class WikiPagePropertiesTest extends RegexTestCase {
+public class WikiPagePropertiesTest {
   private WikiPageProperties properties;
 
   static final String endl = System.getProperty("line.separator");
@@ -40,6 +46,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
       "</properties>" + endl;
   static final String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
 
+  @Before
   public void setUp() throws Exception {
     installPropertiesFrom(sampleXml);
   }
@@ -49,9 +56,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     properties = new WikiPageProperties(sampleInputStream);
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testLoadingOfXmlWithoutAddedSpaces() throws Exception {
     validateLoading();
   }
@@ -77,6 +82,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     assertEquals(">SubChild.SymLink", symbolics.get("SubLink"));
   }
 
+  @Test
   public void testToXml() throws Exception {
     String xml = properties.toXml();
     for (String fragment : sampleXmlFragments) {
@@ -84,6 +90,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     }
   }
 
+  @Test
   public void testKeySet() throws Exception {
     properties = new WikiPageProperties();
     properties.set("one");
@@ -97,6 +104,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     assertFalse(keys.contains("four"));
   }
 
+  @Test
   public void testIsSerializable() throws Exception {
     try {
       new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(properties);
@@ -106,6 +114,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     }
   }
 
+  @Test
   public void testLastModificationTime() throws Exception {
     SimpleDateFormat format = WikiPageProperty.getTimeFormat();
     WikiPageProperties props = new WikiPageProperties();
@@ -116,6 +125,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     assertEquals(date, props.getLastModificationTime());
   }
 
+  @Test
   public void testShouldRemoveSpacesFromPropertyValues() throws Exception {
     String sampleXmlWithSpaces = sampleXml.replaceAll("</", " </");
     installPropertiesFrom(sampleXmlWithSpaces);

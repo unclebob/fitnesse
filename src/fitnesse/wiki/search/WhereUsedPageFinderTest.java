@@ -1,17 +1,20 @@
 package fitnesse.wiki.search;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.wiki.WikiPageUtil;
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import util.RegexTestCase;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
 
-public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalListener<WikiPage> {
+public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage pageTwo;
@@ -24,6 +27,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
     hits.add(page);
   }
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
@@ -36,6 +40,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
     hits.clear();
   }
 
+  @Test
   public void testFindReferencingPages() throws Exception {
     whereUsed = new WhereUsedPageFinder(pageOne, this);
     List<WikiPage> resultList = whereUsed.search(root);
@@ -51,12 +56,14 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
     assertEquals(0, resultList.size());
   }
 
+  @Test
   public void testObserving() throws Exception {
     whereUsed = new WhereUsedPageFinder(pageOne, this);
     whereUsed.search(root);
     assertEquals(2, hits.size());
   }
 
+  @Test
   public void testOnlyOneReferencePerPage() throws Exception {
     whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
@@ -65,6 +72,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalL
     assertEquals(newPage, resultList.get(0));
   }
 
+  @Test
   public void testWordsNotFoundInPreprocessedText() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
     List<WikiPage> resultList = whereUsed.search(pageThree);

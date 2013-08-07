@@ -2,15 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class CartesianVectorTest extends TestCase {
+import org.junit.Test;
+
+public class CartesianVectorTest {
+
+  @Test
   public void testParseVector() throws Exception {
     CartesianVector v = CartesianVector.parse("(0,0)");
     assertEquals(0.0, v.getX(), .001);
     assertEquals(0.0, v.getY(), .001);
   }
 
+  @Test
   public void testVectorEquals() throws Exception {
     CartesianVector v1 = new CartesianVector(3.1, -5.2);
     CartesianVector v2 = new CartesianVector(3.1, -5.2);
@@ -19,6 +26,7 @@ public class CartesianVectorTest extends TestCase {
     assertFalse(v1.equals(v3));
   }
 
+  @Test
   public void testAdd() throws Exception {
     CartesianVector v1 = new CartesianVector(3, 4);
     CartesianVector v2 = new CartesianVector(1, 2);
