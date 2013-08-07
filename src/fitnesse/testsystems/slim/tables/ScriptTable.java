@@ -28,6 +28,62 @@ public class ScriptTable extends SlimTable {
     return "scriptTable";
   }
 
+  /**
+   * Template method to provide the keyword that identifies the table type.
+   */
+  protected String getTableKeyword() {
+    return "script";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code start} action.
+   */
+  protected String getStartKeyword() {
+    return "start";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code check} action.
+   */
+  protected String getCheckKeyword() {
+    return "check";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code checkNot} action.
+   */
+  protected String getCheckNotKeyword() {
+    return "check not";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code reject} action.
+   */
+  protected String getRejectKeyword() {
+    return "reject";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code ensure} action.
+   */
+  protected String getEnsureKeyword() {
+    return "ensure";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code show} action.
+   */
+  protected String getShowKeyword() {
+    return "show";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code note} action.
+   */
+  protected String getNoteKeyword() {
+    return "note";
+  }
+
   public List<Assertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
     List<Assertion> assertions = new ArrayList<Assertion>();
@@ -39,7 +95,7 @@ public class ScriptTable extends SlimTable {
   }
 
   private boolean isScript() {
-    return "script".equalsIgnoreCase(table.getCellContents(0, 0));
+    return getTableKeyword().equalsIgnoreCase(table.getCellContents(0, 0));
   }
 
   // returns a list of statements
@@ -47,19 +103,19 @@ public class ScriptTable extends SlimTable {
     String firstCell = table.getCellContents(0, row).trim();
     List<Assertion> assertions;
     String match;
-    if (firstCell.equalsIgnoreCase("start"))
+    if (firstCell.equalsIgnoreCase(getStartKeyword()))
       assertions = startActor(row);
-    else if (firstCell.equalsIgnoreCase("check"))
+    else if (firstCell.equalsIgnoreCase(getCheckKeyword()))
       assertions = checkAction(row);
-    else if (firstCell.equalsIgnoreCase("check not"))
+    else if (firstCell.equalsIgnoreCase(getCheckNotKeyword()))
       assertions = checkNotAction(row);
-    else if (firstCell.equalsIgnoreCase("reject"))
+    else if (firstCell.equalsIgnoreCase(getRejectKeyword()))
       assertions = reject(row);
-    else if (firstCell.equalsIgnoreCase("ensure"))
+    else if (firstCell.equalsIgnoreCase(getEnsureKeyword()))
       assertions = ensure(row);
-    else if (firstCell.equalsIgnoreCase("show"))
+    else if (firstCell.equalsIgnoreCase(getShowKeyword()))
       assertions = show(row);
-    else if (firstCell.equalsIgnoreCase("note"))
+    else if (firstCell.equalsIgnoreCase(getNoteKeyword()))
       assertions = note(row);
     else if ((match = ifSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
@@ -80,7 +136,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(1 + 1, lastCol, row, assertions);
-      assertions.add(makeAssertion(callAndAssign(symbolName, "scriptTableActor", actionName, args),
+      assertions.add(makeAssertion(callAndAssign(symbolName, getTableType() + "Actor", actionName, args),
               new SymbolAssignmentExpectation(symbolName, 0, row)));
 
     }
@@ -94,7 +150,7 @@ public class ScriptTable extends SlimTable {
       int lastCol = table.getColumnCountInRow(row) - 1;
       String actionName = getActionNameStartingAt(0, lastCol, row);
       String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
-      assertions.add(makeAssertion(callFunction("scriptTableActor", actionName, (Object[]) args),
+      assertions.add(makeAssertion(callFunction(getTableType() + "Actor", actionName, (Object[]) args),
               new ScriptActionExpectation(0, row)));
     }
     return assertions;
@@ -178,7 +234,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
     List<Assertion> assertions = new ArrayList<Assertion>();
     String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row, assertions);
-    assertions.add(makeAssertion(callFunction("scriptTableActor", actionName, (Object[]) args),
+    assertions.add(makeAssertion(callFunction(getTableType() + "Actor", actionName, (Object[]) args),
             expectation));
     return assertions;
   }
@@ -214,7 +270,7 @@ public class ScriptTable extends SlimTable {
     int classNameColumn = 1;
     String cellContents = table.getCellContents(classNameColumn, row);
     String className = Disgracer.disgraceClassName(cellContents);
-    return list(constructInstance("scriptTableActor", className, classNameColumn, row));
+    return list(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
   }
 
   class ArgumentExtractor {
