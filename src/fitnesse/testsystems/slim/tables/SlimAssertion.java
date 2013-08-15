@@ -9,9 +9,9 @@ import fitnesse.testsystems.Assertion;
 
 public class SlimAssertion implements Assertion {
   private final Instruction instruction;
-  private final Expectation expectation;
+  private final SlimExpectation expectation;
 
-  SlimAssertion(Instruction instruction, Expectation expectation) {
+  SlimAssertion(Instruction instruction, SlimExpectation expectation) {
     this.instruction = instruction;
     this.expectation = expectation;
   }
@@ -22,7 +22,7 @@ public class SlimAssertion implements Assertion {
   }
 
   @Override
-  public Expectation getExpectation() {
+  public SlimExpectation getExpectation() {
     return expectation;
   }
 
@@ -42,7 +42,7 @@ public class SlimAssertion implements Assertion {
   }
 
   public static void evaluateExpectations(List<SlimAssertion> assertions, Map<String, Object> results) {
-    for (Assertion a : assertions) {
+    for (SlimAssertion a : assertions) {
       Object returnValue = results.get(a.getInstruction().getId());
       a.getExpectation().evaluateExpectation(returnValue);
     }

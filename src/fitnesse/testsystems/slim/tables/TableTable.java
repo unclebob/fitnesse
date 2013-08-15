@@ -34,7 +34,7 @@ public class TableTable extends SlimTable {
     return list(make, makeAssertion(doTable, new TableTableExpectation()));
   }
 
-  public class TableTableExpectation implements Expectation {
+  public class TableTableExpectation implements SlimExpectation {
 
     @Override
     public TestResult evaluateExpectation(Object tableReturn) {

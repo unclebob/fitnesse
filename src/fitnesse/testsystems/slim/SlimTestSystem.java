@@ -156,7 +156,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
-    for (Assertion a : assertions) {
+    for (SlimAssertion a : assertions) {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);

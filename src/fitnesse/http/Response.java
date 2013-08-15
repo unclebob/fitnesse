@@ -227,7 +227,7 @@ public abstract class Response {
       put(414, "Request-URI Too Large");
       put(415, "Unsupported Media Type");
       put(416, "Requested range not satisfiable");
-      put(417, "Expectation Failed");
+      put(417, "SlimExpectation Failed");
       put(500, "Internal Server Error");
       put(501, "Not Implemented");
       put(502, "Bad Gateway");

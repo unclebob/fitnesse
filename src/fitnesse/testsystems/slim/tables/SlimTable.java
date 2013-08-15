@@ -121,7 +121,7 @@ public abstract class SlimTable {
             expectation);
   }
 
-  protected final SlimAssertion makeAssertion(Instruction instruction, Expectation expectation) {
+  protected final SlimAssertion makeAssertion(Instruction instruction, SlimExpectation expectation) {
     return new SlimAssertion(instruction, expectation);
   }
 
@@ -261,8 +261,8 @@ public abstract class SlimTable {
     }
   }
 
-  /** Expectation base class for row based expectations. */
-  public abstract class RowExpectation implements Expectation {
+  /** SlimExpectation base class for row based expectations. */
+  public abstract class RowExpectation implements SlimExpectation {
     private final int col;
     private final int row;
     private final String originalContent;
@@ -402,7 +402,7 @@ public abstract class SlimTable {
     }
   }
 
-  class SilentReturnExpectation implements Expectation {
+  class SilentReturnExpectation implements SlimExpectation {
     private final int col;
     private final int row;
 

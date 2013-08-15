@@ -69,7 +69,7 @@ public class QueryTable extends SlimTable {
       fieldNames.add(table.getCellContents(col, 1));
   }
 
-  public class QueryTableExpectation implements Expectation {
+  public class QueryTableExpectation implements SlimExpectation {
 
     @Override
     public TestResult evaluateExpectation(Object queryReturn) {

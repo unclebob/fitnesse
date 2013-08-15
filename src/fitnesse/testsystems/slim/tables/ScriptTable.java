@@ -10,7 +10,6 @@ import java.util.List;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestSystem;
@@ -176,7 +175,7 @@ public class ScriptTable extends SlimTable {
             new RejectedValueExpectation(lastColInAction, row));
   }
 
-  private List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, Expectation expectation) {
+  private List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row, assertions);

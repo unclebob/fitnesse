@@ -42,7 +42,7 @@ public class ResponseTest {
     checkPhrase(414, "Request-URI Too Large");
     checkPhrase(415, "Unsupported Media Type");
     checkPhrase(416, "Requested range not satisfiable");
-    checkPhrase(417, "Expectation Failed");
+    checkPhrase(417, "SlimExpectation Failed");
     checkPhrase(500, "Internal Server Error");
     checkPhrase(501, "Not Implemented");
     checkPhrase(502, "Bad Gateway");
