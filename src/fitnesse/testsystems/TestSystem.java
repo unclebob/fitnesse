@@ -17,4 +17,6 @@ public interface TestSystem {
   void runTests(TestPage pageToTest) throws IOException, InterruptedException;
 
   boolean isSuccessfullyStarted();
+
+  void addTestSystemListener(TestSystemListener listener);
 }

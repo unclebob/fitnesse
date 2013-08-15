@@ -13,6 +13,7 @@ import java.util.Map;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
+import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
@@ -31,7 +32,7 @@ public abstract class SlimTestSystem implements TestSystem {
   public static final SlimTable END_OF_TEST = null;
 
   private final SlimClient slimClient;
-  private final TestSystemListener testSystemListener;
+  private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
 
   private SlimTestContextImpl testContext;
@@ -41,7 +42,8 @@ public abstract class SlimTestSystem implements TestSystem {
   public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
     this.testSystemName = testSystemName;
     this.slimClient = slimClient;
-    this.testSystemListener = listener;
+    this.testSystemListener = new CompositeTestSystemListener();
+    this.testSystemListener.addTestSystemListener(listener);
   }
 
   public SlimTestContext getTestContext() {
@@ -86,6 +88,10 @@ public abstract class SlimTestSystem implements TestSystem {
     initializeTest();
     processAllTablesOnPage(pageToTest);
     testComplete(testContext.getTestSummary());
+  }
+
+  public void addTestSystemListener(TestSystemListener listener) {
+    testSystemListener.addTestSystemListener(listener);
   }
 
   private void initializeTest() {
