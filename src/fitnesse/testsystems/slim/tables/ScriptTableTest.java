@@ -14,6 +14,7 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
@@ -31,7 +32,7 @@ import static util.ListUtility.list;
 
 public class ScriptTableTest {
   private WikiPage root;
-  private List<Assertion> assertions;
+  private List<SlimAssertion> assertions;
   private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
   private SlimTestContextImpl testContext;
@@ -39,7 +40,7 @@ public class ScriptTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<Assertion>();
+    assertions = new ArrayList<SlimAssertion>();
   }
 
   private ScriptTable buildInstructionsForWholeTable(String pageContents) throws Exception {
@@ -61,7 +62,7 @@ public class ScriptTableTest {
     List<List<?>> resultList = ListUtility.<List<?>>list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
   }
 
@@ -70,7 +71,7 @@ public class ScriptTableTest {
   }
 
   private List<Instruction> instructions() {
-    return Assertion.getInstructions(assertions);
+    return SlimAssertion.getInstructions(assertions);
   }
 
   @Test

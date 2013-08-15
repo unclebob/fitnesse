@@ -5,8 +5,6 @@ package fitnesse.testsystems;
 import java.io.IOException;
 
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 
 public interface TestSystemListener {
   void testSystemStarted(TestSystem testSystem);

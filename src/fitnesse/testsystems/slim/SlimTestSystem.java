@@ -13,15 +13,17 @@ import java.util.Map;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
@@ -102,10 +104,10 @@ public abstract class SlimTestSystem implements TestSystem {
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
   protected void processTable(SlimTable table) throws IOException {
-    List<Assertion> assertions = createAssertions(table);
+    List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
     if (!stopTestCalled) {
-      instructionResults = slimClient.invokeAndGetResponse(Assertion.getInstructions(assertions));
+      instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
     } else {
       instructionResults = Collections.emptyMap();
     }
@@ -113,14 +115,14 @@ public abstract class SlimTestSystem implements TestSystem {
     evaluateTables(assertions, instructionResults);
   }
 
-  private List<Assertion> createAssertions(SlimTable table) {
-    List<Assertion> assertions = new ArrayList<Assertion>();
+  private List<SlimAssertion> createAssertions(SlimTable table) {
+    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     try {
       assertions.addAll(table.getAssertions());
     } catch (SyntaxError e) {
       String tableName = table.getTable().getCellContents(0, 0);
       // TODO: remove: raise TableFormatException or something like that.
-      table.getTable().updateContent(0, 0, TestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+      table.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
     }
     return assertions;
   }
@@ -152,7 +154,7 @@ public abstract class SlimTestSystem implements TestSystem {
     return SlimServer.EXCEPTION_TAG + stringWriter.toString();
   }
 
-  protected void evaluateTables(List<Assertion> assertions, Map<String, Object> instructionResults) {
+  protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
     for (Assertion a : assertions) {
       try {
         final String key = a.getInstruction().getId();

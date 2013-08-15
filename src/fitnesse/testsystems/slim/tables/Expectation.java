@@ -1,8 +1,8 @@
 package fitnesse.testsystems.slim.tables;
 
 
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
 
 public interface Expectation {
 

@@ -1,8 +1,9 @@
 package fitnesse.testsystems.slim.results;
 
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 
-public class TestResult {
+public class SlimTestResult implements TestResult {
 
   private final String actual;
   private final String expected;
@@ -10,15 +11,15 @@ public class TestResult {
   private final String message;
   private final boolean counts;
 
-  public TestResult(ExecutionResult executionResult) {
+  public SlimTestResult(ExecutionResult executionResult) {
     this(null, null, null, executionResult, true);
   }
 
-  protected TestResult(String actual, String expected, String message, ExecutionResult executionResult) {
+  protected SlimTestResult(String actual, String expected, String message, ExecutionResult executionResult) {
     this(actual, expected, message, executionResult, true);
   }
 
-  protected TestResult(String actual, String expected, String message, ExecutionResult executionResult, boolean counts) {
+  protected SlimTestResult(String actual, String expected, String message, ExecutionResult executionResult, boolean counts) {
     this.actual = actual;
     this.expected = expected;
     this.message = message;
@@ -26,38 +27,46 @@ public class TestResult {
     this.counts = counts;
   }
 
+  @Override
   public boolean doesCount() {
     return counts;
   }
+  @Override
   public boolean hasActual() {
     return actual != null;
   }
 
+  @Override
   public String getActual() {
     return actual;
   }
 
+  @Override
   public boolean hasExpected() {
     return expected != null;
   }
 
+  @Override
   public String getExpected() {
     return expected;
   }
 
+  @Override
   public boolean hasMessage() {
     return message != null;
   }
 
+  @Override
   public String getMessage() {
     return message;
   }
 
+  @Override
   public ExecutionResult getExecutionResult() {
     return executionResult;
   }
 
-  public TestResult negateTestResult() {
+  public SlimTestResult negateTestResult() {
     ExecutionResult newExecutionResult;
     if (executionResult == ExecutionResult.PASS) {
       newExecutionResult = ExecutionResult.FAIL;
@@ -66,7 +75,7 @@ public class TestResult {
     } else  {
       newExecutionResult = executionResult;
     }
-    return new TestResult(actual, expected, message, newExecutionResult);
+    return new SlimTestResult(actual, expected, message, newExecutionResult);
   }
 
   public String toString(String originalContent) {
@@ -101,61 +110,61 @@ public class TestResult {
     return toString("");
   }
 
-  public static TestResult pass() {
-    return new TestResult(ExecutionResult.PASS);
+  public static SlimTestResult pass() {
+    return new SlimTestResult(ExecutionResult.PASS);
   }
 
-  public static TestResult pass(String message) {
-    return new TestResult(null, null, message, ExecutionResult.PASS);
+  public static SlimTestResult pass(String message) {
+    return new SlimTestResult(null, null, message, ExecutionResult.PASS);
   }
 
   // For negating checks:
   public static TestResult pass(String actual, String expected) {
-    return new TestResult(actual, expected, null, ExecutionResult.PASS);
+    return new SlimTestResult(actual, expected, null, ExecutionResult.PASS);
   }
 
-  public static TestResult fail() {
-    return new TestResult(null, null, null, ExecutionResult.FAIL);
+  public static SlimTestResult fail() {
+    return new SlimTestResult(null, null, null, ExecutionResult.FAIL);
   }
 
-  public static TestResult fail(String message) {
-    return new TestResult(null, null, message, ExecutionResult.FAIL);
+  public static SlimTestResult fail(String message) {
+    return new SlimTestResult(null, null, message, ExecutionResult.FAIL);
   }
 
-  public static TestResult fail(String actual, String expected) {
-    return new TestResult(actual, expected, null, ExecutionResult.FAIL);
+  public static SlimTestResult fail(String actual, String expected) {
+    return new SlimTestResult(actual, expected, null, ExecutionResult.FAIL);
   }
 
-  public static TestResult fail(String actual, String expected, String message) {
-    return new TestResult(actual, expected, message, ExecutionResult.FAIL);
+  public static SlimTestResult fail(String actual, String expected, String message) {
+    return new SlimTestResult(actual, expected, message, ExecutionResult.FAIL);
   }
 
-  public static TestResult ignore() {
-    return new TestResult(ExecutionResult.IGNORE);
+  public static SlimTestResult ignore() {
+    return new SlimTestResult(ExecutionResult.IGNORE);
   }
 
-  public static TestResult ignore(String message) {
-    return new TestResult(null, null, message, ExecutionResult.IGNORE);
+  public static SlimTestResult ignore(String message) {
+    return new SlimTestResult(null, null, message, ExecutionResult.IGNORE);
   }
 
-  public static TestResult error(String message) {
-    return new TestResult(null, null, message, ExecutionResult.ERROR);
+  public static SlimTestResult error(String message) {
+    return new SlimTestResult(null, null, message, ExecutionResult.ERROR);
   }
 
-  public static TestResult error(String message, String actual) {
-    return new TestResult(actual, null, message, ExecutionResult.ERROR);
+  public static SlimTestResult error(String message, String actual) {
+    return new SlimTestResult(actual, null, message, ExecutionResult.ERROR);
   }
 
-  public static TestResult plain() {
-    return new TestResult(null, null, null, null);
+  public static SlimTestResult plain() {
+    return new SlimTestResult(null, null, null, null);
   }
 
-  public static TestResult plain(String message) {
-   return new TestResult(null, null, message, null);
+  public static SlimTestResult plain(String message) {
+   return new SlimTestResult(null, null, message, null);
   }
 
   // pass without counting
-  public static TestResult ok(String message) {
-    return new TestResult(null, null, message, ExecutionResult.PASS, false);
+  public static SlimTestResult ok(String message) {
+    return new SlimTestResult(null, null, message, ExecutionResult.PASS, false);
   }
 }

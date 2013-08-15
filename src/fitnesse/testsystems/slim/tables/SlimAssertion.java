@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.Assertion;
 
-public class SlimAssertion {
+public class SlimAssertion implements Assertion {
   private final Instruction instruction;
   private final Expectation expectation;
 
@@ -15,10 +16,12 @@ public class SlimAssertion {
     this.expectation = expectation;
   }
 
+  @Override
   public Instruction getInstruction() {
     return instruction;
   }
 
+  @Override
   public Expectation getExpectation() {
     return expectation;
   }
@@ -39,7 +42,7 @@ public class SlimAssertion {
   }
 
   public static void evaluateExpectations(List<SlimAssertion> assertions, Map<String, Object> results) {
-    for (SlimAssertion a : assertions) {
+    for (Assertion a : assertions) {
       Object returnValue = results.get(a.getInstruction().getId());
       a.getExpectation().evaluateExpectation(returnValue);
     }

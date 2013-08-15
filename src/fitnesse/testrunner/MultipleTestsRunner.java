@@ -8,8 +8,6 @@ import fitnesse.responders.run.Stoppable;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 

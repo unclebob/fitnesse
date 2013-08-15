@@ -12,6 +12,7 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
@@ -43,11 +44,11 @@ public class DecisionTableTest {
       "|7|9|\n";
   private DecisionTable decisionTable;
   private SlimTestContextImpl testContext;
-  private List<Assertion> assertions;
+  private List<SlimAssertion> assertions;
 
   @Before
   public void setUp() throws Exception {
-    assertions = new ArrayList<Assertion>();
+    assertions = new ArrayList<SlimAssertion>();
     testContext = new SlimTestContextImpl();
   }
 
@@ -59,7 +60,7 @@ public class DecisionTableTest {
   }
 
   private List<Instruction> instructions() {
-    return Assertion.getInstructions(assertions);
+    return SlimAssertion.getInstructions(assertions);
   }
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
@@ -112,7 +113,7 @@ public class DecisionTableTest {
                     list("decisionTable_id_1", "OK")
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = decisionTable.getTable().toString();
     String expectedColorizedTable =
@@ -297,7 +298,7 @@ public class DecisionTableTest {
                     list(id(n++), VoidConverter.VOID_TAG) //endTable
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -330,7 +331,7 @@ public class DecisionTableTest {
                     list(id(n++), VoidConverter.VOID_TAG) //endTable
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -363,7 +364,7 @@ public class DecisionTableTest {
                     list(id(n++), VoidConverter.VOID_TAG) //endTable
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =

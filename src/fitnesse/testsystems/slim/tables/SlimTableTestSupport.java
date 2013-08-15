@@ -62,7 +62,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
 
   protected T makeSlimTableAndBuildInstructions(String pageContents) throws Exception {
     tableUnderTest = createSlimTable(pageContents);
-    instructions.addAll(Assertion.getInstructions(tableUnderTest.getAssertions()));
+    instructions.addAll(SlimAssertion.getInstructions(tableUnderTest.getAssertions()));
     return tableUnderTest;
   }
 }

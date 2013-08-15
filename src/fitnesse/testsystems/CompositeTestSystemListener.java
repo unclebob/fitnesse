@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 
 public class CompositeTestSystemListener implements TestSystemListener {
 

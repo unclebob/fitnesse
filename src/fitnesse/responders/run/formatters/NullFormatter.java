@@ -1,9 +1,9 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.CompositeExecutionLog;

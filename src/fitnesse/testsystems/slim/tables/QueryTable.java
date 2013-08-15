@@ -8,12 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.SlimServer;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 
 import static util.ListUtility.list;
 
@@ -39,24 +40,24 @@ public class QueryTable extends SlimTable {
     return c.matches();
   }
 
-  public TestResult matchMessage(String actual, String expected) {
+  public SlimTestResult matchMessage(String actual, String expected) {
     if (actual == null)
-      return TestResult.fail("NULL");
+      return SlimTestResult.fail("NULL");
     if (actual.equals(replaceSymbols(expected)))
-      return TestResult.pass(replaceSymbolsWithFullExpansion(expected));
+      return SlimTestResult.pass(replaceSymbolsWithFullExpansion(expected));
     Comparator c = new Comparator(actual, expected);
     return c.evaluate();
   }
 
   @Override
-  public List<Assertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() < 2)
       throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    Assertion make = constructFixture(getFixtureName());
-    Assertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
+    SlimAssertion make = constructFixture(getFixtureName());
+    SlimAssertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
             new SilentReturnExpectation(0, 0));
-    Assertion qi = makeAssertion(callFunction(getTableName(), "query"),
+    SlimAssertion qi = makeAssertion(callFunction(getTableName(), "query"),
             new QueryTableExpectation());
     tableInstruction = ti.getInstruction().getId();
     queryId = qi.getInstruction().getId();
@@ -73,14 +74,14 @@ public class QueryTable extends SlimTable {
 
     @Override
     public TestResult evaluateExpectation(Object queryReturn) {
-      TestResult testResult;
+      SlimTestResult testResult;
       if (queryId == null || queryReturn == null) {
-        testResult = TestResult.error("query method did not return a list");
+        testResult = SlimTestResult.error("query method did not return a list");
         table.updateContent(0, 0, testResult);
       } else if (queryReturn instanceof List) {
-        testResult = new TestResult(scanRowsForMatches((List<Object>) queryReturn));
+        testResult = new SlimTestResult(scanRowsForMatches((List<Object>) queryReturn));
       } else {
-        testResult = TestResult.error(String.format("The query method returned: %s", queryReturn));
+        testResult = SlimTestResult.error(String.format("The query method returned: %s", queryReturn));
         table.updateContent(0, 0, testResult);
       }
       return testResult;
@@ -109,7 +110,7 @@ public class QueryTable extends SlimTable {
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
-      TestResult testResult = TestResult.fail(surplusRow.get(0), null, "surplus");
+      SlimTestResult testResult = SlimTestResult.fail(surplusRow.get(0), null, "surplus");
       table.updateContent(0, newTableRow, testResult);
       getTestContext().increment(ExecutionResult.FAIL);
       markMissingFields(surplusRow, newTableRow);
@@ -123,7 +124,7 @@ public class QueryTable extends SlimTable {
       String surplusField = surplusRow.get(col);
       if (surplusField == null) {
         String fieldName = fieldNames.get(col);
-        TestResult testResult = TestResult.fail(String.format("field %s not present", fieldName));
+        SlimTestResult testResult = SlimTestResult.fail(String.format("field %s not present", fieldName));
         table.updateContent(col, newTableRow, testResult);
         getTestContext().increment(testResult.getExecutionResult());
       }
@@ -134,7 +135,7 @@ public class QueryTable extends SlimTable {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
-      TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      SlimTestResult testResult = SlimTestResult.fail(null, table.getCellContents(0, tableRow), "missing");
       table.updateContent(0, tableRow, testResult);
       getTestContext().increment(testResult.getExecutionResult());
     } else {
@@ -163,15 +164,15 @@ public class QueryTable extends SlimTable {
     String fieldName = fieldNames.get(col);
     String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
-    TestResult testResult;
+    SlimTestResult testResult;
     if (actualValue == null)
-      testResult = TestResult.fail(String.format("field %s not present", fieldName), expectedValue);
+      testResult = SlimTestResult.fail(String.format("field %s not present", fieldName), expectedValue);
     else if (expectedValue == null || expectedValue.length() == 0)
-      testResult = TestResult.ignore(actualValue);
+      testResult = SlimTestResult.ignore(actualValue);
     else {
       testResult = matchMessage(actualValue, expectedValue);
       if (testResult == null)
-        testResult = TestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
+        testResult = SlimTestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
       else if (testResult.getExecutionResult() == ExecutionResult.PASS)
         testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
     }
@@ -180,8 +181,8 @@ public class QueryTable extends SlimTable {
     return testResult;
   }
 
-  protected TestResult markMatch(int tableRow, int matchedRow, int col, String message) {
-    return TestResult.pass(message);
+  protected SlimTestResult markMatch(int tableRow, int matchedRow, int col, String message) {
+    return SlimTestResult.pass(message);
   }
 
   class QueryResults {

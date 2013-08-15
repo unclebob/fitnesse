@@ -2,12 +2,12 @@ package fitnesse.junit;
 
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;

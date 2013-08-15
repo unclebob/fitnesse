@@ -6,7 +6,7 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class ReturnedValueExpectationTest {
     Table t = ts.getTable(0);
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
     SlimTable.RowExpectation expectation = slimTable.new ReturnedValueExpectation(0, 0);
-    TestResult testResult = expectation.evaluationMessage(value, expected);
+    SlimTestResult testResult = expectation.evaluationMessage(value, expected);
     assertEquals(message, testResult.toString(expected));
     //assertEquals(message, expectation.getEvaluationMessage());
     assertEquals(0, expectation.getRow());
