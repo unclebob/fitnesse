@@ -84,7 +84,6 @@ table {
 	border-collapse:collapse;
 }
 td, th {
-	border: thin solid #777777;
 	padding: 0.25em 0.5em;
 }
 table.plain_text_table {
