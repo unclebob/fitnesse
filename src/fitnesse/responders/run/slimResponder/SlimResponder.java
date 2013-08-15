@@ -17,7 +17,6 @@ import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
-import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

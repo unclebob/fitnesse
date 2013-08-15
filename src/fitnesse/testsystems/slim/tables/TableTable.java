@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
 import static util.ListUtility.list;
@@ -56,7 +55,7 @@ public class TableTable extends SlimTable {
     }
 
     @Override
-    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+    public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       table.updateContent(0, 0, exceptionResult);
       getTestContext().incrementErroredTestsCount();
       return exceptionResult;

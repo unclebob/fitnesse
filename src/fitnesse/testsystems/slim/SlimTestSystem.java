@@ -15,13 +15,14 @@ import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeTestSystemListener;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
@@ -160,7 +161,7 @@ public abstract class SlimTestSystem implements TestSystem {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).startsWith(EXCEPTION_TAG)) {
-          ExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
+          SlimExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           if (exceptionResult.isStopTestException()) {
             stopTestCalled = true;
           }
@@ -178,8 +179,8 @@ public abstract class SlimTestSystem implements TestSystem {
     }
   }
 
-  private ExceptionResult makeExceptionResult(String resultKey, String resultString) {
-    ExceptionResult exceptionResult = new ExceptionResult(resultKey, resultString);
+  private SlimExceptionResult makeExceptionResult(String resultKey, String resultString) {
+    SlimExceptionResult exceptionResult = new SlimExceptionResult(resultKey, resultString);
     return exceptionResult;
   }
 

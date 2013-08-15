@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
@@ -160,7 +161,7 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int colIndex, int rowIndex, ExceptionResult exceptionResult) {
+  public void updateContent(int colIndex, int rowIndex, SlimExceptionResult exceptionResult) {
     Row row = rows.get(rowIndex);
     Cell cell = row.getColumn(colIndex);
     if (exceptionResult.hasMessage()) {

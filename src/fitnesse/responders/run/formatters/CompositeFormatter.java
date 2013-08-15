@@ -2,11 +2,11 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 

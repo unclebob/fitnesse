@@ -5,11 +5,11 @@ import java.io.IOException;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.slim.results.ExceptionResult;
 import util.TimeMeasurement;
 
 public class NullListener implements ResultsListener {

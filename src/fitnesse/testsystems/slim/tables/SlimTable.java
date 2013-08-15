@@ -12,12 +12,11 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
@@ -303,7 +302,7 @@ public abstract class SlimTable {
     protected abstract SlimTestResult createEvaluationMessage(String actual, String expected);
 
     @Override
-    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+    public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
       getTestContext().incrementErroredTestsCount();
       return exceptionResult;
@@ -418,7 +417,7 @@ public abstract class SlimTable {
     }
 
     @Override
-    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+    public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       if (exceptionResult.isNoMethodInClassException() || exceptionResult.isNoInstanceException()) {
         return null;
       }

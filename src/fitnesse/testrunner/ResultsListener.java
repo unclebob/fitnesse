@@ -3,10 +3,10 @@
 package fitnesse.testrunner;
 
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.slim.results.ExceptionResult;
 import util.TimeMeasurement;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ package fitnesse.testsystems.slim;
 import java.util.List;
 
 import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.slim.results.ExceptionResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
@@ -28,7 +28,7 @@ public interface Table {
 
   void updateContent(int col, int row, SlimTestResult testResult);
 
-  void updateContent(int col, int row, ExceptionResult exceptionResult);
+  void updateContent(int col, int row, SlimExceptionResult exceptionResult);
 
   Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
 

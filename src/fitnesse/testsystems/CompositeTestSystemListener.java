@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.testsystems.slim.results.ExceptionResult;
-
 public class CompositeTestSystemListener implements TestSystemListener {
 
   private List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
