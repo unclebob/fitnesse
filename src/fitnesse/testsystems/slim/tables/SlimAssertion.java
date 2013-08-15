@@ -6,11 +6,11 @@ import java.util.Map;
 
 import fitnesse.slim.instructions.Instruction;
 
-public class Assertion {
+public class SlimAssertion {
   private final Instruction instruction;
   private final Expectation expectation;
 
-  Assertion(Instruction instruction, Expectation expectation) {
+  SlimAssertion(Instruction instruction, Expectation expectation) {
     this.instruction = instruction;
     this.expectation = expectation;
   }
@@ -28,9 +28,9 @@ public class Assertion {
    * @param assertions
    * @return
    */
-  public static List<Instruction> getInstructions(List<Assertion> assertions) {
+  public static List<Instruction> getInstructions(List<SlimAssertion> assertions) {
     List<Instruction> instructions = new ArrayList<Instruction>(assertions.size());
-    for (Assertion a : assertions) {
+    for (SlimAssertion a : assertions) {
       if (a.getInstruction() != Instruction.NOOP_INSTRUCTION) {
         instructions.add(a.getInstruction());
       }
@@ -38,8 +38,8 @@ public class Assertion {
     return instructions;
   }
 
-  public static void evaluateExpectations(List<Assertion> assertions, Map<String, Object> results) {
-    for (Assertion a : assertions) {
+  public static void evaluateExpectations(List<SlimAssertion> assertions, Map<String, Object> results) {
+    for (SlimAssertion a : assertions) {
       Object returnValue = results.get(a.getInstruction().getId());
       a.getExpectation().evaluateExpectation(returnValue);
     }
