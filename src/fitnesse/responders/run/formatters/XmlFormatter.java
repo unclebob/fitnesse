@@ -4,7 +4,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.Instruction;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;

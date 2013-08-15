@@ -17,8 +17,16 @@ public class SlimAssertion implements Assertion {
   }
 
   @Override
-  public Instruction getInstruction() {
-    return instruction;
+  public fitnesse.testsystems.Instruction getInstruction() {
+    return new fitnesse.testsystems.Instruction() {
+       public String getId() {
+         return instruction.getId();
+       }
+
+      public String toString() {
+        return instruction.toString();
+      }
+    };
   }
 
   @Override
@@ -34,8 +42,8 @@ public class SlimAssertion implements Assertion {
   public static List<Instruction> getInstructions(List<SlimAssertion> assertions) {
     List<Instruction> instructions = new ArrayList<Instruction>(assertions.size());
     for (SlimAssertion a : assertions) {
-      if (a.getInstruction() != Instruction.NOOP_INSTRUCTION) {
-        instructions.add(a.getInstruction());
+      if (a.instruction != Instruction.NOOP_INSTRUCTION) {
+        instructions.add(a.instruction);
       }
     }
     return instructions;
