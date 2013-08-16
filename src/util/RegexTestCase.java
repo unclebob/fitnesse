@@ -2,12 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import static org.junit.Assert.fail;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
+public final class RegexTestCase {
 
-public abstract class RegexTestCase extends TestCase {
+  private RegexTestCase() {
+    
+  }
+
   public static void assertMatches(String regexp, String string) {
     assertHasRegexp(regexp, string);
   }

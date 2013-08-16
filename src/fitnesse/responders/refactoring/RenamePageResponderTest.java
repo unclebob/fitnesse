@@ -2,12 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RenamePageResponderTest extends ResponderTestCase {
   private WikiPagePath pageOnePath;
@@ -19,6 +28,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     return new RenamePageResponder();
   }
 
+  @Before
   public void setUp() throws Exception {
     super.setUp();
     pageOneName = "PageOne";
@@ -27,6 +37,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     pageTwoPath = PathParser.parse(pageTwoName);
   }
 
+  @Test
   public void testInvalidName() throws Exception {
     String invalidName = "FirstName.SecondName";
     String pageName = "MyPage";
@@ -36,6 +47,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertHasRegexp("Cannot rename", getResponseContent(response));
   }
 
+  @Test
   public void testDontRenameFrontPage() throws Exception {
     String frontPageName = "FrontPage";
     WikiPageUtil.addPage(root, PathParser.parse(frontPageName), "Content");
@@ -44,6 +56,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertSubString("Cannot rename", getResponseContent(response));
   }
 
+  @Test
   public void testPageRedirection() throws Exception {
     WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("OneOne"), "Content");
     WikiPageUtil.addPage(pageOne, PathParser.parse("TwoOne"));
@@ -53,6 +66,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertEquals("OneOne.ReName", response.getHeader("Location"));
   }
 
+  @Test
   public void testPageWasRenamed() throws Exception {
     String originalName = "OneOne";
     WikiPagePath originalPath = PathParser.parse(originalName);
@@ -70,6 +84,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertFalse(crawler.pageExists(originalPath));
   }
 
+  @Test
   public void testReferencesChanged() throws Exception {
     WikiPageUtil.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
     WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
@@ -79,6 +94,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertEquals("Line one\nPageThree\nLine three", pageOne.getData().getContent());
   }
 
+  @Test
   public void testBackSearchReferencesChanged() throws Exception {
     WikiPage topPage = WikiPageUtil.addPage(root, PathParser.parse("TopPage"), "");
     WikiPage pageOne = WikiPageUtil.addPage(topPage, pageOnePath, "Line one\n<TopPage.PageTwo\nLine three");
@@ -88,6 +104,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertEquals("Line one\n<TopPage.PageThree\nLine three", pageOne.getData().getContent());
   }
 
+  @Test
   public void testReferencesNotChangedWhenDisabled() throws Exception {
     WikiPageUtil.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
     WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
@@ -97,6 +114,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertEquals("Line one\nPageTwo\nLine three", pageOne.getData().getContent());
   }
 
+  @Test
   public void testDontRenameToExistingPage() throws Exception {
     WikiPageUtil.addPage(root, pageOnePath, "Page one content");
     WikiPageUtil.addPage(root, pageTwoPath, "Page two content");
@@ -109,6 +127,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     assertSubString("Cannot rename", getResponseContent(response));
   }
 
+  @Test
   public void testChildPagesStayIntactWhenParentIsRenamed() throws Exception {
     WikiPageUtil.addPage(root, pageOnePath, "page one");
     WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildPage"), "child page");

@@ -2,25 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.wiki.WikiPageUtil;
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PageDataWikiPageResponderTest extends RegexTestCase {
+public class PageDataWikiPageResponderTest {
   WikiPage root;
   WikiPage pageOne;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
   }
 
+  @Test
   public void testGetPageData() throws Exception {
     Responder responder = new PageDataWikiPageResponder();
     MockRequest request = new MockRequest();

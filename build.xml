@@ -192,7 +192,7 @@
 	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
 	<target name="acceptance_tests_xml" depends="standalone-jar">
-		<java jar="${dist,dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+		<java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />

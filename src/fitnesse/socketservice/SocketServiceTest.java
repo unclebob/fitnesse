@@ -4,15 +4,18 @@ package fitnesse.socketservice;
 
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SocketServiceTest extends TestCase {
+public class SocketServiceTest {
   private int connections = 0;
   private SocketServer connectionCounter;
   private SocketService ss;
@@ -27,19 +30,19 @@ public class SocketServiceTest extends TestCase {
     };
   }
 
+  @Before
   public void setUp() throws Exception {
     connections = 0;
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testNoConnections() throws Exception {
     ss = new SocketService(portNumber, connectionCounter);
     ss.close();
     assertEquals(0, connections);
   }
 
+  @Test
   public void testOneConnection() throws Exception {
     ss = new SocketService(portNumber, connectionCounter);
     connect(portNumber);
@@ -47,6 +50,7 @@ public class SocketServiceTest extends TestCase {
     assertEquals(1, connections);
   }
 
+  @Test
   public void testManyConnections() throws Exception {
     ss = new SocketService(portNumber, connectionCounter);
     for (int i = 0; i < 10; i++)
@@ -55,6 +59,7 @@ public class SocketServiceTest extends TestCase {
     assertEquals(10, connections);
   }
 
+  @Test
   public void testSendMessage() throws Exception {
     ss = new SocketService(portNumber, new HelloService());
     Socket s = new Socket("localhost", portNumber);
@@ -65,6 +70,7 @@ public class SocketServiceTest extends TestCase {
     assertEquals("Hello", answer);
   }
 
+  @Test
   public void testReceiveMessage() throws Exception {
     ss = new SocketService(portNumber, new EchoService());
     Socket s = new Socket("localhost", portNumber);
@@ -77,6 +83,7 @@ public class SocketServiceTest extends TestCase {
     assertEquals("MyMessage", answer);
   }
 
+  @Test
   public void testMultiThreaded() throws Exception {
     ss = new SocketService(portNumber, new EchoService());
     Socket s = new Socket("localhost", portNumber);

@@ -2,15 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import junit.framework.TestCase;
-import fitnesse.testsystems.TestSummary;
+import static org.junit.Assert.assertEquals;
 
-public class PageResultTest extends TestCase {
+import fitnesse.testsystems.TestSummary;
+import org.junit.Test;
+
+public class PageResultTest {
+  @Test
   public void testToString() throws Exception {
     PageResult result = new PageResult("PageTitle", new TestSummary(1, 2, 3, 4), "content");
     assertEquals("PageTitle\n1 right, 2 wrong, 3 ignored, 4 exceptions\ncontent", result.toString());
   }
 
+  @Test
   public void testParse() throws Exception {
     TestSummary testSummary = new TestSummary(1, 2, 3, 4);
     PageResult result = new PageResult("PageTitle", testSummary, "content");

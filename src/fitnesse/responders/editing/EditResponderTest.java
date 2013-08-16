@@ -2,25 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import fitnesse.wiki.*;
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static util.RegexTestCase.assertMatches;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class EditResponderTest extends RegexTestCase {
+public class EditResponderTest {
   private WikiPage root;
   private MockRequest request;
   private EditResponder responder;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     request = new MockRequest();
     responder = new EditResponder();
   }
 
+  @Test
   public void testResponse() throws Exception {
     WikiPage page= WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     PageData data = page.getData();
@@ -52,6 +65,7 @@ public class EditResponderTest extends RegexTestCase {
     return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
+  @Test
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
     request.setResource("NonExistentPage");
     request.addInput("nonExistent", true);
@@ -72,6 +86,7 @@ public class EditResponderTest extends RegexTestCase {
     assertNotSubString("<h5> </h5>", body);
   }
 
+  @Test
   public void testRedirectToRefererEffect() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("ChildPage");
@@ -85,7 +100,8 @@ public class EditResponderTest extends RegexTestCase {
     String body = response.getContent();
     assertSubString("name=\"redirect\" value=\"http://fitnesse.org:8080/SomePage?boom\"", body);
   }
-  
+
+  @Test
   public void testTemplateListPopulates() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
     
@@ -112,25 +128,29 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
   }
-  
+
+  @Test
   public void testTemplateInserterScriptsExists() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("TemplateInserter.js", body);
   }
 
+  @Test
   public void testPasteFromExcelExists() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("SpreadsheetTranslator.js", body);
   }
 
+  @Test
   public void testFormatterScriptsExist() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     String body = response.getContent();
     assertMatches("WikiFormatter.js", body);
   }
 
+  @Test
   public void testMissingPageDoesNotGetCreated() throws Exception {
     request.setResource("MissingPage");
     responder.makeResponse(FitNesseUtil.makeTestContext(root), request);

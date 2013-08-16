@@ -2,33 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.templateUtilities;
 
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class HtmlPageTest extends RegexTestCase {
+public class HtmlPageTest {
 
   private HtmlPage page;
   private String html;
 
   private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(null);
     page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme");
     html = page.html();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testStandardTags() throws Exception {
     assertTrue("bad doctype for page: " + html, html.startsWith("<!DOCTYPE html>"));
     assertSubString("<html>", html);
     assertHasRegexp("</html>", html);
   }
 
+  @Test
   public void testHead() throws Exception {
     assertSubString("<head>", html);
     assertSubString("</head>", html);
@@ -41,15 +46,18 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("src=\"/files/fitnesse/javascript/fitnesse_theme.js\"", html);
   }
 
+  @Test
   public void testIncludesBody() throws Exception {
     assertSubString("<body>", html);
     assertSubString("</body>", html);
   }
 
+  @Test
   public void testIncludesHeading() throws Exception {
     assertSubString("<header>", html);
   }
 
+  @Test
   public void testMainBar() throws Exception {
     assertSubString("<article>", html);
     String mainHtml = page.html();
@@ -57,10 +65,12 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("<article>", mainHtml);
   }
 
+  @Test
   public void testSidebar() throws Exception {
     assertSubString("<nav>", html);
   }
 
+  @Test
   public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle(PathParser.parse(trail)));
@@ -71,6 +81,7 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3.TstPg4\">TstPg4</a>", breadcrumbs);
   }
 
+  @Test
   public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle(PathParser.parse(trail)).notLinked());
@@ -81,12 +92,12 @@ public class HtmlPageTest extends RegexTestCase {
     assertHasRegexp("<h1>\\s*TstPg4\\s*</h1>", breadcrumbs);
   }
 
+  @Test
   public void testBreadCrumbsWithPageType() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle("Some Type", PathParser.parse(trail)));
     String breadcrumbs = page.html();
     assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3.TstPg4\">TstPg4</a>", breadcrumbs);
   }
-
 
 }

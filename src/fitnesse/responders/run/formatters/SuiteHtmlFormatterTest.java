@@ -2,22 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystem;
-import util.RegexTestCase;
-import util.TimeMeasurement;
-import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.WikiPageDummy;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
-public class SuiteHtmlFormatterTest extends RegexTestCase {
+import fitnesse.FitNesseContext;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPageDummy;
+import org.junit.Before;
+import org.junit.Test;
+import util.TimeMeasurement;
+
+public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
 
+  @Before
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     formatter = new SuiteHtmlFormatter(context) {
@@ -28,9 +32,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     };
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testTestSummary() throws Exception {
     formatter.processTestResults("TestName", new TestSummary(49, 0, 0, 0));
     formatter.processTestResults("TestName2", new TestSummary(1, 0, 2, 0));
@@ -50,14 +52,15 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<strong>Assertions:</strong> 2 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
   }
 
+  @Test
   public void testSuiteSetUpSummaryWithTestResults() throws Exception {
     testSuiteMetaTestSummaryWithTestResults("SuiteSetUp");
   }
 
+  @Test
   public void testSuiteTearDownSummaryWithTestResults() throws Exception {
     testSuiteMetaTestSummaryWithTestResults("SuiteTearDown");
   }
-
 
   private void testSuiteMetaTestSummaryWithoutTestResults(String pageName) throws Exception {
     formatter.processTestResults(pageName, new TestSummary(0, 0, 0, 0));
@@ -68,14 +71,17 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
   }
 
+  @Test
   public void testSuiteSetUpSummaryWithoutTestResults() throws Exception {
     testSuiteMetaTestSummaryWithoutTestResults("SuiteSetUp");
   }
-  
+
+  @Test
   public void testSuiteTearDownSummaryWithoutTestResults() throws Exception {
     testSuiteMetaTestSummaryWithoutTestResults("SuiteTearDown");
   }
 
+  @Test
   public void testCountsHtml() throws Exception {
     formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
@@ -89,6 +95,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<a href=\\\"#AnotherPageName0\\\" class=\\\"link\\\">AnotherPageName</a>", pageBuffer.toString());
   }
 
+  @Test
   public void testResultsHtml() throws Exception {
     TestSystem fitMock = mock(TestSystem.class);
     when(fitMock.getName()).thenReturn("Fit:laughing.fit");
@@ -120,7 +127,8 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\" class=\"test_name\">NewRelativeName</a>", results);
     assertSubString("<div class=\"alternating_block\">second test</div>", results);
   }
-  
+
+  @Test
   public void testTestingProgressIndicator() throws Exception {
     TestSystem fitMock = mock(TestSystem.class);
     when(fitMock.getName()).thenReturn("Fit:laughing.fit");
@@ -150,7 +158,8 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
         " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
     assertSubString("(3/20)", pageBuffer.toString());
   }
-  
+
+  @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
@@ -163,6 +172,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
   }
 
+  @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);

@@ -2,22 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import util.RegexTestCase;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RefactorPageResponderTest extends RegexTestCase {
+public class RefactorPageResponderTest {
   WikiPage root;
   private MockRequest request;
   private Responder responder;
   private String childPage = "ChildPage";
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
@@ -28,6 +33,7 @@ public class RefactorPageResponderTest extends RegexTestCase {
     responder = new RefactorPageResponder();
   }
 
+  @Test
   public void testHtml() throws Exception {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(200, response.getStatus());

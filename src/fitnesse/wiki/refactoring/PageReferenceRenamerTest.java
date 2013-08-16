@@ -2,11 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.refactoring;
 
-import fitnesse.wiki.*;
-import util.RegexTestCase;
-import fitnesse.wiki.mem.InMemoryPage;
+import static org.junit.Assert.assertEquals;
 
-public class PageReferenceRenamerTest extends RegexTestCase {
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+
+public class PageReferenceRenamerTest {
   WikiPage root;
   WikiPage subWiki;
   WikiPage subWiki_pageOne;
@@ -15,6 +21,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
 
   PageReferenceRenamer renamer;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     subWiki = WikiPageUtil.addPage(root, PathParser.parse("SubWiki"), "");
@@ -22,42 +29,52 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     subWiki_pageTwo_pageTwoChild = WikiPageUtil.addPage(subWiki_pageTwo, PathParser.parse("PageTwoChild"), "");
   }
 
+  @Test
   public void testReferencesOnPageOne_1() throws Exception {
     checkChangesOnPageOne("Stuff PageTwo Stuff\n", "Stuff PageThree Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_2() throws Exception {
     checkChangesOnPageOne("Stuff !-PageTwo-! Stuff\n", "Stuff !-PageTwo-! Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_3() throws Exception {
     checkChangesOnPageOne("Stuff PageOne.PageTwo Stuff\n", "Stuff PageOne.PageTwo Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_4() throws Exception {
     checkChangesOnPageOne("Stuff .SubWiki.PageTwo.PageTwoChild Stuff\n", "Stuff .SubWiki.PageThree.PageTwoChild Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_5() throws Exception {
     checkChangesOnPageOne("Stuff ^PageTwo Stuff\n", "Stuff ^PageTwo Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_6() throws Exception {
     checkChangesOnPageOne("# Stuff PageTwo Stuff\n", "# Stuff PageTwo Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_7() throws Exception {
     checkChangesOnPageOne("{{{Stuff PageTwo Stuff}}}\n", "{{{Stuff PageTwo Stuff}}}\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_8() throws Exception {
     checkChangesOnPageOne("Stuff .SubWiki.PageTwo Stuff\n", "Stuff .SubWiki.PageThree Stuff\n");
   }
 
+  @Test
   public void testReferencesOnPageOne_9() throws Exception {
     checkChangesOnPageOne("Stuff .SubWiki.PageTwo.NoPage Stuff\n", "Stuff .SubWiki.PageThree.NoPage Stuff\n");
   }
 
+  @Test
   public void testTestReferencesToSubWiki_1() throws Exception {
     PageData data = subWiki.getData();
     data.setContent("Stuff >PageTwo Stuff\n");
@@ -70,6 +87,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("Stuff >PageThree Stuff\n", updatedSubWikiContent);
   }
 
+  @Test
   public void testTestReferencesToSubWiki_2() throws Exception {
     PageData data = subWiki.getData();
     data.setContent("Stuff >PageTwo.DeepPage Stuff\n");
@@ -90,6 +108,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals(expectedAfterText, updatedPageOneContent);
   }
 
+  @Test
   public void testRenameParentPage() throws Exception {
     PageData pageTwoChildData = subWiki_pageTwo_pageTwoChild.getData();
     pageTwoChildData.setContent("gunk .SubWiki.PageTwo gunk");
@@ -100,6 +119,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("gunk .SubWiki.PageThree gunk", updatedContent);
   }
 
+  @Test
   public void testSubPageReferenceUnchangedWhenParentRenamed() throws Exception {
     WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk ^SubPage gunk");
     renamer = new PageReferenceRenamer(root, subWiki, "RenamedSubWiki");
@@ -108,6 +128,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("gunk ^SubPage gunk", updatedContent);
   }
 
+  @Test
   public void testRenameParentWithSubPageReferenceOnSibling() throws Exception {
     WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk PageTwo gunk");
     renamer = new PageReferenceRenamer(root, subWiki, "RenamedSubWiki");
@@ -116,6 +137,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("gunk PageTwo gunk", updatedContent);
   }
 
+  @Test
   public void testRenameSiblingOfRoot() throws Exception {
     WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk TargetPage gunk");
     WikiPage target = WikiPageUtil.addPage(root, PathParser.parse("TargetPage"));
@@ -125,6 +147,7 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("gunk RenamedPage gunk", updatedSourceContent);
   }
 
+  @Test
   public void testRenameSubpageOfRoot() throws Exception {
     WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk ^TargetPage gunk");
     WikiPage target = WikiPageUtil.addPage(source, PathParser.parse("TargetPage"));
@@ -134,34 +157,41 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     assertEquals("gunk >RenamedPage gunk", updatedSourceContent);
   }
 
+  @Test
   public void testImageNotChanged() throws Exception {
     final String IMAGE_WIDGET = "!img http://PageTwo.jpg";
     checkChangesOnPageOne(IMAGE_WIDGET, IMAGE_WIDGET);
   }
 
+  @Test
   public void testLinkNotChanged() throws Exception {
     final String LINK_WIDGET = "http://PageTwo";
     checkChangesOnPageOne(LINK_WIDGET, LINK_WIDGET);
   }
 
+  @Test
   public void testPathNotChanged() throws Exception {
     final String PATH_WIDGET = "!path PageTwo";
     checkChangesOnPageOne(PATH_WIDGET, PATH_WIDGET);
   }
 
+  @Test
   public void testAliasTagNotChanged() throws Exception {
     final String ALIAS_LINK = "[[PageTwo][MyPageTwo]]";
     checkChangesOnPageOne(ALIAS_LINK, ALIAS_LINK);
   }
 
+  @Test
   public void testAliasLinkRenamed() throws Exception {
     checkChangesOnPageOne("gunk [[gunk][PageTwo]] gunk", "gunk [[gunk][PageThree]] gunk");
   }
 
+  @Test
   public void testAliasLinWithLiteralDoesntGetCorrupted() throws Exception {
     checkChangesOnPageOne("gunk [[!-gunk-!][PageTwo]] gunk", "gunk [[!-gunk-!][PageThree]] gunk");
   }
 
+  @Test
   public void testXrefWidgetRenamed() throws Exception {
     checkChangesOnPageOne("!see PageTwo", "!see PageThree");
   }

@@ -2,17 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.decorator.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.awt.Point;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ClassDelegatePointParserTest extends TestCase {
+public class ClassDelegatePointParserTest {
+
+  @Test
   public void testParseMethodReturnsPointClassFromGivenString() throws Exception {
     assertEquals(new Point(1, 2), ClassDelegatePointParser.parse("(1,2)"));
     assertEquals(new Point(2, -1), ClassDelegatePointParser.parse("(2,-1)"));
     assertEquals(new Point(-99999, 99999), ClassDelegatePointParser.parse("(-99999,99999)"));
   }
 
+  @Test
   public void testShouldThrowAnExceptionIfFormatOfTheInputStringIsNotWelformed() throws Exception {
     assertParseException("(,)");
     assertParseException("(2,)");

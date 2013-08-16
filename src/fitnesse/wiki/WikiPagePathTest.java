@@ -2,22 +2,33 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wiki.mem.InMemoryPage;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-public class WikiPagePathTest extends TestCase {
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+
+public class WikiPagePathTest {
   public WikiPagePath path;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     path = new WikiPagePath();
   }
 
+  @Test
   public void testEmptyPath() throws Exception {
     assertTrue(path.isEmpty());
     assertNull(path.getFirst());
     assertTrue(path.getRest().isEmpty());
   }
 
+  @Test
   public void testAddOneName() throws Exception {
     path.addNameToEnd("bob");
     assertEquals("bob", path.getFirst());
@@ -25,6 +36,7 @@ public class WikiPagePathTest extends TestCase {
     assertTrue(path.getRest().isEmpty());
   }
 
+  @Test
   public void testAddTwoNames() throws Exception {
     path.addNameToEnd("bob");
     path.addNameToEnd("martin");
@@ -36,17 +48,20 @@ public class WikiPagePathTest extends TestCase {
     assertTrue(rest.getRest().isEmpty());
   }
 
+  @Test
   public void testRenderEmptyPath() throws Exception {
     String renderedPath = PathParser.render(path);
     assertEquals("", renderedPath);
   }
 
+  @Test
   public void testRenderSimplePath() throws Exception {
     path.addNameToEnd("Bob");
     String renderedPath = PathParser.render(path);
     assertEquals("Bob", renderedPath);
   }
 
+  @Test
   public void testRenderComplexPaths() throws Exception {
     path.addNameToEnd("Bob");
     path.addNameToEnd("Martin");
@@ -54,6 +69,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals("Bob.Martin", renderedPath);
   }
 
+  @Test
   public void testPop() throws Exception {
     path.addNameToEnd("Micah");
     path.removeNameFromEnd();
@@ -68,6 +84,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals("", PathParser.render(path));
   }
 
+  @Test
   public void testConstructorWithPage() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPagePath abcdPath = PathParser.parse("AaA.BbB.CcC.DdD");
@@ -82,6 +99,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals(grandchildPath, page2Path);
   }
 
+  @Test
   public void testAppend() throws Exception {
     WikiPagePath path = new WikiPagePath();
     WikiPagePath a = PathParser.parse("PageA");
@@ -93,11 +111,13 @@ public class WikiPagePathTest extends TestCase {
     assertEquals("PageA.PageB", PathParser.render(pageABPath));
   }
 
+  @Test
   public void testIsAbsolute() throws Exception {
     assertTrue(PathParser.parse(".AbsolutePage").isAbsolute());
     assertFalse(PathParser.parse("RelativePage").isAbsolute());
   }
 
+  @Test
   public void testGetRelativePath() throws Exception {
     WikiPagePath somePageAbsolutePath = PathParser.parse(".SomePage");
     assertEquals("SomePage", PathParser.render(somePageAbsolutePath.relativePath()));
@@ -106,6 +126,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals("SomePage", PathParser.render(somePagePath.relativePath()));
   }
 
+  @Test
   public void testEquals() throws Exception {
     assertEquals(PathParser.parse("PageOne"), PathParser.parse("PageOne"));
     assertFalse(PathParser.parse("PageOne").equals(PathParser.parse("PageTwo")));
@@ -115,6 +136,7 @@ public class WikiPagePathTest extends TestCase {
     assertFalse(PathParser.parse("PageOne").equals(PathParser.parse(".PageOne")));
   }
 
+  @Test
   public void testCompareTo() throws Exception {
     WikiPagePath a = PathParser.parse("PageA");
     WikiPagePath ab = PathParser.parse("PageA.PageB");
@@ -134,6 +156,7 @@ public class WikiPagePathTest extends TestCase {
     assertTrue(bb.compareTo(ba) == 1);  // bb > ba
   }
 
+  @Test
   public void testMakeAbsolute() throws Exception {
     WikiPagePath p = PathParser.parse("PathOne");
     p.makeAbsolute();
@@ -144,6 +167,7 @@ public class WikiPagePathTest extends TestCase {
     assertTrue(empty.isAbsolute());
   }
 
+  @Test
   public void testAbsoluteModeIsMutuallyExclusive() throws Exception {
     path = PathParser.parse("<MyPage");
     assertTrue(path.isBackwardSearchPath());
@@ -151,6 +175,7 @@ public class WikiPagePathTest extends TestCase {
     assertFalse(path.isBackwardSearchPath());
   }
 
+  @Test
   public void testParentPath() throws Exception {
     WikiPagePath path2 = new WikiPagePath();
     assertEquals(path2, path.parentPath());
@@ -163,6 +188,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals(path2, path.parentPath());
   }
 
+  @Test
   public void testEquality() throws Exception {
     WikiPagePath path1 = new WikiPagePath();
     WikiPagePath path2 = new WikiPagePath();
@@ -187,6 +213,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals(path1, path2);
   }
 
+  @Test
   public void testClone() throws Exception {
     WikiPagePath abs = PathParser.parse(".MyPage");
     WikiPagePath rel = PathParser.parse("MyPage");
@@ -198,6 +225,7 @@ public class WikiPagePathTest extends TestCase {
     assertEquals(back, back.clone());
   }
 
+  @Test
   public void testStartsWith() throws Exception {
     WikiPagePath path2 = new WikiPagePath();
     assertTrue(path2.startsWith(path));
@@ -222,6 +250,7 @@ public class WikiPagePathTest extends TestCase {
     assertFalse(path.startsWith(path2));
   }
 
+  @Test
   public void testWithNameAdded() throws Exception {
     WikiPagePath path2 = new WikiPagePath();
     path2.addNameToEnd("AbC");
@@ -231,6 +260,7 @@ public class WikiPagePathTest extends TestCase {
     assertNotSame(path3, path);
   }
 
+  @Test
   public void testSubstract() throws Exception {
     WikiPagePath path123 = new WikiPagePath(new String[]{"OnE", "TwO", "ThreE"});
     WikiPagePath path12 = new WikiPagePath(new String[]{"OnE", "TwO"});

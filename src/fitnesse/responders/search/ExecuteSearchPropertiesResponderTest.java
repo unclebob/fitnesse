@@ -1,25 +1,38 @@
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageType.*;
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.*;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.ACTION;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.SPECIAL;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
+import static fitnesse.wiki.PageData.PropertyPRUNE;
+import static fitnesse.wiki.PageType.STATIC;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.wiki.*;
-import org.junit.*;
-
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
+public class ExecuteSearchPropertiesResponderTest {
   private WikiPage root;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
@@ -209,6 +222,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     return request;
   }
 
+  @Test
   public void testFindJustObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
     request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Static");
