@@ -1,4 +1,4 @@
-<form method="post">
+<form>
  <input type="hidden" name="responder" value="search"/>
  <fieldset>
   <label for="searchString">Search:</label>
@@ -13,7 +13,7 @@
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>
 
-<form method="post">
+<form>
 #macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
@@ -31,6 +31,8 @@
    #foreach( $pageType in $pageTypeAttributes )
    <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
    #end
+
+   <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip</label>
   </fieldset>
      
   <fieldset>
