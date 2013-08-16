@@ -284,7 +284,7 @@ public class ResponderFactoryTest {
   }
 
   private void assertResponderType(Class<?> expectedClass, WikiPage page) throws Exception {
-    Responder responder = factory.makeResponder(request, page);
+    Responder responder = factory.makeResponder(request);
     assertEquals(expectedClass, responder.getClass());
   }
 
