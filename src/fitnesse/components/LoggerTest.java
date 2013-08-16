@@ -3,6 +3,9 @@
 
 package fitnesse.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,10 +16,12 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
-public class LoggerTest extends TestCase {
+public class LoggerTest {
   private final String dirPath = "testLogs";
   private Logger l;
   private LogData ld;
@@ -24,6 +29,7 @@ public class LoggerTest extends TestCase {
   private String logLine = "myHost - - [06/Mar/2003:13:42:05 -0100] \"request\" 42 666";
   private Locale saveLocale;
 
+  @Before
   public void setUp() throws Exception {
     saveLocale = Locale.getDefault();
     Locale.setDefault(Locale.US);
@@ -38,12 +44,14 @@ public class LoggerTest extends TestCase {
     ld.time.setTimeZone(z);
   }
 
+  @After
   public void tearDown() throws Exception {
     l.close();
     FileUtil.deleteFileSystemDirectory(dirPath);
     Locale.setDefault(saveLocale);
   }
 
+  @Test
   public void testTimeZoneHandling() {
     // let's figure out how this stuff works...
     Calendar calendar = new GregorianCalendar(2003, 0, 2, 3, 4, 5);
@@ -57,6 +65,7 @@ public class LoggerTest extends TestCase {
     assertEquals("Jan 02, 2003 03:04:05 +0200", format2.format(calendar.getTime()));
   }
 
+  @Test
   public void testConstruction() throws Exception {
     assertEquals(dirPath, l.getDirectory().getName());
     File dir = new File(dirPath);
@@ -64,16 +73,19 @@ public class LoggerTest extends TestCase {
     assertEquals(true, dir.isDirectory());
   }
 
+  @Test
   public void testLogFormat() throws Exception {
     String line = l.formatLogLine(ld);
     assertEquals(logLine, line);
   }
 
+  @Test
   public void testLogFileName() throws Exception {
     String logName = Logger.makeLogFileName(ld.time);
     assertEquals(filename, logName);
   }
 
+  @Test
   public void testLoggingOneLineInNewFile() throws Exception {
     l.log(ld);
     l.close();
@@ -84,6 +96,7 @@ public class LoggerTest extends TestCase {
     assertEquals(logLine + System.getProperty("line.separator"), contents);
   }
 
+  @Test
   public void testLogSecondLineInSameFile() throws Exception {
     l.log(ld);
     LogData ld2 = (LogData) ld.clone();
@@ -98,6 +111,7 @@ public class LoggerTest extends TestCase {
     br.close();
   }
 
+  @Test
   public void testLogLineInNewFile() throws Exception {
     LogData nextDay = (LogData) ld.clone();
     nextDay.time.add(Calendar.DATE, 1);
@@ -114,6 +128,7 @@ public class LoggerTest extends TestCase {
     assertEquals(l.formatLogLine(nextDay) + System.getProperty("line.separator"), secondContent);
   }
 
+  @Test
   public void testLoggingIncludesUsername() throws Exception {
     ld.username = "Joe";
     l.log(ld);

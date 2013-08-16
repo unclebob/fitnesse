@@ -2,20 +2,33 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertSubString;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.*;
-import org.w3c.dom.Document;
-
-import util.Clock;
-import util.RegexTestCase;
-import util.XmlUtil;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import util.Clock;
+import util.XmlUtil;
 
-public class WikiImporterTest extends RegexTestCase implements WikiImporterClient {
+public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
   public WikiPage childPageOne;
   public WikiPage pageTwo;
@@ -25,6 +38,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
   private LinkedList<Exception> errors;
   public WikiPage localRoot;
 
+  @Before
   public void setUp() throws Exception {
     createRemoteRoot();
     createLocalRoot();
@@ -54,10 +68,12 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     return remoteRoot;
   }
 
+  @After
   public void tearDown() throws Exception {
     FitNesseUtil.stopFitnesse();
   }
 
+  @Test
   public void testEnterChildPage() throws Exception {
     importer.enterChildPage(pageOne, Clock.currentDate());
 
@@ -65,6 +81,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals("page one", data.getContent());
   }
 
+  @Test
   public void testChildPageAdded() throws Exception {
     importer.enterChildPage(pageOne, Clock.currentDate());
     importer.enterChildPage(childPageOne, Clock.currentDate());
@@ -73,6 +90,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals("child one", data.getContent());
   }
 
+  @Test
   public void testEnterChildPageWhenRemotePageNotModified() throws Exception {
     importer.enterChildPage(pageOne, Clock.currentDate());
     importer.exitPage();
@@ -86,6 +104,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals("new content", pageOne.getData().getContent());
   }
 
+  @Test
   public void testExiting() throws Exception {
     importer.enterChildPage(pageOne, Clock.currentDate());
     importer.enterChildPage(childPageOne, Clock.currentDate());
@@ -97,6 +116,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals("page two", data.getContent());
   }
 
+  @Test
   public void testGetPageTree() throws Exception {
     Document doc = importer.getPageTree();
     assertNotNull(doc);
@@ -106,6 +126,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertSubString("PageTwo", xml);
   }
 
+  @Test
   public void testUrlParsing() throws Exception {
     testUrlParsing("http://mysite.com", "mysite.com", 80, "");
     testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
@@ -123,6 +144,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals(path, PathParser.render(importer.getRemotePath()));
   }
 
+  @Test
   public void testParsingBadUrl() throws Exception {
     try {
       importer.parseUrl("blah");
@@ -133,6 +155,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     }
   }
 
+  @Test
   public void testParsingUrlWithNonWikiWord() throws Exception {
     try {
       importer.parseUrl("http://blah.com/notawikiword");
@@ -143,6 +166,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     }
   }
 
+  @Test
   public void testImportingWiki() throws Exception {
     localRoot = InMemoryPage.makeRoot("LocalRoot");
     importer.importWiki(localRoot);
@@ -152,6 +176,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals(0, errors.size());
   }
 
+  @Test
   public void testFindsOrphansOnLocalWiki() throws Exception {
     performImportWithExtraLocalPages();
 
@@ -173,6 +198,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     importer.importWiki(localRoot);
   }
 
+  @Test
   public void testWholeTreeOrphaned() throws Exception {
     importer.importWiki(localRoot);
 
@@ -183,6 +209,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertFalse(localRoot.hasChildPage("PageOne"));
   }
 
+  @Test
   public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
     addLocalPageWithImportProperty(localRoot, "PageOne", false);
     importer.parseUrl("http://localhost:" + FitNesseUtil.PORT + "/PageOne");
@@ -192,6 +219,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertEquals(0, importer.getOrphans().size());
   }
 
+  @Test
   public void testAutoUpdatePropertySetOnRoot() throws Exception {
     addLocalPageWithImportProperty(localRoot, "PageOne", false);
     importer.parseUrl("http://localhost:" + FitNesseUtil.PORT + "/PageOne");
@@ -209,6 +237,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertFalse(importProp.isAutoUpdate());
   }
 
+  @Test
   public void testAutoUpdate_NewPage() throws Exception {
     importer.setAutoUpdateSetting(true);
     importer.enterChildPage(pageOne, Clock.currentDate());
@@ -217,6 +246,7 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
     assertTrue(importProps.isAutoUpdate());
   }
 
+  @Test
   public void testAutoUpdateWhenRemotePageNotModified() throws Exception {
     importer.enterChildPage(pageOne, Clock.currentDate());
     importer.exitPage();

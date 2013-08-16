@@ -3,9 +3,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class CountsTest extends TestCase {
+import org.junit.Test;
+
+public class CountsTest {
+
+  @Test
   public void testEquality() throws Exception {
     assertFalse(new Counts().equals(null));
     assertFalse(new Counts().equals(""));

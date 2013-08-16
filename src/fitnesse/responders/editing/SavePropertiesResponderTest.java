@@ -2,21 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SavePropertiesResponderTest extends RegexTestCase {
+public class SavePropertiesResponderTest {
   private WikiPage root;
-
   private MockRequest request;
-
   private WikiPage page;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
   }
@@ -36,9 +43,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     request.setResource("PageOne");
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testResponse() throws Exception {
     createRequest();
 

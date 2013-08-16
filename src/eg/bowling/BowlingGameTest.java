@@ -2,25 +2,33 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package eg.bowling;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class BowlingGameTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
+
+public class BowlingGameTest {
   private Bowling g;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     g = new BowlingGame();
   }
 
+  @Test
   public void testGutterGame() throws Exception {
     rollMany(20, 0);
     assertEquals(0, g.score(10));
   }
 
+  @Test
   public void testAllOnes() throws Exception {
     rollMany(20, 1);
     assertEquals(20, g.score(10));
   }
 
+  @Test
   public void testSpare() throws Exception {
     g.roll(5);
     g.roll(5); // spare
@@ -29,6 +37,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(16, g.score(10));
   }
 
+  @Test
   public void testStrike() throws Exception {
     g.roll(10); // strike
     g.roll(3);
@@ -37,6 +46,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(26, g.score(10));
   }
 
+  @Test
   public void testPerfectGame() throws Exception {
     rollMany(12, 10);
     assertEquals(300, g.score(10));
@@ -47,10 +57,12 @@ public class BowlingGameTest extends TestCase {
       g.roll(pins);
   }
 
+  @Test
   public void testCurrentFrameStartsAtOne() throws Exception {
     assertEquals(1, g.currentFrame());
   }
 
+  @Test
   public void testCurrentFrameNoStrike() throws Exception {
     g.roll(1);
     assertEquals(1, g.currentFrame());
@@ -58,15 +70,18 @@ public class BowlingGameTest extends TestCase {
     assertEquals(2, g.currentFrame());
   }
 
+  @Test
   public void testCurrentFrameNeverExceedsTen() throws Exception {
     rollMany(20, 0);
     assertEquals(10, g.currentFrame());
   }
 
+  @Test
   public void testCurrentBallStartsAtOne() throws Exception {
     assertEquals(1, g.currentBall());
   }
 
+  @Test
   public void testCurrentBallNoStrike() throws Exception {
     g.roll(1);
     assertEquals(2, g.currentBall());
@@ -74,15 +89,18 @@ public class BowlingGameTest extends TestCase {
     assertEquals(1, g.currentBall());
   }
 
+  @Test
   public void testCurrentBallZeroWhenGameOver() throws Exception {
     rollMany(20, 0);
     assertEquals(0, g.currentBall());
   }
 
+  @Test
   public void testScoreableFrameStartsAtZero() throws Exception {
     assertEquals(0, g.scoreableFrame());
   }
 
+  @Test
   public void testScoreableFrameNoMarks() throws Exception {
     g.roll(1);
     assertEquals(0, g.scoreableFrame());
@@ -92,6 +110,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(10, g.scoreableFrame());
   }
 
+  @Test
   public void testScoreableFrameForSpare() throws Exception {
     g.roll(5);
     g.roll(5);
@@ -102,6 +121,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(2, g.scoreableFrame());
   }
 
+  @Test
   public void testScoreableFrameForTenthFrameSpare() throws Exception {
     rollMany(18, 0);
     g.roll(5);
@@ -117,10 +137,12 @@ public class BowlingGameTest extends TestCase {
     assertTrue(g.gameOver());
   }
 
+  @Test
   public void testGameNotOver() throws Exception {
     assertEquals(false, g.gameOver());
   }
 
+  @Test
   public void testGameOverNoMarks() throws Exception {
     for (int i = 0; i < 20; i++) {
       assertEquals(false, g.gameOver());
@@ -129,6 +151,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(true, g.gameOver());
   }
 
+  @Test
   public void testCurrentFrameForStrike() throws Exception {
     g.roll(10); // strike
     assertEquals(2, g.currentFrame());
@@ -144,6 +167,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(2, g.scoreableFrame());
   }
 
+  @Test
   public void testStrikeAfterSpare() throws Exception {
     g.roll(5);
     g.roll(5);
@@ -153,6 +177,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals(1, g.scoreableFrame());
   }
 
+  @Test
   public void testManyStrikes() throws Exception {
     g.roll(10);
     g.roll(10);
@@ -176,6 +201,7 @@ public class BowlingGameTest extends TestCase {
     assertTrue(g.gameOver());
   }
 
+  @Test
   public void testFinalStrike() throws Exception {
     rollMany(18, 0);
     g.roll(5);
@@ -186,6 +212,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals("", 10, g.scoreableFrame());
   }
 
+  @Test
   public void testFourFinalStrikes() throws Exception {
     rollMany(16, 0);
     g.roll(10);
@@ -207,6 +234,7 @@ public class BowlingGameTest extends TestCase {
     assertEquals("", true, g.gameOver());
   }
 
+  @Test
   public void testThreeFinalStrikes() throws Exception {
     rollMany(18, 0);
     g.roll(10);

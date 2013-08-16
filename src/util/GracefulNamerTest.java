@@ -3,9 +3,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class GracefulNamerTest extends TestCase {
+import org.junit.Test;
+
+public class GracefulNamerTest {
+  @Test
   public void testIsGracefulName() throws Exception {
     assertTrue(GracefulNamer.isGracefulName("My Nice Fixture"));
     assertTrue(GracefulNamer.isGracefulName("My_Nice Fixture"));
@@ -16,6 +21,7 @@ public class GracefulNamerTest extends TestCase {
     assertFalse(GracefulNamer.isGracefulName("my.package.Fixture"));
   }
 
+  @Test
   public void testUnGracefulName() throws Exception {
     assertEquals("BadCompany", GracefulNamer.disgrace("Bad Company"));
     assertEquals("BadCompany", GracefulNamer.disgrace("bad company"));
@@ -32,6 +38,7 @@ public class GracefulNamerTest extends TestCase {
     assertEquals("MyNamespaceBad123Company", GracefulNamer.disgrace("My.Namespace.Bad123Company"));
   }
 
+  @Test
   public void testRegracingName() throws Exception {
     assertEquals("Company", GracefulNamer.regrace("Company"));
     assertEquals("Bad Company", GracefulNamer.regrace("BadCompany"));
@@ -48,6 +55,7 @@ public class GracefulNamerTest extends TestCase {
     assertEquals("<Bad Company Two .Child Page", GracefulNamer.regrace("<BadCompanyTwo.ChildPage"));
   }
 
+  @Test
   public void testEmptyString() throws Exception {
     assertEquals("", GracefulNamer.disgrace(""));
   }

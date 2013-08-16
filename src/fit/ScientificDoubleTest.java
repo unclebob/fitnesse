@@ -3,9 +3,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class ScientificDoubleTest extends TestCase {
+import org.junit.Test;
+
+public class ScientificDoubleTest {
+
+  @Test
   public void testScientificDouble() {
     Double pi = new Double(3.141592653589793);
     assertEquals(ScientificDouble.valueOf("3.14"), pi);

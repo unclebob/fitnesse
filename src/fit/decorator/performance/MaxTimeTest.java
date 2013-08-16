@@ -1,5 +1,8 @@
 package fit.decorator.performance;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.text.ParseException;
 
 import fit.ColumnFixture;
@@ -9,12 +12,14 @@ import fit.decorator.FixtureDecoratorTestCase;
 import fit.decorator.Loop;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
+import org.junit.Test;
 
 public class MaxTimeTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + MaxTime.class.getName()
     + "</td><td>100</td><td>milliseconds</td></tr>";
   private MaxTime decorator = new MaxTime();
 
+  @Test
   public void testRunShouldMeasureTimeTakenToExecuteDoTableMethodOnGivenFixture() throws Exception {
     String fitPage = "<table><tr><td>eg.Division</td></tr>"
       + "<tr><td>numerator</td><td>denominator</td><td>quotient()</td></tr>"
@@ -24,6 +29,7 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     assertEquals(ELAPSED, ((Long) fixture.summary.get(MaxTime.ACTUAL_TIME_TAKEN)).longValue());
   }
 
+  @Test
   public void testSetupDecoratorMustThrowInvalidInputExceptionIfMaxTimeIsNotSpecified() throws ParseException {
     try {
       decorator.setupDecorator(new String[0]);
@@ -33,12 +39,14 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     }
   }
 
+  @Test
   public void testSetupDecoratorShouldAddMaxTimeToSummary() throws Exception {
     decorator.setupDecorator(new String[]
       {"80"});
     assertEquals(80, ((Long) decorator.summary.get(MaxTime.MAX_TIME)).longValue());
   }
 
+  @Test
   public void testShouldFailIfActualExecutionTimeIsGreaterThanMaxtime() throws Exception {
     String fitPage = "<table><tr><td>" + MaxTime.class.getName() + "</td><td>19</td><td>milliseconds</td>"
       + "</tr><tr><td>eg.Division</td></tr>"
@@ -49,6 +57,7 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new MaxTime(stopWatch));
   }
 
+  @Test
   public void testShouldPassIfActualExecutionTimeIsEqualToMaxtime() throws Exception {
     String fitPage = "<table><tr><td>" + MaxTime.class.getName()
       + "</td><td>20</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -59,6 +68,7 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new MaxTime(stopWatch));
   }
 
+  @Test
   public void testShouldPassIfActualExecutionTimeIsLessThanMaxtime() throws Exception {
     String fitPage = "<table><tr><td>" + MaxTime.class.getName()
       + "</td><td>80</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -69,6 +79,7 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new MaxTime(stopWatch));
   }
 
+  @Test
   public void testShouldWorkIfFitureDecoratorsArePiped() throws Exception {
     String fitPage = "<table><tr><td>" + MaxTime.class.getName()
       + "</td><td>80</td><td>milliseconds</td></tr><tr><td>" + Loop.class.getName()

@@ -2,16 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-public class CommandLineTest extends TestCase {
+import org.junit.Test;
+
+public class CommandLineTest {
   private CommandLine options;
 
+  @Test
   public void testSimpleParsing() throws Exception {
     assertTrue(createOptionsAndParse("", ""));
     assertFalse(createOptionsAndParse("", "blah"));
   }
 
+  @Test
   public void testOneRequiredArgument() throws Exception {
     assertFalse(createOptionsAndParse("arg1", ""));
 
@@ -19,6 +26,7 @@ public class CommandLineTest extends TestCase {
     assertEquals("blah", options.getArgument("arg1"));
   }
 
+  @Test
   public void testThreeRequiredArguments() throws Exception {
     assertTrue(createOptionsAndParse("arg1 arg2 arg3", "tic tac toe"));
     assertEquals("tic", options.getArgument("arg1"));
@@ -26,6 +34,7 @@ public class CommandLineTest extends TestCase {
     assertEquals("toe", options.getArgument("arg3"));
   }
 
+  @Test
   public void testOneSimpleOption() throws Exception {
     assertTrue(createOptionsAndParse("[-opt1]", ""));
     assertFalse(options.hasOption("opt1"));
@@ -33,6 +42,7 @@ public class CommandLineTest extends TestCase {
     assertTrue(options.hasOption("opt1"));
   }
 
+  @Test
   public void testOptionWithArgument() throws Exception {
     assertFalse(createOptionsAndParse("[-opt1 arg]", "-opt1"));
 
@@ -43,6 +53,7 @@ public class CommandLineTest extends TestCase {
     assertEquals("blah", argument);
   }
 
+  @Test
   public void testMultipleOptions(){
     options = new CommandLine("[-opt1 arg]");
     String[] args = new Option().split("-opt1 blah");
@@ -51,11 +62,12 @@ public class CommandLineTest extends TestCase {
     assertEquals("blah", options.getOptionArgument("opt1", "arg"));
   }
 
+  @Test
   public void testInvalidOption() throws Exception {
     assertFalse(createOptionsAndParse("", "-badArg"));
   }
-  
 
+  @Test
   public void testCombo() throws Exception {
     String descriptor = "[-opt1 arg1 arg2] [-opt2 arg1] [-opt3] arg1 arg2";
 

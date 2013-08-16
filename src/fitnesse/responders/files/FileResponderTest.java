@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
@@ -15,11 +15,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
@@ -29,6 +24,9 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FileResponderTest {
   MockRequest request;
@@ -61,7 +59,7 @@ public class FileResponderTest {
     request.setResource("files/testFile1");
     responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
     response = responder.makeResponse(context, request);
-    RegexTestCase.assertEquals(InputStreamResponse.class, response.getClass());
+    assertEquals(InputStreamResponse.class, response.getClass());
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     assertSubString("file1 content", sender.sentData());

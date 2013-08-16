@@ -2,18 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.File;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
-import util.RegexTestCase;
 
-public class PasswordFileTest extends RegexTestCase {
+public class PasswordFileTest {
 
   private PasswordFile passwords;
   private File passwordFile;
   private PasswordCipher cipher = new HashingCipher();
   private String passwordFilename = "testDir/password.txt";
 
+  @Before
   public void setUp() throws Exception {
     new File("testDir").mkdir();
 
@@ -21,10 +29,12 @@ public class PasswordFileTest extends RegexTestCase {
     passwordFile = new File(passwordFilename);
   }
 
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testDir");
   }
 
+  @Test
   public void testSavePasswordForFirstUser() throws Exception {
     passwords.savePassword("Aladdin", "open sesame");
     assertTrue(passwordFile.exists());
@@ -32,6 +42,7 @@ public class PasswordFileTest extends RegexTestCase {
     assertSubString("Aladdin:" + cipher.encrypt("open sesame"), contents);
   }
 
+  @Test
   public void testChangePasswordForFirstUser() throws Exception {
     passwords.savePassword("Aladdin", "open sesame");
     passwords.savePassword("Aladdin", "open please");
@@ -40,6 +51,7 @@ public class PasswordFileTest extends RegexTestCase {
     assertSubString("Aladdin:" + cipher.encrypt("open please"), contents);
   }
 
+  @Test
   public void testMultipleUsers() throws Exception {
     addTMNTUsers();
     String contents = FileUtil.getFileContent(passwordFile);
@@ -49,6 +61,7 @@ public class PasswordFileTest extends RegexTestCase {
     assertSubString("Rafael:" + cipher.encrypt("sai"), contents);
   }
 
+  @Test
   public void testAddChangePasswordWithMultipleUsers() throws Exception {
     addTMNTUsers();
     passwords.savePassword("Donatello", "manrikigusari");
@@ -66,6 +79,7 @@ public class PasswordFileTest extends RegexTestCase {
     passwords.savePassword("Rafael", "sai");
   }
 
+  @Test
   public void testWritesAndReadsCipherType1() throws Exception {
     passwords.savePassword("rocksteady", "horn");
     String contents = FileUtil.getFileContent(passwordFile);
@@ -75,6 +89,7 @@ public class PasswordFileTest extends RegexTestCase {
     assertEquals(HashingCipher.class, passwords.getCipher().getClass());
   }
 
+  @Test
   public void testWritesAndReadsCipherType2() throws Exception {
     passwordFilename = "testDir/passwords2.txt";
     setUp();

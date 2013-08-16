@@ -6,6 +6,7 @@ import fit.Fixture;
 import fitnesse.wiki.fs.FileSystemPage;
 
 public class FileSystemPageSetUp extends Fixture {
+
   public FileSystemPageSetUp() throws Exception {
     FitnesseFixtureContext.root = new FileSystemPage(FitnesseFixtureContext.baseDir, "RooT");
   }

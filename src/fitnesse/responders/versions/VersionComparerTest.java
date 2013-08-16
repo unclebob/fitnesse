@@ -1,12 +1,12 @@
 package fitnesse.responders.versions;
 
+import static util.RegexTestCase.assertSubString;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import util.RegexTestCase;
 import util.StringUtil;
 
-public class VersionComparerTest extends RegexTestCase {
+public class VersionComparerTest {
   
   private VersionComparer comparer;
   private String originalContent;
