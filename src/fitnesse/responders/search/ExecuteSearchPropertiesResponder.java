@@ -68,8 +68,8 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     getListboxAttributesFromRequest(request, SPECIAL, SPECIAL_ATTRIBUTES,
         attributes);
 
-    Object skip = request.getInput(SEARCH_ATTRIBUTE_SKIP);
-    if (skip != null)
+    // "obsolete" input is used to make existing queries work
+    if (request.hasInput(SEARCH_ATTRIBUTE_SKIP) || request.hasInput("obsolete"))
       attributes.put(SEARCH_ATTRIBUTE_SKIP, true);
 
     return attributes;
