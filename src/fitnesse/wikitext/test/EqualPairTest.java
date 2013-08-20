@@ -47,13 +47,4 @@ public class EqualPairTest {
         ParserTestHelper.assertTranslatesTo("--some text--", "<strike>some text</strike>");
         ParserTestHelper.assertTranslatesTo("--embedded-dash--", "<strike>embedded-dash</strike>");
     }
-
-    @Test public void testEvilExponentialMatch() throws Exception {
-        long startTime = System.currentTimeMillis();
-
-        ParserTestHelper.assertTranslatesTo("--1234567890123456789012", "--1234567890123456789012");
-
-        long endTime = System.currentTimeMillis();
-        assertTrue("took too long", endTime - startTime < 20);
-    }
 }
