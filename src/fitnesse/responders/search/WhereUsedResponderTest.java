@@ -2,30 +2,35 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
+
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WhereUsedResponderTest extends RegexTestCase {
+public class WhereUsedResponderTest {
   private WikiPage root;
   private WikiPage pageTwo;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageCrawler crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
-    crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "PageOne");
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
   }
 
+  @Test
   public void testResponse() throws Exception {
     MockRequest request = new MockRequest();
     request.setResource("PageOne");

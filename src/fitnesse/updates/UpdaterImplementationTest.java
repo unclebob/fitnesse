@@ -11,7 +11,6 @@ import java.util.Properties;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +29,6 @@ public class UpdaterImplementationTest {
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
-  protected PageCrawler crawler;
   private boolean updateDone = false;
 
   @Before
@@ -50,7 +48,6 @@ public class UpdaterImplementationTest {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(testDir, name);
     root.commit(root.getData());
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 

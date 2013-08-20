@@ -88,7 +88,7 @@ public class WikiPageActions {
 
   public String getLocalPageName() {
     if (page != null) {
-      WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
+      WikiPagePath localPagePath = page.getPageCrawler().getFullPath();
       return PathParser.render(localPagePath);
     }
     return null;

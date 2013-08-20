@@ -2,7 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimClient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
@@ -10,16 +14,12 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
@@ -55,11 +55,11 @@ public class TableTableTest {
 
   private void assertTableResults(String tableRows, List<Object> tableResults, String table) throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + tableRows);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("tableTable_id_0", "OK"),
-        list("tableTable_id_1", tableResults)
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", tableResults)
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, tt.getTable().toString());
@@ -289,13 +289,13 @@ public class TableTableTest {
   public void tableWithSymbols() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|\n");
     tt.setSymbol("X", "value");
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("tableTable_id_0", "OK"),
-        list("tableTable_id_1", list(
-        list("pass", "fail")
-      ))
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", list(
+                            list("pass", "fail")
+                    ))
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
@@ -311,11 +311,11 @@ public class TableTableTest {
   @Test
   public void tableMethodThrowsException() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|2|4|\n");
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("tableTable_id_0", "OK"),
-        list("tableTable_id_1", "Exception: except")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", "Exception: except")
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[error(Exception: except), argument], [2, 4]]",

@@ -2,22 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.Before;
+import org.junit.Test;
 
-public class DeleteConfirmationResponderTest extends RegexTestCase {
+public class DeleteConfirmationResponderTest {
   MockRequest request;
   private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
   }
 
+  @Test
   public void testContentOfPage() throws Exception {
     request.setResource("files");
     request.addInput("filename", "MyFile.txt");

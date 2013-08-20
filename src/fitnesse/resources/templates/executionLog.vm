@@ -1,24 +1,30 @@
+
+#foreach( $entry in $logs.entrySet() )
+#set( $testSystemName = $entry.key)
+#set( $log = $entry.value)
+!3 !-${testSystemName}-!
 |'''Date: '''| $currentDate |
 |'''Test Page: '''|$testPage|
-|'''Command: '''| !-${runner.command}-! |
-|'''Exit code: '''| $runner.exitCode |
-#set( $execTime = $runner.executionTime / 1000.0 )
+|'''Command: '''| !-${log.command}-! |
+|'''Exit code: '''| $log.exitCode |
+#set( $execTime = $log.executionTime / 1000.0 )
 |'''Time elapsed: '''| $execTime seconds |
 
-#if( $runner.wroteToOutputStream() )
+#if( $log.capturedOutput != "")
 ----
 '''Standard Output:'''
-{{{ $runner.output }}}
+{{{ $log.capturedOutput }}}
 #end
-#if( $runner.wroteToErrorStream() )
+#if( $log.capturedError != "")
 ----
 '''Standard Error:'''
-{{{ $runner.error }}}
+{{{ $log.capturedError }}}
 #end
-#if( $exceptions.size() > 0 )
+#if( $log.exceptionCount() > 0 )
 ----
-'''Internal Exception#if( $exceptions.size() > 1)s#end:'''
-#foreach( $exception in $exceptions)
+'''Internal Exception#if( $log.exceptionCount() > 1)s#end:'''
+#foreach( $exception in $log.exceptions)
 {{{ $exception.message }}}
+#end
 #end
 #end

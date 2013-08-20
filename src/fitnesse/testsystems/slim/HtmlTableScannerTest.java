@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import static org.junit.Assert.assertEquals;
-import static util.RegexTestCase.assertHasRegexp;
-
 import java.util.Arrays;
 
 import org.htmlparser.util.ParserException;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
 
 public class HtmlTableScannerTest {
   private HtmlTableScanner ts;

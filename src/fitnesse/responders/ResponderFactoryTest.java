@@ -21,7 +21,6 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
@@ -37,14 +36,12 @@ public class ResponderFactoryTest {
   private MockRequest request;
   private WikiPageDummy nonExistantPage;
   private WikiPage root;
-  private PageCrawler crawler;
 
   @Before
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     request = new MockRequest();
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
     nonExistantPage = new WikiPageDummy();
   }
 
@@ -287,7 +284,7 @@ public class ResponderFactoryTest {
   }
 
   private void assertResponderType(Class<?> expectedClass, WikiPage page) throws Exception {
-    Responder responder = factory.makeResponder(request, page);
+    Responder responder = factory.makeResponder(request);
     assertEquals(expectedClass, responder.getClass());
   }
 

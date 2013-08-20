@@ -34,15 +34,7 @@ public class FileUpdate implements Update {
   }
 
   private void makeSureDirectoriesExist() {
-    String[] subDirectories = destination.split(Pattern.quote(File.separator));
-    String currentDirPath = rootDir;
-
-    for (int i = 0; i < subDirectories.length; i++) {
-      String subDirectory = subDirectories[i];
-      currentDirPath = currentDirPath + File.separator + subDirectory;
-      File directory = new File(currentDirPath);
-      directory.mkdir();
-    }
+    destinationDir.mkdirs();
   }
 
   private void copyResource() throws IOException {

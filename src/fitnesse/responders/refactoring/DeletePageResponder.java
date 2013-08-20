@@ -44,7 +44,7 @@ public class DeletePageResponder implements SecureResponder {
     } else {
       String nameOfPageToBeDeleted = path.last();
       path.removeNameFromEnd();
-      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
+      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(path);
       if (parentOfPageToBeDeleted != null) {
         parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
       }
@@ -78,7 +78,7 @@ public class DeletePageResponder implements SecureResponder {
     if(context.root!=null){
       WikiPagePath path = PathParser.parse(qualifiedPageName);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);
@@ -94,7 +94,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
-    WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
+    WikiPage pageToDelete = root.getPageCrawler().getPage(path);
     List<WikiPage> children = pageToDelete.getChildren();
 
     html.put("deleteSubPages", children != null && !children.isEmpty());

@@ -7,29 +7,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SuiteFilterTestCase {
   private WikiPage root;
-  private PageCrawler crawler;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     PageData data = root.getData();
     root.commit(data);
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content)
       throws Exception {
-    WikiPage testPage = crawler.addPage(page, PathParser.parse(name), content);
+    WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);
@@ -38,7 +33,7 @@ public class SuiteFilterTestCase {
   
   private WikiPage addSuitePage(WikiPage page, String name, String content)
   throws Exception {
-    WikiPage suitePage = crawler.addPage(page, PathParser.parse(name), content);
+    WikiPage suitePage = WikiPageUtil.addPage(page, PathParser.parse(name), content);
     PageData data = suitePage.getData();
     data.setAttribute("Suite");
     suitePage.commit(data);
@@ -70,7 +65,7 @@ public class SuiteFilterTestCase {
   public void testPrunesSuites() throws Exception {
     SuiteFilter filter = new SuiteFilter(null, null, null, null);
     
-    WikiPage prunedSuite = crawler.addPage(root, PathParser.parse("MySuite"), "the suite");
+    WikiPage prunedSuite = WikiPageUtil.addPage(root, PathParser.parse("MySuite"), "the suite");
     PageData data = prunedSuite.getData();
     data.setAttribute(PageData.PropertyPRUNE);
     data.setAttribute("Suite");
@@ -116,7 +111,7 @@ public class SuiteFilterTestCase {
   public void testSuiteWithTag() throws Exception {
     SuiteFilter filter = new SuiteFilter("good", null, null,  null);
 
-    WikiPage goodSuite = crawler.addPage(root, PathParser.parse("MySuite"), "the suite");
+    WikiPage goodSuite = WikiPageUtil.addPage(root, PathParser.parse("MySuite"), "the suite");
     PageData data = goodSuite.getData();
     data.setAttribute("Suite");
     data.setAttribute(PageData.PropertySUITES, "good");
@@ -131,7 +126,7 @@ public class SuiteFilterTestCase {
   public void testSuiteWithTagWithIntersect() throws Exception {
     SuiteFilter filter = new SuiteFilter(null, null, "good, better",  null);
 
-    WikiPage goodSuite = crawler.addPage(root, PathParser.parse("MySuite"), "the suite");
+    WikiPage goodSuite = WikiPageUtil.addPage(root, PathParser.parse("MySuite"), "the suite");
     PageData data = goodSuite.getData();
     data.setAttribute("Suite");
     data.setAttribute(PageData.PropertySUITES, "good, better");

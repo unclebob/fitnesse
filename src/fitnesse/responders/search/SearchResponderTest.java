@@ -2,28 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SearchResponderTest extends RegexTestCase {
+public class SearchResponderTest {
   private WikiPage root;
-  private PageCrawler crawler;
   private SearchResponder responder;
   private MockRequest request;
   private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
+    WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "has something in it");
     request = new MockRequest();
     request.addInput("searchString", "blah");
     request.addInput("searchType", "blah");
@@ -31,9 +34,7 @@ public class SearchResponderTest extends RegexTestCase {
     responder = new SearchResponder();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testHtml() throws Exception {
     String content = getResponseContentUsingSearchString("something");
 
@@ -41,32 +42,38 @@ public class SearchResponderTest extends RegexTestCase {
     assertHasRegexp("SomePage", content);
   }
 
+  @Test
   public void testTableSorterScript() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     // test only small part, since output is chunked
     assertSubString("tableSorter = new TableSorter('searchResultsTable'", content); //, new DateParser(/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/,8,2,3,4,5,6));", content);
   }
 
+  @Test
   public void testClientSideSortScript() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     assertHasRegexp("<script src=\"/files/fitnesse/javascript/clientSideSort.js\"> </script>", content);
   }
 
+  @Test
   public void testPageSortLink() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     assertSubString("<a href=\"javascript:void(tableSorter.sort(1));\">Page</a>", content);
   }
 
+  @Test
   public void testLastModifiedSortLink() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     assertSubString("<a href=\"javascript:void(tableSorter.sort(3, 'date'));\">LastModified</a>", content);
   }
 
+  @Test
   public void testNoSearchStringBringsUpNoResults() throws Exception {
     String content = getResponseContentUsingSearchString("");
     assertSubString("No pages matched your search criteria.", content);
   }
 
+  @Test
   public void testEscapesSearchString() throws Exception {
     String content = getResponseContentUsingSearchString("!+-<&>");
     assertSubString("!+-<&>", content);
@@ -81,6 +88,7 @@ public class SearchResponderTest extends RegexTestCase {
     return sender.sentData();
   }
 
+  @Test
   public void testTitle() throws Exception {
     request.addInput("searchType", "something with the word title in it");
     responder.setRequest(request);

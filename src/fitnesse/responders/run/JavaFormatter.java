@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.testsystems.CompositeExecutionLog;
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import util.TimeMeasurement;
@@ -137,7 +138,7 @@ public class JavaFormatter extends BaseFormatter {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
     listener.newTestStarted(test, timeMeasurement);
   }
@@ -146,7 +147,7 @@ public class JavaFormatter extends BaseFormatter {
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     String fullPath = getFullPath(test.getSourcePage());
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -166,7 +167,7 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testSystemStarted(TestSystem testSystem) {
   }
 
   private ResultsRepository resultsRepository;

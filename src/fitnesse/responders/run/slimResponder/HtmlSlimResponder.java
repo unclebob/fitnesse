@@ -2,16 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
+import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+
+import java.io.IOException;
 
 public class HtmlSlimResponder extends SlimResponder {
 
-  protected SlimTestSystem getTestSystem() {
-    SlimTestSystem.SlimDescriptor descriptor = new SlimTestSystem.SlimDescriptor(getPage(), getContext().pageFactory, false);
+  protected SlimTestSystem getTestSystem() throws IOException {
 
-    return new HtmlSlimTestSystem(getPage(), getDescriptor(), this);
+    SlimCommandRunningClient slimClient;
+    if (fastTest) {
+      slimClient = new InProcessSlimClientBuilder(getDescriptor()).build();
+    } else {
+      slimClient = new SlimClientBuilder(getDescriptor()).build();
+    }
+    return new HtmlSlimTestSystem("slim", slimClient, this);
   }
+
 }

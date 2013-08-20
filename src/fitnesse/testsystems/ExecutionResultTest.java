@@ -1,9 +1,9 @@
 package fitnesse.testsystems;
 
-import static org.junit.Assert.assertEquals;
-import static fitnesse.testsystems.ExecutionResult.*;
-
 import org.junit.Test;
+
+import static fitnesse.testsystems.ExecutionResult.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class ExecutionResultTest {

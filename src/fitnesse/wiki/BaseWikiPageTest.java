@@ -2,27 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.mem.InMemoryPage;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
-public class BaseWikiPageTest extends TestCase {
+public class BaseWikiPageTest {
   private WikiPage linkingPage;
+  private BaseWikiPage root;
 
+  @Before
   public void setUp() throws Exception {
-    BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
+    root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
     root.addChildPage("LinkedPage");
     linkingPage = root.addChildPage("LinkingPage");
     linkingPage.addChildPage("ChildPage");
   }
 
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testDir");
   }
 
+  @Test
   public void testGetChildrenUsesSymbolicPages() throws Exception {
     createLink("LinkedPage");
 
@@ -33,11 +44,13 @@ public class BaseWikiPageTest extends TestCase {
     checkSymbolicPage(children.get(1));
   }
 
+  @Test
   public void testGetChildUsesSymbolicPages() throws Exception {
     createLink("LinkedPage");
     checkSymbolicPage(linkingPage.getChildPage("SymLink"));
   }
 
+  @Test
   public void testCanCreateSymLinksToExternalDirectories() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
@@ -73,4 +86,12 @@ public class BaseWikiPageTest extends TestCase {
     assertEquals("SymLink", symPage.getName());
     assertEquals("LinkedPage", symPage.getRealPage().getName());
   }
+
+  @Test
+  public void testIsRoot() throws Exception {
+    assertTrue(root.isRoot());
+    assertFalse(linkingPage.isRoot());
+  }
+
+
 }

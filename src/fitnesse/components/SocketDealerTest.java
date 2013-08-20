@@ -2,26 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.net.Socket;
 import java.util.Collection;
 
-import junit.framework.TestCase;
 import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testsystems.fit.SocketDoner;
 import fitnesse.testsystems.fit.SocketSeeker;
 import fitnesse.util.MockSocket;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SocketDealerTest extends TestCase {
+public class SocketDealerTest {
   private SocketDealer dealer;
   private SimpleSocketSeeker seeker;
   private int ticket;
   private SimpleDoner doner;
 
+  @Before
   public void setUp() throws Exception {
     dealer = new SocketDealer();
-  }
-
-  public void tearDown() throws Exception {
   }
 
   public static class SimpleDoner implements SocketDoner {
@@ -37,6 +41,7 @@ public class SocketDealerTest extends TestCase {
     }
   }
 
+  @Test
   public void testAddSeeker() throws Exception {
     SocketSeeker seeker = new SimpleSocketSeeker();
     dealer.seekingSocket(seeker);
@@ -46,12 +51,14 @@ public class SocketDealerTest extends TestCase {
     assertTrue(waiting.contains(seeker));
   }
 
+  @Test
   public void testUniqueTicketNumber() throws Exception {
     int ticketNumber1 = dealer.seekingSocket(new SimpleSocketSeeker());
     int ticketNumber2 = dealer.seekingSocket(new SimpleSocketSeeker());
     assertTrue(ticketNumber1 != ticketNumber2);
   }
 
+  @Test
   public void testDealSocketTo() throws Exception {
     doSimpleDealing();
     assertSame(doner.socket, seeker.socket);
@@ -64,6 +71,7 @@ public class SocketDealerTest extends TestCase {
     dealer.dealSocketTo(ticket, doner);
   }
 
+  @Test
   public void testDealSocketToMultipleSeekers() throws Exception {
     SimpleSocketSeeker seeker1 = new SimpleSocketSeeker();
     SimpleSocketSeeker seeker2 = new SimpleSocketSeeker();
@@ -78,12 +86,14 @@ public class SocketDealerTest extends TestCase {
     assertSame(doner2.socket, seeker2.socket);
   }
 
+  @Test
   public void testSeekerRemovedAfterDeltTo() throws Exception {
     doSimpleDealing();
     Collection<SocketSeeker> waiting = dealer.getWaitingList();
     assertEquals(0, waiting.size());
   }
 
+  @Test
   public void testSeekerIsWaiting() throws Exception {
     assertFalse(dealer.isWaiting(23));
     int ticket = dealer.seekingSocket(new SimpleSocketSeeker());

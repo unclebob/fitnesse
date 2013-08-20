@@ -2,14 +2,14 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.ExecutionStatus;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
@@ -17,9 +17,9 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class InteractiveFormatter extends BaseFormatter {
 
-  private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>&nbsp;";
+  private static final String TESTING_INTERRUPTED = "<strong>Testing was interrupted and results are incomplete.</strong>&nbsp;";
 
-  private boolean wasInterupted = false;
+  private boolean wasInterrupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
   private CompositeExecutionLog log;
@@ -40,9 +40,9 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 	  return relativeName;
   }
 
-  protected String getRelativeName(TestPage testPage) {
+  protected String getRelativeName(WikiTestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
+    String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName)) {
       relativeName = String.format("(%s)", testPage.getName());
     }
@@ -67,24 +67,24 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     return assertionCounts;
   }
 
-  public boolean wasInterupted() {
-    return wasInterupted;
+  public boolean wasInterrupted() {
+    return wasInterrupted;
   }
 
   @Override
   public void errorOccured() {
-    wasInterupted = true;
+    wasInterrupted = true;
     super.errorOccured();
   }
 
   @Override
-  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement)
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement)
 		throws IOException {
     relativeName = getRelativeName(testPage);
   }
 
   public String testSummary() {
-    String summaryContent = (wasInterupted()) ? TESTING_INTERUPTED : "";
+    String summaryContent = (wasInterrupted()) ? TESTING_INTERRUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""

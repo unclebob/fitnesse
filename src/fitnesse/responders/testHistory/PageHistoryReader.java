@@ -64,7 +64,7 @@ public class PageHistoryReader {
   public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
     return String.format("%s/%s/%s",
       context.getTestHistoryDirectory(),
-      page.getPageCrawler().getFullPath(page).toString(),
+      page.getPageCrawler().getFullPath().toString(),
       TestHistory.makeResultFileName(counts, time));
   }
 }

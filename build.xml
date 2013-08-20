@@ -122,11 +122,13 @@
 
         <target name="post-compile" depends="stamp-version, retrieve" description="post-compile steps, use those in your IDE" />
 
-	<uptodate property="bootstrap-css-up-to-date" targetfile="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
-		<srcfiles dir="${basedir}" includes="${src.dir}/fitnesse/resources/bootstrap/less/*.less" />
-	</uptodate>
+	<target name="bootstrap-needs-update">
+		<uptodate property="bootstrap-css-up-to-date" targetfile="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
+			<srcfiles dir="${basedir}" includes="${src.dir}/fitnesse/resources/bootstrap/less/*.less" />
+		</uptodate>
+	</target>
 
-	<target name="compile-bootstrap-less" depends="ivy-init" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
+	<target name="compile-bootstrap-less" depends="ivy-init, bootstrap-needs-update" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
 		<mkdir dir="${classes.dir}/fitnesse/resources/bootstrap/css" />
 		<ivy:cachepath pathid="lesscss.classpath" conf="lesscss" />
 		<java classname="org.mozilla.javascript.tools.shell.Main"
@@ -190,7 +192,7 @@
 	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
 	<target name="acceptance_tests_xml" depends="standalone-jar">
-		<java jar="${dist,dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+		<java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />

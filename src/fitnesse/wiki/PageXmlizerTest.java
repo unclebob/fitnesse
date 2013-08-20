@@ -2,31 +2,37 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
-import util.RegexTestCase;
 import util.XmlUtil;
 
-public class PageXmlizerTest extends RegexTestCase {
+public class PageXmlizerTest {
   private PageXmlizer xmlizer;
   private WikiPage root;
   private PageCrawler crawler;
   private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 
+  @Before
   public void setUp() throws Exception {
     xmlizer = new PageXmlizer();
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testXmlizeOneWikiPage() throws Exception {
     Document doc = xmlizer.xmlize(root);
     String value = XmlUtil.xmlAsString(doc);
@@ -44,6 +50,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertSubString("<lastModified>" + timeString + "</lastModified>", value);
   }
 
+  @Test
   public void testDeXmlizeOneWikiPage() throws Exception {
     Document doc = xmlizer.xmlize(root);
     xmlizer.deXmlize(doc, root, new MockXmlizerPageHandler());
@@ -54,6 +61,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertEquals("RooT", page.getName());
   }
 
+  @Test
   public void testXmlizeTwoPages() throws Exception {
     WikiPage pageOne = root.addChildPage("PageOne");
     Document doc = xmlizer.xmlize(root);
@@ -65,6 +73,7 @@ public class PageXmlizerTest extends RegexTestCase {
     checkForLastModifiedTag(pageOne, value);
   }
 
+  @Test
   public void testDeXmlizingTwoPages() throws Exception {
     root.addChildPage("PageOne");
     xmlizer.deXmlize(xmlizer.xmlize(root), root, new MockXmlizerPageHandler());
@@ -77,6 +86,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertNotNull(marshaledRoot.getChildPage("PageOne"));
   }
 
+  @Test
   public void testXmlizingAnEntireTree() throws Exception {
     makeFamilyOfPages();
     Document doc = xmlizer.xmlize(root);
@@ -95,6 +105,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertSubString("PageC", value);
   }
 
+  @Test
   public void testDeXmlizingEntireTree() throws Exception {
     makeFamilyOfPages();
     xmlizer.deXmlize(xmlizer.xmlize(root), root, new MockXmlizerPageHandler());
@@ -113,6 +124,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertNotNull(getPage("RooT.PageC"));
   }
 
+  @Test
   public void testDeXmlizeEntireTreeTwice() throws Exception {
     makeFamilyOfPages();
     Document doc = xmlizer.xmlize(root);
@@ -126,6 +138,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertEquals(2, pageA.getChildren().size());
   }
 
+  @Test
   public void testDeXmlizeSkippingRootLevel() throws Exception {
     makeFamilyOfPages();
     WikiPage pageC = root.getChildPage("PageC");
@@ -139,10 +152,11 @@ public class PageXmlizerTest extends RegexTestCase {
     WikiPage greatGrandChildA = grandChildA.getChildPage("GreatGrandChildA");
     assertNotNull(greatGrandChildA);
 
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageB.ChildOneB.GrandChildB")));
-    assertNotNull(crawler.getPage(pageC, PathParser.parse("PageC")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageB.ChildOneB.GrandChildB")));
+    assertNotNull(pageC.getPageCrawler().getPage(PathParser.parse("PageC")));
   }
 
+  @Test
   public void testUsageOfHandler() throws Exception {
     makeFamilyOfPages();
     MockXmlizerPageHandler handler = new MockXmlizerPageHandler();
@@ -166,7 +180,7 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private WikiPage getPage(String pathName) throws Exception {
-    return crawler.getPage(root, PathParser.parse(pathName));
+    return crawler.getPage(PathParser.parse(pathName));
   }
 
   private void checkPageWasHandledWithRightDate(int i, WikiPage page, MockXmlizerPageHandler handler) throws Exception {
@@ -192,9 +206,10 @@ public class PageXmlizerTest extends RegexTestCase {
   }
 
   private void addPage(String path, String content) throws Exception {
-    crawler.addPage(root, PathParser.parse(path), content);
+    WikiPageUtil.addPage(root, PathParser.parse(path), content);
   }
 
+  @Test
   public void testXmlizingData() throws Exception {
     PageData data = new PageData(root);
     data.setContent("this is some content.");
@@ -214,6 +229,7 @@ public class PageXmlizerTest extends RegexTestCase {
     }
   }
 
+  @Test
   public void testDeXmlizingPageData() throws Exception {
     PageData data = new PageData(root);
     data.setContent("this is some content.");
@@ -228,6 +244,7 @@ public class PageXmlizerTest extends RegexTestCase {
     assertEquals(properties.toString(), receivedProperties.toString());
   }
 
+  @Test
   public void testConditionForXmlization() throws Exception {
     WikiPage pageOne = root.addChildPage("PageOne");
     @SuppressWarnings("unused")

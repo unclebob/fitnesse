@@ -2,19 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import util.FileUtil;
-import util.RegexTestCase;
 import fitnesse.http.Request;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
-public class FormattingOptionTest extends RegexTestCase {
+public class FormattingOptionTest {
   private ByteArrayOutputStream output;
   private FormattingOption option;
   private CachingResultFormatter formatter;
@@ -23,14 +30,17 @@ public class FormattingOptionTest extends RegexTestCase {
   private TestSummary finalSummary;
   private int port = FitNesseUtil.PORT;
 
+  @Before
   public void setUp() throws Exception {
     output = new ByteArrayOutputStream();
   }
 
+  @After
   public void tearDown() throws Exception {
     new File("testOutput.txt").delete();
   }
 
+  @Test
   public void testConstruction() throws Exception {
     option = new FormattingOption("mock", "stdout", output, "localhost", 8081, "SomePage");
     assertEquals("mock", option.format);
@@ -40,6 +50,7 @@ public class FormattingOptionTest extends RegexTestCase {
     assertEquals("SomePage", option.rootPath);
   }
 
+  @Test
   public void testConstructionWithFile() throws Exception {
     option = new FormattingOption("mock", "testOutput.txt", output, "localhost", 8081, "SomePage");
     assertEquals(FileOutputStream.class, option.output.getClass());
@@ -48,6 +59,7 @@ public class FormattingOptionTest extends RegexTestCase {
     assertEquals("sample data", FileUtil.getFileContent("testOutput.txt"));
   }
 
+  @Test
   public void testRawResults() throws Exception {
     sampleFormatter();
     option = new FormattingOption("raw", "stdout", output, "localhost", port, "SomePage");
@@ -57,6 +69,7 @@ public class FormattingOptionTest extends RegexTestCase {
     assertSubString(result2.toString(), content);
   }
 
+  @Test
   public void testRequest() throws Exception {
     option = new FormattingOption("mock", "stdout", output, "localhost", 8081, "SomePage");
     String requestString = option.buildRequest(new ByteArrayInputStream("test results".getBytes()), 12).getText();
@@ -71,6 +84,7 @@ public class FormattingOptionTest extends RegexTestCase {
     assertEquals("test results", request.getInput("results"));
   }
 
+  @Test
   public void testTheWholeDeal() throws Exception {
     sampleFormatter();
 

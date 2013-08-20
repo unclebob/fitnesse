@@ -2,19 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-import fitnesse.testsystems.CommandRunner;
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
 
-public class CommandRunnerTest extends RegexTestCase {
+import org.junit.Test;
 
-  public void setUp() throws Exception {
-  }
+public class CommandRunnerTest {
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!");
+    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!", null);
     runner.run();
     assertHasRegexp("echo this!", runner.getOutput());
     assertEquals("", runner.getError());
@@ -22,8 +20,9 @@ public class CommandRunnerTest extends RegexTestCase {
     assertEquals(0, runner.getExitCode());
   }
 
+  @Test
   public void testClassNotFound() throws Exception {
-    CommandRunner runner = new CommandRunner("java BadClass", null);
+    CommandRunner runner = new CommandRunner("java BadClass", "", null);
     runner.run();
     assertHasRegexp("Error", runner.getError());
     assertEquals("", runner.getOutput());

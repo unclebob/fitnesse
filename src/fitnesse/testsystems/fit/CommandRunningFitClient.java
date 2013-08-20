@@ -9,21 +9,21 @@ import java.util.Map;
 
 import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.CommandRunnerExecutionLog;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.MockCommandRunner;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  public CommandRunner commandRunner;
+  private final CommandRunner commandRunner;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
   private final CommandRunningStrategy commandRunningStrategy;
 
-  public CommandRunningFitClient(TestSystemListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
+  public CommandRunningFitClient(FitClientListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
     super(listener);
     this.commandRunningStrategy = commandRunningStrategy;
     int ticketNumber = socketDealer.seekingSocket(this);
@@ -37,8 +37,12 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       commandRunningStrategy.start();
       waitForConnection();
     } catch (Exception e) {
-      listener.exceptionOccurred(e);
+      exceptionOccurred(e);
     }
+  }
+
+  public ExecutionLog getExecutionLog() {
+    return new CommandRunnerExecutionLog(commandRunner);
   }
 
   public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
@@ -73,11 +77,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     super.kill();
     commandRunner.kill();
     commandRunningStrategy.kill();
-  }
-
-  public void exceptionOccurred(Exception e) {
-    commandRunner.exceptionOccurred(e);
-    super.exceptionOccurred(e);
   }
 
   public interface CommandRunningStrategy {
@@ -154,7 +153,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
           synchronized (this.fitClient) {
             if (!fitClient.isSuccessfullyStarted()) {
               fitClient.notify();
-              fitClient.listener.exceptionOccurred(new Exception(
+              fitClient.exceptionOccurred(new Exception(
                   "FitClient: communication socket was not received on time."));
             }
           }
@@ -180,7 +179,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
           synchronized (fitClient) {
             if (!fitClient.isConnectionEstablished()) {
               fitClient.notify();
-              fitClient.listener.exceptionOccurred(new Exception(
+              fitClient.exceptionOccurred(new Exception(
                   "FitClient: external process terminated before a connection could be established."));
             }
           }
@@ -194,18 +193,18 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private Thread fastFitServer;
-    private final TestSystem.Descriptor testDescriptor;
+    private final String testRunner;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(TestSystem.Descriptor testDescriptor) {
-      this.testDescriptor = testDescriptor;
+    public InProcessCommandRunner(String testRunner) {
+      this.testRunner = testRunner;
     }
 
     @Override
     public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
       String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
       String[] arguments = ("-x " + fitArguments).trim().split(" ");
-      this.fastFitServer = createTestRunnerThread(testDescriptor.getTestRunner(), arguments);
+      this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
       this.commandRunner = new MockCommandRunner();
       return commandRunner;

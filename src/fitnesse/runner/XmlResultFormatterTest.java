@@ -2,23 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.InputStream;
 
+import fitnesse.testsystems.TestSummary;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import util.RegexTestCase;
 import util.StreamReader;
 import util.XmlUtil;
-import fitnesse.testsystems.TestSummary;
 
-public class XmlResultFormatterTest extends RegexTestCase {
+public class XmlResultFormatterTest {
   private XmlResultFormatter formatter;
   private PageResult result1;
   private PageResult result2;
   private TestSummary finalSummary;
 
+  @Before
   public void setUp() throws Exception {
     formatter = new XmlResultFormatter("localhost:8081", "RootPath");
     result1 = new PageResult("ResultOne", new TestSummary(1, 2, 3, 4), "result one content");
@@ -26,10 +31,12 @@ public class XmlResultFormatterTest extends RegexTestCase {
     finalSummary = new TestSummary(5, 5, 5, 5);
   }
 
+  @After
   public void tearDown() throws Exception {
     formatter = null;
   }
 
+  @Test
   public void testValidXml() throws Exception {
     Document doc = getXmlDoc();
     Element documentElement = doc.getDocumentElement();
@@ -38,6 +45,7 @@ public class XmlResultFormatterTest extends RegexTestCase {
     assertEquals("RootPath", XmlUtil.getTextValue(documentElement, "rootPath"));
   }
 
+  @Test
   public void testOneResult() throws Exception {
     formatter.acceptResult(result1);
     Document doc = getXmlDoc();
@@ -47,6 +55,7 @@ public class XmlResultFormatterTest extends RegexTestCase {
     checkResultElement(result, result1);
   }
 
+  @Test
   public void testTwoResults() throws Exception {
     formatter.acceptResult(result1);
     formatter.acceptResult(result2);
@@ -60,6 +69,7 @@ public class XmlResultFormatterTest extends RegexTestCase {
     checkResultElement(resultElement2, result2);
   }
 
+  @Test
   public void testFinalCounts() throws Exception {
     formatter.acceptFinalCount(finalSummary);
     Document doc = getXmlDoc();

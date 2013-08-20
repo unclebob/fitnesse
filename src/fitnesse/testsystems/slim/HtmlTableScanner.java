@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import static fitnesse.util.HtmlParserTools.*;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +14,8 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import static fitnesse.util.HtmlParserTools.*;
 
 public class HtmlTableScanner implements TableScanner<HtmlTable> {
 

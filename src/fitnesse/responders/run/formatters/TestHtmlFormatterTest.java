@@ -2,26 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import util.RegexTestCase;
-import util.TimeMeasurement;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+import util.TimeMeasurement;
 
-public class TestHtmlFormatterTest extends RegexTestCase {
+public class TestHtmlFormatterTest {
   private BaseFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
-  private TestPage page;
+  private WikiTestPage page;
   private WikiPage root;
   private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    page = new TestPage(root.addChildPage("NewPage"));
+    page = new WikiTestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
     context = FitNesseUtil.makeTestContext();
 
@@ -33,9 +37,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     };
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testTestSummaryTestPass() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -48,6 +50,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
   }
 
+  @Test
   public void testTestSummaryTestFail() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -59,6 +62,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
 
+  @Test
   public void testExecutionStatusHtml() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -70,6 +74,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("Tests Executed OK", pageBuffer.toString());
   }
 
+  @Test
   public void testTail() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -81,6 +86,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("<strong>Assertions:</strong>", pageBuffer.toString());
   }
 
+  @Test
   public void testStop() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -95,6 +101,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("document.getElementById(\"test-action\").innerHTML = \"\"", pageBuffer.toString());
   }
 
+  @Test
   public void testIncompleteMessageAfterException() throws Exception {
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
@@ -103,11 +110,12 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     pageBuffer.setLength(0);
     formatter.errorOccured();
     //assert stop button added
-    assertSubString("Testing was interupted", pageBuffer.toString());
+    assertSubString("Testing was interrupted", pageBuffer.toString());
     //assert stop button removed
     assertSubString("className = \"ignore\"", pageBuffer.toString());
   }
 
+  @Test
   public void testTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);

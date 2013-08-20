@@ -8,40 +8,46 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import util.Wildcard;
 
-public class ClassPathBuilder extends InheritedItemBuilder {
+public class ClassPathBuilder {
   private List<String> allPaths;
   private StringBuffer pathsString;
   private Set<String> addedPaths;
 
-  public String getClasspath(WikiPage page){
-    List<String> paths = getInheritedPathElements(page, new HashSet<WikiPage>());
+  public String getClasspath(WikiPage page) {
+    List<String> paths = getInheritedPathElements(page);
     return createClassPathString(paths, getPathSeparator(page));
   }
 
-  public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) {
-    return getInheritedItems(page, visitedPages);
+  public List<String> getInheritedPathElements(WikiPage page) {
+    final List<String> items = new ArrayList<String>();
+
+    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
+      @Override
+      public void process(WikiPage p) {
+        addItemsFromPage(p, items);
+      }
+    });
+    return items;
   }
 
   public String buildClassPath(List<WikiPage> testPages) {
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = getPathSeparator(testPages.get(0));
     List<String> classPathElements = new ArrayList<String>();
-    Set<WikiPage> visitedPages = new HashSet<WikiPage>();
 
     for (WikiPage testPage : testPages) {
-      addClassPathElements(testPage, classPathElements, visitedPages);
+      addClassPathElements(testPage, classPathElements);
     }
 
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
   }
 
-  private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) {
-    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
+  private void addClassPathElements(WikiPage page, List<String> classPathElements) {
+    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page);
     classPathElements.addAll(pathElements);
   }
 
@@ -147,6 +153,11 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   private void addSeparatorIfNecessary(StringBuffer pathsString, String separator) {
     if (pathsString.length() > 0)
       pathsString.append(separator);
+  }
+
+  private void addItemsFromPage(WikiPage itemPage, List<String> items) {
+    List<String> itemsOnThisPage = getItemsFromPage(itemPage);
+    items.addAll(itemsOnThisPage);
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {

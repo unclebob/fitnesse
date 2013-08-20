@@ -3,13 +3,23 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import static fitnesse.testsystems.slim.results.TestResult.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import util.RegexTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class FixtureTest extends RegexTestCase {
+public class FixtureTest {
   private Locale saveLocale;
 
   static class HasParseMethod {
@@ -21,24 +31,24 @@ public class FixtureTest extends RegexTestCase {
   static class HasNoParseMethod {
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     saveLocale = Locale.getDefault();
     Locale.setDefault(Locale.US);
   }
 
-  @Override
-  protected void tearDown() throws Exception {
-    super.tearDown();
+  @After
+  public void tearDown() throws Exception {
     Locale.setDefault(saveLocale);
   }
 
+  @Test
   public void testHasParseMethod() throws Exception {
     assertTrue(Fixture.hasParseMethod(HasParseMethod.class));
     assertFalse(Fixture.hasParseMethod(HasNoParseMethod.class));
   }
 
+  @Test
   public void testCallParseMethod() throws Exception {
     Object o = Fixture.callParseMethod(HasParseMethod.class, "target");
     assertTrue(o instanceof String);
@@ -46,6 +56,7 @@ public class FixtureTest extends RegexTestCase {
     assertEquals("target found", s);
   }
 
+  @Test
   public void testObjectWithParseMethod() throws Exception {
     Fixture f = new Fixture();
     Object o = f.parse("target", HasParseMethod.class);
@@ -61,6 +72,7 @@ public class FixtureTest extends RegexTestCase {
     }
   }
 
+  @Test
   public void testScientificDouble() throws Exception {
     Fixture f = new Fixture();
     Object o = f.parse("13.4", ScientificDouble.class);
@@ -68,6 +80,7 @@ public class FixtureTest extends RegexTestCase {
     assertEquals(new ScientificDouble(13.4), o);
   }
 
+  @Test
   public void testRelationalMatching() throws Exception {
     final String[][] table = {
       {"fitnesse.fixtures.ColumnFixtureTestFixture"},
@@ -81,6 +94,7 @@ public class FixtureTest extends RegexTestCase {
     assertTrue(colTwoTag.contains("pass"));
   }
 
+  @Test
   public void testNullAndBlankStrings() throws Exception {
     Fixture fixture = new Fixture();
     assertNull(fixture.parse("null", String.class));
@@ -91,6 +105,7 @@ public class FixtureTest extends RegexTestCase {
     assertEquals("blank", adapter.toString(""));
   }
 
+  @Test
   public void testEscape() {
     String junk = "!@#$%^*()_-+={}|[]\\:\";',./?`";
     assertEquals(junk, Fixture.escape(junk));
@@ -104,6 +119,7 @@ public class FixtureTest extends RegexTestCase {
     assertEquals("a &lt; b &amp;&amp; c &lt; d", Fixture.escape("a < b && c < d"));
   }
 
+  @Test
   public void testFixtureArguments() throws Exception {
     String prefix = "<table><tr><td>fit.Fixture</td>";
     String suffix = "</tr></table>";
@@ -128,6 +144,7 @@ public class FixtureTest extends RegexTestCase {
     assertEquals("2", args[1]);
   }
 
+  @Test
   public void testParseDate() throws Exception {
     Fixture f = new Fixture();
     Object o = f.parse("1/2/2004", Date.class);
@@ -142,6 +159,7 @@ public class FixtureTest extends RegexTestCase {
     return page;
   }
 
+  @Test
   public void testCanChangeFriendlyExceptions() throws Exception {
     Fixture fixture = new Fixture() {
       public boolean isFriendlyException(Throwable exception) {
@@ -155,6 +173,7 @@ public class FixtureTest extends RegexTestCase {
     assertNotSubString("Exception", cell.body);
   }
 
+  @Test
   public void testClearingSymbols() throws Exception {
     Fixture.setSymbol("blah", "blah");
     assertEquals("blah", Fixture.getSymbol("blah"));

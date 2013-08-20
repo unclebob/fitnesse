@@ -1,9 +1,9 @@
 package fitnesse.testsystems.slim.results;
 
-import fitnesse.testsystems.ExecutionResult;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.testsystems.ExecutionResult;
 
 import static fitnesse.slim.SlimServer.*;
 

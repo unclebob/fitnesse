@@ -3,10 +3,6 @@ package fitnesse.wiki.fs;
 import java.io.File;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.DiskFileSystem;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.SimpleFileVersionsController;
 import util.EnvironmentVariableTool;
 
 public class SymbolicPageFactory {
@@ -45,7 +41,7 @@ public class SymbolicPageFactory {
   protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, WikiPage parent) {
     WikiPagePath path = PathParser.parse(linkPath);
     WikiPage start = (path.isRelativePath()) ? parent.getParent() : parent;  //TODO -AcD- a better way?
-    WikiPage wikiPage = parent.getPageCrawler().getPage(start, path);
+    WikiPage wikiPage = start.getPageCrawler().getPage(path);
     if (wikiPage != null)
       wikiPage = new SymbolicPage(linkName, wikiPage, parent, this);
     return wikiPage;

@@ -22,7 +22,6 @@ public class DeleteConfirmationResponder implements SecureResponder {
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
     response.setContent(makeDirectoryListingPage(resource, filename, context));
-    response.setLastModifiedHeader("Delete");
     return response;
   }
 

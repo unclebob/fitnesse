@@ -2,13 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertMatches;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
@@ -16,15 +23,16 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.json.JSONObject;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PropertiesResponderTest extends RegexTestCase {
+public class PropertiesResponderTest {
   private FitNesseContext context;
 
   private WikiPage root;
-
-  private PageCrawler crawler;
 
   private MockRequest request;
 
@@ -32,16 +40,16 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   private String content;
 
-  @Override
-public void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
   }
 
+  @Test
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -78,8 +86,9 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"" + attribute + "\" name=\"" + attribute + "\" checked=\"checked\"/>", content);
   }
 
+  @Test
   public void testJsonResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -111,6 +120,7 @@ public void setUp() throws Exception {
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
   }
 
+  @Test
   public void testUsernameDisplayed() throws Exception {
     WikiPage page = getContentFromSimplePropertiesPage();
 
@@ -142,6 +152,7 @@ public void setUp() throws Exception {
     return page;
   }
 
+  @Test
   public void testWikiImportForm() throws Exception {
     getContentFromSimplePropertiesPage();
 
@@ -161,6 +172,7 @@ public void setUp() throws Exception {
     assertSubString("value=\"import\"", content);
   }
 
+  @Test
   public void testWikiImportUpdate() throws Exception {
     WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
     property.setRoot(true);
@@ -171,6 +183,7 @@ public void setUp() throws Exception {
     assertSubString("Automatically update imported content when executing tests", content);
   }
 
+  @Test
   public void testWikiImportUpdateNonroot() throws Exception {
     testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
     assertSubString("imports its content and subpages from", content);
@@ -193,6 +206,7 @@ public void setUp() throws Exception {
     assertNotSubString("value=\"Import\"", content);
   }
 
+  @Test
   public void testSymbolicLinkForm() throws Exception {
     getContentFromSimplePropertiesPage();
 
@@ -203,6 +217,7 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create/Replace\"", content);
   }
 
+  @Test
   public void testSymbolicLinkListing() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     page.addChildPage("SomeChild");
@@ -233,6 +248,7 @@ public void setUp() throws Exception {
     assertHasRegexp("<td>\\W*file://some/page\\W*</td>", content);
   }
 
+  @Test
   public void testSymbolicLinkListingForBackwardPath() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     WikiPage child = page.addChildPage("SomeChild");
@@ -250,6 +266,7 @@ public void setUp() throws Exception {
     assertSubString("<a href=\".SomePage.OtherChild\">&lt;SomePage.OtherChild</a>", content);
   }
 
+  @Test
   public void testPageTypePropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
@@ -262,13 +279,14 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
+  @Test
   public void testPageTypePropertiesSuiteHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertEquals(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    assertEquals(page, context.root.getPageCrawler().getPage(PathParser.parse(".SomePage")));
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -278,12 +296,13 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
+  @Test
   public void testPageTypePropertiesTestHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Test");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -293,19 +312,20 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
+  @Test
   public void testPageTypePropertiesSkippedHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Prune");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\" checked=\"checked\"/>", html);
   }
 
-  
+  @Test
   public void testActionPropertiesHtml() throws Exception {
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
@@ -317,6 +337,7 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"WhereUsed\" name=\"WhereUsed\" checked=\"checked\"/>", html);
   }
 
+  @Test
   public void testMakeNavigationPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
@@ -328,6 +349,7 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"Search\" name=\"Search\" checked=\"checked\"/>", html);
   }
 
+  @Test
   public void testMakeSecurityPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
@@ -339,6 +361,7 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"checkbox\" id=\"secure-test\" name=\"secure-test\"/>", html);
   }
 
+  @Test
   public void testEmptySuitesForm() throws Exception {
     getContentFromSimplePropertiesPage();
 
@@ -346,6 +369,7 @@ public void setUp() throws Exception {
     assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"\"", content);
   }
 
+  @Test
   public void testSuitesDisplayed() throws Exception {
     WikiPage page = getContentFromSimplePropertiesPage();
     PageData data = page.getData();

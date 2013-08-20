@@ -2,7 +2,7 @@ package fitnesse.responders.run;
 
 import java.util.LinkedList;
 
-import fitnesse.components.SuiteSpecificationMatchFinder;
+import fitnesse.wiki.search.SuiteSpecificationMatchFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.Table;
@@ -78,7 +78,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   private void getSearchRoot(Table table, int rowIndex) {
     if (table.getCellContents(1, rowIndex) != null) {
       String searchRootPath = table.getCellContents(1, rowIndex);
-      searchRoot = crawler.getPage(root, PathParser.parse(searchRootPath));
+      searchRoot = crawler.getPage(PathParser.parse(searchRootPath));
     }
   }
 

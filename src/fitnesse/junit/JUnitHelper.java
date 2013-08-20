@@ -1,7 +1,7 @@
 package fitnesse.junit;
 
 
-import fitnesse.responders.run.ResultsListener;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 
 import java.text.MessageFormat;

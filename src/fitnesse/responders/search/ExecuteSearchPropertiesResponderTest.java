@@ -1,32 +1,39 @@
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageType.*;
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.*;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.ACTION;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.SPECIAL;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
+import static fitnesse.wiki.PageData.PropertyPRUNE;
+import static fitnesse.wiki.PageType.STATIC;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.*;
-
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
+public class ExecuteSearchPropertiesResponderTest {
   private WikiPage root;
-  private PageCrawler crawler;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
 
@@ -34,7 +41,6 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseUtil.makeTestContext(root);
-    crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
     context = FitNesseUtil.makeTestContext(root);
   }
@@ -87,7 +93,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequest() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -201,7 +207,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private MockRequest setupRequestForObsoletePage() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ObsoletePage"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties1 = data.getProperties();
@@ -216,6 +222,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     return request;
   }
 
+  @Test
   public void testFindJustObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
     request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Static");

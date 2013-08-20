@@ -114,7 +114,7 @@ public class SuiteFilter {
       return true;
     }
     PageCrawler crawler = testPage.getPageCrawler();
-    WikiPagePath pageName = crawler.getFullPath(testPage);
+    WikiPagePath pageName = crawler.getFullPath();
     return (pageName.toString().compareTo(startWithTest) >= 0);
   }
 

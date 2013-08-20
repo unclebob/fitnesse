@@ -2,34 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fitnesse.Responder;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.WikiPageResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 import util.Clock;
-import util.RegexTestCase;
 
-public class WikiImportPropertyTest extends RegexTestCase {
+public class WikiImportPropertyTest {
   private WikiImportProperty property;
-  private WikiPage page;
 
+  @Before
   public void setUp() {
     property = new WikiImportProperty("");
   }
 
+  @Test
   public void testSource() throws Exception {
     property = new WikiImportProperty("import source");
     assertEquals("import source", property.getSourceUrl());
     assertEquals("import source", property.get("Source"));
   }
 
+  @Test
   public void testIsRoot() throws Exception {
     assertFalse(property.isRoot());
     assertFalse(property.has("IsRoot"));
@@ -40,6 +40,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertTrue(property.has("IsRoot"));
   }
 
+  @Test
   public void testAutoUpdate() throws Exception {
     assertFalse(property.isAutoUpdate());
     assertFalse(property.has("AutoUpdate"));
@@ -50,6 +51,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertTrue(property.has("AutoUpdate"));
   }
 
+  @Test
   public void testLastUpdated() throws Exception {
     SimpleDateFormat format = WikiPageProperty.getTimeFormat();
     Date date = Clock.currentDate();
@@ -60,10 +62,12 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals(format.format(date), property.get("LastRemoteModification"));
   }
 
+  @Test
   public void testFailedCreateFromProperty() throws Exception {
     assertNull(WikiImportProperty.createFrom(new WikiPageProperty()));
   }
 
+  @Test
   public void testCreateFromProperty() throws Exception {
     WikiPageProperty rawImportProperty = property.set(WikiImportProperty.PROPERTY_NAME);
     rawImportProperty.set("IsRoot");
@@ -80,6 +84,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals(format.format(date), format.format(importProperty.getLastRemoteModificationTime()));
   }
 
+  @Test
   public void testAddtoProperty() throws Exception {
     WikiImportProperty importProperty = new WikiImportProperty("some source");
     importProperty.setRoot(true);
@@ -90,65 +95,6 @@ public class WikiImportPropertyTest extends RegexTestCase {
     assertEquals("some source", importProperty2.getSourceUrl());
     assertTrue(importProperty2.isRoot());
     assertTrue(importProperty2.isAutoUpdate());
-  }
-
-  // Tests for the rendering of import specific page details
-  private WikiPage root;
-  private PageCrawler crawler;
-
-  public void pageRenderingSetUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
-  }
-
-  private SimpleResponse requestPage(String name) throws Exception {
-    MockRequest request = new MockRequest();
-    request.setResource(name);
-    Responder responder = new WikiPageResponder();
-    return (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-  }
-
-  public void testImportedPageIndication() throws Exception {
-    pageRenderingSetUp();
-
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
-    PageData data = page.getData();
-    WikiImportProperty importProperty = new WikiImportProperty("blah");
-    importProperty.addTo(data.getProperties());
-    page.commit(data);
-
-    String content = getContentAfterSpecialImportHandling();
-
-    assertSubString("<body class=\"imported\">", content);
-  }
-
-  public void testEditActions() throws Exception {
-    pageRenderingSetUp();
-
-    page = crawler.addPage(root, PathParser.parse("SamplePage"));
-    PageData data = page.getData();
-    page.commit(data);
-    String content = getContentAfterSpecialImportHandling();
-
-    assertNotSubString("Edit Locally", content);
-    assertNotSubString("Edit Remotely", content);
-
-    WikiImportProperty importProperty = new WikiImportProperty("blah");
-    importProperty.addTo(data.getProperties());
-    page.commit(data);
-    content = getContentAfterSpecialImportHandling();
-
-    assertTrue(WikiImportProperty.isImported(data));
-    assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
-    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
-  }
-
-  private String getContentAfterSpecialImportHandling() throws Exception {
-    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
-    WikiImportProperty.handleImportProperties(html, page);
-    html.setNavTemplate("wikiNav.vm");
-    html.put("actions", new WikiPageActions(page));
-    return html.html();
   }
 
 }

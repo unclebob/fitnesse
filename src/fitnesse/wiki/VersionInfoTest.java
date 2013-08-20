@@ -2,20 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class VersionInfoTest extends TestCase {
+public class VersionInfoTest {
 
   private Date toDate(String s) {
     return new Date(Long.parseLong(s) * 1000);
   }
 
+  @Test
   public void testSortVersions() {
     List<VersionInfo> list = new LinkedList<VersionInfo>();
     VersionInfo toms = new VersionInfo("Tom-45678901234567", "Tom", toDate("45678901234567"));
@@ -35,6 +38,7 @@ public class VersionInfoTest extends TestCase {
     assertEquals(anons, list.get(3));
   }
 
+  @Test
   public void testConvertVersionNameToAge() throws Exception {
     Date now = new GregorianCalendar(2003, 0, 1, 00, 00, 01).getTime();
     Date tenSeconds = new GregorianCalendar(2003, 0, 1, 00, 00, 11).getTime();

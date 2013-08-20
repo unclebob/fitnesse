@@ -6,15 +6,12 @@ import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.*;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -24,7 +21,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private int currentTest = 0;
-  private String testSystemFullName = null;
+  private String testSystemName = null;
   private boolean printedTestOutput = false;
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
@@ -80,21 +77,20 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   private void maybeWriteTestSystem() {
-    if (testSystemFullName != null) {
-      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
+    if (testSystemName != null) {
+      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
       writeData(systemTitle.html());
       // once we write it out we don't need it any more
-      testSystemFullName = null;
+      testSystemName = null;
     }
   }
 
 
   @Override
-  public void newTestStarted(TestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
     super.newTestStarted(testPage, timeMeasurement);
 
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(testPage.getSourcePage());
+    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
 
     announceStartNewTest(getRelativeName(), fullPathName);
@@ -134,7 +130,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
       tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
 
-    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterupted()));
+    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterrupted()));
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }
@@ -161,7 +157,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
 
@@ -175,10 +171,10 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
-    testSystemFullName = (testSystemName + ":" + testRunner).replaceAll("\\\\", "/");
+  public void testSystemStarted(TestSystem testSystem) {
+    testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
-    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemFullName, testSummariesId);
+    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
 

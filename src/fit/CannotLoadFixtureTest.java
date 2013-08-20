@@ -3,33 +3,41 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import fit.exception.ClassIsNotFixtureException;
 import fit.exception.FixtureException;
 import fit.exception.NoDefaultConstructorFixtureException;
 import fit.exception.NoSuchFixtureException;
 import fit.testFxtr.NoDefaultConstructorFixture;
 import fit.testFxtr.WouldBeFixture;
+import org.junit.Before;
+import org.junit.Test;
 
-public class CannotLoadFixtureTest extends TestCase {
+public class CannotLoadFixtureTest {
   private FixtureLoader fixtureLoader;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     fixtureLoader = new FixtureLoader();
   }
 
+  @Test
   public void testFixtureClassDoesNotExtendFixture() throws Throwable {
     assertCannotLoadFixture(
       "Successfully loaded a fixture that does not extend Fixture!",
       WouldBeFixture.class.getName(), ClassIsNotFixtureException.class);
   }
 
+  @Test
   public void testFixtureClassNotEndingInFixtureDoesNotExtendFixture() throws Throwable {
     assertCannotLoadFixtureAfterChoppingOffFixture(
       "Successfully loaded a fixture that does not extend Fixture!",
       WouldBeFixture.class, ClassIsNotFixtureException.class);
   }
 
+  @Test
   public void testFixtureHasNoDefaultConstructor() throws Throwable {
     assertCannotLoadFixture(
       "Successfully loaded a fixture with no default constructor!",
@@ -37,6 +45,7 @@ public class CannotLoadFixtureTest extends TestCase {
       NoDefaultConstructorFixtureException.class);
   }
 
+  @Test
   public void testFixtureClassNotEndingInFixtureHasNoDefaultConstructor()
     throws Throwable {
     assertCannotLoadFixtureAfterChoppingOffFixture(
@@ -45,11 +54,13 @@ public class CannotLoadFixtureTest extends TestCase {
       NoDefaultConstructorFixtureException.class);
   }
 
+  @Test
   public void testFixtureNameNotFound() throws Throwable {
     assertCannotLoadFixture("Successfully loaded a nonexistent fixture!",
       "BlahBlahBlah", NoSuchFixtureException.class);
   }
 
+  @Test
   public void testFixtureNameNotFoundEvenAfterAddingOnFixture()
     throws Throwable {
     try {

@@ -1,7 +1,40 @@
-It is relatively simple to marry !-FitNesse-! to your source code control system.
+It is relatively simple to marry !-FitNesse-! to your source code control system. By default FitNesse is using a Zip-file based version control mechanism. As soon as a page is updated, a backup is made of the current version and the new version is put into place. Closely tied to the version controller is the .RecentChanges page. This page can be consulted to see who change what.
 
-TODO: Describe usage of fitnesse.wiki.VersionsController.
+The most basic implementation is the !-SimpleFileVersionsController-!. It just stores the content. This class is used as a basis for the !-ZipFileVersionsController-! and !-GitFileVersionsController-!.
 
-In older versions the convention was to create a CmSystem class: a class that fulfilled the CmSystem protocol. Althoug hthis appeared to work fine on paper the real world version had some downsides. For one it was not in control with the saving of the content, now the VersionsController is in charge of this. Also the protocol was quite cumbersome and it involved Java introspection logic to get it working. Why does your wiki page have to "know" about version control anyway...
+!2 Git Version Controller
+For those of us who fancy a more tight integration with their source control system there is a Git based version controller available. This version controller creates a commit for every page change. The .RecentChanges page can also be tailored to show the Git version history, instead of the default file based history.
 
-The VersionsController solution will be more solid can be made to provide generic solutions towards version control in FitNesse.
+To configure the Git version controller, add the following to your plugins.propeties:
+
+{{{VersionsController=fitnesse.wiki.fs.GitFileVersionsController
+RecentChanges=fitnesse.wiki.fs.GitFileVersionsController}}}
+The result is that the files are managed by Git and the Recent changes page is showing those changes.
+
+This version controller takes into account ignored files. If you change a file that is listed as ignored (normally in a .gitignore file), it will not be added to version control.
+
+!2 Description of !-fitnesse.wiki.fs.VersionsController-!
+To create a version controller 2 things are important:
+
+ 1 The pages should be stored in a File system. The filesystem based wiki page is currently the only supported page type (but you're free to create your own)
+ 1 You'll need to implement the !-fitnesse.wiki.fs.VersionsController-! interface.
+ 1 To support recent changes you'll have to provide a class that implements the !-fitnesse.wiki.RecentChanges-! interface.
+
+The !-VersionsController-! interface is quite straightforward. It consists of the following methods:
+
+{{{  VersionInfo makeVersion(FileSystemPage page, PageData data);}}}Create a new version. This is typically called then a page is saved.
+
+{{{  VersionInfo getCurrentVersion(FileSystemPage page);}}}Get version information about the current page.
+
+{{{  PageData getRevisionData(FileSystemPage page, String label);}}}Get a specific version of the Page data, given a label. The label is either a property also provided by the !-VersionInfo-! object (typically name) or null, denoting the most recent version.
+
+{{{  Collection<? extends VersionInfo> history(FileSystemPage page);}}}Obtain the history of a page. The history is as big as the depth set by setHistoryDepth(int) (see below).
+
+{{{  void delete(FileSystemPage page);}}}Delete the page.
+
+{{{  void setHistoryDepth(int historyDepth);}}}Configure the depth for which versions need to be stored (in case of zip files) or the history depth for which changes are fetched (see history() above)
+
+!2 What happened to !-CmSystem-!?
+In older versions the convention was to create a !-CmSystem-! class: a class that fulfilled the !-CmSystem-! protocol. Although this appeared to work fine on paper the real world version had some downsides. For one it was not in control with the saving of the content, now the !-VersionsController-! is in charge of this. Also the protocol was quite cumbersome and it involved Java introspection logic to get it working. Why does your wiki page have to "know" about version control anyway...
+
+The !-VersionsController-! solution will be more solid can be made to provide generic solutions towards version control in FitNesse.

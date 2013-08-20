@@ -3,13 +3,13 @@ package fitnesse.responders.run.formatters;
 import java.io.IOException;
 import java.io.Writer;
 
+import fitnesse.testrunner.WikiTestPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
@@ -23,7 +23,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
     if (suiteTime == 0)
       suiteTime = timeMeasurement.startedAt();
     super.newTestStarted(test, timeMeasurement);

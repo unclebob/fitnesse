@@ -2,22 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
+import java.util.Collection;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Test;
 
-import java.util.Collection;
-
-public class VersionResponderTest extends RegexTestCase {
+public class VersionResponderTest {
   private String oldVersion;
   private SimpleResponse response;
   private WikiPage root;
@@ -26,7 +32,7 @@ public class VersionResponderTest extends RegexTestCase {
   private void makeTestResponse(String pageName) throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
+    page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     
     WikiPageProperties properties = data.getProperties();
@@ -43,6 +49,7 @@ public class VersionResponderTest extends RegexTestCase {
     response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
+  @Test
   public void testVersionName() throws Exception {
     makeTestResponse("PageOne");
 
@@ -52,6 +59,7 @@ public class VersionResponderTest extends RegexTestCase {
     assertNotSubString("New Page tags", response.getContent());
   }
 
+  @Test
   public void testButtons() throws Exception {
     makeTestResponse("PageOne");
 
@@ -64,6 +72,7 @@ public class VersionResponderTest extends RegexTestCase {
     assertHasRegexp(">Rollback</a>", response.getContent());
   }
 
+  @Test
   public void testNameNoAtRootLevel() throws Exception {
     makeTestResponse("PageOne.PageTwo");
     assertSubString("PageOne.PageTwo?responder=", response.getContent());

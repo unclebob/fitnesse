@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 
 import org.junit.After;
@@ -18,7 +19,6 @@ import fitnesse.http.Response;
 import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
@@ -31,7 +31,6 @@ public class ExposeThreadingIssueInMockResponseTest {
   private MockResponseSender sender;
   private WikiPage testPage;
   private String results;
-  private PageCrawler crawler;
   private String simpleRunPageName;
   private final int port = 9123;
   private FitSocketReceiver receiver;
@@ -39,7 +38,6 @@ public class ExposeThreadingIssueInMockResponseTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new TestResponder();
     context = FitNesseUtil.makeTestContext(root, port);
@@ -73,7 +71,7 @@ public class ExposeThreadingIssueInMockResponseTest {
 
   private void doSimpleRun(String fixtureTable) throws Exception {
     simpleRunPageName = "TestPage";
-    testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
+    testPage = WikiPageUtil.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);

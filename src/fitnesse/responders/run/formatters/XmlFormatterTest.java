@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class XmlFormatterTest {
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();

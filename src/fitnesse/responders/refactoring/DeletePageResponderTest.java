@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
+import java.util.List;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -11,8 +19,8 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-
-import java.util.List;
+import fitnesse.wiki.WikiPageUtil;
+import org.junit.Test;
 
 public class DeletePageResponderTest extends ResponderTestCase {
   private final String level1Name = "LevelOne";
@@ -22,9 +30,10 @@ public class DeletePageResponderTest extends ResponderTestCase {
   private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
   private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
 
+  @Test
   public void testDeleteConfirmation() throws Exception {
-    WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
-    this.crawler.addPage(level1, this.level2Path);
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
+    WikiPageUtil.addPage(level1, this.level2Path);
     MockRequest request = new MockRequest();
     request.setResource(this.qualifiedLevel2Name);
     request.addInput("deletePage", "");
@@ -34,10 +43,11 @@ public class DeletePageResponderTest extends ResponderTestCase {
     assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
   }
 
+  @Test
   public void testDeletePage() throws Exception {
-    WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
-    this.crawler.addPage(level1, this.level2Path);
-    assertTrue(this.crawler.pageExists(this.root, this.level1Path));
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
+    WikiPageUtil.addPage(level1, this.level2Path);
+    assertTrue(this.root.getPageCrawler().pageExists(this.level1Path));
     MockRequest request = new MockRequest();
     request.setResource(this.level1Name);
     request.addInput("confirmed", "yes");
@@ -47,14 +57,15 @@ public class DeletePageResponderTest extends ResponderTestCase {
     assertNotSubString("Are you sure you want to delete", page);
     assertEquals(303, response.getStatus());
     assertEquals("root", response.getHeader("Location"));
-    assertFalse(this.crawler.pageExists(this.root, PathParser.parse(this.level1Name)));
+    assertFalse(this.root.getPageCrawler().pageExists(PathParser.parse(this.level1Name)));
 
     List<?> children = this.root.getChildren();
     assertEquals(0, children.size());
   }
 
+  @Test
   public void testDontDeleteFrontPage() throws Exception {
-    this.crawler.addPage(this.root, PathParser.parse("FrontPage"), "Content");
+    WikiPageUtil.addPage(this.root, PathParser.parse("FrontPage"), "Content");
     this.request.setResource("FrontPage");
     this.request.addInput("confirmed", "yes");
     Response response = this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), this.request);

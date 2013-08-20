@@ -1,7 +1,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.testsystems.TestSummary;
@@ -16,17 +16,17 @@ public class PageInProgressFormatter extends NullFormatter {
 	super(context, page);
   }
   
-  public String getLockFileName(TestPage test) {
+  public String getLockFileName(WikiTestPage test) {
 	ReadOnlyPageData data = test.parsedData();
 	return context.getTestProgressPath() + "/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
 	FileUtil.createFile(getLockFileName(test), "");
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
 	FileUtil.deleteFile(getLockFileName(test));
   }
 

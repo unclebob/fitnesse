@@ -125,7 +125,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
               .addFilepattern(fileSystemPath + "/" + contentFilename)
               .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
-      commit(git, String.format("FitNesse page %s updated.", PathParser.render(page.getPageCrawler().getFullPath(page))));
+      commit(git, String.format("FitNesse page %s updated.", PathParser.render(page.getPageCrawler().getFullPath())));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -147,7 +147,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
               .addFilepattern(fileSystemPath + "/" + contentFilename)
               .addFilepattern(fileSystemPath + "/" + propertiesFilename)
               .call();
-      commit(git, String.format("FitNesse page %s deleted.", PathParser.render(page.getPageCrawler().getFullPath(page))));
+      commit(git, String.format("FitNesse page %s deleted.", PathParser.render(page.getPageCrawler().getFullPath())));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -169,7 +169,10 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     assert pagePath.startsWith(workTreePath);
 
     // Add 1 for trailing '/' (not included in abs. path)
-    return pagePath.substring(workTreePath.length() + 1);
+    pagePath = pagePath.substring(workTreePath.length() + 1);
+    // git stores paths unix-style
+    pagePath = pagePath.replace(File.separatorChar, '/');
+    return pagePath;
   }
 
   private VersionInfo getCurrentVersion(FileSystemPage page, Repository repository) {

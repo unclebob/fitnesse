@@ -42,8 +42,7 @@ public class VersionsControllerFixture {
   }
 
   public Object savePageWithContent(String pageName, String content) {
-    final PageCrawler pageCrawler = rootPage.getPageCrawler();
-    lastUsedPage = pageCrawler.addPage(rootPage, PathParser.parse(pageName));
+    lastUsedPage = WikiPageUtil.addPage(rootPage, PathParser.parse(pageName));
     final PageData data = lastUsedPage.getData();
     data.setContent(content);
     return lastUsedPage.commit(data);
@@ -51,7 +50,7 @@ public class VersionsControllerFixture {
 
   public void deletePage(String pageName) {
     final PageCrawler pageCrawler = rootPage.getPageCrawler();
-    lastUsedPage = pageCrawler.getPage(rootPage, PathParser.parse(pageName));
+    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
     lastUsedPage.getParent().removeChildPage(lastUsedPage.getName());
   }
 

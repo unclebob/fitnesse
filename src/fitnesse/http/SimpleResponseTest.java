@@ -2,12 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SimpleResponseTest extends RegexTestCase implements ResponseSender {
+public class SimpleResponseTest implements ResponseSender {
   private StringBuffer buffer;
   private String text;
   private boolean closed = false;
@@ -31,14 +37,13 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     return null;
   }
 
+  @Before
   public void setUp() throws Exception {
     buffer = new StringBuffer();
     text = null;
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testSimpleResponse() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("some content");
@@ -50,12 +55,14 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     assertTrue(closed);
   }
 
+  @Test
   public void testPageNotFound() throws Exception {
     SimpleResponse response = new SimpleResponse(404);
     response.sendTo(this);
     assertHasRegexp("404 Not Found", text);
   }
 
+  @Test
   public void testRedirect() throws Exception {
     SimpleResponse response = new SimpleResponse();
     response.redirect("some url");
@@ -64,6 +71,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     assertHasRegexp("Location: some url\r\n", text);
   }
 
+  @Test
   public void testUnicodeCharacters() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("\uba80\uba81\uba82\uba83");

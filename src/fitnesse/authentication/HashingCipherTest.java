@@ -2,22 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Random;
 
+import org.junit.Test;
 import util.TimeMeasurement;
 
-import junit.framework.TestCase;
-
-public class HashingCipherTest extends TestCase {
+public class HashingCipherTest {
   private String[] inputs = new String[]{"123", "abc", "12345678901234567890", "this is a test", "!@#$%^&*()"};
   private HashingCipher crypter = new HashingCipher();
 
-  public void setUp() throws Exception {
-  }
-
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testHashReturnsDifferentValueThanPassed() throws Exception {
     String testString = "This is a test string";
     String hash = crypter.encrypt(testString);
@@ -25,12 +24,14 @@ public class HashingCipherTest extends TestCase {
     assertFalse(hash.equals(testString));
   }
 
+  @Test
   public void testDifferentStringHashDifferently() throws Exception {
     String hash1 = crypter.encrypt("123456");
     String hash2 = crypter.encrypt("abcdef");
     assertFalse(hash1.equals(hash2));
   }
 
+  @Test
   public void testLengthOfHash() throws Exception {
     for (int i = 0; i < inputs.length; i++) {
       String input = inputs[i];
@@ -39,6 +40,7 @@ public class HashingCipherTest extends TestCase {
     }
   }
 
+  @Test
   public void testSameInputGivesSameOutput() throws Exception {
     for (int i = 0; i < inputs.length; i++) {
       String input = inputs[i];
@@ -48,6 +50,7 @@ public class HashingCipherTest extends TestCase {
     }
   }
 
+  @Test
   public void testAlgorithmSpeed() throws Exception {
     Random generator = new Random();
     int sampleSize = 1000;

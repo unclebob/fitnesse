@@ -2,21 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XmlUtilTest extends TestCase {
+public class XmlUtilTest {
+
+  @Test
   public void testCreateXMLDocumentFromString() throws Exception {
     Document doc = XmlUtil.newDocument("<test>test</test>");
     NodeList elements = doc.getElementsByTagName("test");
     assertEquals(1, elements.getLength());
   }
 
+  @Test
   public void testGetLocalElementByTagName() throws Exception {
     Document doc = XmlUtil.newDocument("<level1>" +
       "  <target1/>" +
@@ -37,6 +44,7 @@ public class XmlUtilTest extends TestCase {
     assertNotNull(target2);
   }
 
+  @Test
   public void testAddCdataElement() throws Exception {
     Document doc = XmlUtil.newDocument();
     Element root = doc.createElement("root");

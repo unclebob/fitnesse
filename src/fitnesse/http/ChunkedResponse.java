@@ -26,8 +26,8 @@ public class ChunkedResponse extends Response {
   }
 
   @Override
-  protected void addStandardHeaders() {
-    super.addStandardHeaders();
+  protected void addContentHeaders() {
+    super.addContentHeaders();
     if (!dontChunk)
       addHeader("Transfer-Encoding", "chunked");
   }

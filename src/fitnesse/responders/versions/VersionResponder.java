@@ -19,6 +19,7 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -38,11 +39,11 @@ public class VersionResponder implements SecureResponder {
 
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    String fullPathName = PathParser.render(pageCrawler.getFullPath(page));
+    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath());
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();
@@ -109,7 +110,7 @@ public class VersionResponder implements SecureResponder {
     public String render() {
       PageData data;
       if (isTestPage(pageData)) {
-        TestPage testPage = new TestPage(pageData);
+        WikiTestPage testPage = new WikiTestPage(pageData);
         data = testPage.getDecoratedData();
       } else {
         data = pageData;

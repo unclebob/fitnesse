@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import util.RegexTestCase;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
@@ -19,8 +21,10 @@ import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestResultFormattingResponderTest extends RegexTestCase {
+public class TestResultFormattingResponderTest {
   private PipedOutputStream output;
   private PipedInputStream input;
   private TestResultFormattingResponder responder;
@@ -29,6 +33,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
   private PageResult result2;
   private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     output = new PipedOutputStream();
     input = new PipedInputStream(output);
@@ -43,6 +48,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     context = FitNesseUtil.makeTestContext(null);
   }
 
+  @Test
   public void testOneResult() throws Exception {
     FitProtocol.writeData(result1.toString(), output);
     FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
@@ -52,6 +58,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     assertEquals(result1.toString(), formatter.results.get(0).toString());
   }
 
+  @Test
   public void testTwoResults() throws Exception {
     FitProtocol.writeData(result1.toString(), output);
     FitProtocol.writeData(result2.toString(), output);
@@ -63,6 +70,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     assertEquals(result2.toString(), formatter.results.get(1).toString());
   }
 
+  @Test
   public void testFinalCounts() throws Exception {
     FitProtocol.writeData(result1.toString(), output);
     Counts counts = new Counts(1, 2, 3, 4);
@@ -76,6 +84,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     assertEquals(counts.exceptions, summary.getExceptions());
   }
 
+  @Test
   public void testMakeResponse() throws Exception {
     MockRequest request = new MockRequest();
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -100,15 +109,17 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
 //    assertSubString("Command Line Test Results", html);
   }
 
-
+  @Test
   public void testMockFormatter() throws Exception {
     checkFormatterCreated(null, MockResultFormatter.class);
   }
 
+  @Test
   public void testHtmlFormatter() throws Exception {
     checkFormatterCreated("html", HtmlResultFormatter.class);
   }
 
+  @Test
   public void testXmlFormatter() throws Exception {
     checkFormatterCreated("xml", XmlResultFormatter.class);
   }

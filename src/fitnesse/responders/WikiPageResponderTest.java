@@ -2,6 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -10,24 +17,29 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WikiPageResponderTest extends RegexTestCase {
+public class WikiPageResponderTest {
   private WikiPage root;
-  private PageCrawler crawler;
   private FitNesseContext context;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
     context = FitNesseUtil.makeTestContext(root);
   }
 
+  @Test
   public void testResponse() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Wiki Page tags");
@@ -51,9 +63,10 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("<h5> Wiki Page tags</h5>", body);
   }
 
+  @Test
   public void testAttributeButtons() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"));
-    final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
+    final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"));
     for (final String attribute : PageData.NON_SECURITY_ATTRIBUTES) {
       final PageData data = noButtonsPage.getData();
       data.removeAttribute(attribute);
@@ -75,15 +88,16 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertNotSubString(">Test</a>", response.getContent());
   }
 
+  @Test
   public void testHeadersAndFooters() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
-    crawler.addPage(root, PathParser.parse("TestPage"), "test page");
-    crawler.addPage(root, PathParser.parse("PageHeader"), "header");
-    crawler.addPage(root, PathParser.parse("PageFooter"), "footer");
-    crawler.addPage(root, PathParser.parse("SetUp"), "setup");
-    crawler.addPage(root, PathParser.parse("TearDown"), "teardown");
-    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
-    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "normal");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "test page");
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "header");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer");
+    WikiPageUtil.addPage(root, PathParser.parse("SetUp"), "setup");
+    WikiPageUtil.addPage(root, PathParser.parse("TearDown"), "teardown");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
 
     SimpleResponse response = requestPage("NormalPage");
     String content = response.getContent();
@@ -113,8 +127,9 @@ public class WikiPageResponderTest extends RegexTestCase {
     return (SimpleResponse) responder.makeResponse(context, request);
   }
 
+  @Test
   public void testImportedPageIndication() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.addTo(data.getProperties());
@@ -125,8 +140,9 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("<body class=\"imported\">", content);
   }
 
+  @Test
   public void testImportedPageIndicationNotOnRoot() throws Exception {
-    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SamplePage"));
     final PageData data = page.getData();
     final WikiImportProperty importProperty = new WikiImportProperty("blah");
     importProperty.setRoot(true);
@@ -138,6 +154,7 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertNotSubString("<body class=\"imported\">", content);
   }
 
+  @Test
   public void testResponderIsSecureReadOperation() throws Exception {
     final Responder responder = new WikiPageResponder();
     assertTrue(responder instanceof SecureResponder);

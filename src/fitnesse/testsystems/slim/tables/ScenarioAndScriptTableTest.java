@@ -2,22 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimClient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
@@ -110,10 +110,10 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|echo|7|giving|7|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "7")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
+            )
     );
 
     Assertion.evaluateExpectations(assertions, pseudoResults);
@@ -138,10 +138,10 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|echo|7|giving|8|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "7")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
+            )
     );
     Assertion.evaluateExpectations(assertions, pseudoResults);
 
@@ -166,11 +166,11 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "|$V=|echo|7|\n" +
         "|echo|$V|giving|$V|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_id_0", "7"),
-        list("scriptTable_id_1/scriptTable_s_id_0", "7")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("scriptTable_id_0", "7"),
+                    list("scriptTable_id_1/scriptTable_s_id_0", "7")
+            )
     );
 
     Assertion.evaluateExpectations(assertions, pseudoResults);
@@ -190,10 +190,10 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|echo|7|giving|7|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "7")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
+            )
     );
 
     Assertion.evaluateExpectations(assertions, pseudoResults);
@@ -213,10 +213,10 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|echo|7|giving|7|\n"
     );
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scriptTable_id_0/scriptTable_s_id_0", "7")
-      )
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
+            )
     );
 
     Assertion.evaluateExpectations(assertions, pseudoResults);

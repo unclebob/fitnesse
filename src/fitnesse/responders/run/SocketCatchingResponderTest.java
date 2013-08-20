@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+
 import fitnesse.FitNesseContext;
 import fitnesse.components.SocketDealer;
 import fitnesse.http.MockRequest;
@@ -10,8 +13,10 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SocketCatchingResponderTest extends RegexTestCase {
+public class SocketCatchingResponderTest {
   private SocketDealer dealer;
   private SimpleSocketSeeker seeker;
   private MockResponseSender sender;
@@ -19,6 +24,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
   private FitNesseContext context;
   private MockRequest request;
 
+  @Before
   public void setUp() throws Exception {
     seeker = new SimpleSocketSeeker();
     sender = new MockResponseSender();
@@ -28,9 +34,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
     request = new MockRequest();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testSuccess() throws Exception {
     int ticket = dealer.seekingSocket(seeker);
     request.addInput("ticket", ticket + "");
@@ -40,6 +44,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
     assertEquals("", sender.sentData());
   }
 
+  @Test
   public void testMissingSeeker() throws Exception {
     request.addInput("ticket", "123");
     Response response = responder.makeResponse(context, request);

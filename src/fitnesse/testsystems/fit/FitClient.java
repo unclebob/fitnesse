@@ -6,26 +6,25 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
+import util.StreamReader;
 
 public class FitClient {
 
-  protected TestSystemListener listener;
-  protected Socket fitSocket;
+  private FitClientListener listener;
+  private Socket fitSocket;
   private OutputStream fitInput;
   private StreamReader fitOutput;
 
   private volatile int sent = 0;
   private volatile int received = 0;
   private volatile boolean isDoneSending = false;
-  protected volatile boolean killed = false;
-  protected Thread fitListeningThread;
+  private volatile boolean killed = false;
+  private Thread fitListeningThread;
 
-  public FitClient(TestSystemListener listener) {
+  public FitClient(FitClientListener listener) {
     this.listener = listener;
   }
 
@@ -80,36 +79,6 @@ public class FitClient {
       throw new InterruptedException("FitClient was killed");
   }
 
-  private void listenToFit() {
-    try {
-      attemptToListenToFit();
-    } catch (Exception e) {
-      exceptionOccurred(e);
-    }
-  }
-
-  private void attemptToListenToFit() throws Exception {
-    while (!finishedReading()) {
-      int size;
-      size = FitProtocol.readSize(fitOutput);
-      if (size != 0) {
-        String readValue = fitOutput.read(size);
-        if (fitOutput.byteCount() < size)
-          throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-        listener.testOutputChunk(readValue);
-      } else {
-        Counts counts = FitProtocol.readCounts(fitOutput);
-        TestSummary summary = new TestSummary();
-        summary.right = counts.right;
-        summary.wrong = counts.wrong;
-        summary.ignores = counts.ignores;
-        summary.exceptions = counts.exceptions;
-        listener.testComplete(summary);
-        received++;
-      }
-    }
-  }
-
   private boolean finishedReading() {
     while (stateIndeterminate())
       shortSleep();
@@ -138,6 +107,37 @@ public class FitClient {
   private class FitListeningRunnable implements Runnable {
     public void run() {
       listenToFit();
+    }
+
+
+    private void listenToFit() {
+      try {
+        attemptToListenToFit();
+      } catch (Exception e) {
+        exceptionOccurred(e);
+      }
+    }
+
+    private void attemptToListenToFit() throws IOException {
+      while (!finishedReading()) {
+        int size;
+        size = FitProtocol.readSize(fitOutput);
+        if (size != 0) {
+          String readValue = fitOutput.read(size);
+          if (fitOutput.byteCount() < size)
+            throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+          listener.testOutputChunk(readValue);
+        } else {
+          Counts counts = FitProtocol.readCounts(fitOutput);
+          TestSummary summary = new TestSummary();
+          summary.right = counts.right;
+          summary.wrong = counts.wrong;
+          summary.ignores = counts.ignores;
+          summary.exceptions = counts.exceptions;
+          listener.testComplete(summary);
+          received++;
+        }
+      }
     }
   }
 

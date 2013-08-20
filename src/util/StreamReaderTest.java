@@ -2,11 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-public class StreamReaderTest extends RegexTestCase {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+public class StreamReaderTest {
   private PipedOutputStream output;
   private StreamReader reader;
   private String readResult;
@@ -15,11 +24,13 @@ public class StreamReaderTest extends RegexTestCase {
   @SuppressWarnings("unused")
   private Exception exception;
 
+  @Before
   public void setUp() throws Exception {
     output = new PipedOutputStream();
     reader = new StreamReader(new PipedInputStream(output));
   }
 
+  @After
   public void tearDown() throws Exception {
     output.close();
     reader.close();
@@ -30,6 +41,7 @@ public class StreamReaderTest extends RegexTestCase {
     output.write(bytes);
   }
 
+  @Test
   public void testReadLine() throws Exception {
     startReading(new ReadLine());
     writeToPipe("a line\r\n");
@@ -37,6 +49,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals("a line", readResult);
   }
 
+  @Test
   public void testReadLineBytes() throws Exception {
     startReading(new ReadLineBytes());
     writeToPipe("a line\r\n");
@@ -44,6 +57,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals("a line", new String(byteResult));
   }
 
+  @Test
   public void testBufferCanGrow() throws Exception {
     startReading(new ReadLine());
     for (int i = 0; i < 1001; i++)
@@ -54,6 +68,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertHasRegexp("1000", readResult);
   }
 
+  @Test
   public void testReadNumberOfBytesAsString() throws Exception {
     startReading(new ReadCount(100));
     StringBuffer buffer = new StringBuffer();
@@ -66,6 +81,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals(buffer.toString(), readResult);
   }
 
+  @Test
   public void testReadNumberOfBytes() throws Exception {
     startReading(new ReadCountBytes(100));
     StringBuffer buffer = new StringBuffer();
@@ -78,6 +94,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals(buffer.toString(), new String(byteResult));
   }
 
+  @Test
   public void testReadNumberOfBytesWithClosedInput() throws Exception {
     startReading(new ReadCountBytes(100));
 
@@ -90,20 +107,24 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals("bytes returned", 50, byteResult.length);
   }
 
+  @Test
   public void testReadingZeroBytes() throws Exception {
     startReading(new ReadCount(0));
     finishReading();
     assertEquals("", readResult);
   }
 
+  @Test
   public void testReadUpTo() throws Exception {
     checkReadUoTo("--boundary", "some bytes--boundary", "some bytes");
   }
 
+  @Test
   public void testReadUpToNonEnd() throws Exception {
     checkReadUoTo("--bound", "some bytes--boundary", "some bytes");
   }
 
+  @Test
   public void testReadBytesUpTo() throws Exception {
     startReading(new ReadUpToBytes("--boundary"));
     writeToPipe("some bytes--boundary");
@@ -112,10 +133,12 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals("some bytes", new String(byteResult));
   }
 
+  @Test
   public void testReadUpTo2() throws Exception {
     checkReadUoTo("--bob", "----bob\r\n", "--");
   }
 
+  @Test
   public void testReadUpTo3() throws Exception {
     checkReadUoTo("12345", "112123123412345", "1121231234");
   }
@@ -128,6 +151,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals(expected, readResult);
   }
 
+  @Test
   public void testCopyBytesUpTo() throws Exception {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     writeToPipe("some bytes--boundary");
@@ -135,6 +159,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals("some bytes", outputStream.toString());
   }
 
+  @Test
   public void testEofReadCount() throws Exception {
     writeToPipe("abcdefghijklmnopqrstuvwxyz");
     output.close();
@@ -147,6 +172,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertTrue(reader.isEof());
   }
 
+  @Test
   public void testEofReadLine() throws Exception {
     writeToPipe("one line\ntwo lines\nthree lines");
     output.close();
@@ -159,6 +185,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertTrue(reader.isEof());
   }
 
+  @Test
   public void testEofReadUpTo() throws Exception {
     writeToPipe("mark one, mark two, the end");
     output.close();
@@ -171,6 +198,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertTrue(reader.isEof());
   }
 
+  @Test
   public void testBytesConsumed() throws Exception {
     writeToPipe("One line\r\n12345abc-boundary");
     assertEquals(0, reader.numberOfBytesConsumed());
@@ -185,6 +213,7 @@ public class StreamReaderTest extends RegexTestCase {
     assertEquals(27, reader.numberOfBytesConsumed());
   }
 
+  @Test
   public void testEarlyClosingStream() throws Exception {
     startReading(new ReadCount(10));
     output.close();

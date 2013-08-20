@@ -1,9 +1,9 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.CompositeExecutionLog;
+import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.results.ExceptionResult;
 import fitnesse.testsystems.slim.results.TestResult;
 import fitnesse.testsystems.slim.tables.Assertion;
@@ -44,27 +44,32 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.addMessageForBlankHtml();
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     for (BaseFormatter formatter : formatters)
       formatter.setExecutionLogAndTrackingId(stopResponderId, log);
   }
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  @Override
+  public void testSystemStarted(TestSystem testSystem) {
     for (BaseFormatter formatter : formatters)
-      formatter.testSystemStarted(testSystem, testSystemName, testRunner);
+      formatter.testSystemStarted(testSystem);
   }
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  @Override
+  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.newTestStarted(test, timeMeasurement);
   }
 
+  @Override
   public void testOutputChunk(String output) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  @Override
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
@@ -76,6 +81,7 @@ public class CompositeFormatter extends BaseFormatter {
     }
   }
 
+  @Override
   public int getErrorCount() {
     int exitCode = 0;
     for (BaseFormatter formatter : formatters)

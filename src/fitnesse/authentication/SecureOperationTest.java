@@ -2,48 +2,49 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import fitnesse.wiki.*;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SecureOperationTest extends TestCase {
+public class SecureOperationTest {
   private SecureReadOperation sro;
   private WikiPage root;
   FitNesseContext context;
   private MockRequest request;
-  private PageCrawler crawler;
   private WikiPagePath parentPagePath;
   private WikiPagePath childPagePath;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     sro = new SecureReadOperation();
     request = new MockRequest();
-    crawler = root.getPageCrawler();
     parentPagePath = PathParser.parse("ParentPage");
     childPagePath = PathParser.parse("ChildPage");
   }
 
+  @Test
   public void testNormalPageDoesNotRequireAuthentication() throws Exception {
     String insecurePageName = "InsecurePage";
     WikiPagePath insecurePagePath = PathParser.parse(insecurePageName);
-    crawler.addPage(root, insecurePagePath);
+    WikiPageUtil.addPage(root, insecurePagePath);
     request.setResource(insecurePageName);
     assertFalse(sro.shouldAuthenticate(context, request));
   }
 
+  @Test
   public void testReadSecurePageRequresAuthentication() throws Exception {
     String securePageName = "SecurePage";
     WikiPagePath securePagePath = PathParser.parse(securePageName);
-    WikiPage securePage = crawler.addPage(root, securePagePath);
+    WikiPage securePage = WikiPageUtil.addPage(root, securePagePath);
     makeSecure(securePage);
     request.setResource(securePageName);
     assertTrue(sro.shouldAuthenticate(context, request));
@@ -55,34 +56,39 @@ public class SecureOperationTest extends TestCase {
     securePage.commit(data);
   }
 
+  @Test
   public void testChildPageOfSecurePageRequiresAuthentication() throws Exception {
-    WikiPage parentPage = crawler.addPage(root, parentPagePath);
+    WikiPage parentPage = WikiPageUtil.addPage(root, parentPagePath);
     makeSecure(parentPage);
-    crawler.addPage(parentPage, childPagePath);
+    WikiPageUtil.addPage(parentPage, childPagePath);
     request.setResource("ParentPage.ChildPage");
     assertTrue(sro.shouldAuthenticate(context, request));
   }
 
+  @Test
   public void testNonExistentPageCanBeAuthenticated() throws Exception {
     request.setResource("NonExistentPage");
     assertFalse(sro.shouldAuthenticate(context, request));
   }
 
+  @Test
   public void testParentOfNonExistentPageStillSetsPrivileges() throws Exception {
-    WikiPage parentPage = crawler.addPage(root, parentPagePath);
+    WikiPage parentPage = WikiPageUtil.addPage(root, parentPagePath);
     makeSecure(parentPage);
     request.setResource("ParentPage.NonExistentPage");
     assertTrue(sro.shouldAuthenticate(context, request));
   }
 
+  @Test
   public void testChildPageIsRestricted() throws Exception {
-    WikiPage parentPage = crawler.addPage(root, parentPagePath);
-    WikiPage childPage = crawler.addPage(parentPage, childPagePath);
+    WikiPage parentPage = WikiPageUtil.addPage(root, parentPagePath);
+    WikiPage childPage = WikiPageUtil.addPage(parentPage, childPagePath);
     makeSecure(childPage);
     request.setResource("ParentPage.ChildPage");
     assertTrue(sro.shouldAuthenticate(context, request));
   }
 
+  @Test
   public void testBlankResource() throws Exception {
     request.setResource("");
     assertFalse(sro.shouldAuthenticate(context, request));

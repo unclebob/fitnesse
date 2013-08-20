@@ -2,22 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.assertHasRegexp;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class MergeResponderTest extends RegexTestCase {
+public class MergeResponderTest {
   private WikiPage source;
   private MockRequest request;
 
+  @Before
   public void setUp() throws Exception {
     source = InMemoryPage.makeRoot("RooT");
-    source.getPageCrawler().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
+    WikiPageUtil.addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
     request = new MockRequest();
     request.setResource("SimplePage");
     request.addInput(EditResponder.TIME_STAMP, "");
@@ -25,9 +30,7 @@ public class MergeResponderTest extends RegexTestCase {
     FitNesseUtil.makeTestContext();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testHtml() throws Exception {
     Responder responder = new MergeResponder(request);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(source), new MockRequest());
@@ -37,6 +40,7 @@ public class MergeResponderTest extends RegexTestCase {
     assertHasRegexp("some new content", response.getContent());
   }
 
+  @Test
   public void testAttributeValues() throws Exception {
     request.addInput("Edit", "On");
     request.addInput("PageType", "Test");

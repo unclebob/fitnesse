@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -9,9 +11,11 @@ import java.io.PrintWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
-public class XmlWriterTest extends RegexTestCase {
+public class XmlWriterTest {
   private ByteArrayOutputStream output;
   private Document doc;
 
@@ -33,15 +37,14 @@ public class XmlWriterTest extends RegexTestCase {
     sampleXml = new String(out.toByteArray());
   }
 
+  @Before
   public void setUp() throws Exception {
     DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     doc = builder.parse(new ByteArrayInputStream(sampleXml.getBytes()));
     output = new ByteArrayOutputStream();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testAll() throws Exception {
     String results = writeXml(doc);
 

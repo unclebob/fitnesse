@@ -2,9 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
@@ -12,12 +17,13 @@ import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
 import fitnesse.testutil.FitNesseUtil;
 
-public class UploadResponderTest extends TestCase {
+public class UploadResponderTest {
   private FitNesseContext context;
   private UploadResponder responder;
   private MockRequest request;
   private File testFile;
 
+  @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(null);
     FileUtil.makeDir(context.getRootPagePath());
@@ -28,10 +34,12 @@ public class UploadResponderTest extends TestCase {
     request = new MockRequest();
   }
 
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(context.getRootPagePath());
   }
 
+  @Test
   public void testMakeResponse() throws Exception {
     request.addInput("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
     request.setResource("files/");
@@ -46,6 +54,7 @@ public class UploadResponderTest extends TestCase {
     assertEquals("/files/", response.getHeader("Location"));
   }
 
+  @Test
   public void testMakeResponseSpaceInFileName() throws Exception {
     request.addInput("file", new UploadedFile("source filename.txt", "plain/text", testFile));
     request.setResource("files/");
@@ -60,6 +69,7 @@ public class UploadResponderTest extends TestCase {
     assertEquals("/files/", response.getHeader("Location"));
   }
 
+  @Test
   public void testMakeResponseSpaceInDirectoryName() throws Exception {
     FileUtil.makeDir(context.getRootPagePath() + "/files/Folder With Space");
     request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
@@ -75,6 +85,7 @@ public class UploadResponderTest extends TestCase {
     assertEquals("/files/Folder%20With%20Space/", response.getHeader("Location"));
   }
 
+  @Test
   public void testMakeRelativeFilename() throws Exception {
     String name1 = "name1.txt";
     String name2 = "name2";
@@ -87,6 +98,7 @@ public class UploadResponderTest extends TestCase {
     assertEquals("name4.txt", UploadResponder.makeRelativeFilename(name4));
   }
 
+  @Test
   public void testMakeNewFilename() throws Exception {
     assertEquals("file_copy1.txt", UploadResponder.makeNewFilename("file.txt", 1));
     assertEquals("file_copy2.txt", UploadResponder.makeNewFilename("file.txt", 2));
@@ -94,6 +106,7 @@ public class UploadResponderTest extends TestCase {
     assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
   }
 
+  @Test
   public void testWriteFile() throws Exception {
     File file = new File(context.getRootPagePath() + "/testFile");
     File inputFile = FileUtil.createFile(context.getRootPagePath() + "/testInput", "heres the content");

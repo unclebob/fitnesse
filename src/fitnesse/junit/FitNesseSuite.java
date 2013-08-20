@@ -13,13 +13,12 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.responders.run.SuiteFilter;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -143,16 +142,16 @@ public class FitNesseSuite extends ParentRunner<String> {
   private List<String> initChildren(FitNesseContext context) {
     WikiPagePath path = PathParser.parse(this.suiteName);
     PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage suiteRoot = crawler.getPage(context.root, path);
+    WikiPage suiteRoot = crawler.getPage(path);
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
-    WikiPage root = crawler.getPage(context.root, PathParser.parse("."));
+    WikiPage root = crawler.getPage(PathParser.parse("."));
     List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.responders.run.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
 
     List<String> testPages = new ArrayList<String>();
     for (WikiPage wp : pages) {
-      testPages.add(crawler.getFullPath(wp).toString());
+      testPages.add(wp.getPageCrawler().getFullPath().toString());
     }
     return testPages;
   }

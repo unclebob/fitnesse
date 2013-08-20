@@ -2,7 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.SlimClient;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
@@ -13,18 +18,13 @@ import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
@@ -60,7 +60,7 @@ public class ScriptTableTest {
     buildInstructionsFor(scriptStatements);
     List<List<?>> resultList = ListUtility.<List<?>>list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     Assertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
   }
