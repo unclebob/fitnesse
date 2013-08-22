@@ -2,7 +2,6 @@ package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.*;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;

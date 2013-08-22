@@ -2,7 +2,7 @@ package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
+import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;

@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.testsystems.ExecutionResult;

@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -11,11 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestExecutionReport.Expectation;
-import fitnesse.responders.run.TestExecutionReport.InstructionResult;
-import fitnesse.responders.run.TestExecutionReport.Row;
-import fitnesse.responders.run.TestExecutionReport.Table;
-import fitnesse.responders.run.TestExecutionReport.TestResult;
+import fitnesse.reporting.TestExecutionReport.Expectation;
+import fitnesse.reporting.TestExecutionReport.InstructionResult;
+import fitnesse.reporting.TestExecutionReport.Row;
+import fitnesse.reporting.TestExecutionReport.Table;
+import fitnesse.reporting.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;

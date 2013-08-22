@@ -10,8 +10,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.TestResultRecord;

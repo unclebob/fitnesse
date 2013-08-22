@@ -5,7 +5,7 @@ import java.io.IOException;
 import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 

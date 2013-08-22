@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.StringWriter;
 
+import fitnesse.reporting.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;

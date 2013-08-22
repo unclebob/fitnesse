@@ -1,6 +1,6 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
-import fitnesse.slim.instructions.Instruction;
+import fitnesse.reporting.ExecutionReport;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

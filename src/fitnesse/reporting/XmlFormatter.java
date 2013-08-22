@@ -3,7 +3,7 @@
 package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;

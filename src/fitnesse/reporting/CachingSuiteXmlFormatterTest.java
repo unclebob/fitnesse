@@ -13,9 +13,8 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.TestResultRecord;

@@ -8,7 +8,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;

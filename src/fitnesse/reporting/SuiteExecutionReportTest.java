@@ -1,6 +1,6 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
-import static fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
+import static fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;

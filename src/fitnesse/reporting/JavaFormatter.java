@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.NullListener;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
@@ -31,6 +30,9 @@ public class JavaFormatter extends BaseFormatter {
 
   private String mainPageName;
   private boolean isSuite = true;
+  private static final Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
+  private ResultsListener listener = new NullListener();
+
 
   public interface ResultsRepository {
     void open(String string) throws IOException;
@@ -191,9 +193,6 @@ public class JavaFormatter extends BaseFormatter {
   JavaFormatter(String suiteName) {
     this.mainPageName = suiteName;
   }
-
-  private static final Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
-  private ResultsListener listener = new NullListener();
 
   public synchronized static JavaFormatter getInstance(String testName) {
     JavaFormatter existing = allocatedInstances.get(testName);
