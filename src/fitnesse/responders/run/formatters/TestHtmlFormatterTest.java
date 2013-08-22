@@ -108,7 +108,7 @@ public class TestHtmlFormatterTest {
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     pageBuffer.setLength(0);
-    formatter.errorOccured();
+    formatter.errorOccurred(new Exception("test"));
     //assert stop button added
     assertSubString("Testing was interrupted", pageBuffer.toString());
     //assert stop button removed

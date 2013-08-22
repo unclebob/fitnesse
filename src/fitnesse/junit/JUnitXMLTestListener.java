@@ -59,7 +59,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void errorOccured() {
+  public void errorOccurred(Throwable cause) {
   }
 
   @Override

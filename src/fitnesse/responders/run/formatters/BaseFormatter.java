@@ -35,7 +35,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   @Override
-  public void errorOccured() {
+  public void errorOccurred(Throwable cause) {
     try {
       allTestingComplete(new TimeMeasurement().start().stop());
     } catch (Exception e) {

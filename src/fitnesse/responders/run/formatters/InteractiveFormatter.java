@@ -72,9 +72,9 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   @Override
-  public void errorOccured() {
+  public void errorOccurred(Throwable cause) {
     wasInterrupted = true;
-    super.errorOccured();
+    super.errorOccurred(cause);
   }
 
   @Override

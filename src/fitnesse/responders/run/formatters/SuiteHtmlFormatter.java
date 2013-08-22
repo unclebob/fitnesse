@@ -165,9 +165,9 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void errorOccured() {
+  public void errorOccurred(Throwable cause) {
     latestTestTime = null;
-    super.errorOccured();
+    super.errorOccurred(cause);
   }
 
   @Override

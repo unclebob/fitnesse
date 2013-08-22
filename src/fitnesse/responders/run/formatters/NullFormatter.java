@@ -21,7 +21,7 @@ public class NullFormatter extends BaseFormatter {
   }
 
   @Override
-  public void errorOccured() {
+  public void errorOccurred(Throwable cause) {
   }
 
   @Override
