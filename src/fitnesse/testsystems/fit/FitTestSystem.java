@@ -7,6 +7,7 @@ import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.ClientBuilder;
+import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
@@ -18,14 +19,15 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private final FitNesseContext context;
-  private final TestSystemListener testSystemListener;
+  private final CompositeTestSystemListener testSystemListener;
   private CommandRunningFitClient client;
 
   public FitTestSystem(FitNesseContext context, Descriptor descriptor,
                        TestSystemListener listener) {
     super(descriptor);
     this.context = context;
-    this.testSystemListener = listener;
+    this.testSystemListener = new CompositeTestSystemListener();
+    this.testSystemListener.addTestSystemListener(listener);
   }
 
   @Override
@@ -59,6 +61,11 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   public void kill() {
     client.kill();
     testSystemStopped(client.getExecutionLog(), null);
+  }
+
+  @Override
+  public void addTestSystemListener(TestSystemListener listener) {
+    testSystemListener.addTestSystemListener(listener);
   }
 
   @Override

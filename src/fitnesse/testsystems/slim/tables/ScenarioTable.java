@@ -14,11 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import util.StringUtil;
 
 
@@ -41,7 +43,7 @@ public class ScenarioTable extends SlimTable {
   }
 
   @Override
-  public List<Assertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws SyntaxError {
     parseTable();
 
     // Note: scenario's only add instructions when needed to,
@@ -141,7 +143,7 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public List<Assertion> call(final Map<String, String> scenarioArguments,
+  public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws SyntaxError {
     Table newTable = getTable().asTemplate(new Table.CellContentSubstitution() {
       @Override
@@ -162,12 +164,12 @@ public class ScenarioTable extends SlimTable {
     ScriptTable t = new ScriptTable(newTable, id,
             new ScenarioTestContext(parentTable.getTestContext()));
     parentTable.addChildTable(t, row);
-    List<Assertion> assertions = t.getAssertions();
+    List<SlimAssertion> assertions = t.getAssertions();
     assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
     return assertions;
   }
 
-  public List<Assertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
+  public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
@@ -246,12 +248,12 @@ public class ScenarioTable extends SlimTable {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      parent.getTable().updateContent(getRow(), new TestResult(testStatus));
+      parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
       return null;
     }
 
     @Override
-    protected TestResult createEvaluationMessage(String actual, String expected) {
+    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

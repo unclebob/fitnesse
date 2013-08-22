@@ -11,6 +11,7 @@ import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -29,7 +30,7 @@ import static util.ListUtility.list;
 
 public abstract class QueryTableBaseTest {
   private WikiPage root;
-  private List<Assertion> assertions;
+  private List<SlimAssertion> assertions;
   private String queryTableHeader;
   public QueryTable qt;
   private SlimTestContextImpl testContext;
@@ -38,7 +39,7 @@ public abstract class QueryTableBaseTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<Assertion>();
+    assertions = new ArrayList<SlimAssertion>();
     queryTableHeader =
       "|" + tableType() + ":fixture|argument|\n" +
         "|n|2n|\n";
@@ -77,7 +78,7 @@ public abstract class QueryTableBaseTest {
             list("queryTable_id_1", "blah"),
             list("queryTable_id_2", queryResults)
     ));
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(table, qt.getTable().toString());
   }
 
@@ -94,7 +95,7 @@ public abstract class QueryTableBaseTest {
   }
 
   private List<Instruction> instructions() {
-    return Assertion.getInstructions(assertions);
+    return SlimAssertion.getInstructions(assertions);
   }
 
   @Test
@@ -269,7 +270,7 @@ public abstract class QueryTableBaseTest {
                     )
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -295,7 +296,7 @@ public abstract class QueryTableBaseTest {
                     )
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +
@@ -320,7 +321,7 @@ public abstract class QueryTableBaseTest {
                     )
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
       "[" +
         headRow +

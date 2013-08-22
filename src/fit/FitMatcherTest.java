@@ -3,7 +3,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import static fitnesse.testsystems.slim.results.TestResult.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +25,6 @@ public class FitMatcherTest {
     FitMatcher matcher = new FitMatcher(expression, parameter);
     try {
       matcher.matches();
-      fail();
     }
     catch (Exception e) {
     }

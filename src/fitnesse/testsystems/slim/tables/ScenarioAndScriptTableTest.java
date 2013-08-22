@@ -9,6 +9,7 @@ import java.util.Map;
 import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
@@ -24,14 +25,14 @@ import static util.ListUtility.list;
 
 public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
   private WikiPage root;
-  private List<Assertion> assertions;
+  private List<SlimAssertion> assertions;
   private ScenarioTable st;
   private ScriptTable script;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<Assertion>();
+    assertions = new ArrayList<SlimAssertion>();
     clearTestSummary();
   }
 
@@ -47,7 +48,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
   }
 
   private List<Instruction> instructions() {
-    return Assertion.getInstructions(assertions);
+    return SlimAssertion.getInstructions(assertions);
   }
 
   @Test
@@ -116,7 +117,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
             )
     );
 
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -143,7 +144,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
                     list("scriptTable_id_0/scriptTable_s_id_0", "7")
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -173,7 +174,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
             )
     );
 
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -196,7 +197,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
             )
     );
 
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
@@ -219,7 +220,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
             )
     );
 
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =

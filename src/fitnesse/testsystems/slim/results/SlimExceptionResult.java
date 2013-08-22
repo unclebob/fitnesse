@@ -3,21 +3,23 @@ package fitnesse.testsystems.slim.results;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
 
 import static fitnesse.slim.SlimServer.*;
 
-public class ExceptionResult {
+public class SlimExceptionResult implements ExceptionResult {
   public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>");
 
   private final String resultKey;
   private final String exceptionValue;
 
-  public ExceptionResult(String resultKey, String exceptionValue) {
+  public SlimExceptionResult(String resultKey, String exceptionValue) {
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
   }
 
+  @Override
   public ExecutionResult getExecutionResult() {
     return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR;
   }
@@ -26,6 +28,7 @@ public class ExceptionResult {
     return getMessage() != null;
   }
 
+  @Override
   public String getMessage() {
     String exceptionMessage = getExceptionMessage();
     if (exceptionMessage != null) {

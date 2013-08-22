@@ -18,11 +18,12 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
@@ -204,7 +205,7 @@ public class ComponentFactoryTest {
     }
 
     @Override
-    public List<Assertion> getAssertions() {
+    public List<SlimAssertion> getAssertions() {
       return null;
     }
   }

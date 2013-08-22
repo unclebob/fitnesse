@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
@@ -150,7 +152,7 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int col, int row, TestResult testResult) {
+  public void updateContent(int col, int row, SlimTestResult testResult) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setTestResult(testResult);
     final String newContent = cell.formatTestResult();
@@ -159,7 +161,7 @@ public class HtmlTable implements Table {
   }
 
   @Override
-  public void updateContent(int colIndex, int rowIndex, ExceptionResult exceptionResult) {
+  public void updateContent(int colIndex, int rowIndex, SlimExceptionResult exceptionResult) {
     Row row = rows.get(rowIndex);
     Cell cell = row.getColumn(colIndex);
     if (exceptionResult.hasMessage()) {
@@ -257,7 +259,7 @@ public class HtmlTable implements Table {
   class Cell {
     private final TableColumn columnNode;
     private final String originalContent;
-    private TestResult testResult;
+    private SlimTestResult testResult;
     private ExceptionResult exceptionResult;
 
     public Cell(TableColumn tableColumn) {
@@ -295,7 +297,7 @@ public class HtmlTable implements Table {
       return columnNode;
     }
 
-    public void setTestResult(TestResult testResult) {
+    public void setTestResult(SlimTestResult testResult) {
       this.testResult = testResult;
     }
 

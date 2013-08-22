@@ -3,7 +3,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import static fitnesse.testsystems.slim.results.TestResult.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -65,7 +64,6 @@ public class FixtureTest {
 
     try {
       f.parse("target", HasNoParseMethod.class);
-      fail();
     }
     catch (Exception e) {
       assertTrue(e.getMessage().startsWith("Could not parse"));

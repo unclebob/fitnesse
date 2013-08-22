@@ -10,6 +10,7 @@ import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
@@ -26,7 +27,7 @@ import static util.ListUtility.list;
 
 public class TableTableTest {
   private WikiPage root;
-  private List<Assertion> assertions;
+  private List<SlimAssertion> assertions;
   private final String tableTableHeader =
     "|Table:fixture|argument|\n";
 
@@ -36,7 +37,7 @@ public class TableTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<Assertion>();
+    assertions = new ArrayList<SlimAssertion>();
   }
 
   private TableTable makeTableTableAndBuildInstructions(String pageContents) throws Exception {
@@ -61,12 +62,12 @@ public class TableTableTest {
                     list("tableTable_id_1", tableResults)
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals(table, tt.getTable().toString());
   }
 
   private List<Instruction> instructions() {
-    return Assertion.getInstructions(assertions);
+    return SlimAssertion.getInstructions(assertions);
   }
 
   @Test
@@ -297,7 +298,7 @@ public class TableTableTest {
                     ))
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
   }
 
@@ -317,7 +318,7 @@ public class TableTableTest {
                     list("tableTable_id_1", "Exception: except")
             )
     );
-    Assertion.evaluateExpectations(assertions, pseudoResults);
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     assertEquals("[[error(Exception: except), argument], [2, 4]]",
         tt.getTable().toString());
   }
