@@ -1,4 +1,4 @@
-package fitnesse.responders.run.formatters;
+package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.WikiTestPage;

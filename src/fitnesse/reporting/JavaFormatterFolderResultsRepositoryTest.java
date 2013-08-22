@@ -1,6 +1,6 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
-import fitnesse.responders.run.JavaFormatter.FolderResultsRepository;
+import fitnesse.reporting.JavaFormatter.FolderResultsRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

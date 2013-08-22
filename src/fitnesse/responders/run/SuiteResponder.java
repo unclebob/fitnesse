@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.responders.run.formatters.CachingSuiteXmlFormatter;
-import fitnesse.responders.run.formatters.PageHistoryFormatter;
-import fitnesse.responders.run.formatters.SuiteHistoryFormatter;
-import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.CachingSuiteXmlFormatter;
+import fitnesse.reporting.PageHistoryFormatter;
+import fitnesse.reporting.SuiteHistoryFormatter;
+import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
 
 public class SuiteResponder extends TestResponder {

@@ -1,4 +1,4 @@
-package fitnesse.responders.run.formatters;
+package fitnesse.reporting;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

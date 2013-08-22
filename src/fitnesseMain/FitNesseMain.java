@@ -15,7 +15,7 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.responders.run.formatters.TestTextFormatter;
+import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.WikiPageFactory;

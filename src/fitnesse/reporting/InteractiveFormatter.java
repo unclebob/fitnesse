@@ -1,4 +1,4 @@
-package fitnesse.responders.run.formatters;
+package fitnesse.reporting;
 
 import java.io.IOException;
 

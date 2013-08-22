@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import fitnesse.components.ContentBuffer;
 import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
+import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.testsystems.TestSummary;

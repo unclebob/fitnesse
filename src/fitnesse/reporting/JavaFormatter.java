@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.reporting;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.run.formatters.BaseFormatter;
+import fitnesse.responders.run.NullListener;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;

@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.formatters;
+package fitnesse.reporting;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

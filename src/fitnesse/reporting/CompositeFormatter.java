@@ -1,4 +1,4 @@
-package fitnesse.responders.run.formatters;
+package fitnesse.reporting;
 
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
