@@ -9,11 +9,11 @@ import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.Expectation;
+import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -85,10 +85,10 @@ public class XmlFormatter extends BaseFormatter {
       if (testResult.getExecutionResult() != null) {
         expectationResult.status = testResult.getExecutionResult().toString();
       }
-      if (expectation instanceof SlimTable.RowExpectation) {
-        SlimTable.RowExpectation rowExpectation = (SlimTable.RowExpectation) expectation;
-        expectationResult.col = Integer.toString(rowExpectation.getCol());
-        expectationResult.row = Integer.toString(rowExpectation.getRow());
+      if (expectation instanceof TableCell) {
+        TableCell cell = (TableCell) expectation;
+        expectationResult.col = Integer.toString(cell.getCol());
+        expectationResult.row = Integer.toString(cell.getRow());
       }
     } catch (Throwable e) {
       e.printStackTrace();
