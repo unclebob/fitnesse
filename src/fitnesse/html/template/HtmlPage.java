@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.templateUtilities;
+package fitnesse.html.template;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -84,6 +84,17 @@ public class HtmlPage {
   public void setTitle(String title) {
     velocityContext.put("title", title);
   }
+
+  /**
+   * Set title and pageTitle properties.
+   *
+   * @param title
+   */
+  public void addTitles(String title) {
+    setTitle(title);
+    setPageTitle(new PageTitle(title));
+  }
+
 
   public void setPageTitle(PageTitle pageTitle) {
     velocityContext.put("pageTitle", pageTitle);

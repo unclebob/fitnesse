@@ -1,9 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders;
+package fitnesse.html.template;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.*;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -52,7 +51,7 @@ public class PageFactory {
           String.format("/fitnesse/resources/%s/templates", context.pageTheme));
 
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
-          fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
+          ClasspathResourceLoader.class.getName());
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
           "/fitnesse/resources/templates");
 

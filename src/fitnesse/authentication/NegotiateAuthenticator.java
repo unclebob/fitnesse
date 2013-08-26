@@ -7,7 +7,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 
 import org.ietf.jgss.*;
 
@@ -119,7 +119,7 @@ public class NegotiateAuthenticator extends Authenticator {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
       HtmlPage html = context.pageFactory.newPage();
-      HtmlUtil.addTitles(html, "Negotiated authentication required");
+      html.addTitles("Negotiated authentication required");
       if (request == null)
         html.setMainTemplate("authRequired.vm");
       else

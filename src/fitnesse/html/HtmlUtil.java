@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageUtil;
 
@@ -22,11 +20,6 @@ public class HtmlUtil {
     div.addAttribute("class", divClass);
     div.add("");
     return div;
-  }
-
-  public static void addTitles(HtmlPage page, String title) {
-    page.setTitle(title);
-    page.setPageTitle(new PageTitle(title));
   }
 
   public static HtmlTag makeBold(String content) {

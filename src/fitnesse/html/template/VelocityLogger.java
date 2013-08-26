@@ -1,4 +1,4 @@
-package fitnesse.responders.templateUtilities;
+package fitnesse.html.template;
 
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;

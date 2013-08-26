@@ -1,4 +1,4 @@
-package fitnesse.responders.templateUtilities;
+package fitnesse.html.template;
 
 import fitnesse.wikitext.Utils;
 import org.apache.velocity.context.InternalContextAdapter;

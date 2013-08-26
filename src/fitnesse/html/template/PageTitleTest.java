@@ -1,4 +1,4 @@
-package fitnesse.responders.templateUtilities;
+package fitnesse.html.template;
 
 import fitnesse.wiki.PathParser;
 import static org.junit.Assert.assertEquals;

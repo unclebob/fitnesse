@@ -13,8 +13,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 
 public class TestHistoryResponder implements SecureResponder {
 

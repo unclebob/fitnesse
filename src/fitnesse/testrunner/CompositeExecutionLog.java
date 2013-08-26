@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import fitnesse.responders.PageFactory;
+import fitnesse.html.template.PageFactory;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;

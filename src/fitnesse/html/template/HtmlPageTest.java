@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.templateUtilities;
+package fitnesse.html.template;
 
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
