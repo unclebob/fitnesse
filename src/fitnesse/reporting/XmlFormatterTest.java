@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,6 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.TestExecutionReport.TestResult;
 import fitnesse.reporting.XmlFormatter.WriterFactory;
-import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;

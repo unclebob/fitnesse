@@ -1,5 +1,6 @@
-package fitnesse.responders.testHistory;
+package fitnesse.reporting.history;
 
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wikitext.parser.WikiWordPath;
 import util.FileUtil;

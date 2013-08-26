@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.StringWriter;
 
+import fitnesse.reporting.ExecutionReport;
+import fitnesse.reporting.SuiteExecutionReport;
 import fitnesse.reporting.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;

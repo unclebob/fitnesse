@@ -1,8 +1,10 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import java.io.IOException;
 import java.io.Writer;
 
+import fitnesse.reporting.SuiteExecutionReportFormatter;
+import fitnesse.reporting.XmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

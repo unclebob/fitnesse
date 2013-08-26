@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
@@ -77,7 +77,7 @@ public class SuiteHistoryFormatterTest {
   public void allTestingCompleteShouldProduceLinksAndSetTotalRunTimeOnReport() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     performTest(totalTimeMeasurement);
-    assertEquals(totalTimeMeasurement.elapsed(), formatter.suiteExecutionReport.getTotalRunTimeInMillis());
+    assertEquals(totalTimeMeasurement.elapsed(), formatter.getSuiteExecutionReport().getTotalRunTimeInMillis());
     
     String output = writer.toString();
     Document document = XmlUtil.newDocument(output);

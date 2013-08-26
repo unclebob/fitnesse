@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CachingSuiteXmlFormatter;
 import fitnesse.reporting.PageHistoryFormatter;
-import fitnesse.reporting.SuiteHistoryFormatter;
+import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
 

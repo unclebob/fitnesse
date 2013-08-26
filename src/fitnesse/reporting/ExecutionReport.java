@@ -2,7 +2,6 @@ package fitnesse.reporting;
 
 import java.util.Date;
 
-import fitnesse.reporting.TestExecutionReport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

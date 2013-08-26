@@ -1,10 +1,11 @@
-package fitnesse.responders.testHistory;
+package fitnesse.reporting.history;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import fitnesse.reporting.TestResultRecord;
 import fitnesse.testsystems.ExecutionResult;
 
 public class PageHistory extends PageHistoryReader{

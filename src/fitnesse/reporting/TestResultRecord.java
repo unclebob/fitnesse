@@ -1,4 +1,4 @@
-package fitnesse.responders.testHistory;
+package fitnesse.reporting;
 
 import java.io.File;
 import java.util.Date;
@@ -9,7 +9,7 @@ public class TestResultRecord extends TestSummary {
   private File file;
   private Date date;
 
-  TestResultRecord(File file, Date date, int right, int wrong, int ignores, int exceptions) {
+  public TestResultRecord(File file, Date date, int right, int wrong, int ignores, int exceptions) {
     super(right, wrong, ignores, exceptions);
     this.file = file;
     this.date = date;

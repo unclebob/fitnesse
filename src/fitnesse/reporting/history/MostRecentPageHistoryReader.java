@@ -1,7 +1,9 @@
-package fitnesse.responders.testHistory;
+package fitnesse.reporting.history;
 
 import java.io.File;
 import java.text.ParseException;
+
+import fitnesse.reporting.TestResultRecord;
 
 public class MostRecentPageHistoryReader extends PageHistoryReader {
 

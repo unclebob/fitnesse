@@ -13,11 +13,9 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.reporting.TestExecutionReport;
-import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.testHistory.TestResultRecord;
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;

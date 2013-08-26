@@ -79,4 +79,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
    return suiteExecutionReport.getFinalCounts();
  }
 
+  public SuiteExecutionReport getSuiteExecutionReport() {
+    return suiteExecutionReport;
+  }
 }

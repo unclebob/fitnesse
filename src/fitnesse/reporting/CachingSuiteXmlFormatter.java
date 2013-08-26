@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport;
-import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.testHistory.TestResultRecord;
 import fitnesse.wiki.WikiPage;
 
 public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {

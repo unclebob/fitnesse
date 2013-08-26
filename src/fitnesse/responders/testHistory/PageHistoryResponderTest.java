@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;

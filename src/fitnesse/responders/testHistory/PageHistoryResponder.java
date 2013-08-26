@@ -6,6 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.TestResultRecord;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;

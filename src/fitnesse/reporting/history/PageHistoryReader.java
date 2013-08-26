@@ -1,4 +1,4 @@
-package fitnesse.responders.testHistory;
+package fitnesse.reporting.history;
 
 import java.io.File;
 import java.text.ParseException;
@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import fitnesse.FitNesseContext;
+import fitnesse.reporting.TestResultRecord;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 

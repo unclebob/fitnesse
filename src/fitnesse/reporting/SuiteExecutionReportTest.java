@@ -4,6 +4,8 @@ import static fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+
+import fitnesse.reporting.SuiteExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;

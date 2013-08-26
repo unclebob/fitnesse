@@ -2,6 +2,7 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 
+import fitnesse.reporting.history.TestHistory;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import fitnesse.reporting.history.TestHistory;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;

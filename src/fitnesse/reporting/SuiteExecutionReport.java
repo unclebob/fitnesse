@@ -1,6 +1,6 @@
 package fitnesse.reporting;
 
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 
