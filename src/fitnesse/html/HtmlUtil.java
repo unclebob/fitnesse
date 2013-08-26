@@ -6,14 +6,9 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageUtil;
 
 public class HtmlUtil {
-  public static final String BRtag = "<br/>";
-  public static final String HRtag = "<hr/>";
-  public static final HtmlElement BR = new RawHtml(BRtag);
-  public static final HtmlElement HR = new RawHtml(HRtag);
+  public static final HtmlElement BR = new RawHtml("<br/>");
+  public static final HtmlElement HR = new RawHtml("<hr/>");
   public static final HtmlElement NBSP = new RawHtml("&nbsp;");
-  public static final HtmlElement P = new RawHtml("<p>");
-  public static final boolean NO_NEW_WINDOW = false;
-  public static final String ENDL = System.getProperty("line.separator");
 
   public static HtmlTag makeDivTag(String divClass) {
     HtmlTag div = new HtmlTag("div");
