@@ -183,16 +183,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   @Override
   public void testOutputChunk(String output) throws IOException {
-    TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
-    boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
-    if (isNewTest) {
-      startingNewTest(firstInQueue);
-    }
     resultsListener.testOutputChunk(output);
   }
 
-  void startingNewTest(TestPage test) throws IOException {
-    currentTest = (WikiTestPage) test;
+  @Override
+  public void testStarted(TestPage testPage) throws IOException {
+    currentTest = (WikiTestPage) testPage;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }

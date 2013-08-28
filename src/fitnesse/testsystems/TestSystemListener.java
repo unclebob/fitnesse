@@ -9,6 +9,8 @@ public interface TestSystemListener {
 
   void testOutputChunk(String output) throws IOException;
 
+  void testStarted(TestPage testPage) throws IOException;
+
   void testComplete(TestSummary testSummary) throws IOException;
 
   void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause /* may be null */);

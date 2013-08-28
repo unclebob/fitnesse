@@ -129,8 +129,8 @@ public class MultipleTestsRunnerTest {
     ResultsListener resultsListener = mock(ResultsListener.class);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
-    
-    runner.startingNewTest(page);
+
+    runner.testStarted(page);
     verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
@@ -155,8 +155,8 @@ public class MultipleTestsRunnerTest {
     runner.addToProcessingQueue(page);
     
     TestSummary testSummary = mock(TestSummary.class);
-    
-    runner.startingNewTest(page);
+
+    runner.testStarted(page);
     runner.testComplete(testSummary);
     verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());

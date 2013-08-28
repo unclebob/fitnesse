@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
@@ -21,6 +22,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   private final FitNesseContext context;
   private final CompositeTestSystemListener testSystemListener;
   private CommandRunningFitClient client;
+  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private TestPage currentTestPage;
 
   public FitTestSystem(FitNesseContext context, Descriptor descriptor,
                        TestSystemListener listener) {
@@ -43,6 +46,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
+    processingQueue.addLast(pageToTest);
     String html = pageToTest.getDecoratedData().getHtml();
     if (html.length() == 0)
       client.send(EMPTY_PAGE_CONTENT);
@@ -70,12 +74,17 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void testOutputChunk(String output) throws IOException {
+    if (currentTestPage == null) {
+      currentTestPage = processingQueue.removeFirst();
+      testSystemListener.testStarted(currentTestPage);
+    }
     testSystemListener.testOutputChunk(output);
   }
 
   @Override
   public void testComplete(TestSummary testSummary) throws IOException {
     testSystemListener.testComplete(testSummary);
+    currentTestPage = null;
   }
 
   @Override

@@ -12,6 +12,7 @@ import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -376,6 +377,10 @@ public class HtmlSlimResponderTest {
 
     @Override
     public void testOutputChunk(String output) {
+    }
+
+    @Override
+    public void testStarted(TestPage testPage) {
     }
 
     @Override

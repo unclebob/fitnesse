@@ -89,6 +89,8 @@ public abstract class SlimTestSystem implements TestSystem {
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
     initializeTest();
+
+    testStarted(pageToTest);
     processAllTablesOnPage(pageToTest);
     testComplete(testContext.getTestSummary());
   }
@@ -186,6 +188,10 @@ public abstract class SlimTestSystem implements TestSystem {
 
   protected void testOutputChunk(String output) throws IOException {
     testSystemListener.testOutputChunk(output);
+  }
+
+  protected void testStarted(TestPage testPage) throws IOException {
+    testSystemListener.testStarted(testPage);
   }
 
   protected void testComplete(TestSummary testSummary) throws IOException {
