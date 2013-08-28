@@ -22,11 +22,13 @@ public class SuiteResponder extends TestResponder {
     return "suitePage";
   }
 
+  @Override
   protected void checkArguments() {
     super.checkArguments();
     includeHtml |= request.hasInput("includehtml");
   }
 
+  @Override
   void addXmlFormatter() {
     CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, response.getWriter());
     if (includeHtml)
@@ -34,6 +36,7 @@ public class SuiteResponder extends TestResponder {
     formatters.add(xmlFormatter);
   }
 
+  @Override
   void addHtmlFormatter() {
     BaseFormatter formatter = new SuiteHtmlFormatter(context, page) {
       protected void writeData(String output) {
@@ -43,12 +46,14 @@ public class SuiteResponder extends TestResponder {
     formatters.add(formatter);
   }
 
+  @Override
   protected void addTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, source));
     formatters.add(new SuiteHistoryFormatter(context, page, source));
   }
 
+  @Override
   protected void performExecution() {
     SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
