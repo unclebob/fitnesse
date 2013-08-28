@@ -87,7 +87,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
 
   @Override
-  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) {
     super.newTestStarted(testPage, timeMeasurement);
 
     WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();

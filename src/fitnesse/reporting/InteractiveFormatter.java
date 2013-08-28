@@ -77,8 +77,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement)
-		throws IOException {
+  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) {
     relativeName = getRelativeName(testPage);
   }
 
