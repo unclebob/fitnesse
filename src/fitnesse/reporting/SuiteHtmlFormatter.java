@@ -87,8 +87,8 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
 
   @Override
-  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) {
-    super.newTestStarted(testPage, timeMeasurement);
+  public void newTestStarted(WikiTestPage testPage) {
+    super.newTestStarted(testPage);
 
     WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);

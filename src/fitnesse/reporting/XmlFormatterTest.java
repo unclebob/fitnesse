@@ -62,22 +62,20 @@ public class XmlFormatterTest {
         return testResult;
       }
     };
-    
+    final long startTime = clock.currentClockTimeInMillis();
+
     formatter.testOutputChunk("outputChunk");
-    
-    TimeMeasurement timeMeasurement = new TimeMeasurement() {
-      public long elapsed() {
-        return 27;
-      }
-    }.start();
-    formatter.newTestStarted(page, timeMeasurement);
-    
+
+    formatter.newTestStarted(page);
+
+    clock.elapse(27);
+
     TestSummary summary = new TestSummary(9,8,7,6);
-    formatter.testComplete(page, summary, timeMeasurement);
+    formatter.testComplete(page, summary, null);
     assertThat(formatter.finalSummary, equalTo(summary));
     assertThat(formatter.testResponse.results.size(), is(1));
     assertThat(formatter.testResponse.results.get(0), is(testResult));
-    assertThat(testResult.startTime, is(timeMeasurement.startedAt()));
+    assertThat(testResult.startTime, is(startTime));
     assertThat(testResult.content, is("outputChunk"));
     assertThat(testResult.right, is("9"));
     assertThat(testResult.wrong, is("8"));

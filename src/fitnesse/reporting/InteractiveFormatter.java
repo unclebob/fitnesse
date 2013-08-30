@@ -3,7 +3,6 @@ package fitnesse.reporting;
 import java.io.IOException;
 
 import fitnesse.testrunner.WikiTestPage;
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -77,7 +76,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage testPage, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage testPage) {
     relativeName = getRelativeName(testPage);
   }
 

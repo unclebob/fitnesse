@@ -63,7 +63,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test) {
   }
 
   @Override

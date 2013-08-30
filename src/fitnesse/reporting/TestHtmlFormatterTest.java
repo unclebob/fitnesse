@@ -39,12 +39,10 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testTestSummaryTestPass() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
-    formatter.testComplete(page, new TestSummary(4, 0, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, new TestSummary(4, 0, 0, 0), null);
+    formatter.allTestingComplete(null);
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
@@ -52,49 +50,40 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testTestSummaryTestFail() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.allTestingComplete(null);
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
 
   @Test
   public void testExecutionStatusHtml() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.allTestingComplete(null);
     assertSubString("Tests Executed OK", pageBuffer.toString());
   }
 
   @Test
   public void testTail() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.allTestingComplete(null);
 
     assertSubString("<strong>Assertions:</strong>", pageBuffer.toString());
   }
 
   @Test
   public void testStop() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.allTestingComplete(null);
     //assert stop button added - double escaped, since it's in javascript
     assertSubString("<a href=\\\"#\\\" onclick=\\\"doSilentRequest('?responder=stoptest&id=2')\\\" class=\\\"stop\\\">", pageBuffer.toString());
     //assert stop button removed
@@ -103,10 +92,9 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testIncompleteMessageAfterException() throws Exception {
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.newTestStarted(page);
     pageBuffer.setLength(0);
     formatter.errorOccurred(new Exception("test"));
     //assert stop button added
@@ -120,7 +108,7 @@ public class TestHtmlFormatterTest {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.newTestStarted(page);
     formatter.testComplete(page, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.600 seconds)", pageBuffer.toString());

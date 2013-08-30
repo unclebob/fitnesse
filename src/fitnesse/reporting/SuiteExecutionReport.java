@@ -119,6 +119,10 @@ public class SuiteExecutionReport extends ExecutionReport {
     private long runTimeInMillis;
     private TestSummary testSummary = new TestSummary();
 
+    public PageHistoryReference(String pageName, long time) {
+      this(pageName, time, 0);
+    }
+
     public PageHistoryReference(String pageName, long time, long runTimeInMillis) {
       this.pageName = pageName;
       this.time = time;

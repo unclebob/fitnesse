@@ -6,6 +6,7 @@ import java.io.Writer;
 import fitnesse.reporting.SuiteExecutionReportFormatter;
 import fitnesse.reporting.XmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -17,7 +18,7 @@ import fitnesse.wiki.WikiPage;
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   private Writer writer;
   private XmlFormatter.WriterFactory writerFactory;
-  private long suiteTime = 0;
+  private TimeMeasurement suiteTime;
 
   public SuiteHistoryFormatter(FitNesseContext context, final WikiPage page, Writer writer) throws Exception {
     super(context, page);
@@ -25,10 +26,10 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
-    if (suiteTime == 0)
-      suiteTime = timeMeasurement.startedAt();
-    super.newTestStarted(test, timeMeasurement);
+  public void testSystemStarted(TestSystem testSystem) {
+    if (suiteTime == null)
+      suiteTime = new TimeMeasurement().start();
+    super.testSystemStarted(testSystem);
   }
 
   public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) {
@@ -38,9 +39,10 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
 
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+    suiteTime.stop();
     super.allTestingComplete(totalTimeMeasurement);
     if (writerFactory != null)
-      writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
+      writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime.startedAt());
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", suiteExecutionReport);
     VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();

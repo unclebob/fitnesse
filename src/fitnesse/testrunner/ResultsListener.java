@@ -13,15 +13,20 @@ import java.io.IOException;
 
 public interface ResultsListener {
 
+  // runner specific
+
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException;
-  
+
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log);
 
+  // Only really used in SuiteHtmlFormatter
   public void announceNumberTestsToRun(int testsToRun);
+
+  // The remaining methods are redundant with TestSystemListener:
 
   public void testSystemStarted(TestSystem testSystem);
 
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException;
+  public void newTestStarted(WikiTestPage test) throws IOException;
 
   public void testOutputChunk(String output) throws IOException;
 

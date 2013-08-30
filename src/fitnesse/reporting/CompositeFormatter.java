@@ -57,9 +57,9 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage test) throws IOException {
     for (BaseFormatter formatter : formatters)
-      formatter.newTestStarted(test, timeMeasurement);
+      formatter.newTestStarted(test);
   }
 
   @Override

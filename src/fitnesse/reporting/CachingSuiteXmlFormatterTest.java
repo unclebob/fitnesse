@@ -24,10 +24,13 @@ import fitnesse.wiki.mem.InMemoryPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+import util.Clock;
+import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
@@ -37,20 +40,28 @@ public class CachingSuiteXmlFormatterTest {
   private WikiPage root;
   private TestSummary testSummary;
   private WikiTestPage testPage;
-  private long testTime;
+  private Date testTime;
   private StringWriter writer;
+  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
+    testTime = DateTimeUtil.getDateFromString("10/8/1988 10:52:12");
+    clock = new DateAlteringClock(testTime).freeze();
+
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     testSummary = new TestSummary(1,2,3,4);
     testPage = new WikiTestPage(root.addChildPage("TestPage"));
     writer = new StringWriter();
     formatter = new CachingSuiteXmlFormatter(context,root, writer);
-    testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
   }
-  
+
+  @After
+  public void resetClock() {
+    Clock.restoreDefaultClock();
+  }
+
   @Test
   public void canCreateFormatter() throws Exception {
     Assert.assertTrue(formatter instanceof BaseFormatter);
@@ -61,17 +72,18 @@ public class CachingSuiteXmlFormatterTest {
   public void shouldRememberThePageNameAndDateAndRunTime() throws Exception {
     formatter = newNonWritingCachingSuiteXmlFormatter();
     formatter.announceNumberTestsToRun(1);
-    TimeMeasurement timeMeasurement = constantStartTimeAndElapsedTimeMeasurement(testTime, 39);
-    formatter.newTestStarted(testPage, timeMeasurement);
-    
-    formatter.testComplete(testPage, testSummary, timeMeasurement);
+    //TimeMeasurement timeMeasurement = constantStartTimeAndElapsedTimeMeasurement(testTime, 39);
+    formatter.newTestStarted(testPage);
+    clock.elapse(39);
+    formatter.testComplete(testPage, testSummary, null);
     assertEquals(1, formatter.getPageHistoryReferences().size());
     PageHistoryReference pageHistoryReference = formatter.getPageHistoryReferences().get(0);
     assertEquals("TestPage", pageHistoryReference.getPageName());
-    assertEquals(testTime, pageHistoryReference.getTime());
+    assertEquals(testTime.getTime(), pageHistoryReference.getTime());
     assertEquals(39, pageHistoryReference.getRunTimeInMillis());
-    
-    formatter.allTestingComplete(constantStartTimeAndElapsedTimeMeasurement(testTime, 49));
+
+    clock.elapse(10);
+    formatter.allTestingComplete(new TimeMeasurement().start());
     assertEquals(49, formatter.suiteExecutionReport.getTotalRunTimeInMillis());
   }
   
@@ -164,7 +176,7 @@ public class CachingSuiteXmlFormatterTest {
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.newTestStarted(testPage, timeMeasurement.start());
+    formatter.newTestStarted(testPage);
     formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0), timeMeasurement.stop()); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }
@@ -196,11 +208,11 @@ public class CachingSuiteXmlFormatterTest {
 
     formatter.setTestHistoryForTests(testHistory);
     formatter.includeHtml();
-    formatter.newTestStarted(testPage, timeMeasurement.start());
+    formatter.newTestStarted(testPage);
     formatter.testOutputChunk("<html>blah\" <a class=unquoted");
     formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0), timeMeasurement.stop());
 
-    formatter.allTestingComplete(timeMeasurement.stop());
+    formatter.allTestingComplete(timeMeasurement.start().stop());
     String output = writer.toString();
     assertTrue(output, output.contains("&lt;html&gt;blah\" &lt;a class=unquoted"));
   }

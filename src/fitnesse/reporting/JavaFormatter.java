@@ -140,9 +140,9 @@ public class JavaFormatter extends BaseFormatter {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) throws IOException {
+  public void newTestStarted(WikiTestPage test) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
-    listener.newTestStarted(test, timeMeasurement);
+    listener.newTestStarted(test);
   }
 
   @Override

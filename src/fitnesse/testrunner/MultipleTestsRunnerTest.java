@@ -131,7 +131,7 @@ public class MultipleTestsRunnerTest {
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
 
     runner.testStarted(page);
-    verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
+    verify(resultsListener).newTestStarted(same(page));
     assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
 

@@ -16,12 +16,15 @@ import util.TimeMeasurement;
 public class SuiteExecutionReportFormatter extends BaseFormatter {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   protected SuiteExecutionReport suiteExecutionReport;
+  private TimeMeasurement timeMeasurement;
+  private final TimeMeasurement totalTimeMeasurement;
 
   public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) {
     super(context, page);
     suiteExecutionReport = new SuiteExecutionReport();
     suiteExecutionReport.version = new FitNesseVersion().toString();
     suiteExecutionReport.rootPath = this.page.getName();
+    totalTimeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -33,9 +36,10 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test) {
     String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
-    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
+    timeMeasurement = new TimeMeasurement().start();
+    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt());
   }
 
   @Override
@@ -51,13 +55,14 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurementx) {
+    timeMeasurement.stop();
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
-	failCount+=testSummary.wrong;
-	failCount+=testSummary.exceptions; 
+    failCount+=testSummary.wrong;
+    failCount+=testSummary.exceptions;
   }
 
   public List<SuiteExecutionReport.PageHistoryReference> getPageHistoryReferences() {
@@ -70,7 +75,8 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete(TimeMeasurement notUsed) throws IOException {
+    totalTimeMeasurement.stop();
     super.allTestingComplete(totalTimeMeasurement);
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
   }

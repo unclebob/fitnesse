@@ -9,11 +9,15 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import util.Clock;
+import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 import util.XmlUtil;
@@ -28,24 +32,31 @@ public class SuiteHistoryFormatterTest {
   private FitNesseContext context;
   private WikiTestPage testPage;
   private StringWriter writer;
-  private long testTime;
+  private Date testTime;
   private WikiPage suitePage;
+  private DateAlteringClock clock;
 
   @Before
   public void setup() throws Exception {
+    testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
+    clock = new DateAlteringClock(testTime).freeze();
+
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     suitePage = root.addChildPage("SuitePage");
     testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writer = new StringWriter();
     formatter = new SuiteHistoryFormatter(context, suitePage, writer);
-    testTime = DateTimeUtil.getTimeFromString("12/5/1952 1:19:00");
+  }
+
+  @After
+  public void restoreDefaultClock() {
+    Clock.restoreDefaultClock();
   }
 
   @Test
   public void shouldRememberTestSummariesInReferences() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    performTest(totalTimeMeasurement);
+    performTest(13);
     List<PageHistoryReference> references = formatter.getPageHistoryReferences();
     assertEquals(1, references.size());
     PageHistoryReference pageHistoryReference = references.get(0);
@@ -53,31 +64,18 @@ public class SuiteHistoryFormatterTest {
     assertEquals(13, pageHistoryReference.getRunTimeInMillis());
   }
 
-  private void performTest(TimeMeasurement totalTimeMeasurement) throws Exception {
-    formatter.announceNumberTestsToRun(1);
-    while (totalTimeMeasurement.elapsed() == 0) {
-      Thread.sleep(50);
-    }
-    TimeMeasurement testTimeMeasurement = new TimeMeasurement() {
-      @Override
-      public long startedAt() {
-        return testTime;
-      }
-      @Override
-      public long elapsed() {
-        return 13;
-      }
-    };
-    formatter.newTestStarted(testPage, testTimeMeasurement);
-    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), testTimeMeasurement);
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+  private void performTest(long elapsedTime) throws Exception {
+    formatter.testSystemStarted(null);
+    formatter.newTestStarted(testPage);
+    clock.elapse(elapsedTime);
+    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), null);
+    formatter.allTestingComplete(null);
   }
 
   @Test
   public void allTestingCompleteShouldProduceLinksAndSetTotalRunTimeOnReport() throws Exception {
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
-    performTest(totalTimeMeasurement);
-    assertEquals(totalTimeMeasurement.elapsed(), formatter.getSuiteExecutionReport().getTotalRunTimeInMillis());
+    performTest(13);
+    assertEquals(13L, formatter.getSuiteExecutionReport().getTotalRunTimeInMillis());
     
     String output = writer.toString();
     Document document = XmlUtil.newDocument(output);
@@ -91,7 +89,7 @@ public class SuiteHistoryFormatterTest {
     for (int referenceIndex = 0; referenceIndex < xmlPageReferences.getLength(); referenceIndex++) {
       Element pageHistoryReferenceElement = (Element) xmlPageReferences.item(referenceIndex);
       assertEquals("SuitePage.TestPage", XmlUtil.getTextValue(pageHistoryReferenceElement, "name"));
-      assertEquals(DateTimeUtil.formatDate(new Date(testTime)), XmlUtil.getTextValue(pageHistoryReferenceElement, "date"));
+      assertEquals(DateTimeUtil.formatDate(testTime), XmlUtil.getTextValue(pageHistoryReferenceElement, "date"));
       String link = "SuitePage.TestPage?pageHistory&resultDate=19521205011900";
       assertEquals(link, XmlUtil.getTextValue(pageHistoryReferenceElement, "pageHistoryLink"));
       Element countsElement = XmlUtil.getElementByTagName(pageHistoryReferenceElement, "counts");
@@ -108,7 +106,7 @@ public class SuiteHistoryFormatterTest {
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "ignores"));
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "exceptions"));
     
-    assertEquals(String.valueOf(totalTimeMeasurement.elapsed()), 
+    assertEquals(String.valueOf(13L),
         XmlUtil.getTextValue(suiteResultsElement, "totalRunTimeInMillis"));
   }
 }

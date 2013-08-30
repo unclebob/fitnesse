@@ -15,6 +15,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
+  private final TimeMeasurement totalTimeMeasurement;
   private TestHistory testHistory = new TestHistory();
   private VelocityContext velocityContext;
   private VelocityEngine velocityEngine;
@@ -26,6 +27,7 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     velocityContext = new VelocityContext();
     velocityEngine = context.pageFactory.getVelocityEngine();
     this.writer = writer;
+    totalTimeMeasurement = new TimeMeasurement().start();
   }
 
   void setTestHistoryForTests(TestHistory testHistory) {
@@ -39,7 +41,8 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete(TimeMeasurement notUsed) throws IOException {
+    totalTimeMeasurement.stop();
     super.allTestingComplete(totalTimeMeasurement);
     writeOutSuiteXML();
   }

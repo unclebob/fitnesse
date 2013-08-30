@@ -37,7 +37,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage test) {
     if (test.isTestPage()) {
       notifier.fireTestStarted(descriptionFor(test));
     }

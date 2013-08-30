@@ -166,7 +166,7 @@ public class SuiteHtmlFormatterTest {
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
-    formatter.newTestStarted(firstPage, timeMeasurement.start());
+    formatter.newTestStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
@@ -181,9 +181,9 @@ public class SuiteHtmlFormatterTest {
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
-    formatter.newTestStarted(firstPage, firstTimeMeasurement.start());
+    formatter.newTestStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), firstTimeMeasurement.stop());
-    formatter.newTestStarted(secondPage, secondTimeMeasurement.start());
+    formatter.newTestStarted(secondPage);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8), secondTimeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());

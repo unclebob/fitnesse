@@ -3,7 +3,6 @@
 package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
@@ -32,7 +31,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   private WriterFactory writerFactory;
-  private long currentTestStartTime;
+  private TimeMeasurement currentTestStartTime;
   private StringBuilder outputBuffer;
   protected TestExecutionReport testResponse = new TestExecutionReport();
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
@@ -44,8 +43,8 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
-    currentTestStartTime = timeMeasurement.startedAt();
+  public void newTestStarted(WikiTestPage test) {
+    currentTestStartTime = new TimeMeasurement().start();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
@@ -119,19 +118,20 @@ public class XmlFormatter extends BaseFormatter {
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+    currentTestStartTime.stop();
     super.testComplete(test, testSummary, timeMeasurement);
-    processTestResults(test.getName(), testSummary, timeMeasurement);
+    processTestResults(test.getName(), testSummary, currentTestStartTime);
   }
 
-  public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement notUsed) {
     finalSummary = new TestSummary(testSummary);
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
-    currentResult.startTime = currentTestStartTime;
+    currentResult.startTime = currentTestStartTime.startedAt();
     currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
     outputBuffer = null;
     addCountsToResult(currentResult, testSummary);
-    currentResult.runTimeInMillis = String.valueOf(timeMeasurement.elapsed());
+    currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.readOnlyData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
@@ -164,7 +164,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
+    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime.startedAt()));
   }
 
   protected WikiPage getPageForHistory() {

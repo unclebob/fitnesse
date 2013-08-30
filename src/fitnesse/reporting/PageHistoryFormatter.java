@@ -5,7 +5,6 @@ import java.io.IOException;
 import fitnesse.testrunner.WikiTestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 
@@ -16,10 +15,10 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage testedPage, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage testedPage) {
     testResponse = new TestExecutionReport();
     setPage(testedPage.getSourcePage());
-    super.newTestStarted(testedPage, timeMeasurement);
+    super.newTestStarted(testedPage);
   }
 
   @Override

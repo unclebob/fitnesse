@@ -190,7 +190,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   public void testStarted(TestPage testPage) throws IOException {
     currentTest = (WikiTestPage) testPage;
     currentTestTime = new TimeMeasurement().start();
-    resultsListener.newTestStarted(currentTest, currentTestTime);
+    resultsListener.newTestStarted((WikiTestPage) testPage);
   }
 
   @Override

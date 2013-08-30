@@ -82,14 +82,16 @@ public class TestFormatterTest {
   }
 
   private void countTestResultsForFormatter(BaseFormatter formatter) throws Exception {
-    TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
-    when(timeMeasurement.startedAtDate()).thenReturn(new Date(0));
-    when(timeMeasurement.elapsedSeconds()).thenReturn(0d);
 
-    formatter.announceNumberTestsToRun(3);
-    formatter.testComplete(page, right, timeMeasurement);
-    formatter.testComplete(page, wrong, timeMeasurement);
-    formatter.testComplete(page, exception, timeMeasurement);
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, right, null);
+
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, wrong, null);
+
+    formatter.newTestStarted(page);
+    formatter.testComplete(page, exception, null);
+
     formatter.allTestingComplete(new TimeMeasurement().start().stop());
 
     assertEquals(3, formatter.testCount);

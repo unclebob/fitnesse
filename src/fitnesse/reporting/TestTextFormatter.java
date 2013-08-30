@@ -14,9 +14,12 @@ import fitnesse.wiki.WikiPage;
 
 public class TestTextFormatter extends BaseFormatter {
   private ChunkedResponse response;
+  private TimeMeasurement timeMeasurement;
+  private TimeMeasurement totalTimeMeasurement;
 
   public TestTextFormatter(ChunkedResponse response) {
     this.response = response;
+    this.totalTimeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -29,7 +32,8 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage page, TimeMeasurement timeMeasurement) {
+  public void newTestStarted(WikiTestPage page) {
+    timeMeasurement = new TimeMeasurement().start();
   }
 
   private String getPath(WikiPage page) {
@@ -41,7 +45,8 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage page, TestSummary summary, TimeMeasurement notUsed) throws IOException {
+    timeMeasurement.stop();
     super.testComplete(page, summary, timeMeasurement);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
@@ -59,7 +64,8 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete(TimeMeasurement notUsed) throws IOException {
+    totalTimeMeasurement.stop();
     super.allTestingComplete(totalTimeMeasurement);
     response.add(String.format("--------\n%d Tests,\t%d Failures\t%.03f seconds.\n", testCount, failCount, totalTimeMeasurement.elapsedSeconds()));
   }

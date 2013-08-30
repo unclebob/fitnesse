@@ -42,7 +42,7 @@ public class JavaFormatterTest {
   public void newTestStarted_SwitchesResultRepositoryToCurrentTest() throws Exception{
     WikiTestPage wp=buildNestedTestPage();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    jf.newTestStarted(wp, timeMeasurement.start());
+    jf.newTestStarted(wp);
     verify(mockResultsRepository).open(nestedPageName);
   }
   @Test
@@ -125,8 +125,8 @@ public class JavaFormatterTest {
     jf.setListener(listener);
     WikiTestPage page=buildNestedTestPage();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    jf.newTestStarted(page, timeMeasurement.start());
-    verify(listener).newTestStarted(page, timeMeasurement);
+    jf.newTestStarted(page);
+    verify(listener).newTestStarted(page);
   }
   @Test
   public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{
