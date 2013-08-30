@@ -20,13 +20,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private final ResultsListener resultsListener;
   private final FitNesseContext fitNesseContext;
-  private final WikiPage page;
   private final List<WikiPage> testPagesToRun;
   private boolean isFastTest = false;
   private boolean isRemoteDebug = false;
-
-  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
-  private WikiTestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
   private volatile boolean isStopped = false;
@@ -35,13 +31,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   TimeMeasurement currentTestTime, totalTestTime;
   private CompositeExecutionLog log;
 
+  private volatile int testsInProgressCount;
+
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
                              final ResultsListener resultsListener) {
     this.testPagesToRun = testPagesToRun;
     this.resultsListener = resultsListener;
-    this.page = page;
     this.fitNesseContext = fitNesseContext;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
     log = new CompositeExecutionLog(page);
@@ -112,17 +109,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
-      addToProcessingQueue(testPage);
       testSystem.runTests(testPage);
+      testsInProgressCount++;
     }
   }
 
-  void addToProcessingQueue(TestPage testPage) {
-    processingQueue.addLast(testPage);
-  }
-
   private void waitForTestSystemToSendResults() throws InterruptedException {
-    while ((processingQueue.size() > 0) && isNotStopped())
+    // TODO: use testSystemStopped event to wait for tests to end.
+    while (testsInProgressCount > 0 && isNotStopped())
       Thread.sleep(50);
   }
 
@@ -188,15 +182,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   @Override
   public void testStarted(TestPage testPage) throws IOException {
-    currentTest = (WikiTestPage) testPage;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted((WikiTestPage) testPage);
   }
 
   @Override
-  public void testComplete(TestSummary testSummary) throws IOException {
-    TestPage testPage = processingQueue.removeFirst();
+  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
     resultsListener.testComplete((WikiTestPage) testPage, testSummary, currentTestTime.stop());
+    testsInProgressCount--;
   }
 
   private void errorOccurred(Throwable cause) {

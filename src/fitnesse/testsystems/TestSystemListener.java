@@ -11,7 +11,7 @@ public interface TestSystemListener {
 
   void testStarted(TestPage testPage) throws IOException;
 
-  void testComplete(TestSummary testSummary) throws IOException;
+  void testComplete(TestPage testPage, TestSummary testSummary) throws IOException;
 
   void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause /* may be null */);
 

@@ -134,7 +134,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void testComplete(TestSummary testSummary)  {
+  public void testComplete(TestPage testPage, TestSummary testSummary)  {
     this.testSummary = testSummary;
   }
 

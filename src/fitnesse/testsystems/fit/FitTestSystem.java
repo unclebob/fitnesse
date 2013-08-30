@@ -83,7 +83,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void testComplete(TestSummary testSummary) throws IOException {
-    testSystemListener.testComplete(testSummary);
+    assert currentTestPage != null;
+    testSystemListener.testComplete(currentTestPage, testSummary);
     currentTestPage = null;
   }
 

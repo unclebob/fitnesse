@@ -384,7 +384,7 @@ public class HtmlSlimResponderTest {
     }
 
     @Override
-    public void testComplete(TestSummary testSummary) {
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
     }
 
     @Override

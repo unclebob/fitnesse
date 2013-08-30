@@ -92,7 +92,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
     testStarted(pageToTest);
     processAllTablesOnPage(pageToTest);
-    testComplete(testContext.getTestSummary());
+    testComplete(pageToTest, testContext.getTestSummary());
   }
 
   public void addTestSystemListener(TestSystemListener listener) {
@@ -194,8 +194,8 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.testStarted(testPage);
   }
 
-  protected void testComplete(TestSummary testSummary) throws IOException {
-    testSystemListener.testComplete(testSummary);
+  protected void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    testSystemListener.testComplete(testPage, testSummary);
   }
 
   protected void exceptionOccurred(Throwable e) {
