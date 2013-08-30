@@ -4,7 +4,6 @@ import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.TestSummary;
@@ -49,7 +48,7 @@ public class NullFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
   }
 }
 

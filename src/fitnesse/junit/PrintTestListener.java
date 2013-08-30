@@ -12,6 +12,8 @@ import util.TimeMeasurement;
 import fitnesse.wiki.WikiPagePath;
 
 public class PrintTestListener implements ResultsListener {
+  private TimeMeasurement timeMeasurement;
+
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
     System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
@@ -27,6 +29,7 @@ public class PrintTestListener implements ResultsListener {
 
   @Override
   public void newTestStarted(WikiTestPage test) {
+    timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -34,7 +37,7 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
     System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
         + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");

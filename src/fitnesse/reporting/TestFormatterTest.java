@@ -13,11 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
 
-import java.util.Date;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 public class TestFormatterTest {
@@ -84,13 +81,13 @@ public class TestFormatterTest {
   private void countTestResultsForFormatter(BaseFormatter formatter) throws Exception {
 
     formatter.newTestStarted(page);
-    formatter.testComplete(page, right, null);
+    formatter.testComplete(page, right);
 
     formatter.newTestStarted(page);
-    formatter.testComplete(page, wrong, null);
+    formatter.testComplete(page, wrong);
 
     formatter.newTestStarted(page);
-    formatter.testComplete(page, exception, null);
+    formatter.testComplete(page, exception);
 
     formatter.allTestingComplete(new TimeMeasurement().start().stop());
 

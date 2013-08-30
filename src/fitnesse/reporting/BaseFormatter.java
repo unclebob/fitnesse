@@ -53,7 +53,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;

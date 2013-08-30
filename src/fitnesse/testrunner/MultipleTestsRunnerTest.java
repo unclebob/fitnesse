@@ -132,7 +132,6 @@ public class MultipleTestsRunnerTest {
 
     runner.testStarted(page);
     verify(resultsListener).newTestStarted(same(page));
-    assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
 
   private ArgumentMatcher<TimeMeasurement> isAStartedTimeMeasurement() {
@@ -157,8 +156,7 @@ public class MultipleTestsRunnerTest {
 
     runner.testStarted(page);
     runner.testComplete(page, testSummary);
-    verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
-    assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());
+    verify(resultsListener).testComplete(same(page), same(testSummary));
   }
 
   private ArgumentMatcher<TimeMeasurement> isAStoppedTimeMeasurement() {

@@ -30,7 +30,8 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
 
   @Override
   public void newTestStarted(WikiTestPage testPage) {
-	super.newTestStarted(testPage);
+    latestTestTime = new TimeMeasurement().start();
+	  super.newTestStarted(testPage);
     writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
@@ -39,9 +40,9 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
-    super.testComplete(testPage, testSummary, timeMeasurement);
-    latestTestTime = timeMeasurement;
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    latestTestTime.stop();
+    super.testComplete(testPage, testSummary);
 
     processTestResults(getRelativeName(testPage), testSummary);
   }

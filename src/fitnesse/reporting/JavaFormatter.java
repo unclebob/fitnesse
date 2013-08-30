@@ -149,14 +149,14 @@ public class JavaFormatter extends BaseFormatter {
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     String fullPath = getFullPath(test.getSourcePage());
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
-    listener.testComplete(test, testSummary, timeMeasurement);
+    listener.testComplete(test, testSummary);
   }
 
   TestSummary getTestSummary(String testPath) {

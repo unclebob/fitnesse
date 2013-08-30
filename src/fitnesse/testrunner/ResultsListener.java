@@ -34,7 +34,7 @@ public interface ResultsListener {
 
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
 
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException;
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException;
 
   public void errorOccurred(Throwable cause);
 }

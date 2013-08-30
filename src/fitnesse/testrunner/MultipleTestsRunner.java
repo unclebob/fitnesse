@@ -28,7 +28,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  TimeMeasurement currentTestTime, totalTestTime;
+  TimeMeasurement totalTestTime;
   private CompositeExecutionLog log;
 
   private volatile int testsInProgressCount;
@@ -182,13 +182,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   @Override
   public void testStarted(TestPage testPage) throws IOException {
-    currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted((WikiTestPage) testPage);
   }
 
   @Override
   public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
-    resultsListener.testComplete((WikiTestPage) testPage, testSummary, currentTestTime.stop());
+    resultsListener.testComplete((WikiTestPage) testPage, testSummary);
     testsInProgressCount--;
   }
 

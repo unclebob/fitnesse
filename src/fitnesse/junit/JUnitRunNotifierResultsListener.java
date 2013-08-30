@@ -52,7 +52,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
     if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
       if (test.isTestPage()) {
         notifier.fireTestFinished(descriptionFor(test));

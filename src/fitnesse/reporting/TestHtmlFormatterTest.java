@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
+import java.util.Date;
+
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
@@ -11,8 +13,11 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
+import util.DateAlteringClock;
 import util.TimeMeasurement;
 
 public class TestHtmlFormatterTest {
@@ -21,9 +26,11 @@ public class TestHtmlFormatterTest {
   private WikiTestPage page;
   private WikiPage root;
   private FitNesseContext context;
+  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
+    clock = new DateAlteringClock(new Date()).freeze();
     root = InMemoryPage.makeRoot("RooT");
     page = new WikiTestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
@@ -37,11 +44,16 @@ public class TestHtmlFormatterTest {
     };
   }
 
+  @After
+  public void restoreDefaultClock() {
+    Clock.restoreDefaultClock();
+  }
+
   @Test
   public void testTestSummaryTestPass() throws Exception {
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(4, 0, 0, 0), null);
+    formatter.testComplete(page, new TestSummary(4, 0, 0, 0));
     formatter.allTestingComplete(null);
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
@@ -52,7 +64,7 @@ public class TestHtmlFormatterTest {
   public void testTestSummaryTestFail() throws Exception {
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete(null);
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
@@ -62,7 +74,7 @@ public class TestHtmlFormatterTest {
   public void testExecutionStatusHtml() throws Exception {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete(null);
     assertSubString("Tests Executed OK", pageBuffer.toString());
   }
@@ -71,7 +83,7 @@ public class TestHtmlFormatterTest {
   public void testTail() throws Exception {
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete(null);
 
     assertSubString("<strong>Assertions:</strong>", pageBuffer.toString());
@@ -82,7 +94,7 @@ public class TestHtmlFormatterTest {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), null);
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete(null);
     //assert stop button added - double escaped, since it's in javascript
     assertSubString("<a href=\\\"#\\\" onclick=\\\"doSilentRequest('?responder=stoptest&id=2')\\\" class=\\\"stop\\\">", pageBuffer.toString());
@@ -106,10 +118,10 @@ public class TestHtmlFormatterTest {
   @Test
   public void testTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
-    TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page);
-    formatter.testComplete(page, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
+    clock.elapse(600);
+    formatter.testComplete(page, new TestSummary(1, 2, 3, 4));
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.600 seconds)", pageBuffer.toString());
   }

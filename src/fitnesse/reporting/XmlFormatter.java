@@ -117,9 +117,9 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
-    super.testComplete(test, testSummary, timeMeasurement);
+    super.testComplete(test, testSummary);
     processTestResults(test.getName(), testSummary, currentTestStartTime);
   }
 

@@ -72,10 +72,9 @@ public class CachingSuiteXmlFormatterTest {
   public void shouldRememberThePageNameAndDateAndRunTime() throws Exception {
     formatter = newNonWritingCachingSuiteXmlFormatter();
     formatter.announceNumberTestsToRun(1);
-    //TimeMeasurement timeMeasurement = constantStartTimeAndElapsedTimeMeasurement(testTime, 39);
     formatter.newTestStarted(testPage);
     clock.elapse(39);
-    formatter.testComplete(testPage, testSummary, null);
+    formatter.testComplete(testPage, testSummary);
     assertEquals(1, formatter.getPageHistoryReferences().size());
     PageHistoryReference pageHistoryReference = formatter.getPageHistoryReferences().get(0);
     assertEquals("TestPage", pageHistoryReference.getPageName());
@@ -98,19 +97,6 @@ public class CachingSuiteXmlFormatterTest {
     return new CachingSuiteXmlFormatter(context,root, null) {
       @Override
       protected void writeOutSuiteXML() {
-      }
-    };
-  }
-
-  private TimeMeasurement constantStartTimeAndElapsedTimeMeasurement(final long startTime, final long elapsed) {
-    return new TimeMeasurement() {
-      @Override
-      public long startedAt() {
-        return startTime;
-      }
-      @Override
-      public long elapsed() {
-        return elapsed;
       }
     };
   }
@@ -175,9 +161,8 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
-    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.newTestStarted(testPage);
-    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0), timeMeasurement.stop()); // 1 right.
+    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0)); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }
 
@@ -210,7 +195,7 @@ public class CachingSuiteXmlFormatterTest {
     formatter.includeHtml();
     formatter.newTestStarted(testPage);
     formatter.testOutputChunk("<html>blah\" <a class=unquoted");
-    formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0), timeMeasurement.stop());
+    formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0));
 
     formatter.allTestingComplete(timeMeasurement.start().stop());
     String output = writer.toString();

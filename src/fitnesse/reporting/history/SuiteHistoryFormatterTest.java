@@ -19,7 +19,6 @@ import org.w3c.dom.NodeList;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
-import util.TimeMeasurement;
 import util.XmlUtil;
 
 import java.io.StringWriter;
@@ -68,7 +67,7 @@ public class SuiteHistoryFormatterTest {
     formatter.testSystemStarted(null);
     formatter.newTestStarted(testPage);
     clock.elapse(elapsedTime);
-    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), null);
+    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
     formatter.allTestingComplete(null);
   }
 

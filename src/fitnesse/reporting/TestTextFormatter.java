@@ -45,9 +45,9 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage page, TestSummary summary, TimeMeasurement notUsed) throws IOException {
+  public void testComplete(WikiTestPage page, TestSummary summary) throws IOException {
     timeMeasurement.stop();
-    super.testComplete(page, summary, timeMeasurement);
+    super.testComplete(page, summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
       passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page.getSourcePage()), timeMeasurement.elapsedSeconds()));

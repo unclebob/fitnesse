@@ -38,7 +38,7 @@ public class NullListener implements ResultsListener {
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {}
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {}
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {}
 
   @Override
   public void errorOccurred(Throwable cause) {}

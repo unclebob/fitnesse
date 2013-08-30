@@ -18,6 +18,7 @@ import java.io.IOException;
 public class JUnitXMLTestListener implements ResultsListener {
   
   private String outputPath;
+  private TimeMeasurement timeMeasurement;
 
   public JUnitXMLTestListener(String outputPath) {
     this.outputPath=outputPath;
@@ -64,6 +65,7 @@ public class JUnitXMLTestListener implements ResultsListener {
 
   @Override
   public void newTestStarted(WikiTestPage test) {
+    timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -71,7 +73,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     recordTestResult(new WikiPagePath(test.getSourcePage()).toString(), testSummary, timeMeasurement.elapsed());
   }
 

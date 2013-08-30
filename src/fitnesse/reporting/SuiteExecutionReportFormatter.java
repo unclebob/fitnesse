@@ -55,7 +55,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurementx) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
     timeMeasurement.stop();
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());

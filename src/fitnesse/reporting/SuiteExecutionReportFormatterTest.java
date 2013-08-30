@@ -45,7 +45,7 @@ public class SuiteExecutionReportFormatterTest {
 
     clock.elapse(99L);
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);
-    formatter.testComplete(page, testSummary, null);
+    formatter.testComplete(page, testSummary);
 
     assertThat(formatter.suiteExecutionReport.getPageHistoryReferences().size(), is(1));
     PageHistoryReference reference = formatter.suiteExecutionReport.getPageHistoryReferences().get(0);
@@ -80,7 +80,7 @@ public class SuiteExecutionReportFormatterTest {
 
     when(timeMeasurement.elapsed()).thenReturn(99L);
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);
-    formatter.testComplete(page, testSummary, timeMeasurement);
+    formatter.testComplete(page, testSummary);
 
     assertThat(formatter.failCount, is(5));
 

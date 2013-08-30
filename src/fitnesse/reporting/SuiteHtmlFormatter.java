@@ -88,6 +88,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
   @Override
   public void newTestStarted(WikiTestPage testPage) {
+    latestTestTime = new TimeMeasurement().start();
     super.newTestStarted(testPage);
 
     WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
@@ -141,6 +142,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+    // Todo: why assign it to this variable, looks inconsistent.
     latestTestTime = totalTimeMeasurement;
     removeStopTestLink();
     publishAndAddLog();
@@ -156,10 +158,11 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     writeData(output);
   }
 
+
   @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
-    super.testComplete(testPage, testSummary, timeMeasurement);
-    latestTestTime = timeMeasurement;
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    latestTestTime.stop();
+    super.testComplete(testPage, testSummary);
 
     processTestResults(getRelativeName(testPage), testSummary);
   }

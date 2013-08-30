@@ -71,7 +71,7 @@ public class XmlFormatterTest {
     clock.elapse(27);
 
     TestSummary summary = new TestSummary(9,8,7,6);
-    formatter.testComplete(page, summary, null);
+    formatter.testComplete(page, summary);
     assertThat(formatter.finalSummary, equalTo(summary));
     assertThat(formatter.testResponse.results.size(), is(1));
     assertThat(formatter.testResponse.results.get(0), is(testResult));

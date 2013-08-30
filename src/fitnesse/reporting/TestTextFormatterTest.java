@@ -4,7 +4,6 @@ import static org.mockito.Mockito.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
@@ -44,7 +43,7 @@ public class TestTextFormatterTest {
     TestTextFormatter formatter = new TestTextFormatter(response);
     formatter.newTestStarted(page);
     clock.elapse(9800);
-    formatter.testComplete(page, summary, null);
+    formatter.testComplete(page, summary);
     verify(response).add("F " + START_TIME + " R:1    W:2    I:3    E:4    page\t()\t9.800 seconds\n");
   }
   

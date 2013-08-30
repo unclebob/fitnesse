@@ -22,8 +22,8 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
-    super.testComplete(test, testSummary, timeMeasurement);
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+    super.testComplete(test, testSummary);
     writeResults();
   }
 

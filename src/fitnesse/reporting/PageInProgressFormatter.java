@@ -26,7 +26,7 @@ public class PageInProgressFormatter extends NullFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
 	FileUtil.deleteFile(getLockFileName(test));
   }
 

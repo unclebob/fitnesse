@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
+import java.util.Date;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
@@ -13,16 +15,21 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageDummy;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
+import util.DateAlteringClock;
 import util.TimeMeasurement;
 
 public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
+  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
+    clock = new DateAlteringClock(new Date()).freeze();
     FitNesseContext context = FitNesseUtil.makeTestContext();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
@@ -30,6 +37,11 @@ public class SuiteHtmlFormatterTest {
         pageBuffer.append(output);
       }
     };
+  }
+
+  @After
+  public void restoreDefaultClock() {
+    Clock.restoreDefaultClock();
   }
 
   @Test
@@ -162,12 +174,11 @@ public class SuiteHtmlFormatterTest {
   @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
-    TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     formatter.newTestStarted(firstPage);
-    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
+    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
   }
@@ -175,16 +186,16 @@ public class SuiteHtmlFormatterTest {
   @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
-    TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);
-    TimeMeasurement secondTimeMeasurement = newConstantElapsedTimeMeasurement(890);
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
     formatter.newTestStarted(firstPage);
-    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), firstTimeMeasurement.stop());
+    clock.elapse(670);
+    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     formatter.newTestStarted(secondPage);
-    formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8), secondTimeMeasurement.stop());
+    clock.elapse(890);
+    formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
     formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</li>", pageBuffer.toString());
