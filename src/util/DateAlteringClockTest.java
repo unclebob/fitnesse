@@ -62,5 +62,13 @@ public class DateAlteringClockTest {
     assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 2));
     assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 3));
   }
-  
+
+  @Test
+  public void shouldBeAbleToDefineElapsedTime() throws Exception {
+    Date startOfTheCentury = ymdDateFormat.parse("2000-01-01");
+    new DateAlteringClock(startOfTheCentury).freeze().elapse(39);
+    assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 39));
+  }
+
+
 }
