@@ -94,9 +94,6 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   protected void finishWritingOutput() throws IOException {
   }
 
-  protected void close() {
-  }
-
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     this.log = log;

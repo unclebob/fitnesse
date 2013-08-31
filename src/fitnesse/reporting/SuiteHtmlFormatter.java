@@ -150,7 +150,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
-    close();
 
     super.allTestingComplete();
   }

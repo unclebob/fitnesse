@@ -63,7 +63,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
-    close();
   }
 
   @Override
