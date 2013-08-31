@@ -97,9 +97,8 @@ public class XmlFormatterTest {
       }
     };
 
-    TimeMeasurement totalTimeMeasurement = mock(TimeMeasurement.class);
-    when(totalTimeMeasurement.elapsed()).thenReturn(77L);
-    formatter.allTestingComplete(totalTimeMeasurement);
+    clock.elapse(77L);
+    formatter.allTestingComplete();
     assertThat(formatter.testResponse.getTotalRunTimeInMillis(), is(77L));
   }
 }

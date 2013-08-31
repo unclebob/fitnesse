@@ -26,14 +26,16 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
   private String testSummariesId = TEST_SUMMARIES_ID;
+  private TimeMeasurement totalTimeMeasurement;
 
 
   public SuiteHtmlFormatter(FitNesseContext context, WikiPage page) {
     super(context, page);
+    totalTimeMeasurement = new TimeMeasurement().start();
   }
 
   public SuiteHtmlFormatter(FitNesseContext context) {
-    super(context, null);
+    this(context, null);
   }
 
   @Override
@@ -141,16 +143,16 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     // Todo: why assign it to this variable, looks inconsistent.
-    latestTestTime = totalTimeMeasurement;
+    latestTestTime = totalTimeMeasurement.stop();
     removeStopTestLink();
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
     close();
 
-    super.allTestingComplete(totalTimeMeasurement);
+    super.allTestingComplete();
   }
 
   @Override
@@ -165,6 +167,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     super.testComplete(testPage, testSummary);
 
     processTestResults(getRelativeName(testPage), testSummary);
+    latestTestTime = null;
   }
 
   @Override

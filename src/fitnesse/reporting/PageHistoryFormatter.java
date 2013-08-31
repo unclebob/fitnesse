@@ -3,7 +3,6 @@ package fitnesse.reporting;
 import java.io.IOException;
 
 import fitnesse.testrunner.WikiTestPage;
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -28,7 +27,7 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
+  public void allTestingComplete() {
     setTotalRunTimeOnReport(totalTimeMeasurement);
   }
 

@@ -19,7 +19,6 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.TimeMeasurement;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -204,10 +203,10 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    listener.allTestingComplete(totalTimeMeasurement);
+    listener.allTestingComplete();
   }
 
   public void writeSummary(String suiteName) throws IOException {

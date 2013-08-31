@@ -8,7 +8,6 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
-import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,9 +74,9 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     for (BaseFormatter formatter : formatters) {
-      formatter.allTestingComplete(totalTimeMeasurement);
+      formatter.allTestingComplete();
     }
   }
 

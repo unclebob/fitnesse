@@ -82,7 +82,7 @@ public class CachingSuiteXmlFormatterTest {
     assertEquals(39, pageHistoryReference.getRunTimeInMillis());
 
     clock.elapse(10);
-    formatter.allTestingComplete(new TimeMeasurement().start());
+    formatter.allTestingComplete();
     assertEquals(49, formatter.suiteExecutionReport.getTotalRunTimeInMillis());
   }
   
@@ -112,7 +112,7 @@ public class CachingSuiteXmlFormatterTest {
     formatter.setVelocityForTests(velocityContext, velocityEngine, writer);
     Template template = mock(Template.class);
     when(velocityEngine.getTemplate("suiteXML.vm")).thenReturn(template);
-    formatter.allTestingComplete(new TimeMeasurement().start().stop());
+    formatter.allTestingComplete();
     verify(testHistory).readHistoryDirectory(context.getTestHistoryDirectory());
     verify(velocityContext).put("formatter", formatter);
     verify(velocityEngine).getTemplate("suiteXML.vm");
@@ -197,7 +197,7 @@ public class CachingSuiteXmlFormatterTest {
     formatter.testOutputChunk("<html>blah\" <a class=unquoted");
     formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0));
 
-    formatter.allTestingComplete(timeMeasurement.start().stop());
+    formatter.allTestingComplete();
     String output = writer.toString();
     assertTrue(output, output.contains("&lt;html&gt;blah\" &lt;a class=unquoted"));
   }

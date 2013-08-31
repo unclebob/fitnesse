@@ -8,7 +8,6 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.WikiPage;
-import util.TimeMeasurement;
 
 import java.io.IOException;
 
@@ -37,14 +36,14 @@ public abstract class BaseFormatter implements ResultsListener {
   @Override
   public void errorOccurred(Throwable cause) {
     try {
-      allTestingComplete(new TimeMeasurement().start().stop());
+      allTestingComplete();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     finalErrorCount = failCount;
   }
 

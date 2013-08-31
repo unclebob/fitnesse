@@ -104,7 +104,7 @@ public class JavaFormatterTest {
   public void allTestingComplete_writesSummaryIfMainPageWasntExecuted() throws Exception{
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    jf.allTestingComplete(timeMeasurement);
+    jf.allTestingComplete();
     verify(mockResultsRepository).open(suiteName);     
   }
   @Test
@@ -113,7 +113,7 @@ public class JavaFormatterTest {
     jf.setResultsRepository(mockResultsRepository);
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    jf.allTestingComplete(timeMeasurement);
+    jf.allTestingComplete();
     verify(mockResultsRepository,times(0)).open(nestedPageName);     
   }
   @Test
@@ -134,8 +134,8 @@ public class JavaFormatterTest {
   public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception{
     jf.setListener(listener);
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start().stop();
-    jf.allTestingComplete(totalTimeMeasurement);
-    verify(listener).allTestingComplete(same(totalTimeMeasurement));
+    jf.allTestingComplete();
+    verify(listener).allTestingComplete();
   }
   @Test
   public void dropInstance_drops_test_results(){

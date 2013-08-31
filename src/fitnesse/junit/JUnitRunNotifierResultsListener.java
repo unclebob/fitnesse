@@ -12,7 +12,6 @@ import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import util.TimeMeasurement;
 
 public class JUnitRunNotifierResultsListener implements ResultsListener {
 
@@ -25,7 +24,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
+  public void allTestingComplete() {
   }
 
   @Override

@@ -7,6 +7,8 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -157,39 +159,5 @@ public class MultipleTestsRunnerTest {
     runner.testStarted(page);
     runner.testComplete(page, testSummary);
     verify(resultsListener).testComplete(same(page), same(testSummary));
-  }
-
-  private ArgumentMatcher<TimeMeasurement> isAStoppedTimeMeasurement() {
-    return new ArgumentMatcher<TimeMeasurement>() {
-      @Override
-      public boolean matches(Object argument) {
-        return ((TimeMeasurement) argument).stoppedAt() > 0;
-      }
-    };
-  }
-  
-  @Test
-  public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
-    
-    runner.announceTotalTestsToRun(new PagesByTestSystem());
-    verify(resultsListener).announceNumberTestsToRun(0);
-    assertThat(runner.totalTestTime, isAStartedTimeMeasurement());
-  }
-  
-  @Test
-  public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
-    runner.announceTotalTestsToRun(new PagesByTestSystem());
-    
-    runner.allTestingComplete();
-    verify(resultsListener).allTestingComplete(same(runner.totalTestTime));
-    assertThat(runner.totalTestTime, isAStoppedTimeMeasurement());
   }
 }

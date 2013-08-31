@@ -8,7 +8,6 @@ import fitnesse.responders.run.Stoppable;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
-import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  TimeMeasurement totalTestTime;
   private CompositeExecutionLog log;
 
   private volatile int testsInProgressCount;
@@ -64,9 +62,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   void allTestingComplete() throws IOException {
-    TimeMeasurement completionTimeMeasurement = new TimeMeasurement().start();
-    resultsListener.allTestingComplete(totalTestTime.stop());
-    completionTimeMeasurement.stop(); // a non-trivial amount of time elapses here
+    resultsListener.allTestingComplete();
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
@@ -167,7 +163,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       tests += listOfPagesToRun.size();
     }
     resultsListener.announceNumberTestsToRun(tests);
-    totalTestTime = new TimeMeasurement().start();
   }
 
   @Override

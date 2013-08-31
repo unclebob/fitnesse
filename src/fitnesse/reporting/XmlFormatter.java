@@ -32,6 +32,7 @@ public class XmlFormatter extends BaseFormatter {
 
   private WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
+  protected TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
   protected TestExecutionReport testResponse = new TestExecutionReport();
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
@@ -40,6 +41,7 @@ public class XmlFormatter extends BaseFormatter {
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
     this.writerFactory = writerFactory;
+    totalTimeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -153,8 +155,8 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
-    super.allTestingComplete(totalTimeMeasurement);
+  public void allTestingComplete() throws IOException {
+    super.allTestingComplete();
     setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }

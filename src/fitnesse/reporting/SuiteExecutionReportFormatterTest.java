@@ -62,7 +62,7 @@ public class SuiteExecutionReportFormatterTest {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement(clock).start();
     formatter.announceNumberTestsToRun(0);
     clock.elapse(50);
-    formatter.allTestingComplete(totalTimeMeasurement);
+    formatter.allTestingComplete();
     assertThat(formatter.suiteExecutionReport.getTotalRunTimeInMillis(),
       is(50L));
   }
@@ -84,7 +84,7 @@ public class SuiteExecutionReportFormatterTest {
 
     assertThat(formatter.failCount, is(5));
 
-    formatter.allTestingComplete(timeMeasurement);
+    formatter.allTestingComplete();
 
     assertThat(BaseFormatter.finalErrorCount, is(5));
 

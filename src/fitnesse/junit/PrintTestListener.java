@@ -13,9 +13,10 @@ import fitnesse.wiki.WikiPagePath;
 
 public class PrintTestListener implements ResultsListener {
   private TimeMeasurement timeMeasurement;
+  private TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
+  public void allTestingComplete() {
     System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
   }
 

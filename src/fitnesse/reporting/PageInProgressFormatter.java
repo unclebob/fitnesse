@@ -5,7 +5,6 @@ import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.testsystems.TestSummary;
-import util.TimeMeasurement;
 import util.FileUtil;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class PageInProgressFormatter extends NullFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     //ignore.
   }
 }

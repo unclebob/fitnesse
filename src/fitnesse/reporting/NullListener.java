@@ -10,11 +10,10 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
-import util.TimeMeasurement;
 
 public class NullListener implements ResultsListener {
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {}
+  public void allTestingComplete() throws IOException {}
 
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {}

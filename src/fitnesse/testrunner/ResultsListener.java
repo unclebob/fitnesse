@@ -15,7 +15,7 @@ public interface ResultsListener {
 
   // runner specific
 
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException;
+  public void allTestingComplete() throws IOException;
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log);
 

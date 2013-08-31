@@ -11,7 +11,6 @@ import fitnesse.wiki.WikiPageDummy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.TimeMeasurement;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -89,7 +88,7 @@ public class TestFormatterTest {
     formatter.newTestStarted(page);
     formatter.testComplete(page, exception);
 
-    formatter.allTestingComplete(new TimeMeasurement().start().stop());
+    formatter.allTestingComplete();
 
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);

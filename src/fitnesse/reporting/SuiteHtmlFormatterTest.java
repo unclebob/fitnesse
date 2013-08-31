@@ -173,13 +173,13 @@ public class SuiteHtmlFormatterTest {
 
   @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
-    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     formatter.newTestStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    clock.elapse(900);
+    formatter.allTestingComplete();
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
   }
 
@@ -196,7 +196,7 @@ public class SuiteHtmlFormatterTest {
     formatter.newTestStarted(secondPage);
     clock.elapse(890);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
-    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    formatter.allTestingComplete();
     assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }

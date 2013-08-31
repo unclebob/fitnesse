@@ -5,7 +5,6 @@ import java.io.Writer;
 
 import fitnesse.reporting.SuiteExecutionReportFormatter;
 import fitnesse.reporting.XmlFormatter;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -38,9 +37,9 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+  public void allTestingComplete() throws IOException {
     suiteTime.stop();
-    super.allTestingComplete(totalTimeMeasurement);
+    super.allTestingComplete();
     if (writerFactory != null)
       writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime.startedAt());
     VelocityContext velocityContext = new VelocityContext();

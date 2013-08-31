@@ -52,7 +52,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
+  public void allTestingComplete() {
   }
 
   @Override
