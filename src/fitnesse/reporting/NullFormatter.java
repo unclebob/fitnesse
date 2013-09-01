@@ -32,7 +32,7 @@ public class NullFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test) {
+  public void testStarted(WikiTestPage test) {
   }
 
   @Override

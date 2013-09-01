@@ -52,7 +52,7 @@ public class TestHtmlFormatterTest {
   @Test
   public void testTestSummaryTestPass() throws Exception {
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 0, 0, 0));
     formatter.allTestingComplete();
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
@@ -63,7 +63,7 @@ public class TestHtmlFormatterTest {
   @Test
   public void testTestSummaryTestFail() throws Exception {
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
@@ -73,7 +73,7 @@ public class TestHtmlFormatterTest {
   @Test
   public void testExecutionStatusHtml() throws Exception {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     assertSubString("Tests Executed OK", pageBuffer.toString());
@@ -82,7 +82,7 @@ public class TestHtmlFormatterTest {
   @Test
   public void testTail() throws Exception {
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
 
@@ -93,7 +93,7 @@ public class TestHtmlFormatterTest {
   public void testStop() throws Exception {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     //assert stop button added - double escaped, since it's in javascript
@@ -106,7 +106,7 @@ public class TestHtmlFormatterTest {
   public void testIncompleteMessageAfterException() throws Exception {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     pageBuffer.setLength(0);
     formatter.errorOccurred(new Exception("test"));
     //assert stop button added
@@ -119,7 +119,7 @@ public class TestHtmlFormatterTest {
   public void testTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     clock.elapse(600);
     formatter.testComplete(page, new TestSummary(1, 2, 3, 4));
     formatter.allTestingComplete();

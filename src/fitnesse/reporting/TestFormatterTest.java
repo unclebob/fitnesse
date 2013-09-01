@@ -79,13 +79,13 @@ public class TestFormatterTest {
 
   private void countTestResultsForFormatter(BaseFormatter formatter) throws Exception {
 
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, right);
 
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, wrong);
 
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     formatter.testComplete(page, exception);
 
     formatter.allTestingComplete();

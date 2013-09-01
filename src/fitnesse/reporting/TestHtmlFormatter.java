@@ -29,9 +29,9 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage testPage) {
+  public void testStarted(WikiTestPage testPage) {
     latestTestTime = new TimeMeasurement().start();
-	  super.newTestStarted(testPage);
+	  super.testStarted(testPage);
     writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 

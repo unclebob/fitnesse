@@ -65,7 +65,7 @@ public class SuiteHistoryFormatterTest {
 
   private void performTest(long elapsedTime) throws Exception {
     formatter.testSystemStarted(null);
-    formatter.newTestStarted(testPage);
+    formatter.testStarted(testPage);
     clock.elapse(elapsedTime);
     formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
     formatter.allTestingComplete();

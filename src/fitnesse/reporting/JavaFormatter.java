@@ -139,9 +139,9 @@ public class JavaFormatter extends BaseFormatter {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void newTestStarted(WikiTestPage test) throws IOException {
+  public void testStarted(WikiTestPage test) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
-    listener.newTestStarted(test);
+    listener.testStarted(test);
   }
 
   @Override

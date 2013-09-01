@@ -26,7 +26,7 @@ public class NullListener implements ResultsListener {
   public void testSystemStarted(TestSystem testSystem) {}
 
   @Override
-  public void newTestStarted(WikiTestPage test) throws IOException {}
+  public void testStarted(WikiTestPage test) throws IOException {}
 
   @Override
   public void testOutputChunk(String output) throws IOException {}

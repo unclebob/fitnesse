@@ -171,7 +171,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   @Override
   public void testStarted(TestPage testPage) throws IOException {
-    resultsListener.newTestStarted((WikiTestPage) testPage);
+    resultsListener.testStarted((WikiTestPage) testPage);
   }
 
   @Override

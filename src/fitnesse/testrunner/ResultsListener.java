@@ -27,7 +27,7 @@ public interface ResultsListener {
 
   public void testSystemStarted(TestSystem testSystem);
 
-  public void newTestStarted(WikiTestPage test) throws IOException;
+  public void testStarted(WikiTestPage test) throws IOException;
 
   public void testOutputChunk(String output) throws IOException;
 

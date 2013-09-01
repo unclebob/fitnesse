@@ -26,7 +26,7 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test) {
+  public void testStarted(WikiTestPage test) {
     timeMeasurement = new TimeMeasurement().start();
   }
 

@@ -45,7 +45,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage test) {
+  public void testStarted(WikiTestPage test) {
     currentTestStartTime = new TimeMeasurement().start();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }

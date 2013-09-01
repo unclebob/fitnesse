@@ -41,7 +41,7 @@ public class SuiteExecutionReportFormatterTest {
     WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
 
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
 
     clock.elapse(99L);
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);
@@ -76,7 +76,7 @@ public class SuiteExecutionReportFormatterTest {
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when(timeMeasurement.startedAt()).thenReturn(65L);
     when(timeMeasurement.elapsed()).thenReturn(2L);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
 
     when(timeMeasurement.elapsed()).thenReturn(99L);
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);

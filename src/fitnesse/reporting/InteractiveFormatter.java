@@ -76,7 +76,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage testPage) {
+  public void testStarted(WikiTestPage testPage) {
     relativeName = getRelativeName(testPage);
   }
 

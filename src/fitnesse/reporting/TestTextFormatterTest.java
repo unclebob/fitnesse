@@ -41,7 +41,7 @@ public class TestTextFormatterTest {
 
     ChunkedResponse response = mock(ChunkedResponse.class);
     TestTextFormatter formatter = new TestTextFormatter(response);
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
     clock.elapse(9800);
     formatter.testComplete(page, summary);
     verify(response).add("F " + START_TIME + " R:1    W:2    I:3    E:4    page\t()\t9.800 seconds\n");

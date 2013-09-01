@@ -20,7 +20,7 @@ public class PageInProgressFormatter extends NullFormatter {
 	return context.getTestProgressPath() + "/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
 
-  public void newTestStarted(WikiTestPage test) {
+  public void testStarted(WikiTestPage test) {
 	FileUtil.createFile(getLockFileName(test), "");
   }
 

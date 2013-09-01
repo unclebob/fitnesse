@@ -72,7 +72,7 @@ public class CachingSuiteXmlFormatterTest {
   public void shouldRememberThePageNameAndDateAndRunTime() throws Exception {
     formatter = newNonWritingCachingSuiteXmlFormatter();
     formatter.announceNumberTestsToRun(1);
-    formatter.newTestStarted(testPage);
+    formatter.testStarted(testPage);
     clock.elapse(39);
     formatter.testComplete(testPage, testSummary);
     assertEquals(1, formatter.getPageHistoryReferences().size());
@@ -161,7 +161,7 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
-    formatter.newTestStarted(testPage);
+    formatter.testStarted(testPage);
     formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0)); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }
@@ -193,7 +193,7 @@ public class CachingSuiteXmlFormatterTest {
 
     formatter.setTestHistoryForTests(testHistory);
     formatter.includeHtml();
-    formatter.newTestStarted(testPage);
+    formatter.testStarted(testPage);
     formatter.testOutputChunk("<html>blah\" <a class=unquoted");
     formatter.testComplete(testPage, new TestSummary(1, 0, 0, 0));
 

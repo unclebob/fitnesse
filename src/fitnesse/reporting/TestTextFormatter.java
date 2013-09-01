@@ -32,7 +32,7 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiTestPage page) {
+  public void testStarted(WikiTestPage page) {
     timeMeasurement = new TimeMeasurement().start();
   }
 

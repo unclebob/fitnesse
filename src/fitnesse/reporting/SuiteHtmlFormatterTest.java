@@ -176,7 +176,7 @@ public class SuiteHtmlFormatterTest {
     formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
-    formatter.newTestStarted(firstPage);
+    formatter.testStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
     formatter.allTestingComplete();
@@ -190,10 +190,10 @@ public class SuiteHtmlFormatterTest {
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
-    formatter.newTestStarted(firstPage);
+    formatter.testStarted(firstPage);
     clock.elapse(670);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
-    formatter.newTestStarted(secondPage);
+    formatter.testStarted(secondPage);
     clock.elapse(890);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
     formatter.allTestingComplete();

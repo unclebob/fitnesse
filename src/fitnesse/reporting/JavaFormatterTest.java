@@ -41,7 +41,7 @@ public class JavaFormatterTest {
   @Test
   public void newTestStarted_SwitchesResultRepositoryToCurrentTest() throws Exception{
     WikiTestPage wp=buildNestedTestPage();
-    jf.newTestStarted(wp);
+    jf.testStarted(wp);
     verify(mockResultsRepository).open(nestedPageName);
   }
   @Test
@@ -120,8 +120,8 @@ public class JavaFormatterTest {
   public void ifListenerIsSet_newTestStartedFiresTestStarted() throws Exception{
     jf.setListener(listener);
     WikiTestPage page=buildNestedTestPage();
-    jf.newTestStarted(page);
-    verify(listener).newTestStarted(page);
+    jf.testStarted(page);
+    verify(listener).testStarted(page);
   }
   @Test
   public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{

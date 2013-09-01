@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 
@@ -18,7 +17,6 @@ import org.junit.Test;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
-import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.TestExecutionReport.TestResult;
 import fitnesse.reporting.XmlFormatter.WriterFactory;
@@ -66,7 +64,7 @@ public class XmlFormatterTest {
 
     formatter.testOutputChunk("outputChunk");
 
-    formatter.newTestStarted(page);
+    formatter.testStarted(page);
 
     clock.elapse(27);
 
