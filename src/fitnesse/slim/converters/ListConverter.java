@@ -24,7 +24,12 @@ public class ListConverter implements Converter<List> {
       arg = arg.substring(1);
     if (arg.endsWith("]"))
       arg = arg.substring(0, arg.length() - 1);
-    String[] strings = arg.split(",");
+    String[] strings;
+    if ("".equals(arg.trim())) {
+	  strings = new String[]{};
+    } else {
+      strings = arg.split(",");
+    }  
     for (int i = 0; i < strings.length; i++)
       strings[i] = strings[i].trim();
     return strings;
