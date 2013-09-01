@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MultipleTestsRunner implements TestSystemListener, Stoppable {
+public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
 
   private final ResultsListener resultsListener;
   private final FitNesseContext fitNesseContext;
@@ -170,13 +170,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
-    resultsListener.testStarted((WikiTestPage) testPage);
+  public void testStarted(WikiTestPage testPage) throws IOException {
+    resultsListener.testStarted(testPage);
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
-    resultsListener.testComplete((WikiTestPage) testPage, testSummary);
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    resultsListener.testComplete(testPage, testSummary);
     testsInProgressCount--;
   }
 
