@@ -6,6 +6,7 @@ import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -40,5 +41,5 @@ public class NullListener implements ResultsListener {
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {}
 
   @Override
-  public void errorOccurred(Throwable cause) {}
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {}
 }

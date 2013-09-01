@@ -4,6 +4,7 @@ import fitnesse.testrunner.ResultsListener;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -60,10 +61,6 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void errorOccurred(Throwable cause) {
-  }
-
-  @Override
   public void newTestStarted(WikiTestPage test) {
     timeMeasurement = new TimeMeasurement().start();
   }
@@ -91,5 +88,9 @@ public class JUnitXMLTestListener implements ResultsListener {
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
   }
 }

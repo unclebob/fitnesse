@@ -4,6 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -36,5 +37,5 @@ public interface ResultsListener {
 
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException;
 
-  public void errorOccurred(Throwable cause);
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause);
 }

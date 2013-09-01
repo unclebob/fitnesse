@@ -4,6 +4,7 @@ import fitnesse.testrunner.ResultsListener;
 import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -29,10 +30,6 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
 
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
-  }
-
-  @Override
-  public void errorOccurred(Throwable cause) {
   }
 
   @Override
@@ -77,4 +74,9 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   @Override
   public void testSystemStarted(TestSystem testSystem) {
   }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  }
+
 }

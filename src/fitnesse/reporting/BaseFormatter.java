@@ -4,9 +4,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -15,6 +17,8 @@ public abstract class BaseFormatter implements ResultsListener {
 
   protected WikiPage page = null;
   protected FitNesseContext context;
+  // Thsi counter is used by the command line executor and a few tests
+  @Deprecated
   public static int finalErrorCount = 0;
   protected int testCount = 0;
   protected int failCount = 0;
@@ -33,7 +37,6 @@ public abstract class BaseFormatter implements ResultsListener {
     return page;
   }
 
-  @Override
   public void errorOccurred(Throwable cause) {
     try {
       allTestingComplete();
@@ -76,5 +79,13 @@ public abstract class BaseFormatter implements ResultsListener {
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+    if (cause != null) {
+      errorOccurred(cause);
+    }
+  }
+
 }
 

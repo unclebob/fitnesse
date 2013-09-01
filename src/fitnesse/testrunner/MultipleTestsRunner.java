@@ -180,22 +180,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     testsInProgressCount--;
   }
 
-  private void errorOccurred(Throwable cause) {
-    try {
-      resultsListener.errorOccurred(cause);
-      stop();
-    } catch (Exception e1) {
-      if (isNotStopped()) {
-        e1.printStackTrace();
-      }
-    }
-  }
-
   @Override
   public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
     log.add(testSystem.getName(), executionLog);
+    resultsListener.testSystemStopped(testSystem, executionLog, cause);
+
     if (cause != null) {
-      errorOccurred(cause);
+      stop();
     }
   }
 
@@ -214,7 +205,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   @Override
-  public void stop() throws IOException {
+  public void stop() {
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
     if (stopId != null) {
@@ -222,7 +213,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
 
     if (wasNotStopped) {
-      testSystemGroup.kill();
+      try {
+        testSystemGroup.kill();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }
