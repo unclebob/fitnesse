@@ -65,12 +65,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     finishWritingOutput();
   }
 
-  @Override
-  protected void finishWritingOutput() throws IOException {
-    writeData(testSummary());
-    super.finishWritingOutput();
-  }
-
   protected String makeSummaryContent() {
     String summaryContent;
     if (latestTestTime != null) {

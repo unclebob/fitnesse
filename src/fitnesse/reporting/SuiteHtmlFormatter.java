@@ -195,12 +195,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     return summaryContent;
   }
 
-  @Override
-  public void finishWritingOutput() throws IOException {
-    writeData(testSummary());
-    super.finishWritingOutput();
-  }
-
 }
 
 

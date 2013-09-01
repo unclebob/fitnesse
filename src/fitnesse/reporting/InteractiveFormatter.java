@@ -91,7 +91,8 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
   protected abstract String makeSummaryContent();
 
-  protected void finishWritingOutput() throws IOException {
+  public void finishWritingOutput() throws IOException {
+    writeData(testSummary());
   }
 
   @Override
