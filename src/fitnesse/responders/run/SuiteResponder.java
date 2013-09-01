@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
+
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CachingSuiteXmlFormatter;
 import fitnesse.reporting.PageHistoryFormatter;
@@ -54,7 +56,7 @@ public class SuiteResponder extends TestResponder {
   }
 
   @Override
-  protected void performExecution() {
+  protected void performExecution() throws IOException, InterruptedException {
     SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);

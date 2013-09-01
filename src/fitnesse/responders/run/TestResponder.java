@@ -16,6 +16,7 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.reporting.JavaFormatter;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CompositeFormatter;
@@ -73,7 +74,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   public void doExecuteTests() {
     sendPreTestNotification();
 
-    performExecution();
+    try {
+      performExecution();
+    } catch (Exception e) {
+      formatters.errorOccurred(e);
+    }
 
     exitCode = formatters.getErrorCount();
   }
@@ -182,7 +187,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
   }
 
-  protected void performExecution() {
+  protected void performExecution() throws IOException, InterruptedException {
     List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
     MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);

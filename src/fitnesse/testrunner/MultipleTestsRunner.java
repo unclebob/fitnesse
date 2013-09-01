@@ -50,15 +50,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     this.isFastTest = isFastTest;
   }
 
-  public void executeTestPages() {
-    try {
-      internalExecuteTestPages();
-      allTestingComplete();
-    } catch (Exception exception) {
-      //hoped to write exceptions to log file but will take some work.
-      exception.printStackTrace(System.out);
-      errorOccurred(exception);
-    }
+  public void executeTestPages() throws IOException, InterruptedException {
+    internalExecuteTestPages();
+    allTestingComplete();
   }
 
   void allTestingComplete() throws IOException {
