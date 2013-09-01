@@ -14,9 +14,9 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
+import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.JavaFormatter;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CompositeFormatter;
@@ -40,20 +40,25 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
+  // TODO: move this to FitNesseContext
   private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
-  protected PageData data;
-  protected CompositeFormatter formatters;
-  protected boolean isInteractive = false;
+
+  private PageData data;
+  private CompositeFormatter formatters;
+  private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
   private boolean fastTest = false;
   private boolean remoteDebug = false;
-  protected TestSystem testSystem;
   int exitCode;
 
   public TestResponder() {
     super();
     formatters = new CompositeFormatter();
+  }
+
+  private boolean isInteractive() {
+    return mainFormatter instanceof InteractiveFormatter;
   }
 
   protected void doSending() throws Exception {
@@ -62,7 +67,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     createFormatters();
 
-    if (isInteractive) {
+    if (isInteractive()) {
       makeHtml().render(response.getWriter());
     } else {
       doExecuteTests();
@@ -77,6 +82,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     try {
       performExecution();
     } catch (Exception e) {
+      // TODO: only call mainFormatter, it has to set wasInterrupted
       formatters.errorOccurred(e);
     }
 
@@ -123,19 +129,19 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected void createFormatters() {
     if (response.isXmlFormat()) {
-      addXmlFormatter();
+      mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
-      addTextFormatter();
+      mainFormatter = newTextFormatter();
     } else if (response.isJavaFormat()) {
-      addJavaFormatter();
+      mainFormatter = newJavaFormatter();
     } else {
-      addHtmlFormatter();
-      isInteractive = true;
+      mainFormatter = newHtmlFormatter();
     }
+    formatters.add(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      addTestHistoryFormatter();
+      formatters.add(newTestHistoryFormatter());
     }
-    addTestInProgressFormatter();
+    formatters.add(newTestInProgressFormatter());
   }
 
   protected String getTitle() {
@@ -146,39 +152,39 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return "testPage";
   }
 
-  void addXmlFormatter() {
+  BaseFormatter newXmlFormatter() {
     XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return response.getWriter();
       }
     };
-    formatters.add(new XmlFormatter(context, page, writerSource));
+    return new XmlFormatter(context, page, writerSource);
   }
 
-  void addTextFormatter() {
-    formatters.add(new TestTextFormatter(response));
-  }
-  void addJavaFormatter() {
-    formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
+  BaseFormatter newTextFormatter() {
+    return new TestTextFormatter(response);
   }
 
-  void addHtmlFormatter() {
-    BaseFormatter formatter = new TestHtmlFormatter(context, page) {
+  BaseFormatter newJavaFormatter() {
+    return JavaFormatter.getInstance(new WikiPagePath(page).toString());
+  }
+
+  BaseFormatter newHtmlFormatter() {
+    return new TestHtmlFormatter(context, page) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-    formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() {
+  protected BaseFormatter newTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-    formatters.add(new PageHistoryFormatter(context, page, writerFactory));
+    return new PageHistoryFormatter(context, page, writerFactory);
   }
 
-  protected void addTestInProgressFormatter() {
-    formatters.add(new PageInProgressFormatter(context, page));
+  protected BaseFormatter newTestInProgressFormatter() {
+    return new PageInProgressFormatter(context, page);
   }
 
   protected void sendPreTestNotification() {
@@ -190,13 +196,18 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void performExecution() throws IOException, InterruptedException {
     List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
-    runner.setFastTest(fastTest);
-    runner.setDebug(isRemoteDebug());
+    MultipleTestsRunner runner = newMultipleTestsRunner(test2run);
 
     if (isEmpty(page))
       formatters.addMessageForBlankHtml();
     runner.executeTestPages();
+  }
+
+  protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
+    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context, page, formatters);
+    runner.setFastTest(fastTest);
+    runner.setDebug(remoteDebug);
+    return runner;
   }
 
   private boolean isEmpty(WikiPage page) {
@@ -250,10 +261,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       response.closeChunks();
       response.close();
     }
-  }
-
-  boolean isRemoteDebug() {
-    return remoteDebug;
   }
 
   public Response getResponse() {

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CachingSuiteXmlFormatter;
+import fitnesse.reporting.CompositeFormatter;
 import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -31,37 +32,37 @@ public class SuiteResponder extends TestResponder {
   }
 
   @Override
-  void addXmlFormatter() {
+  BaseFormatter newXmlFormatter() {
     CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, response.getWriter());
     if (includeHtml)
       xmlFormatter.includeHtml();
-    formatters.add(xmlFormatter);
+    return xmlFormatter;
   }
 
   @Override
-  void addHtmlFormatter() {
+  BaseFormatter newHtmlFormatter() {
     BaseFormatter formatter = new SuiteHtmlFormatter(context, page) {
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-    formatters.add(formatter);
+    return formatter;
   }
 
   @Override
-  protected void addTestHistoryFormatter() {
+  protected BaseFormatter newTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
-    formatters.add(new PageHistoryFormatter(context, page, source));
-    formatters.add(new SuiteHistoryFormatter(context, page, source));
+    CompositeFormatter f = new CompositeFormatter();
+    f.add(new PageHistoryFormatter(context, page, source));
+    f.add(new SuiteHistoryFormatter(context, page, source));
+    return f;
   }
 
   @Override
   protected void performExecution() throws IOException, InterruptedException {
     SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
-    runner.setDebug(isRemoteDebug());
-    runner.setFastTest(isFastTest());
+    MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
     runner.executeTestPages();
   }
 }
