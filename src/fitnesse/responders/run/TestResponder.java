@@ -19,7 +19,6 @@ import fitnesse.reporting.JavaFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CompositeFormatter;
 import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.TestHtmlFormatter;
@@ -44,7 +43,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
 
   private PageData data;
-  private CompositeFormatter formatters;
   private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
@@ -54,7 +52,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public TestResponder() {
     super();
-    formatters = new CompositeFormatter();
   }
 
   private boolean isInteractive() {
@@ -65,7 +62,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     checkArguments();
     data = page.getData();
 
-    createFormatters();
+    createMainFormatter();
 
     if (isInteractive()) {
       makeHtml().render(response.getWriter());
@@ -126,7 +123,15 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
   }
 
-  protected void createFormatters() {
+  protected void addFormatters(MultipleTestsRunner runner) {
+    runner.addTestSystemListener(mainFormatter);
+    if (!request.hasInput("nohistory")) {
+      runner.addTestSystemListener(newTestHistoryFormatter());
+    }
+    runner.addTestSystemListener(newTestInProgressFormatter());
+  }
+
+  private void createMainFormatter() {
     if (response.isXmlFormat()) {
       mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
@@ -136,11 +141,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     } else {
       mainFormatter = newHtmlFormatter();
     }
-    formatters.addTestSystemListener(mainFormatter);
-    if (!request.hasInput("nohistory")) {
-      formatters.addTestSystemListener(newTestHistoryFormatter());
-    }
-    formatters.addTestSystemListener(newTestInProgressFormatter());
   }
 
   protected String getTitle() {
@@ -203,9 +203,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context, page, formatters);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context);
+
     runner.setFastTest(fastTest);
     runner.setDebug(remoteDebug);
+
+    addFormatters(runner);
+
     return runner;
   }
 

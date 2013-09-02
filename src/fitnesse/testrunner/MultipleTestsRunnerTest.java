@@ -4,7 +4,6 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.reporting.CompositeFormatter;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -62,7 +61,7 @@ public class MultipleTestsRunnerTest {
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
@@ -88,7 +87,7 @@ public class MultipleTestsRunnerTest {
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
@@ -133,21 +132,13 @@ public class MultipleTestsRunnerTest {
     TestSystemListener listener = mock(TestSystemListener.class);
     resultsListener.addTestSystemListener(listener);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    runner.addTestSystemListener(resultsListener);
 
     runner.testStarted(page);
     verify(listener).testStarted(same(page));
   }
 
-  private ArgumentMatcher<TimeMeasurement> isAStartedTimeMeasurement() {
-    return new ArgumentMatcher<TimeMeasurement>() {
-      @Override
-      public boolean matches(Object argument) {
-        return ((TimeMeasurement) argument).startedAt() > 0;
-      }
-    };
-  }
-  
   @Test
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
@@ -157,7 +148,8 @@ public class MultipleTestsRunnerTest {
     TestSystemListener listener = mock(TestSystemListener.class);
     resultsListener.addTestSystemListener(listener);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    runner.addTestSystemListener(resultsListener);
 
     TestSummary testSummary = mock(TestSummary.class);
 

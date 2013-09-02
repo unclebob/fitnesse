@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
 
-  private final CompositeFormatter resultsListener;
+  private final CompositeFormatter formatters;
   private final FitNesseContext fitNesseContext;
   private final List<WikiPage> testPagesToRun;
   private boolean isFastTest = false;
@@ -30,13 +30,15 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext,
-                             final WikiPage page,
-                             final CompositeFormatter resultsListener) {
+                             final FitNesseContext fitNesseContext) {
     this.testPagesToRun = testPagesToRun;
-    this.resultsListener = resultsListener;
+    this.formatters = new CompositeFormatter();
     this.fitNesseContext = fitNesseContext;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
+  }
+
+  public void addTestSystemListener(TestSystemListener listener) {
+    this.formatters.addTestSystemListener(listener);
   }
 
   public void setDebug(boolean isDebug) {
@@ -53,7 +55,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   void allTestingComplete() throws IOException {
-    resultsListener.close();
+    formatters.close();
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
@@ -62,7 +64,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
     testSystemGroup.setFastTest(isFastTest);
 
-    resultsListener.setTrackingId(stopId);
+    formatters.setTrackingId(stopId);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
@@ -153,33 +155,33 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
-    resultsListener.announceNumberTestsToRun(tests);
+    formatters.announceNumberTestsToRun(tests);
   }
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    resultsListener.testSystemStarted(testSystem);
+    formatters.testSystemStarted(testSystem);
   }
 
   @Override
   public void testOutputChunk(String output) throws IOException {
-    resultsListener.testOutputChunk(output);
+    formatters.testOutputChunk(output);
   }
 
   @Override
   public void testStarted(WikiTestPage testPage) throws IOException {
-    resultsListener.testStarted(testPage);
+    formatters.testStarted(testPage);
   }
 
   @Override
   public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
-    resultsListener.testComplete(testPage, testSummary);
+    formatters.testComplete(testPage, testSummary);
     testsInProgressCount--;
   }
 
   @Override
   public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    resultsListener.testSystemStopped(testSystem, executionLog, cause);
+    formatters.testSystemStopped(testSystem, executionLog, cause);
 
     if (cause != null) {
       stop();
@@ -188,12 +190,12 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    resultsListener.testAssertionVerified(assertion, testResult);
+    formatters.testAssertionVerified(assertion, testResult);
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    resultsListener.testExceptionOccurred(assertion, exceptionResult);
+    formatters.testExceptionOccurred(assertion, exceptionResult);
   }
 
   private boolean isNotStopped() {
