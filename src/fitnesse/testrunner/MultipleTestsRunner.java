@@ -4,7 +4,6 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 

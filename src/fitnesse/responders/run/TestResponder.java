@@ -28,6 +28,7 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;

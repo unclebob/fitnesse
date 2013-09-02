@@ -1,11 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import fitnesse.testrunner.Stoppable;
 import org.junit.Test;
 
 public class RunningTestingTrackerTest {

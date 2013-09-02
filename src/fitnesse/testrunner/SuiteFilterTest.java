@@ -1,7 +1,7 @@
 /**
  * Copyright AdScale GmbH, Germany, 2009
  */
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,7 +12,7 @@ import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SuiteFilterTestCase {
+public class SuiteFilterTest {
   private WikiPage root;
 
   @Before

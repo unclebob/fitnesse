@@ -1,4 +1,4 @@
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
 import java.util.LinkedList;
 

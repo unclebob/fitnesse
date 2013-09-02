@@ -1,16 +1,16 @@
-package fitnesse.responders.run;
+package fitnesse.testrunner;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-import static org.junit.Assert.*;
-
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 //Proper table format:
 //|suite|
@@ -19,16 +19,12 @@ import org.junit.Test;
 //|Content|contentRegEx|
 
 public class SuiteSpecificationRunnerTest {
-  private MockRequest request;
   private SuiteSpecificationRunner runner;
   private WikiPage root;
-  private FitNesseContext context;
-  private String suitePageName;
 
 
   @Before
   public void setUp() throws Exception {
-    suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     WikiPageUtil.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
     WikiPage child = WikiPageUtil.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
@@ -36,9 +32,6 @@ public class SuiteSpecificationRunnerTest {
     data.setAttribute("Test");
     child.commit(data);
     WikiPageUtil.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
-    request = new MockRequest();
-    request.setResource(suitePageName);
-    context = FitNesseUtil.makeTestContext(root);
     runner = new SuiteSpecificationRunner(root);
   }
 
