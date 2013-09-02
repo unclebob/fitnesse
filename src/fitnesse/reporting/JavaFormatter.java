@@ -203,10 +203,10 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    listener.allTestingComplete();
+    listener.close();
   }
 
   public void writeSummary(String suiteName) throws IOException {

@@ -14,7 +14,7 @@ import fitnesse.testrunner.WikiTestPage;
 
 public class NullListener implements ResultsListener {
   @Override
-  public void allTestingComplete() throws IOException {}
+  public void close() throws IOException {}
 
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {}

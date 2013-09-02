@@ -88,7 +88,7 @@ public class TestFormatterTest {
     formatter.testStarted(page);
     formatter.testComplete(page, exception);
 
-    formatter.allTestingComplete();
+    formatter.close();
 
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);

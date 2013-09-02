@@ -56,7 +56,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   void allTestingComplete() throws IOException {
-    resultsListener.allTestingComplete();
+    resultsListener.close();
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {

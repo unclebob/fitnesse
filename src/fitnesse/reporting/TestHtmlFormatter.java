@@ -57,8 +57,8 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
-    super.allTestingComplete();
+  public void close() throws IOException {
+    super.close();
     removeStopTestLink();
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();

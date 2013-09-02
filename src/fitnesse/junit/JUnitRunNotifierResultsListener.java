@@ -25,7 +25,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void allTestingComplete() {
+  public void close() {
   }
 
   @Override

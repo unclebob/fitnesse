@@ -54,7 +54,7 @@ public class TestTextFormatterTest {
     TestTextFormatter formatter = new TestTextFormatter(response);
     clock.elapse(7600);
 
-    formatter.allTestingComplete();
+    formatter.close();
     verify(response).add("--------\n0 Tests,\t0 Failures\t7.600 seconds.\n");
   }
 }

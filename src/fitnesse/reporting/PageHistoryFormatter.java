@@ -27,7 +27,7 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void allTestingComplete() {
+  public void close() {
     setTotalRunTimeOnReport(totalTimeMeasurement);
   }
 

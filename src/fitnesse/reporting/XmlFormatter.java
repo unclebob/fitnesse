@@ -155,8 +155,8 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
-    super.allTestingComplete();
+  public void close() throws IOException {
+    super.close();
     setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }

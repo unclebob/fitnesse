@@ -30,7 +30,7 @@ public class PageInProgressFormatter extends NullFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     //ignore.
   }
 }

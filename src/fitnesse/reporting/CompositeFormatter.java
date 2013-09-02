@@ -74,9 +74,9 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     for (BaseFormatter formatter : formatters) {
-      formatter.allTestingComplete();
+      formatter.close();
     }
   }
 

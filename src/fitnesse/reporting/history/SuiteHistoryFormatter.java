@@ -37,9 +37,9 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     suiteTime.stop();
-    super.allTestingComplete();
+    super.close();
     if (writerFactory != null)
       writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime.startedAt());
     VelocityContext velocityContext = new VelocityContext();

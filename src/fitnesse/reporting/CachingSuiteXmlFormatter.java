@@ -41,9 +41,9 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     totalTimeMeasurement.stop();
-    super.allTestingComplete();
+    super.close();
     writeOutSuiteXML();
   }
 

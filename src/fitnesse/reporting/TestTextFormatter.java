@@ -64,9 +64,9 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     totalTimeMeasurement.stop();
-    super.allTestingComplete();
+    super.close();
     response.add(String.format("--------\n%d Tests,\t%d Failures\t%.03f seconds.\n", testCount, failCount, totalTimeMeasurement.elapsedSeconds()));
   }
 }

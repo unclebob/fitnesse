@@ -179,7 +179,7 @@ public class SuiteHtmlFormatterTest {
     formatter.testStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
-    formatter.allTestingComplete();
+    formatter.close();
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
   }
 
@@ -196,7 +196,7 @@ public class SuiteHtmlFormatterTest {
     formatter.testStarted(secondPage);
     clock.elapse(890);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
-    formatter.allTestingComplete();
+    formatter.close();
     assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }

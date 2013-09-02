@@ -17,7 +17,7 @@ public class PrintTestListener implements ResultsListener {
   private TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
 
   @Override
-  public void allTestingComplete() {
+  public void close() {
     System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
   }
 

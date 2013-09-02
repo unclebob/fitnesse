@@ -96,7 +96,7 @@ public class XmlFormatterTest {
     };
 
     clock.elapse(77L);
-    formatter.allTestingComplete();
+    formatter.close();
     assertThat(formatter.testResponse.getTotalRunTimeInMillis(), is(77L));
   }
 }

@@ -2,16 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import fitnesse.testsystems.TestSystemListener;
 
-public interface ResultsListener extends TestSystemListener<WikiTestPage> {
+public interface ResultsListener extends TestSystemListener<WikiTestPage>, Closeable {
 
   // runner specific
-
-  // TODO: replace by Closeable.close().
-  public void allTestingComplete() throws IOException;
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log);
 

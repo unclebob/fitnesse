@@ -68,7 +68,7 @@ public class SuiteHistoryFormatterTest {
     formatter.testStarted(testPage);
     clock.elapse(elapsedTime);
     formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
-    formatter.allTestingComplete();
+    formatter.close();
   }
 
   @Test

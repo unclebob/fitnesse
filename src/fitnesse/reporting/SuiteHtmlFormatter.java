@@ -143,7 +143,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     // Todo: why assign it to this variable, looks inconsistent.
     latestTestTime = totalTimeMeasurement.stop();
     removeStopTestLink();
@@ -151,7 +151,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
 
-    super.allTestingComplete();
+    super.close();
   }
 
   @Override

@@ -54,7 +54,7 @@ public class TestHtmlFormatterTest {
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 0, 0, 0));
-    formatter.allTestingComplete();
+    formatter.close();
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
@@ -65,7 +65,7 @@ public class TestHtmlFormatterTest {
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
-    formatter.allTestingComplete();
+    formatter.close();
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
@@ -75,7 +75,7 @@ public class TestHtmlFormatterTest {
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
-    formatter.allTestingComplete();
+    formatter.close();
     assertSubString("Tests Executed OK", pageBuffer.toString());
   }
 
@@ -84,7 +84,7 @@ public class TestHtmlFormatterTest {
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
-    formatter.allTestingComplete();
+    formatter.close();
 
     assertSubString("<strong>Assertions:</strong>", pageBuffer.toString());
   }
@@ -95,7 +95,7 @@ public class TestHtmlFormatterTest {
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
-    formatter.allTestingComplete();
+    formatter.close();
     //assert stop button added - double escaped, since it's in javascript
     assertSubString("<a href=\\\"#\\\" onclick=\\\"doSilentRequest('?responder=stoptest&id=2')\\\" class=\\\"stop\\\">", pageBuffer.toString());
     //assert stop button removed
@@ -122,7 +122,7 @@ public class TestHtmlFormatterTest {
     formatter.testStarted(page);
     clock.elapse(600);
     formatter.testComplete(page, new TestSummary(1, 2, 3, 4));
-    formatter.allTestingComplete();
+    formatter.close();
     assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.600 seconds)", pageBuffer.toString());
   }
 

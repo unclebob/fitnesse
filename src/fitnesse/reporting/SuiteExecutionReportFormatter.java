@@ -75,9 +75,9 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     totalTimeMeasurement.stop();
-    super.allTestingComplete();
+    super.close();
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
   }
   

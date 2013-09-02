@@ -39,14 +39,14 @@ public abstract class BaseFormatter implements ResultsListener {
 
   public void errorOccurred(Throwable cause) {
     try {
-      allTestingComplete();
+      close();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void allTestingComplete() throws IOException {
+  public void close() throws IOException {
     finalErrorCount = failCount;
   }
 
