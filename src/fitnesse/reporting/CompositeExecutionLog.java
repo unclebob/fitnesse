@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testrunner;
+package fitnesse.reporting;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -13,7 +13,6 @@ import org.apache.velocity.VelocityContext;
 import util.Clock;
 
 public class CompositeExecutionLog {
-  public static final String ErrorLogName = "ErrorLogs";
 
   private final WikiPage testPage;
   private final String testPagePath;
@@ -23,7 +22,7 @@ public class CompositeExecutionLog {
     this.testPage = testPage;
     PageCrawler crawler = testPage.getPageCrawler();
     testPagePath = "." + crawler.getFullPath();
-    errorLogPagePath = crawler.getFullPath().addNameToFront(ErrorLogName);
+    errorLogPagePath = crawler.getFullPath().addNameToFront(PageData.ErrorLogName);
   }
 
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();

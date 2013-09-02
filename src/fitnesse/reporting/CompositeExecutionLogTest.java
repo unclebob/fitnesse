@@ -1,8 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.testrunner;
+package fitnesse.reporting;
 
-import static fitnesse.testrunner.CompositeExecutionLog.ErrorLogName;
+import static fitnesse.wiki.PageData.ErrorLogName;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertSubString;
