@@ -1,7 +1,5 @@
 package fitnesse.junit;
 
-import fitnesse.testrunner.ResultsListener;
-import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;

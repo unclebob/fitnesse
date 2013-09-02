@@ -1,7 +1,6 @@
 package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;

@@ -11,7 +11,6 @@ import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSystemListener;
 
 public class SuiteResponder extends TestResponder {

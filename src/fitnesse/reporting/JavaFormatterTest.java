@@ -1,10 +1,12 @@
 package fitnesse.reporting;
 
+import java.io.Closeable;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import fitnesse.testrunner.ResultsListener;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystemListener;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
@@ -13,18 +15,21 @@ import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {
 
+  interface JavaFormatterListener extends TestSystemListener, Closeable {
+  }
+
   private final String nestedPageName = "ParentTest.ChildTest";
   private final String suiteName="MySuite";
   JavaFormatter jf;
   JavaFormatter.ResultsRepository mockResultsRepository;
-  ResultsListener listener;
-  
+  JavaFormatterListener listener;
+
   @Before
   public void prepare(){
     jf=new JavaFormatter(suiteName);
     mockResultsRepository=mock(JavaFormatter.ResultsRepository.class);
     jf.setResultsRepository(mockResultsRepository);
-    listener=mock(ResultsListener.class);
+    listener=mock(JavaFormatterListener.class);
   }
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
@@ -111,7 +116,6 @@ public class JavaFormatterTest {
   public void allTestingComplete_doesntWriteSummaryIfMainPageWasExecuted() throws Exception{
     jf=JavaFormatter.getInstance(nestedPageName);
     jf.setResultsRepository(mockResultsRepository);
-    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
     jf.close();
     verify(mockResultsRepository,times(0)).open(nestedPageName);     
@@ -133,7 +137,6 @@ public class JavaFormatterTest {
   @Test
   public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception{
     jf.setListener(listener);
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start().stop();
     jf.close();
     verify(listener).close();
   }

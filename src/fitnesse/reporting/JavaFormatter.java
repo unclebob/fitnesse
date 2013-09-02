@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testrunner.CompositeExecutionLog;
-import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
