@@ -13,6 +13,7 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -262,7 +263,7 @@ public abstract class SlimTable {
   }
 
   /** SlimExpectation base class for row based expectations. */
-  public abstract class RowExpectation implements SlimExpectation {
+  public abstract class RowExpectation implements SlimExpectation, TableCell {
     private final int col;
     private final int row;
     private final String originalContent;

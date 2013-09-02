@@ -4,6 +4,7 @@ import static util.RegexTestCase.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.testrunner.Stoppable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +85,7 @@ public class StopTestResponderTest {
   class StoppedRecorder implements Stoppable {
     private boolean wasStopped = false;
 
-    public synchronized void stop() throws Exception {
+    public synchronized void stop() {
       wasStopped = true;
     }
 

@@ -65,12 +65,6 @@ public class WikiTestPage implements TestPage {
     return new PageData(sourcePage, decoratedContent.toString());
   }
 
-  public PageData decorate(WikiPage wikiPage) {
-    StringBuilder decoratedContent = new StringBuilder(1024);
-    decorate(wikiPage, decoratedContent);
-    return new PageData(sourcePage, decoratedContent.toString());
-  }
-
   protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
     if (wikiPage == getSetUp()) {
       includePage(wikiPage, "-setup", decoratedContent);
@@ -82,7 +76,6 @@ public class WikiTestPage implements TestPage {
       decoratedContent.append(wikiPage.readOnlyData().getContent());
     }
   }
-
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
     if (!getScenarioLibraries().isEmpty()) {

@@ -1,8 +1,8 @@
 package fitnesse.junit;
 
 
-import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
 
 import java.text.MessageFormat;
 
@@ -23,7 +23,7 @@ public class JUnitHelper {
   }
 
   public JUnitHelper(String fitNesseDir, String outputDir,
-                     ResultsListener resultsListener) {
+                     TestSystemListener resultsListener) {
     helper = new TestHelper(fitNesseDir, outputDir, resultsListener);
   }
 

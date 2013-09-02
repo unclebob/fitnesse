@@ -12,7 +12,7 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
@@ -129,7 +129,12 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void testComplete(TestSummary testSummary)  {
+  public void testStarted(TestPage testPage) {
+    //
+  }
+
+  @Override
+  public void testComplete(TestPage testPage, TestSummary testSummary)  {
     this.testSummary = testSummary;
   }
 

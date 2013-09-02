@@ -12,6 +12,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.responders.ErrorResponder;
 import util.Clock;
 import util.FileUtil;
