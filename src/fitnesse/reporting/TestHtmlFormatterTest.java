@@ -7,7 +7,6 @@ import java.util.Date;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -72,7 +71,7 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testExecutionStatusHtml() throws Exception {
-    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.setTrackingId("2");
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.close();
@@ -91,7 +90,7 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testStop() throws Exception {
-    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.setTrackingId("2");
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
@@ -104,7 +103,7 @@ public class TestHtmlFormatterTest {
 
   @Test
   public void testIncompleteMessageAfterException() throws Exception {
-    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.setTrackingId("2");
     formatter.announceNumberTestsToRun(1);
     formatter.testStarted(page);
     pageBuffer.setLength(0);

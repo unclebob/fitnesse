@@ -4,6 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.CompositeFormatter;
 import fitnesse.responders.run.Stoppable;
 import fitnesse.responders.run.SuiteContentsFinder;
@@ -28,7 +29,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  private CompositeExecutionLog log;
 
   private volatile int testsInProgressCount;
 
@@ -40,7 +40,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.resultsListener = resultsListener;
     this.fitNesseContext = fitNesseContext;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
-    log = new CompositeExecutionLog(page);
   }
 
   public void setDebug(boolean isDebug) {
@@ -66,7 +65,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
     testSystemGroup.setFastTest(isFastTest);
 
-    resultsListener.setExecutionLogAndTrackingId(stopId, log);
+    resultsListener.setTrackingId(stopId);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
@@ -183,7 +182,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
   @Override
   public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    log.add(testSystem.getName(), executionLog);
     resultsListener.testSystemStopped(testSystem, executionLog, cause);
 
     if (cause != null) {

@@ -8,9 +8,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.testrunner.CompositeExecutionLog;
+import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
@@ -21,12 +22,13 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   private boolean wasInterrupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
-  private CompositeExecutionLog log;
+  private final CompositeExecutionLog log;
 
   private String relativeName;
 
   protected InteractiveFormatter(FitNesseContext context, WikiPage page) {
     super(context, page);
+    log = new CompositeExecutionLog(page);
   }
 
   protected abstract void writeData(String output);
@@ -71,6 +73,12 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
     return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
   }
 
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+    log.add(testSystem.getName(), executionLog);
+    super.testSystemStopped(testSystem, executionLog, cause);
+  }
+
   public boolean wasInterrupted() {
     return wasInterrupted;
   }
@@ -106,8 +114,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-    this.log = log;
+  public void setTrackingId(String stopResponderId) {
     addStopLink(stopResponderId);
   }
 

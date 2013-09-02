@@ -20,7 +20,7 @@ public class TestFormatterTest {
     private WikiPage root = InMemoryPage.makeRoot("RooT");
     private FitNesseContext context = FitNesseUtil.makeTestContext(root);
     private ChunkedResponse response = mock(ChunkedResponse.class);
-    private WikiPageDummy dummyPage = new WikiPageDummy("testPage", "testContent");
+    private WikiPage dummyPage = root.addChildPage("testPage");
     private XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);
 
     private TestTextFormatter testTextFormatter = new TestTextFormatter(response);

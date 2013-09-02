@@ -34,10 +34,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     totalTimeMeasurement = new TimeMeasurement().start();
   }
 
-  public SuiteHtmlFormatter(FitNesseContext context) {
-    this(context, null);
-  }
-
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
     super.announceNumberTestsToRun(testsToRun);

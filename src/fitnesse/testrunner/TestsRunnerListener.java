@@ -1,8 +1,10 @@
 package fitnesse.testrunner;
 
+import fitnesse.reporting.CompositeExecutionLog;
+
 public interface TestsRunnerListener {
 
-  void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log);
+  void setTrackingId(String stopResponderId);
 
   void announceNumberTestsToRun(int testsToRun);
 }

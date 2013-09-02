@@ -14,7 +14,9 @@ import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,8 @@ public class SuiteHtmlFormatterTest {
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    formatter = new SuiteHtmlFormatter(context) {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    formatter = new SuiteHtmlFormatter(context, root) {
       @Override
       protected void writeData(String output) {
         pageBuffer.append(output);

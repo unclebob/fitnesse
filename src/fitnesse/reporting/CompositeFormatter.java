@@ -3,7 +3,6 @@ package fitnesse.reporting;
 import java.io.Closeable;
 import java.io.IOException;
 
-import fitnesse.testrunner.CompositeExecutionLog;
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.TestSystemListener;
@@ -18,10 +17,10 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
+  public void setTrackingId(String stopResponderId) {
     for (TestSystemListener listener : listeners())
       if (listener instanceof TestsRunnerListener)
-        ((TestsRunnerListener) listener).setExecutionLogAndTrackingId(stopResponderId, log);
+        ((TestsRunnerListener) listener).setTrackingId(stopResponderId);
   }
 
   @Override
