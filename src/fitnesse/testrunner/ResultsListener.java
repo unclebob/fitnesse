@@ -3,16 +3,8 @@
 package fitnesse.testrunner;
 
 import java.io.Closeable;
-import java.io.IOException;
-
 import fitnesse.testsystems.TestSystemListener;
 
-public interface ResultsListener extends TestSystemListener<WikiTestPage>, Closeable {
+public interface ResultsListener extends TestsRunnerListener, TestSystemListener<WikiTestPage>, Closeable {
 
-  // runner specific
-
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log);
-
-  // Only really used in SuiteHtmlFormatter
-  public void announceNumberTestsToRun(int testsToRun);
 }

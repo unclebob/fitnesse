@@ -65,6 +65,11 @@ public abstract class InteractiveFormatter extends BaseFormatter {
     return assertionCounts;
   }
 
+  @Override
+  public int getErrorCount() {
+    return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
+  }
+
   public boolean wasInterrupted() {
     return wasInterrupted;
   }

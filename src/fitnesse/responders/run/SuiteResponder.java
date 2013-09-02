@@ -11,6 +11,8 @@ import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.ResultsListener;
+import fitnesse.testsystems.TestSystemListener;
 
 public class SuiteResponder extends TestResponder {
   private boolean includeHtml;
@@ -41,20 +43,19 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   BaseFormatter newHtmlFormatter() {
-    BaseFormatter formatter = new SuiteHtmlFormatter(context, page) {
+    return new SuiteHtmlFormatter(context, page) {
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-    return formatter;
   }
 
   @Override
-  protected BaseFormatter newTestHistoryFormatter() {
+  protected TestSystemListener newTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
     CompositeFormatter f = new CompositeFormatter();
-    f.add(new PageHistoryFormatter(context, page, source));
-    f.add(new SuiteHistoryFormatter(context, page, source));
+    f.addTestSystemListener(new PageHistoryFormatter(context, page, source));
+    f.addTestSystemListener(new SuiteHistoryFormatter(context, page, source));
     return f;
   }
 

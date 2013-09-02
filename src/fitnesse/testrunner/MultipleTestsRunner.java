@@ -4,6 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.reporting.CompositeFormatter;
 import fitnesse.responders.run.Stoppable;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
 
-  private final ResultsListener resultsListener;
+  private final CompositeFormatter resultsListener;
   private final FitNesseContext fitNesseContext;
   private final List<WikiPage> testPagesToRun;
   private boolean isFastTest = false;
@@ -34,7 +35,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
-                             final ResultsListener resultsListener) {
+                             final CompositeFormatter resultsListener) {
     this.testPagesToRun = testPagesToRun;
     this.resultsListener = resultsListener;
     this.fitNesseContext = fitNesseContext;

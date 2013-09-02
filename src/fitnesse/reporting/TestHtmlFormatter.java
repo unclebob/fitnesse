@@ -76,11 +76,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public int getErrorCount() {
-    return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
-  }
-
-  @Override
   public void addMessageForBlankHtml() {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");

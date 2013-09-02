@@ -4,6 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.reporting.CompositeFormatter;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -128,12 +129,14 @@ public class MultipleTestsRunnerTest {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     WikiTestPage page = new WikiTestPage(slimPage);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    
+    CompositeFormatter resultsListener = new CompositeFormatter();
+    TestSystemListener listener = mock(TestSystemListener.class);
+    resultsListener.addTestSystemListener(listener);
+
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
 
     runner.testStarted(page);
-    verify(resultsListener).testStarted(same(page));
+    verify(listener).testStarted(same(page));
   }
 
   private ArgumentMatcher<TimeMeasurement> isAStartedTimeMeasurement() {
@@ -150,7 +153,9 @@ public class MultipleTestsRunnerTest {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     WikiTestPage page = new WikiTestPage(slimPage);
-    ResultsListener resultsListener = mock(ResultsListener.class);
+    CompositeFormatter resultsListener = new CompositeFormatter();
+    TestSystemListener listener = mock(TestSystemListener.class);
+    resultsListener.addTestSystemListener(listener);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
 
@@ -158,6 +163,6 @@ public class MultipleTestsRunnerTest {
 
     runner.testStarted(page);
     runner.testComplete(page, testSummary);
-    verify(resultsListener).testComplete(same(page), same(testSummary));
+    verify(listener).testComplete(same(page), same(testSummary));
   }
 }

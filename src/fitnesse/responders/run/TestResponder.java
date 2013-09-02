@@ -13,6 +13,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.TagGroup;
 import fitnesse.http.Response;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.JavaFormatter;
@@ -29,8 +32,10 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -82,11 +87,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     try {
       performExecution();
     } catch (Exception e) {
-      // TODO: only call mainFormatter, it has to set wasInterrupted
-      formatters.errorOccurred(e);
+      mainFormatter.errorOccurred(e);
     }
 
-    exitCode = formatters.getErrorCount();
+    exitCode = mainFormatter.getErrorCount();
   }
 
   private HtmlPage makeHtml() {
@@ -137,11 +141,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     } else {
       mainFormatter = newHtmlFormatter();
     }
-    formatters.add(mainFormatter);
+    formatters.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      formatters.add(newTestHistoryFormatter());
+      formatters.addTestSystemListener(newTestHistoryFormatter());
     }
-    formatters.add(newTestInProgressFormatter());
+    formatters.addTestSystemListener(newTestInProgressFormatter());
   }
 
   protected String getTitle() {
@@ -178,12 +182,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     };
   }
 
-  protected BaseFormatter newTestHistoryFormatter() {
+  protected TestSystemListener newTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
     return new PageHistoryFormatter(context, page, writerFactory);
   }
 
-  protected BaseFormatter newTestInProgressFormatter() {
+  protected TestSystemListener newTestInProgressFormatter() {
     return new PageInProgressFormatter(context, page);
   }
 
@@ -199,7 +203,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     MultipleTestsRunner runner = newMultipleTestsRunner(test2run);
 
     if (isEmpty(page))
-      formatters.addMessageForBlankHtml();
+      mainFormatter.addMessageForBlankHtml();
     runner.executeTestPages();
   }
 
@@ -251,14 +255,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       response.closeChunks();
       response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
       response.closeTrailer();
-      response.close();
-    }
-  }
-
-  void closeHtmlResponse() {
-    if (!isClosed()) {
-      setClosed();
-      response.closeChunks();
       response.close();
     }
   }
