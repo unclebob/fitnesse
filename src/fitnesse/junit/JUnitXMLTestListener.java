@@ -1,22 +1,21 @@
 package fitnesse.junit;
 
-import fitnesse.testrunner.ResultsListener;
-import fitnesse.testrunner.CompositeExecutionLog;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
 import util.TimeMeasurement;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-public class JUnitXMLTestListener implements ResultsListener {
+public class JUnitXMLTestListener implements TestSystemListener<WikiTestPage> {
   
   private String outputPath;
   private TimeMeasurement timeMeasurement;
@@ -53,20 +52,8 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void close() {
-  }
-
-  @Override
-  public void announceNumberTestsToRun(int testsToRun) {
-  }
-
-  @Override
   public void testStarted(WikiTestPage test) {
     timeMeasurement = new TimeMeasurement().start();
-  }
-
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
   @Override

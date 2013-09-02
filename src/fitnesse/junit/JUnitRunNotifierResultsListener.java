@@ -9,12 +9,13 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-public class JUnitRunNotifierResultsListener implements ResultsListener {
+public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiTestPage> {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
@@ -22,14 +23,6 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
     this.notifier = notifier;
     this.mainClass = mainClass;
-  }
-
-  @Override
-  public void close() {
-  }
-
-  @Override
-  public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override
@@ -41,10 +34,6 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
 
   private Description descriptionFor(WikiTestPage test) {
     return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
-  }
-
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
   @Override

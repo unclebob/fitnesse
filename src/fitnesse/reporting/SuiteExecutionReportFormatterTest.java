@@ -59,8 +59,6 @@ public class SuiteExecutionReportFormatterTest {
     WikiPage page = new WikiPageDummy("name", "content");
     SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
 
-    TimeMeasurement totalTimeMeasurement = new TimeMeasurement(clock).start();
-    formatter.announceNumberTestsToRun(0);
     clock.elapse(50);
     formatter.close();
     assertThat(formatter.suiteExecutionReport.getTotalRunTimeInMillis(),

@@ -1,5 +1,6 @@
 package fitnesse.reporting;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -30,7 +32,7 @@ public class JavaFormatter extends BaseFormatter {
   private String mainPageName;
   private boolean isSuite = true;
   private static final Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
-  private ResultsListener listener = new NullListener();
+  private TestSystemListener listener = new NullListener();
 
 
   public interface ResultsRepository {
@@ -144,10 +146,6 @@ public class JavaFormatter extends BaseFormatter {
     listener.testStarted(test);
   }
 
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     String fullPath = getFullPath(test.getSourcePage());
     visitedTestPages.add(fullPath);
@@ -206,7 +204,8 @@ public class JavaFormatter extends BaseFormatter {
   public void close() throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    listener.close();
+    if (listener instanceof Closeable)
+      ((Closeable) listener).close();
   }
 
   public void writeSummary(String suiteName) throws IOException {
@@ -270,7 +269,7 @@ public class JavaFormatter extends BaseFormatter {
     }
   }
 
-  public void setListener(ResultsListener listener) {
+  public void setListener(TestSystemListener listener) {
     this.listener = listener;
   }
 

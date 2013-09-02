@@ -9,11 +9,13 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public abstract class BaseFormatter implements ResultsListener {
+public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>, Closeable {
 
   protected WikiPage page = null;
   protected FitNesseContext context;
@@ -48,10 +50,6 @@ public abstract class BaseFormatter implements ResultsListener {
   @Override
   public void close() throws IOException {
     finalErrorCount = failCount;
-  }
-
-  @Override
-  public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override

@@ -71,7 +71,6 @@ public class CachingSuiteXmlFormatterTest {
   @Test
   public void shouldRememberThePageNameAndDateAndRunTime() throws Exception {
     formatter = newNonWritingCachingSuiteXmlFormatter();
-    formatter.announceNumberTestsToRun(1);
     formatter.testStarted(testPage);
     clock.elapse(39);
     formatter.testComplete(testPage, testSummary);
@@ -103,7 +102,6 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void allTestsCompleteShouldReadTestHistoryAndInvokeVelocity() throws Exception {
-    formatter.announceNumberTestsToRun(0);
     TestHistory testHistory = mock(TestHistory.class);
     formatter.setTestHistoryForTests(testHistory);
     VelocityContext velocityContext = mock(VelocityContext.class);

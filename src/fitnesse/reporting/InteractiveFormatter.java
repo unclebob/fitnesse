@@ -2,6 +2,7 @@ package fitnesse.reporting;
 
 import java.io.IOException;
 
+import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
@@ -13,7 +14,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
-public abstract class InteractiveFormatter extends BaseFormatter {
+public abstract class InteractiveFormatter extends BaseFormatter implements TestsRunnerListener {
 
   private static final String TESTING_INTERRUPTED = "<strong>Testing was interrupted and results are incomplete.</strong>&nbsp;";
 
@@ -98,6 +99,10 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
   public void finishWritingOutput() throws IOException {
     writeData(testSummary());
+  }
+
+  @Override
+  public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override

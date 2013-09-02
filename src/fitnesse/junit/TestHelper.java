@@ -4,13 +4,14 @@ import fitnesse.Arguments;
 import fitnesse.reporting.JavaFormatter;
 import fitnesse.testrunner.ResultsListener;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesseMain.FitNesseMain;
 
 public class TestHelper {
   
   private final String fitNesseRootPath;
   private final String outputPath;
-  private final ResultsListener resultListener;
+  private final TestSystemListener resultListener;
   
   private boolean debug = true;
   
@@ -20,10 +21,10 @@ public class TestHelper {
   public TestHelper(String fitNesseRootPath, String outputPath){
     this(fitNesseRootPath, outputPath, new PrintTestListener());
   }
-  public TestHelper(String fitNesseRootPath, String outputPath, ResultsListener resultListener) {
+  public TestHelper(String fitNesseRootPath, String outputPath, TestSystemListener listener) {
     this.fitNesseRootPath = fitNesseRootPath;
     this.outputPath = outputPath;
-    this.resultListener = resultListener;
+    this.resultListener = listener;
   }
   public TestSummary runSuite(String suiteName) throws Exception{
     return run(suiteName, PAGE_TYPE_SUITE);

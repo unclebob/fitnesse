@@ -145,10 +145,6 @@ public class XmlFormatter extends BaseFormatter {
     return new TestExecutionReport.TestResult();
   }
 
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
   protected void setPage(WikiPage testPage) {
     this.page = testPage;
     testResponse.rootPath = testPage.getName();

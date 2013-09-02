@@ -28,10 +28,6 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
-  @Override
   public void testSystemStarted(TestSystem testSystem) {
   }
 

@@ -21,7 +21,7 @@ import util.DateAlteringClock;
 import util.TimeMeasurement;
 
 public class TestHtmlFormatterTest {
-  private BaseFormatter formatter;
+  private TestHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
   private WikiTestPage page;
   private WikiPage root;

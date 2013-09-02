@@ -188,7 +188,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
-    return new PageInProgressFormatter(context, page);
+    return new PageInProgressFormatter(context);
   }
 
   protected void sendPreTestNotification() {

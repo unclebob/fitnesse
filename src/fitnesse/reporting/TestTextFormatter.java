@@ -23,10 +23,6 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
-  @Override
   public void testSystemStarted(TestSystem testSystem) {
     response.add(String.format("\nStarting Test System: %s.\n", testSystem.getName()));
   }
