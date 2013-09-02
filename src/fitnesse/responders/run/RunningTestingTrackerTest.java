@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.testrunner.Stoppable;
 import org.junit.Test;
 
 public class RunningTestingTrackerTest {

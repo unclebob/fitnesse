@@ -4,6 +4,8 @@ package fitnesse.responders.run;
 
 import java.util.HashMap;
 
+import fitnesse.testrunner.Stoppable;
+
 public class RunningTestingTracker {
 
   private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();

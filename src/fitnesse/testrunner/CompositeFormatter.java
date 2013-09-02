@@ -1,9 +1,8 @@
-package fitnesse.reporting;
+package fitnesse.testrunner;
 
 import java.io.Closeable;
 import java.io.IOException;
 
-import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.TestSystemListener;
 

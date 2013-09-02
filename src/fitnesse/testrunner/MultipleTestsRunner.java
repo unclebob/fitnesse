@@ -4,9 +4,6 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.reporting.CompositeExecutionLog;
-import fitnesse.reporting.CompositeFormatter;
-import fitnesse.responders.run.Stoppable;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
