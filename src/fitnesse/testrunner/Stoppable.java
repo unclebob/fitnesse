@@ -4,5 +4,5 @@ package fitnesse.testrunner;
 
 
 public interface Stoppable {
-    public void stop() throws Exception;
+    public void stop();
 }

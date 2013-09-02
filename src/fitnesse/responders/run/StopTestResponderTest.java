@@ -85,7 +85,7 @@ public class StopTestResponderTest {
   class StoppedRecorder implements Stoppable {
     private boolean wasStopped = false;
 
-    public synchronized void stop() throws Exception {
+    public synchronized void stop() {
       wasStopped = true;
     }
 
