@@ -145,19 +145,24 @@ public class NameWikiPageResponderTest {
     WikiPage pageThree = WikiPageUtil.addPage(frontPage, pageThreePath);
     WikiPage pageFour  = WikiPageUtil.addPage(pageThree, pageFourPath);
     WikiPage pageFive  = WikiPageUtil.addPage(pageFour,  pageFivePath);
+
+    setTag(pageTwo, helloTag);
+    setTag(pageThree, worldTag);
+    setTag(pageFive, fitnesseTag);
 	
-	pageTwo.getData().setAttribute(PageData.PropertySUITES,   helloTag);
-	pageThree.getData().setAttribute(PageData.PropertySUITES, worldTag);
-	pageFive.getData().setAttribute(PageData.PropertySUITES,  fitnesseTag);
-	
-	// the setAttribute() calls above don't have an effect...
-	// assertEquals(helloTag,    pageTwo.getData().getAttribute(PageData.PropertySUITES));
-	// assertEquals(worldTag,    pageThree.getData().getAttribute(PageData.PropertySUITES));
-	// assertEquals(fitnesseTag, pageFive.getData().getAttribute(PageData.PropertySUITES));
-	
-	return frontPage;
+    assertEquals(helloTag,    pageTwo.getData().getAttribute(PageData.PropertySUITES));
+    assertEquals(worldTag,    pageThree.getData().getAttribute(PageData.PropertySUITES));
+    assertEquals(fitnesseTag, pageFive.getData().getAttribute(PageData.PropertySUITES));
+
+    return frontPage;
   }
-  
+
+  private void setTag(WikiPage page, String tag) {
+    PageData data = page.getData();
+    data.setAttribute(PageData.PropertySUITES, tag);
+    page.commit(data);
+  }
+
   @Test
   public void canBeUsedRecursively() throws Exception {
     WikiPage frontPage = createTestPageTree();
@@ -197,12 +202,12 @@ public class NameWikiPageResponderTest {
 	
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 	
-	// since the setAttribute() calls in createTestPageTree() don't have an effect the following tests are failing
-	// reenable them once the issue above has been resolved!
-    // assertHasRegexp(pageOneName,                                                                                          response.getContent());
-    // assertHasRegexp(pageOneName + "." + pageTwoName                         + " [" + helloTag + "]",                      response.getContent());
-    // assertHasRegexp(pageThreeName                                           + " [" + worldTag + "]",                      response.getContent());
-    // assertHasRegexp(pageThreeName + "." + pageFourName                      + " [" + worldTag + "]",                      response.getContent());
-    // assertHasRegexp(pageThreeName + "." + pageFourName + "." + pageFiveName + " [" + fitnesseTag + "][" + worldTag + "]", response.getContent());
+    // since the setAttribute() calls in createTestPageTree() don't have an effect the following tests are failing
+    // reenable them once the issue above has been resolved!
+    assertHasRegexp(pageOneName, response.getContent());
+    assertHasRegexp(pageOneName + "." + pageTwoName + " \\[" + helloTag + "]", response.getContent());
+    assertHasRegexp(pageThreeName + " \\[" + worldTag + "\\]", response.getContent());
+    assertHasRegexp(pageThreeName + "." + pageFourName + " \\[" + worldTag + "\\]", response.getContent());
+    assertHasRegexp(pageThreeName + "." + pageFourName + "." + pageFiveName + " \\[" + fitnesseTag + "\\]\\[" + worldTag + "\\]", response.getContent());
   }
 }
