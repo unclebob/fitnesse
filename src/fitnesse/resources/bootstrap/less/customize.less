@@ -152,14 +152,15 @@ tr.scenario.closed > td:first-child {
   color: darken(@errorText, 30%);
 }
 .error {
-  padding: 8px 35px 8px 14px;
-  margin-bottom: @baseLineHeight;
   background-color: darken(@warningBackground, 10%);
-  border: 1px solid darken(@warningBorder, 30%);
-  .border-radius(4px);
   color: darken(@warningText, 30%);
 }
-
+span.error {
+  background-position: 0, -2px;
+  padding-right: 3px;
+  border: 1px solid darken(@warningBorder, 30%);
+  .border-radius(4px);
+}
 
 #test-action {
   .test-button(@bgColor) {
