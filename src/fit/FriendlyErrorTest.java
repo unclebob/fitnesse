@@ -14,8 +14,8 @@ public class FriendlyErrorTest {
   public void testCantFindFixture() throws Exception {
     String pageString = "<table><tr><td>NoSuchFixture</td></tr></table>";
     Parse page = new Parse(pageString);
-    Fixture fixture = new Fixture();
-    fixture.doTables(page);
+    Dispatcher dispatcher = new Dispatcher();
+    dispatcher.doTables(page);
     String fixtureName = page.at(0, 0, 0).body;
     assertTrue(fixtureName.contains("Could not find fixture: NoSuchFixture."));
   }

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 import util.StringUtil;
-import fit.Fixture;
+import fit.Dispatcher;
 import fit.Parse;
 
 public class HandleFixtureDoesNotExtendFixtureTest {
@@ -27,7 +27,7 @@ public class HandleFixtureDoesNotExtendFixtureTest {
 
     Parse tableForFaultyFixture = new Parse(tableText);
 
-    new Fixture().doTables(tableForFaultyFixture);
+    new Dispatcher().doTables(tableForFaultyFixture);
     String fixtureClassCellText = tableForFaultyFixture.at(0, 0, 0).body;
 
     assertEquals("fit.testFxtr.WouldBeFixture<hr/> "

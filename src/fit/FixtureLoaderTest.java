@@ -22,23 +22,23 @@ public class FixtureLoaderTest {
   @Test
   public void testLoadFixturesFromPreviouslyRememberedPackages()
     throws Throwable {
-    Fixture f1 = fixtureLoader.disgraceThenLoad("fit.FixtureOne");
+    BaseFixture f1 = fixtureLoader.disgraceThenLoad("fit.FixtureOne");
     assertEquals("fit.FixtureOne", f1.getClass().getName());
-    Fixture f2 = fixtureLoader.disgraceThenLoad("FixtureTwo");
+    BaseFixture f2 = fixtureLoader.disgraceThenLoad("FixtureTwo");
     assertEquals("fit.FixtureTwo", f2.getClass().getName());
   }
 
   @Test
   public void testLoadFixturesWithGracefulName() throws Throwable {
     fixtureLoader.disgraceThenLoad("fit.FixtureOne");
-    Fixture f2 = fixtureLoader.disgraceThenLoad("fixture two");
+    BaseFixture f2 = fixtureLoader.disgraceThenLoad("fixture two");
     assertEquals("fit.FixtureTwo", f2.getClass().getName());
   }
 
   @Test
   public void testLoadFixturesWithFixtureImplied() throws Throwable {
     fixtureLoader.disgraceThenLoad("fit.TheThirdFixture");
-    Fixture fixture = fixtureLoader.disgraceThenLoad("the third");
+    BaseFixture fixture = fixtureLoader.disgraceThenLoad("the third");
     assertEquals("fit.TheThirdFixture", fixture.getClass().getName());
   }
 }
