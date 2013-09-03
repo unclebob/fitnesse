@@ -24,7 +24,7 @@ public class SemaphoreFixture extends Fixture {
     boolean isOk = false;
     if ("lock".equals(action)) {
       isOk = lockSemaphore(name);
-      if (!isOk) setForcedAbort(true);
+      if (!isOk) Dispatcher.setForcedAbort(true);
     } else if ("unlock".equals(action)) isOk = unlockSemaphore(name);
     else exception(infoCells.parts, new Throwable("Bad action: " + action));
 
