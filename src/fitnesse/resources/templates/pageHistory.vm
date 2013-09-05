@@ -1,11 +1,12 @@
 <h1>Page history</h1>
 #if($pageHistory)
+<script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
 <form action= "" method="get" name="compareHistory">
  <fieldset class="buttons">
   <input type="hidden" value="compareHistory" name="responder"/>
   <input type="submit" value="Compare" />
   <a class="button" href="$viewLocation">Cancel</a>
-  <input type="checkbox" id="hideGreenTests" onClick="$('td:nth-child(5)').filter('.pass').parent().toggle();";>Hide passed tests</input>
+  <input type="checkbox" id="hideGreenTests" onClick="doTogglePassedTestsInHistory()";>Hide passed tests</input>
  </fieldset>
  <table>
   <tr>
