@@ -18,9 +18,10 @@ function doSilentRequest(url)
 /**
  *  Scenario's and Exceptions (after test execution)
  */
-$(document).on("click", "article tr.scenario td, article tr.exception td", function () {
-    $(this).parent().toggleClass('closed').nextUntil(":not(.exception-detail, .scenario-detail)").toggleClass("closed-detail");
-});
+$(document)
+    .on("click", "article tr.scenario td, article tr.exception td", function () {
+        $(this).parent().toggleClass('closed').nextUntil(":not(.exception-detail, .scenario-detail)").toggleClass("closed-detail");
+    });
 
 /**
  * Collapsible section
@@ -34,14 +35,14 @@ $(document)
 		event.stopPropagation();
 		return true;
 	})
-	.on('click', 'article .collapsible .expandall', function (event) {
+	.on('click', 'article .collapsible .expandall', function () {
 		var section = $(this).closest('.collapsible');
 		section.find('.collapsible').andSelf().removeClass('closed');
 		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
-	.on('click', 'article .collapsible .collapseall', function (event) {
-		section = $(this).closest('.collapsible');
+	.on('click', 'article .collapsible .collapseall', function () {
+		var section = $(this).closest('.collapsible');
 		section.find('.collapsible, .scenario').andSelf().addClass('closed');
 		section.find('.scenario').addClass('closed').next().hide();
 		return false;
@@ -191,7 +192,6 @@ function initErrorMetadata() {
      */
     unfoldErrors($('.fail,.error'));
 }
-
 
 /** Backwards compatibility */
 function toggleCollapsable(id) { $('#' + id).toggle().parent('.collapse_rim').toggleClass('open'); }
