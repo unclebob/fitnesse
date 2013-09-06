@@ -3,6 +3,7 @@
 package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
@@ -57,8 +58,6 @@ public class XmlFormatter extends BaseFormatter {
   public void testOutputChunk(String output) {
     appendHtmlToBuffer(output);
   }
-
-  // TODO: store tables -> need handler startNewTable(SlimTable slimTable)
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
@@ -121,10 +120,11 @@ public class XmlFormatter extends BaseFormatter {
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
     super.testComplete(test, testSummary);
-    processTestResults(test.getName(), testSummary, currentTestStartTime);
+    processTestResults(test.getName(), testSummary);
+    testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
   }
 
-  public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement notUsed) {
+  public void processTestResults(final String relativeTestName, TestSummary testSummary) {
     finalSummary = new TestSummary(testSummary);
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
