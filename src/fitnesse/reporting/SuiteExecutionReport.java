@@ -109,10 +109,6 @@ public class SuiteExecutionReport extends ExecutionReport {
     pageHistoryReferences.add(reference);
   }
 
-  public void tallyPageCounts(ExecutionResult result) {
-    getFinalCounts().tallyPageCounts(result);
-  }
-  
   public static class PageHistoryReference {
     private String pageName;
     private long time;
