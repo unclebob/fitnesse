@@ -36,6 +36,11 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         Symbol bodyText = parser.parseTo(SymbolType.CloseCollapsible);
         if (parser.atEnd()) return Symbol.nothing;
 
+        // Remove trailing newline so we do not introduce excessive whitespace in the page.
+        if (parser.peek().isType(SymbolType.Newline)) {
+            parser.moveNext(1);
+        }
+
         return new Maybe<Symbol>(current
                 .putProperty(STATE, state)
                 .add(titleText)
