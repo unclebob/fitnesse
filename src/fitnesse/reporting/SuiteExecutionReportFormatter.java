@@ -50,14 +50,13 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     timeMeasurement.stop();
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
-    failCount+=testSummary.wrong;
-    failCount+=testSummary.exceptions;
+    super.testComplete(test, testSummary);
   }
 
   public List<SuiteExecutionReport.PageHistoryReference> getPageHistoryReferences() {
