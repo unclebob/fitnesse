@@ -36,7 +36,6 @@ public class XmlFormatter extends BaseFormatter {
   private StringBuilder outputBuffer;
   protected TestExecutionReport testResponse = new TestExecutionReport();
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
-  protected TestSummary finalSummary = new TestSummary();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
@@ -125,7 +124,6 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   public void processTestResults(final String relativeTestName, TestSummary testSummary) {
-    finalSummary = new TestSummary(testSummary);
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
     currentResult.startTime = currentTestStartTime.startedAt();
@@ -161,7 +159,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime.startedAt()));
+    writeResults(writerFactory.getWriter(context, getPageForHistory(), getPageCounts(), currentTestStartTime.startedAt()));
   }
 
   protected WikiPage getPageForHistory() {
