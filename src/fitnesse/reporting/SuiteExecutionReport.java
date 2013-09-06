@@ -110,7 +110,7 @@ public class SuiteExecutionReport extends ExecutionReport {
   }
 
   public void tallyPageCounts(ExecutionResult result) {
-    finalCounts.tallyPageCounts(result);
+    getFinalCounts().tallyPageCounts(result);
   }
   
   public static class PageHistoryReference {

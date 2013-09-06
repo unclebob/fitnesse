@@ -15,7 +15,7 @@ import util.XmlUtil;
 public abstract class ExecutionReport {
   public String version;
   public String rootPath;
-  public TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
+  private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   protected Document xmlDoc;
   private long totalRunTimeInMillis = 0;

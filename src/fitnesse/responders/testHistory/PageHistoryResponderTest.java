@@ -341,7 +341,7 @@ public class PageHistoryResponderTest {
     SuiteExecutionReport report = makeDummySuiteResponse();
     report.version = fitNesseVersion.toString();
     report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
-    report.finalCounts = new TestSummary(4,5,6,7);
+    report.getFinalCounts().add(new TestSummary(4,5,6,7));
     report.rootPath = "SuitePage";
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when (timeMeasurement.elapsed()).thenReturn(12321L);
@@ -395,7 +395,7 @@ public class PageHistoryResponderTest {
     TestExecutionReport testResponse = new TestExecutionReport();
     testResponse.version = fitNesseVersion.toString();
     testResponse.rootPath = "rootPath";
-    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     testResponse.results.add(result);
     result.right = "11";
@@ -472,7 +472,7 @@ public class PageHistoryResponderTest {
     TestExecutionReport testResponse = new TestExecutionReport();
     testResponse.version = "v1";
     testResponse.rootPath = "rootPath";
-    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     testResponse.results.add(result);
     result.right = "xx";
