@@ -48,6 +48,36 @@ $(document)
 	});
 
 /**
+ * Hide/show passed tests
+ */
+$(document)
+    .on('change', '.pageHistory #hidePassedTests', function () {
+        var elems = $('td.date_field.pass').parent();
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    })
+    .on('change', '.testHistory #hidePassedTests', function () {
+        // 3rd column shows failed tests.
+        var elems = $('tr > td:nth-child(3).ignore').parent();
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    })
+    .on('change', '.suiteExecutionReport #hidePassedTests', function () {
+        var elems = $('tr.pass');
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    });
+
+/**
  * Notify user when changing page while test execution is in progress.
  */
 window.onbeforeunload = function () {
