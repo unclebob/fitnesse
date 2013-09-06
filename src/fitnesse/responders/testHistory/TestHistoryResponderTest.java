@@ -1,6 +1,6 @@
 package fitnesse.responders.testHistory;
 
-import static fitnesse.responders.testHistory.PageHistory.BarGraph;
+import static fitnesse.reporting.history.PageHistory.BarGraph;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.TestResultRecord;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

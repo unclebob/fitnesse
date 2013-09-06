@@ -8,7 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.BasicResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 
 public class StopTestResponder extends BasicResponder {
 
@@ -28,7 +28,7 @@ public class StopTestResponder extends BasicResponder {
 
   private String html(FitNesseContext context) {
     HtmlPage page = context.pageFactory.newPage();
-    HtmlUtil.addTitles(page, "Stopping tests");
+    page.addTitles("Stopping tests");
     page.put("testId", testId);
     page.put("runningTestingTracker", context.runningTestingTracker);
     page.setMainTemplate("stopTestPage.vm");

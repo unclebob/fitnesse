@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import fitnesse.reporting.history.TestHistory;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -16,8 +17,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

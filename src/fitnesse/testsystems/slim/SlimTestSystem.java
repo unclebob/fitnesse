@@ -89,8 +89,10 @@ public abstract class SlimTestSystem implements TestSystem {
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
     initializeTest();
+
+    testStarted(pageToTest);
     processAllTablesOnPage(pageToTest);
-    testComplete(testContext.getTestSummary());
+    testComplete(pageToTest, testContext.getTestSummary());
   }
 
   public void addTestSystemListener(TestSystemListener listener) {
@@ -184,15 +186,19 @@ public abstract class SlimTestSystem implements TestSystem {
     return exceptionResult;
   }
 
-  public void testOutputChunk(String output) throws IOException {
+  protected void testOutputChunk(String output) throws IOException {
     testSystemListener.testOutputChunk(output);
   }
 
-  public void testComplete(TestSummary testSummary) throws IOException {
-    testSystemListener.testComplete(testSummary);
+  protected void testStarted(TestPage testPage) throws IOException {
+    testSystemListener.testStarted(testPage);
   }
 
-  public void exceptionOccurred(Throwable e) {
+  protected void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    testSystemListener.testComplete(testPage, testSummary);
+  }
+
+  protected void exceptionOccurred(Throwable e) {
     try {
       slimClient.kill();
     } catch (IOException e1) {
@@ -203,11 +209,11 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.testSystemStopped(this, log, e);
   }
 
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  protected void testAssertionVerified(Assertion assertion, TestResult testResult) {
     testSystemListener.testAssertionVerified(assertion, testResult);
   }
 
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  protected void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.xml.sax.SAXException;
 
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 
 public class HistoryComparer {

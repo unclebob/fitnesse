@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.reporting.history.TestHistory;
 
 public class PageHistory {
   private String name;

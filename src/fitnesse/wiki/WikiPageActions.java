@@ -5,8 +5,6 @@ package fitnesse.wiki;
 public class WikiPageActions {
 
   private WikiPage page;
-  private boolean addChild; // normal wiki page
-  private boolean pageHistory; // test results
 
   public WikiPageActions(WikiPage page) {
     super();

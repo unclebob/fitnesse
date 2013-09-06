@@ -34,6 +34,11 @@ public class DateAlteringClock extends Clock {
     return this;
   }
 
+  public DateAlteringClock elapse(long ms) {
+    rebaseToTime += ms;
+    return this;
+  }
+
   public DateAlteringClock advanceMillisOnEachQuery() {
     advanceOnEachQuery = true;
     return this;

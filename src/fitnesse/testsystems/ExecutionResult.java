@@ -19,11 +19,11 @@ public enum ExecutionResult {
     if (testSummary.getWrong() > 0 || wasInterrupted) {
       return FAIL;
     } else if (testSummary.getExceptions() > 0) {
-	  return ERROR;
+      return ERROR;
     } else if (((isSuiteMetaPage(relativeName) && testSummary.getIgnores() > 0)
     		|| (!isSuiteMetaPage(relativeName) && testSummary.getIgnores() >= 0)) && testSummary.getRight() == 0) {
       return IGNORE;
-	}
+	  }
     return PASS;
   }
   

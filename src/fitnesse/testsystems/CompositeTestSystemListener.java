@@ -6,10 +6,14 @@ import java.util.List;
 
 public class CompositeTestSystemListener implements TestSystemListener {
 
-  private List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
+  private final List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
 
-  public void addTestSystemListener(TestSystemListener listener) {
+  public final void addTestSystemListener(TestSystemListener listener) {
     listeners.add(listener);
+  }
+
+  protected final List<TestSystemListener> listeners() {
+    return listeners;
   }
 
   @Override
@@ -25,9 +29,15 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testComplete(TestSummary testSummary) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
     for (TestSystemListener listener : listeners)
-      listener.testComplete(testSummary);
+      listener.testStarted(testPage);
+  }
+
+  @Override
+  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    for (TestSystemListener listener : listeners)
+      listener.testComplete(testPage, testSummary);
   }
 
   @Override

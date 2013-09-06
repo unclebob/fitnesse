@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;

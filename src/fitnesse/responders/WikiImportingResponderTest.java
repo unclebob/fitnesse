@@ -11,12 +11,13 @@ import static util.RegexTestCase.assertSubString;
 
 import java.io.IOException;
 
+import fitnesse.html.template.PageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;

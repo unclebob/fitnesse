@@ -4,6 +4,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.testutil.FitNesseUtil;
 
 import org.junit.After;

@@ -6,6 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.TestResultRecord;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -18,11 +21,11 @@ import fitnesse.http.Response;
 import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.run.ExecutionReport;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.reporting.ExecutionReport;
+import fitnesse.reporting.SuiteExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;

@@ -7,9 +7,9 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.components.SocketDealer;
-import fitnesse.responders.PageFactory;
+import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.run.RunningTestingTracker;
+import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;

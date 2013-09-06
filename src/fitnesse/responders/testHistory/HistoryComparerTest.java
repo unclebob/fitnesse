@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 

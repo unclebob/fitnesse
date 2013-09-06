@@ -6,13 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import fitnesse.components.ContentBuffer;
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.PageFactory;
+import fitnesse.reporting.SuiteHtmlFormatter;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PathParser;
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class HtmlResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;
@@ -36,7 +38,8 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
 
   private SuiteHtmlFormatter createCustomFormatter() {
-    SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context, root) {
       @Override
       protected void writeData(String output) {
         try {
