@@ -181,10 +181,6 @@ public class XmlFormatter extends BaseFormatter {
     writer.close();
   }
 
-  protected TestSummary getFinalSummary() {
-    return finalSummary;
-  }
-
   protected TestSummary getPageCounts() {
     return testResponse.getFinalCounts();
   }
