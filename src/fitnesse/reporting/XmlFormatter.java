@@ -170,7 +170,7 @@ public class XmlFormatter extends BaseFormatter {
 
   @Override
   public int getErrorCount() {
-    return finalSummary.wrong + finalSummary.exceptions;
+    return getPageCounts().wrong + getPageCounts().exceptions;
   }
 
   protected void writeResults(Writer writer) throws IOException {
@@ -183,6 +183,10 @@ public class XmlFormatter extends BaseFormatter {
 
   protected TestSummary getFinalSummary() {
     return finalSummary;
+  }
+
+  protected TestSummary getPageCounts() {
+    return testResponse.getFinalCounts();
   }
 
   private void addCountsToResult(TestExecutionReport.TestResult currentResult, TestSummary testSummary) {
