@@ -86,12 +86,19 @@ public class WikiTestPage implements TestPage {
   }
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
-    if (!getScenarioLibraries().isEmpty()) {
-      decoratedContent.append("!*> Scenario Libraries\n");
-      for (WikiPage scenarioLibrary : getScenarioLibraries()) {
+    final List<WikiPage> libraries = getScenarioLibraries();
+    if (!libraries.isEmpty()) {
+      if (libraries.size() > 1) {
+        decoratedContent.append("!*> Scenario Libraries\n");
+      }
+
+      for (WikiPage scenarioLibrary : libraries) {
         includeScenarioLibrary(scenarioLibrary, decoratedContent);
       }
-      decoratedContent.append("*!\n");
+
+      if (libraries.size() > 1) {
+        decoratedContent.append("*!\n");
+      }
     }
   }
 
