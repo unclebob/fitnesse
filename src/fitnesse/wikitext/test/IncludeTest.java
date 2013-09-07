@@ -15,7 +15,7 @@ public class IncludeTest {
 
   @Test
   public void parsesIncludes() throws Exception {
-    assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]], Newline]");
+    assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
     assertParses("|!include PageTwo|\n", "SymbolList[Table[SymbolList[SymbolList[Include[Text, WikiWord, Meta[Text]]]]]]");
     assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
     assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");

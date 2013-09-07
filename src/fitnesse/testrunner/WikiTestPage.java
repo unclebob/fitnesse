@@ -58,11 +58,19 @@ public class WikiTestPage implements TestPage {
 
     decorate(getSetUp(), decoratedContent);
 
-    decoratedContent.append(parsedData().getContent());
+    addPageContent(decoratedContent);
 
     decorate(getTearDown(), decoratedContent);
 
     return new PageData(sourcePage, decoratedContent.toString());
+  }
+
+  protected void addPageContent(StringBuilder decoratedContent) {
+    String content = parsedData().getContent();
+    decoratedContent
+            .append("\n")
+            .append(content)
+            .append(content.endsWith("\n") ? "" : "\n");
   }
 
   protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
@@ -78,12 +86,19 @@ public class WikiTestPage implements TestPage {
   }
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
-    if (!getScenarioLibraries().isEmpty()) {
-      decoratedContent.append("!*> Scenario Libraries\n");
-      for (WikiPage scenarioLibrary : getScenarioLibraries()) {
+    final List<WikiPage> libraries = getScenarioLibraries();
+    if (!libraries.isEmpty()) {
+      if (libraries.size() > 1) {
+        decoratedContent.append("!*> Scenario Libraries\n");
+      }
+
+      for (WikiPage scenarioLibrary : libraries) {
         includeScenarioLibrary(scenarioLibrary, decoratedContent);
       }
-      decoratedContent.append("*!\n");
+
+      if (libraries.size() > 1) {
+        decoratedContent.append("*!\n");
+      }
     }
   }
 
@@ -98,7 +113,7 @@ public class WikiTestPage implements TestPage {
       return;
     String pagePathName = getPathNameForPage(wikiPage);
     newPageContent
-            .append("\n!include ")
+            .append("!include ")
             .append(arg)
             .append(" .")
             .append(pagePathName)
