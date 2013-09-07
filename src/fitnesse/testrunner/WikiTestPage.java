@@ -58,7 +58,7 @@ public class WikiTestPage implements TestPage {
 
     decorate(getSetUp(), decoratedContent);
 
-    decoratedContent.append(parsedData().getContent());
+    decoratedContent.append(parsedData().getContent()).append("\n");
 
     decorate(getTearDown(), decoratedContent);
 
@@ -98,7 +98,7 @@ public class WikiTestPage implements TestPage {
       return;
     String pagePathName = getPathNameForPage(wikiPage);
     newPageContent
-            .append("\n!include ")
+            .append("!include ")
             .append(arg)
             .append(" .")
             .append(pagePathName)
