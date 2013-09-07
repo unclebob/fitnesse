@@ -42,7 +42,7 @@ article .centered {
 }
 
 .collapsible > div {
-  margin-left: 16px;
+    margin: 16px 0 0 16px;
 }
 
 .collapsible.closed > div {
