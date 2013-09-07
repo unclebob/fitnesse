@@ -20,7 +20,7 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
     includePage(getSuiteSetUp(), "-setup", decoratedContent);
     includePage(getSetUp(), "-setup", decoratedContent);
 
-    decoratedContent.append(parsedData().getContent()).append("\n");
+    addPageContent(decoratedContent);
 
     includePage(getTearDown(), "-teardown", decoratedContent);
     includePage(getSuiteTearDown(), "-teardown", decoratedContent);

@@ -58,11 +58,19 @@ public class WikiTestPage implements TestPage {
 
     decorate(getSetUp(), decoratedContent);
 
-    decoratedContent.append(parsedData().getContent()).append("\n");
+    addPageContent(decoratedContent);
 
     decorate(getTearDown(), decoratedContent);
 
     return new PageData(sourcePage, decoratedContent.toString());
+  }
+
+  protected void addPageContent(StringBuilder decoratedContent) {
+    String content = parsedData().getContent();
+    decoratedContent
+            .append("\n")
+            .append(content)
+            .append(content.endsWith("\n") ? "" : "\n");
   }
 
   protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
