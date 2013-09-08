@@ -215,7 +215,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"pass\">.*03 May, 09 11:04.*</td>", response.getContent());
+    assertHasRegexp("<td class=\"date_field pass\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -225,7 +225,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"fail\">.*03 May, 09 11:04.*</td>", response.getContent());
+    assertHasRegexp("<td class=\"date_field fail\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -235,8 +235,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_1");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"fail\">2</td>", response.getContent());
-    assertHasRegexp("<td .* class=\"pass\">6</td>", response.getContent());
+    assertHasRegexp("<td class=\"fail_count fail\">2</td>", response.getContent());
+    assertHasRegexp("<td class=\"pass_count pass\">6</td>", response.getContent());
   }
 
   @Test
@@ -246,8 +246,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_0_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
-    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td class=\"pass_count ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td class=\"fail_count ignore\">0</td>", response.getContent());
   }
 
   @Test
@@ -258,11 +258,11 @@ public class PageHistoryResponderTest {
     makeResponse();
     StringBuilder expected = new StringBuilder();
     for (int i = 0; i < 30; i++) {
-      expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
+      expected.append("<td class=\"element pass\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 20; i++) {
-      expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
+      expected.append("<td class=\"element fail\">&nbsp;</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
   }
@@ -276,15 +276,15 @@ public class PageHistoryResponderTest {
     makeResponse();
     StringBuilder expected = new StringBuilder();
     for (int i = 0; i < 10; i++) {
-      expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
+      expected.append("<td class=\"element pass\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 5; i++) {
-      expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
+      expected.append("<td class=\"element fail\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 35; i++) {
-      expected.append("<td id=\"element\" class=\"ignore\">&nbsp</td>");
+      expected.append("<td class=\"element ignore\">&nbsp;</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
   }
