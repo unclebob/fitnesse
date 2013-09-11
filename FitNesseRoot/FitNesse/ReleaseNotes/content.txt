@@ -1,3 +1,11 @@
+!2 Upcoming release
+ * Git version control and recent-changes support
+ * Page caching is removed. Changes on the file system are now directly reflected in the wiki
+ * Test and Page history can show/hide passed tests. This makes it easier to search for failed test runs.
+ * the "names" responder has new options: "Recursive", "LeafOnly", and "ShowTags" (needs documentation update!)
+ * Reduce space used by included pages on test page.
+ * Test system, Fit server and wiki code has been cleaned up.
+ 
 !2 2013-05-30
  * Many improvements in the JUnit test runner
  * New: version comparator
