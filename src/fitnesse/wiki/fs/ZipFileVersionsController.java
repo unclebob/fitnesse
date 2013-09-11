@@ -98,20 +98,20 @@ public class ZipFileVersionsController implements VersionsController {
 
   protected VersionInfo makeZipVersion(FileSystemPage page, PageData data) {
     final String dirPath = page.getFileSystemPath();
-    final Set<File> filesToZip = getFilesToZip(dirPath);
-
+    final File contentFile = new File(dirPath, contentFilename);
+    final File propertiesFile = new File(dirPath, propertiesFilename);
     final VersionInfo version = VersionInfo.makeVersionInfo(data);
 
-    if (filesToZip.size() == 0) {
+    if (!contentFile.exists() || !propertiesFile.exists()) {
       return version;
     }
+
     ZipOutputStream zos = null;
     try {
       final String filename = makeVersionFileName(page, version.getName());
       zos = new ZipOutputStream(new FileOutputStream(filename));
-      for (File aFilesToZip : filesToZip) {
-        addToZip(aFilesToZip, zos);
-      }
+      addToZip(contentFile, zos);
+      addToZip(propertiesFile, zos);
       return version;
     } catch (Throwable th) {
       throw new RuntimeException(th);
@@ -137,21 +137,6 @@ public class ZipFileVersionsController implements VersionsController {
     is.read(bytes);
     is.close();
     zos.write(bytes, 0, size);
-  }
-
-  private Set<File> getFilesToZip(final String dirPath) {
-    final Set<File> filesToZip = new HashSet<File>();
-    final File dir = new File(dirPath);
-    final File[] files = dir.listFiles();
-    if (files == null) {
-      return filesToZip;
-    }
-    for (final File file : files) {
-      if (!(isVersionFile(file) || file.isDirectory())) {
-        filesToZip.add(file);
-      }
-    }
-    return filesToZip;
   }
 
   private boolean isVersionFile(final File file) {
