@@ -61,6 +61,7 @@ public class ContentsItemBuilder {
     public HtmlTag buildItem(SourcePage page) {
         HtmlTag result = new HtmlTag("a", buildBody(page));
         result.addAttribute("href", buildReference(page));
+        result.addAttribute("class", getBooleanPropertiesClasses(page));
         String help = page.getProperty(PageData.PropertyHELP);
         if (help.length() > 0) {
             if (hasOption("-h", Contents.HELP_TOC)) {
@@ -127,6 +128,21 @@ public class ContentsItemBuilder {
         if (sourcePage.hasProperty(PageType.TEST.toString())) result += "+";
         if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += "@";
         if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += "-";
+        return result;
+    }
+    private String getBooleanPropertiesClasses(SourcePage sourcePage) {
+        String result = "";
+        if (sourcePage.hasProperty(PageType.SUITE.toString())) {
+        		result += "suite";
+        	}
+        else if (sourcePage.hasProperty(PageType.TEST.toString())) {
+        	result += "test";
+        	}
+        else {
+        	result += "static";
+        };
+        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += " linked";
+        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += " pruned";
         return result;
     }
 }
