@@ -15,7 +15,6 @@ import util.GracefulNamer;
 public class TemplateUtil {
 
   public static List<String> getTemplatesFromUncles(WikiPage page) {
-    List<WikiPage> wikiUncles = new LinkedList<WikiPage>();
     final List<String> templatePaths = new ArrayList<String>();
     page.getPageCrawler().traverseUncles("TemplateLibrary", new TraversalListener<WikiPage>() {
       @Override
