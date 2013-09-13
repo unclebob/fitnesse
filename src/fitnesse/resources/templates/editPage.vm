@@ -16,7 +16,9 @@
  <fieldset>
   <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
  </fieldset>
- #if( $!pageType )
+ #if($!pageTemplate)
+ <input type="hidden" name="pageTemplate" value="$pageTemplate"/>
+ #elseif( $!pageType )
  <input type="hidden" name="pageType" value="$pageType"/>
  #else
  <fieldset id="pagetypes">

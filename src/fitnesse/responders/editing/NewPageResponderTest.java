@@ -72,4 +72,18 @@ public class NewPageResponderTest {
     assertSubString("textarea class=\"wikitext no_wrap\"", body);
   }
 
+  @Test
+  public void shouldSetPageTemplateIfProvidedAsArgument() {
+    WikiPageUtil.addPage(root, PathParser.parse("FancyTemplate"), "template page");
+    request.setResource("");
+    request.addInput(NewPageResponder.PAGE_TEMPLATE, ".FancyTemplate");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
+            request);
+    assertEquals(200, response.getStatus());
+
+    String body = response.getContent();
+    assertSubString("<form", body);
+    assertSubString("name=\"" + NewPageResponder.PAGE_TEMPLATE + "\"", body);
+    assertSubString("value=\".FancyTemplate\"", body);
+  }
 }

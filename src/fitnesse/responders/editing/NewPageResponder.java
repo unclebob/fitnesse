@@ -19,6 +19,10 @@ import fitnesse.wiki.WikiPagePath;
 
 public class NewPageResponder implements Responder {
 
+  public static final String PAGE_TEMPLATE = "pageTemplate";
+  public static final String PAGE_TYPE = "pageType";
+  public static final String PAGE_TYPES = "pageTypes";
+
   public Response makeResponse(FitNesseContext context, Request request) {
 
     SimpleResponse response = new SimpleResponse();
@@ -44,19 +48,21 @@ public class NewPageResponder implements Responder {
     html.put(EditResponder.HELP_TEXT, "");
 
     html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
-    if (request.hasInput("pageTemplate")) {
+    if (request.hasInput(PAGE_TEMPLATE)) {
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage pageTemplate = crawler.getPage(PathParser.parse((String) request.getInput("pageTemplate")));
-      html.put(EditResponder.CONTENT_INPUT_NAME, pageTemplate.getData().getContent());
-      html.put(EditResponder.PAGE_TYPE, PageType.fromWikiPage(pageTemplate));
-    } else if (request.hasInput("pageType")) {
-      String pageType = (String) request.getInput("pageType");
+      String pageTemplate = (String) request.getInput(PAGE_TEMPLATE);
+      WikiPage template = crawler.getPage(PathParser.parse(pageTemplate));
+      html.put(EditResponder.CONTENT_INPUT_NAME, template.getData().getContent());
+      html.put(EditResponder.PAGE_TYPE, PageType.fromWikiPage(template));
+      html.put(PAGE_TEMPLATE, pageTemplate);
+    } else if (request.hasInput(PAGE_TYPE)) {
+      String pageType = (String) request.getInput(PAGE_TYPE);
       // Validate page type:
       PageType.fromString(pageType);
       html.put(EditResponder.PAGE_TYPE, pageType);
       html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     } else {
-      html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+      html.put(PAGE_TYPES, PAGE_TYPE_ATTRIBUTES);
       html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
     }
   }

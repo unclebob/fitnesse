@@ -1,13 +1,12 @@
 package fitnesse.responders.editing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
@@ -169,6 +168,33 @@ public class AddChildPageResponderTest {
     assertFalse(isTest());
     assertTrue(isSuite());
   }
+
+  @Test
+  public void createNewPageBasedOnTemplate() throws Exception {
+    final String newContent = "To be saved data";
+    final String dummyKey = "DummyKey";
+
+    WikiPage template = WikiPageUtil.addPage(root, PathParser.parse("TemplatePage"), "Template data");
+    PageData templateData = template.getData();
+    templateData.setAttribute(dummyKey, "true");
+    template.commit(templateData);
+
+    request.setResource("");
+    request.addInput(EditResponder.PAGE_NAME, "TestChildPage");
+    request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent);
+    request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
+    request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+    request.addInput(NewPageResponder.PAGE_TEMPLATE, ".TemplatePage");
+
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    WikiPage newPage = root.getChildPage("TestChildPage");
+    assertNotNull(newPage);
+    assertTrue(newPage.getData().hasAttribute(dummyKey));
+    assertEquals("true", newPage.getData().getAttribute(dummyKey));
+    assertEquals(newContent, newPage.getData().getContent());
+  }
+
 
   private boolean isTest() {
     return childPageData.hasAttribute("Test");
