@@ -17,6 +17,7 @@ public class OrderedQueryTable extends QueryTable {
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
       SlimTestResult testResult = SlimTestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      getTestContext().increment(testResult.getExecutionResult());
       table.updateContent(0, tableRow, testResult);
     } else {
       int columns = table.getColumnCountInRow(tableRow);
