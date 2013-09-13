@@ -10,6 +10,8 @@ public interface Descriptor {
 
   String getTestSystemName();
 
+  String getTestSystemType();
+
   String getTestRunner();
 
   String getCommandPattern();
