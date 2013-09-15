@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
@@ -24,6 +25,12 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 public class HtmlTable implements Table {
+  // Source: http://dev.w3.org/html5/markup/common-models.html
+  private final static Pattern HTML_PATTERN = Pattern.compile("^<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
+          "blockquote|ins|del|object|map||video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
+          "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
+          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|( .*)?/>)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
 
@@ -79,13 +86,13 @@ public class HtmlTable implements Table {
     rows.add(row);
     tableNode.getChildren().add(row.getRowNode());
     for (String s : list)
-      row.appendCell(s == null ? "" : Utils.escapeHTML(s));
+      row.appendCell(s == null ? "" : asHtml(s));
     return rows.size() - 1;
   }
 
   public void addColumnToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
-    row.appendCell(Utils.escapeHTML(contents));
+    row.appendCell(asHtml(contents));
   }
 
   /**
@@ -307,16 +314,16 @@ public class HtmlTable implements Table {
         setContent(String.format("%s <span class=\"%s\">%s</span>",
                 originalContent,
                 exceptionResult.getExecutionResult().toString(),
-                Utils.escapeHTML(exceptionResult.getMessage())));
+                asHtml(exceptionResult.getMessage())));
       }
     }
 
     public String formatTestResult() {
       if (testResult.getExecutionResult() == null) {
-        return testResult.getMessage() != null ? Utils.escapeHTML(testResult.getMessage()) : null;
+        return testResult.getMessage() != null ? asHtml(testResult.getMessage()) : null;
       }
-      final String message = testResult.hasMessage() && !testResult.getMessage().equals(originalContent)
-              ? Utils.escapeHTML(testResult.getMessage())
+      final String message = testResult.hasMessage()
+              ? asHtml(testResult.getMessage())
               : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
@@ -324,12 +331,12 @@ public class HtmlTable implements Table {
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
             return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
-                    Utils.escapeHTML(testResult.getActual()),
-                    Utils.escapeHTML(testResult.getExpected()));
+                    asHtml(testResult.getActual()),
+                    asHtml(testResult.getExpected()));
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
             return String.format("[%s] <span class=\"fail\">%s</span>",
-                    Utils.escapeHTML(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
-                    Utils.escapeHTML(testResult.getMessage()));
+                    asHtml(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
+                    asHtml(testResult.getMessage()));
           }
           return String.format("<span class=\"fail\">%s</span>", message);
         case IGNORE:
@@ -341,6 +348,10 @@ public class HtmlTable implements Table {
     }
   }
 
+  private String asHtml(String text) {
+    return qualifiesAsHtml(text) ? text : Utils.escapeHTML(text);
+  }
+
   @Override
   public HtmlTable asTemplate(CellContentSubstitution substitution) throws SyntaxError {
     String script = this.toHtml();
@@ -348,6 +359,11 @@ public class HtmlTable implements Table {
     script = substitution.substitute(0, 0, script);
     return new HtmlTableScanner(script).getTable(0);
   }
+
+  static boolean qualifiesAsHtml(String text) {
+    return HTML_PATTERN.matcher(text).matches();
+  }
+
 }
 
 
