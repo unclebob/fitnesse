@@ -19,6 +19,8 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.fit.FitSocketReceiver;
+import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -66,7 +68,7 @@ public class SuiteResponderTest {
     responder.page = suite;
     context = FitNesseUtil.makeTestContext(root);
 
-    receiver = new FitSocketReceiver(0, context.socketDealer);
+    receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
   }
 
