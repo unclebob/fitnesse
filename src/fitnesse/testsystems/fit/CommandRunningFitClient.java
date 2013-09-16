@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.CommandRunnerExecutionLog;
 import fitnesse.testsystems.ExecutionLog;

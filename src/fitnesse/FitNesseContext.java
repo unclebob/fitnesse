@@ -6,7 +6,7 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.wiki.RecentChanges;
-import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testrunner.RunningTestingTracker;
