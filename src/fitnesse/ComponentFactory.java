@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,8 +19,6 @@ import fitnesse.wikitext.parser.SymbolType;
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
 
-  public static final String PROPERTIES_FILE = "plugins.properties";
-
   public static final String WIKI_PAGE_FACTORY_CLASS = "WikiPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
@@ -36,54 +32,15 @@ public class ComponentFactory {
   public static final String RECENT_CHANGES_CLASS = "RecentChanges";
   public static final String THEME = "Theme";
 
-  private final Properties loadedProperties;
-  private final String propertiesLocation;
-  private boolean propertiesAreLoaded = false;
-
-  public ComponentFactory() {
-    this(new Properties());
-  }
-
-  public ComponentFactory(String propertiesLocation) {
-    this(propertiesLocation, new Properties());
-  }
+  private final Properties properties;
 
   public ComponentFactory(Properties properties) {
-    this.propertiesLocation = null;
-    this.loadedProperties = properties;
-    propertiesAreLoaded = true;
+    this.properties = properties;
   }
 
-  public ComponentFactory(String propertiesLocation, Properties properties) {
-    this.propertiesLocation = propertiesLocation;
-    this.loadedProperties = properties;
-    loadProperties(propertiesLocation);
-  }
-
-  protected void loadProperties(String propertiesLocation) {
-    try {
-      String propertiesPath = propertiesLocation + "/" + PROPERTIES_FILE;
-      FileInputStream propertiesStream = new FileInputStream(propertiesPath);
-      loadedProperties.load(propertiesStream);
-    } catch (IOException e) {
-      // No properties files means all defaults are loaded
-    }
-  }
-
-  public Properties getProperties() {
-    if (!propertiesAreLoaded) {
-      loadProperties(propertiesLocation);
-      propertiesAreLoaded = true;
-    }
-    return loadedProperties;
-  }
-
-  public String getProperty(String propertyName) {
-    return getProperties().getProperty(propertyName);
-  }
 
   public Object createComponent(String componentType, Class<?> defaultComponent) {
-    String componentClassName = loadedProperties.getProperty(componentType);
+    String componentClassName = properties.getProperty(componentType);
     Class<?> componentClass;
     try {
       if (componentClassName != null)
@@ -94,7 +51,7 @@ public class ComponentFactory {
       if (componentClass != null) {
         try {
           Constructor<?> constructor = componentClass.getConstructor(Properties.class);
-          return constructor.newInstance(loadedProperties);
+          return constructor.newInstance(properties);
         } catch (NoSuchMethodException e) {
           Constructor<?> constructor = componentClass.getConstructor();
           return constructor.newInstance();
@@ -163,7 +120,7 @@ public class ComponentFactory {
   }
 
   private String[] getListFromProperties(String propertyName) {
-    String value = loadedProperties.getProperty(propertyName);
+    String value = properties.getProperty(propertyName);
     if (value == null)
       return null;
     else

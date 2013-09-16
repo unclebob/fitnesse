@@ -23,8 +23,11 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Properties;
 
 public class FitNesseMain {
   private static String extraOutput;
@@ -109,11 +112,12 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    Builder builder = new Builder();
-    ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
-
+    Properties properties = loadConfigFile(arguments.getConfigFile());
     // Enrich properties with command line values:
-    componentFactory.getProperties().setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+
+    Builder builder = new Builder();
+    ComponentFactory componentFactory = new ComponentFactory(properties);
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
@@ -121,9 +125,8 @@ public class FitNesseMain {
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
-    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = componentFactory
-        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    builder.pageTheme = properties.getProperty(ComponentFactory.THEME);
+    builder.defaultNewPageContent = properties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:
@@ -152,9 +155,22 @@ public class FitNesseMain {
     return context;
   }
 
+  public static Properties loadConfigFile(final String propertiesFile) throws IOException {
+    FileInputStream propertiesStream = null;
+    try {
+      propertiesStream = new FileInputStream(propertiesFile);
+      Properties properties = new Properties();
+      properties.load(propertiesStream);
+      return properties;
+    } finally {
+      if (propertiesStream != null)
+        propertiesStream.close();
+    }
+  }
+
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command][-b output]");
+      "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -174,6 +190,8 @@ public class FitNesseMain {
         arguments.setCommand(commandLine.getOptionArgument("c", "command"));
       if (commandLine.hasOption("b"))
         arguments.setOutput(commandLine.getOptionArgument("b", "output"));
+      if (commandLine.hasOption("f"))
+        arguments.setConfigFile(commandLine.getOptionArgument("f", "config"));
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
@@ -208,6 +226,7 @@ public class FitNesseMain {
     System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
       + "}");
     System.err.println("\t-l <log directory> {no logging}");
+    System.err.println("\t-f <config properties file> {" + Arguments.DEFAULT_CONFIG_FILE + "}");
     System.err.println("\t-e <days> {" + Arguments.DEFAULT_VERSION_DAYS
       + "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
