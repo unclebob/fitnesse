@@ -157,6 +157,7 @@ public class FitNesseMain {
       propertiesStream = new FileInputStream(propertiesFile);
       Properties properties = new Properties();
       properties.load(propertiesStream);
+      properties.putAll(System.getProperties());
       return properties;
     } finally {
       if (propertiesStream != null)
