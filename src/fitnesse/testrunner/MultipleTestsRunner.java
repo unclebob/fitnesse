@@ -3,7 +3,7 @@
 package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 
