@@ -1,6 +1,6 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 

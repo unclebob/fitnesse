@@ -1,7 +1,7 @@
 package fitnesseMain;
 
 import fitnesse.Arguments;
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
@@ -12,6 +12,7 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.PluginsLoader;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -133,21 +134,22 @@ public class FitNesseMain {
     //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-      builder.rootDirectoryName);
+            builder.rootDirectoryName);
 
-    builder.logger = makeLogger(arguments);
-    builder.authenticator = makeAuthenticator(arguments.getUserpass(),
-      componentFactory);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
+
+    builder.logger = pluginsLoader.makeLogger(arguments.getLogDirectory());
+    builder.authenticator = pluginsLoader.makeAuthenticator(arguments.getUserpass());
 
     FitNesseContext context = builder.createFitNesseContext();
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    extraOutput += componentFactory.loadPlugins(context.responderFactory, symbolProvider);
-    extraOutput += componentFactory.loadResponders(context.responderFactory);
-    extraOutput += componentFactory.loadSymbolTypes(symbolProvider);
-    extraOutput += componentFactory.loadContentFilter();
-    extraOutput += componentFactory.loadSlimTables();
+    extraOutput += pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    extraOutput += pluginsLoader.loadResponders(context.responderFactory);
+    extraOutput += pluginsLoader.loadSymbolTypes(symbolProvider);
+    extraOutput += pluginsLoader.loadContentFilter();
+    extraOutput += pluginsLoader.loadSlimTables();
 
 
     WikiImportTestEventListener.register();
@@ -196,26 +198,6 @@ public class FitNesseMain {
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
     return arguments;
-  }
-
-  private static Logger makeLogger(Arguments arguments) {
-    String logDirectory = arguments.getLogDirectory();
-    return logDirectory != null ? new Logger(logDirectory) : null;
-  }
-
-  public static Authenticator makeAuthenticator(String authenticationParameter,
-                                                ComponentFactory componentFactory) throws Exception {
-    Authenticator authenticator = new PromiscuousAuthenticator();
-    if (authenticationParameter != null) {
-      if (new File(authenticationParameter).exists())
-        authenticator = new MultiUserAuthenticator(authenticationParameter);
-      else {
-        String[] values = authenticationParameter.split(":");
-        authenticator = new OneUserAuthenticator(values[0], values[1]);
-      }
-    }
-
-    return componentFactory.getAuthenticator(authenticator);
   }
 
   private static void printUsage() {
