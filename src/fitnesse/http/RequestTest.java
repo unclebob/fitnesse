@@ -18,7 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 import fitnesse.util.Base64;
-import fitnesse.responders.editing.EditResponder;
 
 public class RequestTest {
   PipedOutputStream output;
@@ -208,11 +207,11 @@ public class RequestTest {
     appendToMessage("Content-type: application/x-www-form-urlencoded\r\n");
     appendToMessage("Content-length: 67\r\n");
     appendToMessage("\r\n");
-    appendToMessage(EditResponder.TIME_STAMP+"=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
+    appendToMessage("edittime=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
 
     parseMessage();
 
-    assertTrue(request.hasInput(EditResponder.TIME_STAMP));
+    assertTrue(request.hasInput("edittime"));
     assertTrue(request.hasInput("Edit"));
     assertTrue(request.hasInput("Search"));
     assertTrue(request.hasInput("Test"));
@@ -227,7 +226,7 @@ public class RequestTest {
       for (int j = 0; j < 1000; j++)
         buffer.append(i);
     }
-    String prefix = EditResponder.TIME_STAMP + "=12345&content=";
+    String prefix = "edittime=12345&content=";
     appendToMessage("POST /HelloThere HTTP/1.1\r\n");
     appendToMessage(String.format("Content-length: %d\r\n", prefix.length()+buffer.length()));
     appendToMessage("\r\n");
