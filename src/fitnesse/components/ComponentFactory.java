@@ -3,18 +3,7 @@
 package fitnesse.components;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Properties;
-
-import fitnesse.authentication.Authenticator;
-import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.editing.ContentFilter;
-import fitnesse.responders.editing.SaveResponder;
-import fitnesse.testsystems.slim.tables.SlimTable;
-import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolType;
 
 public class ComponentFactory {
 
