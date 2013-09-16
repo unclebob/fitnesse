@@ -11,13 +11,8 @@ import java.io.File;
 import java.io.PrintStream;
 
 import fitnesse.Arguments;
-import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.MultiUserAuthenticator;
-import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;

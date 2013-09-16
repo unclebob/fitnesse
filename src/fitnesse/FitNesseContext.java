@@ -41,11 +41,6 @@ public class FitNesseContext {
       super();
     }
 
-    public Builder(WikiPage root) {
-      super();
-      this.root = root;
-    }
-
     public Builder(FitNesseContext context) {
       super();
       if (context != null) {
