@@ -60,6 +60,12 @@
    <li#group(4)><a href="?testHistory">Test History</a></li>
    <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
   #end
+  #if( $actions.testPage )
+   <li#group(4)><a href="?test&remote_debug">Remote Debug</a></li>
+  #end
+  #if( $actions.suitePage )
+   <li#group(4)><a href="?suite&remote_debug">Remote Debug</a></li>
+  #end
 
   #if( $actions.withUserGuide )
    <li#group(5)><a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>
