@@ -98,19 +98,25 @@ table.plain_text_table th {
   border: none;
 }
 
-/** !style_* */
-.error {
+/** Test output */
+.error,
+span.error * {
   background-color: #ffffaa;
 }
-.pass {
+.pass,
+span.pass * {
   background-color: #AAFFAA;
 }
-.fail {
+.fail,
+span.fail * {
   background-color: #FFAAAA;
 }
-.ignore {
+.ignore,
+span.ignore * {
   background-color: lightgray;
 }
+
+/** !style_* */
 .caps {
   font-variant: small-caps;
 }
