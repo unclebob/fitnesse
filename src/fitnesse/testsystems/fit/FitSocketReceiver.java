@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import fitnesse.components.SocketDealer;
 import fitnesse.http.Request;
 
 public class FitSocketReceiver {

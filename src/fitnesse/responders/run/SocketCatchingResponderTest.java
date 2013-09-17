@@ -7,7 +7,8 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -30,7 +31,7 @@ public class SocketCatchingResponderTest {
     sender = new MockResponseSender();
     responder = new SocketCatchingResponder();
     context = FitNesseUtil.makeTestContext();
-    dealer = context.socketDealer;
+    dealer = FitTestSystem.socketDealer();
     request = new MockRequest();
   }
 

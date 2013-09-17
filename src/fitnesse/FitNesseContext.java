@@ -6,7 +6,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.wiki.RecentChanges;
-import fitnesse.components.SocketDealer;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testrunner.RunningTestingTracker;
@@ -29,7 +28,6 @@ public class FitNesseContext {
     public int port = -1;
     public String rootPath;
     public String rootDirectoryName;
-    public SocketDealer socketDealer;
 
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
@@ -41,11 +39,6 @@ public class FitNesseContext {
       super();
     }
 
-    public Builder(WikiPage root) {
-      super();
-      this.root = root;
-    }
-
     public Builder(FitNesseContext context) {
       super();
       if (context != null) {
@@ -53,7 +46,6 @@ public class FitNesseContext {
         port = context.port;
         rootPath = context.rootPath;
         rootDirectoryName = context.rootDirectoryName;
-        socketDealer = context.socketDealer;
         logger = context.logger;
         authenticator = context.authenticator;
         defaultNewPageContent = context.defaultNewPageContent;
@@ -70,7 +62,6 @@ public class FitNesseContext {
           defaultNewPageContent,
           recentChanges,
           port,
-          socketDealer,
           authenticator,
           logger);
     }
@@ -78,7 +69,6 @@ public class FitNesseContext {
 
 
   public final WikiPage root;
-  public final SocketDealer socketDealer;
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
   public final int port;
@@ -96,7 +86,7 @@ public class FitNesseContext {
 
   private FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
-      RecentChanges recentChanges, int port, SocketDealer socketDealer,
+      RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger) {
     super();
     this.root = root;
@@ -106,7 +96,6 @@ public class FitNesseContext {
     this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
     this.recentChanges = recentChanges;
     this.port = port >= 0 ? port : 80;
-    this.socketDealer = socketDealer != null ? socketDealer : new SocketDealer();
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
     responderFactory = new ResponderFactory(getRootPagePath());

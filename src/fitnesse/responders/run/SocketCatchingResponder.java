@@ -7,7 +7,8 @@ import java.net.Socket;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.SocketDealer;
+import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
@@ -21,7 +22,7 @@ public class SocketCatchingResponder implements Responder, SocketDoner, Response
   private PuppetResponse response;
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    dealer = context.socketDealer;
+    dealer = FitTestSystem.socketDealer();
     ticketNumber = Integer.parseInt(request.getInput("ticket").toString());
     response = new PuppetResponse(this);
     return response;

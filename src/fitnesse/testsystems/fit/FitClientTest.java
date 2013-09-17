@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.util.MockSocket;
 import org.junit.After;

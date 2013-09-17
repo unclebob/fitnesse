@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems.fit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,9 +10,6 @@ import static org.junit.Assert.assertTrue;
 import java.net.Socket;
 import java.util.Collection;
 
-import fitnesse.testsystems.fit.SimpleSocketSeeker;
-import fitnesse.testsystems.fit.SocketDoner;
-import fitnesse.testsystems.fit.SocketSeeker;
 import fitnesse.util.MockSocket;
 import org.junit.Before;
 import org.junit.Test;
