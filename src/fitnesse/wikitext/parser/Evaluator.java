@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.FormattedExpression;
 import util.Maybe;
 
 public class Evaluator extends SymbolType implements Rule, Translation {

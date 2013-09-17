@@ -1,13 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.testsystems.fit;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import fitnesse.testsystems.fit.SocketDoner;
-import fitnesse.testsystems.fit.SocketSeeker;
 
 public class SocketDealer {
   private Map<Integer, SocketSeeker> waitingList = new HashMap<Integer, SocketSeeker>(17);

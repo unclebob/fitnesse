@@ -3,7 +3,7 @@
 package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -15,10 +15,8 @@ import static org.junit.Assert.*;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 
 import static util.RegexTestCase.assertSubString;
-import util.TimeMeasurement;
 
 import java.util.LinkedList;
 import java.util.List;

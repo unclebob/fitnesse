@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -284,15 +284,13 @@ public class FitNesseSuite extends ParentRunner<String> {
   private static FitNesseContext initContext(String rootPath, int port) throws Exception {
     Builder builder = new Builder();
     WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
-    ComponentFactory componentFactory = new ComponentFactory(rootPath);
 
     builder.port = port;
     builder.rootPath = rootPath;
     builder.rootDirectoryName = "FitNesseRoot";
 
-    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = componentFactory
-            .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    // TODO: should make a standalone theme.
+    builder.pageTheme = "fitnesse_straight";
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
         builder.rootDirectoryName);

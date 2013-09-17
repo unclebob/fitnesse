@@ -9,7 +9,7 @@ import java.util.List;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;

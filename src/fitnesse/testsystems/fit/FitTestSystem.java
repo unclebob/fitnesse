@@ -19,6 +19,8 @@ import fitnesse.testsystems.TestSystemListener;
 public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
+  private static SocketDealer socketDealer = new SocketDealer();
+
   private final FitNesseContext context;
   private final CompositeTestSystemListener testSystemListener;
   private CommandRunningFitClient client;
@@ -31,6 +33,10 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     this.context = context;
     this.testSystemListener = new CompositeTestSystemListener();
     this.testSystemListener.addTestSystemListener(listener);
+  }
+
+  public static SocketDealer socketDealer() {
+    return socketDealer;
   }
 
   @Override
@@ -127,7 +133,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
-    client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+    client = new CommandRunningFitClient(this, context.port, socketDealer, runningStrategy);
 
     return client;
   }

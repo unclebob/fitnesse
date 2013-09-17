@@ -2,15 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.slim.SlimCommandRunningClient;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
-import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 

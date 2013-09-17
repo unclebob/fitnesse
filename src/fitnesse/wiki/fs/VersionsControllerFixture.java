@@ -1,6 +1,6 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.*;
 import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
