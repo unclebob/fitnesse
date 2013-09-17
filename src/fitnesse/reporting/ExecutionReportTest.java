@@ -68,7 +68,7 @@ public class ExecutionReportTest {
     original.version = "version";
     original.rootPath = "rootPath";
     original.date = DateTimeUtil.getDateFromString("12/31/1969 18:00:00");
-    original.finalCounts = new TestSummary(1, 2, 3, 4);
+    original.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(41));
     long time = DateTimeUtil.getTimeFromString("12/31/1969 18:00:00");
     SuiteExecutionReport.PageHistoryReference reference = new SuiteExecutionReport.PageHistoryReference("dah", time, 3L);

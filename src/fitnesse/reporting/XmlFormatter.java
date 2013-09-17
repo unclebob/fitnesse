@@ -3,6 +3,7 @@
 package fitnesse.reporting;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
@@ -35,7 +36,6 @@ public class XmlFormatter extends BaseFormatter {
   private StringBuilder outputBuffer;
   protected TestExecutionReport testResponse = new TestExecutionReport();
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
-  protected TestSummary finalSummary = new TestSummary();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
@@ -57,8 +57,6 @@ public class XmlFormatter extends BaseFormatter {
   public void testOutputChunk(String output) {
     appendHtmlToBuffer(output);
   }
-
-  // TODO: store tables -> need handler startNewTable(SlimTable slimTable)
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
@@ -121,11 +119,11 @@ public class XmlFormatter extends BaseFormatter {
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
     super.testComplete(test, testSummary);
-    processTestResults(test.getName(), testSummary, currentTestStartTime);
+    processTestResults(test.getName(), testSummary);
+    testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
   }
 
-  public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement notUsed) {
-    finalSummary = new TestSummary(testSummary);
+  public void processTestResults(final String relativeTestName, TestSummary testSummary) {
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
     currentResult.startTime = currentTestStartTime.startedAt();
@@ -161,7 +159,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime.startedAt()));
+    writeResults(writerFactory.getWriter(context, getPageForHistory(), getPageCounts(), currentTestStartTime.startedAt()));
   }
 
   protected WikiPage getPageForHistory() {
@@ -170,7 +168,7 @@ public class XmlFormatter extends BaseFormatter {
 
   @Override
   public int getErrorCount() {
-    return finalSummary.wrong + finalSummary.exceptions;
+    return getPageCounts().wrong + getPageCounts().exceptions;
   }
 
   protected void writeResults(Writer writer) throws IOException {
@@ -181,8 +179,8 @@ public class XmlFormatter extends BaseFormatter {
     writer.close();
   }
 
-  protected TestSummary getFinalSummary() {
-    return finalSummary;
+  protected TestSummary getPageCounts() {
+    return testResponse.getFinalCounts();
   }
 
   private void addCountsToResult(TestExecutionReport.TestResult currentResult, TestSummary testSummary) {

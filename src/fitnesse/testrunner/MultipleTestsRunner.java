@@ -97,8 +97,8 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
   private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
-      testSystem.runTests(testPage);
       testsInProgressCount++;
+      testSystem.runTests(testPage);
     }
   }
 

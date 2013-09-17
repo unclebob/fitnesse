@@ -35,7 +35,7 @@ public class TestExecutionReportTest {
 
   private void makeHeader() {
     expected.version = "version";
-    expected.finalCounts = new TestSummary(1, 2, 3, 4);
+    expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     expected.rootPath = "rootPath";
   }
 
