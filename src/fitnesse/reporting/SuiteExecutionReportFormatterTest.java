@@ -80,11 +80,11 @@ public class SuiteExecutionReportFormatterTest {
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);
     formatter.testComplete(page, testSummary);
 
-    assertThat(formatter.failCount, is(5));
+    assertThat(formatter.failCount, is(2));
 
     formatter.close();
 
-    assertThat(BaseFormatter.finalErrorCount, is(5));
+    assertThat(BaseFormatter.finalErrorCount, is(2));
 
   }
 

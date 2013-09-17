@@ -295,7 +295,7 @@ public class TestResponderTest {
   public void slimXmlFormat() throws Exception {
     responder.turnOffChunking();
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(0, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -306,7 +306,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormatGivesErrorCountAsExitCode() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(0, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     getXmlFromFileAndDeleteFile();
     assertSubString("Exit-Code: 1", results);

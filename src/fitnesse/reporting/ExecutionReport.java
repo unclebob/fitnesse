@@ -2,6 +2,7 @@ package fitnesse.reporting;
 
 import java.util.Date;
 
+import fitnesse.testsystems.ExecutionResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -15,7 +16,7 @@ import util.XmlUtil;
 public abstract class ExecutionReport {
   public String version;
   public String rootPath;
-  public TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
+  private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   protected Document xmlDoc;
   private long totalRunTimeInMillis = 0;
@@ -28,6 +29,11 @@ public abstract class ExecutionReport {
   protected ExecutionReport() {
     version = new FitNesseVersion().toString();
   }
+
+  public void tallyPageCounts(ExecutionResult result) {
+    finalCounts.tallyPageCounts(result);
+  }
+
 
   @Override
   public String toString() {

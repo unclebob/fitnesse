@@ -70,7 +70,7 @@ public class XmlFormatterTest {
 
     TestSummary summary = new TestSummary(9,8,7,6);
     formatter.testComplete(page, summary);
-    assertThat(formatter.finalSummary, equalTo(summary));
+    assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0,1,0,0)));
     assertThat(formatter.testResponse.results.size(), is(1));
     assertThat(formatter.testResponse.results.get(0), is(testResult));
     assertThat(testResult.startTime, is(startTime));

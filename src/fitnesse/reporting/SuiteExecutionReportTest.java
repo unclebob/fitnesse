@@ -77,8 +77,8 @@ public class SuiteExecutionReportTest {
 
   @Test
   public void shouldNotBeEqualIfFinalCountsAreDifferent() throws Exception {
-    report1.finalCounts = new TestSummary(1,2,3,4);
-    report2.finalCounts = new TestSummary(4,3,2,1);
+    report1.getFinalCounts().add(new TestSummary(1,2,3,4));
+    report2.getFinalCounts().add(new TestSummary(4,3,2,1));
     assertFalse(report1.equals(report2));    
   }
 
@@ -93,7 +93,8 @@ public class SuiteExecutionReportTest {
   public void shouldBeEqualWithAllFieldsEqual() throws Exception {
     report1.version = report2.version = "version";
     report1.date = report2.date = new Date(1);
-    report1.finalCounts = report2.finalCounts = new TestSummary(4,5,6,7);
+    report1.getFinalCounts().add(new TestSummary(4,5,6,7));
+    report2.getFinalCounts().add(new TestSummary(4,5,6,7));
     report1.rootPath = report2.rootPath = "rootPath";
     PageHistoryReference r1a = new PageHistoryReference("testPage", 1234, 5);
     PageHistoryReference r2a = new PageHistoryReference("testPage", 1234, 5);
