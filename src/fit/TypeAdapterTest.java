@@ -4,6 +4,7 @@
 package fit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.DateFormat;
@@ -72,6 +73,14 @@ public class TypeAdapterTest {
     assertEquals(12345, f.sampleShort);
   }
 
+  @Test
+  public void testTypeAdapterEqualsForRegex() throws Exception {
+    adapter = TypeAdapter.on(f, f.getClass().getMethod("name"), true);
+    assertFalse(adapter.equals(".*", null));
+    assertTrue(adapter.equals(".*", ""));
+    assertTrue(adapter.equals("as.*", "asdasd"));
+  }
+
   static class TestFixture extends ColumnFixture {
     public byte sampleByte;
     public short sampleShort;
@@ -89,6 +98,10 @@ public class TypeAdapterTest {
 
     public Integer getNull() {
       return null;
+    }
+
+    public String name() {
+      return name;
     }
   }
 
