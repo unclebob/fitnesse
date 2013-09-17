@@ -142,11 +142,13 @@ tr.scenario.closed > td:first-child {
   padding-left: 18px;
 }
 
-.pass {
+.pass,
+span.pass * {
   background-color: darken(@successBackground, 10%);
   color: darken(@successText, 30%);
 }
-.fail {
+.fail,
+span.fail * {
   background-color: darken(@errorBackground, 15%);
   color: darken(@errorText, 30%);
 }
@@ -154,13 +156,18 @@ tr.scenario.closed > td:first-child {
   background-color: darken(@warningBackground, 10%);
   color: darken(@warningText, 30%);
 }
-span.error {
+span.error,
+span.error *{
   background-position: 0, -2px;
   padding-right: 3px;
   border: 1px solid darken(@warningBorder, 30%);
   .border-radius(4px);
 }
-
+.ignore,
+span.ignore * {
+  background-color: darken(@infoBackground, 10%);
+  color: darken(@infoText, 30%);
+}
 #test-action {
   .test-button(@bgColor) {
     .label;

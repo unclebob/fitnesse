@@ -13,6 +13,10 @@ public class EchoFixture {
     this.name = name;
   }
 
+  public boolean nameContains(String s) {
+    return name.contains(s);
+  }
+
   public String echo(String s) {
     return s;
   }
@@ -20,4 +24,11 @@ public class EchoFixture {
   public int echoInt(int i) {
     return i;
   }
+
+  public String echoAndLog(String s) {
+    System.out.println(s);
+    return s;
+  }
+
+
 }
