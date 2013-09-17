@@ -287,7 +287,10 @@ public class HtmlTable implements Table {
     public String getContent() {
       String unescaped = columnNode.getChildrenHTML();
       //Some browsers need &nbsp; inside an empty table cell, so we remove it here.
-      return Utils.unescapeHTML("&nbsp;".equals(unescaped) ? "" : unescaped);
+      if ("&nbsp;".equals(unescaped)) {
+        return "";
+      }
+      return qualifiesAsHtml(unescaped) ? unescaped : Utils.unescapeHTML(unescaped);
     }
 
     private void setContent(String s) {
