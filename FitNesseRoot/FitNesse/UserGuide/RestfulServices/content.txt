@@ -49,6 +49,9 @@
 | | newLocation | The full path name of the page that will be the new parent. |
 | names | | Displays a list of the pages at the current level.  If no page name is supplied, then the list is all the pages at the top level.  Otherwise it is the list of direct children (not grandchildren) of the supplied page. |
 | | format=json | returns the list as a JSON array |
+| | Recursive | prints also child, grand-child, ... pages |
+| | LeafOnly | in combination with the "Recursive" option prints only leaf pages that don't have further children |
+| | ShowTags | prints the tags associated with a page in []-brackets, e.g., [hello][world] |
 | | !-ShowChildCount-! | adds the count of children to each page name after a space. |
 | new | | Like ''edit'', but used for new pages. |
 | | pageTemplate | Define a page to use as a template for the to be created page  |
