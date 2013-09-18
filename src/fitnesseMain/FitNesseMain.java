@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 public class FitNesseMain {
-  private static String extraOutput;
+  private static String extraOutput = "";
   public static boolean dontExitAfterSingleCommand;
 
   public static void main(String[] args) throws Exception {
