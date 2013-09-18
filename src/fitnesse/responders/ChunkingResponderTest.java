@@ -2,17 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.http.ChunkedResponse;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
+import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
-
-import static util.RegexTestCase.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ChunkingResponderTest {
 

@@ -90,6 +90,6 @@ public class VariableTest {
         WikiPage includer = root.makePage("PageOne", "!include -seamless PageTwo\n${x}");
         root.makePage("PageTwo", "!define x {y}");
         ParserTestHelper.assertTranslatesTo(includer, "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
-          ParserTestHelper.newLineRendered + "y");
+          "y");
     }
 }

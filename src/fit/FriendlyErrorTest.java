@@ -3,20 +3,24 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
-public class FriendlyErrorTest extends TestCase {
+import org.junit.Test;
+
+public class FriendlyErrorTest {
   //Test the FitFailureException mechanism.  If this works, then all of the FitFailureException derivatives ought
   //to be working too.
+  @Test
   public void testCantFindFixture() throws Exception {
     String pageString = "<table><tr><td>NoSuchFixture</td></tr></table>";
     Parse page = new Parse(pageString);
-    Fixture fixture = new Fixture();
-    fixture.doTables(page);
+    Dispatcher dispatcher = new Dispatcher();
+    dispatcher.doTables(page);
     String fixtureName = page.at(0, 0, 0).body;
     assertTrue(fixtureName.contains("Could not find fixture: NoSuchFixture."));
   }
 
+  @Test
   public void testNoSuchMethod() throws Exception {
     final String[][] table = {
       {"fitnesse.fixtures.ColumnFixtureTestFixture"},
@@ -27,6 +31,7 @@ public class FriendlyErrorTest extends TestCase {
     assertTrue(columnHeader.contains("Could not find method: no such method?."));
   }
 
+  @Test
   public void testParseFailure() throws Exception {
     final String[][] table = {
       {"fitnesse.fixtures.ColumnFixtureTestFixture"},
@@ -38,6 +43,7 @@ public class FriendlyErrorTest extends TestCase {
     assertTrue(colTwoResult.contains("Could not parse: alpha, expected type: int"));
   }
 
+  @Test
   public void testExceptionInMethod() throws Exception {
     final String[][] table = {
       {"fitnesse.fixtures.ColumnFixtureTestFixture"},

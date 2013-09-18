@@ -5,10 +5,13 @@ package fitnesse.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
+
+import util.Clock;
 
 public abstract class Response {
   public enum Format {
@@ -83,6 +86,10 @@ public abstract class Response {
     return Format.JAVA.contentType.equals(contentType);
   }
 
+  public boolean hasContent() {
+    return contentType != null;
+  }
+
   public abstract void sendTo(ResponseSender sender) throws IOException;
 
   public abstract int getContentSize();
@@ -102,8 +109,8 @@ public abstract class Response {
   public final String makeHttpHeaders() {
     if (!withHttpHeaders)
       return "";
-    if (status != 304) {
-      addStandardHeaders();
+    if (hasContent()) {
+      addContentHeaders();
     }
     StringBuffer text = new StringBuffer();
     if (!Format.TEXT.contentType.equals(contentType)) {
@@ -123,6 +130,10 @@ public abstract class Response {
     contentType = type;
   }
 
+  private void noContent() {
+    contentType = null;
+  }
+
   public void setContentType(Format format) {
     contentType = format.getContentType();
   }
@@ -132,16 +143,21 @@ public abstract class Response {
     addHeader("Location", location);
   }
 
+  public void notModified(Date lastModified, Date date) {
+    status = 304;
+    noContent();
+    SimpleDateFormat httpDateFormat = makeStandardHttpDateFormat();
+    addHeader("Date", httpDateFormat.format(date));
+    setLastModifiedHeader(lastModified);
+    addHeader("Cache-Control", "private");
+  }
+
   public void setMaxAge(int age) {
     addHeader("Cache-Control", "max-age=" + age);
   }
 
-  public void setLastModifiedHeader(String date) {
-    addHeader("Last-Modified", date);
-  }
-
-  public void setExpiresHeader(String date) {
-    addHeader("Expires", date);
+  public void setLastModifiedHeader(Date date) {
+    addHeader("Last-Modified", makeStandardHttpDateFormat().format(date));
   }
 
   public void addHeader(String key, String value) {
@@ -167,7 +183,7 @@ public abstract class Response {
     }
   }
 
-  protected void addStandardHeaders() {
+  protected void addContentHeaders() {
     addHeader("Content-Type", getContentType());
   }
 
@@ -211,7 +227,7 @@ public abstract class Response {
       put(414, "Request-URI Too Large");
       put(415, "Unsupported Media Type");
       put(416, "Requested range not satisfiable");
-      put(417, "Expectation Failed");
+      put(417, "SlimExpectation Failed");
       put(500, "Internal Server Error");
       put(501, "Not Implemented");
       put(502, "Bad Gateway");

@@ -2,18 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import java.util.List;
 
-import util.RegexTestCase;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RecentChangesWikiPageTest extends RegexTestCase {
+public class RecentChangesWikiPageTest {
   private WikiPage rootPage;
   private WikiPage newPage;
   private WikiPage page1;
   private WikiPage page2;
   private RecentChangesWikiPage recentChangesWikiPage;
 
+  @Before
   public void setUp() throws Exception {
     rootPage = InMemoryPage.makeRoot("RooT");
     newPage = rootPage.addChildPage("SomeNewPage");
@@ -22,9 +28,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     recentChangesWikiPage = new RecentChangesWikiPage();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testFirstRecentChange() throws Exception {
     assertEquals(false, rootPage.hasChildPage("RecentChanges"));
     recentChangesWikiPage.updateRecentChanges(newPage.getData());
@@ -35,6 +39,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     assertHasRegexp("SomeNewPage", lines.get(0));
   }
 
+  @Test
   public void testTwoChanges() throws Exception {
     recentChangesWikiPage.updateRecentChanges(page1.getData());
     recentChangesWikiPage.updateRecentChanges(page2.getData());
@@ -45,6 +50,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     assertHasRegexp("PageOne", lines.get(1));
   }
 
+  @Test
   public void testNoDuplicates() throws Exception {
     recentChangesWikiPage.updateRecentChanges(page1.getData());
     recentChangesWikiPage.updateRecentChanges(page1.getData());
@@ -54,6 +60,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     assertHasRegexp("PageOne", lines.get(0));
   }
 
+  @Test
   public void testMaxSize() throws Exception {
     for (int i = 0; i < 101; i++) {
       StringBuffer b = new StringBuffer("LotsOfAs");
@@ -68,6 +75,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     assertEquals(100, lines.size());
   }
 
+  @Test
   public void testUsernameColumnWithoutUser() throws Exception {
     recentChangesWikiPage.updateRecentChanges(page1.getData());
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
@@ -76,6 +84,7 @@ public class RecentChangesWikiPageTest extends RegexTestCase {
     assertSubString("|PageOne||", line);
   }
 
+  @Test
   public void testUsernameColumnWithUser() throws Exception {
     PageData data = page1.getData();
     data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");

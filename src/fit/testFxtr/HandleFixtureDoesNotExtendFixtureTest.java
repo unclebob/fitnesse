@@ -2,15 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.testFxtr;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import util.StringUtil;
-import fit.Fixture;
+import fit.Dispatcher;
 import fit.Parse;
 
-public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
+public class HandleFixtureDoesNotExtendFixtureTest {
+
+  @Test
   public void testLearnHowBadFixtureClassIsHandled() throws Exception {
     List<String> tableLines = Arrays.asList(new String[]
       {"<table>",
@@ -23,7 +27,7 @@ public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
 
     Parse tableForFaultyFixture = new Parse(tableText);
 
-    new Fixture().doTables(tableForFaultyFixture);
+    new Dispatcher().doTables(tableForFaultyFixture);
     String fixtureClassCellText = tableForFaultyFixture.at(0, 0, 0).body;
 
     assertEquals("fit.testFxtr.WouldBeFixture<hr/> "

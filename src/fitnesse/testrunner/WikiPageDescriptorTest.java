@@ -4,7 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
@@ -194,5 +194,27 @@ public class WikiPageDescriptorTest {
     Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
     assertEquals(fitnesseRootpath + "/rubyslim.rb", descriptor.getTestRunner());
   }
+
+  @Test
+  public void testReadSystemPropertyIfPagePropertyDoesNotExist() {
+    String pageText = "!define TEST_PROPERTY {foo}\n";
+    System.setProperty("test.property", "bar");
+    WikiPage page = makeTestPage(pageText);
+
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
+    assertEquals("bar", descriptor.getVariable("test.property"));
+  }
+
+  @Test
+  public void testPageVariableTakesPrecedenceOverSystemProperty() {
+    String pageText = "!define TEST_PROPERTY {foo}\n";
+    System.setProperty("TEST_PROPERTY", "bar");
+    WikiPage page = makeTestPage(pageText);
+
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
+  }
+
 
 }

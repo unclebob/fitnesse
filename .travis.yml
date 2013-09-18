@@ -1,0 +1,5 @@
+language: java
+
+install: ant build
+
+script: ant release

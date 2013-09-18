@@ -8,7 +8,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 
 public class ErrorResponder implements Responder {
   Exception exception;
@@ -25,7 +25,7 @@ public class ErrorResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(400);
     HtmlPage html = context.pageFactory.newPage();
-    HtmlUtil.addTitles(html, "Error Occured");
+    html.addTitles("Error Occured");
     html.setMainTemplate("error");
     html.put("exception", exception);
     if (exception != null)

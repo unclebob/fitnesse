@@ -66,6 +66,11 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
+  public String getTestSystemType() {
+    return getTestSystem().split(":")[0];
+  }
+
+  @Override
   public String getTestSystemName() {
     String testSystemName = getTestSystem();
     String testRunner = getTestRunnerNormal();
@@ -91,7 +96,7 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   String defaultTestRunner() {
-    String testSystemType = getTestSystem();
+    String testSystemType = getTestSystemType();
     if ("slim".equalsIgnoreCase(testSystemType))
       return "fitnesse.slim.SlimService";
     else
@@ -146,6 +151,11 @@ public class WikiPageDescriptor implements Descriptor {
   @Override
   public String getClassPath() {
     return classPath;
+  }
+
+  @Override
+  public boolean isDebug() {
+    return remoteDebug;
   }
 
   // Generic entry point for everything the test system needs to know.

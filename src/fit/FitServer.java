@@ -11,11 +11,12 @@ import util.StreamReader;
 import util.FileUtil;
 import fit.exception.FitParseException;
 
+
 public class FitServer {
-  public String input;
-  public Fixture fixture = new Fixture();
-  public FixtureListener fixtureListener = new TablePrintingFixtureListener();
-  private Counts counts = new Counts();
+  private final Dispatcher dispatcher;
+  private final Counts overallCounts;
+  private final FixtureListener fixtureListener;
+  
   private OutputStream socketOutput;
   private StreamReader socketReader;
   private boolean verbose = false;
@@ -28,12 +29,16 @@ public class FitServer {
   private boolean sentinel;
 
   public FitServer(String host, int port, boolean verbose) {
+    this();
     this.host = host;
     this.port = port;
     this.verbose = verbose;
   }
 
   public FitServer() {
+    fixtureListener = new TablePrintingFixtureListener();
+    dispatcher = new Dispatcher(fixtureListener);
+    overallCounts = new Counts();
   }
 
   public static void main(String argv[]) throws Exception {
@@ -60,50 +65,6 @@ public class FitServer {
     exit();
   }
 
-  public static String sentinelName(int thePort) {
-    return String.format("fitserverSentinel%d", thePort);
-  }
-
-  public void closeConnection() throws IOException {
-    socket.close();
-  }
-
-  public void process() {
-    fixture.listener = fixtureListener;
-    try {
-      int size = 1;
-      while ((size = FitProtocol.readSize(socketReader)) != 0) {
-        try {
-          print("processing document of size: " + size + "\n");
-          String document = FitProtocol.readDocument(socketReader, size);
-          //TODO MDM if the page name was always the first line of the body, it could be printed here.
-          Parse tables = new Parse(document);
-          newFixture().doTables(tables);
-          print("\tresults: " + fixture.counts() + "\n");
-          counts.tally(fixture.counts);
-        }
-        catch (FitParseException e) {
-          exception(e);
-        }
-      }
-      print("completion signal recieved" + "\n");
-    }
-    catch (Exception e) {
-      exception(e);
-    }
-  }
-
-  public String readDocument() throws Exception {
-    int size = FitProtocol.readSize(socketReader);
-    return FitProtocol.readDocument(socketReader, size);
-  }
-
-  protected Fixture newFixture() {
-    fixture = new Fixture();
-    fixture.listener = fixtureListener;
-    return fixture;
-  }
-
   public void args(String[] argv) {
     CommandLine commandLine = new CommandLine("[-v][-x][-s] host port socketToken");
     if (commandLine.parse(argv)) {
@@ -123,23 +84,53 @@ public class FitServer {
     System.exit(-1);
   }
 
+  public static String sentinelName(int thePort) {
+    return String.format("fitserverSentinel%d", thePort);
+  }
+
+  public void closeConnection() throws IOException {
+    socket.close();
+  }
+
+  public void process() {
+    try {
+      int size = 1;
+      while ((size = FitProtocol.readSize(socketReader)) != 0) {
+        try {
+          print("processing document of size: " + size + "\n");
+          String document = FitProtocol.readDocument(socketReader, size);
+          //TODO MDM if the page name was always the first line of the body, it could be printed here.
+          Parse tables = new Parse(document);
+          dispatcher.doTables(tables);
+          print("\tresults: " + dispatcher.counts.toString() + "\n");
+          overallCounts.tally(dispatcher.counts);
+        } catch (FitParseException e) {
+          exception(e);
+        }
+      }
+      print("completion signal recieved" + "\n");
+    } catch (Exception e) {
+      exception(e);
+    }
+  }
+
   protected void exception(Exception e) {
     print("Exception occurred!" + "\n");
     print("\t" + e.getMessage() + "\n");
     Parse tables = new Parse("span", "Exception occurred: ", null, null);
-    fixture.exception(tables, e);
-    counts.exceptions += 1;
-    fixture.listener.tableFinished(tables);
-    fixture.listener.tablesFinished(counts); //TODO shouldn't this be fixture.counts
+    dispatcher.exception(tables, e);
+    overallCounts.exceptions += 1;
+    fixtureListener.tableFinished(tables);
+    fixtureListener.tablesFinished(dispatcher.counts);
   }
 
   public void exit() throws Exception {
     print("exiting" + "\n");
-    print("\tend results: " + counts.toString() + "\n");
+    print("\tend results: " + overallCounts.toString() + "\n");
   }
 
   public int exitCode() {
-    return counts.wrong + counts.exceptions;
+    return overallCounts.wrong + overallCounts.exceptions;
   }
 
   public void establishConnection() throws Exception {
@@ -174,10 +165,6 @@ public class FitServer {
     }
   }
 
-  public Counts getCounts() {
-    return counts;
-  }
-
   private void print(String message) {
     if (verbose)
       System.out.print(message);
@@ -197,19 +184,13 @@ public class FitServer {
     return byteBuffer.toByteArray();
   }
 
-  public void writeCounts(Counts count) throws IOException {
-    //TODO This can't be right.... which counts should be used?
-    FitProtocol.writeCounts(counts, socketOutput);
-  }
-
   class TablePrintingFixtureListener implements FixtureListener {
     public void tableFinished(Parse table) {
       try {
         byte[] bytes = readTable(table);
         if (bytes.length > 0)
           FitProtocol.writeData(bytes, socketOutput);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -217,11 +198,9 @@ public class FitServer {
     public void tablesFinished(Counts count) {
       try {
         FitProtocol.writeCounts(count, socketOutput);
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         e.printStackTrace();
       }
     }
   }
 }
-

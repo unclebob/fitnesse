@@ -1,15 +1,24 @@
 package fitnesse.responders.editing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-import static util.RegexTestCase.*;
 
 public class AddChildPageResponderTest {
   private WikiPage root;
@@ -49,7 +58,6 @@ public class AddChildPageResponderTest {
     final String body = response.getContent();
     assertEquals("", body);
     assertEquals(response.getStatus(), 303);
-
   }
 
   @Test
@@ -165,7 +173,6 @@ public class AddChildPageResponderTest {
   private boolean isTest() {
     return childPageData.hasAttribute("Test");
   }
-
 
   private void getChildPage(String childName) throws Exception {
     childPage = crawler.getPage(PathParser.parse("TestPage."+ childName));

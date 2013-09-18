@@ -2,31 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RenameFileConfirmationResponderTest extends RegexTestCase {
+public class RenameFileConfirmationResponderTest {
   MockRequest request;
   private FitNesseContext context;
   private String content;
   private SimpleResponse response;
   private Responder responder;
 
+  @Before
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
     SampleFileUtility.makeSampleFiles();
   }
 
+  @After
   public void tearDown() throws Exception {
     SampleFileUtility.deleteSampleFiles();
   }
 
+  @Test
   public void testContentOfPage() throws Exception {
     getContentForSimpleRename();
 
@@ -35,6 +42,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     assertSubString("Rename <b>MyFile.txt</b>", content);
   }
 
+  @Test
   public void testExistingFilenameIsInTextField() throws Exception {
     getContentForSimpleRename();
 
@@ -49,6 +57,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     content = response.getContent();
   }
 
+  @Test
   public void testFitnesseLook() throws Exception {
     Responder responder = new RenameFileConfirmationResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);

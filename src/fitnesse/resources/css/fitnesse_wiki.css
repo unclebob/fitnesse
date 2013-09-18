@@ -42,7 +42,7 @@ article .centered {
 }
 
 .collapsible > div {
-  margin-left: 16px;
+    margin: 16px 0 0 16px;
 }
 
 .collapsible.closed > div {
@@ -84,7 +84,6 @@ table {
 	border-collapse:collapse;
 }
 td, th {
-	border: thin solid #777777;
 	padding: 0.25em 0.5em;
 }
 table.plain_text_table {
@@ -99,19 +98,25 @@ table.plain_text_table th {
   border: none;
 }
 
-/** !style_* */
-.error {
+/** Test output */
+.error,
+span.error * {
   background-color: #ffffaa;
 }
-.pass {
+.pass,
+span.pass * {
   background-color: #AAFFAA;
 }
-.fail {
+.fail,
+span.fail * {
   background-color: #FFAAAA;
 }
-.ignore {
+.ignore,
+span.ignore * {
   background-color: lightgray;
 }
+
+/** !style_* */
 .caps {
   font-variant: small-caps;
 }

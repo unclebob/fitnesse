@@ -3,10 +3,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
-import fit.exception.FitParseException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class ParseTest extends TestCase {
+import fit.exception.FitParseException;
+import org.junit.Test;
+
+public class ParseTest {
+
+  @Test
   public void testParsing() throws Exception {
     Parse p = new Parse("leader<Table foo=2>body</table>trailer", new String[]{"table"});
     assertEquals("leader", p.leader);
@@ -15,6 +20,7 @@ public class ParseTest extends TestCase {
     assertEquals("trailer", p.trailer);
   }
 
+  @Test
   public void testRecursing() throws Exception {
     Parse p = new Parse("leader<table><TR><Td>body</tD></TR></table>trailer");
     assertEquals(null, p.body);
@@ -22,6 +28,7 @@ public class ParseTest extends TestCase {
     assertEquals("body", p.parts.parts.body);
   }
 
+  @Test
   public void testIterating() throws Exception {
     Parse p = new Parse("leader<table><tr><td>one</td><td>two</td><td>three</td></tr></table>trailer");
     assertEquals("one", p.parts.parts.body);
@@ -29,6 +36,7 @@ public class ParseTest extends TestCase {
     assertEquals("three", p.parts.parts.more.more.body);
   }
 
+  @Test
   public void testIndexing() throws Exception {
     Parse p = new Parse("leader<table><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>four</td></tr></table>trailer");
     assertEquals("one", p.at(0, 0, 0).body);
@@ -46,6 +54,7 @@ public class ParseTest extends TestCase {
     assertEquals("four", p.parts.last().leaf().body);
   }
 
+  @Test
   public void testParseException() {
     try {
       new Parse("leader<table><tr><th>one</th><th>two</th><th>three</th></tr><tr><td>four</td></tr></table>trailer");
@@ -58,6 +67,7 @@ public class ParseTest extends TestCase {
     fail("exptected exception not thrown");
   }
 
+  @Test
   public void testText() throws Exception {
     String tags[] = {"td"};
     Parse p = new Parse("<td>a&lt;b</td>", tags);
@@ -71,6 +81,7 @@ public class ParseTest extends TestCase {
     assertEquals("GroupTestFixture", p.text());
   }
 
+  @Test
   public void testUnescape() {
     assertEquals("a<b", Parse.unescape("a&lt;b"));
     assertEquals("a>b & b>c &&", Parse.unescape("a&gt;b&nbsp;&amp;&nbsp;b>c &&"));
@@ -78,18 +89,21 @@ public class ParseTest extends TestCase {
     assertEquals("a>b & b>c &&", Parse.unescape("a&gt;b&nbsp;&amp;&nbsp;b>c &&"));
   }
 
+  @Test
   public void testUnformat() {
     assertEquals("ab", Parse.unformat("<font size=+1>a</font>b"));
     assertEquals("ab", Parse.unformat("a<font size=+1>b</font>"));
     assertEquals("a<b", Parse.unformat("a<b"));
   }
 
+  @Test
   public void testFindNestedEnd() throws FitParseException {
     assertEquals(0, Parse.findMatchingEndTag("</t>", 0, "t", 0));
     assertEquals(7, Parse.findMatchingEndTag("<t></t></t>", 0, "t", 0));
     assertEquals(14, Parse.findMatchingEndTag("<t></t><t></t></t>", 0, "t", 0));
   }
 
+  @Test
   public void testNestedTables() throws Exception {
     String nestedTable = "<table><tr><td>embedded</td></tr></table>";
     Parse p = new Parse("<table><tr><td>" + nestedTable + "</td></tr>" +
@@ -110,6 +124,7 @@ public class ParseTest extends TestCase {
     assertEquals(1, p.at(0, 2, 0).size());
   }
 
+  @Test
   public void testNestedTables2() throws Exception {
     String nestedTable = "<table><tr><td>embedded</td></tr></table>";
     String nestedTable2 = "<table><tr><td>" + nestedTable + "</td></tr><tr><td>two</td></tr></table>";

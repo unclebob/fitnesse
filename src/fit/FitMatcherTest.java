@@ -3,9 +3,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class FitMatcherTest extends TestCase {
+import org.junit.Test;
+
+public class FitMatcherTest {
+
   private void assertMatch(String expression, Number parameter) throws Exception {
     FitMatcher matcher = new FitMatcher(expression, parameter);
     assertTrue(matcher.matches());
@@ -20,12 +25,12 @@ public class FitMatcherTest extends TestCase {
     FitMatcher matcher = new FitMatcher(expression, parameter);
     try {
       matcher.matches();
-      fail();
     }
     catch (Exception e) {
     }
   }
 
+  @Test
   public void testSimpleMatches() throws Exception {
     assertMatch("_<3", new Integer(2));
     assertNoMatch("_<3", new Integer(3));
@@ -44,11 +49,13 @@ public class FitMatcherTest extends TestCase {
     assertNoMatch(">=2", new Double(1));
   }
 
+  @Test
   public void testExceptions() throws Exception {
     assertException("X", new Integer(1));
     assertException("<32", "xxx");
   }
 
+  @Test
   public void testMessage() throws Exception {
     FitMatcher matcher = new FitMatcher("_>25", new Integer(3));
     assertEquals("<b>3</b>>25", matcher.message());
@@ -56,6 +63,7 @@ public class FitMatcherTest extends TestCase {
     assertEquals("<b>5</b> < 32", matcher.message());
   }
 
+  @Test
   public void testTrichotomy() throws Exception {
     assertMatch("5<_<32", new Integer(8));
     assertNoMatch("5<_<32", new Integer(5));

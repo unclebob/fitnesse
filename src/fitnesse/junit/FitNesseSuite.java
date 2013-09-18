@@ -8,17 +8,17 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -147,7 +147,7 @@ public class FitNesseSuite extends ParentRunner<String> {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
     WikiPage root = crawler.getPage(PathParser.parse("."));
-    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.responders.run.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
+    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
 
     List<String> testPages = new ArrayList<String>();
     for (WikiPage wp : pages) {
@@ -284,15 +284,13 @@ public class FitNesseSuite extends ParentRunner<String> {
   private static FitNesseContext initContext(String rootPath, int port) throws Exception {
     Builder builder = new Builder();
     WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
-    ComponentFactory componentFactory = new ComponentFactory(rootPath);
 
     builder.port = port;
     builder.rootPath = rootPath;
     builder.rootDirectoryName = "FitNesseRoot";
 
-    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = componentFactory
-            .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    // TODO: should make a standalone theme.
+    builder.pageTheme = "fitnesse_straight";
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
         builder.rootDirectoryName);

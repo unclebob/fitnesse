@@ -3,15 +3,9 @@
 package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.run.Stoppable;
-import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.WikiPage;
-import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,35 +13,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MultipleTestsRunner implements TestSystemListener, Stoppable {
+public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
 
-  private final ResultsListener resultsListener;
+  private final CompositeFormatter formatters;
   private final FitNesseContext fitNesseContext;
-  private final WikiPage page;
   private final List<WikiPage> testPagesToRun;
   private boolean isFastTest = false;
   private boolean isRemoteDebug = false;
-
-  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
-  private WikiTestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  TimeMeasurement currentTestTime, totalTestTime;
-  private CompositeExecutionLog log;
+
+  private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext,
-                             final WikiPage page,
-                             final ResultsListener resultsListener) {
+                             final FitNesseContext fitNesseContext) {
     this.testPagesToRun = testPagesToRun;
-    this.resultsListener = resultsListener;
-    this.page = page;
+    this.formatters = new CompositeFormatter();
     this.fitNesseContext = fitNesseContext;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
-    log = new CompositeExecutionLog(page);
+  }
+
+  public void addTestSystemListener(TestSystemListener listener) {
+    this.formatters.addTestSystemListener(listener);
   }
 
   public void setDebug(boolean isDebug) {
@@ -58,21 +48,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     this.isFastTest = isFastTest;
   }
 
-  public void executeTestPages() {
-    try {
-      internalExecuteTestPages();
-      allTestingComplete();
-    } catch (Exception exception) {
-      //hoped to write exceptions to log file but will take some work.
-      exception.printStackTrace(System.out);
-      errorOccurred(exception);
-    }
+  public void executeTestPages() throws IOException, InterruptedException {
+    internalExecuteTestPages();
+    allTestingComplete();
   }
 
   void allTestingComplete() throws IOException {
-    TimeMeasurement completionTimeMeasurement = new TimeMeasurement().start();
-    resultsListener.allTestingComplete(totalTestTime.stop());
-    completionTimeMeasurement.stop(); // a non-trivial amount of time elapses here
+    formatters.close();
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
@@ -80,10 +62,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
 
     testSystemGroup.setFastTest(isFastTest);
-    testSystemGroup.setManualStart(useManualStartForTestSystem());
-    testSystemGroup.setRemoteDebug(isRemoteDebug);
 
-    resultsListener.setExecutionLogAndTrackingId(stopId, log);
+    formatters.setTrackingId(stopId);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
@@ -92,14 +72,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
 
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
-  }
-
-  private boolean useManualStartForTestSystem() {
-    if (isRemoteDebug) {
-      String useManualStart = page.readOnlyData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
-      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
-    }
-    return false;
   }
 
   private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
@@ -125,17 +97,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
-      addToProcessingQueue(testPage);
+      testsInProgressCount++;
       testSystem.runTests(testPage);
     }
   }
 
-  void addToProcessingQueue(TestPage testPage) {
-    processingQueue.addLast(testPage);
-  }
-
   private void waitForTestSystemToSendResults() throws InterruptedException {
-    while ((processingQueue.size() > 0) && isNotStopped())
+    // TODO: use testSystemStopped event to wait for tests to end.
+    while (testsInProgressCount > 0 && isNotStopped())
       Thread.sleep(50);
   }
 
@@ -185,64 +154,47 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
-    resultsListener.announceNumberTestsToRun(tests);
-    totalTestTime = new TimeMeasurement().start();
+    formatters.announceNumberTestsToRun(tests);
   }
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    resultsListener.testSystemStarted(testSystem);
+    formatters.testSystemStarted(testSystem);
   }
 
   @Override
   public void testOutputChunk(String output) throws IOException {
-    TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
-    boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
-    if (isNewTest) {
-      startingNewTest(firstInQueue);
-    }
-    resultsListener.testOutputChunk(output);
-  }
-
-  void startingNewTest(TestPage test) throws IOException {
-    currentTest = (WikiTestPage) test;
-    currentTestTime = new TimeMeasurement().start();
-    resultsListener.newTestStarted(currentTest, currentTestTime);
+    formatters.testOutputChunk(output);
   }
 
   @Override
-  public void testComplete(TestSummary testSummary) throws IOException {
-    TestPage testPage = processingQueue.removeFirst();
-    resultsListener.testComplete((WikiTestPage) testPage, testSummary, currentTestTime.stop());
+  public void testStarted(WikiTestPage testPage) throws IOException {
+    formatters.testStarted(testPage);
   }
 
-  private void errorOccurred(Throwable e) {
-    try {
-      resultsListener.errorOccured();
-      stop();
-    } catch (Exception e1) {
-      if (isNotStopped()) {
-        e1.printStackTrace();
-      }
-    }
+  @Override
+  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    formatters.testComplete(testPage, testSummary);
+    testsInProgressCount--;
   }
 
   @Override
   public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    log.add(testSystem.getName(), executionLog);
+    formatters.testSystemStopped(testSystem, executionLog, cause);
+
     if (cause != null) {
-      errorOccurred(cause);
+      stop();
     }
   }
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    resultsListener.testAssertionVerified(assertion, testResult);
+    formatters.testAssertionVerified(assertion, testResult);
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    resultsListener.testExceptionOccurred(assertion, exceptionResult);
+    formatters.testExceptionOccurred(assertion, exceptionResult);
   }
 
   private boolean isNotStopped() {
@@ -250,7 +202,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   @Override
-  public void stop() throws IOException {
+  public void stop() {
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
     if (stopId != null) {
@@ -258,7 +210,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
 
     if (wasNotStopped) {
-      testSystemGroup.kill();
+      try {
+        testSystemGroup.kill();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

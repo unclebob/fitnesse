@@ -1,6 +1,7 @@
 package fitnesse.responders.search;
 
 import static fitnesse.responders.search.SearchFormResponder.SEARCH_ACTION_ATTRIBUTES;
+import static fitnesse.responders.search.SearchFormResponder.SEARCH_ATTRIBUTE_SKIP;
 import static fitnesse.responders.search.SearchFormResponder.SPECIAL_ATTRIBUTES;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertyPRUNE;
@@ -67,10 +68,9 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     getListboxAttributesFromRequest(request, SPECIAL, SPECIAL_ATTRIBUTES,
         attributes);
 
-    // this is an ugly renaming we need to make
-    Boolean obsoleteFlag = attributes.remove("obsolete");
-    if (obsoleteFlag != null)
-      attributes.put(PropertyPRUNE, obsoleteFlag);
+    // "obsolete" input is used to make existing queries work
+    if (request.hasInput(SEARCH_ATTRIBUTE_SKIP) || request.hasInput("obsolete"))
+      attributes.put(SEARCH_ATTRIBUTE_SKIP, true);
 
     return attributes;
   }

@@ -5,6 +5,7 @@ package fitnesse.responders.search;
 import static fitnesse.wiki.PageData.PropertyEDIT;
 import static fitnesse.wiki.PageData.PropertyFILES;
 import static fitnesse.wiki.PageData.PropertyPROPERTIES;
+import static fitnesse.wiki.PageData.PropertyPRUNE;
 import static fitnesse.wiki.PageData.PropertyRECENT_CHANGES;
 import static fitnesse.wiki.PageData.PropertyREFACTOR;
 import static fitnesse.wiki.PageData.PropertySEARCH;
@@ -16,15 +17,16 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageType;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
     PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED };
   public static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
-  public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
+  public static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
+  public static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
 
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();

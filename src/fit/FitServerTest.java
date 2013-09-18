@@ -22,7 +22,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-import util.RegexTestCase;
 import util.StreamReader;
 
 public class FitServerTest {
@@ -304,7 +303,7 @@ public class FitServerTest {
   }
 
   private void checkSize(String sizeString) throws Exception {
-    RegexTestCase.assertEquals(sizeString, read(10));
+    assertEquals(sizeString, read(10));
   }
 
   private void checkForTwoClassAttributesInResponse() throws Exception {

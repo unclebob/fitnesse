@@ -2,23 +2,32 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import java.io.ByteArrayInputStream;
 
-import util.RegexTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RequestBuilderTest extends RegexTestCase {
+public class RequestBuilderTest {
   private RequestBuilder builder;
 
+  @Before
   public void setUp() {
     builder = new RequestBuilder("/");
   }
 
+  @Test
   public void testDeafultValues() throws Exception {
     builder = new RequestBuilder("/someResource");
     String text = builder.getText();
     assertHasRegexp("GET /someResource HTTP/1.1\r\n", text);
   }
 
+  @Test
   public void testHostHeader_RFC2616_section_14_23() throws Exception {
     builder = new RequestBuilder("/someResource");
     String text = builder.getText();
@@ -29,12 +38,14 @@ public class RequestBuilderTest extends RegexTestCase {
     assertSubString("Host: some.host.com:123\r\n", text);
   }
 
+  @Test
   public void testChangingMethod() throws Exception {
     builder.setMethod("POST");
     String text = builder.getText();
     assertHasRegexp("POST / HTTP/1.1\r\n", text);
   }
 
+  @Test
   public void testAddInput() throws Exception {
     builder.addInput("responder", "saveData");
     String content = "!fixture fit.ColumnFixture\n" +
@@ -50,12 +61,14 @@ public class RequestBuilderTest extends RegexTestCase {
     assertSubString("&", inputString);
   }
 
+  @Test
   public void testGETMethodWithInputs() throws Exception {
     builder.addInput("key", "value");
     String text = builder.getText();
     assertSubString("GET /?key=value HTTP/1.1\r\n", text);
   }
 
+  @Test
   public void testPOSTMethodWithInputs() throws Exception {
     builder.setMethod("POST");
     builder.addInput("key", "value");
@@ -64,11 +77,13 @@ public class RequestBuilderTest extends RegexTestCase {
     assertSubString("key=value", text);
   }
 
+  @Test
   public void testAddingCredentials() throws Exception {
     builder.addCredentials("Aladdin", "open sesame");
     assertSubString("Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", builder.getText());
   }
 
+  @Test
   public void testGetBoundary() throws Exception {
     String boundary = builder.getBoundary();
 
@@ -76,6 +91,7 @@ public class RequestBuilderTest extends RegexTestCase {
     assertFalse(boundary.equals(new RequestBuilder("blah").getBoundary()));
   }
 
+  @Test
   public void testMultipartOnePart() throws Exception {
     builder.addInputAsPart("myPart", "part data");
     String text = builder.getText();
@@ -88,6 +104,7 @@ public class RequestBuilderTest extends RegexTestCase {
     assertSubString("--" + boundary + "--", text);
   }
 
+  @Test
   public void testMultipartWithInputStream() throws Exception {
     ByteArrayInputStream input = new ByteArrayInputStream("data from input stream".getBytes());
     builder.addInputAsPart("input", input, 89, "text/html");
@@ -97,6 +114,7 @@ public class RequestBuilderTest extends RegexTestCase {
     assertSubString("\r\n\r\ndata from input stream\r\n", text);
   }
 
+  @Test
   public void testMultipartWithRequestParser() throws Exception {
     builder.addInputAsPart("part1", "data 1");
     builder.addInput("input1", "input1 value");

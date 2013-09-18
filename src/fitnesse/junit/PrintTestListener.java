@@ -1,40 +1,34 @@
 package fitnesse.junit;
 
-import fitnesse.testrunner.CompositeExecutionLog;
-import fitnesse.testrunner.ResultsListener;
+import java.io.Closeable;
+
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-import util.TimeMeasurement;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
+import util.TimeMeasurement;
 
-public class PrintTestListener implements ResultsListener {
+public class PrintTestListener implements TestSystemListener<WikiTestPage>, Closeable {
+  private TimeMeasurement timeMeasurement;
+  private TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
+
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
+  public void close() {
     System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
   }
 
   @Override
-  public void announceNumberTestsToRun(int testsToRun) {
+  public void testStarted(WikiTestPage test) {
+    timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
-  public void errorOccured() {
-  }
-
-  @Override
-  public void newTestStarted(WikiTestPage test, TimeMeasurement timeMeasurement) {
-  }
-
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
-  @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
     System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
         + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
@@ -55,4 +49,9 @@ public class PrintTestListener implements ResultsListener {
   @Override
   public void testSystemStarted(TestSystem testSystem) {
   }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  }
+
 }

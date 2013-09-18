@@ -16,13 +16,13 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.testsystems.TestPage;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -108,7 +108,7 @@ public class VersionResponder implements SecureResponder {
     }
 
     public String render() {
-      PageData data;
+      ReadOnlyPageData data;
       if (isTestPage(pageData)) {
         WikiTestPage testPage = new WikiTestPage(pageData);
         data = testPage.getDecoratedData();

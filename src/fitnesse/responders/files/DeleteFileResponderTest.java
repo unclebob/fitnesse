@@ -2,29 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import util.FileUtil;
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
-public class DeleteFileResponderTest extends RegexTestCase {
+public class DeleteFileResponderTest {
   public MockRequest request;
   private FitNesseContext context;
 
+  @Before
   public void setUp() {
     FileUtil.makeDir(FitNesseUtil.base);
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext();
   }
 
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 
+  @Test
   public void testDelete() throws Exception {
     File file = new File(FitNesseUtil.base + "/testfile");
     assertTrue(file.createNewFile());
@@ -37,6 +46,7 @@ public class DeleteFileResponderTest extends RegexTestCase {
     assertEquals("/", response.getHeader("Location"));
   }
 
+  @Test
   public void testDeleteDirectory() throws Exception {
     File dir = new File(FitNesseUtil.base + "/dir");
     assertTrue(dir.mkdir());

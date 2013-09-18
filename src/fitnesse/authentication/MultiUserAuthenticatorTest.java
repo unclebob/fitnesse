@@ -2,19 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class MultiUserAuthenticatorTest extends TestCase {
+public class MultiUserAuthenticatorTest {
   private File passwd;
   private PrintStream ps;
   private final String passwordFilename = "testpasswd";
   private MultiUserAuthenticator a;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     passwd = new File(passwordFilename);
     ps = new PrintStream(new FileOutputStream(passwd));
     ps.println("uncle:bob");
@@ -23,20 +30,24 @@ public class MultiUserAuthenticatorTest extends TestCase {
     a = new MultiUserAuthenticator(passwordFilename);
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     passwd.delete();
   }
 
+  @Test
   public void testBuildAuthenticator() throws Exception {
     assertEquals(2, a.userCount());
     assertEquals("bob", a.getPasswd("uncle"));
     assertEquals("boy", a.getPasswd("micah"));
   }
 
+  @Test
   public void testAuthenticRequest() throws Exception {
     assertTrue(a.isAuthenticated("uncle", "bob"));
   }
 
+  @Test
   public void testInauthenticRequest() throws Exception {
     assertFalse(a.isAuthenticated("bill", "boob"));
   }

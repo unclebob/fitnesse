@@ -49,8 +49,13 @@ public class Include extends SymbolType implements Rule, Translation {
                             .parse());
             if (option.equals("-setup")) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
-        
-        return new Maybe<Symbol>(current);
+
+      // Remove trailing newline so we do not introduce excessive whitespace in the page.
+      if (parser.peek().isType(SymbolType.Newline)) {
+        parser.moveNext(1);
+      }
+
+      return new Maybe<Symbol>(current);
     }
 
     public String toTarget(Translator translator, Symbol symbol) {

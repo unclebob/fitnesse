@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -28,8 +30,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.SuiteExecutionReport;
+import fitnesse.reporting.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -213,7 +215,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"pass\">.*03 May, 09 11:04.*</td>", response.getContent());
+    assertHasRegexp("<td class=\"date_field pass\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -223,7 +225,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"fail\">.*03 May, 09 11:04.*</td>", response.getContent());
+    assertHasRegexp("<td class=\"date_field fail\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -233,8 +235,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_1");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"fail\">2</td>", response.getContent());
-    assertHasRegexp("<td .* class=\"pass\">6</td>", response.getContent());
+    assertHasRegexp("<td class=\"fail_count fail\">2</td>", response.getContent());
+    assertHasRegexp("<td class=\"pass_count pass\">6</td>", response.getContent());
   }
 
   @Test
@@ -244,8 +246,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_0_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
-    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td class=\"pass_count ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td class=\"fail_count ignore\">0</td>", response.getContent());
   }
 
   @Test
@@ -256,11 +258,11 @@ public class PageHistoryResponderTest {
     makeResponse();
     StringBuilder expected = new StringBuilder();
     for (int i = 0; i < 30; i++) {
-      expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
+      expected.append("<td class=\"element pass\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 20; i++) {
-      expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
+      expected.append("<td class=\"element fail\">&nbsp;</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
   }
@@ -274,15 +276,15 @@ public class PageHistoryResponderTest {
     makeResponse();
     StringBuilder expected = new StringBuilder();
     for (int i = 0; i < 10; i++) {
-      expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
+      expected.append("<td class=\"element pass\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 5; i++) {
-      expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
+      expected.append("<td class=\"element fail\">&nbsp;</td>");
     }
     expected.append(".*");
     for (int i = 0; i < 35; i++) {
-      expected.append("<td id=\"element\" class=\"ignore\">&nbsp</td>");
+      expected.append("<td class=\"element ignore\">&nbsp;</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
   }
@@ -339,7 +341,7 @@ public class PageHistoryResponderTest {
     SuiteExecutionReport report = makeDummySuiteResponse();
     report.version = fitNesseVersion.toString();
     report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
-    report.finalCounts = new TestSummary(4,5,6,7);
+    report.getFinalCounts().add(new TestSummary(4,5,6,7));
     report.rootPath = "SuitePage";
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when (timeMeasurement.elapsed()).thenReturn(12321L);
@@ -393,7 +395,7 @@ public class PageHistoryResponderTest {
     TestExecutionReport testResponse = new TestExecutionReport();
     testResponse.version = fitNesseVersion.toString();
     testResponse.rootPath = "rootPath";
-    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     testResponse.results.add(result);
     result.right = "11";
@@ -470,7 +472,7 @@ public class PageHistoryResponderTest {
     TestExecutionReport testResponse = new TestExecutionReport();
     testResponse.version = "v1";
     testResponse.rootPath = "rootPath";
-    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     testResponse.results.add(result);
     result.right = "xx";

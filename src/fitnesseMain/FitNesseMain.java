@@ -1,33 +1,32 @@
 package fitnesseMain;
 
 import fitnesse.Arguments;
-import fitnesse.ComponentFactory;
+import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
-import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.MultiUserAuthenticator;
-import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.PluginsLoader;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.responders.run.formatters.TestTextFormatter;
+import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Properties;
 
 public class FitNesseMain {
-  private static String extraOutput;
+  private static String extraOutput = "";
   public static boolean dontExitAfterSingleCommand;
 
   public static void main(String[] args) throws Exception {
@@ -109,11 +108,12 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    Builder builder = new Builder();
-    ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
-
+    Properties properties = loadConfigFile(arguments.getConfigFile());
     // Enrich properties with command line values:
-    componentFactory.getProperties().setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+
+    Builder builder = new Builder();
+    ComponentFactory componentFactory = new ComponentFactory(properties);
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
@@ -121,30 +121,30 @@ public class FitNesseMain {
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
-    builder.pageTheme = componentFactory.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = componentFactory
-        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+    builder.pageTheme = properties.getProperty(ComponentFactory.THEME);
+    builder.defaultNewPageContent = properties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:
     //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-      builder.rootDirectoryName);
+            builder.rootDirectoryName);
 
-    builder.logger = makeLogger(arguments);
-    builder.authenticator = makeAuthenticator(arguments.getUserpass(),
-      componentFactory);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
+
+    builder.logger = pluginsLoader.makeLogger(arguments.getLogDirectory());
+    builder.authenticator = pluginsLoader.makeAuthenticator(arguments.getUserpass());
 
     FitNesseContext context = builder.createFitNesseContext();
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    extraOutput += componentFactory.loadPlugins(context.responderFactory, symbolProvider);
-    extraOutput += componentFactory.loadResponders(context.responderFactory);
-    extraOutput += componentFactory.loadSymbolTypes(symbolProvider);
-    extraOutput += componentFactory.loadContentFilter();
-    extraOutput += componentFactory.loadSlimTables();
+    extraOutput += pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    extraOutput += pluginsLoader.loadResponders(context.responderFactory);
+    extraOutput += pluginsLoader.loadSymbolTypes(symbolProvider);
+    extraOutput += pluginsLoader.loadContentFilter();
+    extraOutput += pluginsLoader.loadSlimTables();
 
 
     WikiImportTestEventListener.register();
@@ -152,9 +152,33 @@ public class FitNesseMain {
     return context;
   }
 
+  public static Properties loadConfigFile(final String propertiesFile) {
+    FileInputStream propertiesStream = null;
+    Properties properties = new Properties();
+    try {
+      propertiesStream = new FileInputStream(propertiesFile);
+    } catch (FileNotFoundException e) {
+      System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+    }
+
+    if (propertiesStream != null) {
+      try {
+        properties.load(propertiesStream);
+        propertiesStream.close();
+      } catch (IOException e) {
+        System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
+      }
+    }
+
+    // Command line properties override settings from configuration file.
+    properties.putAll(System.getProperties());
+
+    return properties;
+  }
+
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command][-b output]");
+      "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -174,30 +198,12 @@ public class FitNesseMain {
         arguments.setCommand(commandLine.getOptionArgument("c", "command"));
       if (commandLine.hasOption("b"))
         arguments.setOutput(commandLine.getOptionArgument("b", "output"));
+      if (commandLine.hasOption("f"))
+        arguments.setConfigFile(commandLine.getOptionArgument("f", "config"));
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
     return arguments;
-  }
-
-  private static Logger makeLogger(Arguments arguments) {
-    String logDirectory = arguments.getLogDirectory();
-    return logDirectory != null ? new Logger(logDirectory) : null;
-  }
-
-  public static Authenticator makeAuthenticator(String authenticationParameter,
-                                                ComponentFactory componentFactory) throws Exception {
-    Authenticator authenticator = new PromiscuousAuthenticator();
-    if (authenticationParameter != null) {
-      if (new File(authenticationParameter).exists())
-        authenticator = new MultiUserAuthenticator(authenticationParameter);
-      else {
-        String[] values = authenticationParameter.split(":");
-        authenticator = new OneUserAuthenticator(values[0], values[1]);
-      }
-    }
-
-    return componentFactory.getAuthenticator(authenticator);
   }
 
   private static void printUsage() {
@@ -208,6 +214,7 @@ public class FitNesseMain {
     System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
       + "}");
     System.err.println("\t-l <log directory> {no logging}");
+    System.err.println("\t-f <config properties file> {" + Arguments.DEFAULT_CONFIG_FILE + "}");
     System.err.println("\t-e <days> {" + Arguments.DEFAULT_VERSION_DAYS
       + "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");

@@ -2,11 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import util.RegexTestCase;
-import util.StreamReader;
-import fitnesse.testsystems.TestSummary;
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertSubString;
 
-public class CachingResultFormatterTest extends RegexTestCase {
+import fitnesse.testsystems.TestSummary;
+import org.junit.Test;
+import util.StreamReader;
+
+public class CachingResultFormatterTest {
+
+  @Test
   public void testAddResult() throws Exception {
     CachingResultFormatter formatter = new CachingResultFormatter();
     PageResult result = new PageResult("PageTitle", new TestSummary(1, 2, 3, 4), "content");
@@ -22,6 +27,7 @@ public class CachingResultFormatterTest extends RegexTestCase {
     assertSubString("0000000004", content);
   }
 
+  @Test
   public void testIsComposit() throws Exception {
     CachingResultFormatter formatter = new CachingResultFormatter();
     MockResultFormatter mockFormatter = new MockResultFormatter();

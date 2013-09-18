@@ -1,6 +1,6 @@
 package fitnesse.junit;
 
-import fitnesse.responders.run.JavaFormatter;
+import fitnesse.reporting.JavaFormatter;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -18,9 +18,10 @@ function doSilentRequest(url)
 /**
  *  Scenario's and Exceptions (after test execution)
  */
-$(document).on("click", "article tr.scenario td, article tr.exception td", function () {
-    $(this).parent().toggleClass('closed').nextUntil(":not(.exception-detail, .scenario-detail)").toggleClass("closed-detail");
-});
+$(document)
+    .on("click", "article tr.scenario td, article tr.exception td", function () {
+        $(this).parent().toggleClass('closed').nextUntil(":not(.exception-detail, .scenario-detail)").toggleClass("closed-detail");
+    });
 
 /**
  * Collapsible section
@@ -34,18 +35,48 @@ $(document)
 		event.stopPropagation();
 		return true;
 	})
-	.on('click', 'article .collapsible .expandall', function (event) {
+	.on('click', 'article .collapsible .expandall', function () {
 		var section = $(this).closest('.collapsible');
 		section.find('.collapsible').andSelf().removeClass('closed');
 		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
-	.on('click', 'article .collapsible .collapseall', function (event) {
-		section = $(this).closest('.collapsible');
+	.on('click', 'article .collapsible .collapseall', function () {
+		var section = $(this).closest('.collapsible');
 		section.find('.collapsible, .scenario').andSelf().addClass('closed');
 		section.find('.scenario').addClass('closed').next().hide();
 		return false;
 	});
+
+/**
+ * Hide/show passed tests
+ */
+$(document)
+    .on('change', '.pageHistory #hidePassedTests', function () {
+        var elems = $('td.date_field.pass').parent();
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    })
+    .on('change', '.testHistory #hidePassedTests', function () {
+        // 3rd column shows failed tests.
+        var elems = $('tr > td:nth-child(3).ignore').parent();
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    })
+    .on('change', '.suiteExecutionReport #hidePassedTests', function () {
+        var elems = $('tr.pass');
+        if (this.checked) {
+            elems.hide();
+        } else {
+            elems.show();
+        }
+    });
 
 /**
  * Notify user when changing page while test execution is in progress.
@@ -161,7 +192,6 @@ function initErrorMetadata() {
      */
     unfoldErrors($('.fail,.error'));
 }
-
 
 /** Backwards compatibility */
 function toggleCollapsable(id) { $('#' + id).toggle().parent('.collapse_rim').toggleClass('open'); }

@@ -30,7 +30,7 @@ public class WikiTestPage implements TestPage {
     this.sourcePage = data.getWikiPage();
   }
 
-  public static boolean isTestPage(PageData pageData) {
+  public static boolean isTestPage(ReadOnlyPageData pageData) {
     return pageData.hasAttribute("Test");
   }
 
@@ -42,33 +42,31 @@ public class WikiTestPage implements TestPage {
     return data == null ? sourcePage.getData() : data;
   }
 
-  public ReadOnlyPageData parsedData() {
-    return sourcePage.readOnlyData();
-  }
-
   /**
    * Obtain one big page containing all (suite-) setUp and -tearDown content needed to run a test.
    *
    * @return
    */
   @Override
-  public PageData getDecoratedData() {
+  public ReadOnlyPageData getDecoratedData() {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
     decorate(getSetUp(), decoratedContent);
 
-    decoratedContent.append(parsedData().getContent());
+    addPageContent(decoratedContent);
 
     decorate(getTearDown(), decoratedContent);
 
     return new PageData(sourcePage, decoratedContent.toString());
   }
 
-  public PageData decorate(WikiPage wikiPage) {
-    StringBuilder decoratedContent = new StringBuilder(1024);
-    decorate(wikiPage, decoratedContent);
-    return new PageData(sourcePage, decoratedContent.toString());
+  protected void addPageContent(StringBuilder decoratedContent) {
+    String content = getData().getContent();
+    decoratedContent
+            .append("\n")
+            .append(content)
+            .append(content.endsWith("\n") ? "" : "\n");
   }
 
   protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
@@ -83,14 +81,20 @@ public class WikiTestPage implements TestPage {
     }
   }
 
-
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
-    if (!getScenarioLibraries().isEmpty()) {
-      decoratedContent.append("!*> Scenario Libraries\n");
-      for (WikiPage scenarioLibrary : getScenarioLibraries()) {
+    final List<WikiPage> libraries = getScenarioLibraries();
+    if (!libraries.isEmpty()) {
+      if (libraries.size() > 1) {
+        decoratedContent.append("!*> Scenario Libraries\n");
+      }
+
+      for (WikiPage scenarioLibrary : libraries) {
         includeScenarioLibrary(scenarioLibrary, decoratedContent);
       }
-      decoratedContent.append("*!\n");
+
+      if (libraries.size() > 1) {
+        decoratedContent.append("*!\n");
+      }
     }
   }
 
@@ -105,7 +109,7 @@ public class WikiTestPage implements TestPage {
       return;
     String pagePathName = getPathNameForPage(wikiPage);
     newPageContent
-            .append("\n!include ")
+            .append("!include ")
             .append(arg)
             .append(" .")
             .append(pagePathName)
@@ -126,7 +130,7 @@ public class WikiTestPage implements TestPage {
   }
 
   public boolean isSlim() {
-    return "slim".equalsIgnoreCase(parsedData().getVariable("TEST_SYSTEM"));
+    return "slim".equalsIgnoreCase(getData().getVariable("TEST_SYSTEM"));
   }
 
   public boolean isTestPage() {

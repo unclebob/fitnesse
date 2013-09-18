@@ -33,7 +33,6 @@ public class FileResponder implements Responder {
   final public String resource;
   final public File requestedFile;
   public Date lastModifiedDate;
-  public String lastModifiedDateString;
 
   public static Responder makeResponder(Request request, String rootPath) {
     String resource = request.getResource();
@@ -91,8 +90,8 @@ public class FileResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     response.setContent(content);
     setContentType(classpathResource, response);
-    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(LAST_MODIFIED_FOR_RESOURCES);
-    response.setLastModifiedHeader(lastModifiedDateString);
+    lastModifiedDate = LAST_MODIFIED_FOR_RESOURCES;
+    response.setLastModifiedHeader(lastModifiedDate);
 
     return response;
   }
@@ -106,7 +105,7 @@ public class FileResponder implements Responder {
     else {
       response.setBody(requestedFile);
       setContentType(requestedFile.getName(), response);
-      response.setLastModifiedHeader(lastModifiedDateString);
+      response.setLastModifiedHeader(lastModifiedDate);
     }
     return response;
   }
@@ -115,7 +114,7 @@ public class FileResponder implements Responder {
     if (request.hasHeader("If-Modified-Since")) {
       String queryDateString = (String) request.getHeader("If-Modified-Since");
       try {
-        Date queryDate = SimpleResponse.makeStandardHttpDateFormat().parse(queryDateString);
+        Date queryDate = Response.makeStandardHttpDateFormat().parse(queryDateString);
         if (!queryDate.before(lastModifiedDate))
           return true;
       }
@@ -129,24 +128,13 @@ public class FileResponder implements Responder {
 
   private Response createNotModifiedResponse() {
     Response response = new SimpleResponse();
-    response.setStatus(304);
-    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(Clock.currentDate()));
-    response.addHeader("Cache-Control", "private");
-    response.setLastModifiedHeader(lastModifiedDateString);
+    response.notModified(lastModifiedDate, Clock.currentDate());
     return response;
   }
 
   private void determineLastModifiedInfo(Date lastModified) {
-    lastModifiedDate = lastModified;
-    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
-
-    try  // remove milliseconds
-    {
-      lastModifiedDate = SimpleResponse.makeStandardHttpDateFormat().parse(lastModifiedDateString);
-    }
-    catch (java.text.ParseException jtpe) {
-      jtpe.printStackTrace();
-    }
+    // remove milliseconds
+    lastModifiedDate = new Date((lastModified.getTime() / 1000) * 1000);
   }
 
   private void setContentType(String filename, Response response) {

@@ -13,7 +13,7 @@ public class FixtureClass {
     this.klass = klass;
   }
 
-  public Fixture newInstance() throws IllegalAccessException {
+  public BaseFixture newInstance() throws IllegalAccessException {
     // Instantiate according to policies?
     // Example: policy #1 -- has default constructor
     // ...
@@ -23,8 +23,8 @@ public class FixtureClass {
     try {
       Object fixtureAsObject = klass.newInstance();
 
-      if (fixtureAsObject instanceof Fixture) {
-        return (Fixture) fixtureAsObject;
+      if (fixtureAsObject instanceof BaseFixture) {
+        return (BaseFixture) fixtureAsObject;
       } else {
         throw new ClassIsNotFixtureException(fixtureClassName);
       }

@@ -2,17 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import fitnesse.components.SocketDealer;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.util.MockSocket;
-import util.RegexTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.TimeMeasurement;
 
-public class FitClientTest extends RegexTestCase implements FitClientListener {
+public class FitClientTest implements FitClientListener {
   private List<String> outputs = new ArrayList<String>();
   private List<TestSummary> counts = new ArrayList<TestSummary>();
   private CommandRunningFitClient client;
@@ -21,6 +27,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
   private FitSocketReceiver receiver;
   private SimpleSocketDoner doner;
 
+  @Before
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
@@ -39,6 +46,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     }
   }
 
+  @After
   public void tearDown() throws Exception {
     receiver.close();
   }
@@ -63,6 +71,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     }
   }
 
+  @Test
   public void testOneRunUsage() throws Exception {
     doSimpleRun();
     assertFalse(exceptionOccurred);
@@ -81,6 +90,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     client.join();
   }
 
+  @Test
   public void testStandardError() throws Exception {
     client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.start();
@@ -90,6 +100,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     assertSubString("Error", client.getExecutionLog().getCapturedError());
   }
 
+  @Test
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
@@ -99,9 +110,9 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     client.join();
     assertTrue(exceptionOccurred);
     assertTrue(measurement.elapsed() < CommandRunningFitClient.TIMEOUT);
-
   }
 
+  @Test
   public void testOneRunWithManyTables() throws Exception {
     receiver.receiveSocket();
     client.start();
@@ -119,6 +130,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     assertEquals(1, count.getExceptions());
   }
 
+  @Test
   public void testManyRuns() throws Exception {
     receiver.receiveSocket();
     client.start();
@@ -136,11 +148,13 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     assertEquals(1, (counts.get(2)).getExceptions());
   }
 
+  @Test
   public void testDonerIsNotifiedWhenFinished_success() throws Exception {
     doSimpleRun();
     assertTrue(doner.finished);
   }
 
+  @Test
   public void testReadyForSending() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     Thread startThread = new Thread() {
@@ -164,6 +178,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener {
     startThread.interrupt();
   }
 
+  @Test
   public void testUnicodeCharacters() throws Exception {
     receiver.receiveSocket();
     client.start();

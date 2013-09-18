@@ -2,29 +2,38 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 import fitnesse.util.Base64;
-import fitnesse.responders.editing.EditResponder;
 
-public class RequestTest extends TestCase {
+public class RequestTest {
   PipedOutputStream output;
   Request request;
   public Thread parseThread;
   public Exception exception;
   ByteArrayOutputStream messageBuffer;
 
+  @Before
   public void setUp() throws Exception {
     output = new PipedOutputStream();
     request = new Request(new PipedInputStream(output));
     messageBuffer = new ByteArrayOutputStream();
   }
 
+  @After
   public void tearDown() throws Exception {
     output.close();
   }
@@ -51,6 +60,7 @@ public class RequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testMultilevelRequest() throws Exception {
     appendToMessage("GET /SomePage.SubPage?edit HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -58,6 +68,7 @@ public class RequestTest extends TestCase {
     assertEquals("SomePage.SubPage", request.getResource());
   }
 
+  @Test
   public void testSimpleRequest() throws Exception {
     assertFalse(request.hasBeenParsed());
     appendToMessage("GET /request-uri HTTP/1.1\r\n");
@@ -67,6 +78,7 @@ public class RequestTest extends TestCase {
     assertEquals("/request-uri", request.getRequestUri());
   }
 
+  @Test
   public void testMalformedRequestLine() throws Exception {
     appendToMessage("/resource HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -75,6 +87,7 @@ public class RequestTest extends TestCase {
     assertEquals("The request string is malformed and can not be parsed", exception.getMessage());
   }
 
+  @Test
   public void testBadMethod() throws Exception {
     appendToMessage("DELETE /resource HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -83,6 +96,7 @@ public class RequestTest extends TestCase {
     assertEquals("The DELETE method is not currently supported", exception.getMessage());
   }
 
+  @Test
   public void testQueryStringValueWithNoQueryString() throws Exception {
     appendToMessage("GET /resource HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -90,6 +104,7 @@ public class RequestTest extends TestCase {
     assertEquals("", request.getQueryString());
   }
 
+  @Test
   public void testParsingRequestUri() throws Exception {
     appendToMessage("GET /resource?queryString HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -98,6 +113,7 @@ public class RequestTest extends TestCase {
     assertEquals("queryString", request.getQueryString());
   }
 
+  @Test
   public void testCanGetQueryStringValues() throws Exception {
     appendToMessage("GET /resource?key1=value1&key2=value2 HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -105,6 +121,7 @@ public class RequestTest extends TestCase {
     checkInputs();
   }
 
+  @Test
   public void testHeaders() throws Exception {
     appendToMessage("GET /something HTTP/1.1\r\n");
     appendToMessage("Content-Length: 0\r\n");
@@ -122,6 +139,7 @@ public class RequestTest extends TestCase {
     assertEquals(null, request.getHeader("Something-Else"));
   }
 
+  @Test
   public void testEntityBodyWithoutContentLength() throws Exception {
     appendToMessage("GET /something HTTP/1.1\r\n");
     appendToMessage("\r\nThis is the Entity Body");
@@ -129,6 +147,7 @@ public class RequestTest extends TestCase {
     assertEquals("", request.getBody());
   }
 
+  @Test
   public void testEntityBodyIsRead() throws Exception {
     appendToMessage("GET /something HTTP/1.1\r\n");
     appendToMessage("Content-Length: 23\r\n");
@@ -138,6 +157,7 @@ public class RequestTest extends TestCase {
     assertEquals("This is the Entity Body", request.getBody());
   }
 
+  @Test
   public void testEntityBodyParametersAreParsed() throws Exception {
     appendToMessage("GET /something HTTP/1.1\r\n");
     appendToMessage("Content-Length: 23\r\n");
@@ -156,6 +176,7 @@ public class RequestTest extends TestCase {
     assertEquals(null, request.getInput("someOtherKey"));
   }
 
+  @Test
   public void testPostMethod() throws Exception {
     appendToMessage("POST /something HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -163,6 +184,7 @@ public class RequestTest extends TestCase {
     assertNull("POST method should be allowed", exception);
   }
 
+  @Test
   public void testSimpleInputStyle() throws Exception {
     appendToMessage("GET /abc?something HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -170,6 +192,7 @@ public class RequestTest extends TestCase {
     assertEquals(true, request.hasInput("something"));
   }
 
+  @Test
   public void testOperaPostRequest() throws Exception {
     appendToMessage("POST /HelloThere HTTP/1.1\r\n");
     appendToMessage("User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 5.1) Opera 7.02  [en]\r\n");
@@ -184,11 +207,11 @@ public class RequestTest extends TestCase {
     appendToMessage("Content-type: application/x-www-form-urlencoded\r\n");
     appendToMessage("Content-length: 67\r\n");
     appendToMessage("\r\n");
-    appendToMessage(EditResponder.TIME_STAMP+"=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
+    appendToMessage("edittime=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
 
     parseMessage();
 
-    assertTrue(request.hasInput(EditResponder.TIME_STAMP));
+    assertTrue(request.hasInput("edittime"));
     assertTrue(request.hasInput("Edit"));
     assertTrue(request.hasInput("Search"));
     assertTrue(request.hasInput("Test"));
@@ -196,13 +219,14 @@ public class RequestTest extends TestCase {
     assertTrue(request.hasInput("content"));
   }
 
+  @Test
   public void testBigPosts() throws Exception {
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < 10; i++) {
       for (int j = 0; j < 1000; j++)
         buffer.append(i);
     }
-    String prefix = EditResponder.TIME_STAMP + "=12345&content=";
+    String prefix = "edittime=12345&content=";
     appendToMessage("POST /HelloThere HTTP/1.1\r\n");
     appendToMessage(String.format("Content-length: %d\r\n", prefix.length()+buffer.length()));
     appendToMessage("\r\n");
@@ -217,6 +241,7 @@ public class RequestTest extends TestCase {
     assertEquals(expected, actual);
   }
 
+  @Test
   public void testMultiPartForms() throws Exception {
     String content = "----bob\r\n" +
     "Content-Disposition: form-data; name=\"key1\"\r\n" +
@@ -254,6 +279,7 @@ public class RequestTest extends TestCase {
     assertEquals("", request.getInput("key4"));
   }
 
+  @Test
   public void testUploadingFile() throws Exception {
     String content = "----bob\r\n" +
     "Content-Disposition: form-data; name=\"file1\"; filename=\"mike dile.txt\"\r\n" +
@@ -272,6 +298,7 @@ public class RequestTest extends TestCase {
     testUploadedFile("file1", "mike dile.txt", "text/plain", "file contents");
   }
 
+  @Test
   public void testUploadingTwoFiles() throws Exception {
     String content = "-----------------------------7d32df3a80058\r\n" +
     "Content-Disposition: form-data; name=\"file\"; filename=\"C:\\test.txt\"\r\n" +
@@ -305,6 +332,7 @@ public class RequestTest extends TestCase {
     assertEquals(content, FileUtil.getFileContent(file.getFile()));
   }
 
+  @Test
   public void testUploadingBinaryFile() throws Exception {
     appendToMessage("GET /request-uri HTTP/1.1\r\n");
     appendToMessage("Content-Length: " + (83) + "\r\n");
@@ -330,6 +358,7 @@ public class RequestTest extends TestCase {
     assertEquals("file contents", new String(contents, 3, contents.length - 3));
   }
 
+  @Test
   public void testCanGetCredentials() throws Exception {
     appendToMessage("GET /abc?something HTTP/1.1\r\n");
     appendToMessage("Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==\r\n");
@@ -340,6 +369,7 @@ public class RequestTest extends TestCase {
     assertEquals("open sesame", request.getAuthorizationPassword());
   }
 
+  @Test
   public void testDoenstChokeOnMissingPassword() throws Exception {
     appendToMessage("GET /abc?something HTTP/1.1\r\n");
     appendToMessage("Authorization: Basic " + Base64.encode("Aladin") + "\r\n");
@@ -348,16 +378,19 @@ public class RequestTest extends TestCase {
     request.getCredentials();
   }
 
+  @Test
   public void testGetUserpass() throws Exception {
     assertEquals("Aladdin:open sesame", request.getUserpass("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
   }
 
+  @Test
   public void testUnicodeCharacters() throws Exception {
     appendToMessage("GET /?key=%EB%AA%80%EB%AA%81%EB%AA%82%EB%AA%83 HTTP/1.1\r\n\r\n");
     parseMessage();
     assertEquals("\uba80\uba81\uba82\uba83", request.getInput("key"));
   }
 
+  @Test
   public void testParsingProgress() throws Exception {
     appendToMessage("GET /something HTTP/1.1\r\n");
     appendToMessage("Content-Length: 23\r\n");
@@ -368,6 +401,7 @@ public class RequestTest extends TestCase {
     assertEquals(70, request.numberOfBytesParsed());
   }
 
+  @Test
   public void testMultipleRequests() throws Exception {
     appendToMessage("GET /resource?key1=value1&key1=value2 HTTP/1.1\r\n");
     appendToMessage("\r\n");
@@ -376,6 +410,7 @@ public class RequestTest extends TestCase {
     assertEquals("value1,value2", request.getInput("key1"));
   }
 
+  @Test
   public void testRequestWithSameValue() throws Exception {
     appendToMessage("GET /resource?key1=value1&key1=value1 HTTP/1.1\r\n");
     appendToMessage("\r\n");

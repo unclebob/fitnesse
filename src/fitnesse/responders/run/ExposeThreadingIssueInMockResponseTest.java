@@ -5,6 +5,8 @@ package fitnesse.responders.run;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 
@@ -42,7 +44,7 @@ public class ExposeThreadingIssueInMockResponseTest {
     responder = new TestResponder();
     context = FitNesseUtil.makeTestContext(root, port);
 
-    receiver = new FitSocketReceiver(port, context.socketDealer);
+    receiver = new FitSocketReceiver(port, FitTestSystem.socketDealer());
     receiver.receiveSocket();
   }
 

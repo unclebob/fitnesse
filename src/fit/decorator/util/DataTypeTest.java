@@ -1,11 +1,17 @@
 package fit.decorator.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+
 import java.awt.Point;
 
-import junit.framework.TestCase;
 import fit.decorator.exceptions.InvalidInputException;
+import org.junit.Test;
 
-public class DataTypeTest extends TestCase {
+public class DataTypeTest {
+
+  @Test
   public void testInstanceMethodReturnsValidDataTypeForGivenParam() throws Exception {
     assertSame(DataType.INTEGER, DataType.instance("int"));
     assertSame(DataType.INTEGER, DataType.instance("Int"));
@@ -18,10 +24,12 @@ public class DataTypeTest extends TestCase {
     assertSame(DataType.DATE, DataType.instance("DATE"));
   }
 
+  @Test
   public void testInstanceMethodDefaultsDataTypeToSTRINGIfGivenParamIsInvalid() throws Exception {
     assertSame(DataType.STRING, DataType.instance("invalid"));
   }
 
+  @Test
   public void testParseMethodParsesInputStringAndConvertsItToAppropriateObject() throws Exception {
     Object parsedObject = DataType.INTEGER.parse("10");
     assertEquals(10, ((Integer) parsedObject).intValue());
@@ -36,6 +44,7 @@ public class DataTypeTest extends TestCase {
     assertEquals(10, ((Integer) parsedObject).intValue());
   }
 
+  @Test
   public void testParseMethodThrowsInvalidInputExceptionIfInputStringIsCannotBeParsed() throws Exception {
     assertInvalidInputException("Invalid Integer", DataType.INTEGER, "int");
     assertInvalidInputException("1.2", DataType.INTEGER, "int");
@@ -53,6 +62,7 @@ public class DataTypeTest extends TestCase {
     }
   }
 
+  @Test
   public void testAddToMethodAddsGivenValueGivenNumberOfTimesToOriginalValue() throws Exception {
     assertEquals("10", DataType.INTEGER.addTo("10", new Integer(5), 0));
     assertEquals("15", DataType.INTEGER.addTo("10", new Integer(5), 1));
@@ -69,6 +79,7 @@ public class DataTypeTest extends TestCase {
     assertEquals("01/21/2007", DataType.DATE.addTo("12/02/2006", new Integer(5), 10));
   }
 
+  @Test
   public void testShouldBeAbleToAddCustomDataTypes() throws Exception {
     DataType.registerUserDefinedDataTypes(Point.class.getName(), new PointDataType());
     DataType returnedDataType = DataType.instance(Point.class.getName());
@@ -77,6 +88,7 @@ public class DataTypeTest extends TestCase {
     assertEquals("(10,10)", returnedDataType.addTo("(5,5)", new Point(1, 1), 5));
   }
 
+  @Test
   public void testShouldBeAbleToRemoveSpecificCustomDataTypes() throws Exception {
     DataType.registerUserDefinedDataTypes(Point.class.getName(), new PointDataType());
     DataType returnedDataType = DataType.instance(Point.class.getName());
@@ -86,6 +98,7 @@ public class DataTypeTest extends TestCase {
     assertEquals("(5,5)java.awt.Point[x=1,y=1]", returnedDataType.addTo("(5,5)", new Point(1, 1), 1));
   }
 
+  @Test
   public void testShouldBeAbleToRemoveAllCustomDataTypes() throws Exception {
     DataType.registerUserDefinedDataTypes(Point.class.getName(), new PointDataType());
     DataType returnedDataType = DataType.instance(Point.class.getName());

@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.SliM.ScriptTable||16:46:18 Wed, Aug 07, 2013|
 |FitNesse.ReleaseNotes||15:32:24 Sat, Mar 30, 2013|
 |FrontPage||17:33:05 Tue, Mar 05, 2013|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests||11:46:53 Fri, Feb 15, 2013|
@@ -97,4 +98,3 @@
 |JunkPage.PlainTextTables||16:30:54 Wed, Feb 10, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||08:44:35 Wed, Feb 03, 2010|
 |FitNesse.SuiteAcceptanceTests.PageFooter||08:43:11 Wed, Feb 03, 2010|
-|FitNesse.UserGuide.SliM.ValueComparisons||19:06:36 Tue, Feb 02, 2010|

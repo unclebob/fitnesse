@@ -4,16 +4,14 @@ package fitnesse.testsystems;
 
 import java.io.IOException;
 
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
-
-public interface TestSystemListener {
+public interface TestSystemListener<PageType extends TestPage> {
   void testSystemStarted(TestSystem testSystem);
 
   void testOutputChunk(String output) throws IOException;
 
-  void testComplete(TestSummary testSummary) throws IOException;
+  void testStarted(PageType testPage) throws IOException;
+
+  void testComplete(PageType testPage, TestSummary testSummary) throws IOException;
 
   void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause /* may be null */);
 

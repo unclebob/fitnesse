@@ -1,20 +1,25 @@
 package fitnesse.responders.editing;
 
-import fitnesse.wiki.WikiPageUtil;
-import util.RegexTestCase;
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class NewPageResponderTest extends RegexTestCase {
+public class NewPageResponderTest {
 
   private WikiPage root;
   private MockRequest request;
   private NewPageResponder responder;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
@@ -22,6 +27,7 @@ public class NewPageResponderTest extends RegexTestCase {
     responder = new NewPageResponder();
   }
 
+  @Test
   public void testResponse() throws Exception {
     request.setResource("root");
 
@@ -39,6 +45,7 @@ public class NewPageResponderTest extends RegexTestCase {
     assertSubString("textarea class=\"wikitext no_wrap\"", body);
   }
 
+  @Test
   public void testTemplateListPopulates() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
 

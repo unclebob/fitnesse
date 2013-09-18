@@ -3,10 +3,12 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.ClientBuilder;
+import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
@@ -17,15 +19,24 @@ import fitnesse.testsystems.TestSystemListener;
 public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
+  private static SocketDealer socketDealer = new SocketDealer();
+
   private final FitNesseContext context;
-  private final TestSystemListener testSystemListener;
+  private final CompositeTestSystemListener testSystemListener;
   private CommandRunningFitClient client;
+  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private TestPage currentTestPage;
 
   public FitTestSystem(FitNesseContext context, Descriptor descriptor,
                        TestSystemListener listener) {
     super(descriptor);
     this.context = context;
-    this.testSystemListener = listener;
+    this.testSystemListener = new CompositeTestSystemListener();
+    this.testSystemListener.addTestSystemListener(listener);
+  }
+
+  public static SocketDealer socketDealer() {
+    return socketDealer;
   }
 
   @Override
@@ -41,6 +52,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
+    processingQueue.addLast(pageToTest);
     String html = pageToTest.getDecoratedData().getHtml();
     if (html.length() == 0)
       client.send(EMPTY_PAGE_CONTENT);
@@ -62,13 +74,24 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   @Override
+  public void addTestSystemListener(TestSystemListener listener) {
+    testSystemListener.addTestSystemListener(listener);
+  }
+
+  @Override
   public void testOutputChunk(String output) throws IOException {
+    if (currentTestPage == null) {
+      currentTestPage = processingQueue.removeFirst();
+      testSystemListener.testStarted(currentTestPage);
+    }
     testSystemListener.testOutputChunk(output);
   }
 
   @Override
   public void testComplete(TestSummary testSummary) throws IOException {
-    testSystemListener.testComplete(testSummary);
+    assert currentTestPage != null;
+    testSystemListener.testComplete(currentTestPage, testSummary);
+    currentTestPage = null;
   }
 
   @Override
@@ -103,11 +126,14 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     String classPath = descriptor.getClassPath();
     String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
-    CommandRunningFitClient.CommandRunningStrategy runningStrategy = fastTest ?
-            new CommandRunningFitClient.InProcessCommandRunner(testRunner) :
+    CommandRunningFitClient.CommandRunningStrategy runningStrategy =
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
-    client = new CommandRunningFitClient(this, context.port, context.socketDealer, runningStrategy);
+    return buildFitClient(runningStrategy);
+  }
+
+  protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
+    client = new CommandRunningFitClient(this, context.port, socketDealer, runningStrategy);
 
     return client;
   }

@@ -9,14 +9,15 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.*;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -379,7 +380,11 @@ public class HtmlSlimResponderTest {
     }
 
     @Override
-    public void testComplete(TestSummary testSummary) {
+    public void testStarted(TestPage testPage) {
+    }
+
+    @Override
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
     }
 
     @Override

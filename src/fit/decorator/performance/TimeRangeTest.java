@@ -1,11 +1,15 @@
 package fit.decorator.performance;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.text.ParseException;
 
 import fit.Counts;
 import fit.decorator.FixtureDecoratorTestCase;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
+import org.junit.Test;
 
 public class TimeRangeTest extends FixtureDecoratorTestCase {
   // this is used only for the FixtureDecoratorTestCase tests which don't check the time range
@@ -22,6 +26,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     return 2;
   }
 
+  @Test
   public void testSetupDecoratorMustThrowInvalidInputExceptionIfTimeRangeIsNotSpecified() throws ParseException {
     try {
       decorator.setupDecorator(new String[]
@@ -32,6 +37,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     }
   }
 
+  @Test
   public void testSetupDecoratorShouldAddTimeRangeToSummary() throws Exception {
     decorator.setupDecorator(new String[]
       {"10", "80"});
@@ -39,6 +45,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     assertEquals(80, ((Long) decorator.summary.get(MaxTime.MAX_TIME)).longValue());
   }
 
+  @Test
   public void testShouldFailIfActualExecutionTimeGreaterThanMaxTime() throws Exception {
     String fitPage = "<table><tr><td>fit.decorator.TimeRange</td><td>15</td><td>milliseconds min and max</td>"
       + "<td>19</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -49,6 +56,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new TimeRange(stopWatch));
   }
 
+  @Test
   public void testShouldFailIfActualExecutionTimeLessThanMinTime() throws Exception {
     String fitPage = "<table><tr><td>fit.decorator.TimeRange</td><td>21</td><td>milliseconds min and max</td>"
       + "<td>25</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -59,6 +67,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new TimeRange(stopWatch));
   }
 
+  @Test
   public void testShouldPassIfActualExecutionTimeIsWithinTheRange() throws Exception {
     String fitPage = "<table><tr><td>fit.decorator.TimeRange</td><td>15</td><td>milliseconds min and max</td>"
       + "<td>25</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -69,6 +78,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new TimeRange(stopWatch));
   }
 
+  @Test
   public void testShouldPassIfActualExecutionTimeIsEqualToMinTime() throws Exception {
     String fitPage = "<table><tr><td>fit.decorator.TimeRange</td><td>20</td><td>milliseconds min and max</td>"
       + "<td>25</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"
@@ -79,6 +89,7 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new TimeRange(stopWatch));
   }
 
+  @Test
   public void testShouldPassIfActualExecutionTimeIsEqualToMaxTime() throws Exception {
     String fitPage = "<table><tr><td>fit.decorator.TimeRange</td><td>15</td><td>milliseconds min and max</td>"
       + "<td>20</td><td>milliseconds</td></tr><tr><td>eg.Division</td></tr>"

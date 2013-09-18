@@ -6,7 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 
 public class DefaultResponder extends BasicResponder {
   public Response makeResponse(FitNesseContext context, Request request) {
@@ -16,7 +16,7 @@ public class DefaultResponder extends BasicResponder {
 
   private HtmlPage prepareResponseDocument(FitNesseContext context) {
     HtmlPage responseDocument = context.pageFactory.newPage();
-    HtmlUtil.addTitles(responseDocument, "Default Responder");
+    responseDocument.addTitles("Default Responder");
     responseDocument.setMainTemplate("defaultPage.vm");
     return responseDocument;
   }

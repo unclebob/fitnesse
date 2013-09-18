@@ -3,20 +3,20 @@
 package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 
 import static util.RegexTestCase.assertSubString;
-import util.TimeMeasurement;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class MultipleTestsRunnerTest {
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
@@ -85,7 +85,7 @@ public class MultipleTestsRunnerTest {
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
@@ -126,73 +126,33 @@ public class MultipleTestsRunnerTest {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     WikiTestPage page = new WikiTestPage(slimPage);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
-    
-    runner.startingNewTest(page);
-    verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
-    assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
+    CompositeFormatter resultsListener = new CompositeFormatter();
+    TestSystemListener listener = mock(TestSystemListener.class);
+    resultsListener.addTestSystemListener(listener);
+
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    runner.addTestSystemListener(resultsListener);
+
+    runner.testStarted(page);
+    verify(listener).testStarted(same(page));
   }
 
-  private ArgumentMatcher<TimeMeasurement> isAStartedTimeMeasurement() {
-    return new ArgumentMatcher<TimeMeasurement>() {
-      @Override
-      public boolean matches(Object argument) {
-        return ((TimeMeasurement) argument).startedAt() > 0;
-      }
-    };
-  }
-  
   @Test
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
     WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
     WikiTestPage page = new WikiTestPage(slimPage);
-    ResultsListener resultsListener = mock(ResultsListener.class);
+    CompositeFormatter resultsListener = new CompositeFormatter();
+    TestSystemListener listener = mock(TestSystemListener.class);
+    resultsListener.addTestSystemListener(listener);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page.getSourcePage(), resultsListener);
-    runner.addToProcessingQueue(page);
-    
-    TestSummary testSummary = mock(TestSummary.class);
-    
-    runner.startingNewTest(page);
-    runner.testComplete(testSummary);
-    verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
-    assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());
-  }
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    runner.addTestSystemListener(resultsListener);
 
-  private ArgumentMatcher<TimeMeasurement> isAStoppedTimeMeasurement() {
-    return new ArgumentMatcher<TimeMeasurement>() {
-      @Override
-      public boolean matches(Object argument) {
-        return ((TimeMeasurement) argument).stoppedAt() > 0;
-      }
-    };
-  }
-  
-  @Test
-  public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
-    
-    runner.announceTotalTestsToRun(new PagesByTestSystem());
-    verify(resultsListener).announceNumberTestsToRun(0);
-    assertThat(runner.totalTestTime, isAStartedTimeMeasurement());
-  }
-  
-  @Test
-  public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    ResultsListener resultsListener = mock(ResultsListener.class);
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, page, resultsListener);
-    runner.announceTotalTestsToRun(new PagesByTestSystem());
-    
-    runner.allTestingComplete();
-    verify(resultsListener).allTestingComplete(same(runner.totalTestTime));
-    assertThat(runner.totalTestTime, isAStoppedTimeMeasurement());
+    TestSummary testSummary = mock(TestSummary.class);
+
+    runner.testStarted(page);
+    runner.testComplete(page, testSummary);
+    verify(listener).testComplete(same(page), same(testSummary));
   }
 }

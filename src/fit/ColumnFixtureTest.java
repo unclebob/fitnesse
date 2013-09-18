@@ -3,12 +3,16 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ColumnFixtureTest extends TestCase {
+public class ColumnFixtureTest {
   private TestFixture fixture;
 
   static class TestFixture extends ColumnFixture {
@@ -24,10 +28,12 @@ public class ColumnFixtureTest extends TestCase {
     }
   }
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     fixture = new TestFixture();
   }
 
+  @Test
   public void testBindColumnToMethod() throws Exception {
     String[] methodSpecifiers = new String[]
       {"method()", "method?", "method!", "string method()", "string method?", "string method!"};
@@ -44,6 +50,7 @@ public class ColumnFixtureTest extends TestCase {
     }
   }
 
+  @Test
   public void testBindColumnToField() throws Exception {
     Parse table = new Parse("<table><tr><td>field</td></tr></table>");
     Parse tableHead = table.parts.parts;
@@ -54,6 +61,7 @@ public class ColumnFixtureTest extends TestCase {
     assertEquals("field", field.getName());
   }
 
+  @Test
   public void testGracefulColumnNames() throws Exception {
     Parse table = new Parse("<table><tr><td>string field</td></tr></table>");
     Parse tableHead = table.parts.parts;
@@ -64,6 +72,7 @@ public class ColumnFixtureTest extends TestCase {
     assertEquals("stringField", field.getName());
   }
 
+  @Test
   public void testBindColumnToFieldSymbol() throws Exception {
     Fixture.setSymbol("Symbol", "42");
     Parse table = new Parse("<table><tr><td>field=</td></tr><tr><td>Symbol</td></tr></table>");
@@ -78,6 +87,7 @@ public class ColumnFixtureTest extends TestCase {
     assertEquals(42, fixture.field);
   }
 
+  @Test
   public void testBindColumnToMethodSymbol() throws Exception {
     Parse table = new Parse("<table><tr><td>=method?</td></tr><tr><td>MethodSymbol</td></tr></table>");
     Parse rows = table.parts;

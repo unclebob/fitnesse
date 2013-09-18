@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.reporting.history.MostRecentPageHistoryReader;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.TestResultRecord;
 import fitnesse.wiki.WikiPage;
 import util.GracefulNamer;
 

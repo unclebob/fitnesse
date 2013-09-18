@@ -18,6 +18,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
+  public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
@@ -36,12 +37,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
 
-    if (fastTest) {
-      commandRunner = new MockCommandRunner();
-      final String slimArguments = buildArguments();
-      createSlimService(slimArguments);
-    }
-    else if (manualStart) {
+    if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner();
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
@@ -50,13 +46,13 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
-  public String buildCommand() {
+  protected String buildCommand() {
     String slimArguments = buildArguments();
     String slimCommandPrefix = super.buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
     return String.format("%s %s", slimCommandPrefix, slimArguments);
   }
 
-  private String buildArguments() {
+  protected String buildArguments() {
     int slimSocket = getSlimPort();
     String slimFlags = getSlimFlags();
     return String.format("%s %d", slimFlags, slimSocket);
@@ -103,13 +99,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getNextSlimPort() {
-    int base;
-
-    if (System.getProperty("slim.port") != null) {
-      base = Integer.parseInt(System.getProperty("slim.port"));
-    } else {
-      base = getSlimPortBase();
-    }
+    int base = getSlimPortBase();
 
     if (base == 0) {
       return findFreePort();
@@ -128,17 +118,20 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getSlimPortBase() {
-    int base = 8085;
     try {
-      String slimPort = descriptor.getVariable(SLIM_PORT);
-      if (slimPort != null) {
-        int slimPortInt = Integer.parseInt(slimPort);
-        base = slimPortInt;
+      String port = descriptor.getVariable("slim.port");
+      if (port != null) {
+        return Integer.parseInt(port);
+      }
+
+      port = descriptor.getVariable(SLIM_PORT);
+      if (port != null) {
+        return Integer.parseInt(port);
       }
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return base;
+    return 8085;
   }
 
   String determineSlimHost() {
@@ -149,6 +142,14 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   String getSlimFlags() {
     String slimFlags = descriptor.getVariable(SLIM_FLAGS);
     return slimFlags == null ? "" : slimFlags;
+  }
+
+  private boolean useManualStartForTestSystem() {
+    if (descriptor.isDebug()) {
+      String useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
+    }
+    return false;
   }
 
 }

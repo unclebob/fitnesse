@@ -8,18 +8,15 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
-import fitnesse.components.ClassPathBuilder;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestSystem;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -132,7 +129,12 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void testComplete(TestSummary testSummary)  {
+  public void testStarted(TestPage testPage) {
+    //
+  }
+
+  @Override
+  public void testComplete(TestPage testPage, TestSummary testSummary)  {
     this.testSummary = testSummary;
   }
 

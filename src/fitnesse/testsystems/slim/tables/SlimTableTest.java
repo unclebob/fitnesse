@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import org.junit.Test;
 
@@ -128,7 +129,7 @@ public class SlimTableTest {
       return null;
     }
 
-    public List<Assertion> getAssertions() {
+    public List<SlimAssertion> getAssertions() {
       return Collections.emptyList();
     }
   }

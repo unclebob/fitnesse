@@ -11,13 +11,8 @@ import java.io.File;
 import java.io.PrintStream;
 
 import fitnesse.Arguments;
-import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.MultiUserAuthenticator;
-import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -70,34 +65,6 @@ public class FitNesseMainTest {
 
     assertTrue(new File("testFitnesseRoot").exists());
     assertTrue(new File("testFitnesseRoot/files").exists());
-  }
-
-  @Test
-  public void testMakeNullAuthenticator() throws Exception {
-    Authenticator a = FitNesseMain.makeAuthenticator(null,
-      new ComponentFactory("blah"));
-    assertTrue(a instanceof PromiscuousAuthenticator);
-  }
-
-  @Test
-  public void testMakeOneUserAuthenticator() throws Exception {
-    Authenticator a = FitNesseMain.makeAuthenticator("bob:uncle",
-      new ComponentFactory("blah"));
-    assertTrue(a instanceof OneUserAuthenticator);
-    OneUserAuthenticator oua = (OneUserAuthenticator) a;
-    assertEquals("bob", oua.getUser());
-    assertEquals("uncle", oua.getPassword());
-  }
-
-  @Test
-  public void testMakeMultiUserAuthenticator() throws Exception {
-    final String passwordFilename = "testpasswd";
-    File passwd = new File(passwordFilename);
-    passwd.createNewFile();
-    Authenticator a = FitNesseMain.makeAuthenticator(passwordFilename,
-      new ComponentFactory("blah"));
-    assertTrue(a instanceof MultiUserAuthenticator);
-    passwd.delete();
   }
 
   @Test

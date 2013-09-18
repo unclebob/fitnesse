@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
@@ -75,7 +77,7 @@ public class TestResponderTest {
     responder = new TestResponder();
     responder.setFastTest(true);
     context = FitNesseUtil.makeTestContext(root);
-    receiver = new FitSocketReceiver(0, context.socketDealer);
+    receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
     context = FitNesseUtil.makeTestContext(context, receiver.receiveSocket());
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
@@ -295,7 +297,7 @@ public class TestResponderTest {
   public void slimXmlFormat() throws Exception {
     responder.turnOffChunking();
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(0, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -306,7 +308,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormatGivesErrorCountAsExitCode() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(0, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     getXmlFromFileAndDeleteFile();
     assertSubString("Exit-Code: 1", results);

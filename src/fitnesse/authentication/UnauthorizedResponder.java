@@ -8,7 +8,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 
 public class UnauthorizedResponder implements Responder {
   
@@ -17,7 +17,7 @@ public class UnauthorizedResponder implements Responder {
     response.addHeader("WWW-Authenticate", "Basic realm=\"FitNesse\"");
 
     HtmlPage page = context.pageFactory.newPage();
-    HtmlUtil.addTitles(page, "401 Unauthorized");
+    page.addTitles("401 Unauthorized");
     page.put("resource", request.getResource());
     page.setMainTemplate("unauthorized.vm");
     response.setContent(page.html());

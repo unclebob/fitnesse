@@ -2,16 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PageCreatorTest extends TestCase {
-  protected void setUp() throws Exception {
+public class PageCreatorTest {
+
+  @Before
+  public void setUp() throws Exception {
     FitnesseFixtureContext.root = InMemoryPage.makeRoot("root");
   }
 
+  @Test
   public void testCreatePage() throws Exception {
     WikiPage testPage = makePage("TestPage", "contents", "attr=val");
     assertNotNull(testPage);
@@ -30,6 +38,7 @@ public class PageCreatorTest extends TestCase {
     return testPage;
   }
 
+  @Test
   public void testMultipleAttributes() throws Exception {
     WikiPage testPage = makePage("TestPage", "Contents", "att1=one,att2=two");
     PageData data = testPage.getData();

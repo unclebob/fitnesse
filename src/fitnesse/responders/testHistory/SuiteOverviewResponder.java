@@ -7,10 +7,11 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.responders.run.SuiteFilter;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -24,7 +25,7 @@ public class SuiteOverviewResponder implements Responder {
     WikiPage root = context.root;
     WikiPage page = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
 
-    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteFilter filter = SuiteResponder.createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
 
     List<WikiPage> pagelist = suiteTestFinder.makePageList();

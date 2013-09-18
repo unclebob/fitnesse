@@ -1,6 +1,5 @@
 package fitnesse.testrunner;
 
-import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wiki.*;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;

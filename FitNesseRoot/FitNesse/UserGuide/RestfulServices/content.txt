@@ -15,7 +15,8 @@
 | addChild | | Creates a new child page beneath the selected page |
 | | pageName | The name of the page to be created. |
 | | content | The contents of the new page. |
-| | pageType | If present must be {Test, Suite, Static} and sets the page type accordingly.  Otherwise page type is set based on the name of the page as usual. |
+| | pageTemplate | If present must point to a valid wiki page. The new page will have the same properties as the referred page. |
+| | pageType | If present must be {Test, Suite, Static} and sets the page type accordingly.  Otherwise page type is set based on the name of the page as usual. This option does nothing if the ''pageTemplate'' option is set. |
 | compareHistory | | Generates a report comparing two test results. |
 | | TestResult_''yyyyMMddHHmmss_rr_ww_ii_xx''.xml | One of the files to be compared.  Always two there are. |
 | createDir | | Create a new directory in the ''files'' section.  The directory will be created below the ''resource'' |
@@ -48,7 +49,13 @@
 | | newLocation | The full path name of the page that will be the new parent. |
 | names | | Displays a list of the pages at the current level.  If no page name is supplied, then the list is all the pages at the top level.  Otherwise it is the list of direct children (not grandchildren) of the supplied page. |
 | | format=json | returns the list as a JSON array |
+| | Recursive | prints also child, grand-child, ... pages |
+| | LeafOnly | in combination with the "Recursive" option prints only leaf pages that don't have further children |
+| | ShowTags | prints the tags associated with a page in []-brackets, e.g., [hello][world] |
 | | !-ShowChildCount-! | adds the count of children to each page name after a space. |
+| new | | Like ''edit'', but used for new pages. |
+| | pageTemplate | Define a page to use as a template for the to be created page  |
+| | pageType | If present must be {Test, Suite, Static} and sets the page type accordingly.  Otherwise page type is set based on the name of the page as usual. This option does nothing if the ''pageTemplate'' option is set. |
 | packet | | Returns a json packet containing all the tables on the page.  See: RestfulPackets |
 | | jsonp=function | Wraps the json packet into a function call for JSONP, see: RestfulPackets |
 | pageData | | Returns the raw wiki-text of the page. |

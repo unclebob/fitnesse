@@ -8,8 +8,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 

@@ -3,19 +3,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
-public class TypeAdapterTest extends TestCase {
+public class TypeAdapterTest {
   private TestFixture f = new TestFixture();
   private TypeAdapter adapter;
   private static final String dateFormat = "MMM dd yyyy";
 
+  @Test
   public void testTypeAdapter() throws Exception {
 
     adapter = TypeAdapter.on(f, f.getClass().getField("sampleInt"));
@@ -67,6 +73,14 @@ public class TypeAdapterTest extends TestCase {
     assertEquals(12345, f.sampleShort);
   }
 
+  @Test
+  public void testTypeAdapterEqualsForRegex() throws Exception {
+    adapter = TypeAdapter.on(f, f.getClass().getMethod("name"), true);
+    assertFalse(adapter.equals(".*", null));
+    assertTrue(adapter.equals(".*", ""));
+    assertTrue(adapter.equals("as.*", "asdasd"));
+  }
+
   static class TestFixture extends ColumnFixture {
     public byte sampleByte;
     public short sampleShort;
@@ -85,8 +99,13 @@ public class TypeAdapterTest extends TestCase {
     public Integer getNull() {
       return null;
     }
+
+    public String name() {
+      return name;
+    }
   }
 
+  @Test
   public void testBooleanTypeAdapter() throws Exception {
     assertBooleanTypeAdapterParses("true", true);
     assertBooleanTypeAdapterParses("yes", true);
@@ -111,6 +130,7 @@ public class TypeAdapterTest extends TestCase {
     assertTrue(result.booleanValue() == assertedValue);
   }
 
+  @Test
   public void testParseDelegateObjectMethod() throws Exception {
     Date april26Of1949 = new GregorianCalendar(49 + 1900, 4, 26).getTime();
     String format = new SimpleDateFormat(dateFormat).format(april26Of1949);
@@ -122,6 +142,7 @@ public class TypeAdapterTest extends TestCase {
     assertEquals(april26Of1949, f.sampleDate);
   }
 
+  @Test
   public void testParseDelegateClassMethod() throws Exception {
     Date april26Of1949 = new GregorianCalendar(49 + 1900, 4, 26).getTime();
     String format = new SimpleDateFormat(dateFormat).format(april26Of1949);
@@ -133,10 +154,12 @@ public class TypeAdapterTest extends TestCase {
     assertEquals(april26Of1949, f.sampleDate);
   }
 
+  @Test
   public void testParsedelegateClassShouldHavePublicStaticNonVoidParseMethodWithStringParam() throws Exception {
     TypeAdapter.registerParseDelegate(Class.class, PublicStaticParseMethod.class);
   }
 
+  @Test
   public void testShouldThrowNoSuchMethodExceptionIfGivenParseDelgateClassDoesNotHavePublicParseMethod()
     throws Exception {
     try {
@@ -147,6 +170,7 @@ public class TypeAdapterTest extends TestCase {
     }
   }
 
+  @Test
   public void testShouldThrowNoSuchMethodExceptionIfGivenParseDelgateClassDoesNotHaveStaticParseMethod()
     throws Exception {
     try {
@@ -157,6 +181,7 @@ public class TypeAdapterTest extends TestCase {
     }
   }
 
+  @Test
   public void testShouldThrowNoSuchMethodExceptionIfGivenParseDelgateClassHasParseMethodReturningVoid()
     throws Exception {
     try {
@@ -167,6 +192,7 @@ public class TypeAdapterTest extends TestCase {
     }
   }
 
+  @Test
   public void testShouldThrowNoSuchMethodExceptionIfGivenParseDelgateClassDoesNotHaveParseMethodWithStringParam()
     throws Exception {
     try {
@@ -212,8 +238,8 @@ public class TypeAdapterTest extends TestCase {
     }
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     TypeAdapter.clearDelegatesForNextTest();
   }
 }

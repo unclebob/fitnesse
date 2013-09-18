@@ -2,19 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import util.RegexTestCase;
-import fitnesse.http.ResponseParser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
 
-public class ShutdownTest extends RegexTestCase {
+import fitnesse.http.ResponseParser;
+import org.junit.Before;
+import org.junit.Test;
+
+public class ShutdownTest {
   private Shutdown shutdown;
 
+  @Before
   public void setUp() throws Exception {
     shutdown = new Shutdown();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testArgs() throws Exception {
     assertTrue(shutdown.parseArgs(new String[]{}));
     assertEquals("localhost", shutdown.hostname);
@@ -29,6 +34,7 @@ public class ShutdownTest extends RegexTestCase {
     assertEquals("pass", shutdown.password);
   }
 
+  @Test
   public void testBuildRequest() throws Exception {
     String request = shutdown.buildRequest().getText();
     assertSubString("GET /?responder=shutdown", request);
@@ -40,6 +46,7 @@ public class ShutdownTest extends RegexTestCase {
     assertSubString("Authorization: ", request);
   }
 
+  @Test
   public void testBadServer() throws Exception {
     try {
       shutdown.hostname = "http://google.com";

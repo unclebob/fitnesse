@@ -24,7 +24,7 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.reporting.history.TestHistory;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -201,17 +201,16 @@ public class PageDriver {
     return dateFormat.format(date);
   }
 
-  public int countOfTagWithIdAndWithClassBelowTagWithIdPrefix(String childTag, String childId, String tagClass, String parentTag, String parentIdPrefix) throws Exception {
+  public int countOfTagWithClassBelowTagWithIdPrefix(String childTag, String tagClass, String parentTag, String parentIdPrefix) throws Exception {
     NodeList parents = getMatchingTags(
-      new AndFilter(
-        new TagNameFilter(parentTag),
-        new HasAttributePrefixFilter("id", parentIdPrefix))
+            new AndFilter(
+                    new TagNameFilter(parentTag),
+                    new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
     NodeFilter predicates[] = {
-      new TagNameFilter(childTag),
-      new HasAttributeFilter("class", tagClass),
-      new HasAttributeFilter("id", childId)
+            new TagNameFilter(childTag),
+            new HasAttributeFilter("class", tagClass)
     };
     NodeFilter filter = new AndFilter(predicates);
     NodeList matches = parents.extractAllNodesThatMatch(filter, true);

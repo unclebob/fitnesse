@@ -2,7 +2,7 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 
 public class OrderedQueryTable extends QueryTable {
   private int lastMatchedRow = -1;
@@ -16,7 +16,8 @@ public class OrderedQueryTable extends QueryTable {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
-      TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      SlimTestResult testResult = SlimTestResult.fail(null, table.getCellContents(0, tableRow), "missing");
+      getTestContext().increment(testResult.getExecutionResult());
       table.updateContent(0, tableRow, testResult);
     } else {
       int columns = table.getColumnCountInRow(tableRow);
@@ -32,12 +33,12 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   @Override
-  protected TestResult markMatch(int tableRow, int matchedRow, int col, String message) {
-    TestResult testResult;
+  protected SlimTestResult markMatch(int tableRow, int matchedRow, int col, String message) {
+    SlimTestResult testResult;
     if (col == 0 && matchedRow <= lastMatchedRow) {
-      testResult = TestResult.fail(null, message, "out of order: row " + (matchedRow+1));
+      testResult = SlimTestResult.fail(null, message, "out of order: row " + (matchedRow + 1));
     } else {
-      testResult = TestResult.pass(message);
+      testResult = SlimTestResult.pass(message);
     }
     return testResult;
   }

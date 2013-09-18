@@ -2,21 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wiki.mem.InMemoryPage;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-public class MockingPageCrawlerTest extends TestCase {
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+
+public class MockingPageCrawlerTest {
   private WikiPage root;
   private PageCrawler crawler;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testGetMockPageSimple() throws Exception {
     WikiPagePath pageOnePath = PathParser.parse("PageOne");
     WikiPage mockPage = crawler.getPage(pageOnePath, new MockingPageCrawler());
@@ -25,6 +29,7 @@ public class MockingPageCrawlerTest extends TestCase {
     assertEquals("PageOne", mockPage.getName());
   }
 
+  @Test
   public void testGetMockPageMoreComplex() throws Exception {
     WikiPagePath otherPagePath = PathParser.parse("PageOne.SomePage.OtherPage");
     WikiPage mockPage = crawler.getPage(otherPagePath, new MockingPageCrawler());

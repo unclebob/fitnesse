@@ -1,11 +1,15 @@
 package fit.decorator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.text.ParseException;
 
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.Delta;
 import fit.decorator.util.TestCaseHelper;
+import org.junit.Test;
 
 public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + IncrementColumnsValue.class.getName()
@@ -20,6 +24,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     return 0;
   }
 
+  @Test
   public void testSetupDecoratorShouldAddColumnNameDataTypeAndDeltaToSummary() throws Exception {
     decorator.setupDecorator(new String[]
       {"Column1", "int", "1"});
@@ -27,6 +32,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     assertEquals(new Delta("int", "1"), decorator.summary.get(IncrementColumnsValue.DELTA));
   }
 
+  @Test
   public void testSetupDecoratorShouldAddColumnNameDataTypeAndDeltaToSummaryForDates() throws Exception {
     decorator.setupDecorator(new String[]
       {"Column1", "date", "5"});
@@ -34,21 +40,25 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     assertEquals(new Delta("date", "5"), decorator.summary.get(IncrementColumnsValue.DELTA));
   }
 
+  @Test
   public void testSetupDecoratorShouldThrowInvalidInputExceptionIfColumnNameIsNotSpecified() throws ParseException {
     assertInvalidInputException(new String[]
       {}, "Column name, Data type and Delta Value must be specified");
   }
 
+  @Test
   public void testSetupDecoratorShouldThrowInvalidInputExceptionIfDataTypeIsNotSpecified() throws ParseException {
     assertInvalidInputException(new String[]
       {"Column1"}, "Column name, Data type and Delta Value must be specified");
   }
 
+  @Test
   public void testSetupDecoratorShouldThrowInvalidInputExceptionIfDeltaValueIsNotSpecified() throws ParseException {
     assertInvalidInputException(new String[]
       {"Column1", "double"}, "Column name, Data type and Delta Value must be specified");
   }
 
+  @Test
   public void testSetupDecoratorShouldThrowInvalidInputExceptionIfDataTypeAndDeltaValueDoNotMatch()
     throws ParseException {
     assertInvalidInputException(new String[]
@@ -59,6 +69,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
       {"Column1", "date", "12-5-2006"}, "value '12-5-2006' is not a valid DataType = 'date'");
   }
 
+  @Test
   public void testSetupDecoratorShouldDefaultDataTypeToStringIfItDoesNotMatch_int_integer_double_or_date()
     throws Exception {
     decorator.setupDecorator(new String[]
@@ -66,12 +77,14 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     assertEquals(new Delta("String", "1"), decorator.summary.get(IncrementColumnsValue.DELTA));
   }
 
+  @Test
   public void testSetupDecoratorShouldDefaultDataTypeTo_int() throws Exception {
     decorator.setupDecorator(new String[]
       {"Column1", "integer", "1"});
     assertEquals(new Delta("INT", "1"), decorator.summary.get(IncrementColumnsValue.DELTA));
   }
 
+  @Test
   public void testShouldIncrementColumnValuesFromSecondRowForTheGivenColumnName() throws Exception {
     String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
       + "</td><td>numerator</td><td>of type</td><td>int</td><td>by</td><td>5</td></tr>"
@@ -83,6 +96,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     TestCaseHelper.assertCounts(TestCaseHelper.counts(2, 1, 0, 0), decorator.counts);
   }
 
+  @Test
   public void testShouldIncrementDateColumnValuesFromSecondRowForTheGivenColumnName() throws Exception {
     String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
       + "</td><td>inDate</td><td>of type</td><td>date</td><td>by</td><td>5</td></tr>"
@@ -93,6 +107,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     TestCaseHelper.assertCounts(TestCaseHelper.counts(3, 0, 0, 0), decorator.counts);
   }
 
+  @Test
   public void testShouldLeaveTheTableAsItIsIfTablesHasLessThanFourRows() throws Exception {
     String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
       + "</td><td>numerator</td><td>of type</td><td>int</td><td>by</td><td>5</td></tr>"
@@ -103,6 +118,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     TestCaseHelper.assertCounts(TestCaseHelper.counts(1, 0, 0, 0), decorator.counts);
   }
 
+  @Test
   public void testShouldHandleExceptionsByIgnoringDecorator() throws Exception {
     String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
       + "</td><td>invalidColumnName</td><td>of type</td><td>int</td><td>by</td><td>5</td></tr>"
@@ -113,6 +129,7 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     TestCaseHelper.assertCounts(TestCaseHelper.counts(1, 0, 0, 0), decorator.counts);
   }
 
+  @Test
   public void testShouldIncrementMultipleColumnsValueIfDecoratorIsPiped() throws Exception {
     String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
       + "</td><td>numerator</td><td>of type</td><td>int</td><td>by</td><td>5</td></tr>" + "<tr><td>"

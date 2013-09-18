@@ -1,16 +1,21 @@
 package fit.decorator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.text.ParseException;
 
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
+import org.junit.Test;
 
 public class LoopTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + Loop.class.getName()
     + "</td><td>1</td><td>times</td></tr>";
   private FixtureDecorator decorator = new Loop();
 
+  @Test
   public void testSetupDecoratorShouldThrowInvalidInputExceptionIfLoopCountIsNotSpecified() throws ParseException {
     try {
       decorator.setupDecorator(new String[0]);
@@ -20,12 +25,14 @@ public class LoopTest extends FixtureDecoratorTestCase {
     }
   }
 
+  @Test
   public void testSetupDecoratorShouldAddLoopCountToSummary() throws Exception {
     decorator.setupDecorator(new String[]
       {"5"});
     assertEquals(5, ((Long) decorator.summary.get(Loop.COUNT)).longValue());
   }
 
+  @Test
   public void testShouldExecuteDoTableMethodLoopCounterNumberOfTimes() throws Exception {
     String fitPage = "<table><tr><td>" + Loop.class.getName()
       + "</td><td>5</td><td>times</td></tr><tr><td>eg.Division</td></tr>"

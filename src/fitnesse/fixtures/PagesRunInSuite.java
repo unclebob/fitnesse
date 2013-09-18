@@ -22,6 +22,9 @@ public class PagesRunInSuite {
     List<String> testPages = new ArrayList<String>();
 
     String content = FitnesseFixtureContext.sender.sentData();
+    if (content.contains("Testing was interrupted and results are incomplete.")) {
+      throw new Exception("Test result page says: Testing was interrupted and results are incomplete.");
+    }
     String testSystems[] = content.split("slim:");
     for (String testSystem : testSystems) {
       addPagesForThisTestSystem(testPages, testSystem);
