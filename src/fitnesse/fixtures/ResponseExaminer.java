@@ -19,6 +19,7 @@ public class ResponseExaminer extends ColumnFixture {
   private int currentLine = 0;
     private int currentPosition = 0;
 
+  // Content is escaped, since it's used by both FIT and SLiM.
   public String contents() throws Exception {
     String sentData = FitnesseFixtureContext.sender.sentData();
     return Utils.escapeHTML(sentData);

@@ -3,6 +3,7 @@
 package fitnesse.html;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPageUtil;
 
 public class HtmlUtil {
@@ -41,7 +42,7 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makePageHtml(PageData pageData) {
+  public static String makePageHtml(ReadOnlyPageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(WikiPageUtil.getHeaderPageHtml(pageData.getWikiPage()));
     buffer.append(pageData.getHtml());

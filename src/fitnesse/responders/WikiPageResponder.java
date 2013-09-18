@@ -102,9 +102,9 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public class WikiPageRenderer {
-    private PageData data;
+    private ReadOnlyPageData data;
 
-    WikiPageRenderer(PageData data) {
+    WikiPageRenderer(ReadOnlyPageData data) {
       this.data = data;
     }
 
