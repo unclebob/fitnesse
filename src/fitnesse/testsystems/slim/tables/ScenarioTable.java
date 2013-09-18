@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -54,14 +53,18 @@ public class ScenarioTable extends SlimTable {
   private void parseTable() throws SyntaxError {
     validateHeader();
 
-    String firstNameCell = table.getCellContents(1, 0);
-    parameterized = isNameParameterized(firstNameCell);
+    parameterized = determineParameterized();
     name = getScenarioName();
     getTestContext().addScenario(name, this);
     getScenarioArguments();
   }
 
-  private void getScenarioArguments() {
+  protected boolean determineParameterized() {
+    String firstNameCell = table.getCellContents(1, 0);
+    return isNameParameterized(firstNameCell);
+  }
+
+    protected void getScenarioArguments() {
     if (parameterized) {
       getArgumentsForParameterizedName();
     } else {
@@ -89,8 +92,12 @@ public class ScenarioTable extends SlimTable {
     String[] arguments = argumentString.split(",");
 
     for (String argument : arguments) {
-      inputs.add(Disgracer.disgraceMethodName(argument.trim()));
+      addInput(Disgracer.disgraceMethodName(argument.trim()));
     }
+  }
+
+  protected void addInput(String argument) {
+    inputs.add(argument);
   }
 
   public String getScenarioName() {
