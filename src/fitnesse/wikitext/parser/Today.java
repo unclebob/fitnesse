@@ -11,13 +11,15 @@ import java.util.List;
 public class Today extends SymbolType implements Rule, Translation {
     private static final String Format = "Format";
     private static final String Increment = "Increment";
+    private final int incrementUnit;
 
     public Today() {
-        this("Today", "!today");
+        this("Today", "!today", Calendar.DAY_OF_MONTH);
     }
 
-    protected Today(String symbolName, String symbolText) {
+    protected Today(String symbolName, String symbolText, int unitForIncrement) {
         super(symbolName);
+        incrementUnit = unitForIncrement;
         wikiMatcher(new Matcher().string(symbolText));
         wikiRule(this);
         htmlTranslation(this);
@@ -69,7 +71,7 @@ public class Today extends SymbolType implements Rule, Translation {
     }
 
     protected void addIncrement(GregorianCalendar calendar, int increment) {
-        calendar.add(Calendar.DAY_OF_MONTH, increment);
+        calendar.add(incrementUnit, increment);
     }
 
     private String makeFormat(String format) {

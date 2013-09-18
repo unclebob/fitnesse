@@ -56,12 +56,7 @@ public class TodayExtensionTest {
 
     private static class MonthsFromToday extends Today {
         public MonthsFromToday() {
-            super("MonthsFromToday", "!monthsFromToday");
-        }
-
-        @Override
-        protected void addIncrement(GregorianCalendar calendar, int increment) {
-            calendar.add(Calendar.MONTH, increment);
+            super("MonthsFromToday", "!monthsFromToday", Calendar.MONTH);
         }
     }
 }
