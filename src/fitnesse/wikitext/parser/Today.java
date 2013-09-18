@@ -13,8 +13,12 @@ public class Today extends SymbolType implements Rule, Translation {
     private static final String Increment = "Increment";
 
     public Today() {
-        super("Today");
-        wikiMatcher(new Matcher().string("!today"));
+        this("Today", "!today");
+    }
+
+    protected Today(String symbolName, String symbolText) {
+        super(symbolName);
+        wikiMatcher(new Matcher().string(symbolText));
         wikiRule(this);
         htmlTranslation(this);
     }
@@ -52,16 +56,20 @@ public class Today extends SymbolType implements Rule, Translation {
     }
     public String toTarget(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(Today.Increment);
-        int incrementDays =
+        int incrementInt =
                 increment.startsWith("+") ? Integer.parseInt(increment.substring(1)) :
                 increment.startsWith("-") ? - Integer.parseInt(increment.substring(1)) :
                 0;
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(Clock.currentDate());
-        calendar.add(Calendar.DAY_OF_MONTH, incrementDays);
+        addIncrement(calendar, incrementInt);
         return new SimpleDateFormat(
                 makeFormat(symbol.getProperty(Today.Format)))
                         .format(calendar.getTime());
+    }
+
+    protected void addIncrement(GregorianCalendar calendar, int increment) {
+        calendar.add(Calendar.DAY_OF_MONTH, increment);
     }
 
     private String makeFormat(String format) {
