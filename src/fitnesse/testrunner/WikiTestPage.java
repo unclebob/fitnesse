@@ -30,7 +30,7 @@ public class WikiTestPage implements TestPage {
     this.sourcePage = data.getWikiPage();
   }
 
-  public static boolean isTestPage(PageData pageData) {
+  public static boolean isTestPage(ReadOnlyPageData pageData) {
     return pageData.hasAttribute("Test");
   }
 
@@ -42,17 +42,13 @@ public class WikiTestPage implements TestPage {
     return data == null ? sourcePage.getData() : data;
   }
 
-  public ReadOnlyPageData parsedData() {
-    return sourcePage.readOnlyData();
-  }
-
   /**
    * Obtain one big page containing all (suite-) setUp and -tearDown content needed to run a test.
    *
    * @return
    */
   @Override
-  public PageData getDecoratedData() {
+  public ReadOnlyPageData getDecoratedData() {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
@@ -66,7 +62,7 @@ public class WikiTestPage implements TestPage {
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {
-    String content = parsedData().getContent();
+    String content = getData().getContent();
     decoratedContent
             .append("\n")
             .append(content)
@@ -134,7 +130,7 @@ public class WikiTestPage implements TestPage {
   }
 
   public boolean isSlim() {
-    return "slim".equalsIgnoreCase(parsedData().getVariable("TEST_SYSTEM"));
+    return "slim".equalsIgnoreCase(getData().getVariable("TEST_SYSTEM"));
   }
 
   public boolean isTestPage() {
