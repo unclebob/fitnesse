@@ -168,12 +168,16 @@ public class ScenarioTable extends SlimTable {
         return content;
       }
     });
-    ScriptTable t = new ScriptTable(newTable, id,
-            new ScenarioTestContext(parentTable.getTestContext()));
+    ScenarioTestContext testContext = new ScenarioTestContext(parentTable.getTestContext());
+    ScriptTable t = createChild(testContext, newTable);
     parentTable.addChildTable(t, row);
     List<SlimAssertion> assertions = t.getAssertions();
     assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
     return assertions;
+  }
+
+  protected ScriptTable createChild(ScenarioTestContext testContext, Table newTable) {
+    return new ScriptTable(newTable, id, testContext);
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
