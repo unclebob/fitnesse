@@ -19,6 +19,7 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -151,18 +152,28 @@ public class FitNesseMain {
     return context;
   }
 
-  public static Properties loadConfigFile(final String propertiesFile) throws IOException {
+  public static Properties loadConfigFile(final String propertiesFile) {
     FileInputStream propertiesStream = null;
+    Properties properties = new Properties();
     try {
       propertiesStream = new FileInputStream(propertiesFile);
-      Properties properties = new Properties();
-      properties.load(propertiesStream);
-      properties.putAll(System.getProperties());
-      return properties;
-    } finally {
-      if (propertiesStream != null)
-        propertiesStream.close();
+    } catch (FileNotFoundException e) {
+      System.err.println(String.format("No configuration file found (%s)", propertiesFile));
     }
+
+    if (propertiesStream != null) {
+      try {
+        properties.load(propertiesStream);
+        propertiesStream.close();
+      } catch (IOException e) {
+        System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
+      }
+    }
+
+    // Command line properties override settings from configuration file.
+    properties.putAll(System.getProperties());
+
+    return properties;
   }
 
   public static Arguments parseCommandLine(String[] args) {
