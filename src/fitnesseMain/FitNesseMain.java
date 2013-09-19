@@ -1,6 +1,5 @@
 package fitnesseMain;
 
-import fitnesse.Arguments;
 import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -202,7 +201,7 @@ public class FitNesseMain {
   }
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
+      "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();

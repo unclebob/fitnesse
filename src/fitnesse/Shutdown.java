@@ -13,7 +13,7 @@ import util.CommandLine;
 
 public class Shutdown {
   public String hostname = "localhost";
-  public int port = Arguments.DEFAULT_PORT;
+  public int port = FitNesseContext.DEFAULT_PORT;
   public String username;
   public String password;
   private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");
@@ -79,7 +79,7 @@ public class Shutdown {
   public void usage() {
     System.err.println("Usage: java fitnesse.Shutdown [-hpc]");
     System.err.println("\t-h <hostname> {localhost}");
-    System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
+    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
     System.err.println("\t-c <username> <password> Supply user credentials.  Use when FitNesse has authentication activated.");
     System.exit(-1);
   }

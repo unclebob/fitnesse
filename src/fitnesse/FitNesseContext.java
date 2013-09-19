@@ -17,6 +17,7 @@ public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
+  public static final int DEFAULT_PORT = 80;
 
 
   /**
@@ -95,7 +96,7 @@ public class FitNesseContext {
     this.pageTheme = pageTheme != null ? pageTheme : "fitnesse_straight";
     this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
     this.recentChanges = recentChanges;
-    this.port = port >= 0 ? port : 80;
+    this.port = port >= 0 ? port : DEFAULT_PORT;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
     responderFactory = new ResponderFactory(getRootPagePath());

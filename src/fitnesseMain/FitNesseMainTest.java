@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 
-import fitnesse.Arguments;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;

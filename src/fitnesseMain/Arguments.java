@@ -1,11 +1,12 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse;
+package fitnesseMain;
+
+import fitnesse.FitNesseContext;
 
 public class Arguments {
   public static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
-  public static final int DEFAULT_PORT = 80;
   public static final int DEFAULT_COMMAND_PORT = 9123;
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
@@ -35,7 +36,7 @@ public class Arguments {
   }
 
   private int getDefaultPort() {
-    return command == null ? DEFAULT_PORT : DEFAULT_COMMAND_PORT;
+    return command == null ? FitNesseContext.DEFAULT_PORT : DEFAULT_COMMAND_PORT;
   }
 
   public void setPort(String port) {
