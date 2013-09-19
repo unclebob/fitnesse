@@ -45,6 +45,7 @@ public class FitNesseMain {
   }
 
   public static void launchFitNesse(Arguments arguments) throws Exception {
+    configureLogging();
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
     Updater updater = null;
@@ -183,6 +184,22 @@ public class FitNesseMain {
     return properties;
   }
 
+  public static void configureLogging() {
+    InputStream in = FitNesseMain.class.getResourceAsStream("logging.properties");
+    try {
+      LogManager.getLogManager().readConfiguration(in);
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Log configuration failed", e);
+    } finally {
+      if (in != null) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          LOG.log(Level.SEVERE, "Unable to close Log configuration file", e);
+        }
+      }
+    }
+  }
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
       "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
