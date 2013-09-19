@@ -5,6 +5,7 @@
  * the "names" responder has new options: "Recursive", "LeafOnly", and "ShowTags" (needs documentation update!)
  * Reduce space used by included pages on test page.
  * Test system, Fit server and wiki code has been cleaned up.
+ * new command line option ''-f <config file>''. Loads a custom configuration properties file.
  
 !2 2013-05-30
  * Many improvements in the JUnit test runner
