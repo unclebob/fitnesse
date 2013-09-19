@@ -22,11 +22,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class FitNesseMain {
-  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+  private static final Logger LOG = Logger.getLogger("Main");
 
   public static boolean dontExitAfterSingleCommand;
 
@@ -144,6 +148,13 @@ public class FitNesseMain {
     pluginsLoader.loadSlimTables();
 
     WikiImportTestEventListener.register();
+
+    LOG.info("root page: " + context.root);
+    LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
+    LOG.info("authenticator: " + context.authenticator);
+    LOG.info("page factory: " + context.pageFactory);
+    LOG.info("page theme: " + context.pageTheme);
+    LOG.info("Starting FitNesse on port: " + context.port);
 
     return context;
   }
