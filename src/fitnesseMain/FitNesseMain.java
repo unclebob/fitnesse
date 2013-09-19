@@ -231,7 +231,7 @@ public class FitNesseMain {
 
   private static void printUsage() {
     System.err.println("Usage: java -jar fitnesse.jar [-pdrleoab]");
-    System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
+    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
       + "}");
     System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
