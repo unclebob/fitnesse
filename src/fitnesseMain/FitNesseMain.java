@@ -44,7 +44,7 @@ public class FitNesseMain {
   }
 
   public static void launchFitNesse(Arguments arguments) throws Exception {
-    configureLogging();
+    configureLogging(arguments.hasVerboseLogging());
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
     Updater updater = null;
@@ -183,8 +183,14 @@ public class FitNesseMain {
     return properties;
   }
 
-  public static void configureLogging() {
-    InputStream in = FitNesseMain.class.getResourceAsStream("logging.properties");
+  public static void configureLogging(boolean verbose) {
+    if (System.getProperty("java.util.logging.config.class") != null ||
+            System.getProperty("java.util.logging.config.file") != null) {
+      // Do not reconfigure logging if explicitly set from the command line
+      return;
+    }
+
+    InputStream in = FitNesseMain.class.getResourceAsStream((verbose ? "verbose-" : "") + "logging.properties");
     try {
       LogManager.getLogManager().readConfiguration(in);
     } catch (Exception e) {
@@ -198,13 +204,17 @@ public class FitNesseMain {
         }
       }
     }
+    LOG.finest("Configured verbose logging");
   }
+
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
       "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
+      if (commandLine.hasOption("v"))
+        arguments.setVerboseLogging(true);
       if (commandLine.hasOption("p"))
         arguments.setPort(commandLine.getOptionArgument("p", "port"));
       if (commandLine.hasOption("d"))

@@ -33,6 +33,7 @@
 	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
+			<arg value="-v" />
 			<arg value="-p" />
 			<arg value="${port}" />
 		</java>

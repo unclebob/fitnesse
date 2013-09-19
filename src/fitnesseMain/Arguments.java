@@ -22,6 +22,7 @@ public class Arguments {
   private String command = null;
   private String output = null;
   private String configFile = null;
+  private boolean verboseLogging;
 
   public String getRootPath() {
     return rootPath;
@@ -119,5 +120,13 @@ public class Arguments {
 
   public void setConfigFile(String configFile) {
     this.configFile = configFile;
+  }
+
+  public void setVerboseLogging(boolean verboseLogging) {
+    this.verboseLogging = verboseLogging;
+  }
+
+  public boolean hasVerboseLogging() {
+    return verboseLogging;
   }
 }
