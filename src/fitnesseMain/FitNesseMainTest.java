@@ -96,16 +96,17 @@ public class FitNesseMainTest {
   @Test
   public void canRunSingleCommandWithAuthentication() throws Exception {
     String response = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
+    assertTrue(FitNesse.FITNESSE_INSTANCE.getContext().authenticator instanceof fitnesse.authentication.OneUserAuthenticator);
     assertThat(response, containsString("fitnesse.authentication.OneUserAuthenticator"));
   }
 
   private String runFitnesseMainWith(String... args) throws Exception {
     FitNesseMain.dontExitAfterSingleCommand = true;
-    PrintStream out = System.out;
+    PrintStream err = System.err;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputBytes));
+    System.setErr(new PrintStream(outputBytes));
     FitNesseMain.main(args);
-    System.setOut(out);
+    System.setErr(err);
     String response = outputBytes.toString();
     return response;
   }
