@@ -29,7 +29,6 @@ public class VersionComparerTest {
   @Test
   public void testPadsNonDifferentLinesWithSpaces() {
     comparer.compare("1", originalContent, "2", revisedContent);
-    System.out.println(StringUtil.join(comparer.getDifferences(), "\n"));
     assertSubString(" First line in content", StringUtil.join(comparer.getDifferences(), "\n"));
     assertSubString(" Last line in content.", StringUtil.join(comparer.getDifferences(), "\n"));
   }

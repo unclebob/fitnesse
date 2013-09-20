@@ -155,8 +155,6 @@ public class WikiImportingResponderTest {
     sender.doSending(response);
     String content = sender.sentData();
 
-    System.out.println(content);
-
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
 

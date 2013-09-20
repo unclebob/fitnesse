@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestEventListener;
 import fitnesse.responders.run.TestResponder;
@@ -10,6 +13,8 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
 public class WikiImportTestEventListener implements TestEventListener {
+  private static final Logger LOG = Logger.getLogger("Web");
+
   public static void register() {
     TestResponder.registerListener(new WikiImportTestEventListener(new WikiImporterFactory()));
   }
@@ -96,10 +101,7 @@ public class WikiImportTestEventListener implements TestEventListener {
 
     public void pageImportError(WikiPage localPage, Exception e) {
       errorOccured = true;
-      System.out.println("Exception while importing \"local page\": " + localPage.getName() + ", exception: " + e.getMessage());
-      if (e.getCause() != null)
-        System.out.println("  cause: " + e.getCause().getMessage());
-      e.printStackTrace(System.out);
+      LOG.log(Level.WARNING, "Exception while importing \"local page\": " + localPage.getName(), e);
       testResponder.addToResponse(e.toString());
     }
   }
