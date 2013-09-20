@@ -14,7 +14,6 @@ public class UpdaterTest extends UpdateTestCase {
 
   public void setUp() throws Exception {
     super.setUp();
-    UpdaterImplementation.testing = true;
     WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
   }
 
