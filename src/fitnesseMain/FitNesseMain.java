@@ -145,6 +145,7 @@ public class FitNesseMain {
     extraOutput += pluginsLoader.loadSymbolTypes(symbolProvider);
     extraOutput += pluginsLoader.loadContentFilter();
     extraOutput += pluginsLoader.loadSlimTables();
+    extraOutput += pluginsLoader.loadCustomComparators();
 
 
     WikiImportTestEventListener.register();

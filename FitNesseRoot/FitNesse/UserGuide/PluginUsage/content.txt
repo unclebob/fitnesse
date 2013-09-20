@@ -79,6 +79,41 @@ The classes supplied must extend ''!-fitnesse.responders.editing.ContentFilter-!
 
 There may be certain (rare) situations where the default table types are not sufficient. This hook allows for custom SLiM table types. A custom table must extend fitnesse.slimTables.
 
+!3 !-Custom Comparators-!
+''required property:'' '''!-CustomComparators-! = <prefix>:<class name>'''
+
+''motivation:'' The Slim protocol is all String values. It means that comparison of an expected and actual result for complex datatypes is limited to String equality or Regular Expression matching.
+If that is not sufficient, a Custom Comparator can do more sophisticated comparisons. Once registered, a Custom Comparator is triggered by its prefix, followed by a colon, in front of the expected value.
+
+Example Comparator implementation:
+
+{{{
+public class JSONAssertComparator implements CustomComparator {
+  @Override
+  public boolean matches(String actual, String expected) {
+    try {
+      JSONAssert.assertEquals(expected, actual, false);
+      return true;
+    } catch (JSONException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+}
+}}}
+
+Example plugins.properties:
+
+{{{
+CustomComparators = json:com.acme.JSONAssertComparator
+}}}
+
+Example !-ScriptTable-! usage:
+
+{{{
+|script|Customer|
+|check|get|cust1|json:{id:cust1,name:"John Doe"}|
+}}}
+
 !3 !-Plugins-!
 ''required property:'' '''!-Plugins-! = <class name>[,<class name>]'''
 
