@@ -31,14 +31,7 @@ public class SocketService {
   }
 
   private ServerSocket tryCreateServerSocket(int port) throws IOException {
-    ServerSocket socket;
-    try {
-      socket = new ServerSocket(port);
-    } catch (BindException e) {
-      System.out.println("Bind exception on port = " + port);
-      throw e;
-    }
-    return socket;
+    return new ServerSocket(port);
   }
 
   public void close() throws IOException {

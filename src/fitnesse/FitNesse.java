@@ -14,8 +14,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FitNesse {
+  private static final Logger LOG = Logger.getLogger("Main");
   public static final FitNesseVersion VERSION = new FitNesseVersion();
   public static FitNesse FITNESSE_INSTANCE;
   private final Updater updater;
@@ -68,17 +71,13 @@ public class FitNesse {
       }
       return true;
     } catch (BindException e) {
-      printBadPortMessage(context.port);
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Port " + context.port + " is already in use.");
+      LOG.severe("Use the -p <port#> command line argument to use a different port.");
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.SEVERE, "Error while starting the FitNesse socket service", e);
     }
     return false;
-  }
-
-  private static void printBadPortMessage(int port) {
-    System.err.println("FitNesse cannot be started...");
-    System.err.println("Port " + port + " is already in use.");
-    System.err.println("Use the -p <port#> command line argument to use a different port.");
   }
 
   public void stop() throws IOException {
