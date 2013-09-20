@@ -5,7 +5,8 @@ import java.util.logging.LogRecord;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.*;
 
 public class LogFormatterTest {
 
@@ -33,5 +34,28 @@ public class LogFormatterTest {
     assertEquals("MyLogger\tSEVERE: message" + System.getProperty("line.separator"), new LogFormatter().format(logRecord));
   }
 
+  @Test
+  public void logShouldLogExceptions() {
+    LogRecord logRecord = new LogRecord(Level.WARNING, "message");
+    logRecord.setLoggerName("MyLogger");
+    logRecord.setThrown(new RuntimeException(new IllegalArgumentException("Something went wrong here")));
+
+    String logOutput = new LogFormatter().format(logRecord);
+    assertTrue(logOutput, logOutput.contains("MyLogger\tWARNING: message [java.lang.IllegalArgumentException: Something went wrong here]" + System.getProperty("line.separator")));
+    assertTrue(logOutput, logOutput.contains("at fitnesse.logging.LogFormatterTest.logShouldLogExceptions"));
+
+  }
+
+  @Test
+  public void logShouldNotLogExceptionsAtInfoLevel() {
+    LogRecord logRecord = new LogRecord(Level.WARNING, "message");
+    logRecord.setLoggerName("MyLogger");
+    logRecord.setThrown(new RuntimeException(new IllegalArgumentException("Something went wrong here")));
+
+    String logOutput = new LogFormatter().format(logRecord);
+    assertTrue(logOutput, logOutput.contains("MyLogger\tWARNING: message [java.lang.IllegalArgumentException: Something went wrong here]" + System.getProperty("line.separator")));
+    assertFalse(logOutput, logOutput.contains("at fitnesse.logging.LogFormatterTest.logShouldLogExceptions"));
+
+  }
 
 }
