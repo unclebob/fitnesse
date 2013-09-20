@@ -5,6 +5,7 @@ package fitnesse.testutil;
 import fit.Fixture;
 import fit.Parse;
 
+// Used in acceptance suite
 public class PassFixture extends Fixture {
   public void doTable(Parse parse) {
     right(parse);

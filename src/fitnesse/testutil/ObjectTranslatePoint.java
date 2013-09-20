@@ -6,6 +6,7 @@ import java.awt.Point;
 
 import fit.TypeAdapter;
 
+// Used in acceptance suite
 public class ObjectTranslatePoint extends TranslatePoint {
   public ObjectTranslatePoint() {
     TypeAdapter.registerParseDelegate(Point.class, new ObjectDelegatePointParser());

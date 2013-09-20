@@ -7,10 +7,11 @@ import java.util.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 public class FileUtil {
-  public static final String ENDL = System.getProperty("line.separator");
-  
+  private static final Logger LOG = Logger.getLogger("Util");
+
   public static File createFile(String path, String content) {
     String names[] = path.split("/");
     if (names.length == 1)
@@ -98,7 +99,7 @@ public class FileUtil {
     int i = 10;
     while (file.exists()) {
       if (--i <= 0) {
-        System.out.println("Breaking out of delete wait");
+        LOG.finer("Breaking out of delete wait");
         break;
       }
       waitFor(500);

@@ -5,6 +5,7 @@
 package fitnesse;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
@@ -12,6 +13,8 @@ import fitnesse.http.ResponseParser;
 import util.CommandLine;
 
 public class Shutdown {
+  private static final Logger LOG = Logger.getLogger("Main");
+
   public String hostname = "localhost";
   public int port = FitNesseContext.DEFAULT_PORT;
   public String username;
@@ -31,8 +34,7 @@ public class Shutdown {
 
     String status = checkResponse(response);
     if (!"OK".equals(status)) {
-      System.err.println("Failed to shutdown.");
-      System.err.println(status);
+      LOG.warning("Failed to shutdown. Status = " + status);
       System.exit(response.getStatus());
     }
   }
