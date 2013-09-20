@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.util.Cache;
 import fitnesse.wiki.PageData;
@@ -18,6 +20,7 @@ import util.Clock;
 import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
+  private static final Logger LOG = Logger.getLogger("Wiki");
 
   public static final int CACHE_TIMEOUT = 300000; // ms
 
@@ -158,8 +161,7 @@ public class SimpleFileVersionsController implements VersionsController {
         data.setProperties(props);
       }
     } catch (final Exception e) {
-      System.err.println("Could not read properties file: " + path);
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Could not read properties file: " + path, e);
     }
   }
 

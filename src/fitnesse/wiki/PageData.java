@@ -7,6 +7,7 @@ import static fitnesse.wiki.PageType.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
@@ -23,6 +24,7 @@ import util.StringUtil;
 
 @SuppressWarnings("unchecked")
 public class PageData implements ReadOnlyPageData, Serializable {
+  private static final Logger LOG = Logger.getLogger("Wiki");
 
   public static final String ErrorLogName = "ErrorLogs";
   private static final long serialVersionUID = 1L;
@@ -131,14 +133,11 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return ErrorLogName.equals(pagePath.getFirst());
   }
 
-  // TODO: Should be written to a real logger, but it doesn't like FitNesse's
-  // logger is
-  // really intended for general logging.
   private void handleInvalidPageName(WikiPage wikiPage) {
     try {
       String msg = "WikiPage " + wikiPage + " does not have a valid name!"
           + wikiPage.getName();
-      System.err.println(msg);
+      LOG.warning(msg);
       throw new RuntimeException(msg);
     } catch (Exception e) {
       throw new RuntimeException(e);

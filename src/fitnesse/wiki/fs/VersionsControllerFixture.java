@@ -56,7 +56,6 @@ public class VersionsControllerFixture {
 
   public int historySize() {
     Collection<VersionInfo> versions = lastUsedPage.getVersions();
-    System.out.println(versions);
     return versions.size();
   }
 

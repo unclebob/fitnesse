@@ -8,6 +8,8 @@ import util.StreamReader;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -17,6 +19,7 @@ import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
 import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
 
 public class ZipFileVersionsController implements VersionsController {
+  private static final Logger LOG = Logger.getLogger("Wiki");
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
 
@@ -60,7 +63,7 @@ public class ZipFileVersionsController implements VersionsController {
           zipFile.close();
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Unable to read zip file contents", e);
       }
     }
   }
@@ -122,7 +125,7 @@ public class ZipFileVersionsController implements VersionsController {
           zos.close();
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Unable to create zip file", e);
       }
       pruneVersions(page, history(page));
     }
@@ -159,7 +162,7 @@ public class ZipFileVersionsController implements VersionsController {
             attributeIS.close();
           }
         } catch (IOException e) {
-          e.printStackTrace();
+          LOG.log(Level.WARNING, "Unable to read zip file contents", e);
         }
       }
     }
@@ -182,7 +185,7 @@ public class ZipFileVersionsController implements VersionsController {
             reader.close();
           }
         } catch (Exception e) {
-          e.printStackTrace();
+          LOG.log(Level.WARNING, "Unable to read zip file contents", e);
         }
       }
     }

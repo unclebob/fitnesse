@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import fitnesse.wikitext.Utils;
 import org.w3c.dom.Document;
@@ -23,6 +24,8 @@ import util.Clock;
 import util.XmlUtil;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
+  private static final Logger LOG = Logger.getLogger("Wiki");
+
   private static final long serialVersionUID = 1L;
 
   public WikiPageProperties() {
@@ -126,7 +129,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         String childKey = (String) iterator.next();
         WikiPageProperty child = context.getProperty(childKey);
         if (child == null) {
-          System.err.println("Property key \"" + childKey + "\" has null value for {" + context + "}");
+          LOG.warning("Property key \"" + childKey + "\" has null value for {" + context + "}");
         } else {
           toXml(child, childKey, document, element);
         }
