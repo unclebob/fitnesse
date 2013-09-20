@@ -13,6 +13,8 @@ import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.testsystems.slim.CustomComparator;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -155,4 +157,21 @@ public class PluginsLoader {
     return buffer.toString();
   }
 
+  public String loadCustomComparators() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+      StringBuffer buffer = new StringBuffer();
+      String[] tableList = getListFromProperties(CUSTOM_COMPARATORS);
+      if (tableList != null) {
+        buffer.append("\tCustom Comparators loaded:").append(endl);
+        for (String table : tableList) {
+          table = table.trim();
+          int colonIndex = table.lastIndexOf(':');
+          String prefix = table.substring(0, colonIndex);
+          String className = table.substring(colonIndex + 1, table.length());
+          
+          CustomComparatorRegistry.addCustomComparator(prefix, (CustomComparator) Class.forName(className).newInstance());
+          buffer.append("\t\t").append(prefix).append(":").append(className).append(endl);
+        }
+      }
+      return buffer.toString();
+    }
 }
