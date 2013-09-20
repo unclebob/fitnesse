@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import fitnesse.socketservice.SocketFactory;
+
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimService;
@@ -89,7 +91,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = new ServerSocket(0);
+      ServerSocket socket = SocketFactory.tryCreateServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {
