@@ -22,7 +22,7 @@ public class LogFormatterTest {
     LogRecord logRecord = new LogRecord(Level.WARNING, "message");
     logRecord.setLoggerName("MyLogger");
 
-    assertEquals("WARNING MyLogger\tmessage" + System.getProperty("line.separator"), new LogFormatter().format(logRecord));
+    assertEquals("MyLogger\tWARNING: message" + System.getProperty("line.separator"), new LogFormatter().format(logRecord));
   }
 
   @Test
@@ -30,7 +30,7 @@ public class LogFormatterTest {
     LogRecord logRecord = new LogRecord(Level.SEVERE, "message");
     logRecord.setLoggerName("MyLogger");
 
-    assertEquals("SEVERE MyLogger\tmessage" + System.getProperty("line.separator"), new LogFormatter().format(logRecord));
+    assertEquals("MyLogger\tSEVERE: message" + System.getProperty("line.separator"), new LogFormatter().format(logRecord));
   }
 
 
