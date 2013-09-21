@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
@@ -25,16 +28,10 @@ public abstract class Authenticator {
 
   private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
     SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
-    try {
-      if (so.shouldAuthenticate(context, request))
-        return unauthorizedResponder(context, request);
-      else
-        return privilegedResponder;
-    }
-    catch (Exception e) {
-      e.printStackTrace();
+    if (so.shouldAuthenticate(context, request))
       return unauthorizedResponder(context, request);
-    }
+    else
+      return privilegedResponder;
   }
 
   protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
