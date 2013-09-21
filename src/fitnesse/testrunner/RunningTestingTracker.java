@@ -3,10 +3,13 @@
 package fitnesse.testrunner;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.testrunner.Stoppable;
 
 public class RunningTestingTracker {
+  public static final Logger LOG = Logger.getLogger("Test");
 
   private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
   private int nextTicketNumber = 1;
@@ -51,7 +54,7 @@ public class RunningTestingTracker {
     try {
       process.stop();
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to stop test system", e);
     }
   }
 
