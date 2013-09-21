@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimCommandRunningClient;
@@ -14,6 +16,7 @@ import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
+  private static final Logger LOG = Logger.getLogger("Slim");
 
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
@@ -64,7 +67,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       try {
         Thread.sleep(10);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        LOG.log(Level.FINE, "Sleep interrupted", e);
       }
   }
 
@@ -77,7 +80,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } catch (SocketException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to create SLiM service", e);
       return false;
     }
   }

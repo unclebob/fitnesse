@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
@@ -31,6 +33,8 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
+  private static final Logger LOG = Logger.getLogger("Slim");
+
   public static final SlimTable START_OF_TEST = null;
   public static final SlimTable END_OF_TEST = null;
 
@@ -153,7 +157,6 @@ public abstract class SlimTestSystem implements TestSystem {
   public static String exceptionToString(Throwable e) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
-    e.printStackTrace(pw);
     return SlimServer.EXCEPTION_TAG + stringWriter.toString();
   }
 
@@ -202,7 +205,7 @@ public abstract class SlimTestSystem implements TestSystem {
     try {
       slimClient.kill();
     } catch (IOException e1) {
-      e1.printStackTrace();
+      LOG.log(Level.WARNING, "Failed to kill SLiM client", e);
     }
     ExecutionLog log = slimClient.getExecutionLog();
     log.addException(e);

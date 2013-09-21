@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import util.TimeMeasurement;
@@ -88,7 +89,7 @@ public class CommandRunner {
         Thread.sleep(timeStep);
       }
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.FINE, "Wait for death of process " + process + " interrupted", e);
     }
     LOG.warning("Could not detect death of command line test runner.");
   }
@@ -162,8 +163,7 @@ public class CommandRunner {
       try {
         stdin.close();
       } catch (IOException e) {
-        // TODO: log at debug level
-        e.printStackTrace();
+        LOG.log(Level.FINE, "Failed to close output stream", e);
       }
     }
   }

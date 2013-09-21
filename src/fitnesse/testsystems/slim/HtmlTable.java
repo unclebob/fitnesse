@@ -5,6 +5,8 @@ package fitnesse.testsystems.slim;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import fitnesse.testsystems.ExceptionResult;
@@ -25,6 +27,8 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 public class HtmlTable implements Table {
+  private static final Logger LOG = Logger.getLogger("Slim");
+
   // Source: http://dev.w3.org/html5/markup/common-models.html
   private final static Pattern HTML_PATTERN = Pattern.compile("^<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
           "blockquote|ins|del|object|map||video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
@@ -192,7 +196,7 @@ public class HtmlTable implements Table {
       endTag.setParent(tag);
       tag.setEndTag(endTag);
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to create tag from class " + klass, e);
     }
     return tag;
   }
