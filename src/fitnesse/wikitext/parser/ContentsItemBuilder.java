@@ -23,13 +23,8 @@ public class ContentsItemBuilder {
     public HtmlTag buildLevel(SourcePage page, HtmlTag contentsDiv) {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
         HtmlTag list = new HtmlTag("ul");
-        try {
-            for (SourcePage child: getSortedChildren(page)) {
-                list.add(buildListItem(child));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
+        for (SourcePage child: getSortedChildren(page)) {
+            list.add(buildListItem(child));
         }
         contentsDiv.add(list);
         div.add(contentsDiv);

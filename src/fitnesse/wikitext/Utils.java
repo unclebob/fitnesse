@@ -35,11 +35,4 @@ public class Utils {
   public static String escapeWiki(String value) {
       return replaceStrings(value, specialWikiChars, specialWikiEscapes);
   }
-
-  public static String getStackTrace(Throwable e) {
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter pw = new PrintWriter(stringWriter);
-    e.printStackTrace(pw);
-    return stringWriter.toString();
-  }
 }
