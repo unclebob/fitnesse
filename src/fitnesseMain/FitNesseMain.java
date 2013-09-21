@@ -240,7 +240,7 @@ public class FitNesseMain {
   }
 
   private static void printUsage() {
-    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoab]");
+    System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
     System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
       + "}");
@@ -256,5 +256,6 @@ public class FitNesseMain {
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
     System.err.println("\t-b <filename> redirect command output.");
+    System.err.println("\t-v {off} Verbose logging");
   }
 }
