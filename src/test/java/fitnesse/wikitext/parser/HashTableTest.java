@@ -1,4 +1,4 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
 import org.junit.Test;

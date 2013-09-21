@@ -1,16 +1,12 @@
-package fitnesse.wikitext.test;
-
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SourcePage;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import org.junit.Test;
-
-import java.util.ArrayList;
+package fitnesse.wikitext.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+
+import fitnesse.wiki.WikiPage;
+import org.junit.Test;
 
 public class WikiSourcePageTest {
 

@@ -1,20 +1,10 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Scanner;
-import fitnesse.wikitext.parser.SourcePage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import fitnesse.wikitext.parser.WikiTranslator;
 
 public class ParserTestHelper {
   public static final String newLineRendered = "<br/>";

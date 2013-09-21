@@ -1,6 +1,5 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.WikiWordBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,9 +1,9 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
+
+import static org.junit.Assert.assertEquals;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.parser.HtmlWriter;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 public class HtmlWriterTest {
     @Test public void writesSimpleTag() {

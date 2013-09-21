@@ -1,9 +1,8 @@
-package fitnesse.wikitext.test;
-
-import fitnesse.wikitext.parser.ParsedPage;
-import org.junit.Test;
+package fitnesse.wikitext.parser;
 
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class ParsedPageTest {
   @Test

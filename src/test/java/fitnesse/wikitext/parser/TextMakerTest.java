@@ -1,10 +1,9 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.VariableSource;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 public class TextMakerTest {
     private VariableSource source = new TestVariableSource("x", "y");

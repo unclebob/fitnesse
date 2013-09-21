@@ -1,14 +1,12 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Paths;
-import fitnesse.wikitext.parser.WikiSourcePage;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import java.util.List;
 
 public class PathTest {
     @Test

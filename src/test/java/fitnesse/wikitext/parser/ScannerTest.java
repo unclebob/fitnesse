@@ -1,9 +1,8 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.Scanner;
-import fitnesse.wikitext.parser.SymbolType;
-import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 public class ScannerTest {
     @Test public void copyRestoresState() {

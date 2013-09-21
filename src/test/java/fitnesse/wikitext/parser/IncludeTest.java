@@ -1,6 +1,6 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import static fitnesse.wikitext.test.ParserTestHelper.assertParses;
+import static fitnesse.wikitext.parser.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.wiki.PageData;

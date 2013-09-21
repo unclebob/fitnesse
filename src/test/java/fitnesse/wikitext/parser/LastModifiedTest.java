@@ -1,4 +1,6 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
+
+import java.util.GregorianCalendar;
 
 import fitnesse.wiki.PageData;
 import org.junit.After;
@@ -6,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 import util.DateAlteringClock;
-
-import java.util.GregorianCalendar;
 
 public class LastModifiedTest {
 

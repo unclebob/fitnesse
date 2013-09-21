@@ -1,6 +1,5 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.VariableSource;
 import util.Maybe;
 
 public class TestVariableSource implements VariableSource {

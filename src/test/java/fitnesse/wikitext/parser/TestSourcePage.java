@@ -1,11 +1,10 @@
-package fitnesse.wikitext.test;
-
-import fitnesse.wikitext.parser.SourcePage;
-import util.Maybe;
+package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
+import util.Maybe;
 
 public class TestSourcePage implements SourcePage {
     public String content;

@@ -1,11 +1,10 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
+
+import static org.junit.Assert.assertEquals;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class DefineTest {
     @Test public void scansDefine() {

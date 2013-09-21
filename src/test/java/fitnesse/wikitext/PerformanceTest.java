@@ -1,18 +1,20 @@
 package fitnesse.wikitext;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.slim.protocol.SlimDeserializer;
-
 import fitnesse.slim.protocol.SlimSerializer;
-
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.test.TestRoot;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.TestRoot;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class PerformanceTest {
     private String tablePageContent = "";
@@ -56,7 +58,7 @@ public class PerformanceTest {
     public void listDeserializationTest() {
       List<Object> objects = new ArrayList<Object>();
       for (int i = 0; i < 10000; i++) {
-        objects.add(new String("This is string " + i));
+        objects.add("This is string " + i);
       }
       final String serializedList = SlimSerializer.serialize(objects);
 

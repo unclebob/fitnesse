@@ -1,6 +1,9 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 
 public class TestRoot {

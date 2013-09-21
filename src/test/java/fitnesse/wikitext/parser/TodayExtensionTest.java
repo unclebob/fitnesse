@@ -1,15 +1,13 @@
-package fitnesse.wikitext.test;
+package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.Today;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 import util.DateAlteringClock;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class TodayExtensionTest {
 

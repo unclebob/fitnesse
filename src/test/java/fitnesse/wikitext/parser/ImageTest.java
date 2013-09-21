@@ -1,8 +1,7 @@
-package fitnesse.wikitext.test;
-
-import org.junit.Test;
+package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.WikiPage;
+import org.junit.Test;
 
 public class ImageTest {
     @Test

@@ -1,9 +1,8 @@
-package fitnesse.wikitext.test;
-
-import fitnesse.wikitext.parser.*;
-import org.junit.Test;
+package fitnesse.wikitext.parser;
 
 import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
 
 public class SymbolProviderTest {
   @Test
