@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -14,6 +17,8 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
+  private final static Logger LOG = Logger.getLogger("Report");
+
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
@@ -30,7 +35,7 @@ public class ShutdownResponder implements SecureResponder {
           FitNesse.FITNESSE_INSTANCE.stop();
         }
         catch (Exception e) {
-          e.printStackTrace();
+          LOG.log(Level.WARNING, "Error while stopping FitNesse", e);
         }
       }
     };
