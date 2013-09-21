@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<PageHistory>
+
+  #if($pageHistory)
+
+  <Page>
+    <Name>$pageHistory.FullPageName</Name>
+    #set($dates = $pageHistory.datesInChronologicalOrder())
+    #foreach($date in $dates)
+    <TestResult>
+      <Date>$date</Date>
+      <ResultLink>$pageHistory.FullPageName?pageHistory&amp;resultDate=$pageHistory.formatDate("yyyyMMddHHmmss",$date)&amp;format=xml</ResultLink>
+      #set($bar = $pageHistory.getPassFailBar($date, 50))
+      <Pass>$bar.Pass</Pass>
+      <Fail>$bar.Fail</Fail>
+     </TestResult>
+    #end
+  </Page>
+
+  #end
+
+</PageHistory>

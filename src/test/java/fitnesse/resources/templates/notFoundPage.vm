@@ -1,0 +1,6 @@
+The requested resource: <i>$name</i> was not found.
+#if($shouldCreate)
+ <form method="POST" action="$name?edit" name="createPageForm">
+  <button type="submit" name="createPageSubmit">Create This Page</button>
+ </form>
+#end

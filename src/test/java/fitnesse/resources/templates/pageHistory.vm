@@ -1,0 +1,39 @@
+<h1>Page history</h1>
+#if($pageHistory)
+<script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
+<form action= "" method="get" name="compareHistory">
+ <fieldset class="buttons">
+  <input type="hidden" value="compareHistory" name="responder"/>
+  <input type="submit" value="Compare" />
+  <a class="button" href="$viewLocation">Cancel</a>
+  <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
+ </fieldset>
+ <table>
+  <tr>
+    <th>Compare</th>
+    <th>Time</th>
+    <th>Pass</th>
+    <th>Fail</th>
+    <th colspan="50">0..$pageHistory.maxAssertions()</th>
+  </tr>
+  #set($dates = $pageHistory.datesInChronologicalOrder())
+  #foreach($date in $dates)
+    <tr id="pageHistoryRow_$pageHistory.formatDate("yyyyMMddHHmmss",$date)">
+      <td><input type="checkbox" name="TestResult_$pageHistory.getPageFileName($date)"/></td>
+      #set($bar = $pageHistory.getPassFailBar($date, 50))
+      <td class="date_field#if($bar.Fail>0) fail#elseif($bar.Pass>0) pass#else ignore#end">
+      <a href="$pageHistory.FullPageName?pageHistory&amp;resultDate=$pageHistory.formatDate("yyyyMMddHHmmss",$date)">$pageHistory.formatDate("dd MMM, yy HH:mm", $date)</a>
+      </td>
+      <td class="pass_count#if($bar.Pass==0) ignore#else pass#end">$bar.Pass</td>
+      <td class="fail_count#if($bar.Fail==0) ignore#else fail#end">$bar.Fail</td>
+      #if($bar.PassUnits > 0)#foreach($barsegment in [1..$bar.PassUnits])<td class="element pass">&nbsp;</td>#end#end
+      #if($bar.FailUnits > 0)#foreach($barsegment in [1..$bar.FailUnits])<td class="element fail">&nbsp;</td>#end#end
+      #set($ignores=50-($bar.PassUnits+$bar.FailUnits))
+      #if($ignores > 0)#foreach($barsegment in [1..$ignores])<td class="element ignore">&nbsp;</td>#end#end
+   </tr>
+  #end
+ </table>
+</form>
+#else
+<h2>No history for page: $pageTitle.Title</h2>
+#end

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<TestHistory>
+
+  #foreach ($page in $testHistory.pageNames)
+  #set ($pageHistory = $testHistory.getPageHistory($page))
+  #if($pageHistory)
+  #set($linkExtra = "?pageHistory&amp;format=xml")
+
+  <Page>
+    <Name>$page</Name>
+    <PageHistoryLink>$page$linkExtra</PageHistoryLink>
+    <Pass>$pageHistory.passes</Pass>
+    <Fail>$pageHistory.failures</Fail>
+    <MinDate>$pageHistory.minDate</MinDate>
+    <MaxDate>$pageHistory.maxDate</MaxDate>
+  </Page>
+
+  #end
+  #end
+
+</TestHistory>
+

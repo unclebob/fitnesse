@@ -1,0 +1,23 @@
+<form method="post">
+ <input type="hidden" name="responder" value="saveData"/>
+ <input type="hidden" name="editTime" value="$editTime"/>
+ <input type="hidden" name="ticketId" value="$ticketId"/>
+ 
+ #if( $!pageType )
+ <input type="hidden" name="PageType" value="$pageType" checked="checked" />
+ #end
+ #foreach( $attr in $attributes )
+ <input type="hidden" name="$attr" value="On"/>
+ #end
+ 
+ <p>This page has been recently modified.  You may want to merge existing page content into your changes.</p>
+ <fieldset id="merge-new">
+  <label for="newContent">Your Changes</label>
+  <textarea id="newContent" name="pageContent">$newContent</textarea>
+ </fieldset>
+ <fieldset id="merge-old">
+  <label for="oldContent">Existing Content (read only)</label>
+  <textarea id="oldContent" name="oldContent" readonly="readonly">$oldContent</textarea>
+ </fieldset>
+ <input type="submit" name="submit" value="Save" accesskey="s"/>
+</form>

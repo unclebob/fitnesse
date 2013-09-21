@@ -1,0 +1,243 @@
+body {
+	font:normal 80% Verdana, Helvetica, Arial, sans-serif;
+	padding: 0;
+	margin: 0 2em;
+}
+header,
+footer,
+article,
+section,
+aside,
+nav {
+	display:block;
+}
+table {
+	border: 1px solid #EEEEEE;
+	border-collapse:collapse;
+}
+td, th {
+	border: thin solid #777777;
+	padding: 0.25em 0.5em;
+}
+header {
+	padding: 8px;
+	height: 90px;
+}
+#art_niche {
+	float: left;
+	margin-right: 1em;
+	background-image: url("../../../../../main/java/fitnesse/resources/images/FitNesseLogo.png");
+	width: 90px;
+	height: 90px;
+}
+#art_niche span {
+	display: none;
+}
+header ul {
+	margin: 0;
+	padding: 0;
+}
+header li {
+	display: inline;
+}
+header li+li:before {
+	content: "> ";
+}
+header h1 {
+	font: bold 2em;
+	margin: 0 0 0 102px;
+	font-weight: normal;
+	letter-spacing: 0.08em;
+	margin: 0 0 0 102px;
+	top: 25px;
+	position: absolute;
+}
+header h5 {
+	color: #aaaaaa;
+	font: bold 2em;
+	font-weight: normal;
+	letter-spacing: 0.08em;
+	margin: 0 0 0 105px;
+	top: 56px;
+	position: absolute;
+}
+header a, header a:active, header a:visited {
+	color:#800000
+}
+header a:hover {
+	text-decoration:none;
+	color:#880000
+}
+nav {
+	font-size: 0.9em;
+	border-bottom: 1px solid #800000;
+}
+nav ul {
+	float: right;
+	margin-top: -2.5em;
+}
+nav ul li {
+	display: block;
+	float: left;
+	list-style: none;
+	text-align:center;
+	z-index: 99;
+}
+nav a, nav a:active, nav a:visited {
+	color: #000000;
+	white-space: nowrap;
+	text-decoration: none;
+	width: 5em;
+	height: 1.5em;
+	color: black;
+	letter-spacing: 0.1em;
+    margin-right: 1em;
+	padding: 0.5em 3em;
+	background-color: #eeeeee;
+	border-radius: 0.25em;
+	border: 1pt solid #aaaaaa;
+}
+nav a:hover, nav a:active  {
+	background-color: white;
+}
+nav ul ul {
+	background: #eeeeee; /* Adding a background makes the dropdown work properly in IE7+. */
+	position: absolute;
+	display: none;
+	border: 1pt solid #aaaaaa;
+	z-index: 999;
+	width: 10em;
+	margin: 0.5em 0 0 0;
+	padding: .25em;
+	border-radius: 0.25em;
+}
+nav hr {
+	border: 1px solid black;
+	margin: 0;
+	
+}
+nav ul ul li {
+	float: none;
+	display: block;
+	line-height: 1.5em;
+	margin: 0;
+	text-align: left;
+}
+nav ul ul li.divider {
+	border-top: 1px solid #999999;
+}
+nav ul ul li a,
+nav ul ul li a:active {
+	display: block;
+	border-radius: 0px;
+	padding: 0.5em;
+	height: 1.5em;
+	border: none;
+}
+nav ul ul li a:hover {
+	background-color: white;
+	width:9em;
+}
+nav ul ul li a:active {
+	background-color: #eee;
+}
+nav li:hover ul {
+	display: block;
+}
+article {
+	padding: 0.5em;
+}
+footer {
+	 margin: 0;
+	 padding: 0.5em; /* Use same color as border color for div.header. */
+	 border-top: 1px solid #800000;
+	 font-size: 80%;
+	 text-align: center;
+}
+footer a, header a:active, header a:visited {
+	color:#800000;
+}
+footer a:hover {
+	text-decoration:none;
+	color:#880000;
+}
+
+/** Page content (article) styles **/
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
+	display: none;
+}
+article h1 {
+	 font: bold 1.5em;
+}
+article a, header a:active, header a:visited {
+	color:#800000;
+}
+article a:hover {
+	text-decoration:none;
+	color:#880000;
+}
+th {
+	text-align: left;
+}
+article th {
+	 white-space:nowrap;
+}
+.dirListing tbody tr:nth-child(odd) {
+	background: #fff
+}
+.dirListing tbody tr:nth-child(even) {
+	background: #efefef
+}
+#test-action .ok {
+ 	background-color: lightblue;
+}
+#test-action .output {
+ 	background-color: lightblue;
+}
+
+@media print {
+	nav ul {
+		display: none;
+	}
+}
+
+#error-nav {
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	font-weight: bold;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Black;
+	height: 60px;
+	width: 180px;
+	background-color: #FFAAAA ;
+}
+
+#error-nav-label {
+	text-align: center;
+	line-height: 50%;
+}
+
+#error-nav-controls {
+	text-align: center;
+}
+
+#error-nav button{
+	width: 30px;
+}
+
+#error-nav input{
+	width: 40px;
+}
+
+.error-nav-hidden{
+	visibility:hidden;
+}
+
+.selected-error{
+	border-style:solid;
+  border-width:4px;
+  border-color:SlateGray;
+}
+

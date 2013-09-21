@@ -1,0 +1,9 @@
+## ... for deleting files and directories
+<form method="get" action="">
+ <p>Are you sure you would like to delete <strong>$filename</strong>
+ #if( $isDir ) and all $nFiles files inside?#end</p>
+ <input type="submit" name="" value="Yes" accesskey="y"/>
+ <input type="hidden" name="responder" value="deleteFile"/>
+ <input type="hidden" name="filename" value="$filename"/>
+ <a class="button" href="$pageName" accesskey="n">No</a>
+</form>

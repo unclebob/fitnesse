@@ -1,0 +1,65 @@
+#if($suiteExecutionReport)
+<script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
+<h1>$suiteExecutionReport.getRootPath()</h1>
+<table>
+  <tr>
+    <td>$suiteExecutionReport.getDate()</td>
+    <td class="meta">FitNesse Version: $suiteExecutionReport.Version</td>
+  </tr>
+</table>
+<hr/>
+#set($finalCounts = $suiteExecutionReport.FinalCounts)
+#if($finalCounts)
+<div id="test-summary">
+  <div id="progressBar" class="$ExecutionStatus.getExecutionStatus($suiteExecutionReport.getRootPath(), $finalCounts)">
+    <strong>Test Pages:</strong>
+    $finalCounts.Right right,
+    $finalCounts.Wrong wrong,
+    $finalCounts.Ignores ignored,
+    $finalCounts.Exceptions exceptions
+    #if($suiteExecutionReport.hasRunTimes())
+    ($suiteExecutionReport.totalRunTimeInMillis ms)
+    #end
+    <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
+  </div>
+</div>
+#end
+<p/>
+<table>
+  <tr>
+    <th class="numeric">Right</th>
+    <th class="numeric">Wrong</th>
+    <th class="numeric">Ignored</th>
+    <th class="numeric">Exceptions</th>
+    <th>Page</th>
+    #if($suiteExecutionReport.hasRunTimes())
+    <th class="numeric">Run time (ms)</th>
+    #end
+  </tr>
+  #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())
+  #set($counts = $pageHistoryReference.getTestSummary())
+  <tr class="$ExecutionResult.getExecutionResult($pageHistoryReference.pageName, $counts)">
+    <td class="numeric">
+      $counts.Right
+    </td>
+    <td class="numeric">
+      $counts.Wrong
+    </td>
+    <td class="numeric">
+      $counts.Ignores
+    </td>
+    <td class="numeric">
+      $counts.Exceptions
+    </td>
+    <td>
+      <a href="$pageHistoryReference.pageName?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
+    </td>
+    #if($suiteExecutionReport.hasRunTimes())
+    <td class="numeric">
+      $pageHistoryReference.RunTimeInMillis
+    </td>
+    #end
+  </tr>
+  #end
+</table>
+#end
