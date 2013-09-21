@@ -5,10 +5,14 @@ package fitnesse.schedule;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.Clock;
 
 public class ScheduleImpl implements Schedule, Runnable {
+  private final static Logger LOG = Logger.getLogger("Schedule");
+
   private long delay;
   private Thread thread;
   private boolean running;
@@ -44,6 +48,7 @@ public class ScheduleImpl implements Schedule, Runnable {
       }
     }
     catch (Exception e) {
+      LOG.log(Level.FINER, "Error running scheduled loop", e);
     }
   }
 
@@ -62,7 +67,7 @@ public class ScheduleImpl implements Schedule, Runnable {
         item.run(time);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Error running scheduled item " + item, e);
     }
   }
 }

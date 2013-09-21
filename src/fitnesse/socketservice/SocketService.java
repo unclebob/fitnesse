@@ -46,7 +46,7 @@ public class SocketService {
       serviceThread.join();
       waitForServerThreads();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Thread joining interrupted", e);
     }
   }
 
