@@ -22,4 +22,7 @@ Examine the requested page to ensure the correct links are displayed in the corr
 |<a href="/files" accesskey="f">Files</a>|true|
 |<a href="?searchForm" accesskey="s">Search</a>|true|
 |<a href="/RecentChanges" accesskey="">Recent Changes</a>|true|
+|<a href="?testHistory">Test History</a>|true|
+|<a href="SomePage?pageHistory">Page History</a>|true|
+|<a href="?test&amp;remote_debug">Remote Debug</a>|true|
 |<a href=".FitNesse.UserGuide" accesskey="">User Guide</a>|true|
