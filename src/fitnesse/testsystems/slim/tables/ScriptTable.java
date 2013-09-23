@@ -100,7 +100,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // returns a list of statements
-  private List<SlimAssertion> instructionsForRow(int row) throws SyntaxError {
+  protected List<SlimAssertion> instructionsForRow(int row) throws SyntaxError {
     String firstCell = table.getCellContents(0, row).trim();
     List<SlimAssertion> assertions;
     String match;
@@ -131,7 +131,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  private List<SlimAssertion> actionAndAssign(String symbolName, int row) {
+  protected List<SlimAssertion> actionAndAssign(String symbolName, int row) {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(1, lastCol, row);
@@ -144,7 +144,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  private List<SlimAssertion> action(int row) throws SyntaxError {
+  protected List<SlimAssertion> action(int row) throws SyntaxError {
     List<SlimAssertion> assertions = assertionsFromScenario(row);
     if (assertions.isEmpty()) {
       // Invoke fixture:
@@ -194,44 +194,44 @@ public class ScriptTable extends SlimTable {
   }
 
 
-  private List<SlimAssertion> note(int row) {
+  protected List<SlimAssertion> note(int row) {
     return Collections.emptyList();
   }
 
-  private List<SlimAssertion> show(int row) {
+  protected List<SlimAssertion> show(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
     return invokeAction(1, lastCol, row,
             new ShowActionExpectation(0, row));
   }
 
-  private List<SlimAssertion> ensure(int row) {
+  protected List<SlimAssertion> ensure(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
     return invokeAction(1, lastCol, row,
             new EnsureActionExpectation(0, row));
   }
 
-  private List<SlimAssertion> reject(int row) {
+  protected List<SlimAssertion> reject(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
     return invokeAction(1, lastCol, row,
             new RejectActionExpectation(0, row));
 
   }
 
-  private List<SlimAssertion> checkAction(int row) {
+  protected List<SlimAssertion> checkAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     table.getCellContents(lastColInAction, row);
     return invokeAction(1, lastColInAction - 1, row,
             new ReturnedValueExpectation(lastColInAction, row));
   }
 
-  private List<SlimAssertion> checkNotAction(int row) {
+  protected List<SlimAssertion> checkNotAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     table.getCellContents(lastColInAction, row);
     return invokeAction(1, lastColInAction - 1, row,
             new RejectedValueExpectation(lastColInAction, row));
   }
 
-  private List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
+  protected List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row, assertions);
@@ -267,7 +267,7 @@ public class ScriptTable extends SlimTable {
     return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
 
-  private List<SlimAssertion> startActor(int row) {
+  protected List<SlimAssertion> startActor(int row) {
     int classNameColumn = 1;
     String cellContents = table.getCellContents(classNameColumn, row);
     String className = Disgracer.disgraceClassName(cellContents);
