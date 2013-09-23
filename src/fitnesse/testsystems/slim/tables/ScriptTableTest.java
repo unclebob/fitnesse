@@ -2,18 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import util.ListUtility;
 import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -21,7 +14,6 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -31,6 +23,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.Utils;
+import org.junit.Before;
+import org.junit.Test;
+import util.ListUtility;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public class ScriptTableTest {
   private WikiPage root;
@@ -459,7 +457,7 @@ public class ScriptTableTest {
             ListUtility.<List<?>>list(
                     list("scriptTable_id_0", VoidConverter.VOID_TAG)
             ),
-      "[[Script], [func]]", false
+            "[[Script], [func]]", false
     );
   }
 
