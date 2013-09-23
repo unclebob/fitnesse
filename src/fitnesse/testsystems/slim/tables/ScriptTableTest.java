@@ -14,7 +14,6 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -28,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
 public class ScriptTableTest {
@@ -660,20 +659,6 @@ public class ScriptTableTest {
             ),
       "[[Script], [show, func, 3, kawabunga]]", false
     );
-  }
-
-  @Test
-  public void showDoesEscape() throws Exception {
-    assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
-            ),
-            "[[Script], [show, func, 3, <a href=\"http://myhost/turtle.html\">kawabunga</a>]]", false
-    );
-    assertTrue(st.getTable() instanceof HtmlTable);
-    String html = ((HtmlTable) st.getTable()).toHtml();
-    assertTrue("Unexpected table html:\n" + html,
-                html.contains("&lt;a href=\"http://myhost/turtle.html\"&gt;kawabunga&lt;/a&gt;"));
   }
 
   @Test
