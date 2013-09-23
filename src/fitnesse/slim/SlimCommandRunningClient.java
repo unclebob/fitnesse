@@ -28,6 +28,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   private final CommandRunner slimRunner;
   private final String testRunner;
+  private final boolean debug;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -37,8 +38,9 @@ public class SlimCommandRunningClient implements SlimClient {
   private int port;
 
 
-  public SlimCommandRunningClient(String testRunner, CommandRunner slimRunner, String hostName, int port) {
+  public SlimCommandRunningClient(String testRunner, boolean debug, CommandRunner slimRunner, String hostName, int port) {
     this.testRunner = testRunner;
+    this.debug = debug;
     this.slimRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
@@ -94,7 +96,7 @@ public class SlimCommandRunningClient implements SlimClient {
       if (tries > 100)
         throw new SlimError("Could not build Slim.");
       try {
-        Thread.sleep(50);
+        Thread.sleep(debug ? 250 : 50);
       } catch (InterruptedException e) {
         throw new SlimError("Wait for connection interrupted.");
       }
