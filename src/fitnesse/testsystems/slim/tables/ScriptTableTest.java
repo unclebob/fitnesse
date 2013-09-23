@@ -14,7 +14,6 @@ import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -28,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
 public class ScriptTableTest {
