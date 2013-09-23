@@ -121,8 +121,8 @@
   </target>
 
   <target name="compile_tests" depends="resolve" description="compile the test sources (make)">
-    <mkdir dir="${test.classes.dir}" />
-    <javac srcdir="${test.dir}" destdir="${test.classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
+    <mkdir dir="${test-classes.dir}" />
+    <javac srcdir="${test.dir}" destdir="${test-classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
   </target>
 
   <target name="post-compile" depends="stamp-version, retrieve" description="post-compile steps, use those in your IDE" />
