@@ -23,9 +23,6 @@ public class LogFormatter extends Formatter {
     StringBuilder builder = new StringBuilder(128);
     Throwable thrown = logRecord.getThrown();
 
-    builder.append(logRecord.getLoggerName())
-            .append("\t");
-
     if (atLeastWarningLevel(logRecord)) {
       builder.append(logRecord.getLevel().getName())
               .append(": ");
