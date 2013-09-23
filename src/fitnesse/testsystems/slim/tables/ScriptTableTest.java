@@ -666,13 +666,26 @@ public class ScriptTableTest {
   public void showDoesEscapes() throws Exception {
     assertScriptResults("|show|func|3|\n",
             ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "1 < 0")
+            ),
+            "[[Script], [show, func, 3, 1 < 0]]", false
+    );
+    assertTrue(st.getTable() instanceof HtmlTable);
+    String html = ((HtmlTable) st.getTable()).toHtml();
+    assertTrue(html, html.contains("1 &lt; 0"));
+  }
+
+  @Test
+  public void showDoesNotEscapeValidHtml() throws Exception {
+    assertScriptResults("|show|func|3|\n",
+            ListUtility.<List<?>>list(
                     list("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
             ),
             "[[Script], [show, func, 3, <a href=\"http://myhost/turtle.html\">kawabunga</a>]]", false
     );
     assertTrue(st.getTable() instanceof HtmlTable);
     String html = ((HtmlTable) st.getTable()).toHtml();
-    assertTrue(html.contains("&lt;a href=\"http://myhost/turtle.html\"&gt;kawabunga&lt;/a&gt;"));
+    assertTrue(html.contains("<a href=\"http://myhost/turtle.html\">kawabunga</a>"));
   }
 
   @Test
