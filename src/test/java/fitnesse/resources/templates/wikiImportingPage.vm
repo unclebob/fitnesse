@@ -1,0 +1,96 @@
+
+<h1>
+#if( $isUpdate )
+ Updating imported wiki.
+#else
+ Importing wiki.
+#end
+ This may take a few moments.
+</h1>
+    
+<p>Destination wiki: <a href="$pageName">$pageName</a></p>
+
+ <p>Source wiki: <a href="$remoteUrl">$remoteUrl</a></p>
+
+<p>Imported pages:</p>
+<hr/>
+
+## Meat
+<ul>
+#traverse( $importTraverser )
+ <li>
+ #if( $result.type == "ERROR" )
+  <h2>Import failure</h2>
+  <p>$result.message</p>
+  #if( $!result.exception )
+   <ul class="stacktrace">
+    #foreach( $stackElement in $result.exception.stackTrace )
+     <li>${stackElement.className}.${stackElement.methodName}:$stackElement.lineNumber</li>
+    #end
+   </ul>
+  #end
+ #elseif( $result.type == "AUTH" )
+ <form method="post">
+  <h2>The wiki at $result.message requires authentication.</h2>
+
+  <input type="hidden" name="responder" value="import"/>
+  #if( $remoteUrl )
+  <input type="hidden" name="remoteUrl" value="$remoteUrl"/>
+  #end
+  <label for="username">remote username:</label>
+  <input id="username" type="text" name="remoteUsername"/>
+ 
+  <label for="password">remote password:</label>
+  <input id="password" type="password" name="remotePassword"/>
+  <input type="submit" name="submit" value="Authenticate and Continue Import"/>
+ </form>
+ #else
+  #set( $relativePathName = $PathParser.render( $importer.relativePath ) )
+  #set( $localPathName = $PathParser.render( $importer.localPath ) )
+  <a href="$localPathName">$relativePathName</a>
+ #end
+ </li>
+#end
+</ul>
+
+<a name="end"><hr></a>
+
+<h3>Import complete.</h3>
+
+#if( $importer.unmodifiedCount != 0 )
+ <p>
+  #if( $importer.unmodifiedCount == 1 )
+   1 page was unmodified.
+  #else
+   ${importer.unmodifiedCount} pages were unmodified.
+  #end
+ </p>
+#end
+
+<p>
+ #if( $importer.importCount == 1 )
+  1 page was imported.
+ #else
+  ${importer.importCount} pages were imported.
+ #end
+</p>
+
+#set( $orphans = $importer.orphans )
+#if( $orphans.size() > 0)
+ <p>#if( $orphans.size() == 1)
+     1 orphaned page was found and has been removed.
+    #else
+     $orphans.size() orphaned pages were found and have been removed.
+    #end
+  </p>
+  <p>This may occur when a remote page is deleted, moved, or renamed.</p>
+  <p>Orphans:</p>
+
+ <ul>
+ #foreach( $path in $orphans )
+   <li>$PathParser.render($path)</li>
+ #end
+ </ul>
+ <hr/>
+#end
+<p>Automatic Update turned#if( $importer.autoUpdateSetting ) ON#else OFF#end.</p>

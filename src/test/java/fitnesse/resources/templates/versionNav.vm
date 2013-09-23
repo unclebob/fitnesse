@@ -1,0 +1,10 @@
+<ul>
+ #if( $!nextVersion )
+ <li ><a href="$localPath?responder=viewVersion&version=$nextVersion">Next</a></li>
+ #end
+ #if( $!previousVersion )
+ <li ><a href="$localPath?responder=viewVersion&version=$previousVersion">Previous</a></li>
+ #end
+ <li ><a href="$localPath?responder=rollback&version=$rollbackVersion">Rollback</a></li>
+ <li ><a href="$localPath">Get out</a></li>
+</ul>

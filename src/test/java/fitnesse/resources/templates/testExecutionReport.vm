@@ -1,0 +1,41 @@
+#if($testExecutionReport)
+<table>
+  <tr>
+    <td>$testExecutionReport.Date</td>
+    <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
+  </tr>
+</table>
+
+#foreach($testResult in $testExecutionReport.Results)
+<p/>
+<hr/>
+<p/>
+<table>
+  <tr class="$ExecutionResult.getExecutionResult($testResult.RelativePageName, $testResult.TestSummary)">
+    <td>
+      <strong>
+        <a name="$testResult.RelativePageName">$testResult.RelativePageName</a>
+      </strong>
+    </td>
+    <td class="numeric">
+      $testResult.Right Right
+    </td>
+    <td class="numeric">
+      $testResult.Wrong Wrong
+    </td>
+    <td class="numeric">
+      $testResult.Ignores Ignores
+    </td>
+    <td class="numeric">
+      $testResult.Exceptions Exceptions
+    </td>
+    #if($testExecutionReport.hasRunTimes())
+    <td class="numeric">
+      $testResult.runTimeInMillis ms
+    </td>
+    #end
+  </tr>
+</table>
+<div>$testResult.Content</div>
+#end
+#end

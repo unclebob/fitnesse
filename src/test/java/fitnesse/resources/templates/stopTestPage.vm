@@ -1,0 +1,7 @@
+#if($testId)
+ Attempting to stop single test or suite...<br/>
+ $runningTestingTracker.stopProcess($testId)
+#else
+ Attempting to stop all running test processes...</br/>
+ $runningTestingTracker.stopAllProcesses()
+#end

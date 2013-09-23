@@ -1,4 +1,5 @@
 TestDir
+/out
 properties
 updateList
 updateDoNotCopyOverList

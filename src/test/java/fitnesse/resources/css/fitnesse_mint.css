@@ -1,0 +1,231 @@
+/* ****************** 
+Style colors:
+Base: #DADFCA
+DarkerBase: #969789
+DarkGray: #494A43
+Green: #CFE48A 
+DarkGreen: #474A2D
+******************* */
+
+/* BASIC CSS */
+
+/* Makeshift CSS Reset */
+{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial','Helvetica',sans-serif;
+    font-size: small;
+    background:#979789;
+    color:#333;
+}
+/* Tell the browser to render HTML 5 elements as block */
+header, footer, aside, nav, article {
+    display: block;
+}
+
+img {
+    border:0;
+}
+
+a, a:active, a:link, a:visited {
+    text-decoration: none;
+    color:#8A8A7D;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #5D5F56;
+    font-family: Helvetica,Arial;
+    font-weight: bold;
+    line-height: 1.1em;
+    padding-bottom: 5px;
+    text-shadow: 0 1px 0 #FFFFFF;
+    font-size:xx-large;
+}
+
+/* HEADER */
+header {
+ background:#d9dfc9;
+ padding:20px;
+}
+
+
+header ul {
+ list-style: none;
+ margin: 10px 0;
+ padding:0;
+}
+
+header li {
+ display: inline-block;
+}
+
+header h1 {
+ margin: 20px 20px 0 0;
+ font-size:xx-large;
+ color:#4A4A2E;
+}
+
+header h5 {
+ color: #aaaaaa;
+ margin: 0px 0px 0 0;
+ font-size: 10pt;
+}
+
+#art_niche {
+ display:block;
+ background: url("../images/fit_mint.png") top left no-repeat;
+ width: 156px;
+ height: 49px;
+}
+#art_niche span{
+ display:none;
+}
+
+
+/* NAVIGATION */
+
+nav {
+ float:left;
+ background:#4A4A44;
+ width:100%;
+ height:25px;
+}
+
+nav ul {
+ padding: 5px 0 5px 0;
+ margin:0;
+}
+
+nav ul li {
+ display: block;
+ float: left;
+ list-style: none;
+ margin-right: 0.5em;
+ z-index: 99;
+}
+
+nav a, nav a:link, nav a:active, nav a:visited {
+ white-space:nowrap;
+ text-decoration: none;
+ color: #D6D6C5;
+ padding: 0.3em 3em 0.3em 3em;
+}
+
+nav ul ul {
+ background: #4A4A44; /* Adding a background makes the dropdown work properly in IE7+. */
+ -moz-box-shadow: 0 3px 10px #4A4A44;
+ position: absolute;
+ display: none;
+ z-index: 999;
+ margin: 0;
+ padding: 10px 0 10px 0;
+}
+
+nav li.divider {
+ border-top: 1px solid #A8AC9C;
+}
+
+nav ul ul li {
+ float: none;
+ display: block;
+ line-height: 1.5em;
+ margin: 0;
+}
+
+nav ul ul li a {
+ display: block;
+ padding:5px 0px 5px 0px;
+ border: none;
+}
+
+nav li:hover ul {
+    display: block;
+}
+
+/* ARTICLE */
+
+article {
+ padding: 40px 40px 80px 40px;
+ background:#fff; 
+ margin: 0 20px 0 20px;
+ -moz-box-shadow: 2px 2px 2px #494A43;
+-webkit-box-shadow: 2px 2px 2px #494A43;
+box-shadow: 2px 2px 2px #494A43;
+ 
+ 
+}
+
+table {
+	border: thin solid #5D5F56;
+	border-collapse:collapse;
+}
+td, th {
+	border: thin solid #5D5F56;
+	padding: 0.25em 0.5em;
+}
+
+/* FOOTER  */
+
+footer {
+    padding:20px;
+    color:#D9D9D9;
+}
+
+footer a, footer a:active, footer a:link, footer a:visited {
+    text-decoration: none;
+    color:#D9D9D9;
+}
+
+/* TESTS */
+#test-action .ok,
+#test-action .output {
+	font-weight: bold;
+	color: white;
+}
+
+#error-nav {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    font-weight: bold;
+    border-width: 3px;
+    border-style: solid;
+    border-color: Black;
+    height: 60px;
+    width: 180px;
+    background-color: #FFAAAA ;
+}
+
+#error-nav-label {
+    text-align: center;
+    line-height: 50%;
+}
+
+#error-nav-controls {
+    text-align: center;
+}
+
+#error-nav button{
+    width: 30px;
+}
+
+#error-nav input{
+    width: 40px;
+}
+
+.error-nav-hidden{
+    visibility:hidden;
+}
+
+.selected-error{
+    border-style:solid;
+  border-width:4px;
+  border-color:SlateGray;
+}
+
+

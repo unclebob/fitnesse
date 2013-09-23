@@ -1,0 +1,115 @@
+<script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+
+<form method="post" action="$resource" name="f">
+#if($!editTime)
+ <input type="hidden" name="editTime" value="$editTime"/>
+ <input type="hidden" name="ticketId" value="$ticketId"/>
+#end
+#if($!redirect)
+ <input type="hidden" name="redirect" value="$redirect"/>
+#end
+#if($!isNewPage)
+ <input type="hidden" name="responder" value="addChild"/>
+ <fieldset>
+  <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
+ </fieldset>
+ #if( $!pageType )
+ <input type="hidden" name="pageType" value="$pageType"/>
+ #else
+ <fieldset id="pagetypes">
+  #foreach( $pageType in $pageTypes )
+  <label for="pageType_$pageType"><input type="radio" name="pageType" value="$pageType" id="pageType_$pageType"/> $pageType</label>
+  #end
+  <label for="pageType_Default"><input type="radio" name="pageType" value="Default" id="pageType_Default" checked="checked" /> Default</label>
+ </fieldset>
+ #end
+#else
+ <input type="hidden" name="responder" value="saveData"/>
+#end
+ <fieldset>
+  <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
+ </fieldset>
+ <fieldset>
+  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
+ </fieldset>
+
+ <div id="backingData" class="hidden">
+  <select id="templateMap">
+   <option value=""></option>
+   #foreach ($templateEntry in $templateMap.entrySet())
+   <option value="$templateEntry.key">$templateEntry.value</option>
+   #end
+  </select>
+
+ </div>
+
+
+ <fieldset id="editor">
+  <textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
+ </fieldset>
+
+ <fieldset id="save_buttons">
+  <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
+  <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
+ </fieldset>
+</form>
+<script src="/files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
+<script src="/files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function () {
+
+  var editors = Wysiwyg.initialize();
+  if (editors) {
+    var editor = editors[0];
+
+    // On cancel button:
+    
+    function fieldValues () {
+      return $.map($('#pageContent,#helptext,#suites', document.f), function(e) { return $(e).val(); });
+    }
+    
+    var originalFieldValues = fieldValues();
+    
+    var performingSubmit = false;
+    
+    $(document.f).submit(function () {
+      performingSubmit = true;
+    });
+
+    window.onbeforeunload = function () {
+      if (performingSubmit) {
+        return;
+      }
+
+      if (editor.activeEditor() === "wysiwyg") {
+        editor.loadWikiText();
+      }
+
+      if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
+        return "The page content has been changed.\nDo you really want to leave this page?";
+      }
+    };
+  }
+
+  var rte = $('#editor iframe');
+  var textarea = $('#editor textarea');
+  $(window).resize(function () {
+    var h = $('#save_buttons').position().top;
+    rte.height(h - rte.position().top - 1);
+    textarea.height(h - textarea.position().top - 1);
+  }).resize();
+
+  /* Tags */
+  $('#suites').tagsInput();
+
+  #if($!isNewPage)
+    document.f.pageName.focus();
+  #else
+    document.f.pageContent.focus();
+  #end
+
+});
+</script>
