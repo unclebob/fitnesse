@@ -663,7 +663,7 @@ public class ScriptTableTest {
   }
 
   @Test
-  public void showDoesEscapes() throws Exception {
+  public void showDoesEscape() throws Exception {
     assertScriptResults("|show|func|3|\n",
             ListUtility.<List<?>>list(
                     list("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
@@ -672,7 +672,8 @@ public class ScriptTableTest {
     );
     assertTrue(st.getTable() instanceof HtmlTable);
     String html = ((HtmlTable) st.getTable()).toHtml();
-    assertTrue(html.contains("&lt;a href=\"http://myhost/turtle.html\"&gt;kawabunga&lt;/a&gt;"));
+    assertTrue("Unexpected table html:\n" + html,
+                html.contains("&lt;a href=\"http://myhost/turtle.html\"&gt;kawabunga&lt;/a&gt;"));
   }
 
   @Test

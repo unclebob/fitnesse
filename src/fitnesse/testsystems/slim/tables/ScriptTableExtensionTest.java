@@ -487,7 +487,8 @@ public class ScriptTableExtensionTest {
     );
     assertTrue(st.getTable() instanceof HtmlTable);
     String html = ((HtmlTable) st.getTable()).toHtml();
-    assertTrue(html.contains(ahref));
+    assertTrue("Unexpected table html:\n" + html,
+                html.contains(ahref));
   }
 
   @Test
