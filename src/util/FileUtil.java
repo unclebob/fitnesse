@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 public class FileUtil {
-  private static final Logger LOG = Logger.getLogger("Util");
 
   public static File createFile(String path, String content) {
     String names[] = path.split("/");
@@ -99,7 +98,6 @@ public class FileUtil {
     int i = 10;
     while (file.exists()) {
       if (--i <= 0) {
-        LOG.finer("Breaking out of delete wait");
         break;
       }
       waitFor(500);

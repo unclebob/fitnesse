@@ -29,7 +29,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class FitNesseMain {
-  private static final Logger LOG = Logger.getLogger("Main");
+  private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
 
   public static boolean dontExitAfterSingleCommand;
 

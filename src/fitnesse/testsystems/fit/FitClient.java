@@ -14,7 +14,7 @@ import fitnesse.testsystems.TestSummary;
 import util.StreamReader;
 
 public class FitClient {
-  private static final Logger LOG = Logger.getLogger("Fit");
+  private static final Logger LOG = Logger.getLogger(FitClient.class.getName());
 
   private FitClientListener listener;
   private Socket fitSocket;

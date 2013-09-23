@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SocketService {
-  private static final Logger LOG = Logger.getLogger("Main");
+  private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
 
   private ServerSocket serverSocket = null;
   private Thread serviceThread = null;

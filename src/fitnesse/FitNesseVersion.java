@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * I.e. the suffix is optional.
  **/
 public class FitNesseVersion {
-  private static final Logger LOG = Logger.getLogger("Main");
+  private static final Logger LOG = Logger.getLogger(FitNesseVersion.class.getName());
 
   private final String version;
 

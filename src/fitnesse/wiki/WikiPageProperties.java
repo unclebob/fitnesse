@@ -24,7 +24,7 @@ import util.Clock;
 import util.XmlUtil;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());
 
   private static final long serialVersionUID = 1L;
 

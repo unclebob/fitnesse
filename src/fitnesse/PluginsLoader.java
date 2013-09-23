@@ -22,7 +22,7 @@ import static fitnesse.components.ComponentFactory.*;
 
 public class PluginsLoader {
 
-  java.util.logging.Logger LOG = java.util.logging.Logger.getLogger("Plugin");
+  java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
 

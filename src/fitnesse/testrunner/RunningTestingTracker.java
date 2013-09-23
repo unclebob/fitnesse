@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import fitnesse.testrunner.Stoppable;
 
 public class RunningTestingTracker {
-  public static final Logger LOG = Logger.getLogger("Test");
+  public static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
 
   private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
   private int nextTicketNumber = 1;

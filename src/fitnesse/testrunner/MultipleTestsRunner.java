@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
-  public static final Logger LOG = Logger.getLogger("Test");
+  public static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
   private final FitNesseContext fitNesseContext;

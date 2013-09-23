@@ -13,7 +13,7 @@ import fitnesse.http.ResponseParser;
 import util.CommandLine;
 
 public class Shutdown {
-  private static final Logger LOG = Logger.getLogger("Main");
+  private static final Logger LOG = Logger.getLogger(Shutdown.class.getName());
 
   public String hostname = "localhost";
   public int port = FitNesseContext.DEFAULT_PORT;

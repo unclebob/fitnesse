@@ -16,7 +16,7 @@ import fitnesse.wiki.WikiPagePath;
 import util.StringUtil;
 
 public class SuiteFilter {
-  public static final Logger LOG = Logger.getLogger("Test");
+  public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
 
   final private SuiteTagMatcher notMatchTags;
   final private SuiteTagMatcher matchTags;

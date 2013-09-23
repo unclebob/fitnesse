@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import util.TimeMeasurement;
 
 public class CommandRunner {
-  private static final Logger LOG = Logger.getLogger("TestSys");
+  private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
   private String input = "";

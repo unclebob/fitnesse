@@ -46,7 +46,7 @@ import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
-  private final static Logger LOG = Logger.getLogger("Report");
+  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
 
   private final String rootPath;
   private final Map<String, Class<?>> responderMap;

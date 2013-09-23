@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import fitnesse.socketservice.SocketServer;
 
 public class FitNesseServer implements SocketServer {
-  private static final Logger LOG = Logger.getLogger("Server");
+  private static final Logger LOG = Logger.getLogger(FitNesseServer.class.getName());
 
   private FitNesseContext context;
 

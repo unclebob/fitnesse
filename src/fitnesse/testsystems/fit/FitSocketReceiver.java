@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import fitnesse.http.Request;
 
 public class FitSocketReceiver {
-  private static final Logger LOG = Logger.getLogger("Fit");
+  private static final Logger LOG = Logger.getLogger(FitSocketReceiver.class.getName());
 
   public static final int DEFAULT_SOCKET = 9123;
 

@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
-    private static final Logger LOG = Logger.getLogger("Wiki");
+    private static final Logger LOG = Logger.getLogger(WikiSourcePage.class.getName());
 
     private WikiPage page;
 

@@ -10,7 +10,7 @@ import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;
 
 public class PageReferenceRenamer extends ReferenceRenamer {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(PageReferenceRenamer.class.getName());
 
   private WikiPage subjectPage;
   private String newName;

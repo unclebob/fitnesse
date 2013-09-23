@@ -20,7 +20,7 @@ import util.Clock;
 import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(SimpleFileVersionsController.class.getName());
 
   public static final int CACHE_TIMEOUT = 300000; // ms
 

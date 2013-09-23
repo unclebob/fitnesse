@@ -13,7 +13,7 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
 public class WikiImportTestEventListener implements TestEventListener {
-  private static final Logger LOG = Logger.getLogger("Web");
+  private static final Logger LOG = Logger.getLogger(WikiImportTestEventListener.class.getName());
 
   public static void register() {
     TestResponder.registerListener(new WikiImportTestEventListener(new WikiImporterFactory()));

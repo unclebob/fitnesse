@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import fitnesse.util.MockSocket;
 
 public class SimpleSocketDoner implements SocketDoner {
-  private static final Logger LOG = Logger.getLogger("Fit");
+  private static final Logger LOG = Logger.getLogger(SimpleSocketDoner.class.getName());
 
   public Socket socket;
   public boolean finished = false;

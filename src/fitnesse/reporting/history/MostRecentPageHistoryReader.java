@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import fitnesse.reporting.TestResultRecord;
 
 public class MostRecentPageHistoryReader extends PageHistoryReader {
-  private final static Logger LOG = Logger.getLogger("Report");
+  private final static Logger LOG = Logger.getLogger(MostRecentPageHistoryReader.class.getName());
 
   TestResultRecord mostRecentRecord = null;
   File directory = null;

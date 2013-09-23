@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FitNesseExpediter implements ResponseSender {
-  private static final Logger LOG = Logger.getLogger("Server");
+  private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
 
   private Socket socket;
   private InputStream input;

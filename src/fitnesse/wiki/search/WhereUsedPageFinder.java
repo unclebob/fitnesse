@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(WhereUsedPageFinder.class.getName());
 
   private WikiPage subjectPage;
   private TraversalListener<? super WikiPage> observer;

@@ -33,7 +33,7 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
-  private static final Logger LOG = Logger.getLogger("Slim");
+  private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
 
   public static final SlimTable START_OF_TEST = null;
   public static final SlimTable END_OF_TEST = null;

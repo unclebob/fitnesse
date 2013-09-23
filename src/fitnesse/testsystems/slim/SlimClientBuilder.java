@@ -16,7 +16,7 @@ import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
-  private static final Logger LOG = Logger.getLogger("Slim");
+  private static final Logger LOG = Logger.getLogger(SlimClientBuilder.class.getName());
 
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";

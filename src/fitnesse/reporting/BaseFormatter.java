@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>, Closeable {
-  protected static final Logger LOG = Logger.getLogger("Report");
+  protected final Logger LOG = Logger.getLogger(getClass().getName());
 
   protected WikiPage page = null;
   protected FitNesseContext context;

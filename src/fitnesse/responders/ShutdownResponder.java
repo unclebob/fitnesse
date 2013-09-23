@@ -17,7 +17,7 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
-  private final static Logger LOG = Logger.getLogger("Report");
+  private final static Logger LOG = Logger.getLogger(ShutdownResponder.class.getName());
 
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();

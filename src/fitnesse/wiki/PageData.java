@@ -24,7 +24,7 @@ import util.StringUtil;
 
 @SuppressWarnings("unchecked")
 public class PageData implements ReadOnlyPageData, Serializable {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
   public static final String ErrorLogName = "ErrorLogs";
   private static final long serialVersionUID = 1L;

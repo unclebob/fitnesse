@@ -12,7 +12,7 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiWord;
 
 public class MovedPageReferenceRenamer extends ReferenceRenamer {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(MovedPageReferenceRenamer.class.getName());
 
   private WikiPage pageToBeMoved;
   private String newParentName;

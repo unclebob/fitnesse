@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class ChunkingResponder implements Responder, ChunkedDataProvider {
-  private static final Logger LOG = Logger.getLogger("Web");
+  private final Logger LOG = Logger.getLogger(ChunkingResponder.class.getName());
 
   protected WikiPage root;
   public WikiPage page;

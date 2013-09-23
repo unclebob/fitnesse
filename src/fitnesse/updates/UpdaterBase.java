@@ -14,7 +14,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 
 public class UpdaterBase implements Updater {
-  protected static final Logger LOG = Logger.getLogger("Update");
+  protected static final Logger LOG = Logger.getLogger(UpdaterBase.class.getName());
 
   public FitNesseContext context;
   public Properties rootProperties;

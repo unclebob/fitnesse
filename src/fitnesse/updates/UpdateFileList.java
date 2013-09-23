@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class UpdateFileList {
-  private static final Logger LOG = Logger.getLogger("Update");
+  private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
 
   private List<String> mainDirectories;
   private String updateListContent;

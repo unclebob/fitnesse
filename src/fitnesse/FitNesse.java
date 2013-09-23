@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FitNesse {
-  private static final Logger LOG = Logger.getLogger("Main");
+  private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
   public static final FitNesseVersion VERSION = new FitNesseVersion();
   public static FitNesse FITNESSE_INSTANCE;
   private final Updater updater;

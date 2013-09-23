@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import util.Clock;
 
 public class ScheduleImpl implements Schedule, Runnable {
-  private final static Logger LOG = Logger.getLogger("Schedule");
+  private final static Logger LOG = Logger.getLogger(ScheduleImpl.class.getName());
 
   private long delay;
   private Thread thread;

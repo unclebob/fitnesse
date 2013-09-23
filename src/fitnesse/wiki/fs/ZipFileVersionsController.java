@@ -19,7 +19,7 @@ import static fitnesse.wiki.fs.SimpleFileVersionsController.contentFilename;
 import static fitnesse.wiki.fs.SimpleFileVersionsController.propertiesFilename;
 
 public class ZipFileVersionsController implements VersionsController {
-  private static final Logger LOG = Logger.getLogger("Wiki");
+  private static final Logger LOG = Logger.getLogger(ZipFileVersionsController.class.getName());
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
 

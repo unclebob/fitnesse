@@ -11,7 +11,7 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
-  private static final Logger LOG = Logger.getLogger("Slim");
+  private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
 
   private static final Map<String, Class<? extends SlimTable>> tableTypes;
 

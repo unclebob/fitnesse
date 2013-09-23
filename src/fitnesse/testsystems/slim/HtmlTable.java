@@ -27,7 +27,7 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
 public class HtmlTable implements Table {
-  private static final Logger LOG = Logger.getLogger("Slim");
+  private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
   // Source: http://dev.w3.org/html5/markup/common-models.html
   private final static Pattern HTML_PATTERN = Pattern.compile("^<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
