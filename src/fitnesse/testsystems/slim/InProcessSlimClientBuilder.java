@@ -22,7 +22,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
     final String slimArguments = buildArguments();
     createSlimService(slimArguments);
 
-    return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(descriptor.getTestRunner(), descriptor.isDebug(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
 }

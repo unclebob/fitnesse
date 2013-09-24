@@ -43,7 +43,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
     }
 
-    return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(descriptor.getTestRunner(), descriptor.isDebug(), commandRunner, determineSlimHost(), getSlimPort());
   }
 
   protected String buildCommand() {
