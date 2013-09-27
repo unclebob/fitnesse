@@ -690,6 +690,45 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void sendHtmlInstructionForTable() throws Exception {
+    String testPage = "!define BONUSRatingTbl {| RATING_NBR | DESCR2 |\n" +
+      "| 1 | Met 100% of goals |\n" +
+      "| 2 | Met < 50% of goals |\n" +
+            "}\n" +
+            "| script |\n" +
+            "| show | echo | ${BONUSRatingTbl}|\n";
+    st = makeScriptTable(testPage, false);
+    assertions.addAll(st.getAssertions());
+    assertEquals(assertions.toString(), 2, assertions.size());
+    assertEquals("Instruction{id='NOOP'}", assertions.get(0).getInstruction().toString());
+    assertEquals("{id='scriptTable_id_0', instruction='call', instanceName='scriptTableActor', methodName='echo', args=[<table>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>RATING_NBR</td>\n" +
+            "\t\t<td>DESCR2</td>\n" +
+            "\t</tr>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>1</td>\n" +
+            "\t\t<td>Met 100% of goals</td>\n" +
+            "\t</tr>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>2</td>\n" +
+            "\t\t<td>Met &lt; 50% of goals</td>\n" +
+            "\t</tr>\n" +
+            "</table>]}", assertions.get(1).getInstruction().toString());
+  }
+
+  @Test
+  public void testPlainTextWhenCellIsNotHtml() throws Exception {
+    String testPage = "| script |\n" +
+            "| show | echo | < 50 % |\n";
+    st = makeScriptTable(testPage, false);
+    assertions.addAll(st.getAssertions());
+    assertEquals(assertions.toString(), 2, assertions.size());
+    assertEquals("Instruction{id='NOOP'}", assertions.get(0).getInstruction().toString());
+    assertEquals("{id='scriptTable_id_0', instruction='call', instanceName='scriptTableActor', methodName='echo', args=[< 50 %]}", assertions.get(1).getInstruction().toString());
+  }
+
+  @Test
   public void localizedShow() throws Exception {
     assertScriptResults("|localized show|func|3|\n",
             ListUtility.<List<?>>list(
