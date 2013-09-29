@@ -1,4 +1,4 @@
-package fitnesse.slim;
+package fitnesse.testsystems.slim;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionLog;
@@ -12,11 +12,11 @@ public interface SlimClient {
 
   Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException;
 
+  void connect() throws IOException;
+
   void bye() throws IOException;
 
   void kill() throws IOException;
-
-  String getTestRunner();
 
   ExecutionLog getExecutionLog();
 }

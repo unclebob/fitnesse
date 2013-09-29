@@ -6,7 +6,6 @@ import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fitnesse.slim.JavaSlimFactory;
-import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimService;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
@@ -43,7 +42,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
     }
 
-    return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
   }
 
   protected String buildCommand() {

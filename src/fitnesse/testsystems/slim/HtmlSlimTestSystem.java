@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
