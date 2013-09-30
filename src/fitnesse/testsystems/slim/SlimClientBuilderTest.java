@@ -48,6 +48,14 @@ public class SlimClientBuilderTest {
   }
 
   @Test
+  public void slimPortPoolSizeCanBeModified() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("slim.pool.size")).thenReturn("20");
+    for (int i = 1; i < 25; i++)
+      assertEquals(8085 + (i % 20), new SlimClientBuilder(descriptor).getSlimPort());
+  }
+
+  @Test
   public void slimHostDefaultsTolocalhost() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
     assertEquals("localhost", new SlimClientBuilder(descriptor).determineSlimHost());

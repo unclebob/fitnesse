@@ -98,7 +98,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getNextSlimPort() {
-    int base = getSlimPortBase();
+    final int base = getSlimPortBase();
+    final int poolSize = getSlimPortPoolSize();
 
     if (base == 0) {
       return findFreePort();
@@ -106,7 +107,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (slimPortOffset) {
       int offset = slimPortOffset.get();
-      offset = (offset + 1) % 10;
+      offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
       return offset + base;
     }
@@ -133,6 +134,18 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return 8085;
   }
 
+  private int getSlimPortPoolSize() {
+    try {
+      String poolSize = descriptor.getVariable("slim.pool.size");
+      if (poolSize != null) {
+        return Integer.parseInt(poolSize);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
+    }
+    return 10;
+  }
+
   String determineSlimHost() {
     String slimHost = descriptor.getVariable(SLIM_HOST);
     return slimHost == null ? "localhost" : slimHost;
@@ -150,5 +163,4 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     }
     return false;
   }
-
 }
