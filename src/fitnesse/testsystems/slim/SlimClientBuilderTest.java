@@ -38,6 +38,16 @@ public class SlimClientBuilderTest {
       assertEquals(9000 + (i % 10), clientBuilder.getSlimPort());
     }
   }
+  @Test
+  public void portStartsAtSlimPortEnvironmentVariable() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("slim.port")).thenReturn("9000");
+    when(descriptor.getVariable("SLIM_PORT")).thenReturn("1313");
+    for (int i = 1; i < 15; i++) {
+      SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
+      assertEquals(9000 + (i % 10), clientBuilder.getSlimPort());
+    }
+  }
 
   @Test
   public void badSlimPortVariableDefaults() throws Exception {
@@ -65,6 +75,14 @@ public class SlimClientBuilderTest {
   public void slimHostVariableSetsTheHost() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("SLIM_HOST")).thenReturn("somehost");
+    assertEquals("somehost", new SlimClientBuilder(descriptor).determineSlimHost());
+  }
+
+  @Test
+  public void slimHostVariableSetsTheHostEnvironmentVariable() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("slim.host")).thenReturn("somehost");
+    when(descriptor.getVariable("SLIM_HOST")).thenReturn("notThisHost");
     assertEquals("somehost", new SlimClientBuilder(descriptor).determineSlimHost());
   }
 
