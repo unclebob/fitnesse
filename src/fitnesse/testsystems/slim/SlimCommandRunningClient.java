@@ -1,7 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.slim;
+package fitnesse.testsystems.slim;
 
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
 import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
@@ -27,7 +29,6 @@ public class SlimCommandRunningClient implements SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
 
   private final CommandRunner slimRunner;
-  private final String testRunner;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -37,8 +38,7 @@ public class SlimCommandRunningClient implements SlimClient {
   private int port;
 
 
-  public SlimCommandRunningClient(String testRunner, CommandRunner slimRunner, String hostName, int port) {
-    this.testRunner = testRunner;
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
     this.slimRunner = slimRunner;
     this.port = port;
     this.hostName = hostName;
@@ -88,8 +88,8 @@ public class SlimCommandRunningClient implements SlimClient {
     client.close();
   }
 
-
-  void connect() throws IOException {
+  @Override
+  public void connect() throws IOException {
     for (int tries = 0; tryConnect() == false; tries++) {
       if (tries > 100)
         throw new SlimError("Could not build Slim.");
@@ -139,15 +139,10 @@ public class SlimCommandRunningClient implements SlimClient {
     String instructions = SlimSerializer.serialize(toList(statements));
     writeString(instructions);
     int resultLength = getLengthToRead();
-    String results = null;
-    results = reader.read(resultLength);
+    String results = reader.read(resultLength);
     // resultList is a list: [tag, resultValue]
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
-  }
-
-  public String getTestRunner() {
-    return testRunner;
   }
 
   @Override

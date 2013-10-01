@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;

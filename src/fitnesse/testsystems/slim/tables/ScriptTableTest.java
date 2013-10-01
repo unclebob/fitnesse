@@ -2,26 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import util.ListUtility;
-import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -31,6 +24,13 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.Utils;
+import org.junit.Before;
+import org.junit.Test;
+import util.ListUtility;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.ListUtility.list;
 
 public class ScriptTableTest {
   private WikiPage root;
@@ -459,7 +459,7 @@ public class ScriptTableTest {
             ListUtility.<List<?>>list(
                     list("scriptTable_id_0", VoidConverter.VOID_TAG)
             ),
-      "[[Script], [func]]", false
+            "[[Script], [func]]", false
     );
   }
 
@@ -661,6 +661,71 @@ public class ScriptTableTest {
             ),
       "[[Script], [show, func, 3, kawabunga]]", false
     );
+  }
+
+  @Test
+  public void showDoesEscapes() throws Exception {
+    assertScriptResults("|show|func|3|\n",
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "1 < 0")
+            ),
+            "[[Script], [show, func, 3, 1 < 0]]", false
+    );
+    assertTrue(st.getTable() instanceof HtmlTable);
+    String html = ((HtmlTable) st.getTable()).toHtml();
+    assertTrue(html, html.contains("1 &lt; 0"));
+  }
+
+  @Test
+  public void showDoesNotEscapeValidHtml() throws Exception {
+    assertScriptResults("|show|func|3|\n",
+            ListUtility.<List<?>>list(
+                    list("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
+            ),
+            "[[Script], [show, func, 3, <a href=\"http://myhost/turtle.html\">kawabunga</a>]]", false
+    );
+    assertTrue(st.getTable() instanceof HtmlTable);
+    String html = ((HtmlTable) st.getTable()).toHtml();
+    assertTrue(html.contains("<a href=\"http://myhost/turtle.html\">kawabunga</a>"));
+  }
+
+  @Test
+  public void sendHtmlInstructionForTable() throws Exception {
+    String testPage = "!define BONUSRatingTbl {| RATING_NBR | DESCR2 |\n" +
+      "| 1 | Met 100% of goals |\n" +
+      "| 2 | Met < 50% of goals |\n" +
+            "}\n" +
+            "| script |\n" +
+            "| show | echo | ${BONUSRatingTbl}|\n";
+    st = makeScriptTable(testPage, false);
+    assertions.addAll(st.getAssertions());
+    assertEquals(assertions.toString(), 2, assertions.size());
+    assertEquals("Instruction{id='NOOP'}", assertions.get(0).getInstruction().toString());
+    assertEquals("{id='scriptTable_id_0', instruction='call', instanceName='scriptTableActor', methodName='echo', args=[<table>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>RATING_NBR</td>\n" +
+            "\t\t<td>DESCR2</td>\n" +
+            "\t</tr>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>1</td>\n" +
+            "\t\t<td>Met 100% of goals</td>\n" +
+            "\t</tr>\n" +
+            "\t<tr>\n" +
+            "\t\t<td>2</td>\n" +
+            "\t\t<td>Met &lt; 50% of goals</td>\n" +
+            "\t</tr>\n" +
+            "</table>]}", assertions.get(1).getInstruction().toString());
+  }
+
+  @Test
+  public void testPlainTextWhenCellIsNotHtml() throws Exception {
+    String testPage = "| script |\n" +
+            "| show | echo | < 50 % |\n";
+    st = makeScriptTable(testPage, false);
+    assertions.addAll(st.getAssertions());
+    assertEquals(assertions.toString(), 2, assertions.size());
+    assertEquals("Instruction{id='NOOP'}", assertions.get(0).getInstruction().toString());
+    assertEquals("{id='scriptTable_id_0', instruction='call', instanceName='scriptTableActor', methodName='echo', args=[< 50 %]}", assertions.get(1).getInstruction().toString());
   }
 
   @Test

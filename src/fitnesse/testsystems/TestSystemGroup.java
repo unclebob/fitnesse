@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
-import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitTestSystem;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;

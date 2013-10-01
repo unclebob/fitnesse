@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
