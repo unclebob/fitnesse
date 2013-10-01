@@ -40,4 +40,13 @@ public class FitNesseContextTest {
     assertThat(context.getProperty("user.name"), is(System.getProperty("user.name")));
   }
 
+  @Test
+  public void environmentVariableShouldTakePrecedenceOverSystemProperties() {
+    Properties properties = new Properties();
+    System.setProperty("PATH", "xxxxx");
+    builder.properties = properties;
+    FitNesseContext context = builder.createFitNesseContext();
+    assertThat(context.getProperty("PATH"), is(System.getenv("PATH")));
+  }
+
 }
