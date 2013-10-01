@@ -60,7 +60,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   //For testing only.  Makes responder faster.
-  void createSlimService(String args) throws SocketException {
+  void createSlimService(String args) throws IOException {
     while (!tryCreateSlimService(args))
       try {
         Thread.sleep(10);
@@ -70,12 +70,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   // For testing only
-  private boolean tryCreateSlimService(String args) throws SocketException {
+  private boolean tryCreateSlimService(String args) throws IOException {
     try {
       SlimService.parseCommandLine(args.trim().split(" "));
       SlimService.startWithFactoryAsync(new JavaSlimFactory());
       return true;
-    } catch (SocketException e) {
+    } catch (IOException e) {
       throw e;
     } catch (Exception e) {
       e.printStackTrace();
