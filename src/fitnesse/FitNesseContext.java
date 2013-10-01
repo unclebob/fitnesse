@@ -12,12 +12,12 @@ import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
+import java.util.Properties;
 
 public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
-
 
   /**
    * Use the builder to create your FitNesse contexts.
@@ -34,6 +34,7 @@ public class FitNesseContext {
     public String defaultNewPageContent;
     public RecentChanges recentChanges;
     public String pageTheme;
+    public Properties properties;
 
     public Builder() {
       super();
@@ -51,6 +52,7 @@ public class FitNesseContext {
         defaultNewPageContent = context.defaultNewPageContent;
         pageTheme = context.pageTheme;
         recentChanges = context.recentChanges;
+        properties = context.properties;
       }
     }
 
@@ -63,7 +65,8 @@ public class FitNesseContext {
           recentChanges,
           port,
           authenticator,
-          logger);
+          logger,
+          properties);
     }
   }
 
@@ -77,17 +80,20 @@ public class FitNesseContext {
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory = new PageFactory(this);
 
+  // Remove this, let it use getProperty instead
   public final String defaultNewPageContent;
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
   public final String pageTheme;
+  private final Properties properties;
+
 
 
   private FitNesseContext(WikiPage root, String rootPath,
       String rootDirectoryName, String pageTheme, String defaultNewPageContent,
       RecentChanges recentChanges, int port,
-      Authenticator authenticator, Logger logger) {
+      Authenticator authenticator, Logger logger, Properties properties) {
     super();
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
@@ -98,6 +104,7 @@ public class FitNesseContext {
     this.port = port >= 0 ? port : 80;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
+    this.properties = properties;
     responderFactory = new ResponderFactory(getRootPagePath());
   }
 
@@ -124,5 +131,9 @@ public class FitNesseContext {
 
   public String getRootPagePath() {
     return String.format("%s/%s", rootPath, rootDirectoryName);
+  }
+
+  public String getProperty(String name) {
+    return properties.getProperty(name);
   }
 }

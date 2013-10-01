@@ -12,6 +12,7 @@ import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class FitNesseUtil {
   public static final String base = "TestDir";
@@ -78,6 +79,7 @@ public class FitNesseUtil {
     builder.port = port;
     builder.authenticator = authenticator;
     builder.recentChanges = new RecentChangesWikiPage();
+    builder.properties = new Properties();
     FitNesseContext context = builder.createFitNesseContext();
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
