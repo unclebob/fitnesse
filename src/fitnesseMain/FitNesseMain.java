@@ -122,7 +122,6 @@ public class FitNesseMain {
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
-    builder.pageTheme = properties.getProperty(ComponentFactory.THEME);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:

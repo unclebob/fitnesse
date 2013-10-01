@@ -21,15 +21,6 @@ public class FitNesseContextTest {
   }
 
   @Test
-  public void builderPageThemeInputShouldEqualsCreatedContextParam() {
-    String pageThemeValue = "testPageTheme";
-    builder.pageTheme = pageThemeValue;
-
-    FitNesseContext context = builder.createFitNesseContext();
-    assertEquals("pageTheme not correctly set in context from builder", pageThemeValue, context.pageTheme);
-  }
-
-  @Test
   public void shouldReadProvidedProperties() {
     Properties properties = new Properties();
     properties.setProperty("TestProp", "found");
