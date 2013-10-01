@@ -18,6 +18,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class NewPageResponder implements Responder {
+  public static final String DEFAULT_PAGE_CONTENT_PROPERTY = "newpage.default.content";
+  public static final String DEFAULT_PAGE_CONTENT = "!contents -R2 -g -p -f -h";
 
   public Response makeResponse(FitNesseContext context, Request request) {
 
@@ -44,7 +46,7 @@ public class NewPageResponder implements Responder {
     html.put(EditResponder.HELP_TEXT, "");
 
     html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
-    html.put(EditResponder.CONTENT_INPUT_NAME, context.defaultNewPageContent);
+    html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(context));
     if (request.hasInput("pageType")) {
       String pageType = (String) request.getInput("pageType");
       // Validate page type:
@@ -53,6 +55,14 @@ public class NewPageResponder implements Responder {
     } else {
       html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
     }
+  }
+
+  public static String getDefaultContent(FitNesseContext context) {
+    String content = context.getProperty(DEFAULT_PAGE_CONTENT_PROPERTY);
+    if (content == null) {
+      content = DEFAULT_PAGE_CONTENT;
+    }
+    return content;
   }
 
   private WikiPage getParentWikiPage(FitNesseContext context, Request request) {

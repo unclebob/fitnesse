@@ -31,7 +31,6 @@ public class FitNesseContext {
 
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
-    public String defaultNewPageContent;
     public RecentChanges recentChanges;
     public String pageTheme;
     public Properties properties;
@@ -49,7 +48,6 @@ public class FitNesseContext {
         rootDirectoryName = context.rootDirectoryName;
         logger = context.logger;
         authenticator = context.authenticator;
-        defaultNewPageContent = context.defaultNewPageContent;
         pageTheme = context.pageTheme;
         recentChanges = context.recentChanges;
         properties = context.properties;
@@ -61,7 +59,6 @@ public class FitNesseContext {
           rootPath,
           rootDirectoryName,
           pageTheme,
-          defaultNewPageContent,
           recentChanges,
           port,
           authenticator,
@@ -81,7 +78,6 @@ public class FitNesseContext {
   public final PageFactory pageFactory = new PageFactory(this);
 
   // Remove this, let it use getProperty instead
-  public final String defaultNewPageContent;
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
@@ -91,7 +87,7 @@ public class FitNesseContext {
 
 
   private FitNesseContext(WikiPage root, String rootPath,
-      String rootDirectoryName, String pageTheme, String defaultNewPageContent,
+      String rootDirectoryName, String pageTheme,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger, Properties properties) {
     super();
@@ -99,7 +95,6 @@ public class FitNesseContext {
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
     this.pageTheme = pageTheme != null ? pageTheme : "fitnesse_straight";
-    this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
     this.recentChanges = recentChanges;
     this.port = port >= 0 ? port : 80;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();

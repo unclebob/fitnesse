@@ -78,7 +78,7 @@ public class EditResponderTest {
     assertSubString("<html>", body);
     assertSubString("<form", body);
     assertSubString("method=\"post\"", body);
-    assertSubString(context.defaultNewPageContent, body);
+    assertSubString(NewPageResponder.DEFAULT_PAGE_CONTENT, body);
     assertSubString("name=\"responder\"", body);
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
