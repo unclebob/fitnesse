@@ -134,6 +134,8 @@ public class FitNesseContext {
   }
 
   public String getProperty(String name) {
+    String p = System.getProperty(name);
+    if (p != null) return p;
     return properties.getProperty(name);
   }
 }

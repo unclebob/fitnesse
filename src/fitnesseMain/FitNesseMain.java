@@ -172,9 +172,6 @@ public class FitNesseMain {
       }
     }
 
-    // Command line properties override settings from configuration file.
-    properties.putAll(System.getProperties());
-
     return properties;
   }
 
