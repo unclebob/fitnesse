@@ -19,7 +19,7 @@ public class SocketService {
 
   public SocketService(int port, SocketServer server) throws IOException {
     this.server = server;
-    serverSocket = tryCreateServerSocket(port);
+    serverSocket = SocketFactory.tryCreateServerSocket(port);
     serviceThread = new Thread(
       new Runnable() {
         public void run() {
@@ -30,17 +30,7 @@ public class SocketService {
     serviceThread.start();
   }
 
-  private ServerSocket tryCreateServerSocket(int port) throws IOException {
-    ServerSocket socket;
-    try {
-      socket = new ServerSocket(port);
-    } catch (BindException e) {
-      System.out.println("Bind exception on port = " + port);
-      throw e;
-    }
-    return socket;
-  }
-
+  
   public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;

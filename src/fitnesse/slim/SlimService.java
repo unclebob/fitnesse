@@ -10,6 +10,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
+import fitnesse.socketservice.SocketFactory;
+
 public class SlimService {
 	static boolean verbose;
 	static int port;
@@ -84,23 +86,12 @@ public class SlimService {
 		this.slimServer = slimServer;
 
 		try {
-			serverSocket = tryCreateServerSocket(port);
+			serverSocket = SocketFactory.tryCreateServerSocket(port);
 		} catch (java.lang.OutOfMemoryError e) {
 			System.err.println("Out of Memory. Aborting");
 			e.printStackTrace();
 			System.exit(99);
 
-			throw e;
-		}
-	}
-
-	private ServerSocket tryCreateServerSocket(int port) throws IOException {
-		try
-		{
-			return new ServerSocket(port);
-		} catch (IOException e) {
-			System.out.println("IO exception on port = " + port);
-			e.printStackTrace();
 			throw e;
 		}
 	}
