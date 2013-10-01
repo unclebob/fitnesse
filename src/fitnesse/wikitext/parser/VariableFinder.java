@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 import util.Maybe;
 
 public class VariableFinder implements VariableSource {
@@ -16,19 +18,28 @@ public class VariableFinder implements VariableSource {
     result = findVariableInPages(name);
     if (!result.isNothing()) return result;
 
-    String value = System.getenv(name);
-    if (value != null) return new Maybe<String>(value);
-
-    value = System.getProperty(name);
-    if (value != null) return new Maybe<String>(value);
-
-    return Maybe.noString;
+    return findVariableInContext(name);
   }
 
   private Maybe<String> findVariableInPages(String name) {
     Maybe<String> localVariable = page.findVariable(name);
     if (!localVariable.isNothing()) return new Maybe<String>(localVariable.getValue());
     return lookInParentPages(name);
+  }
+
+  private Maybe<String> findVariableInContext(String name) {
+    final FitNesseContext context = getFitNesseContext();
+    if (context != null) {
+      String val = context.getProperty(name);
+      if (val != null) return new Maybe<String>(val);
+    }
+    return Maybe.noString;
+  }
+
+  private FitNesseContext getFitNesseContext() {
+    // Make this fail safe for unit tests
+    final FitNesse fitnesse = FitNesse.FITNESSE_INSTANCE;
+    return fitnesse != null ? fitnesse.getContext() : null;
   }
 
   private Maybe<String> lookInParentPages(String name) {
