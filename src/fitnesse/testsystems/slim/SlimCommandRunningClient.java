@@ -221,6 +221,7 @@ public class SlimCommandRunningClient implements SlimClient {
   public void bye() throws IOException {
     writeString("bye");
     slimRunner.join();
+    kill();
   }
 
   public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {
