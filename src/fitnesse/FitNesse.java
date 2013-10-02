@@ -18,17 +18,16 @@ import java.net.BindException;
 public class FitNesse {
   public static final FitNesseVersion VERSION = new FitNesseVersion();
   public static FitNesse FITNESSE_INSTANCE;
-  private final Updater updater;
   private final FitNesseContext context;
   private SocketService theService;
 
   public FitNesse(FitNesseContext context) {
-    this(context, null, true);
+    this(context, true);
   }
 
   // TODO MdM. This boolean agument is annoying... please fix.
-  public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
-    this.updater = updater;
+  // Update AJM: To make this work we need to get rid of FITNESSE_INSTANCE, remove update logic from here (move to FitNesseMain)
+  public FitNesse(FitNesseContext context, boolean makeDirs) {
     FITNESSE_INSTANCE = this;
     this.context = context;
     if (makeDirs)
@@ -44,14 +43,6 @@ public class FitNesse {
     File filesDir = new File(path);
     if (!filesDir.exists())
       filesDir.mkdir();
-  }
-
-  public FitNesse(FitNesseContext context, Updater updater) {
-    this(context, updater, true);
-  }
-
-  public FitNesse(FitNesseContext context, boolean makeDirs) {
-    this(context, null, makeDirs);
   }
 
   public static void main(String[] args) throws Exception {
@@ -86,11 +77,6 @@ public class FitNesse {
       theService.close();
       theService = null;
     }
-  }
-
-  public void applyUpdates() throws IOException{
-    if (updater != null)
-      updater.update();
   }
 
   public boolean isRunning() {

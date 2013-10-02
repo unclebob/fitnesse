@@ -62,7 +62,7 @@ public class UpdaterBase implements Updater {
     }
   }
 
-  public void update() throws IOException {
+  public boolean update() throws IOException {
     Update[] updates = getUpdates();
     for (int i = 0; i < updates.length; i++) {
       Update update = updates[i];
@@ -70,6 +70,7 @@ public class UpdaterBase implements Updater {
         performUpdate(update);
     }
     saveProperties();
+    return true;
   }
 
   private void performUpdate(Update update) {

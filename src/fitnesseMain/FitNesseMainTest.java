@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import fitnesse.Arguments;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -38,10 +39,8 @@ public class FitNesseMainTest {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
     FitNesse fitnesse = mock(FitNesse.class);
-    FitNesseMain.update(args, fitnesse);
     FitNesseMain.launch(args, context, fitnesse);
     verify(fitnesse, never()).start();
-    verify(fitnesse, times(1)).applyUpdates();
   }
 
   @Test
@@ -49,11 +48,10 @@ public class FitNesseMainTest {
     FitNesseMain.dontExitAfterSingleCommand = true;
     Arguments args = new Arguments();
     args.setCommand("command");
+    args.setOmitUpdates(true);
     FitNesse fitnesse = mock(FitNesse.class);
     when(fitnesse.start()).thenReturn(true);
-    FitNesseMain.update(args, fitnesse);
     FitNesseMain.launch(args, context, fitnesse);
-    verify(fitnesse, times(1)).applyUpdates();
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();

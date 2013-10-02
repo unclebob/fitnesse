@@ -42,21 +42,22 @@ public class FitNesseMain {
   public static void launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
-    Updater updater = null;
-    if (!arguments.isOmittingUpdates())
-      updater = new UpdaterImplementation(context);
-    FitNesse fitnesse = new FitNesse(context, updater);
-    update(arguments, fitnesse);
+    FitNesse fitnesse = new FitNesse(context);
+
+    update(arguments, context);
     launch(arguments, context, fitnesse);
+  }
+
+  static boolean update(Arguments arguments, FitNesseContext context) throws IOException {
+    if (!arguments.isOmittingUpdates()) {
+      Updater updater = new UpdaterImplementation(context);
+      return updater.update();
+    }
+    return false;
   }
 
   private static void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
-  }
-
-  static void update(Arguments arguments,FitNesse fitnesse) throws Exception {
-    if (!arguments.isOmittingUpdates())
-      fitnesse.applyUpdates();
   }
 
   static void launch(Arguments arguments, FitNesseContext context,
@@ -228,4 +229,5 @@ public class FitNesseMain {
     if (extraOutput != null)
       System.out.print(extraOutput);
   }
+
 }
