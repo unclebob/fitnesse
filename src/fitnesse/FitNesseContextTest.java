@@ -3,10 +3,14 @@
 
 package fitnesse;
 
+import java.util.Properties;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class FitNesseContextTest {
   private FitNesseContext.Builder builder;
@@ -17,20 +21,32 @@ public class FitNesseContextTest {
   }
 
   @Test
-  public void builderPageThemeInputShouldEqualsCreatedContextParam() {
-    String pageThemeValue = "testPageTheme";
-    builder.pageTheme = pageThemeValue;
+  public void shouldReadProvidedProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("TestProp", "found");
 
+    builder.properties = properties;
     FitNesseContext context = builder.createFitNesseContext();
-    assertEquals("pageTheme not correctly set in context from builder", pageThemeValue, context.pageTheme);
+    assertThat(context.getProperty("TestProp"), is("found"));
   }
 
   @Test
-  public void builderDefaultNewPageContentShouldEqualsCreatedContextParam() {
-    String defaultNewPageContentValue = "testDefaultNewPageContentValue";
-    builder.defaultNewPageContent = defaultNewPageContentValue;
+  public void systemPropertyShouldTakePrecedenceOverProvidedProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("user.name", "xxxxx");
 
+    builder.properties = properties;
     FitNesseContext context = builder.createFitNesseContext();
-    assertEquals("defaultNewPageContent not correctly set in context from builder", defaultNewPageContentValue, context.defaultNewPageContent);
+    assertThat(context.getProperty("user.name"), is(System.getProperty("user.name")));
   }
+
+  @Test
+  public void environmentVariableShouldTakePrecedenceOverSystemProperties() {
+    Properties properties = new Properties();
+    System.setProperty("PATH", "xxxxx");
+    builder.properties = properties;
+    FitNesseContext context = builder.createFitNesseContext();
+    assertThat(context.getProperty("PATH"), is(System.getenv("PATH")));
+  }
+
 }

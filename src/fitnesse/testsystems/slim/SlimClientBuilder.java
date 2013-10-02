@@ -98,7 +98,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getNextSlimPort() {
-    int base = getSlimPortBase();
+    final int base = getSlimPortBase();
+    final int poolSize = getSlimPortPoolSize();
 
     if (base == 0) {
       return findFreePort();
@@ -106,7 +107,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (slimPortOffset) {
       int offset = slimPortOffset.get();
-      offset = (offset + 1) % 10;
+      offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
       return offset + base;
     }
@@ -119,11 +120,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int getSlimPortBase() {
     try {
       String port = descriptor.getVariable("slim.port");
-      if (port != null) {
-        return Integer.parseInt(port);
+      if (port == null) {
+        port = descriptor.getVariable(SLIM_PORT);
       }
 
-      port = descriptor.getVariable(SLIM_PORT);
       if (port != null) {
         return Integer.parseInt(port);
       }
@@ -133,22 +133,42 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return 8085;
   }
 
+  private int getSlimPortPoolSize() {
+    try {
+      String poolSize = descriptor.getVariable("slim.pool.size");
+      if (poolSize != null) {
+        return Integer.parseInt(poolSize);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
+    }
+    return 10;
+  }
+
   String determineSlimHost() {
-    String slimHost = descriptor.getVariable(SLIM_HOST);
+    String slimHost = descriptor.getVariable("slim.host");
+    if (slimHost == null) {
+      slimHost = descriptor.getVariable(SLIM_HOST);
+    }
     return slimHost == null ? "localhost" : slimHost;
   }
 
   String getSlimFlags() {
-    String slimFlags = descriptor.getVariable(SLIM_FLAGS);
+    String slimFlags = descriptor.getVariable("slim.flags");
+    if (slimFlags == null) {
+      slimFlags = descriptor.getVariable(SLIM_FLAGS);
+    }
     return slimFlags == null ? "" : slimFlags;
   }
 
   private boolean useManualStartForTestSystem() {
     if (descriptor.isDebug()) {
-      String useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      String useManualStart = descriptor.getVariable("manually.start.test.runner.on.debug");
+      if (useManualStart == null) {
+        useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      }
       return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }
     return false;
   }
-
 }

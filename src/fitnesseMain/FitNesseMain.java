@@ -117,12 +117,11 @@ public class FitNesseMain {
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
+    builder.properties = properties;
     builder.port = arguments.getPort();
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
-    builder.pageTheme = properties.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = properties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:
@@ -170,9 +169,6 @@ public class FitNesseMain {
         System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
-
-    // Command line properties override settings from configuration file.
-    properties.putAll(System.getProperties());
 
     return properties;
   }

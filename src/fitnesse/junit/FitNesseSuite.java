@@ -289,9 +289,6 @@ public class FitNesseSuite extends ParentRunner<String> {
     builder.rootPath = rootPath;
     builder.rootDirectoryName = "FitNesseRoot";
 
-    // TODO: should make a standalone theme.
-    builder.pageTheme = "fitnesse_straight";
-
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
         builder.rootDirectoryName);
 
