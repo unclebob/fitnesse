@@ -43,30 +43,6 @@ public class ParsingPage {
     public SourcePage getPage() { return page; }
     public SourcePage getNamedPage() { return namedPage; }
 
-    public Maybe<String> getSpecialVariableValue(String key) {
-      // Make this fail safe for unit tests
-      final FitNesse fitnesse = FitNesse.FITNESSE_INSTANCE;
-      final FitNesseContext context = fitnesse != null ? fitnesse.getContext() : null;
-        String value;
-        if (key.equals("RUNNING_PAGE_NAME"))
-            value = page.getName();
-        else if (key.equals("RUNNING_PAGE_PATH"))
-            value = page.getPath();
-        else if (key.equals("PAGE_NAME"))
-            value = namedPage.getName();
-        else if (key.equals("PAGE_PATH"))
-            value = namedPage.getPath();
-        else if (key.equals("FITNESSE_PORT"))
-          value = Integer.toString(context != null ? context.port : -1);
-        else if (key.equals("FITNESSE_ROOTPATH"))
-          value = context != null ? context.rootPath : "";
-        else if (key.equals("FITNESSE_VERSION"))
-          value = new FitNesseVersion().toString();
-        else
-            return Maybe.noString;
-        return new Maybe<String>(value);
-    }
-
     public boolean inCache(SourcePage page) {
         return cache.containsKey(page.getFullName());
     }

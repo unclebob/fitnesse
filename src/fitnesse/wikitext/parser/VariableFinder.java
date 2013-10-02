@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
 import util.Maybe;
 
 public class VariableFinder implements VariableSource {
@@ -12,7 +13,7 @@ public class VariableFinder implements VariableSource {
   }
 
   public Maybe<String> findVariable(String name) {
-    Maybe<String> result = page.getSpecialVariableValue(name);
+    Maybe<String> result = findSpecialVariableValue(name);
     if (!result.isNothing()) return result;
 
     result = findVariableInPages(name);
@@ -20,6 +21,31 @@ public class VariableFinder implements VariableSource {
 
     return findVariableInContext(name);
   }
+
+  public Maybe<String> findSpecialVariableValue(String key) {
+    final FitNesseContext context = getFitNesseContext();
+    final SourcePage sourcePage = page.getPage();
+    final SourcePage namedSourcePage = page.getNamedPage();
+    String value;
+    if (key.equals("RUNNING_PAGE_NAME"))
+      value = sourcePage.getName();
+    else if (key.equals("RUNNING_PAGE_PATH"))
+      value = sourcePage.getPath();
+    else if (key.equals("PAGE_NAME"))
+      value = namedSourcePage.getName();
+    else if (key.equals("PAGE_PATH"))
+      value = namedSourcePage.getPath();
+    else if (key.equals("FITNESSE_PORT"))
+      value = Integer.toString(context != null ? context.port : -1);
+    else if (key.equals("FITNESSE_ROOTPATH"))
+      value = context != null ? context.rootPath : "";
+    else if (key.equals("FITNESSE_VERSION"))
+      value = new FitNesseVersion().toString();
+    else
+      return Maybe.noString;
+    return new Maybe<String>(value);
+  }
+
 
   private Maybe<String> findVariableInPages(String name) {
     Maybe<String> localVariable = page.findVariable(name);
