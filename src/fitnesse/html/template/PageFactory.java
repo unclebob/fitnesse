@@ -12,17 +12,21 @@ import java.io.Writer;
 import java.util.Properties;
 
 public class PageFactory {
+  public static final String THEME_PROPERTY = "Theme";
+  public static final String DEFAULT_THEME = "fitnesse_straight";
 
-  private static VelocityEngine velocityEngine = null;
-  private FitNesseContext context;
+  private final String theme;
+  private VelocityEngine velocityEngine = null;
 
   public PageFactory(FitNesseContext context) {
     super();
-    this.context = context;
+    String theme = context.getProperty(THEME_PROPERTY);
+    this.theme = theme != null ? theme : DEFAULT_THEME;
+    this.velocityEngine = newVelocityEngine(context, this.theme);
   }
 
   public HtmlPage newPage() {
-    return new HtmlPage(getVelocityEngine(), "skeleton.vm", context.pageTheme);
+    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme);
   }
 
   public String render(VelocityContext context, String templateName) {
@@ -32,39 +36,44 @@ public class PageFactory {
     return writer.toString();
   }
 
+  public String getTheme() {
+    return theme;
+  }
+
+  public VelocityEngine getVelocityEngine() {
+    return velocityEngine;
+  }
+
   public String toString() {
     return getClass().getName();
   }
 
-  public VelocityEngine getVelocityEngine() {
-    if (velocityEngine == null) {
-      Properties properties = new Properties();
+  private VelocityEngine newVelocityEngine(FitNesseContext context, String theme) {
+    Properties properties = new Properties();
 
-      properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
+    properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
 
-      properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH,
-          String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName));
+    properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH,
+        String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName));
 
-      properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
-          ClasspathResourceLoader.class.getName());
-      properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".base",
-          String.format("/fitnesse/resources/%s/templates", context.pageTheme));
+    properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
+        ClasspathResourceLoader.class.getName());
+    properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".base",
+        String.format("/fitnesse/resources/%s/templates", theme));
 
-      properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
-          ClasspathResourceLoader.class.getName());
-      properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
-          "/fitnesse/resources/templates");
+    properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
+        ClasspathResourceLoader.class.getName());
+    properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
+        "/fitnesse/resources/templates");
 
-      properties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
-              VelocityLogger.class.getName());
+    properties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+            VelocityLogger.class.getName());
 
-      velocityEngine = new VelocityEngine();
-      velocityEngine.init(properties);
+    VelocityEngine engine = new VelocityEngine();
+    engine.init(properties);
 
-      velocityEngine.loadDirective(TraverseDirective.class.getName());
-      velocityEngine.loadDirective(EscapeDirective.class.getName());
-    }
-    return velocityEngine;
+    engine.loadDirective(TraverseDirective.class.getName());
+    engine.loadDirective(EscapeDirective.class.getName());
+    return engine;
   }
-
 }

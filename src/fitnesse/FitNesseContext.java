@@ -12,12 +12,12 @@ import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
+import java.util.Properties;
 
 public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
-
 
   /**
    * Use the builder to create your FitNesse contexts.
@@ -31,9 +31,8 @@ public class FitNesseContext {
 
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
-    public String defaultNewPageContent;
     public RecentChanges recentChanges;
-    public String pageTheme;
+    public Properties properties;
 
     public Builder() {
       super();
@@ -48,9 +47,8 @@ public class FitNesseContext {
         rootDirectoryName = context.rootDirectoryName;
         logger = context.logger;
         authenticator = context.authenticator;
-        defaultNewPageContent = context.defaultNewPageContent;
-        pageTheme = context.pageTheme;
         recentChanges = context.recentChanges;
+        properties = context.properties;
       }
     }
 
@@ -58,12 +56,11 @@ public class FitNesseContext {
       return new FitNesseContext(root,
           rootPath,
           rootDirectoryName,
-          pageTheme,
-          defaultNewPageContent,
           recentChanges,
           port,
           authenticator,
-          logger);
+          logger,
+          properties);
     }
   }
 
@@ -77,27 +74,27 @@ public class FitNesseContext {
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory = new PageFactory(this);
 
-  public final String defaultNewPageContent;
+  // Remove this, let it use getProperty instead
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
-  public final String pageTheme;
+  private final Properties properties;
+
 
 
   private FitNesseContext(WikiPage root, String rootPath,
-      String rootDirectoryName, String pageTheme, String defaultNewPageContent,
+      String rootDirectoryName,
       RecentChanges recentChanges, int port,
-      Authenticator authenticator, Logger logger) {
+      Authenticator authenticator, Logger logger, Properties properties) {
     super();
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
-    this.pageTheme = pageTheme != null ? pageTheme : "fitnesse_straight";
-    this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
     this.recentChanges = recentChanges;
     this.port = port >= 0 ? port : 80;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
+    this.properties = properties;
     responderFactory = new ResponderFactory(getRootPagePath());
   }
 
@@ -109,7 +106,7 @@ public class FitNesseContext {
     buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
     buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
     buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
-    buffer.append("\t").append("page theme:        ").append(pageTheme).append(endl);
+    buffer.append("\t").append("page theme:        ").append(pageFactory.getTheme()).append(endl);
 
     return buffer.toString();
   }
@@ -124,5 +121,14 @@ public class FitNesseContext {
 
   public String getRootPagePath() {
     return String.format("%s/%s", rootPath, rootDirectoryName);
+  }
+
+  public String getProperty(String name) {
+    String p = System.getenv(name);
+    if (p != null) return p;
+    p = System.getProperty(name);
+    if (p != null) return p;
+
+    return properties != null ? properties.getProperty(name) : null;
   }
 }
