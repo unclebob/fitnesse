@@ -26,29 +26,34 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 public class FitNesseMain {
-  private static String extraOutput = "";
-  public static boolean dontExitAfterSingleCommand;
+  private String extraOutput = "";
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = parseCommandLine(args);
-    if (arguments != null) {
-      launchFitNesse(arguments);
-    } else {
+    if (arguments == null) {
       printUsage();
-      System.exit(1);
+      exit(1);
+    }
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    if (exitCode != null) {
+      exit(exitCode);
     }
   }
 
-  public static void launchFitNesse(Arguments arguments) throws Exception {
+  protected static void exit(int exitCode) {
+    System.exit(exitCode);
+  }
+
+  public Integer launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
     FitNesse fitnesse = new FitNesse(context);
 
     update(arguments, context);
-    launch(arguments, context, fitnesse);
+    return launch(arguments, context, fitnesse);
   }
 
-  static boolean update(Arguments arguments, FitNesseContext context) throws IOException {
+  boolean update(Arguments arguments, FitNesseContext context) throws IOException {
     if (!arguments.isOmittingUpdates()) {
       Updater updater = new UpdaterImplementation(context);
       return updater.update();
@@ -56,24 +61,25 @@ public class FitNesseMain {
     return false;
   }
 
-  private static void loadPlugins() throws Exception {
+  private void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  static void launch(Arguments arguments, FitNesseContext context,
+  Integer launch(Arguments arguments, FitNesseContext context,
       FitNesse fitnesse) throws Exception {
     if (!arguments.isInstallOnly()) {
       boolean started = fitnesse.start();
       if (started) {
         printStartMessage(arguments, context);
         if (arguments.getCommand() != null) {
-          executeSingleCommand(arguments, fitnesse, context);
+          return executeSingleCommand(arguments, fitnesse, context);
         }
       }
     }
+    return null;
   }
 
-  private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
 
@@ -98,16 +104,10 @@ public class FitNesseMain {
       System.out.println("-----Command Complete-----");
     }
 
-    if (shouldExitAfterSingleCommand()) {
-      System.exit(TestTextFormatter.finalErrorCount);
-    }
+    return TestTextFormatter.finalErrorCount;
   }
 
-  private static boolean shouldExitAfterSingleCommand() {
-    return !dontExitAfterSingleCommand;
-  }
-
-  private static FitNesseContext loadContext(Arguments arguments)
+  private FitNesseContext loadContext(Arguments arguments)
     throws Exception {
     Properties properties = loadConfigFile(arguments.getConfigFile());
     // Enrich properties with command line values:
@@ -153,7 +153,7 @@ public class FitNesseMain {
     return context;
   }
 
-  public static Properties loadConfigFile(final String propertiesFile) {
+  public Properties loadConfigFile(final String propertiesFile) {
     FileInputStream propertiesStream = null;
     Properties properties = new Properties();
     try {
@@ -174,6 +174,7 @@ public class FitNesseMain {
     return properties;
   }
 
+  // Move to Arguments class.
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
       "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
@@ -223,7 +224,7 @@ public class FitNesseMain {
     System.err.println("\t-b <filename> redirect command output.");
   }
 
-  private static void printStartMessage(Arguments args, FitNesseContext context) {
+  private void printStartMessage(Arguments args, FitNesseContext context) {
     System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
     System.out.print(context.toString());
     if (extraOutput != null)

@@ -39,19 +39,19 @@ public class FitNesseMainTest {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
     FitNesse fitnesse = mock(FitNesse.class);
-    FitNesseMain.launch(args, context, fitnesse);
+    new FitNesseMain().launch(args, context, fitnesse);
     verify(fitnesse, never()).start();
   }
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    FitNesseMain.dontExitAfterSingleCommand = true;
     Arguments args = new Arguments();
     args.setCommand("command");
     args.setOmitUpdates(true);
     FitNesse fitnesse = mock(FitNesse.class);
     when(fitnesse.start()).thenReturn(true);
-    FitNesseMain.launch(args, context, fitnesse);
+    int exitCode = new FitNesseMain().launch(args, context, fitnesse);
+    assertThat(exitCode, is(0));
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
@@ -99,11 +99,13 @@ public class FitNesseMainTest {
   }
 
   private String runFitnesseMainWith(String... args) throws Exception {
-    FitNesseMain.dontExitAfterSingleCommand = true;
+    //FitNesseMain.dontExitAfterSingleCommand = true;
     PrintStream out = System.out;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outputBytes));
-    FitNesseMain.main(args);
+    Arguments arguments = FitNesseMain.parseCommandLine(args);
+    int exitCode = new FitNesseMain().launchFitNesse(arguments);
+    assertThat(exitCode, is(0));
     System.setOut(out);
     String response = outputBytes.toString();
     return response;
