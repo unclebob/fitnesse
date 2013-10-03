@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import fitnesse.socketservice.SocketFactory;
+
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimService;
 import fitnesse.testsystems.ClientBuilder;
@@ -58,7 +60,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   //For testing only.  Makes responder faster.
-  void createSlimService(String args) throws SocketException {
+  void createSlimService(String args) throws IOException {
     while (!tryCreateSlimService(args))
       try {
         Thread.sleep(10);
@@ -68,12 +70,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   // For testing only
-  private boolean tryCreateSlimService(String args) throws SocketException {
+  private boolean tryCreateSlimService(String args) throws IOException {
     try {
       SlimService.parseCommandLine(args.trim().split(" "));
       SlimService.startWithFactoryAsync(new JavaSlimFactory());
       return true;
-    } catch (SocketException e) {
+    } catch (IOException e) {
       throw e;
     } catch (Exception e) {
       e.printStackTrace();
@@ -88,7 +90,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = new ServerSocket(0);
+      ServerSocket socket = SocketFactory.tryCreateServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {
