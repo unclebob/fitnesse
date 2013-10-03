@@ -31,10 +31,7 @@ public class ParsedPage {
 
   private void parseContent() {
     if (syntaxTree == null) {
-        //long start = Clock.currentTimeInMillis();
         syntaxTree = Parser.make(parsingPage, content).parse();
-        //long elapsed = Clock.currentTimeInMillis() - start;
-        //System.out.println((wikiPage != null && wikiPage.getName() != null ? wikiPage.getName() : "?") + " parse " + elapsed + " " + (content != null ? content.length() : 0));
     }
   }
 

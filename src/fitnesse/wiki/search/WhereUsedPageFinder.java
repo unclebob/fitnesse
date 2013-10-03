@@ -20,13 +20,10 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
     this.observer = observer;
   }
 
-  public void hit(WikiPage referencingPage) {
-  }
-
   public void process(WikiPage currentPage) {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
-      Symbol syntaxTree = Parser.make(
+    Symbol syntaxTree = Parser.make(
               new ParsingPage(new WikiSourcePage(currentPage)),
               content,
               SymbolProvider.refactoringProvider)

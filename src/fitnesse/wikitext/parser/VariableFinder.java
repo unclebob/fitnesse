@@ -77,7 +77,6 @@ public class VariableFinder implements VariableSource {
       }
       Maybe<String> result = page.findVariable(sourcePage, name);
       if (!result.isNothing()) return result;
-      //page.putVariable(sourcePage, name, result);
     }
     return Maybe.noString;
   }
