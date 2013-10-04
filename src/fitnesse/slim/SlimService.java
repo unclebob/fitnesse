@@ -30,8 +30,7 @@ public class SlimService {
   }
 
   protected static void parseCommandLineFailed(String[] args) {
-    System.err.println("Invalid command line arguments:"
-      + Arrays.asList(args));
+    System.err.println("Invalid command line arguments:" + Arrays.asList(args));
   }
 
   public static void startWithFactory(SlimFactory slimFactory) throws IOException {
@@ -69,12 +68,10 @@ public class SlimService {
   }
 
   public static boolean parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine(
-      "[-v] [-i interactionClass] port ");
+    CommandLine commandLine = new CommandLine("[-v] [-i interactionClass] port ");
     if (commandLine.parse(args)) {
       verbose = commandLine.hasOption("v");
-      interactionClassName = commandLine.getOptionArgument("i",
-        "interactionClass");
+      interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
       port = (portString == null) ? 8099 : Integer.parseInt(portString);
       return true;
@@ -119,8 +116,7 @@ public class SlimService {
       return DefaultInteraction.class;
     }
     try {
-      return (Class<DefaultInteraction>) Class
-        .forName(interactionClassName);
+      return (Class<DefaultInteraction>) Class.forName(interactionClassName);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
