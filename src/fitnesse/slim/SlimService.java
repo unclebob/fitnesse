@@ -13,6 +13,7 @@ import java.util.Arrays;
 import fitnesse.socketservice.SocketFactory;
 
 public class SlimService {
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] port";
   static Class<? extends DefaultInteraction> interactionClass;
 
   public static class Options {
@@ -41,7 +42,9 @@ public class SlimService {
   }
 
   protected static void parseCommandLineFailed(String[] args) {
-    System.err.println("Invalid command line arguments:" + Arrays.asList(args));
+    System.err.println("Invalid command line arguments: " + Arrays.asList(args));
+    System.err.println("Usage:");
+    System.err.println("    " + SlimService.class.getName() + " " + OPTION_DESCRIPTOR);
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
@@ -79,7 +82,7 @@ public class SlimService {
   }
 
   public static Options parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine("[-v] [-i interactionClass] port");
+    CommandLine commandLine = new CommandLine(OPTION_DESCRIPTOR);
     if (commandLine.parse(args)) {
       boolean verbose = commandLine.hasOption("v");
       String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
