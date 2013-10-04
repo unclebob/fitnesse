@@ -21,12 +21,12 @@ import java.net.SocketException;
 import java.util.GregorianCalendar;
 
 public class FitNesseExpediter implements ResponseSender {
-  private Socket socket;
-  private InputStream input;
-  private OutputStream output;
+  private final Socket socket;
+  private final InputStream input;
+  private final OutputStream output;
   private Request request;
   private Response response;
-  private FitNesseContext context;
+  private final FitNesseContext context;
   protected long requestParsingTimeLimit;
   private long requestProgress;
   private long requestParsingDeadline;
@@ -126,7 +126,6 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   public Response createGoodResponse(Request request) throws Exception {
-    Response response;
     if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
     Responder responder = context.responderFactory.makeResponder(request);
@@ -141,7 +140,7 @@ public class FitNesseExpediter implements ResponseSender {
     while (!hasError && !request.hasBeenParsed()) {
       Thread.sleep(10);
       if (timeIsUp(now) && parsingIsUnproductive(request))
-        reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+        reportError(408, "The client request has been unproductive for too long. It has timed out and will now longer be processed.");
     }
   }
 
