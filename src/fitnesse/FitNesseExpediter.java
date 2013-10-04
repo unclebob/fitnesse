@@ -8,6 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.socketservice.SocketServerShutdownException;
 import util.Clock;
 import util.StringUtil;
 
@@ -39,13 +40,22 @@ public class FitNesseExpediter implements ResponseSender {
     requestParsingTimeLimit = 10000;
   }
 
-  public void start() {
+  public void start() throws SocketServerShutdownException {
     try {
       Request request = makeRequest();
       makeResponse(request);
       sendResponse();
     }
-    catch (SocketException se) {
+    catch (SocketServerShutdownException e) {
+      try {
+        sendResponse();
+      } catch (IOException e1) {
+        // Log this:
+        e1.printStackTrace();
+      }
+      throw e;
+    }
+    catch (SocketException e) {
       // can be thrown by makeResponse or sendResponse.
     }
     catch (Throwable e) {
@@ -55,10 +65,6 @@ public class FitNesseExpediter implements ResponseSender {
 
   public void setRequestParsingTimeLimit(long t) {
     requestParsingTimeLimit = t;
-  }
-
-  public long getRequestParsingTimeLimit() {
-    return requestParsingTimeLimit;
   }
 
   public void send(byte[] bytes) {
@@ -94,7 +100,7 @@ public class FitNesseExpediter implements ResponseSender {
     response.sendTo(this);
   }
 
-  private Response makeResponse(Request request) throws SocketException {
+  private Response makeResponse(Request request) throws SocketException, SocketServerShutdownException {
     try {
       Thread parseThread = createParsingThread(request);
       parseThread.start();
@@ -103,8 +109,12 @@ public class FitNesseExpediter implements ResponseSender {
       if (!hasError)
         response = createGoodResponse(request);
     }
-    catch (SocketException se) {
-      throw se;
+    catch (FitNesseShutdownException e) {
+      response = e.getFinalResponse();
+      throw e;
+    }
+    catch (SocketException e) {
+      throw e;
     }
     catch (Exception e) {
       response = new ErrorResponder(e).makeResponse(context, request);
