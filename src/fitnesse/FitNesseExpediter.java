@@ -109,6 +109,9 @@ public class FitNesseExpediter implements ResponseSender {
     catch (Exception e) {
       response = new ErrorResponder(e).makeResponse(context, request);
     }
+    // Add those as default headers?
+    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
+    response.addHeader("Connection", "close");
     return response;
   }
 
@@ -118,10 +121,7 @@ public class FitNesseExpediter implements ResponseSender {
       request.setResource("FrontPage");
     Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);
-    response = responder.makeResponse(context, request);
-    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
-    response.addHeader("Connection", "close");
-    return response;
+    return responder.makeResponse(context, request);
   }
 
   private void waitForRequest(Request request) throws InterruptedException {
