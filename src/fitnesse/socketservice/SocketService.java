@@ -10,11 +10,11 @@ import java.net.SocketException;
 import java.util.LinkedList;
 
 public class SocketService {
-  private ServerSocket serverSocket = null;
-  private Thread serviceThread = null;
+  private final ServerSocket serverSocket;
+  private final Thread serviceThread;
   private volatile boolean running = false;
-  private SocketServer server = null;
-  private LinkedList<Thread> threads = new LinkedList<Thread>();
+  private final SocketServer server;
+  private final LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan = false;
 
   public SocketService(int port, SocketServer server) throws IOException {
