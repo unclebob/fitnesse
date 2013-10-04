@@ -29,10 +29,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     slimPort = getNextSlimPort();
   }
 
-  public static String defaultTestRunner() {
-    return "fitnesse.slim.SlimService";
-  }
-
   @Override
   public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
