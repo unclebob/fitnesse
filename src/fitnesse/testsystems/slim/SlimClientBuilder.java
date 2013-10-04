@@ -2,7 +2,6 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fitnesse.socketservice.SocketFactory;
@@ -72,8 +71,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   // For testing only
   private boolean tryCreateSlimService(String args) throws IOException {
     try {
-      SlimService.parseCommandLine(args.trim().split(" "));
-      SlimService.startWithFactoryAsync(new JavaSlimFactory());
+      SlimService.Options options = SlimService.parseCommandLine(args.trim().split(" "));
+      SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
       return true;
     } catch (IOException e) {
       throw e;

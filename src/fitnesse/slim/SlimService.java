@@ -13,17 +13,28 @@ import java.util.Arrays;
 import fitnesse.socketservice.SocketFactory;
 
 public class SlimService {
-  static boolean verbose;
-  static int port;
-  static String interactionClassName = null;
+  static Class<? extends DefaultInteraction> interactionClass;
+
+  public static class Options {
+    final boolean verbose;
+    final int port;
+    final Class<? extends DefaultInteraction> interactionClass;
+
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass) {
+      this.verbose = verbose;
+      this.port = port;
+      this.interactionClass = interactionClass;
+    }
+  }
 
   private final ServerSocket serverSocket;
   private final SlimServer slimServer;
   static Thread service;
 
   public static void main(String[] args) throws IOException {
-    if (parseCommandLine(args)) {
-      startWithFactory(new JavaSlimFactory());
+    Options options = parseCommandLine(args);
+    if (options != null) {
+      startWithFactory(new JavaSlimFactory(), options);
     } else {
       parseCommandLineFailed(args);
     }
@@ -33,18 +44,18 @@ public class SlimService {
     System.err.println("Invalid command line arguments:" + Arrays.asList(args));
   }
 
-  public static void startWithFactory(SlimFactory slimFactory) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
+  public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
     slimservice.accept();
   }
 
-  public static void startWithFactoryAsync(SlimFactory slimFactory) throws IOException {
+  public static void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
       System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
       service.interrupt();
       throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
     service = new Thread() {
       public void run() {
         try {
@@ -67,19 +78,20 @@ public class SlimService {
     }
   }
 
-  public static boolean parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine("[-v] [-i interactionClass] port ");
+  public static Options parseCommandLine(String[] args) {
+    CommandLine commandLine = new CommandLine("[-v] [-i interactionClass] port");
     if (commandLine.parse(args)) {
-      verbose = commandLine.hasOption("v");
-      interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
+      boolean verbose = commandLine.hasOption("v");
+      String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
-      port = (portString == null) ? 8099 : Integer.parseInt(portString);
-      return true;
+      int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      return new Options(verbose, port, getInteractionClass(interactionClassName));
     }
-    return false;
+    return null;
   }
 
-  public SlimService(SlimServer slimServer) throws IOException {
+  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass) throws IOException {
+    SlimService.interactionClass = interactionClass;
     this.slimServer = slimServer;
 
     try {
@@ -111,7 +123,7 @@ public class SlimService {
   }
 
   @SuppressWarnings("unchecked")
-  public static Class<DefaultInteraction> getInteractionClass() {
+  private static Class<DefaultInteraction> getInteractionClass(String interactionClassName) {
     if (interactionClassName == null) {
       return DefaultInteraction.class;
     }
@@ -120,5 +132,9 @@ public class SlimService {
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Class<? extends DefaultInteraction> getInteractionClass() {
+    return interactionClass;
   }
 }
