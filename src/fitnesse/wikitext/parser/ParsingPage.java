@@ -8,11 +8,6 @@ import util.Maybe;
 import java.util.HashMap;
 
 public class ParsingPage {
-    private static final SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
-        Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
-        SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
-        SymbolType.ClosePreformat, SymbolType.Text
-    });
 
     private SourcePage page;
     private SourcePage namedPage;
@@ -66,9 +61,5 @@ public class ParsingPage {
 
     public void putVariable(String name, String value) {
         putVariable(page, name, new Maybe<String>(value));
-    }
-
-    public String renderVariableValue(String variableValue) {
-        return new HtmlTranslator(null, this).translate(Parser.make(this, "", variableDefinitionSymbolProvider).parseWithParent(variableValue, null));
     }
 }

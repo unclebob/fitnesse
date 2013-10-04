@@ -11,6 +11,8 @@ import java.util.List;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
@@ -187,9 +189,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public String getVariable(String name) {
-      Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
-      if (variable.isNothing()) return null;
-      return getParsingPage().renderVariableValue(variable.getValue());
+    ParsingPage parsingPage = getParsingPage();
+    Maybe<String> variable = new VariableFinder(parsingPage).findVariable(name);
+    if (variable.isNothing()) return null;
+
+    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
+    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
   public ParsedPage getParsedPage() {
