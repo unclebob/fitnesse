@@ -147,10 +147,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
     }
   }
 
+  @Override
   public WikiPageProperties getProperties() {
     return properties;
   }
 
+  @Override
   public String getAttribute(String key) {
     return properties.get(key);
   }
@@ -167,6 +169,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(key);
   }
 
+  @Override
   public boolean hasAttribute(String attribute) {
     return properties.has(attribute);
   }
@@ -175,6 +178,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.properties = properties;
   }
 
+  @Override
   public String getContent() {
     return content;
   }
@@ -184,10 +188,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   /* this is the public entry to page parse and translate */
+  @Override
   public String getHtml() {
       return getParsedPage().toHtml();
   }
 
+  @Override
   public String getVariable(String name) {
     ParsingPage parsingPage = getParsingPage();
     Maybe<String> variable = new VariableFinder(parsingPage).findVariable(name);
@@ -203,34 +209,38 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return parsedPage;
   }
 
-    private Symbol getSyntaxTree() {
-        return getParsedPage().getSyntaxTree();
-    }
+  private Symbol getSyntaxTree() {
+    return getParsedPage().getSyntaxTree();
+  }
 
-    private ParsingPage getParsingPage() {
-        return getParsedPage().getParsingPage();
-    }
+  private ParsingPage getParsingPage() {
+    return getParsedPage().getParsingPage();
+  }
 
   public void setWikiPage(WikiPage page) {
     wikiPage = page;
   }
 
+  @Override
   public WikiPage getWikiPage() {
     return wikiPage;
   }
 
-    public List<String> getXrefPages() {
-        final ArrayList<String> xrefPages = new ArrayList<String>();
-        getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-            public boolean visit(Symbol node) {
-                if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-                return true;
-            }
+  @Override
+  public List<String> getXrefPages() {
+    final ArrayList<String> xrefPages = new ArrayList<String>();
+    getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      public boolean visit(Symbol node) {
+        if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
+        return true;
+      }
 
-            public boolean visitChildren(Symbol node) { return true; }
-        });
-        return xrefPages;
-    }
+      public boolean visitChildren(Symbol node) {
+        return true;
+      }
+    });
+    return xrefPages;
+  }
 
   public boolean isEmpty() {
     return getContent() == null || getContent().length() == 0;
