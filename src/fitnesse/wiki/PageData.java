@@ -219,11 +219,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return wikiPage;
   }
 
-  public List<String> getClasspaths() {
-    Symbol tree = getSyntaxTree();
-    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), getParsingPage())).getPaths(tree);
-  }
-
     public List<String> getXrefPages() {
         final ArrayList<String> xrefPages = new ArrayList<String>();
         getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {

@@ -79,42 +79,6 @@ public class PageDataTest {
   }
 
   @Test
-  public void testClasspath() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
-    List<?> paths = page.getData().getClasspaths();
-    assertTrue(paths.contains("123"));
-    assertTrue(paths.contains("abc"));
-  }
-
-  @Test
-  public void testClasspathWithVariable() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
-    List<?> paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
-
-    PageData data = root.getData();
-    data.setContent("!define PATH {/my/path}\n");
-    root.commit(data);
-
-    page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
-    paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
-  }
-
-  @Test
-  public void testClasspathWithVariableDefinedInIncludedPage() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
-
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
-    List<?> paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
-  }
-
-  @Test
   public void testVariableIgnoredInParentPreformatted() throws Exception {  //--variables in parent preformatted blocks must not recognize !define widgets.
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");

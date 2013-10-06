@@ -6,7 +6,6 @@ import java.util.List;
 public interface ReadOnlyPageData {
     String getHtml();
     String getVariable(String name);
-    List<String> getClasspaths();
     List<String> getXrefPages();
     String getContent();
     String getAttribute(String attribute);
