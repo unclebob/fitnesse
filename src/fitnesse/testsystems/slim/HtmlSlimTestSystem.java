@@ -55,9 +55,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private NodeList makeNodeList(ReadOnlyPageData pageData) {
-    String html;
-    ParsedPage parsedPage = pageData.getParsedPage();
-    html = parsedPage.toHtml();
+    String html = pageData.getHtml();
     Parser parser = new Parser(new Lexer(new Page(html)));
     try {
       return parser.parse(null);
