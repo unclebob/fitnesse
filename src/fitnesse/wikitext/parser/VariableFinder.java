@@ -5,6 +5,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import util.Maybe;
 
+// TODO: Merge with ParsingPage
 public class VariableFinder implements VariableSource {
   private ParsingPage page;
 

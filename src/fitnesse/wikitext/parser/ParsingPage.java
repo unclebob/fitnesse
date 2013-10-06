@@ -9,30 +9,36 @@ import java.util.HashMap;
 
 public class ParsingPage {
 
-  private SourcePage page;
-  private SourcePage namedPage;
+  private final SourcePage page;
+  private final SourcePage namedPage;
+  private final VariableSource variableSource;
 
-  private HashMap<String, HashMap<String, Maybe<String>>> cache;
+  private final HashMap<String, HashMap<String, Maybe<String>>> cache;
 
   public ParsingPage(SourcePage page) {
-    this(page, page, new HashMap<String, HashMap<String, Maybe<String>>>());
+    this(page, null);
+  }
+
+  public ParsingPage(SourcePage page, VariableSource variableSource) {
+    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>());
   }
 
   public ParsingPage copy() {
-    return new ParsingPage(page, page, this.cache);
+    return new ParsingPage(page, page, variableSource, cache);
   }
 
   public ParsingPage copyForPage(SourcePage page) {
-    return new ParsingPage(page, page, this.cache);
+    return new ParsingPage(page, page, variableSource, cache);
   }
 
   public ParsingPage copyForNamedPage(SourcePage namedPage) {
-    return new ParsingPage(this.page, namedPage, this.cache);
+    return new ParsingPage(this.page, namedPage, variableSource, cache);
   }
 
-  private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> cache) {
+  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache) {
     this.page = page;
     this.namedPage = namedPage;
+    this.variableSource = variableSource;
     this.cache = cache;
   }
 

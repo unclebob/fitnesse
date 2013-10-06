@@ -198,7 +198,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public ParsedPage getParsedPage() {
-    if (parsedPage == null) parsedPage = new ParsedPage(new WikiSourcePage(wikiPage), content);
+    // TODO: use variableSource here!
+    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), null), content);
     return parsedPage;
   }
 

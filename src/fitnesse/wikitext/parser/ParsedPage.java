@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
 public class ParsedPage {
-  public ParsedPage(SourcePage sourcePage, String content) {
-    parsingPage = new ParsingPage(sourcePage);
+  public ParsedPage(ParsingPage parsingPage, String content) {
+    this.parsingPage = parsingPage;
     this.content = content;
   }
 

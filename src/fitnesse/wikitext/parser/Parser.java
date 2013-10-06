@@ -9,10 +9,6 @@ import java.util.List;
 public class Parser {
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
-    public static Parser make(WikiPage page, String input) {
-        return make(new ParsingPage(new WikiSourcePage(page)), input);
-    }
-    
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
