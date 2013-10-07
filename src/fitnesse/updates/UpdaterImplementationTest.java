@@ -12,6 +12,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class UpdaterImplementationTest {
 
   private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPage(testDir, name);
+    root = new FileSystemPageFactory().makeRootPage(testDir, name);
     root.commit(root.getData());
     context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }

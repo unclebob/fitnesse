@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.SymbolicPageFactory;
 
 import java.util.List;
@@ -10,13 +11,19 @@ public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;
 
   protected final String name;
-  protected WikiPage parent;
-  private final SymbolicPageFactory symbolicPageFactory;
+  protected BaseWikiPage parent;
+  protected final SymbolicPageFactory symbolicPageFactory;
 
-  protected BaseWikiPage(String name, WikiPage parent, SymbolicPageFactory symbolicPageFactory) {
+  protected BaseWikiPage(String name, SymbolicPageFactory symbolicPageFactory) {
+    this.name = name;
+    this.parent = null;
+    this.symbolicPageFactory = symbolicPageFactory;
+  }
+
+  protected BaseWikiPage(String name, BaseWikiPage parent) {
     this.name = name;
     this.parent = parent;
-    this.symbolicPageFactory = symbolicPageFactory;
+    this.symbolicPageFactory = parent.symbolicPageFactory;
   }
 
   public String getName() {

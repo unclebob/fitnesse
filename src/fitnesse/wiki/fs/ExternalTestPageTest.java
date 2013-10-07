@@ -27,6 +27,7 @@ public class ExternalTestPageTest {
     FileSystem fileSystem = new MemoryFileSystem();
     String path = directory + "/" + name;
     fileSystem.makeFile(path, content);
-    return new ExternalTestPage(path, name, null, fileSystem);
+    FileSystemPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makeRootPage("", "RooT");
+    return new ExternalTestPage(path, name, rootPage, fileSystem);
   }
 }

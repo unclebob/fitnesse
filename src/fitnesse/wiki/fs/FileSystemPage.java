@@ -23,8 +23,9 @@ public class FileSystemPage extends BaseWikiPage {
   private final VersionsController versionsController;
   private boolean autoCommit;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, null, new SymbolicPageFactory(fileSystem));
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
+                        final VersionsController versionsController, final SymbolicPageFactory symbolicPageFactory) {
+    super(name, symbolicPageFactory);
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
@@ -32,20 +33,21 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Deprecated
   // TODO: not to be used in production code
-  public FileSystemPage(final String path, final String name) {
-    this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
+  public FileSystemPage(final String path, final String name, final SymbolicPageFactory symbolicPageFactory) {
+    this(path, name, new DiskFileSystem(), new ZipFileVersionsController(), symbolicPageFactory);
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent, new SymbolicPageFactory(parent.fileSystem));
+    super(name, parent);
     path = null;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
     autoCommit = parent.autoCommit;
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, parent, new SymbolicPageFactory(fileSystem));
+  public FileSystemPage(final String name, final FileSystemPage parent,
+                        final FileSystem fileSystem, final VersionsController versionsController) {
+    super(name, parent);
     path = null;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
