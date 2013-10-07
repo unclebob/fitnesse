@@ -9,6 +9,7 @@ import fitnesse.wiki.RecentChanges;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testrunner.RunningTestingTracker;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
@@ -124,11 +125,6 @@ public class FitNesseContext {
   }
 
   public String getProperty(String name) {
-    String p = System.getenv(name);
-    if (p != null) return p;
-    p = System.getProperty(name);
-    if (p != null) return p;
-
-    return properties != null ? properties.getProperty(name) : null;
+    return new SystemVariableSource(properties).getProperty(name);
   }
 }
