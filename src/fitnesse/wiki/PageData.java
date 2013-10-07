@@ -13,11 +13,9 @@ import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
-import fitnesse.wikitext.parser.VariableFinder;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
@@ -205,7 +203,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   @Override
   public String getVariable(String name) {
     ParsingPage parsingPage = getParsingPage();
-    Maybe<String> variable = new VariableFinder(parsingPage).findVariable(name);
+    Maybe<String> variable = parsingPage.findVariable(name);
     if (variable.isNothing()) return null;
 
     Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);

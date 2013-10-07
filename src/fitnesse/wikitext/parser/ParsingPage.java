@@ -7,7 +7,10 @@ import util.Maybe;
 
 import java.util.HashMap;
 
-public class ParsingPage {
+/**
+ * The page represents wiki page in the course of being parsed.
+ */
+public class ParsingPage implements VariableSource {
 
   private final SourcePage page;
   private final SourcePage namedPage;
@@ -50,22 +53,22 @@ public class ParsingPage {
     return namedPage;
   }
 
-  public boolean inCache(SourcePage page) {
+  private boolean inCache(SourcePage page) {
     return cache.containsKey(page.getFullName());
   }
 
-  public Maybe<String> findVariable(SourcePage page, String name) {
+  private Maybe<String> findVariableInCache(SourcePage page, String name) {
     String key = page.getFullName();
     if (!cache.containsKey(key)) return Maybe.noString;
     if (!cache.get(key).containsKey(name)) return Maybe.noString;
     return cache.get(key).get(name);
   }
 
-  public Maybe<String> findVariable(String name) {
-    return findVariable(page, name);
+  private Maybe<String> findVariableInCache(String name) {
+    return findVariableInCache(page, name);
   }
 
-  public void putVariable(SourcePage page, String name, Maybe<String> value) {
+  private void putVariable(SourcePage page, String name, Maybe<String> value) {
     String key = page.getFullName();
     if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
     cache.get(key).put(name, value);
@@ -75,7 +78,64 @@ public class ParsingPage {
     putVariable(page, name, new Maybe<String>(value));
   }
 
-  protected VariableSource systemVariableSource() {
-    return variableSource;
+  public Maybe<String> findVariable(String name) {
+    Maybe<String> result = findSpecialVariableValue(name);
+    if (!result.isNothing()) return result;
+
+    result = findVariableInPages(name);
+    if (!result.isNothing()) return result;
+
+    return findVariableInContext(name);
+  }
+
+  private Maybe<String> findSpecialVariableValue(String key) {
+    final FitNesseContext context = getFitNesseContext();
+    String value;
+    if (key.equals("RUNNING_PAGE_NAME"))
+      value = page.getName();
+    else if (key.equals("RUNNING_PAGE_PATH"))
+      value = page.getPath();
+    else if (key.equals("PAGE_NAME"))
+      value = namedPage.getName();
+    else if (key.equals("PAGE_PATH"))
+      value = namedPage.getPath();
+    else if (key.equals("FITNESSE_PORT"))
+      value = Integer.toString(context != null ? context.port : -1);
+    else if (key.equals("FITNESSE_ROOTPATH"))
+      value = context != null ? context.rootPath : "";
+    else if (key.equals("FITNESSE_VERSION"))
+      value = new FitNesseVersion().toString();
+    else
+      return Maybe.noString;
+    return new Maybe<String>(value);
+  }
+
+
+  private Maybe<String> findVariableInPages(String name) {
+    Maybe<String> localVariable = findVariableInCache(name);
+    if (!localVariable.isNothing()) return new Maybe<String>(localVariable.getValue());
+    return lookInParentPages(name);
+  }
+
+  private Maybe<String> findVariableInContext(String name) {
+    return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
+  }
+
+  private FitNesseContext getFitNesseContext() {
+    // Make this fail safe for unit tests
+    final FitNesse fitnesse = FitNesse.FITNESSE_INSTANCE;
+    return fitnesse != null ? fitnesse.getContext() : null;
+  }
+
+  private Maybe<String> lookInParentPages(String name) {
+    for (SourcePage sourcePage : page.getAncestors()) {
+      if (!inCache(sourcePage)) {
+        Parser.make(copyForPage(sourcePage), sourcePage.getContent()).parse();
+        putVariable(sourcePage, "", Maybe.noString);
+      }
+      Maybe<String> result = findVariableInCache(sourcePage, name);
+      if (!result.isNothing()) return result;
+    }
+    return Maybe.noString;
   }
 }
