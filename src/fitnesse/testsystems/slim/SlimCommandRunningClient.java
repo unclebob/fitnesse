@@ -47,26 +47,8 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void start() throws IOException {
     slimRunner.asynchronousStart();
-    waitUntilStarted();
+    connect();
     checkForVersionMismatch();
-  }
-
-  void waitUntilStarted() {
-    while (!isStarted())
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-  }
-
-  private boolean isStarted() {
-    try {
-      connect();
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
   }
 
   private void checkForVersionMismatch() {
@@ -93,15 +75,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public void connect() throws IOException {
-    for (int tries = 0; tryConnect() == false; tries++) {
-      if (tries > 100)
-        throw new SlimError("Could not build Slim.");
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException e) {
-        throw new SlimError("Wait for connection interrupted.");
-      }
-    }
+    client = tryConnect(200);
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersionMessage = reader.readLine();
@@ -118,12 +92,20 @@ public class SlimCommandRunningClient implements SlimClient {
     }
   }
 
-  private boolean tryConnect() {
+  private Socket tryConnect(int maxTries) throws IOException {
     try {
-      client = new Socket(hostName, port);
-      return true;
+      return new Socket(hostName, port);
     } catch (IOException e) {
-      return false;
+      if (maxTries <= 1) {
+        throw e;
+      } else {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException i) {
+          throw new SlimError("Wait for connection interrupted.");
+        }
+        return tryConnect(maxTries - 1);
+      }
     }
   }
 
