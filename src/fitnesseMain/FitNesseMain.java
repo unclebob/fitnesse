@@ -225,7 +225,7 @@ public class FitNesseMain {
   }
 
   private void printStartMessage(Arguments args, FitNesseContext context) {
-    System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
+    System.out.println("FitNesse (" + context.version + ") Started...");
     System.out.print(context.toString());
     if (extraOutput != null)
       System.out.print(extraOutput);

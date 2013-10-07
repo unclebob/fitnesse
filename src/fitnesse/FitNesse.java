@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 import java.net.BindException;
 
 public class FitNesse {
-  public static final FitNesseVersion VERSION = new FitNesseVersion();
   public static FitNesse FITNESSE_INSTANCE;
   private final FitNesseContext context;
   private SocketService theService;

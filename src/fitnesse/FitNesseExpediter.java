@@ -120,7 +120,7 @@ public class FitNesseExpediter implements ResponseSender {
       response = new ErrorResponder(e).makeResponse(context, request);
     }
     // Add those as default headers?
-    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
+    response.addHeader("Server", "FitNesse-" + context.version);
     response.addHeader("Connection", "close");
     return response;
   }

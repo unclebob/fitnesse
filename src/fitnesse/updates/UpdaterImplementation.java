@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import util.FileUtil;
 
@@ -16,12 +15,13 @@ public class UpdaterImplementation extends UpdaterBase {
 
   private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
   private ArrayList<String> updateList = new ArrayList<String>();
-  private String fitNesseVersion = FitNesse.VERSION.toString();
+  private String fitNesseVersion;
 
   public UpdaterImplementation(FitNesseContext context) throws IOException {
     super(context);
     createUpdateAndDoNotCopyOverLists();
     updates = makeAllUpdates();
+    fitNesseVersion = context.version.toString();
   }
 
   private Update[] makeAllUpdates() {

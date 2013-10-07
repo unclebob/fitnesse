@@ -65,6 +65,7 @@ public class FitNesseContext {
     }
   }
 
+  public final FitNesseVersion version = new FitNesseVersion();
 
   public final WikiPage root;
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
@@ -75,7 +76,6 @@ public class FitNesseContext {
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory = new PageFactory(this);
 
-  // Remove this, let it use getProperty instead
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
