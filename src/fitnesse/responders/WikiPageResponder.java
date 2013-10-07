@@ -66,10 +66,8 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
     
-    String tags = "";
-    if (pageData != null) {
-      tags = pageData.getAttribute(PageData.PropertySUITES);
-    }
+    String tags = pageData.getAttribute(PageData.PropertySUITES);
+
     pt.setPageTags(tags);
     
     html.setTitle(fullPathName);
