@@ -39,6 +39,9 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
   }
 
   public void errorOccurred(Throwable cause) {
+    if (cause != null) {
+      cause.printStackTrace();
+    }
     try {
       close();
     } catch (Exception e) {
