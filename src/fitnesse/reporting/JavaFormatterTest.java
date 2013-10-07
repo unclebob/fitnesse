@@ -40,7 +40,7 @@ public class JavaFormatterTest {
     WikiPageDummy wp=new WikiPageDummy("ChildTest",null);
     WikiPageDummy parent=new WikiPageDummy("ParentTest",null);
     wp.setParent(parent);
-    parent.setParent(new WikiPageDummy("root"));
+    parent.setParent(new WikiPageDummy("root", null));
     return new WikiTestPage(wp);
   }
   @Test

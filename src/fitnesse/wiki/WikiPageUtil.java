@@ -26,8 +26,7 @@ public class WikiPageUtil {
   public static WikiPage addPage(WikiPage context, WikiPagePath path, String content) {
     WikiPage page = addPage(context, path);
     if (page != null) {
-      PageData data = new PageData(page);
-      data.setContent(content);
+      PageData data = new PageData(page.getData(), content);
       page.commit(data);
     }
     return page;

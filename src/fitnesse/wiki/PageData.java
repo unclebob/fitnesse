@@ -83,8 +83,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
     initializeAttributes();
   }
 
-  public PageData(WikiPage page, String content) {
-    this(page);
+  public PageData(PageData data, String content) {
+    this(data);
     setContent(content);
   }
 

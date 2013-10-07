@@ -35,7 +35,7 @@ public class PageDataTest {
 
   @Test
   public void testVariablePreprocessing() throws Exception {
-    PageData d = new PageData(InMemoryPage.makeRoot("RooT"), "!define x {''italic''}\n${x}\n");
+    PageData d = new PageData(InMemoryPage.makeRoot("RooT").getData(), "!define x {''italic''}\n${x}\n");
     String preprocessedText = d.getContent();
     assertHasRegexp("''italic''", preprocessedText);
   }
@@ -64,7 +64,7 @@ public class PageDataTest {
 
   @Test
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    PageData d = new PageData(new WikiPageDummy(), "<b>");
+    PageData d = new PageData(new WikiPageDummy().getData(), "<b>");
     String html = d.getHtml();
     assertEquals("&lt;b&gt;", html);
   }

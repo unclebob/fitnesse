@@ -83,7 +83,7 @@ public class WikiPageResponder implements SecureResponder {
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
     } else {
-      html.put("content", new WikiPageRenderer(page.getData()));
+      html.put("content", new WikiPageRenderer(pageData));
     }
 
     html.setMainTemplate("wikiPage");
