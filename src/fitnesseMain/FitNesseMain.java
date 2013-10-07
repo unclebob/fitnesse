@@ -18,11 +18,7 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class FitNesseMain {
@@ -155,10 +151,15 @@ public class FitNesseMain {
   public static Properties loadConfigFile(final String propertiesFile) {
     FileInputStream propertiesStream = null;
     Properties properties = new Properties();
+    File configurationFile = new File(propertiesFile);
     try {
-      propertiesStream = new FileInputStream(propertiesFile);
+      propertiesStream = new FileInputStream(configurationFile);
     } catch (FileNotFoundException e) {
-      System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+      try {
+        System.err.println(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
+      } catch (IOException e1) {
+        System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+      }
     }
 
     if (propertiesStream != null) {
