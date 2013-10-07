@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -107,7 +106,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public String render() {
-        return HtmlUtil.makePageHtml(data);
+        return WikiPageUtil.makePageHtml(data);
     }
   }
 
@@ -119,7 +118,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public String render() {
-        return HtmlUtil.makePageFooterHtml(data);
+        return WikiPageUtil.getFooterPageHtml(data.getWikiPage());
     }
   }
 

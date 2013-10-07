@@ -42,17 +42,6 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makePageHtml(ReadOnlyPageData pageData) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(WikiPageUtil.getHeaderPageHtml(pageData.getWikiPage()));
-    buffer.append(pageData.getHtml());
-    return buffer.toString();
-  }
-
-  public static String makePageFooterHtml(PageData pageData) {
-    return WikiPageUtil.getFooterPageHtml(pageData.getWikiPage());
-  }
-
   public static String metaText(String text) {
     return "<span class=\"meta\">" + text + "</span>";
   }

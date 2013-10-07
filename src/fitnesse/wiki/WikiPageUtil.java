@@ -48,4 +48,11 @@ public class WikiPageUtil {
       return current;
     return getOrMakePage(current, rest);
   }
+
+  public static String makePageHtml(ReadOnlyPageData pageData) {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append(getHeaderPageHtml(pageData.getWikiPage()));
+    buffer.append(pageData.getHtml());
+    return buffer.toString();
+  }
 }
