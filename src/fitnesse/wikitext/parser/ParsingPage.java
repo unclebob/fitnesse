@@ -74,4 +74,8 @@ public class ParsingPage {
   public void putVariable(String name, String value) {
     putVariable(page, name, new Maybe<String>(value));
   }
+
+  protected VariableSource systemVariableSource() {
+    return variableSource;
+  }
 }

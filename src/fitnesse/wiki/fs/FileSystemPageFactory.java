@@ -3,21 +3,25 @@ package fitnesse.wiki.fs;
 import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.VariableSource;
 import util.EnvironmentVariableTool;
 
 import java.io.File;
 import java.util.Properties;
 
 public class FileSystemPageFactory implements WikiPageFactory {
-  private FileSystem fileSystem;
-  private VersionsController versionsController;
+  private final FileSystem fileSystem;
+  private final VersionsController versionsController;
+  private final VariableSource variableSource;
 
   public FileSystemPageFactory() {
     fileSystem = new DiskFileSystem();
     versionsController = new ZipFileVersionsController();
+    variableSource = new SystemVariableSource(new Properties());
   }
 
   public FileSystemPageFactory(Properties properties) {
@@ -25,17 +29,19 @@ public class FileSystemPageFactory implements WikiPageFactory {
     versionsController = (VersionsController) new ComponentFactory(properties).createComponent(
             ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
+    variableSource = new SystemVariableSource(properties);
   }
 
-  public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController) {
+  public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController, VariableSource variableSource) {
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.variableSource = variableSource;
   }
 
   @Override
   // TODO: RootPath should be a File()?
   public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController, new FileSystemSymbolicPageFactory());
+    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController, new FileSystemSymbolicPageFactory(), variableSource);
   }
 
   VersionsController getVersionsController() {

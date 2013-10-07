@@ -18,6 +18,7 @@ import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.VariableFinder;
+import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
 import util.Maybe;
@@ -77,6 +78,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
   private transient ParsedPage parsedPage;
+  private VariableSource variableSource;
 
   public PageData(WikiPage page) {
     wikiPage = page;
@@ -88,10 +90,17 @@ public class PageData implements ReadOnlyPageData, Serializable {
     setContent(content);
   }
 
+  public PageData(PageData data, VariableSource variableSource) {
+    this(data);
+    this.variableSource = variableSource;
+  }
+
   public PageData(PageData data) {
-    this(data.getWikiPage(), data.content);
-    properties = new WikiPageProperties(data.properties);
-    parsedPage = data.parsedPage;
+    this.wikiPage = data.getWikiPage();
+    this.variableSource = data.variableSource;
+    this.properties = new WikiPageProperties(data.properties);
+    this.content = data.content;
+    this.parsedPage = data.parsedPage;
   }
 
   public void initializeAttributes() {
@@ -204,8 +213,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public ParsedPage getParsedPage() {
-    // TODO: use variableSource here!
-    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), null), content);
+    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
     return parsedPage;
   }
 

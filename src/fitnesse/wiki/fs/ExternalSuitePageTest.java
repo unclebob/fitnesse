@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +14,7 @@ public class ExternalSuitePageTest {
   @Before
   public void prepare() {
     fileSystem = new MemoryFileSystem();
-    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makeRootPage("", "RooT");
+    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), new SystemVariableSource()).makeRootPage("", "RooT");
   }
 
     @Test

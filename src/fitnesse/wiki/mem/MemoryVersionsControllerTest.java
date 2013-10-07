@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Iterator;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
@@ -23,7 +24,7 @@ public class MemoryVersionsControllerTest {
   public void setUp() {
     fileSystem = new MemoryFileSystem();
     memoryVersionsController = new MemoryVersionsController(fileSystem);
-    wikiPageFactory = new FileSystemPageFactory(fileSystem, memoryVersionsController);
+    wikiPageFactory = new FileSystemPageFactory(fileSystem, memoryVersionsController, new SystemVariableSource());
   }
 
   @Test

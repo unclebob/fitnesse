@@ -55,12 +55,8 @@ public class VariableFinder implements VariableSource {
   }
 
   private Maybe<String> findVariableInContext(String name) {
-    final FitNesseContext context = getFitNesseContext();
-    if (context != null) {
-      String val = context.getProperty(name);
-      if (val != null) return new Maybe<String>(val);
-    }
-    return Maybe.noString;
+    VariableSource variableSource = page.systemVariableSource();
+    return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
   }
 
   private FitNesseContext getFitNesseContext() {

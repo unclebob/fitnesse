@@ -19,6 +19,7 @@ import java.util.List;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
@@ -41,7 +42,7 @@ public class FileSystemPageZipFileVersioningTest {
   @Before
   public void setUp() throws Exception {
     versionsController = new ZipFileVersionsController();
-    FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController);
+    FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController, new SystemVariableSource());
     root = fileSystemPageFactory.makeRootPage("TestDir", "RooT");
     page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
