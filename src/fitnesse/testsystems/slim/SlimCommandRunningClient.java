@@ -97,7 +97,7 @@ public class SlimCommandRunningClient implements SlimClient {
       return new Socket(hostName, port);
     } catch (IOException e) {
       if (maxTries <= 1) {
-        throw e;
+        throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
       } else {
         try {
           Thread.sleep(50);
