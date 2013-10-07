@@ -9,7 +9,7 @@ To get started, check out [http://fitnesse.org](http://fitnesse.org)!
 ## Quick start
 
 * [A One-Minute Description of FitNesse](http://fitnesse.org/FitNesse.UserGuide.OneMinuteDescription)
-* [Download FitNesse and Plugins](http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad)
+* [Download FitNesse](http://fitnesse.org/FitNesseDownLoad) and [Plugins](http://fitnesse.org/PlugIns)
 * [The FitNesse User Guide](http://fitnesse.org/.FitNesse.UserGuide)
 
 
