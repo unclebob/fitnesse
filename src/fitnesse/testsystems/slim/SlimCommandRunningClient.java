@@ -83,9 +83,12 @@ public class SlimCommandRunningClient implements SlimClient {
   public void kill() throws IOException {
     if (slimRunner != null)
       slimRunner.kill();
-    reader.close();
-    writer.close();
-    client.close();
+    if (reader != null)
+      reader.close();
+    if (writer != null)
+      writer.close();
+    if (client != null)
+      client.close();
   }
 
   @Override
