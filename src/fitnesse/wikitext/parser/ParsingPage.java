@@ -1,11 +1,8 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import util.Maybe;
-
 import java.util.HashMap;
+
+import util.Maybe;
 
 /**
  * The page represents wiki page in the course of being parsed.
@@ -89,7 +86,6 @@ public class ParsingPage implements VariableSource {
   }
 
   private Maybe<String> findSpecialVariableValue(String key) {
-    final FitNesseContext context = getFitNesseContext();
     String value;
     if (key.equals("RUNNING_PAGE_NAME"))
       value = page.getName();
@@ -99,17 +95,19 @@ public class ParsingPage implements VariableSource {
       value = namedPage.getName();
     else if (key.equals("PAGE_PATH"))
       value = namedPage.getPath();
-    else if (key.equals("FITNESSE_PORT"))
-      value = Integer.toString(context != null ? context.port : -1);
-    else if (key.equals("FITNESSE_ROOTPATH"))
-      value = context != null ? context.rootPath : "";
-    else if (key.equals("FITNESSE_VERSION"))
-      value = new FitNesseVersion().toString();
-    else
+    else if (key.equals("FITNESSE_PORT")) {
+      Maybe<String> port = findVariableInContext("FITNESSE_PORT");
+      value = port.isNothing() ? "-1" : port.getValue();
+    } else if (key.equals("FITNESSE_ROOTPATH")) {
+      Maybe<String> path = findVariableInContext("FITNESSE_ROOTPATH");
+      value = path.isNothing() ? "" : path.getValue();
+    } else if (key.equals("FITNESSE_VERSION")) {
+      Maybe<String> version = findVariableInContext("FITNESSE_VERSION");
+      value = version.isNothing() ? "" : version.getValue();
+    } else
       return Maybe.noString;
     return new Maybe<String>(value);
   }
-
 
   private Maybe<String> findVariableInPages(String name) {
     Maybe<String> localVariable = findVariableInCache(name);
@@ -119,12 +117,6 @@ public class ParsingPage implements VariableSource {
 
   private Maybe<String> findVariableInContext(String name) {
     return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
-  }
-
-  private FitNesseContext getFitNesseContext() {
-    // Make this fail safe for unit tests
-    final FitNesse fitnesse = FitNesse.FITNESSE_INSTANCE;
-    return fitnesse != null ? fitnesse.getContext() : null;
   }
 
   private Maybe<String> lookInParentPages(String name) {

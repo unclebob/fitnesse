@@ -33,7 +33,7 @@ public class FitNesseContext {
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public RecentChanges recentChanges;
-    public Properties properties;
+    public Properties properties = new Properties();
 
     public Builder() {
       super();
@@ -54,7 +54,15 @@ public class FitNesseContext {
     }
 
     public final FitNesseContext createFitNesseContext() {
-      return new FitNesseContext(root,
+      FitNesseVersion version = new FitNesseVersion();
+      // Those variables are defined so they can be looked up for as wiki variables.
+      if (rootPath != null) {
+        properties.setProperty("FITNESSE_ROOTPATH", rootPath);
+      }
+      properties.setProperty("FITNESSE_PORT", Integer.toString(port));
+      properties.setProperty("FITNESSE_VERSION", version.toString());
+      return new FitNesseContext(version,
+          root,
           rootPath,
           rootDirectoryName,
           recentChanges,
@@ -65,7 +73,7 @@ public class FitNesseContext {
     }
   }
 
-  public final FitNesseVersion version = new FitNesseVersion();
+  public final FitNesseVersion version;
 
   public final WikiPage root;
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
@@ -83,11 +91,12 @@ public class FitNesseContext {
 
 
 
-  private FitNesseContext(WikiPage root, String rootPath,
+  private FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
       String rootDirectoryName,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger, Properties properties) {
     super();
+    this.version = version;
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
