@@ -94,4 +94,23 @@ public class ArgumentsTest {
     args = makeArgs("-x");
     assertNull(args);
   }
+
+  @Test
+  public void defaultConfigLocation() {
+    args = makeArgs();
+    assertEquals("./plugins.properties", args.getConfigFile());
+  }
+
+  @Test
+  public void configLocationWithDifferentRootPath() {
+    args = makeArgs("-d", "customDir");
+    assertEquals("customDir/plugins.properties", args.getConfigFile());
+  }
+
+  @Test
+  public void customConfigLocation() {
+    args = makeArgs("-f", "custom.properties");
+    assertEquals("custom.properties", args.getConfigFile());
+  }
+
 }
