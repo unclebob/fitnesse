@@ -59,10 +59,15 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    new FitNesse(context);
+    FitNesse fitnesse = new FitNesse(context);
+    fitnesse.start();
 
-    assertTrue(new File("testFitnesseRoot").exists());
-    assertTrue(new File("testFitnesseRoot/files").exists());
+    try {
+      assertTrue(new File("testFitnesseRoot").exists());
+      assertTrue(new File("testFitnesseRoot/files").exists());
+    } finally {
+      fitnesse.stop();
+    }
   }
 
   @Test
@@ -77,13 +82,6 @@ public class FitNesseMainTest {
 
     fitnesse.stop();
     assertFalse(fitnesse.isRunning());
-  }
-
-  @Test
-  public void testShouldInitializeFitNesseContext() {
-    context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
-    new FitNesse(context, false);
-    assertNotNull(FitNesse.FITNESSE_INSTANCE.getContext());
   }
 
   @Test

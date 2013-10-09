@@ -16,9 +16,9 @@ import java.lang.reflect.Method;
 import java.net.BindException;
 
 public class FitNesse {
-  public static FitNesse FITNESSE_INSTANCE;
   private final FitNesseContext context;
-  private SocketService theService;
+  private final boolean makeDirs;
+  private static SocketService theService;
 
   public FitNesse(FitNesseContext context) {
     this(context, true);
@@ -27,10 +27,8 @@ public class FitNesse {
   // TODO MdM. This boolean agument is annoying... please fix.
   // Update AJM: To make this work we need to get rid of FITNESSE_INSTANCE, remove update logic from here (move to FitNesseMain)
   public FitNesse(FitNesseContext context, boolean makeDirs) {
-    FITNESSE_INSTANCE = this;
     this.context = context;
-    if (makeDirs)
-      establishRequiredDirectories();
+    this.makeDirs = makeDirs;
   }
 
   private void establishRequiredDirectories() {
@@ -52,6 +50,9 @@ public class FitNesse {
   }
 
   public boolean start() {
+    if (makeDirs) {
+      establishRequiredDirectories();
+    }
     try {
       if (context.port > 0) {
         theService = new SocketService(context.port, new FitNesseServer(context));
@@ -80,10 +81,6 @@ public class FitNesse {
 
   public boolean isRunning() {
     return theService != null;
-  }
-
-  public FitNesseContext getContext() {
-    return context;
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {

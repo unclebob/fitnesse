@@ -74,7 +74,7 @@ public class FitNesseContext {
   }
 
   public final FitNesseVersion version;
-
+  public final FitNesse fitNesse;
   public final WikiPage root;
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
@@ -106,6 +106,7 @@ public class FitNesseContext {
     this.logger = logger;
     this.properties = properties;
     responderFactory = new ResponderFactory(getRootPagePath());
+    fitNesse = new FitNesse(this);
   }
 
   public String toString() {

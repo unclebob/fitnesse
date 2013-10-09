@@ -16,7 +16,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.socketservice.SocketServerShutdownException;
 
 public class ShutdownResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws SocketServerShutdownException {
+  public Response makeResponse(final FitNesseContext context, Request request) throws SocketServerShutdownException {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.pageFactory.newPage();
@@ -29,7 +29,7 @@ public class ShutdownResponder implements SecureResponder {
     Thread shutdownThread = new Thread() {
       public void run() {
         try {
-          FitNesse.FITNESSE_INSTANCE.stop();
+          context.fitNesse.stop();
         }
         catch (Exception e) {
           e.printStackTrace();
