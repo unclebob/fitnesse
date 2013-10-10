@@ -297,12 +297,12 @@ span.error {
   background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
-li > a.pruned {
+div.contents li > a.pruned {
   text-decoration: line-through;
 }
-li > a.suite {
+div.contents li > a.suite {
   font-weight:bold;
 }
-li > a.static {
+div.contents li > a.static {
   font-style:italic;
 }
