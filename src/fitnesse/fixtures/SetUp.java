@@ -31,7 +31,7 @@ public class SetUp extends Fixture {
         return true;
       }
     });
-    fitnesse = new FitNesse(context, false);
+    fitnesse = new FitNesse(context).dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);

@@ -73,7 +73,7 @@ public class FitNesseMainTest {
   @Test
   public void testIsRunning() throws Exception {
     context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
-    FitNesse fitnesse = new FitNesse(context, false);
+    FitNesse fitnesse = new FitNesse(context).dontMakeDirs();
 
     assertFalse(fitnesse.isRunning());
 

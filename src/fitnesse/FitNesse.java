@@ -17,18 +17,16 @@ import java.net.BindException;
 
 public class FitNesse {
   private final FitNesseContext context;
-  private final boolean makeDirs;
+  private boolean makeDirs = true;
   private static SocketService theService;
 
   public FitNesse(FitNesseContext context) {
-    this(context, true);
+    this.context = context;
   }
 
-  // TODO MdM. This boolean agument is annoying... please fix.
-  // Update AJM: To make this work we need to get rid of FITNESSE_INSTANCE, remove update logic from here (move to FitNesseMain)
-  public FitNesse(FitNesseContext context, boolean makeDirs) {
-    this.context = context;
-    this.makeDirs = makeDirs;
+  public FitNesse dontMakeDirs() {
+    makeDirs = false;
+    return this;
   }
 
   private void establishRequiredDirectories() {

@@ -186,8 +186,6 @@ public class WikiPageDescriptorTest {
   @Test
   public void testTestRunnerWithRootPathVariable() throws Exception {
     String fitnesseRootpath = System.getProperty("user.home");
-    FitNesseContext context = FitNesseUtil.makeTestContext(null, fitnesseRootpath, null, 80);
-    new FitNesse(context, false);
 
     String specifiedPageText = "!define TEST_RUNNER (${user.home}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
