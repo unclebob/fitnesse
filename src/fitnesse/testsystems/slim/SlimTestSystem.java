@@ -74,15 +74,21 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void kill() throws IOException {
-    if (slimClient != null)
-      slimClient.kill();
-    testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+    try {
+      if (slimClient != null)
+        slimClient.kill();
+    } finally {
+      testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+    }
   }
 
   @Override
   public void bye() throws IOException {
-    slimClient.bye();
-    testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+    try {
+      slimClient.bye();
+    } finally {
+      testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+    }
   }
 
   @Override
