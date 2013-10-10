@@ -47,10 +47,9 @@ public class FitNesseMain {
   public Integer launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
-    FitNesse fitnesse = new FitNesse(context);
 
     update(arguments, context);
-    return launch(arguments, context, fitnesse);
+    return launch(arguments, context);
   }
 
   boolean update(Arguments arguments, FitNesseContext context) throws IOException {
@@ -65,21 +64,20 @@ public class FitNesseMain {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  Integer launch(Arguments arguments, FitNesseContext context,
-      FitNesse fitnesse) throws Exception {
+  Integer launch(Arguments arguments, FitNesseContext context) throws Exception {
     if (!arguments.isInstallOnly()) {
-      boolean started = fitnesse.start();
+      boolean started = context.fitNesse.start();
       if (started) {
         printStartMessage(arguments, context);
         if (arguments.getCommand() != null) {
-          return executeSingleCommand(arguments, fitnesse, context);
+          return executeSingleCommand(arguments, context);
         }
       }
     }
     return null;
   }
 
-  private int executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
 
@@ -95,8 +93,8 @@ public class FitNesseMain {
       os = System.out;
     }
 
-    fitnesse.executeSingleCommand(arguments.getCommand(), os);
-    fitnesse.stop();
+    context.fitNesse.executeSingleCommand(arguments.getCommand(), os);
+    context.fitNesse.stop();
 
     if (outputRedirectedToFile) {
       os.close();

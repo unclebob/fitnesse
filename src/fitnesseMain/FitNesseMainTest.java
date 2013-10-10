@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 import fitnesse.Arguments;
 import fitnesse.FitNesse;
@@ -38,8 +39,8 @@ public class FitNesseMainTest {
   public void testInstallOnly() throws Exception {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
-    FitNesse fitnesse = mock(FitNesse.class);
-    new FitNesseMain().launch(args, context, fitnesse);
+    FitNesse fitnesse = mockFitNesse();
+    new FitNesseMain().launch(args, context);
     verify(fitnesse, never()).start();
   }
 
@@ -48,9 +49,9 @@ public class FitNesseMainTest {
     Arguments args = new Arguments();
     args.setCommand("command");
     args.setOmitUpdates(true);
-    FitNesse fitnesse = mock(FitNesse.class);
+    FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
-    int exitCode = new FitNesseMain().launch(args, context, fitnesse);
+    int exitCode = new FitNesseMain().launch(args, context);
     assertThat(exitCode, is(0));
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
@@ -59,7 +60,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    FitNesse fitnesse = new FitNesse(context);
+    FitNesse fitnesse = context.fitNesse;
     fitnesse.start();
 
     try {
@@ -73,7 +74,7 @@ public class FitNesseMainTest {
   @Test
   public void testIsRunning() throws Exception {
     context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
-    FitNesse fitnesse = new FitNesse(context).dontMakeDirs();
+    FitNesse fitnesse = context.fitNesse.dontMakeDirs();
 
     assertFalse(fitnesse.isRunning());
 
@@ -108,4 +109,13 @@ public class FitNesseMainTest {
     String response = outputBytes.toString();
     return response;
   }
+
+  private FitNesse mockFitNesse() throws NoSuchFieldException, IllegalAccessException {
+    FitNesse fitNesse = mock(FitNesse.class);
+    Field aField = context.getClass().getDeclaredField("fitNesse");
+    aField.setAccessible(true);
+    aField.set(context, fitNesse);
+    return fitNesse;
+  }
+
 }
