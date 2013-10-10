@@ -3,7 +3,6 @@
 package fitnesse.fixtures;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
-import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.File;
@@ -31,12 +30,12 @@ public class SetUp extends Fixture {
         return true;
       }
     });
-    fitnesse = new FitNesse(context).dontMakeDirs();
+    context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);
     historyDirectory.mkdirs();
     SaveRecorder.clear();
-    fitnesse.start();
+    context.fitNesse.start();
   }
 }
