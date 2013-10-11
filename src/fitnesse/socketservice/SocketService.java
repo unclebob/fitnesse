@@ -14,16 +14,16 @@ import java.util.logging.Logger;
 public class SocketService {
   private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
 
-  private ServerSocket serverSocket = null;
-  private Thread serviceThread = null;
+  private final ServerSocket serverSocket;
+  private final Thread serviceThread;
   private volatile boolean running = false;
-  private SocketServer server = null;
-  private LinkedList<Thread> threads = new LinkedList<Thread>();
+  private final SocketServer server;
+  private final LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan = false;
 
   public SocketService(int port, SocketServer server) throws IOException {
     this.server = server;
-    serverSocket = tryCreateServerSocket(port);
+    serverSocket = SocketFactory.tryCreateServerSocket(port);
     serviceThread = new Thread(
       new Runnable() {
         public void run() {
@@ -32,10 +32,6 @@ public class SocketService {
       }
     );
     serviceThread.start();
-  }
-
-  private ServerSocket tryCreateServerSocket(int port) throws IOException {
-    return new ServerSocket(port);
   }
 
   public void close() throws IOException {

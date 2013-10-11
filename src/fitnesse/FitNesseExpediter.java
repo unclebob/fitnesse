@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 public class FitNesseExpediter implements ResponseSender {
   private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
 
-  private Socket socket;
-  private InputStream input;
-  private OutputStream output;
+  private final Socket socket;
+  private final InputStream input;
+  private final OutputStream output;
   private Request request;
   private Response response;
-  private FitNesseContext context;
+  private final FitNesseContext context;
   protected long requestParsingTimeLimit;
   private long requestProgress;
   private long requestParsingDeadline;
@@ -113,19 +113,18 @@ public class FitNesseExpediter implements ResponseSender {
     catch (Exception e) {
       response = new ErrorResponder(e).makeResponse(context, request);
     }
+    // Add those as default headers?
+    response.addHeader("Server", "FitNesse-" + context.version);
+    response.addHeader("Connection", "close");
     return response;
   }
 
   public Response createGoodResponse(Request request) throws Exception {
-    Response response;
     if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
     Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);
-    response = responder.makeResponse(context, request);
-    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
-    response.addHeader("Connection", "close");
-    return response;
+    return responder.makeResponse(context, request);
   }
 
   private void waitForRequest(Request request) throws InterruptedException {
@@ -135,7 +134,7 @@ public class FitNesseExpediter implements ResponseSender {
     while (!hasError && !request.hasBeenParsed()) {
       Thread.sleep(10);
       if (timeIsUp(now) && parsingIsUnproductive(request))
-        reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+        reportError(408, "The client request has been unproductive for too long. It has timed out and will now longer be processed.");
     }
   }
 

@@ -276,8 +276,8 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 
 | ''' NAME ''' | ''' Default ''' | ''' Values ''' | ''' Notes ''' |
 | ${CODE} TEST_SYSTEM ${CODEend} | !c fit | !c fit&bar;slim | '' Selects the test system to use for this, and descendant pages.'' |
-| ${CODE} SLIM_PORT ${CODEend} | !c 8085 | !c integer | '' Selects the starting port number in a range of 10 for slim.'' |
-| ${CODE} SLIM_HOST ${CODEend} | !c localhost | !c string | '' The name of the host on which !-SlimServer-! is running.'' |
+| ${CODE} SLIM_PORT ${CODEend} ''(deprecated)''| !c 8085 | !c integer | '' Selects the starting port number in a range of 10 for slim.'' |
+| ${CODE} SLIM_HOST ${CODEend} ''(deprecated)''| !c localhost | !c string | '' The name of the host on which !-SlimServer-! is running.'' |
 | ${CODE} SLIM_VERSION ${CODEend} | !c nil | !c string | '' The minimum Slim Protocol Version required for this page.  Used to turn off slim protocol error messages.'' |
 | ${CODE} MANUALLY_START_TEST_RUNNER_ON_DEBUG ${CODEend} | !c false | !c true${BAR}false | '' When set to true, and a page is run in debug mode then fitnesse will not create it's own slim runner, and will instead connect to an existing runner on port ${CODE} SLIM_PORT ${CODEend}.'' |
 | ${CODE} CLASSPATH_PROPERTY ${CODEend} | !c nil | !c ''an environment variable'' | '' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.'' |

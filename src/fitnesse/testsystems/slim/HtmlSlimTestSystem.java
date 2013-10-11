@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
@@ -56,9 +55,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private NodeList makeNodeList(ReadOnlyPageData pageData) {
-    String html;
-    ParsedPage parsedPage = pageData.getParsedPage();
-    html = parsedPage.toHtml();
+    String html = pageData.getHtml();
     Parser parser = new Parser(new Lexer(new Page(html)));
     try {
       return parser.parse(null);

@@ -2,7 +2,6 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 
-import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
@@ -22,7 +21,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
     final String slimArguments = buildArguments();
     createSlimService(slimArguments);
 
-    return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
   }
 
 }

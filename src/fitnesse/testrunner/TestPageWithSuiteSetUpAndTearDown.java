@@ -25,7 +25,7 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
     includePage(getTearDown(), "-teardown", decoratedContent);
     includePage(getSuiteTearDown(), "-teardown", decoratedContent);
 
-    return new PageData(getSourcePage(), decoratedContent.toString());
+    return new PageData(getSourcePage().getData(), decoratedContent.toString());
   }
 
   public WikiPage getSuiteSetUp() {

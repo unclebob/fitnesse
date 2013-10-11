@@ -12,11 +12,12 @@ import java.util.logging.Logger;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Paths;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
-import fitnesse.wikitext.parser.VariableFinder;
+import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
 import util.Maybe;
@@ -77,21 +78,29 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
   private transient ParsedPage parsedPage;
+  private VariableSource variableSource;
 
   public PageData(WikiPage page) {
     wikiPage = page;
     initializeAttributes();
   }
 
-  public PageData(WikiPage page, String content) {
-    this(page);
+  public PageData(PageData data, String content) {
+    this(data);
     setContent(content);
   }
 
+  public PageData(PageData data, VariableSource variableSource) {
+    this(data);
+    this.variableSource = variableSource;
+  }
+
   public PageData(PageData data) {
-    this(data.getWikiPage(), data.content);
-    properties = new WikiPageProperties(data.properties);
-    parsedPage = data.parsedPage;
+    this.wikiPage = data.getWikiPage();
+    this.variableSource = data.variableSource;
+    this.properties = new WikiPageProperties(data.properties);
+    this.content = data.content;
+    this.parsedPage = data.parsedPage;
   }
 
   public void initializeAttributes() {
@@ -144,10 +153,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
     }
   }
 
+  @Override
   public WikiPageProperties getProperties() {
     return properties;
   }
 
+  @Override
   public String getAttribute(String key) {
     return properties.get(key);
   }
@@ -164,6 +175,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(key);
   }
 
+  @Override
   public boolean hasAttribute(String attribute) {
     return properties.has(attribute);
   }
@@ -172,6 +184,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.properties = properties;
   }
 
+  @Override
   public String getContent() {
     return content;
   }
@@ -181,54 +194,58 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   /* this is the public entry to page parse and translate */
+  @Override
   public String getHtml() {
       return getParsedPage().toHtml();
   }
 
+  @Override
   public String getVariable(String name) {
-      Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
-      if (variable.isNothing()) return null;
-      return getParsingPage().renderVariableValue(variable.getValue());
+    ParsingPage parsingPage = getParsingPage();
+    Maybe<String> variable = parsingPage.findVariable(name);
+    if (variable.isNothing()) return null;
+
+    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
+    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
   public ParsedPage getParsedPage() {
-    if (parsedPage == null) parsedPage = new ParsedPage(new WikiSourcePage(wikiPage), content);
+    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
     return parsedPage;
   }
 
-    private Symbol getSyntaxTree() {
-        return getParsedPage().getSyntaxTree();
-    }
+  private Symbol getSyntaxTree() {
+    return getParsedPage().getSyntaxTree();
+  }
 
-    private ParsingPage getParsingPage() {
-        return getParsedPage().getParsingPage();
-    }
+  private ParsingPage getParsingPage() {
+    return getParsedPage().getParsingPage();
+  }
 
   public void setWikiPage(WikiPage page) {
     wikiPage = page;
   }
 
+  @Override
   public WikiPage getWikiPage() {
     return wikiPage;
   }
 
-  public List<String> getClasspaths() {
-    Symbol tree = getSyntaxTree();
-    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), getParsingPage())).getPaths(tree);
+  @Override
+  public List<String> getXrefPages() {
+    final ArrayList<String> xrefPages = new ArrayList<String>();
+    getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      public boolean visit(Symbol node) {
+        if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
+        return true;
+      }
+
+      public boolean visitChildren(Symbol node) {
+        return true;
+      }
+    });
+    return xrefPages;
   }
-
-    public List<String> getXrefPages() {
-        final ArrayList<String> xrefPages = new ArrayList<String>();
-        getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-            public boolean visit(Symbol node) {
-                if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-                return true;
-            }
-
-            public boolean visitChildren(Symbol node) { return true; }
-        });
-        return xrefPages;
-    }
 
   public boolean isEmpty() {
     return getContent() == null || getContent().length() == 0;

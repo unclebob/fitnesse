@@ -1,8 +1,8 @@
 Slim tables can contain HTML content. If content qualifies as HTML, it is passed to the SUT as HTML.
 
 !**> scenarios
-!define html {| !-<span>&lt; 50%</span>-! |
-| !-<span>&lt; 50%</span>-! |}
+!define html {| !note > 50% (note) |
+| !meta < 50% (meta) |}
 
 !define no_html {< 50%}
 
@@ -16,7 +16,8 @@ Slim tables can contain HTML content. If content qualifies as HTML, it is passed
 
 -|script|
 | Content | ${html} | is returned as | ${html} |
-| And the SUT sees | !-<span>&lt; 50%</span>-! |
+| And the SUT sees | !note > 50% (note) |
+| And the SUT sees | !meta < 50% (meta) |
 
 -|script|
 | Content | ${no_html} | is returned as | ${no_html} |

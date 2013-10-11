@@ -58,7 +58,7 @@ public class WikiTestPage implements TestPage {
 
     decorate(getTearDown(), decoratedContent);
 
-    return new PageData(sourcePage, decoratedContent.toString());
+    return new PageData(getSourcePage().getData(), decoratedContent.toString());
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {

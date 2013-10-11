@@ -103,7 +103,7 @@ public class SuiteContentsFinderTest {
     WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
     setUpForGetAllTestPages();
     String content = "|Suite|\n|Title|Test|\n|Content|.|\n";
-    suite.commit(new PageData(suite,content));
+    suite.commit(new PageData(suite.getData(), content));
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
     assertEquals(2, testPages.size());

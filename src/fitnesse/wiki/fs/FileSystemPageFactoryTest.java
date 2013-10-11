@@ -2,6 +2,7 @@ package fitnesse.wiki.fs;
 
 import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.mem.MemoryFileSystem;
@@ -22,8 +23,8 @@ public class FileSystemPageFactoryTest {
     @Before
     public void SetUp() throws Exception {
         fileSystem = new MemoryFileSystem();
-        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController());
-        rootPage = (FileSystemPage) new FileSystemPageFactory(fileSystem, new ZipFileVersionsController()).makeRootPage(".", "somepath") ;
+        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController(), new SystemVariableSource());
+        rootPage = fileSystemPageFactory.makeRootPage(".", "somepath") ;
     }
 
     @Test

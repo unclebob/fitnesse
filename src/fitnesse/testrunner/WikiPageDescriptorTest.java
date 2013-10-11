@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -184,11 +185,9 @@ public class WikiPageDescriptorTest {
 
   @Test
   public void testTestRunnerWithRootPathVariable() throws Exception {
-    String fitnesseRootpath = "/home/fitnesse";
-    FitNesseContext context = FitNesseUtil.makeTestContext(null, fitnesseRootpath, null, 80);
-    new FitNesse(context, false);
+    String fitnesseRootpath = System.getProperty("user.home");
 
-    String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
+    String specifiedPageText = "!define TEST_RUNNER (${user.home}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
     Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));

@@ -1,11 +1,23 @@
 !2 Upcoming release
+ * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.
  * Git version control and recent-changes support
  * Page caching is removed. Changes on the file system are now directly reflected in the wiki
  * Test and Page history can show/hide passed tests. This makes it easier to search for failed test runs.
- * the "names" responder has new options: "Recursive", "LeafOnly", and "ShowTags" (needs documentation update!)
+ * The "names" responder has new options: "Recursive", "!-LeafOnly-!", and "!-ShowTags-!" (needs documentation update!)
  * Reduce space used by included pages on test page.
  * Test system, Fit server and wiki code has been cleaned up.
- 
+ * New command line option ''-f <config file>''. Loads a custom configuration properties file.
+ * Code cleanup: test system, wiki and reporting (formatters)
+ * Settings can be configured both on the command line and in the plugins.properties file
+ * Updated REST API parameter for "names" request
+ * Issues fixed:
+   * HTML content is table cells is passed to the SUT as-is
+   * Sockets are not properly closed after Slim test execution
+   * !-StopTest-! behaviour changed in version 20130530. The old behaviour is in place again.
+   * Fixed issue where stylesheets were not properly loaded in Chrome.
+   * String arguments are not converted, even if a Converter is registered.
+   * Rich text editor improvements
+
 !2 2013-05-30
  * Many improvements in the JUnit test runner
  * New: version comparator

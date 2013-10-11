@@ -35,6 +35,18 @@ You can also create your own custom type converters if you like.
 
 Content returned from the SUT will be escaped by default, so your fixture can return a piece of output without the need to transform it to HTML compatible output. On the other hand, if you're returning HTML content (e.g. a <table>..</table>), !-FitNesse-! will try to detect that (based on a valid HTML start and end tag) and will render the HTML in-line.
 
+!4 Configure SLIM
+
+The Slim test system can be configured using the following properties:
+
+| slim.port | 8085| Base port for SLIM. |
+| slim.pool.size | 10| The size of the pool of ports to cycle through. By default the ports 8085 up to 8095 are used (''slim.port'' + ''slim.pool.size''). |
+| slim.host | localhost | The host the SLIM server will be running on. This is mostly useful if you're running a remote SLIM server. |
+| slim.flags | | Extra flags to provide to the SLIM server. |
+| manually.start.test.runner.on.debug | false | Do not launch a SLIM server if the test is ran in debug mode. |
+
+Those properties can be either provided on the command line (e.g. ''-Dslim.port=9000'') or in the plugins.properties file.
+
 !4 Extra Goodies that are consistent throughout all Slim tables and ports.
 | [[''Exception Handling''][>ExceptionHandling]] |
 | [[''Symbols in tables''][>SymbolsInTables]] |

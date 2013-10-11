@@ -15,6 +15,8 @@ import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.CustomComparator;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
@@ -514,6 +516,7 @@ public abstract class SlimTable {
     );
 
     private Pattern regexPattern = Pattern.compile("\\s*=~/(.*)/");
+    private Pattern customComparatorPattern = Pattern.compile("\\s*(\\w*):(.*)");
     private double v;
     private double arg1;
     private double arg2;
@@ -542,6 +545,10 @@ public abstract class SlimTable {
       if (message != null)
         return message;
 
+      message = evaluateCustomComparatorIfPresent();
+      if (message != null)
+        return message;
+
       operation = matchSimpleComparison();
       if (operation != null)
         return doSimpleComparison();
@@ -551,6 +558,28 @@ public abstract class SlimTable {
         return doRange(matcher);
       } else
         return null;
+    }
+
+    private SlimTestResult evaluateCustomComparatorIfPresent() {
+      SlimTestResult message = null;
+      Matcher customComparatorMatcher = customComparatorPattern.matcher(expression);
+      if (customComparatorMatcher.matches()) {
+        String prefix = customComparatorMatcher.group(1);
+        CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix(prefix);
+        if (customComparator != null) {
+          String expectedString = customComparatorMatcher.group(2);
+          try {
+            if (customComparator.matches(actual, expectedString)) {
+              message = SlimTestResult.pass(expectedString + " matches " + actual);
+            } else {
+              message = SlimTestResult.fail(expectedString + " doesn't match " + actual);
+            }
+          } catch (Throwable t) {
+            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + t.getMessage());
+          }
+        }
+      }
+      return message;
     }
 
     private SlimTestResult evaluateRegularExpressionIfPresent() {

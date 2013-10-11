@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
@@ -370,6 +370,47 @@ public class HtmlSlimResponderTest {
         .getScenarios().iterator().next().getScenarioName().equals("myScenario"));
   }
 
+  @Test
+  public void customComparatorReturnsPass() throws Exception {
+    CustomComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    getResultsForPageContents("!|script|\n"
+        + "|start|fitnesse.slim.test.TestSlim|\n"
+        + "|check|return string|equalsIgnoreCase:STRING|\n");
+    assertTestResultsContain("<td><span class=\"pass\">STRING matches string</span></td>");
+  }
+
+  @Test
+  public void customComparatorReturnsFail() throws Exception {
+    CustomComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    getResultsForPageContents("!|script|\n"
+        + "|start|fitnesse.slim.test.TestSlim|\n"
+        + "|check|return string|equalsIgnoreCase:STRINGS|\n");
+    assertTestResultsContain("<td><span class=\"fail\">STRINGS doesn't match string</span></td>");
+  }
+
+  @Test
+  public void customComparatorReturnsMessage() throws Exception {
+    CustomComparatorRegistry.addCustomComparator("exceptionMessage", new ExceptionMessageComparator());
+    getResultsForPageContents("!|script|\n"
+        + "|start|fitnesse.slim.test.TestSlim|\n"
+        + "|check|return string|exceptionMessage:STRINGS|\n");
+    assertTestResultsContain("<td><span class=\"fail\">STRINGS doesn't match string:\nexception message</span></td>");
+  }
+
+  class EqualsIgnoreCaseComparator implements CustomComparator {
+    @Override
+    public boolean matches(String actual, String expected) {
+      return expected.equalsIgnoreCase(actual);
+    }
+  }
+	  
+  class ExceptionMessageComparator implements CustomComparator {
+    @Override
+    public boolean matches(String actual, String expected) {
+      throw new RuntimeException("exception message");
+    }
+  }
+	  
   private static class DummyListener implements TestSystemListener {
     @Override
     public void testSystemStarted(TestSystem testSystem) {

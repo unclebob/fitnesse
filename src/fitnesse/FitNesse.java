@@ -19,23 +19,17 @@ import java.util.logging.Logger;
 
 public class FitNesse {
   private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
-  public static final FitNesseVersion VERSION = new FitNesseVersion();
-  public static FitNesse FITNESSE_INSTANCE;
-  private final Updater updater;
   private final FitNesseContext context;
+  private boolean makeDirs = true;
   private SocketService theService;
 
   public FitNesse(FitNesseContext context) {
-    this(context, null, true);
+    this.context = context;
   }
 
-  // TODO MdM. This boolean agument is annoying... please fix.
-  public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
-    this.updater = updater;
-    FITNESSE_INSTANCE = this;
-    this.context = context;
-    if (makeDirs)
-      establishRequiredDirectories();
+  public FitNesse dontMakeDirs() {
+    makeDirs = false;
+    return this;
   }
 
   private void establishRequiredDirectories() {
@@ -49,14 +43,6 @@ public class FitNesse {
       filesDir.mkdir();
   }
 
-  public FitNesse(FitNesseContext context, Updater updater) {
-    this(context, updater, true);
-  }
-
-  public FitNesse(FitNesseContext context, boolean makeDirs) {
-    this(context, null, makeDirs);
-  }
-
   public static void main(String[] args) throws Exception {
     System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
     Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
@@ -65,6 +51,9 @@ public class FitNesse {
   }
 
   public boolean start() {
+    if (makeDirs) {
+      establishRequiredDirectories();
+    }
     try {
       if (context.port > 0) {
         theService = new SocketService(context.port, new FitNesseServer(context));
@@ -87,17 +76,8 @@ public class FitNesse {
     }
   }
 
-  public void applyUpdates() throws IOException{
-    if (updater != null)
-      updater.update();
-  }
-
   public boolean isRunning() {
     return theService != null;
-  }
-
-  public FitNesseContext getContext() {
-    return context;
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {

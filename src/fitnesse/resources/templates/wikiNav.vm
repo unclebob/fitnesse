@@ -19,9 +19,9 @@
  #if( $actions.withEdit)
  <li id="add"><a href="$localPath?new" class="label">Add</a>
   <ul>
-   <li><a href="$localPath?new&pageType=Static">Static page</a></li>
-   <li><a href="$localPath?new&pageType=Test">Test page</a></li>
-   <li><a href="$localPath?new&pageType=Suite">Suite page</a></li>
+   <li><a href="$localPath?new&amp;pageType=Static">Static page</a></li>
+   <li><a href="$localPath?new&amp;pageType=Test">Test page</a></li>
+   <li><a href="$localPath?new&amp;pageType=Suite">Suite page</a></li>
   </ul>
  </li>
  #end
@@ -59,6 +59,12 @@
   #if( $actions.testPage || $actions.suitePage )
    <li#group(4)><a href="?testHistory">Test History</a></li>
    <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
+  #end
+  #if( $actions.testPage )
+   <li#group(4)><a href="?test&amp;remote_debug">Remote Debug</a></li>
+  #end
+  #if( $actions.suitePage )
+   <li#group(4)><a href="?suite&amp;remote_debug">Remote Debug</a></li>
   #end
 
   #if( $actions.withUserGuide )

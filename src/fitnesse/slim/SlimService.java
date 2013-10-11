@@ -10,51 +10,66 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class SlimService {
-	static boolean verbose;
-	static int port;
-	static String interactionClassName = null;
+import fitnesse.socketservice.SocketFactory;
 
-	private final ServerSocket serverSocket;
-	private final SlimServer slimServer;
+public class SlimService {
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] port";
+  static Class<? extends DefaultInteraction> interactionClass;
+
+  public static class Options {
+    final boolean verbose;
+    final int port;
+    final Class<? extends DefaultInteraction> interactionClass;
+
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass) {
+      this.verbose = verbose;
+      this.port = port;
+      this.interactionClass = interactionClass;
+    }
+  }
+
+  private final ServerSocket serverSocket;
+  private final SlimServer slimServer;
   static Thread service;
 
   public static void main(String[] args) throws IOException {
-		if (parseCommandLine(args)) {
-			startWithFactory(new JavaSlimFactory());
-		} else {
-			parseCommandLineFailed(args);
-		}
-	}
+    Options options = parseCommandLine(args);
+    if (options != null) {
+      startWithFactory(new JavaSlimFactory(), options);
+    } else {
+      parseCommandLineFailed(args);
+    }
+  }
 
-	protected static void parseCommandLineFailed(String[] args) {
-		System.err.println("Invalid command line arguments:"
-				+ Arrays.asList(args));
-	}
+  protected static void parseCommandLineFailed(String[] args) {
+    System.err.println("Invalid command line arguments: " + Arrays.asList(args));
+    System.err.println("Usage:");
+    System.err.println("    " + SlimService.class.getName() + " " + OPTION_DESCRIPTOR);
+  }
 
-	public static void startWithFactory(SlimFactory slimFactory) throws IOException {
-		SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
-		slimservice.accept();
-	}
+  public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
+    slimservice.accept();
+  }
 
-	public static void startWithFactoryAsync(SlimFactory slimFactory) throws IOException {
-      if (service != null && service.isAlive()) {
-        System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
-        service.interrupt();
-        throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+  public static void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
+    if (service != null && service.isAlive()) {
+      System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      service.interrupt();
+      throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+    }
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
+    service = new Thread() {
+      public void run() {
+        try {
+          slimservice.accept();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
-      final SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
-      service = new Thread() {
-          public void run() {
-              try {
-                  slimservice.accept();
-              } catch (IOException e) {
-                  throw new RuntimeException(e);
-              }
-          }
-      };
-      service.start();
-	}
+    };
+    service.start();
+  }
 
   // For testing, mainly.
   public static void waitForServiceToStopAsync() throws InterruptedException {
@@ -66,72 +81,63 @@ public class SlimService {
     }
   }
 
-	public static boolean parseCommandLine(String[] args) {
-		CommandLine commandLine = new CommandLine(
-				"[-v] [-i interactionClass] port ");
-		if (commandLine.parse(args)) {
-			verbose = commandLine.hasOption("v");
-			interactionClassName = commandLine.getOptionArgument("i",
-					"interactionClass");
-			String portString = commandLine.getArgument("port");
-			port = (portString == null) ? 8099 : Integer.parseInt(portString);
-			return true;
-		}
-		return false;
-	}
+  public static Options parseCommandLine(String[] args) {
+    CommandLine commandLine = new CommandLine(OPTION_DESCRIPTOR);
+    if (commandLine.parse(args)) {
+      boolean verbose = commandLine.hasOption("v");
+      String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
+      String portString = commandLine.getArgument("port");
+      int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      return new Options(verbose, port, getInteractionClass(interactionClassName));
+    }
+    return null;
+  }
 
-	public SlimService(SlimServer slimServer) throws IOException {
-		this.slimServer = slimServer;
+  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass) throws IOException {
+    SlimService.interactionClass = interactionClass;
+    this.slimServer = slimServer;
 
-		try {
-			serverSocket = tryCreateServerSocket(port);
-		} catch (java.lang.OutOfMemoryError e) {
-			System.err.println("Out of Memory. Aborting");
-			e.printStackTrace();
-			System.exit(99);
+    try {
+      serverSocket = SocketFactory.tryCreateServerSocket(port);
+    } catch (java.lang.OutOfMemoryError e) {
+      System.err.println("Out of Memory. Aborting");
+      e.printStackTrace();
+      System.exit(99);
 
-			throw e;
-		}
-	}
+      throw e;
+    }
+  }
 
-	private ServerSocket tryCreateServerSocket(int port) throws IOException {
-		try
-		{
-			return new ServerSocket(port);
-		} catch (IOException e) {
-			System.out.println("IO exception on port = " + port);
-			e.printStackTrace();
-			throw e;
-		}
-	}
+  public void accept() throws IOException {
+    Socket socket = null;
+    try {
+      socket = serverSocket.accept();
+      slimServer.serve(socket);
+    } catch (java.lang.OutOfMemoryError e) {
+      System.err.println("Out of Memory. Aborting");
+      e.printStackTrace();
+      System.exit(99);
+    } finally {
+      if (socket != null) {
+        socket.close();
+      }
+      serverSocket.close();
+    }
+  }
 
-	public void accept() throws IOException {
-		Socket socket = null;
-		try{
-			socket = serverSocket.accept();
-			slimServer.serve(socket);
-		} catch (java.lang.OutOfMemoryError e) {
-			System.err.println("Out of Memory. Aborting");
-			e.printStackTrace();
-			System.exit(99);
-		} finally {
-			if (socket != null) {
-				socket.close();
-			}
-			serverSocket.close();
-		}
-	}
+  @SuppressWarnings("unchecked")
+  private static Class<DefaultInteraction> getInteractionClass(String interactionClassName) {
+    if (interactionClassName == null) {
+      return DefaultInteraction.class;
+    }
+    try {
+      return (Class<DefaultInteraction>) Class.forName(interactionClassName);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-	@SuppressWarnings("unchecked")
-	public static Class<DefaultInteraction> getInteractionClass() {
-		if (interactionClassName == null) {
-			return DefaultInteraction.class;
-		}
-		try {
-			return (Class<DefaultInteraction>) Class
-					.forName(interactionClassName);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  public static Class<? extends DefaultInteraction> getInteractionClass() {
+    return interactionClass;
+  }
 }

@@ -17,12 +17,7 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -31,52 +26,58 @@ import java.util.logging.Logger;
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
 
-  public static boolean dontExitAfterSingleCommand;
+  private String extraOutput = "";
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = parseCommandLine(args);
-    if (arguments != null) {
-      launchFitNesse(arguments);
-    } else {
+    if (arguments == null) {
       printUsage();
-      System.exit(1);
+      exit(1);
+    }
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    if (exitCode != null) {
+      exit(exitCode);
     }
   }
 
-  public static void launchFitNesse(Arguments arguments) throws Exception {
+  protected static void exit(int exitCode) {
+    System.exit(exitCode);
+  }
+
+  public Integer launchFitNesse(Arguments arguments) throws Exception {
     configureLogging(arguments.hasVerboseLogging());
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
-    Updater updater = null;
-    if (!arguments.isOmittingUpdates())
-      updater = new UpdaterImplementation(context);
-    FitNesse fitnesse = new FitNesse(context, updater);
-    update(arguments, fitnesse);
-    launch(arguments, context, fitnesse);
+
+    update(arguments, context);
+    return launch(arguments, context);
   }
 
-  private static void loadPlugins() throws Exception {
+  boolean update(Arguments arguments, FitNesseContext context) throws IOException {
+    if (!arguments.isOmittingUpdates()) {
+      Updater updater = new UpdaterImplementation(context);
+      return updater.update();
+    }
+    return false;
+  }
+
+  private void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  static void update(Arguments arguments,FitNesse fitnesse) throws Exception {
-    if (!arguments.isOmittingUpdates())
-      fitnesse.applyUpdates();
-  }
-
-  static void launch(Arguments arguments, FitNesseContext context,
-      FitNesse fitnesse) throws Exception {
+  Integer launch(Arguments arguments, FitNesseContext context) throws Exception {
     if (!arguments.isInstallOnly()) {
-      boolean started = fitnesse.start();
+      boolean started = context.fitNesse.start();
       if (started) {
         if (arguments.getCommand() != null) {
-          executeSingleCommand(arguments, fitnesse, context);
+          return executeSingleCommand(arguments, context);
         }
       }
     }
+    return null;
   }
 
-  private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     LOG.info("Executing command: " + arguments.getCommand());
 
@@ -92,8 +93,8 @@ public class FitNesseMain {
       os = System.out;
     }
 
-    fitnesse.executeSingleCommand(arguments.getCommand(), os);
-    fitnesse.stop();
+    context.fitNesse.executeSingleCommand(arguments.getCommand(), os);
+    context.fitNesse.stop();
 
     if (outputRedirectedToFile) {
       os.close();
@@ -101,16 +102,10 @@ public class FitNesseMain {
       LOG.info("-----Command Complete-----");
     }
 
-    if (shouldExitAfterSingleCommand()) {
-      System.exit(TestTextFormatter.finalErrorCount);
-    }
+    return TestTextFormatter.finalErrorCount;
   }
 
-  private static boolean shouldExitAfterSingleCommand() {
-    return !dontExitAfterSingleCommand;
-  }
-
-  private static FitNesseContext loadContext(Arguments arguments)
+  private FitNesseContext loadContext(Arguments arguments)
     throws Exception {
     Properties properties = loadConfigFile(arguments.getConfigFile());
     // Enrich properties with command line values:
@@ -121,12 +116,11 @@ public class FitNesseMain {
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
+    builder.properties = properties;
     builder.port = arguments.getPort();
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
-    builder.pageTheme = properties.getProperty(ComponentFactory.THEME);
-    builder.defaultNewPageContent = properties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
@@ -146,6 +140,7 @@ public class FitNesseMain {
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadContentFilter();
     pluginsLoader.loadSlimTables();
+    pluginsLoader.loadCustomComparators();
 
     WikiImportTestEventListener.register();
 
@@ -153,19 +148,24 @@ public class FitNesseMain {
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);
-    LOG.info("page theme: " + context.pageTheme);
+    LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
 
     return context;
   }
 
-  public static Properties loadConfigFile(final String propertiesFile) {
+  public Properties loadConfigFile(final String propertiesFile) {
     FileInputStream propertiesStream = null;
     Properties properties = new Properties();
+    File configurationFile = new File(propertiesFile);
     try {
-      propertiesStream = new FileInputStream(propertiesFile);
+      propertiesStream = new FileInputStream(configurationFile);
     } catch (FileNotFoundException e) {
-      System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+      try {
+        System.err.println(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
+      } catch (IOException e1) {
+        System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+      }
     }
 
     if (propertiesStream != null) {
@@ -176,9 +176,6 @@ public class FitNesseMain {
         System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
-
-    // Command line properties override settings from configuration file.
-    properties.putAll(System.getProperties());
 
     return properties;
   }
@@ -207,6 +204,7 @@ public class FitNesseMain {
     LOG.finest("Configured verbose logging");
   }
 
+  // Move to Arguments class.
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
       "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");

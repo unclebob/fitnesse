@@ -16,6 +16,8 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.testsystems.slim.CustomComparator;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -174,6 +176,18 @@ public class PluginsLoaderTest {
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
+  public void testCustomComparatorsCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    testProperties.setProperty(ComponentFactory.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
+    String content = loader.loadCustomComparators();
+
+    assertTrue(content.contains("test:"));
+    assertTrue(content.contains("TestCustomComparator"));
+
+    CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
+    assertNotNull(customComparator);
+    assertTrue(customComparator instanceof TestCustomComparator);
+  }
+
   private HtmlTable makeMockTable(String tableIdentifier) {
     // Create just enough "table" to test if
     TableTag tableTag = new TableTag();
@@ -221,6 +235,13 @@ public class PluginsLoaderTest {
     @Override
     public List<SlimAssertion> getAssertions() {
       return null;
+    }
+  }
+  
+  public static class TestCustomComparator implements CustomComparator {
+    @Override
+    public boolean matches(String actual, String expected) {
+      return false;
     }
   }
 }

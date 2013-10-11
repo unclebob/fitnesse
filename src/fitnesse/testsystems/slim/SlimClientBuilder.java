@@ -2,13 +2,13 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fitnesse.socketservice.SocketFactory;
+
 import fitnesse.slim.JavaSlimFactory;
-import fitnesse.slim.SlimCommandRunningClient;
 import fitnesse.slim.SlimService;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
@@ -32,10 +32,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     slimPort = getNextSlimPort();
   }
 
-  public static String defaultTestRunner() {
-    return "fitnesse.slim.SlimService";
-  }
-
   @Override
   public SlimCommandRunningClient build() throws IOException {
     CommandRunner commandRunner;
@@ -46,7 +42,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
     }
 
-    return new SlimCommandRunningClient(descriptor.getTestRunner(), commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
   }
 
   protected String buildCommand() {
@@ -62,7 +58,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   //For testing only.  Makes responder faster.
-  void createSlimService(String args) throws SocketException {
+  void createSlimService(String args) throws IOException {
     while (!tryCreateSlimService(args))
       try {
         Thread.sleep(10);
@@ -72,12 +68,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   // For testing only
-  private boolean tryCreateSlimService(String args) throws SocketException {
+  private boolean tryCreateSlimService(String args) throws IOException {
     try {
-      SlimService.parseCommandLine(args.trim().split(" "));
-      SlimService.startWithFactoryAsync(new JavaSlimFactory());
+      SlimService.Options options = SlimService.parseCommandLine(args.trim().split(" "));
+      SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
       return true;
-    } catch (SocketException e) {
+    } catch (IOException e) {
       throw e;
     } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to create SLiM service", e);
@@ -92,7 +88,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = new ServerSocket(0);
+      ServerSocket socket = SocketFactory.tryCreateServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {
@@ -102,7 +98,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   private int getNextSlimPort() {
-    int base = getSlimPortBase();
+    final int base = getSlimPortBase();
+    final int poolSize = getSlimPortPoolSize();
 
     if (base == 0) {
       return findFreePort();
@@ -110,7 +107,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (slimPortOffset) {
       int offset = slimPortOffset.get();
-      offset = (offset + 1) % 10;
+      offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
       return offset + base;
     }
@@ -123,11 +120,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int getSlimPortBase() {
     try {
       String port = descriptor.getVariable("slim.port");
-      if (port != null) {
-        return Integer.parseInt(port);
+      if (port == null) {
+        port = descriptor.getVariable(SLIM_PORT);
       }
 
-      port = descriptor.getVariable(SLIM_PORT);
       if (port != null) {
         return Integer.parseInt(port);
       }
@@ -137,22 +133,42 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return 8085;
   }
 
+  private int getSlimPortPoolSize() {
+    try {
+      String poolSize = descriptor.getVariable("slim.pool.size");
+      if (poolSize != null) {
+        return Integer.parseInt(poolSize);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
+    }
+    return 10;
+  }
+
   String determineSlimHost() {
-    String slimHost = descriptor.getVariable(SLIM_HOST);
+    String slimHost = descriptor.getVariable("slim.host");
+    if (slimHost == null) {
+      slimHost = descriptor.getVariable(SLIM_HOST);
+    }
     return slimHost == null ? "localhost" : slimHost;
   }
 
   String getSlimFlags() {
-    String slimFlags = descriptor.getVariable(SLIM_FLAGS);
+    String slimFlags = descriptor.getVariable("slim.flags");
+    if (slimFlags == null) {
+      slimFlags = descriptor.getVariable(SLIM_FLAGS);
+    }
     return slimFlags == null ? "" : slimFlags;
   }
 
   private boolean useManualStartForTestSystem() {
     if (descriptor.isDebug()) {
-      String useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      String useManualStart = descriptor.getVariable("manually.start.test.runner.on.debug");
+      if (useManualStart == null) {
+        useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+      }
       return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }
     return false;
   }
-
 }

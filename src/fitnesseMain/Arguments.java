@@ -115,7 +115,7 @@ public class Arguments {
   }
 
   public String getConfigFile() {
-    return configFile == null ? DEFAULT_CONFIG_FILE : configFile;
+    return configFile == null ? (rootPath + "/" + DEFAULT_CONFIG_FILE) : configFile;
   }
 
   public void setConfigFile(String configFile) {
