@@ -10,11 +10,11 @@ import java.net.SocketException;
 import java.util.LinkedList;
 
 public class SocketService {
-  private ServerSocket serverSocket = null;
-  private Thread serviceThread = null;
+  private final ServerSocket serverSocket;
+  private final Thread serviceThread;
   private volatile boolean running = false;
-  private SocketServer server = null;
-  private LinkedList<Thread> threads = new LinkedList<Thread>();
+  private final SocketServer server;
+  private final LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan = false;
 
   public SocketService(int port, SocketServer server) throws IOException {
@@ -30,7 +30,10 @@ public class SocketService {
     serviceThread.start();
   }
 
-  
+  public boolean isRunning() {
+    return running;
+  }
+
   public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
@@ -60,7 +63,7 @@ public class SocketService {
         e.printStackTrace();
         System.exit(99);
       } catch (SocketException sox) {
-        running = false;// do nothing
+        running = false;
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -96,11 +99,19 @@ public class SocketService {
 
     public void run() {
       try {
-        server.serve(socket);
-        synchronized (threads) {
-          threads.remove(Thread.currentThread());
+        try {
+          server.serve(socket);
+        } finally {
+          synchronized (threads) {
+            threads.remove(Thread.currentThread());
+          }
         }
-      } catch (Exception e) {
+      } catch (SocketServerShutdownException e) {
+        try {
+          close();
+        } catch (IOException ioe) {
+          ioe.printStackTrace();
+        }
       }
     }
   }

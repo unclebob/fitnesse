@@ -8,6 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.socketservice.SocketServerShutdownException;
 import util.Clock;
 import util.StringUtil;
 
@@ -20,12 +21,12 @@ import java.net.SocketException;
 import java.util.GregorianCalendar;
 
 public class FitNesseExpediter implements ResponseSender {
-  private Socket socket;
-  private InputStream input;
-  private OutputStream output;
+  private final Socket socket;
+  private final InputStream input;
+  private final OutputStream output;
   private Request request;
   private Response response;
-  private FitNesseContext context;
+  private final FitNesseContext context;
   protected long requestParsingTimeLimit;
   private long requestProgress;
   private long requestParsingDeadline;
@@ -39,13 +40,22 @@ public class FitNesseExpediter implements ResponseSender {
     requestParsingTimeLimit = 10000;
   }
 
-  public void start() {
+  public void start() throws SocketServerShutdownException {
     try {
       Request request = makeRequest();
       makeResponse(request);
       sendResponse();
     }
-    catch (SocketException se) {
+    catch (SocketServerShutdownException e) {
+      try {
+        sendResponse();
+      } catch (IOException e1) {
+        // Log this:
+        e1.printStackTrace();
+      }
+      throw e;
+    }
+    catch (SocketException e) {
       // can be thrown by makeResponse or sendResponse.
     }
     catch (Throwable e) {
@@ -55,10 +65,6 @@ public class FitNesseExpediter implements ResponseSender {
 
   public void setRequestParsingTimeLimit(long t) {
     requestParsingTimeLimit = t;
-  }
-
-  public long getRequestParsingTimeLimit() {
-    return requestParsingTimeLimit;
   }
 
   public void send(byte[] bytes) {
@@ -94,7 +100,7 @@ public class FitNesseExpediter implements ResponseSender {
     response.sendTo(this);
   }
 
-  private Response makeResponse(Request request) throws SocketException {
+  private Response makeResponse(Request request) throws SocketException, SocketServerShutdownException {
     try {
       Thread parseThread = createParsingThread(request);
       parseThread.start();
@@ -103,25 +109,28 @@ public class FitNesseExpediter implements ResponseSender {
       if (!hasError)
         response = createGoodResponse(request);
     }
-    catch (SocketException se) {
-      throw se;
+    catch (FitNesseShutdownException e) {
+      response = e.getFinalResponse();
+      throw e;
+    }
+    catch (SocketException e) {
+      throw e;
     }
     catch (Exception e) {
       response = new ErrorResponder(e).makeResponse(context, request);
     }
+    // Add those as default headers?
+    response.addHeader("Server", "FitNesse-" + context.version);
+    response.addHeader("Connection", "close");
     return response;
   }
 
   public Response createGoodResponse(Request request) throws Exception {
-    Response response;
     if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
     Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);
-    response = responder.makeResponse(context, request);
-    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
-    response.addHeader("Connection", "close");
-    return response;
+    return responder.makeResponse(context, request);
   }
 
   private void waitForRequest(Request request) throws InterruptedException {
@@ -131,7 +140,7 @@ public class FitNesseExpediter implements ResponseSender {
     while (!hasError && !request.hasBeenParsed()) {
       Thread.sleep(10);
       if (timeIsUp(now) && parsingIsUnproductive(request))
-        reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+        reportError(408, "The client request has been unproductive for too long. It has timed out and will now longer be processed.");
     }
   }
 

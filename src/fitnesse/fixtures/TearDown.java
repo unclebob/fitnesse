@@ -12,7 +12,7 @@ import util.FileUtil;
 
 public class TearDown extends Fixture {
   public TearDown() throws Exception {
-    fitnesse.stop();
+    context.fitNesse.stop();
     root = null;
     authenticator = null;
     File historyDirectory = context.getTestHistoryDirectory();

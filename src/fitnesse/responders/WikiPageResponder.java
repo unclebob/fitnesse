@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -66,10 +65,8 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
     
-    String tags = "";
-    if (pageData != null) {
-      tags = pageData.getAttribute(PageData.PropertySUITES);
-    }
+    String tags = pageData.getAttribute(PageData.PropertySUITES);
+
     pt.setPageTags(tags);
     
     html.setTitle(fullPathName);
@@ -83,7 +80,7 @@ public class WikiPageResponder implements SecureResponder {
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
     } else {
-      html.put("content", new WikiPageRenderer(page.getData()));
+      html.put("content", new WikiPageRenderer(pageData));
     }
 
     html.setMainTemplate("wikiPage");
@@ -109,7 +106,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public String render() {
-        return HtmlUtil.makePageHtml(data);
+        return WikiPageUtil.makePageHtml(data);
     }
   }
 
@@ -121,7 +118,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public String render() {
-        return HtmlUtil.makePageFooterHtml(data);
+        return WikiPageUtil.getFooterPageHtml(data.getWikiPage());
     }
   }
 

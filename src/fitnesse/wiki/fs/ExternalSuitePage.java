@@ -22,8 +22,8 @@ public class ExternalSuitePage extends BaseWikiPage {
   private String path;
   private FileSystem fileSystem;
 
-  public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem) {
-    super(name, parent, null);
+  public ExternalSuitePage(String path, String name, BaseWikiPage parent, FileSystem fileSystem) {
+    super(name, parent);
     this.path = path;
     this.fileSystem = fileSystem;
   }

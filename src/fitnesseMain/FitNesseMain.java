@@ -26,53 +26,58 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 public class FitNesseMain {
-  private static String extraOutput = "";
-  public static boolean dontExitAfterSingleCommand;
+  private String extraOutput = "";
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = parseCommandLine(args);
-    if (arguments != null) {
-      launchFitNesse(arguments);
-    } else {
+    if (arguments == null) {
       printUsage();
-      System.exit(1);
+      exit(1);
+    }
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    if (exitCode != null) {
+      exit(exitCode);
     }
   }
 
-  public static void launchFitNesse(Arguments arguments) throws Exception {
-    loadPlugins();
-    FitNesseContext context = loadContext(arguments);
-    Updater updater = null;
-    if (!arguments.isOmittingUpdates())
-      updater = new UpdaterImplementation(context);
-    FitNesse fitnesse = new FitNesse(context, updater);
-    update(arguments, fitnesse);
-    launch(arguments, context, fitnesse);
+  protected static void exit(int exitCode) {
+    System.exit(exitCode);
   }
 
-  private static void loadPlugins() throws Exception {
+  public Integer launchFitNesse(Arguments arguments) throws Exception {
+    loadPlugins();
+    FitNesseContext context = loadContext(arguments);
+
+    update(arguments, context);
+    return launch(arguments, context);
+  }
+
+  boolean update(Arguments arguments, FitNesseContext context) throws IOException {
+    if (!arguments.isOmittingUpdates()) {
+      Updater updater = new UpdaterImplementation(context);
+      return updater.update();
+    }
+    return false;
+  }
+
+  private void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  static void update(Arguments arguments,FitNesse fitnesse) throws Exception {
-    if (!arguments.isOmittingUpdates())
-      fitnesse.applyUpdates();
-  }
-
-  static void launch(Arguments arguments, FitNesseContext context,
-      FitNesse fitnesse) throws Exception {
+  Integer launch(Arguments arguments, FitNesseContext context) throws Exception {
     if (!arguments.isInstallOnly()) {
-      boolean started = fitnesse.start();
+      boolean started = context.fitNesse.start();
       if (started) {
         printStartMessage(arguments, context);
         if (arguments.getCommand() != null) {
-          executeSingleCommand(arguments, fitnesse, context);
+          return executeSingleCommand(arguments, context);
         }
       }
     }
+    return null;
   }
 
-  private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
 
@@ -88,8 +93,8 @@ public class FitNesseMain {
       os = System.out;
     }
 
-    fitnesse.executeSingleCommand(arguments.getCommand(), os);
-    fitnesse.stop();
+    context.fitNesse.executeSingleCommand(arguments.getCommand(), os);
+    context.fitNesse.stop();
 
     if (outputRedirectedToFile) {
       os.close();
@@ -97,16 +102,10 @@ public class FitNesseMain {
       System.out.println("-----Command Complete-----");
     }
 
-    if (shouldExitAfterSingleCommand()) {
-      System.exit(TestTextFormatter.finalErrorCount);
-    }
+    return TestTextFormatter.finalErrorCount;
   }
 
-  private static boolean shouldExitAfterSingleCommand() {
-    return !dontExitAfterSingleCommand;
-  }
-
-  private static FitNesseContext loadContext(Arguments arguments)
+  private FitNesseContext loadContext(Arguments arguments)
     throws Exception {
     Properties properties = loadConfigFile(arguments.getConfigFile());
     // Enrich properties with command line values:
@@ -152,7 +151,7 @@ public class FitNesseMain {
     return context;
   }
 
-  public static Properties loadConfigFile(final String propertiesFile) {
+  public Properties loadConfigFile(final String propertiesFile) {
     FileInputStream propertiesStream = null;
     Properties properties = new Properties();
     try {
@@ -173,6 +172,7 @@ public class FitNesseMain {
     return properties;
   }
 
+  // Move to Arguments class.
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
       "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
@@ -222,10 +222,11 @@ public class FitNesseMain {
     System.err.println("\t-b <filename> redirect command output.");
   }
 
-  private static void printStartMessage(Arguments args, FitNesseContext context) {
-    System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
+  private void printStartMessage(Arguments args, FitNesseContext context) {
+    System.out.println("FitNesse (" + context.version + ") Started...");
     System.out.print(context.toString());
     if (extraOutput != null)
       System.out.print(extraOutput);
   }
+
 }

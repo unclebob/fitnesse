@@ -275,12 +275,6 @@ public class PageDriver {
     return data.hasAttribute(attribute);
   }
 
-  public void givenUserWithPassword(String user, String password) {
-    Builder builder = new Builder(FitnesseFixtureContext.context);
-    builder.authenticator = new OneUserAuthenticator(user, password);
-    FitnesseFixtureContext.context = builder.createFitNesseContext();
-  }
-
   public void sendAsHash(Map<String, String> hash) {
     this.hash = hash;
   }

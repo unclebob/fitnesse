@@ -51,8 +51,7 @@ public class TestHelper {
     arguments.setPort(String.valueOf(port));
     arguments.setRootPath(fitNesseRootPath);
     arguments.setCommand(getCommand(pageName, pageType, suiteFilter, excludeSuiteFilter));
-    FitNesseMain.dontExitAfterSingleCommand=true;
-    FitNesseMain.launchFitNesse(arguments);   
+    new FitNesseMain().launchFitNesse(arguments);
     return testFormatter.getTotalSummary();
   }
   public  TestSummary run(String pageName, String pageType, String suiteFilter) throws Exception{

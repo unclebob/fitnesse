@@ -4,10 +4,11 @@ package fitnesse.fixtures;
 
 import fit.Fixture;
 import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 
 public class FileSystemPageSetUp extends Fixture {
 
   public FileSystemPageSetUp() throws Exception {
-    FitnesseFixtureContext.root = new FileSystemPage(FitnesseFixtureContext.baseDir, "RooT");
+    FitnesseFixtureContext.root = new FileSystemPageFactory().makeRootPage(FitnesseFixtureContext.baseDir, "RooT");
   }
 }

@@ -35,7 +35,7 @@ public class PageDataTest {
 
   @Test
   public void testVariablePreprocessing() throws Exception {
-    PageData d = new PageData(InMemoryPage.makeRoot("RooT"), "!define x {''italic''}\n${x}\n");
+    PageData d = new PageData(InMemoryPage.makeRoot("RooT").getData(), "!define x {''italic''}\n${x}\n");
     String preprocessedText = d.getContent();
     assertHasRegexp("''italic''", preprocessedText);
   }
@@ -64,7 +64,7 @@ public class PageDataTest {
 
   @Test
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    PageData d = new PageData(new WikiPageDummy(), "<b>");
+    PageData d = new PageData(new WikiPageDummy().getData(), "<b>");
     String html = d.getHtml();
     assertEquals("&lt;b&gt;", html);
   }
@@ -76,42 +76,6 @@ public class PageDataTest {
     String renderedContent = page.getData().getHtml();
     assertHasRegexp("literal", renderedContent);
     assertDoesntHaveRegexp("!-literal-!", renderedContent);
-  }
-
-  @Test
-  public void testClasspath() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
-    List<?> paths = page.getData().getClasspaths();
-    assertTrue(paths.contains("123"));
-    assertTrue(paths.contains("abc"));
-  }
-
-  @Test
-  public void testClasspathWithVariable() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
-    List<?> paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
-
-    PageData data = root.getData();
-    data.setContent("!define PATH {/my/path}\n");
-    root.commit(data);
-
-    page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
-    paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
-  }
-
-  @Test
-  public void testClasspathWithVariableDefinedInIncludedPage() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
-
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
-    List<?> paths = page.getData().getClasspaths();
-    assertEquals("/my/path.jar", paths.get(0).toString());
   }
 
   @Test

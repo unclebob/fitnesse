@@ -9,6 +9,7 @@ import fitnesse.wiki.RecentChanges;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testrunner.RunningTestingTracker;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class FitNesseContext {
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public RecentChanges recentChanges;
-    public Properties properties;
+    public Properties properties = new Properties();
 
     public Builder() {
       super();
@@ -53,7 +54,15 @@ public class FitNesseContext {
     }
 
     public final FitNesseContext createFitNesseContext() {
-      return new FitNesseContext(root,
+      FitNesseVersion version = new FitNesseVersion();
+      // Those variables are defined so they can be looked up for as wiki variables.
+      if (rootPath != null) {
+        properties.setProperty("FITNESSE_ROOTPATH", rootPath);
+      }
+      properties.setProperty("FITNESSE_PORT", Integer.toString(port));
+      properties.setProperty("FITNESSE_VERSION", version.toString());
+      return new FitNesseContext(version,
+          root,
           rootPath,
           rootDirectoryName,
           recentChanges,
@@ -64,7 +73,8 @@ public class FitNesseContext {
     }
   }
 
-
+  public final FitNesseVersion version;
+  public final FitNesse fitNesse;
   public final WikiPage root;
   public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
@@ -74,7 +84,6 @@ public class FitNesseContext {
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory = new PageFactory(this);
 
-  // Remove this, let it use getProperty instead
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
@@ -82,11 +91,12 @@ public class FitNesseContext {
 
 
 
-  private FitNesseContext(WikiPage root, String rootPath,
+  private FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
       String rootDirectoryName,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger, Properties properties) {
     super();
+    this.version = version;
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
@@ -96,6 +106,7 @@ public class FitNesseContext {
     this.logger = logger;
     this.properties = properties;
     responderFactory = new ResponderFactory(getRootPagePath());
+    fitNesse = new FitNesse(this);
   }
 
   public String toString() {
@@ -124,11 +135,6 @@ public class FitNesseContext {
   }
 
   public String getProperty(String name) {
-    String p = System.getenv(name);
-    if (p != null) return p;
-    p = System.getProperty(name);
-    if (p != null) return p;
-
-    return properties != null ? properties.getProperty(name) : null;
+    return new SystemVariableSource(properties).getProperty(name);
   }
 }

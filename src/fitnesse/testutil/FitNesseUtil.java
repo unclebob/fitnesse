@@ -28,7 +28,7 @@ public class FitNesseUtil {
   }
 
   public static void startFitnesseWithContext(FitNesseContext context) {
-    instance = new FitNesse(context);
+    instance = context.fitNesse;
     instance.start();
   }
 
