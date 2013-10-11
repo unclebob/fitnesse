@@ -4,17 +4,19 @@ package fitnesse.responders;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseShutdownException;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
+import fitnesse.socketservice.SocketServerShutdownException;
 
 public class ShutdownResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(final FitNesseContext context, Request request) throws SocketServerShutdownException {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.pageFactory.newPage();
@@ -27,7 +29,7 @@ public class ShutdownResponder implements SecureResponder {
     Thread shutdownThread = new Thread() {
       public void run() {
         try {
-          FitNesse.FITNESSE_INSTANCE.stop();
+          context.fitNesse.stop();
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -36,7 +38,7 @@ public class ShutdownResponder implements SecureResponder {
     };
     shutdownThread.start();
 
-    return response;
+    throw new FitNesseShutdownException("FitNesse shutdown by shutdown responder", response);
   }
 
   public SecureOperation getSecureOperation() {

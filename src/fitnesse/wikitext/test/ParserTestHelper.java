@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -61,7 +62,7 @@ public class ParserTestHelper {
   }
 
   public static void assertTranslatesTo(String input, VariableSource variableSource, String expected) {
-    assertEquals(expected, translateToHtml(null, input, variableSource));
+    assertEquals(expected, translateToHtml(new WikiPageDummy(), input, variableSource));
   }
 
   public static void assertTranslatesTo(WikiPage page, String input, String expected) {
@@ -97,7 +98,7 @@ public class ParserTestHelper {
   }
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input, variableSource, SymbolProvider.wikiParsingProvider).parse();
+    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource), input, SymbolProvider.wikiParsingProvider).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }
 
@@ -106,7 +107,7 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(SourcePage page, VariableSource variableSource) throws Exception {
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent(), variableSource, SymbolProvider.wikiParsingProvider).parse());
+    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, variableSource), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
   }
 
   public static String translateTo(SourcePage page) throws Exception {

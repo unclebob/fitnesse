@@ -19,8 +19,8 @@ public class ExternalTestPage extends BaseWikiPage {
   private FileSystem fileSystem;
   private String path;
 
-  public ExternalTestPage(String path, String name, WikiPage parent, FileSystem fileSystem) {
-    super(name, parent, null);
+  public ExternalTestPage(String path, String name, BaseWikiPage parent, FileSystem fileSystem) {
+    super(name, parent);
     this.path = path;
     this.fileSystem = fileSystem;
   }

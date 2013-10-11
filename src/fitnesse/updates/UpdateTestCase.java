@@ -8,6 +8,7 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import util.FileUtil;
@@ -24,7 +25,7 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = new FileSystemPage(FitNesseUtil.base, rootName);
+    root = new FileSystemPageFactory().makeRootPage(FitNesseUtil.base, rootName);
     context = FitNesseUtil.makeTestContext(root);
 
     FileUtil.makeDir(FitNesseUtil.base);

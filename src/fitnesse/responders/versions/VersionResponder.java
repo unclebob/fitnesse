@@ -10,7 +10,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -26,6 +25,7 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -115,7 +115,7 @@ public class VersionResponder implements SecureResponder {
       } else {
         data = pageData;
       }
-      return HtmlUtil.makePageHtml(data);
+      return WikiPageUtil.makePageHtml(data);
 
     }
 

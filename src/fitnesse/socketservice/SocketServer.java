@@ -11,7 +11,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public interface SocketServer {
-  public void serve(Socket s);
+  public void serve(Socket s) throws SocketServerShutdownException;
 
   static class StreamUtility {
     public static PrintStream GetPrintStream(Socket s) throws IOException {

@@ -9,10 +9,12 @@ import static org.mockito.Mockito.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 import fitnesse.Arguments;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -37,23 +39,20 @@ public class FitNesseMainTest {
   public void testInstallOnly() throws Exception {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
-    FitNesse fitnesse = mock(FitNesse.class);
-    FitNesseMain.update(args, fitnesse);
-    FitNesseMain.launch(args, context, fitnesse);
+    FitNesse fitnesse = mockFitNesse();
+    new FitNesseMain().launch(args, context);
     verify(fitnesse, never()).start();
-    verify(fitnesse, times(1)).applyUpdates();
   }
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    FitNesseMain.dontExitAfterSingleCommand = true;
     Arguments args = new Arguments();
     args.setCommand("command");
-    FitNesse fitnesse = mock(FitNesse.class);
+    args.setOmitUpdates(true);
+    FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
-    FitNesseMain.update(args, fitnesse);
-    FitNesseMain.launch(args, context, fitnesse);
-    verify(fitnesse, times(1)).applyUpdates();
+    int exitCode = new FitNesseMain().launch(args, context);
+    assertThat(exitCode, is(0));
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
@@ -61,16 +60,21 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    new FitNesse(context);
+    FitNesse fitnesse = context.fitNesse;
+    fitnesse.start();
 
-    assertTrue(new File("testFitnesseRoot").exists());
-    assertTrue(new File("testFitnesseRoot/files").exists());
+    try {
+      assertTrue(new File("testFitnesseRoot").exists());
+      assertTrue(new File("testFitnesseRoot/files").exists());
+    } finally {
+      fitnesse.stop();
+    }
   }
 
   @Test
   public void testIsRunning() throws Exception {
     context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
-    FitNesse fitnesse = new FitNesse(context, false);
+    FitNesse fitnesse = context.fitNesse.dontMakeDirs();
 
     assertFalse(fitnesse.isRunning());
 
@@ -79,13 +83,6 @@ public class FitNesseMainTest {
 
     fitnesse.stop();
     assertFalse(fitnesse.isRunning());
-  }
-
-  @Test
-  public void testShouldInitializeFitNesseContext() {
-    context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
-    new FitNesse(context, false);
-    assertNotNull(FitNesse.FITNESSE_INSTANCE.getContext());
   }
 
   @Test
@@ -101,13 +98,24 @@ public class FitNesseMainTest {
   }
 
   private String runFitnesseMainWith(String... args) throws Exception {
-    FitNesseMain.dontExitAfterSingleCommand = true;
+    //FitNesseMain.dontExitAfterSingleCommand = true;
     PrintStream out = System.out;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outputBytes));
-    FitNesseMain.main(args);
+    Arguments arguments = FitNesseMain.parseCommandLine(args);
+    int exitCode = new FitNesseMain().launchFitNesse(arguments);
+    assertThat(exitCode, is(0));
     System.setOut(out);
     String response = outputBytes.toString();
     return response;
   }
+
+  private FitNesse mockFitNesse() throws NoSuchFieldException, IllegalAccessException {
+    FitNesse fitNesse = mock(FitNesse.class);
+    Field aField = context.getClass().getDeclaredField("fitNesse");
+    aField.setAccessible(true);
+    aField.set(context, fitNesse);
+    return fitNesse;
+  }
+
 }

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertSame;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +32,7 @@ public class SymbolicPageTest {
     root = InMemoryPage.makeRoot("RooT");
     pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
-    symPage = new SymbolicPage("SymPage", pageTwo, pageOne, null);
+    symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
   }
 
   @After
@@ -128,12 +129,12 @@ public class SymbolicPageTest {
   private void CreateExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
-    externalRoot = new FileSystemPage("testDir/ExternalRoot", "ExternalRoot");
+    externalRoot = new FileSystemPageFactory().makeRootPage("testDir/ExternalRoot", "ExternalRoot");
     WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
     WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
 
-    symPage = new SymbolicPage("SymPage", externalRoot, pageOne, null);
+    symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
   }
 
   @Test

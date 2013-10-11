@@ -1,5 +1,5 @@
+
 !|script|
-|given user|Aladdin|with password|open sesame|
 |given read locked page|FrontPage|
 
 !|operation is authenticated|

@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Paths;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Wildcard;
 
 public class ClassPathBuilder {
@@ -160,6 +165,11 @@ public class ClassPathBuilder {
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {
-    return page.readOnlyData().getClasspaths();
+    PageData data = page.getData();
+    Symbol tree = data.getParsedPage().getSyntaxTree();
+    ParsingPage parsingPage = data.getParsedPage().getParsingPage();
+    return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);
   }
+
+
 }

@@ -14,23 +14,18 @@ public class WikiPageDummy implements WikiPage {
   private static final long serialVersionUID = 1L;
 
   public String name;
-  protected String location;
   private PageData pageData;
   private WikiPage parent;
 
   public WikiPageDummy(String name, String content) {
     this.name = name;
-    pageData = new PageData(this, content);
-  }
-
-  public WikiPageDummy(String location) {
-    this.location = location;
-    name = "Default";
+    pageData = new PageData(this);
+    pageData.setContent(content);
   }
 
   public WikiPageDummy() {
-    location = null;
     name = "Default";
+    pageData = new PageData(this);
   }
 
   public String getName() {

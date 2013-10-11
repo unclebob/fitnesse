@@ -4,6 +4,7 @@ package fitnesse.fixtures;
 
 import fit.ColumnFixture;
 import fitnesse.FitNesseExpediter;
+import fitnesse.FitNesseShutdownException;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.util.MockSocket;
@@ -34,7 +35,11 @@ public class ResponseRequester extends ColumnFixture {
     WikiPagePath path = PathParser.parse(request.getResource()); // uri;
     FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(path);
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
-    FitnesseFixtureContext.response = expediter.createGoodResponse(request);
+    try {
+      FitnesseFixtureContext.response = expediter.createGoodResponse(request);
+    } catch (FitNesseShutdownException e) {
+      FitnesseFixtureContext.response = e.getFinalResponse();
+    }
     FitnesseFixtureContext.sender = new MockResponseSender();
     FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
   }

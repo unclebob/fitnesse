@@ -5,6 +5,7 @@ package fitnesse.socketservice;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
@@ -60,7 +61,7 @@ public class SocketServiceTest {
   }
 
   @Test
-  public void testSendMessage() throws Exception {
+  public void testSendMessage() throws IOException {
     ss = new SocketService(portNumber, new HelloService());
     Socket s = new Socket("localhost", portNumber);
     BufferedReader br = GetBufferedReader(s);
@@ -71,7 +72,7 @@ public class SocketServiceTest {
   }
 
   @Test
-  public void testReceiveMessage() throws Exception {
+  public void testReceiveMessage() throws IOException {
     ss = new SocketService(portNumber, new EchoService());
     Socket s = new Socket("localhost", portNumber);
     BufferedReader br = GetBufferedReader(s);
@@ -84,7 +85,7 @@ public class SocketServiceTest {
   }
 
   @Test
-  public void testMultiThreaded() throws Exception {
+  public void testMultiThreaded() throws IOException {
     ss = new SocketService(portNumber, new EchoService());
     Socket s = new Socket("localhost", portNumber);
     BufferedReader br = GetBufferedReader(s);
@@ -105,6 +106,14 @@ public class SocketServiceTest {
     ss.close();
     assertEquals("MyMessage2", answer2);
     assertEquals("MyMessage1", answer);
+  }
+
+  @Test
+  public void testShutdownException() throws Exception {
+    ss = new SocketService(portNumber, new ShutdownService());
+    Socket s = new Socket("localhost", portNumber);
+    Thread.sleep(100);
+    assertFalse(ss.isRunning());
   }
 
   private void connect(int port) {
@@ -148,5 +157,13 @@ class EchoService implements SocketServer {
     }
     catch (IOException e) {
     }
+  }
+}
+
+class ShutdownService implements SocketServer {
+
+  @Override
+  public void serve(Socket s) throws SocketServerShutdownException {
+    throw new SocketServerShutdownException("this is the end");
   }
 }

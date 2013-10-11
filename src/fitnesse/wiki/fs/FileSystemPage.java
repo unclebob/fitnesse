@@ -11,6 +11,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class FileSystemPage extends BaseWikiPage {
@@ -19,33 +20,30 @@ public class FileSystemPage extends BaseWikiPage {
   // Only used for root page:
   private final String path;
 
-  private final FileSystem fileSystem;
-  private final VersionsController versionsController;
+  private final transient FileSystem fileSystem;
+  private final transient VersionsController versionsController;
   private boolean autoCommit;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, null, new SymbolicPageFactory(fileSystem));
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
+                        final VersionsController versionsController, final SymbolicPageFactory symbolicPageFactory,
+                        final VariableSource variableSource) {
+    super(name, symbolicPageFactory, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
   }
 
-  @Deprecated
-  // TODO: not to be used in production code
-  public FileSystemPage(final String path, final String name) {
-    this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
-  }
-
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent, new SymbolicPageFactory(parent.fileSystem));
+    super(name, parent);
     path = null;
     fileSystem = parent.fileSystem;
     versionsController = parent.versionsController;
     autoCommit = parent.autoCommit;
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, parent, new SymbolicPageFactory(fileSystem));
+  public FileSystemPage(final String name, final FileSystemPage parent,
+                        final FileSystem fileSystem, final VersionsController versionsController) {
+    super(name, parent);
     path = null;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
@@ -126,7 +124,7 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public PageData getData() {
     PageData pageData = versionsController.getRevisionData(this, null);
-    return new PageData(pageData);
+    return new PageData(pageData, getVariableSource());
   }
 
   @Override
@@ -165,7 +163,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public PageData getDataVersion(final String versionName) {
-    return versionsController.getRevisionData(this, versionName);
+    return new PageData(versionsController.getRevisionData(this, versionName), getVariableSource());
   }
 
   @Override
