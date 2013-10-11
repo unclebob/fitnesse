@@ -39,6 +39,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
+  private boolean testSystemIsStopped;
 
 
   public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
@@ -75,10 +76,11 @@ public abstract class SlimTestSystem implements TestSystem {
   @Override
   public void kill() throws IOException {
     try {
-      if (slimClient != null)
-        slimClient.kill();
-    } finally {
-      testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+      slimClient.kill();
+      testSystemStopped(null);
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
     }
   }
 
@@ -86,8 +88,10 @@ public abstract class SlimTestSystem implements TestSystem {
   public void bye() throws IOException {
     try {
       slimClient.bye();
-    } finally {
-      testSystemListener.testSystemStopped(this, slimClient.getExecutionLog(), null);
+      testSystemStopped(null);
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
     }
   }
 
@@ -209,9 +213,7 @@ public abstract class SlimTestSystem implements TestSystem {
     } catch (IOException e1) {
       e1.printStackTrace();
     }
-    ExecutionLog log = slimClient.getExecutionLog();
-    log.addException(e);
-    testSystemListener.testSystemStopped(this, log, e);
+    testSystemStopped(e);
   }
 
   protected void testAssertionVerified(Assertion assertion, TestResult testResult) {
@@ -222,4 +224,15 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
+  // Ensure testSystemStopped is called only once per test system. First call counts.
+  protected void testSystemStopped(Throwable e) {
+    if (testSystemIsStopped) return;
+
+    testSystemIsStopped = true;
+    ExecutionLog log = slimClient.getExecutionLog();
+    if (e != null) {
+      log.addException(e);
+    }
+    testSystemListener.testSystemStopped(this, log, e);
+  }
 }
