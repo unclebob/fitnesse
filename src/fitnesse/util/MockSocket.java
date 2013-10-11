@@ -13,8 +13,12 @@ import java.io.PipedOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MockSocket extends Socket {
+  private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
+
   InputStream input;
   OutputStream output;
   private String host;
@@ -59,7 +63,7 @@ public class MockSocket extends Socket {
       output.close();
     }
     catch (IOException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to close IO", e);
     }
   }
 

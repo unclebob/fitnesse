@@ -162,9 +162,9 @@ public class FitNesseMain {
       propertiesStream = new FileInputStream(configurationFile);
     } catch (FileNotFoundException e) {
       try {
-        System.err.println(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
+        LOG.info(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
       } catch (IOException e1) {
-        System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+        LOG.info(String.format("No configuration file found (%s)", propertiesFile));
       }
     }
 
@@ -173,7 +173,7 @@ public class FitNesseMain {
         properties.load(propertiesStream);
         propertiesStream.close();
       } catch (IOException e) {
-        System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
+        LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
 
