@@ -16,8 +16,8 @@ public class SlimServiceTest extends SlimServiceTestBase {
   }
 
   protected void startSlimService() throws IOException {
-    SlimService.parseCommandLine(new String[] { "8099" });
-    SlimService.startWithFactoryAsync(new JavaSlimFactory());
+    SlimService.Options options = SlimService.parseCommandLine(new String[] { "8099" });
+    SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
   }
 
   protected void closeSlimService() throws InterruptedException {
@@ -36,14 +36,14 @@ public class SlimServiceTest extends SlimServiceTestBase {
 
   @Test
   public void nullInteractionService_returnsDefaultClass(){
-    SlimService.interactionClassName = null;
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    SlimService.Options options = SlimService.parseCommandLine(new String[] { "8099" });
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interactionClass.getName());
   }
 
   @Test
   public void definedInteractionService_returnsCorrectClass() {
-    SlimService.interactionClassName = "fitnesse.slim.fixtureInteraction.InteractionDemo";
-    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", SlimService.getInteractionClass().getName());
+    SlimService.Options options = SlimService.parseCommandLine(new String[] { "-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099" });
+    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interactionClass.getName());
   }
 
 }
