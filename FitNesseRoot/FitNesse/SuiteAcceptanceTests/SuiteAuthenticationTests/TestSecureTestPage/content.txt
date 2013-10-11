@@ -1,11 +1,6 @@
 If we try to test a page that is marked secure-test, we'll have to authenticate.
 A response with status 401 will be received signifying lack of authentication.
 
-First setup the Authentication module.
-!|Authenticator Setup|
-|username|password|status?|
-|Aladdin|open sesame||
-
 Create a page to be tested.
 !|Page creator.|
 |Page name.|page attributes|valid?|

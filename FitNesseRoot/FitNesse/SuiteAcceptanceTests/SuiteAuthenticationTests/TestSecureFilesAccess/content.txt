@@ -4,7 +4,6 @@ Requesting a file from the ''files''' directory does not require authentication,
 A response with status 401 will be received signifying lack of authentication.
 
 !|script|
-|given user|Aladdin|with password|open sesame|
 |directory|files/|should not be readable with no authentication|
 |directory|files/|should not be readable by user|Aladdin|password|open please|
 |directory|files/|should be readable by user|Aladdin|password|open sesame|
