@@ -36,15 +36,15 @@ public class ContentsTest {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R",
            contentsWithPages("PageThree", "PageTwo",
-             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild</a>",
-               nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\">PageTwoGrandChild</a>", ""))));
+             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild</a>",
+               nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\" class=\"static\">PageTwoGrandChild</a>", ""))));
      }
 
     @Test public void translatesRecursiveContentsToLevel() throws Exception {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R2",
            contentsWithPages("PageThree", "PageTwo",
-             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild ...</a>", "")));
+             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild ...</a>", "")));
      }
 
     @Test public void translatesContentsWithInvalidRecursionLimit() throws Exception {
@@ -69,10 +69,10 @@ public class ContentsTest {
         "\t\t<b>Contents:</b>" + HtmlElement.endl +
         "\t\t<ul>" + HtmlElement.endl +
         "\t\t\t<li>" + HtmlElement.endl +
-        "\t\t\t\t<a href=\"PageOne.PageThree\">" + name1 + "</a>" + HtmlElement.endl +
+        "\t\t\t\t<a href=\"PageOne.PageThree\" class=\"static\">" + name1 + "</a>" + HtmlElement.endl +
         "\t\t\t</li>" + HtmlElement.endl +
         "\t\t\t<li>" + HtmlElement.endl +
-        "\t\t\t\t<a href=\"PageOne.PageTwo\">" + name2 + "</a>" + HtmlElement.endl + nested +
+        "\t\t\t\t<a href=\"PageOne.PageTwo\" class=\"static\">" + name2 + "</a>" + HtmlElement.endl + nested +
         "\t\t\t</li>" + HtmlElement.endl +
         "\t\t</ul>" + HtmlElement.endl +
         "\t</div>" + HtmlElement.endl +
