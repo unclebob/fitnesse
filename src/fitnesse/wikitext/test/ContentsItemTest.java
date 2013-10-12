@@ -12,33 +12,39 @@ import static org.junit.Assert.assertEquals;
 public class ContentsItemTest {
     @Test
     public void buildsPlain() throws Exception {
-        assertBuilds("PlainItem", new String[] {}, "", "", "<a href=\"PlainItem\">PlainItem</a>");
+        assertBuilds("PlainItem", new String[] {}, "", "", "<a href=\"PlainItem\" class=\"static\">PlainItem</a>");
     }
 
     @Test
     public void buildsWithHelp() throws Exception {
-        assertBuilds("PlainItem", new String[]{"Help=help"}, "", "", "<a href=\"PlainItem\" title=\"help\">PlainItem</a>");
+        assertBuilds("PlainItem", new String[]{"Help=help"}, "", "", "<a href=\"PlainItem\" class=\"static\" title=\"help\">PlainItem</a>");
     }
 
     @Test
     public void buildsFilter() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{"Suites=F1"}, "-f", "FILTER_TOC", "<a href=\"PlainItem\">PlainItem (F1)</a>");
+        assertBuildsOption("PlainItem", new String[]{"Suites=F1"}, "-f", "FILTER_TOC", "<a href=\"PlainItem\" class=\"static\">PlainItem (F1)</a>");
     }
 
     @Test
     public void buildsHelp() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{"Help=help"}, "-h", "HELP_TOC", "<a href=\"PlainItem\">PlainItem</a><span class=\"pageHelp\">: help</span>");
+        assertBuildsOption("PlainItem", new String[]{"Help=help"}, "-h", "HELP_TOC", "<a href=\"PlainItem\" class=\"static\">PlainItem</a><span class=\"pageHelp\">: help</span>");
     }
 
     @Test
-    public void buildsProperties() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{"Suite=true", "Test=true", "WikiImport=true", "Prune=true"}, "-p", "PROPERTY_TOC",
-                "<a href=\"PlainItem\">PlainItem *+@-</a>");
+    public void buildsPropertiesSuite() throws Exception {
+        assertBuildsOption("PlainItem", new String[]{"Suite=true", "WikiImport=true", "Prune=true"}, "-p", "PROPERTY_TOC",
+                "<a href=\"PlainItem\" class=\"suite linked pruned\">PlainItem *@-</a>");
+    }
+
+    @Test
+    public void buildsPropertiesTest() throws Exception {
+        assertBuildsOption("PlainItem", new String[]{"Test=true", "WikiImport=true", "Prune=true"}, "-p", "PROPERTY_TOC",
+                "<a href=\"PlainItem\" class=\"test linked pruned\">PlainItem +@-</a>");
     }
 
     @Test
     public void buildsRegraced() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{}, "-g", "REGRACE_TOC", "<a href=\"PlainItem\">Plain Item</a>");
+        assertBuildsOption("PlainItem", new String[]{}, "-g", "REGRACE_TOC", "<a href=\"PlainItem\" class=\"static\">Plain Item</a>");
     }
 
     private void assertBuildsOption(String page, String[] properties, String option, String variable, String result) throws Exception {
