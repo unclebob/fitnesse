@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,14 +32,15 @@ public class UploadResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
-    String resource = request.getResource().replace("%20", " ");
+
+    String resource = URLDecoder.decode(request.getResource(), "UTF-8");
     UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
     if (uploadedFile.isUsable()) {
       File file = makeFileToCreate(uploadedFile, resource);
       writeFile(file, uploadedFile);
     }
 
-    response.redirect("/" + resource.replace(" ", "%20"));
+    response.redirect("/" + request.getResource());
     return response;
   }
 
