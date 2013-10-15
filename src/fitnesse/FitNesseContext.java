@@ -134,6 +134,10 @@ public class FitNesseContext {
     return String.format("%s/%s", rootPath, rootDirectoryName);
   }
 
+  public Properties getProperties() {
+    return properties;
+  }
+
   public String getProperty(String name) {
     return new SystemVariableSource(properties).getProperty(name);
   }

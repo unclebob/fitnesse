@@ -2,14 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +16,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import util.FileUtil;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -37,28 +30,11 @@ public class UploadResponder implements SecureResponder {
     UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
     if (uploadedFile.isUsable()) {
       File file = makeFileToCreate(uploadedFile, resource);
-      writeFile(file, uploadedFile);
+      FileVersionsControllerFactory.getVersionsController(context).addFile(file, uploadedFile.getFile());
     }
 
     response.redirect("/" + request.getResource());
     return response;
-  }
-
-  public void writeFile(File file, UploadedFile uploadedFile) throws IOException {
-    boolean renamed = uploadedFile.getFile().renameTo(file);
-    if (!renamed) {
-      InputStream input = null;
-      OutputStream output = null;
-      try {
-        input = new BufferedInputStream(new FileInputStream(uploadedFile.getFile()));
-        output = new BufferedOutputStream(new FileOutputStream(file));
-        FileUtil.copyBytes(input, output);
-      } finally {
-        input.close();
-        output.close();
-        uploadedFile.delete();
-      }
-    }
   }
 
   private File makeFileToCreate(UploadedFile uploadedFile, String resource) {
