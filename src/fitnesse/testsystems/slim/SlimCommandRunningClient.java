@@ -191,7 +191,7 @@ public class SlimCommandRunningClient implements SlimClient {
     	length = Integer.parseInt(resultLength);
     }
     catch (NumberFormatException e){
-    	throw new RuntimeException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    	throw new IOException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
     }
 	return length;
   }
