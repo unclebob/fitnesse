@@ -4,8 +4,15 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -15,9 +22,11 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPageProperties;
 import util.Clock;
+import util.FileUtil;
+
 import static fitnesse.wiki.VersionInfo.makeVersionInfo;
 
-public class SimpleFileVersionsController implements VersionsController {
+public class SimpleFileVersionsController implements VersionsController, FileVersionsController {
 
   public static final int CACHE_TIMEOUT = 300000; // ms
 
@@ -175,4 +184,41 @@ public class SimpleFileVersionsController implements VersionsController {
     return props;
   }
 
+  @Override
+  public void addFile(File file, File contentFile) throws IOException {
+    boolean renamed = contentFile.renameTo(file);
+    if (!renamed) {
+      InputStream input = null;
+      OutputStream output = null;
+      try {
+        input = new BufferedInputStream(new FileInputStream(contentFile));
+        output = new BufferedOutputStream(new FileOutputStream(file));
+        FileUtil.copyBytes(input, output);
+      } finally {
+        input.close();
+        output.close();
+        contentFile.delete();
+      }
+    }
+  }
+
+  @Override
+  public void deleteFile(File file) {
+    file.delete();
+  }
+
+  @Override
+  public void addDirectory(File dir) {
+    dir.mkdirs();
+  }
+
+  @Override
+  public void deleteDirectory(File dir) {
+    FileUtil.deleteFileSystemDirectory(dir);
+  }
+
+  @Override
+  public void renameFile(File file, File oldFile) {
+    oldFile.renameTo(file);
+  }
 }

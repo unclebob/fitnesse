@@ -105,19 +105,4 @@ public class UploadResponderTest {
     assertEquals("a.b.c.d_copy2.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
     assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
   }
-
-  @Test
-  public void testWriteFile() throws Exception {
-    File file = new File(context.getRootPagePath() + "/testFile");
-    File inputFile = FileUtil.createFile(context.getRootPagePath() + "/testInput", "heres the content");
-    UploadedFile uploaded = new UploadedFile(context.getRootPagePath() + "/testOutput", "text", inputFile);
-
-    long inputFileLength = inputFile.length();
-    String inputFileContent = FileUtil.getFileContent(inputFile);
-
-    responder.writeFile(file, uploaded);
-
-    assertEquals(inputFileLength, file.length());
-    assertEquals(inputFileContent, FileUtil.getFileContent(file));
-  }
 }
