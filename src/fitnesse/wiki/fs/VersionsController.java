@@ -3,19 +3,19 @@ package fitnesse.wiki.fs;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 public interface VersionsController {
 
   void setHistoryDepth(int historyDepth);
 
-  PageData getRevisionData(FileSystemPage page, String label);
+  FileVersion[] getRevisionData(String label, File... files);
 
-  Collection<? extends VersionInfo> history(FileSystemPage page);
+  Collection<? extends VersionInfo> history(File... files);
 
-  VersionInfo makeVersion(FileSystemPage page, PageData data);
+  VersionInfo makeVersion(FileVersion... fileVersion) throws IOException;
 
-  VersionInfo getCurrentVersion(FileSystemPage page);
-
-  void delete(FileSystemPage page);
+  void delete(File... files);
 }

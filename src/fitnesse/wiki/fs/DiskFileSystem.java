@@ -3,11 +3,18 @@ package fitnesse.wiki.fs;
 import util.Clock;
 import util.FileUtil;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class DiskFileSystem implements FileSystem {
   public void makeFile(String path, String content) throws IOException {
+    FileUtil.createFile(path, content);
+  }
+
+  public void makeFile(String path, InputStream content) throws IOException {
     FileUtil.createFile(path, content);
   }
 
@@ -28,6 +35,11 @@ public class DiskFileSystem implements FileSystem {
 
   public String getContent(String path) throws IOException {
     return FileUtil.getFileContent(path);
+  }
+
+  @Override
+  public InputStream getInputStream(String path) throws IOException {
+    return new BufferedInputStream(new FileInputStream(path));
   }
 
   @Override

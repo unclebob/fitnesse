@@ -3,7 +3,7 @@ package fitnesse.wiki.fs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Date;
 
 import fitnesse.wiki.VersionInfo;
 
@@ -13,6 +13,10 @@ import fitnesse.wiki.VersionInfo;
 public interface FileVersion {
 
   File getFile();
+
   InputStream getContent() throws IOException;
-  VersionInfo getVersionInfo();
+
+  String getAuthor();
+
+  Date getLastModificationTime();
 }

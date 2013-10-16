@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,9 +55,16 @@ public class UploadResponder implements SecureResponder {
         }
 
         @Override
-        public VersionInfo getVersionInfo() {
+        public String getAuthor() {
+          // TODO: find authenticated user
           return null;
         }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+
       });
     }
 

@@ -70,7 +70,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
   private transient WikiPage wikiPage;
-  private String content;
+  private String content = "";
   private WikiPageProperties properties = new WikiPageProperties();
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";

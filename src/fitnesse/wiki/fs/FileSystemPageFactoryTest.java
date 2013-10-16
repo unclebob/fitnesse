@@ -9,6 +9,7 @@ import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -120,31 +121,22 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public PageData getRevisionData(final FileSystemPage page, final String label) {
-      try {
-        return page.getData();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+    public FileVersion[] getRevisionData(final String label, final File... files) {
+      return null;
     }
 
     @Override
-    public Collection<VersionInfo> history(final FileSystemPage page) {
+    public Collection<VersionInfo> history(final File... files) {
       return new HashSet<VersionInfo>();
     }
 
     @Override
-    public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
+    public VersionInfo makeVersion(final FileVersion... fileVersions) {
       return null;
     }
 
     @Override
-    public VersionInfo getCurrentVersion(FileSystemPage page) {
-      return null;
-    }
-
-    @Override
-    public void delete(FileSystemPage page) {
+    public void delete(File... files) {
     }
   }
 

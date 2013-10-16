@@ -1,5 +1,10 @@
 package fitnesse.wiki.mem;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -7,12 +12,20 @@ import java.util.Iterator;
 
 import fitnesse.wiki.fs.FileSystem;
 import util.Clock;
+import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
     private final Hashtable<String, Payload> files = new Hashtable<String, Payload>();
 
     public void makeFile(String path, String content) {
         files.put(path, payload(content));
+    }
+
+    @Override
+    public void makeFile(String path, InputStream content) throws IOException {
+      ByteArrayOutputStream buf = new ByteArrayOutputStream();
+      FileUtil.copyBytes(content, buf);
+      makeFile(path, buf.toString());
     }
 
     public void makeDirectory(String path) {
@@ -40,9 +53,15 @@ public class MemoryFileSystem implements FileSystem {
         return result.toArray(new String[result.size()]);
     }
 
+    @Override
     public String getContent(String path) {
         return files.get(path).payload;
     }
+
+  @Override
+  public InputStream getInputStream(String path) throws IOException {
+    return new ByteArrayInputStream(files.get(path).payload.getBytes());
+  }
 
   @Override
   public void delete(String pathToDelete) {

@@ -2,8 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
@@ -11,11 +17,16 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
+import util.FileUtil;
 
 public class FileSystemPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
+
+  static final String contentFilename = "content.txt";
+  static final String propertiesFilename = "properties.xml";
 
   // Only used for root page:
   private final String path;
@@ -49,11 +60,18 @@ public class FileSystemPage extends BaseWikiPage {
     this.versionsController = versionsController;
   }
 
+  public static WikiPageProperties parsePropertiesXml(InputStream propertiesXml, long lastModifiedTime) {
+    final WikiPageProperties props = new WikiPageProperties();
+    props.loadFromXml(propertiesXml);
+    props.setLastModificationTime(new Date(lastModifiedTime));
+    return props;
+  }
+
   @Override
   public void removeChildPage(final String name) {
     WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
-      versionsController.delete((FileSystemPage) childPage);
+      versionsController.delete(new File(((FileSystemPage) childPage).getFileSystemPath()));
     }
   }
 
@@ -123,8 +141,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public PageData getData() {
-    PageData pageData = versionsController.getRevisionData(this, null);
-    return new PageData(pageData, getVariableSource());
+    return getDataVersion(null);
   }
 
   @Override
@@ -152,18 +169,40 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
-    VersionInfo versionInfo = versionsController.makeVersion(this, data);
-    return versionInfo;
+    try {
+      return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return (Collection<VersionInfo>) versionsController.history(this);
+    return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
   }
 
   @Override
   public PageData getDataVersion(final String versionName) {
-    return new PageData(versionsController.getRevisionData(this, versionName), getVariableSource());
+    FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    PageData data = new PageData(this);
+    try {
+      for (FileVersion version : versions) {
+        if (version == null) continue;
+        if (contentFilename.equals(version.getFile().getName())) {
+          data.setContent(loadContent(version));
+        } else if (propertiesFilename.equals(version.getFile().getName())) {
+          data.setProperties(loadAttributes(version));
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return new PageData(data, getVariableSource());
+  }
+
+  public void autoCommit(boolean autoCommit) {
+    this.autoCommit = autoCommit;
   }
 
   @Override
@@ -175,7 +214,116 @@ public class FileSystemPage extends BaseWikiPage {
     }
   }
 
-  public void autoCommit(boolean autoCommit) {
-    this.autoCommit = autoCommit;
+  private File contentFile() {
+    return new File(getFileSystemPath(), contentFilename);
+  }
+
+  private File propertiesFile() {
+    return new File(getFileSystemPath(), propertiesFilename);
+  }
+
+  private String loadContent(final FileVersion fileVersion) throws IOException {
+    try {
+      return FileUtil.toString(fileVersion.getContent());
+    } finally {
+      fileVersion.getContent().close();
+    }
+  }
+
+  private WikiPageProperties loadAttributes(final FileVersion fileVersion) throws IOException {
+    final WikiPageProperties props = new WikiPageProperties();
+    props.loadFromXml(fileVersion.getContent());
+    props.setLastModificationTime(fileVersion.getLastModificationTime());
+    return props;
+  }
+
+  private long getLastModifiedTime(final FileSystemPage page) {
+    final String path = page.contentFile().getPath();
+    return fileSystem.lastModified(path);
+  }
+
+
+  class ContentFileVersion implements FileVersion {
+
+    final PageData data;
+
+    ContentFileVersion(PageData pageData) {
+      this.data = new PageData(pageData);
+    }
+
+    @Override
+    public File getFile() {
+      return contentFile();
+    }
+
+    @Override
+    public InputStream getContent() throws UnsupportedEncodingException {
+      String content = data.getContent();
+
+      if (content == null) {
+        return new ByteArrayInputStream("".getBytes());
+      }
+
+      final String separator = System.getProperty("line.separator");
+
+      if (content.endsWith("|")) {
+        content += separator;
+      }
+
+      //First replace every windows style to unix
+      content = content.replaceAll("\r\n", "\n");
+      //Then do the replace to match the OS.  This works around
+      //a strange behavior on windows.
+      content = content.replaceAll("\n", separator);
+
+      return new ByteArrayInputStream(content.getBytes("UTF-8"));
+    }
+
+    @Override
+    public String getAuthor() {
+      return data.getAttribute(PageData.LAST_MODIFYING_USER);
+
+    }
+
+    @Override
+    public Date getLastModificationTime() {
+      return data.getProperties().getLastModificationTime();
+    }
+
+  }
+
+  class PropertiesFileVersion implements FileVersion {
+
+    final PageData data;
+
+    PropertiesFileVersion(PageData pageData) {
+      this.data = new PageData(pageData);
+    }
+
+    @Override
+    public File getFile() {
+      return propertiesFile();
+    }
+
+    @Override
+    public InputStream getContent() throws IOException {
+      WikiPageProperties propertiesToSave = new WikiPageProperties(data.getProperties());
+      removeAlwaysChangingProperties(propertiesToSave);
+      return new ByteArrayInputStream(propertiesToSave.toXml().getBytes("UTF-8"));
+    }
+
+    @Override
+    public String getAuthor() {
+      return data.getAttribute(PageData.LAST_MODIFYING_USER);
+    }
+
+    @Override
+    public Date getLastModificationTime() {
+      return data.getProperties().getLastModificationTime();
+    }
+
+    private void removeAlwaysChangingProperties(WikiPageProperties properties) {
+      properties.remove(PageData.PropertyLAST_MODIFIED);
+    }
   }
 }

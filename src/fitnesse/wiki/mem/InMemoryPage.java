@@ -7,6 +7,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 
 // In memory page, used for testing and instant pages (like GitFileVersionController's RecentChanges page).
 public class InMemoryPage {

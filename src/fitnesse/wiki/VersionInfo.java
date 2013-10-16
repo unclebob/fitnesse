@@ -19,20 +19,17 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     this.creationTime = new Date(creationTime.getTime());
   }
 
-  public static VersionInfo makeVersionInfo(final PageData data) {
-    try {
-      Date time;
-      time = data.getProperties().getLastModificationTime();
-      String versionName = WikiImportProperty.getTimeFormat().format(time);
-      final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
-      if (user != null && !"".equals(user)) {
-        versionName = user + "-" + versionName;
-      }
-
-      return new VersionInfo(versionName, user, time);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+  public static VersionInfo makeVersionInfo(String author, Date creationTime) {
+    String versionName = WikiImportProperty.getTimeFormat().format(creationTime);
+    if (author != null && !"".equals(author)) {
+      versionName = author + "-" + versionName;
     }
+    return new VersionInfo(versionName, author, creationTime);
+  }
+
+  public static VersionInfo makeVersionInfo(final PageData data) {
+    return makeVersionInfo(data.getAttribute(PageData.LAST_MODIFYING_USER),
+            data.getProperties().getLastModificationTime());
   }
 
   public String getAuthor() {
