@@ -54,10 +54,18 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
     processingQueue.addLast(pageToTest);
     String html = pageToTest.getDecoratedData().getHtml();
-    if (html.length() == 0)
-      client.send(EMPTY_PAGE_CONTENT);
-    else
-      client.send(html);
+    try {
+      if (html.length() == 0)
+        client.send(EMPTY_PAGE_CONTENT);
+      else
+        client.send(html);
+    } catch (InterruptedException e) {
+      exceptionOccurred(e);
+      throw e;
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
+    }
   }
 
   @Override
@@ -70,7 +78,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public void kill() {
     client.kill();
-    testSystemStopped(client.getExecutionLog(), null);
   }
 
   @Override
