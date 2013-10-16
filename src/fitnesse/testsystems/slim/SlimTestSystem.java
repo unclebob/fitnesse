@@ -75,13 +75,8 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void kill() throws IOException {
-    try {
-      slimClient.kill();
-      testSystemStopped(null);
-    } catch (IOException e) {
-      exceptionOccurred(e);
-      throw e;
-    }
+    // No need to send events here, since killing the process is typically done asynchronously.
+    slimClient.kill();
   }
 
   @Override
@@ -119,7 +114,14 @@ public abstract class SlimTestSystem implements TestSystem {
     List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
     if (!stopTestCalled) {
-      instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
+      // Okay, if this crashes, the test system is killed.
+      // We're not gonna continue here, but instead declare our test system done.
+      try {
+        instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
+      } catch (IOException e) {
+        exceptionOccurred(e);
+        throw e;
+      }
     } else {
       instructionResults = Collections.emptyMap();
     }
