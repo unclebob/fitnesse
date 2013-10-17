@@ -28,11 +28,11 @@ import static fitnesse.wiki.fs.SimpleFileVersionsController.*;
 /**
  * This class requires jGit to be available.
  */
-public class GitFileVersionsController implements VersionsController, RecentChanges {
+public class GitFileVersionsController implements VersionsController, RecentChanges, FileVersionsController {
 
   private static final int RECENT_CHANGES_DEPTH = 100;
 
-  private final VersionsController persistence;
+  private final SimpleFileVersionsController persistence;
 
   private int historyDepth;
 
@@ -129,12 +129,12 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    return getCurrentVersion(page, repository);
+    return getCurrentVersion(repository);
   }
 
   @Override
   public VersionInfo getCurrentVersion(FileSystemPage page) {
-    return getCurrentVersion(page, getRepository(page));
+    return getCurrentVersion(getRepository(page));
   }
 
   @Override
@@ -162,9 +162,9 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   // Paths we feed to Git should be relative to the git repo. Absolute paths are not appreciated.
-  private String getPath(FileSystemPage page, Repository repository) {
+  private String getPath(File file, Repository repository) {
     String workTreePath = repository.getWorkTree().getAbsolutePath();
-    String pagePath = new File(page.getFileSystemPath()).getAbsolutePath();
+    String pagePath = file.getAbsolutePath();
 
     assert pagePath.startsWith(workTreePath);
 
@@ -175,7 +175,11 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     return pagePath;
   }
 
-  private VersionInfo getCurrentVersion(FileSystemPage page, Repository repository) {
+  private String getPath(FileSystemPage page, Repository repository) {
+    return getPath(new File(page.getFileSystemPath()), repository);
+  }
+
+  private VersionInfo getCurrentVersion(Repository repository) {
     try {
       ObjectId head = repository.resolve("HEAD");
       RevWalk walk = new RevWalk(repository);
@@ -191,17 +195,20 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     return new GitVersionInfo(revCommit.name(), authorIdent.getName(), authorIdent.getWhen(), revCommit.getShortMessage());
   }
 
-  public static Repository getRepository(FileSystemPage page) {
+  public static Repository getRepository(File file) {
     try {
       return new FileRepositoryBuilder()
-              .findGitDir(new File(page.getFileSystemPath()))
+              .findGitDir(file)
               .readEnvironment()
               .setMustExist(true)
               .build();
     } catch (IOException e) {
       throw new RuntimeException("No Git repository found", e);
     }
+  }
 
+  public static Repository getRepository(FileSystemPage page) {
+    return getRepository(new File(page.getFileSystemPath()));
   }
 
   @Override
@@ -225,13 +232,9 @@ public class GitFileVersionsController implements VersionsController, RecentChan
       pageData.setContent("Unable to read history: " + e.getMessage());
     }
     // No properties, no features.
-    pageData.setProperties(recentChangesPageProperties());
+    pageData.setProperties(new WikiPageProperties());
     recentChangesPage.commit(pageData);
     return recentChangesPage;
-  }
-
-  private WikiPageProperties recentChangesPageProperties() {
-    return new WikiPageProperties();
   }
 
   private String convertToWikiText(Collection<GitVersionInfo> history) {
@@ -249,6 +252,75 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     }
     return builder.toString();
   }
+
+  @Override
+  public void addFile(File file, File contentFile) throws IOException {
+    Repository repository = getRepository(file);
+    persistence.addFile(file, contentFile);
+    Git git = new Git(repository);
+    try {
+      git.add()
+              .addFilepattern(getPath(file, repository))
+              .call();
+      commit(git, String.format("FitNesse file %s updated.", file.getName()));
+    } catch (GitAPIException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void deleteFile(File file) {
+    Repository repository = getRepository(file);
+    persistence.deleteFile(file);
+    Git git = new Git(repository);
+    try {
+      git.rm()
+              .addFilepattern(getPath(file, repository))
+              .call();
+      commit(git, String.format("FitNesse file %s deleted.", file.getName()));
+    } catch (GitAPIException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void addDirectory(File dir) {
+    persistence.addDirectory(dir);
+  }
+
+  @Override
+  public void deleteDirectory(File dir) {
+    Repository repository = getRepository(dir);
+    persistence.deleteDirectory(dir);
+    Git git = new Git(repository);
+    try {
+      git.rm()
+              .addFilepattern(getPath(dir, repository))
+              .call();
+      commit(git, String.format("FitNesse directory %s deleted.", dir.getName()));
+    } catch (GitAPIException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void renameFile(File file, File oldFile) {
+    Repository repository = getRepository(file);
+    persistence.renameFile(file, oldFile);
+    Git git = new Git(repository);
+    try {
+      git.add()
+              .addFilepattern(getPath(file, repository))
+              .call();
+      git.rm()
+              .addFilepattern(getPath(oldFile, repository))
+              .call();
+      commit(git, String.format("FitNesse file %s moved to %s.", oldFile.getName(), file.getName()));
+    } catch (GitAPIException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 
   private static class GitVersionInfo extends VersionInfo {
     private final String comment;
