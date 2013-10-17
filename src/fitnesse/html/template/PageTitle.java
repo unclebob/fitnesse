@@ -110,8 +110,7 @@ public class PageTitle {
   }
   
   public void setPageTags(String pageTags) {
-    if(pageTags == null) return;
-    if(pageTags == "") return;
+    if(pageTags == null || "".equals(pageTags)) return;
     this.pageTags = pageTags;
   }   
 

@@ -45,7 +45,7 @@ public class CompositeExecutionLog {
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         String tags = pageData.getAttribute(PageData.PropertySUITES);
-        if(tags != null && tags !="" ){
+        if(tags != null && !"".equals(tags)){
           data.setAttribute(PageData.PropertySUITES,tags);
         }
       }
