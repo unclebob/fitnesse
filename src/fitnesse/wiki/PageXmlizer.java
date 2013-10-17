@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 import util.XmlUtil;
 
 public class PageXmlizer {
-  private static final SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+  private final SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
   private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
   public Document xmlize(WikiPage page) {

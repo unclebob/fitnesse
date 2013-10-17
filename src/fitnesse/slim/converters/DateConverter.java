@@ -11,7 +11,7 @@ import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
 public class DateConverter implements Converter<Date> {
-  public final static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+  public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
   public String toString(Date o) {
     return dateFormat.format(o);
