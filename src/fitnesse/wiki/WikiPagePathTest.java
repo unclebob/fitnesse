@@ -219,10 +219,10 @@ public class WikiPagePathTest {
     WikiPagePath rel = PathParser.parse("MyPage");
     WikiPagePath sub = PathParser.parse(">MyPage");
     WikiPagePath back = PathParser.parse("<MyPage");
-    assertEquals(abs, abs.clone());
-    assertEquals(rel, rel.clone());
-    assertEquals(sub, sub.clone());
-    assertEquals(back, back.clone());
+    assertEquals(abs, abs.copy());
+    assertEquals(rel, rel.copy());
+    assertEquals(sub, sub.copy());
+    assertEquals(back, back.copy());
   }
 
   @Test

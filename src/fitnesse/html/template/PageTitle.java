@@ -15,7 +15,7 @@ public class PageTitle {
   private String pageTags;
 
   public PageTitle(WikiPagePath pagePath) {
-    pagePath = pagePath.clone();
+    pagePath = pagePath.copy();
     List<String> names = pagePath.getNames();
     link = PathParser.render(pagePath);
     if (names.size() > 0) {
