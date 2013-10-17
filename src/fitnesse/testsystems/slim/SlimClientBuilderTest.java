@@ -95,7 +95,7 @@ public class SlimClientBuilderTest {
     Descriptor descriptor = mock(Descriptor.class);
     ServerSocket slimSocket = SocketFactory.tryCreateServerSocket(slimServerPort);
     try {
-      SlimClientBuilder sys = new SlimClientBuilder(descriptor);
+      InProcessSlimClientBuilder sys = new InProcessSlimClientBuilder(descriptor);
       String slimArguments = String.format("%s %d", "", slimServerPort);
       sys.createSlimService(slimArguments);
     } finally {
