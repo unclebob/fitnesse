@@ -40,10 +40,6 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     return clone;
   }
 
-  public WikiPagePath copy() {
-    return (WikiPagePath) clone();
-  }
-
   public WikiPagePath(WikiPage page) {
     while (!page.isRoot()) {
       names.addFirst(page.getName());
