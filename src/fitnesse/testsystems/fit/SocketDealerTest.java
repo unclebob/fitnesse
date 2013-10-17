@@ -27,14 +27,12 @@ public class SocketDealerTest {
 
   public static class SimpleDoner implements SocketDoner {
     public MockSocket socket = new MockSocket("");
-    boolean finished = false;
 
     public Socket donateSocket() {
       return socket;
     }
 
     public void finishedWithSocket() {
-      finished = true;
     }
   }
 

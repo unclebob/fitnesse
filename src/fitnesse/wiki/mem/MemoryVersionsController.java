@@ -19,7 +19,6 @@ public class MemoryVersionsController implements VersionsController {
 
 
   private Map<String, FileVersions> versions = new HashMap<String, FileVersions>();
-  private int historyDepth;
 
   private VersionsController persistence;
 
@@ -29,7 +28,6 @@ public class MemoryVersionsController implements VersionsController {
 
   @Override
   public void setHistoryDepth(int historyDepth) {
-    this.historyDepth = historyDepth;
   }
 
   @Override

@@ -15,12 +15,10 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String contentRegEx;
   public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
   public WikiPage searchRoot;
-  private WikiPage root;
   public PageCrawler crawler;
 
 
   public SuiteSpecificationRunner(WikiPage root) {
-    this.root = root;
     searchRoot = root;
     titleRegEx = "";
     contentRegEx = "";
