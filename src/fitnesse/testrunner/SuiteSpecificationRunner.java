@@ -102,9 +102,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
 
 
   private static boolean tableIsTooSmall(Table table) {
-    if (table.getRowCount() < 3)
-      return true;
-    return false;
+    return table.getRowCount() < 3;
   }
 
   public static boolean isASuiteSpecificationsTable(Table table) {

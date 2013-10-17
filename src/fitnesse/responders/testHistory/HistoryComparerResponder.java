@@ -102,9 +102,7 @@ public class HistoryComparerResponder implements Responder {
         if (setFileNames(key))
           return false;
     }
-    if (firstFileName.equals("") || secondFileName.equals(""))
-      return false;
-    return true;
+    return !(firstFileName.equals("") || secondFileName.equals(""));
   }
 
   private boolean setFileNames(String key) {

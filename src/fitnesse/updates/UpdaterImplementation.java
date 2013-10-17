@@ -75,7 +75,7 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
-    if (updateFileList.exists() == false)
+    if (!updateFileList.exists())
       throw new RuntimeException("Could Not Find UpdateList");
 
     try {

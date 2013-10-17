@@ -63,9 +63,7 @@ public class AddChildPageResponder implements SecureResponder {
   private boolean nameIsInvalid(String name) {
     if (name.equals(""))
       return true;
-    if (!WikiWordPath.isSingleWikiWord(name))
-      return true;
-    return false;
+    return !WikiWordPath.isSingleWikiWord(name);
   }
 
   private void createChildPage(Request request) {

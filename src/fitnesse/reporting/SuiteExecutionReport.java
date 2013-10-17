@@ -39,10 +39,8 @@ public class SuiteExecutionReport extends ExecutionReport {
         return false;
       if (pageHistoryReferences.size() != report.pageHistoryReferences.size())
         return false;
-      else if (!allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences))
-        return false;
       else
-        return true;
+        return allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences);
     }
     return false;
   }

@@ -28,12 +28,7 @@ public class PageHistoryReader {
   }
 
   private boolean fileIsNotADirectoryAndIsValid(File file) {
-    if(file.isDirectory())
-      return false;
-    if(!matchesPageHistoryFileFormat(file.getName()))
-      return false;
-    return true;
-
+    return !file.isDirectory() && matchesPageHistoryFileFormat(file.getName());
   }
 
   public static boolean matchesPageHistoryFileFormat(String pageHistoryFileName) {

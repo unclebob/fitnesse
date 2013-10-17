@@ -79,9 +79,7 @@ public class VersionComparerResponder implements Responder {
         if (setFileNames(key))
           return false;
     }
-    if (firstVersion.equals("") || secondVersion.equals(""))
-      return false;
-    return true;
+    return !(firstVersion.equals("") || secondVersion.equals(""));
   }
 
   private boolean setFileNames(String key) {

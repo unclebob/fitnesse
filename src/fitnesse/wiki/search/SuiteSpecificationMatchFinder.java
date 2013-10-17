@@ -20,12 +20,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     if(!nullOrEmpty(titleRegEx) && !nullOrEmpty(contentRegEx))
        return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx,page.getData().getContent());
     else{
-    if (patternMatches(titleRegEx, page.getName()))
-      return true;
-    if (patternMatches(contentRegEx,page.getData().getContent()))
-      return true;
-
-    return false;
+      return patternMatches(titleRegEx, page.getName()) || patternMatches(contentRegEx,page.getData().getContent());
     }
   }
 
