@@ -22,12 +22,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     super(context, page);
   }
 
-  //special constructor for TestRunner.  Used only for formatting.
-  //todo this is nasty coupling.
-  public TestHtmlFormatter(FitNesseContext context) {
-    super(context, null);
-  }
-
   @Override
   public void testStarted(WikiTestPage testPage) {
     latestTestTime = new TimeMeasurement().start();
