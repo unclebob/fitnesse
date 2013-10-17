@@ -31,5 +31,5 @@ public interface PageCrawler {
 
   WikiPage findAncestorWithName(String name);
 
-  WikiPage getClosestInheritedPage(WikiPage context, String pageName);
+  WikiPage getClosestInheritedPage(String pageName);
 }

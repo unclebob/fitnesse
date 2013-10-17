@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import fitnesse.components.ContentBuffer;
-import fitnesse.html.template.PageFactory;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
@@ -31,7 +30,7 @@ public class HtmlResultFormatter implements ResultFormatter {
 
     buffer = new ContentBuffer(".html");
 
-    createPage(context.pageFactory, rootPath);
+    createPage(rootPath);
     suiteFormatter = createCustomFormatter();
     System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
@@ -52,7 +51,7 @@ public class HtmlResultFormatter implements ResultFormatter {
     return formatter;
   }
   
-  private void createPage(PageFactory pageFactory, String rootPath) {
+  private void createPage(String rootPath) {
     HtmlPage htmlPage = context.pageFactory.newPage();
 
     htmlPage.setTitle(rootPath);

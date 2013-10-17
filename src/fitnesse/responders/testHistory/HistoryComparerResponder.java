@@ -47,7 +47,7 @@ public class HistoryComparerResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
-    initializeReponseComponents(request);
+    initializeReponseComponents();
     if (!getFileNameFromRequest(request))
       return makeErrorResponse(context, request,
           "Compare Failed because the wrong number of Input Files were given. "
@@ -78,7 +78,7 @@ public class HistoryComparerResponder implements Responder {
         || ((new File(secondFilePath)).exists());
   }
 
-  private void initializeReponseComponents(Request request) {
+  private void initializeReponseComponents() {
     if (comparer == null)
       comparer = new HistoryComparer();
   }

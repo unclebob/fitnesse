@@ -58,8 +58,8 @@ public class FileResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     if (requestedFile.exists()) {
-      return makeFileResponse(context, request);
-    } else if (canLoadFromClasspath(resource)) {
+      return makeFileResponse(request);
+    } else if (canLoadFromClasspath()) {
       return makeClasspathResponse(context, request);
     } else {
       return new NotFoundResponder().makeResponse(context, request);
@@ -67,7 +67,7 @@ public class FileResponder implements Responder {
   }
   
 
-  private boolean canLoadFromClasspath(String resource2) {
+  private boolean canLoadFromClasspath() {
     return resource.startsWith("files/fitnesse/");
   }
 
@@ -96,7 +96,7 @@ public class FileResponder implements Responder {
     return response;
   }
 
-  private Response makeFileResponse(FitNesseContext context, Request request) throws FileNotFoundException {
+  private Response makeFileResponse(Request request) throws FileNotFoundException {
     InputStreamResponse response = new InputStreamResponse();
     determineLastModifiedInfo(new Date(requestedFile.lastModified()));
 

@@ -38,10 +38,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     latestTestTime.stop();
     super.testComplete(testPage, testSummary);
 
-    processTestResults(getRelativeName(testPage), testSummary);
-  }
-
-  public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
     getAssertionCounts().add(testSummary);
   }
 

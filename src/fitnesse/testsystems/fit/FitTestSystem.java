@@ -47,7 +47,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public void start() {
     client.start();
-    testSystemStarted(this, descriptor.getTestSystemName(), descriptor.getTestRunner());
+    testSystemStarted(this);
   }
 
   @Override
@@ -112,7 +112,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  private void testSystemStarted(TestSystem testSystem) {
     testSystemListener.testSystemStarted(testSystem);
   }
 
