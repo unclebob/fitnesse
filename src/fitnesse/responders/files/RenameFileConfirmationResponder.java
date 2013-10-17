@@ -22,8 +22,9 @@ public class RenameFileConfirmationResponder implements SecureResponder {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
-    page.setMainTemplate("renameFileConfirmation.vm");
+    page.setMainTemplate("renameFileConfirmation");
     page.put("filename", filename);
+    page.put("resource", resource);
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());

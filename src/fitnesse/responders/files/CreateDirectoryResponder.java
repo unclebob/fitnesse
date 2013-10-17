@@ -21,7 +21,7 @@ public class CreateDirectoryResponder implements SecureResponder {
     String pathname = context.getRootPagePath() + "/" + resource + dirname;
     File file = new File(pathname);
     if (!file.exists())
-      file.mkdir();
+      FileVersionsControllerFactory.getVersionsController(context).addDirectory(file);
 
     response.redirect("/" + resource);
     return response;
