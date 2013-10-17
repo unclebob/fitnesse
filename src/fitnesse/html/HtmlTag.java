@@ -134,15 +134,15 @@ public class HtmlTag extends HtmlElement {
     }
 
     private String makeChildrenWithoutTrailingIndent() {
-      String children = "";
+      StringBuilder children = new StringBuilder(64);
       childTagWasMade = false;
       lastMadeChildWasNotTag = false;
       firstElement = true;
       for (HtmlElement element : childTags) {
-        children += makeChildFromElement(element);
+        children.append(makeChildFromElement(element));
         firstElement = false;
       }
-      return children;
+      return children.toString();
     }
 
     private String makeChildFromElement(HtmlElement element) {

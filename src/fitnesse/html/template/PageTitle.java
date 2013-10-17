@@ -56,11 +56,11 @@ public class PageTitle {
   public PageTitle(String path, String separator) {
     String[] crumbs = path.split(separator);
     String crumb;
-    String trail = "";
+    StringBuilder trail = new StringBuilder(64);
     for (int i = 0; i < crumbs.length - 1; i++) {
       crumb = crumbs[i];
       breadCrumbs.add(new BreadCrumb(crumb, trail + crumb));
-      trail = trail + crumb + separator;
+      trail.append(crumb).append(separator);
     }
     if (crumbs.length > 0) {
       crumb = crumbs[crumbs.length - 1];
