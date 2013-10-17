@@ -195,8 +195,10 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
         output = new BufferedOutputStream(new FileOutputStream(file));
         FileUtil.copyBytes(input, output);
       } finally {
-        input.close();
-        output.close();
+        if (input != null)
+          input.close();
+        if (output != null)
+          output.close();
         contentFile.delete();
       }
     }
