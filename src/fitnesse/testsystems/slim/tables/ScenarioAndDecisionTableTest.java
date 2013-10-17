@@ -25,7 +25,6 @@ import static util.ListUtility.list;
 public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
   private WikiPage root;
   private List<SlimAssertion> assertions;
-  private ScenarioTable st;
   private DecisionTable dt;
 
   private List<Instruction> instructions() {
@@ -43,7 +42,7 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    st = new ScenarioTable(t, "s_id", this);
+    ScenarioTable st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     dt = new DecisionTable(t, "did", this);
     assertions.addAll(st.getAssertions());

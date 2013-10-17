@@ -35,7 +35,6 @@ public class HistoryComparerResponder implements Responder {
   private String secondFilePath;
   public boolean testing = false;
 
-  private int count;
   private FitNesseContext context;
 
   public HistoryComparerResponder(HistoryComparer historyComparer) {
@@ -119,7 +118,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeValidResponse(Request request) {
-    count = 0;
+    int count = 0;
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));

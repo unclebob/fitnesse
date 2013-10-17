@@ -36,9 +36,7 @@ import static util.ListUtility.list;
 public class ScriptTableExtensionTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
-  private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
-  private SlimTestContextImpl testContext;
 
   private class HtmlScriptTable extends ScriptTable {
 
@@ -91,7 +89,7 @@ public class ScriptTableExtensionTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     return new HtmlScriptTable(t, "id", testContext);
   }
 
@@ -105,6 +103,7 @@ public class ScriptTableExtensionTest {
   }
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {
+    String scriptTableHeader = "|Script|\n";
     buildInstructionsForWholeTable(scriptTableHeader + scriptStatements);
   }
 

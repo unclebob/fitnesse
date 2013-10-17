@@ -17,7 +17,6 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
-  private String doTableId;
 
   public TableTable(Table table, String tableId, SlimTestContext slimTestContext) {
     super(table, tableId, slimTestContext);
@@ -30,7 +29,7 @@ public class TableTable extends SlimTable {
   public List<SlimAssertion> getAssertions() {
     SlimAssertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
-    doTableId = doTable.getId();
+    String doTableId = doTable.getId();
     return list(make, makeAssertion(doTable, new TableTableExpectation()));
   }
 

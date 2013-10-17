@@ -209,7 +209,7 @@ public class SlimCommandRunningClient implements SlimClient {
     kill();
   }
 
-  public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {
+  public static Map<String, Object> resultToMap(List<?> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
       List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);

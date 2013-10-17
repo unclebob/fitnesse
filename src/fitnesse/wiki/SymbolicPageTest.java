@@ -23,13 +23,13 @@ public class SymbolicPageTest {
   private SymbolicPage symPage;
   private String pageOnePath = "PageOne";
   private String pageTwoPath = "PageTwo";
-  private String pageOneContent = "page one";
   private String pageTwoContent = "page two";
   private WikiPage externalRoot;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    String pageOneContent = "page one";
     pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne);

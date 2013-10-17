@@ -304,11 +304,10 @@ public class WikiImportingResponderTest {
   // Tests for the rendering of import specific page details
   private WikiPage root;
   private WikiPage page;
-  private PageCrawler crawler;
 
   public void pageRenderingSetUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    crawler = root.getPageCrawler();
+    PageCrawler crawler = root.getPageCrawler();
   }
 
   @Test

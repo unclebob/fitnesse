@@ -27,12 +27,9 @@ import java.util.List;
 
 public class SuiteHistoryFormatterTest {
   private SuiteHistoryFormatter formatter;
-  private WikiPage root;
-  private FitNesseContext context;
   private WikiTestPage testPage;
   private StringWriter writer;
   private Date testTime;
-  private WikiPage suitePage;
   private DateAlteringClock clock;
 
   @Before
@@ -40,9 +37,9 @@ public class SuiteHistoryFormatterTest {
     testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
     clock = new DateAlteringClock(testTime).freeze();
 
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    suitePage = root.addChildPage("SuitePage");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    WikiPage suitePage = root.addChildPage("SuitePage");
     testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writer = new StringWriter();
     formatter = new SuiteHistoryFormatter(context, suitePage, writer);

@@ -35,9 +35,7 @@ import static util.ListUtility.list;
 public class ScriptTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
-  private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
-  private SlimTestContextImpl testContext;
 
   private class LocalizedScriptTable extends ScriptTable {
 
@@ -90,7 +88,7 @@ public class ScriptTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     if (localized) return new LocalizedScriptTable(t, "id", testContext);
     else return new ScriptTable(t, "id", testContext);
   }
@@ -105,6 +103,7 @@ public class ScriptTableTest {
   }
 
   private void buildInstructionsFor(String scriptStatements, boolean localized) throws Exception {
+    String scriptTableHeader = "|Script|\n";
     buildInstructionsForWholeTable(scriptTableHeader + scriptStatements, localized);
   }
 

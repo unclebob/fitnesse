@@ -9,9 +9,9 @@ import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
 public class LibraryTableTest extends SlimTableTestSupport<LibraryTable> {
-  private String tableHeader = "|Library|\n";
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {
+    String tableHeader = "|Library|\n";
     makeSlimTableAndBuildInstructions(tableHeader + scriptStatements);
   }
 

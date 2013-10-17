@@ -29,12 +29,7 @@ public class ExposeThreadingIssueInMockResponseTest {
   private MockRequest request;
   private TestResponder responder;
   private FitNesseContext context;
-  private Response response;
-  private MockResponseSender sender;
-  private WikiPage testPage;
   private String results;
-  private String simpleRunPageName;
-  private final int port = 9123;
   private FitSocketReceiver receiver;
 
   @Before
@@ -42,6 +37,7 @@ public class ExposeThreadingIssueInMockResponseTest {
     root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
     responder = new TestResponder();
+    int port = 9123;
     context = FitNesseUtil.makeTestContext(root, port);
 
     receiver = new FitSocketReceiver(port, FitTestSystem.socketDealer());
@@ -72,12 +68,12 @@ public class ExposeThreadingIssueInMockResponseTest {
   }
 
   private void doSimpleRun(String fixtureTable) throws Exception {
-    simpleRunPageName = "TestPage";
-    testPage = WikiPageUtil.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
+    String simpleRunPageName = "TestPage";
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     request.setResource(testPage.getName());
 
-    response = responder.makeResponse(context, request);
-    sender = new MockResponseSender();
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
 
     results = sender.sentData();

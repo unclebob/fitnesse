@@ -23,17 +23,15 @@ public class TestHtmlFormatterTest {
   private TestHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
   private WikiTestPage page;
-  private WikiPage root;
-  private FitNesseContext context;
   private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     page = new WikiTestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
-    context = FitNesseUtil.makeTestContext();
+    FitNesseContext context = FitNesseUtil.makeTestContext();
 
     formatter = new TestHtmlFormatter(context, page.getSourcePage()) {
       @Override

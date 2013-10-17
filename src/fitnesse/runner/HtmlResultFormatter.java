@@ -23,7 +23,6 @@ public class HtmlResultFormatter implements ResultFormatter {
   private FitNesseContext context;
   private String host;
   private String rootPath;
-  private HtmlPage htmlPage;
 
   public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws IOException {
     this.context = context;
@@ -54,7 +53,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
   
   private void createPage(PageFactory pageFactory, String rootPath) {
-    htmlPage = context.pageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage();
 
     htmlPage.setTitle(rootPath);
     htmlPage.put("baseUri", baseUri(host));

@@ -5,19 +5,17 @@ TableSorter = function(id, dateParser)
   this.activeSort = null;
   this.dateParser = dateParser;
 
-  this.getSortDirection = function(sortCol)
-  {
-    if (this.activeSort == null || this.activeSort.column != sortCol)
-      this.activeSort = new SortReference(sortCol, "asc");
-    else
-    {
-      if (this.activeSort.direction == "asc")
-        this.activeSort.direction = "dsc";
-      else
-        this.activeSort.direction = "asc";
-    }
-    return this.activeSort.direction;
-  }
+  this.getSortDirection = function (sortCol) {
+      if (this.activeSort == null || this.activeSort.column != sortCol)
+          this.activeSort = new SortReference(sortCol, "asc");
+      else {
+          if (this.activeSort.direction == "asc")
+              this.activeSort.direction = "dsc";
+          else
+              this.activeSort.direction = "asc";
+      }
+      return this.activeSort.direction;
+  };
 
   this.sort = function(sortCol, datatype)
   {

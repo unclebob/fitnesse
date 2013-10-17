@@ -26,14 +26,13 @@ public class FitNesseExpediterTest {
   private FitNesseExpediter expediter;
   private MockSocket socket;
   private FitNesseContext context;
-  private WikiPage root;
   private PipedInputStream clientInput;
   private PipedOutputStream clientOutput;
   private ResponseParser response;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     root.addChildPage("FrontPage");
     socket = new MockSocket();
     context = FitNesseUtil.makeTestContext(root);

@@ -12,7 +12,7 @@ public abstract class MethodExecutor {
 
   public abstract MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable;
 
-  protected Method findMatchingMethod(String methodName, Class<? extends Object> k, int nArgs) {
+  protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
     Method methods[] = k.getMethods();
 
     for (Method method : methods) {

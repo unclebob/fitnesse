@@ -30,7 +30,6 @@ import org.junit.Test;
 import util.FileUtil;
 
 public class SerializedPageResponderTest {
-  private final String RootPath = "TestRooT";
   private WikiPage root;
   private MockRequest request;
 
@@ -42,7 +41,8 @@ public class SerializedPageResponderTest {
 
   @After
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory(RootPath);
+    String rootPath = "TestRooT";
+    FileUtil.deleteFileSystemDirectory(rootPath);
   }
 
   private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {

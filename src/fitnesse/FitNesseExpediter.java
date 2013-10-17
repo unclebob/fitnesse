@@ -129,7 +129,7 @@ public class FitNesseExpediter implements ResponseSender {
     requestProgress = 0;
     while (!hasError && !request.hasBeenParsed()) {
       Thread.sleep(10);
-      if (timeIsUp(now) && parsingIsUnproductive(request))
+      if (timeIsUp() && parsingIsUnproductive(request))
         reportError(408, "The client request has been unproductive for too long. It has timed out and will now longer be processed.");
     }
   }
@@ -143,8 +143,8 @@ public class FitNesseExpediter implements ResponseSender {
       return true;
   }
 
-  private boolean timeIsUp(long now) {
-    now = Clock.currentTimeInMillis();
+  private boolean timeIsUp() {
+    long now = Clock.currentTimeInMillis();
     if (now > requestParsingDeadline) {
       requestParsingDeadline = now + requestParsingTimeLimit;
       return true;

@@ -37,8 +37,6 @@ public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
-  private TestHistory history;
-  private String pageName;
   private PageHistory pageHistory;
   private HtmlPage page;
   private FitNesseContext context;
@@ -161,8 +159,8 @@ public class PageHistoryResponder implements SecureResponder {
     response = new SimpleResponse();
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
-    history = new TestHistory();
-    pageName = request.getResource();
+    TestHistory history = new TestHistory();
+    String pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();

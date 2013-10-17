@@ -36,7 +36,7 @@ public class TestFormatterTest {
     };
     private PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, dummyPage, writerFactory) {
       protected void writeResults() {
-      };
+      }
     };
 
   private WikiTestPage page;

@@ -32,11 +32,6 @@ public class DecisionTableTest {
       "|var|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
-  private final String decisionTableWithSameSetterMultipleTimes =
-      "|DT:fixture|argument|\n" +
-        "|var|var|\n" +
-        "|3|5|\n" +
-        "|7|9|\n";
   private final String decisionTableWithSameFunctionMultipleTimes= "|DT:fixture|argument|\n" +
       "|func?|func?|\n" +
       "|3|5|\n" +
@@ -144,6 +139,10 @@ public class DecisionTableTest {
 
   @Test
   public void canBuildInstructionsForMultipleCallsToSameSetter() throws Exception {
+    String decisionTableWithSameSetterMultipleTimes = "|DT:fixture|argument|\n" +
+            "|var|var|\n" +
+            "|3|5|\n" +
+            "|7|9|\n";
     makeDecisionTableAndBuildInstructions(decisionTableWithSameSetterMultipleTimes);
     int n = 0;
     List<Instruction> expectedInstructions = list(

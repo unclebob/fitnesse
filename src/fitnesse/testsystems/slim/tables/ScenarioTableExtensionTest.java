@@ -28,7 +28,6 @@ public class ScenarioTableExtensionTest {
   private WikiPage root;
   private List<Object> instructions;
   public ScenarioTable st;
-  private SlimTestContextImpl testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -44,7 +43,7 @@ public class ScenarioTableExtensionTest {
 
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     st = new AutoArgScenarioTable(t, "id", testContext);
     instructions.addAll(st.getAssertions());
 

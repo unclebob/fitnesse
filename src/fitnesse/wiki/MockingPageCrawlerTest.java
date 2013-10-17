@@ -11,12 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class MockingPageCrawlerTest {
-  private WikiPage root;
   private PageCrawler crawler;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
   }
 

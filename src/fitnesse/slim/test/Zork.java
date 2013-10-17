@@ -1,6 +1,6 @@
 package fitnesse.slim.test;
 
-public class Zork extends Object {
+public class Zork {
   private int i;
 
   public Zork(int i) {

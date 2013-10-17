@@ -13,12 +13,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class RenameFileResponder implements SecureResponder {
-  private String resource;
   String newFilename;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     Response response = new SimpleResponse();
-    resource = request.getResource();
+    String resource = request.getResource();
     String filename = (String) request.getInput("filename");
     newFilename = (String) request.getInput("newName");
     newFilename = newFilename.trim();

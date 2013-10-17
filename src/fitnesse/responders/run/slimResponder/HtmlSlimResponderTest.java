@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class HtmlSlimResponderTest {
-  private WikiPage root;
   private FitNesseContext context;
   private MockRequest request;
   protected SlimResponder responder;
@@ -56,7 +55,7 @@ public class HtmlSlimResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
+    WikiPage root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = getSlimResponder();

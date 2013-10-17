@@ -17,8 +17,6 @@ import org.junit.Test;
 public class WikiTestPageTest {
   private WikiPage root;
   private WikiPage wikiPage;
-  private WikiPage subPage;
-  private WikiPage subTestPage;
 
   @Before
   public void setUp() throws Exception {
@@ -29,10 +27,10 @@ public class WikiTestPageTest {
     addPage("SuiteSetUp", "suiteSetUp");
     addPage("SuiteTearDown", "suiteTearDown");
 
-    subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
+    WikiPage subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
     WikiPageUtil.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
-    subTestPage = WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
+    WikiPage subTestPage = WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
     WikiPageUtil.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
   }
 

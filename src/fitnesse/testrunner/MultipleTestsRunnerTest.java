@@ -27,7 +27,6 @@ public class MultipleTestsRunnerTest {
   private WikiPage root;
   private WikiPage suite;
   private WikiPage testPage;
-  private String suitePageName;
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
@@ -37,7 +36,7 @@ public class MultipleTestsRunnerTest {
 
   @Before
   public void setUp() throws Exception {
-    suitePageName = "SuitePage";
+    String suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     PageData data = root.getData();

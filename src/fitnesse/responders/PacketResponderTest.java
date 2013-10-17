@@ -21,7 +21,6 @@ public class PacketResponderTest {
   protected MockRequest request;
   protected Responder responder;
   protected FitNesseContext context;
-  private SimpleResponse response;
 
   @Before
   public void setUp() throws Exception {
@@ -45,7 +44,7 @@ public class PacketResponderTest {
   @Test
   public void noSuchPage() throws Exception {
     request.setResource("NoSuchPage");
-    response = makeResponse();
+    SimpleResponse response = makeResponse();
     assertEquals(404, response.getStatus());
   }
 

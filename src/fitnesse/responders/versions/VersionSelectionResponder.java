@@ -17,25 +17,21 @@ import fitnesse.wiki.*;
 import java.util.*;
 
 public class VersionSelectionResponder implements SecureResponder {
-  private WikiPage page;
-  private List<VersionInfo> versions;
-  private PageData pageData;
-  private String resource;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
-    resource = request.getResource();
+    String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    pageData = page.getData();
-    versions = getVersionsList(page);
+    PageData pageData = page.getData();
+    List<VersionInfo> versions = getVersionsList(page);
 
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
-    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource),pageData.getAttribute(PageData.PropertySUITES)));
+    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.put("versions", versions);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
