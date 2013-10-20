@@ -185,38 +185,34 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
   }
 
   @Override
-  public void addFile(File file, File contentFile) throws IOException {
-    boolean renamed = contentFile.renameTo(file);
-    if (!renamed) {
+  public void addFile(FileVersion... fileVersions) throws IOException {
+    for (FileVersion fileVersion : fileVersions) {
       InputStream input = null;
       OutputStream output = null;
       try {
-        input = new BufferedInputStream(new FileInputStream(contentFile));
-        output = new BufferedOutputStream(new FileOutputStream(file));
+        input = fileVersion.getContent();
+        output = new BufferedOutputStream(new FileOutputStream(fileVersion.getFile()));
         FileUtil.copyBytes(input, output);
       } finally {
         if (input != null)
           input.close();
         if (output != null)
           output.close();
-        contentFile.delete();
       }
     }
   }
 
   @Override
-  public void deleteFile(File file) {
-    file.delete();
+  public void delete(File file) {
+    if (file.isDirectory())
+      FileUtil.deleteFileSystemDirectory(file);
+    else
+      file.delete();
   }
 
   @Override
   public void addDirectory(File dir) {
     dir.mkdirs();
-  }
-
-  @Override
-  public void deleteDirectory(File dir) {
-    FileUtil.deleteFileSystemDirectory(dir);
   }
 
   @Override

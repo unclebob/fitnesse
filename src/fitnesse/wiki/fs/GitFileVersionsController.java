@@ -3,6 +3,7 @@ package fitnesse.wiki.fs;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
@@ -254,29 +255,34 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void addFile(File file, File contentFile) throws IOException {
-    Repository repository = getRepository(file);
-    persistence.addFile(file, contentFile);
+  public void addFile(FileVersion... fileVersions) throws IOException {
+    Repository repository = getRepository(fileVersions[0].getFile());
+    persistence.addFile(fileVersions);
     Git git = new Git(repository);
     try {
-      git.add()
-              .addFilepattern(getPath(file, repository))
-              .call();
-      commit(git, String.format("FitNesse file %s updated.", file.getName()));
+      AddCommand addCommand = git.add();
+      for (FileVersion fileVersion : fileVersions) {
+        addCommand.addFilepattern(getPath(fileVersion.getFile(), repository));
+
+      }
+      addCommand.call();
+      // TODO: read message from VersionInfo.
+      commit(git, "FitNesse files updated.");
     } catch (GitAPIException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void deleteFile(File file) {
+  public void delete(File file) {
     Repository repository = getRepository(file);
-    persistence.deleteFile(file);
+    persistence.delete(file);
     Git git = new Git(repository);
     try {
       git.rm()
               .addFilepattern(getPath(file, repository))
               .call();
+      // TODO: read message from VersionInfo.
       commit(git, String.format("FitNesse file %s deleted.", file.getName()));
     } catch (GitAPIException e) {
       throw new RuntimeException(e);
@@ -286,21 +292,6 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   @Override
   public void addDirectory(File dir) {
     persistence.addDirectory(dir);
-  }
-
-  @Override
-  public void deleteDirectory(File dir) {
-    Repository repository = getRepository(dir);
-    persistence.deleteDirectory(dir);
-    Git git = new Git(repository);
-    try {
-      git.rm()
-              .addFilepattern(getPath(dir, repository))
-              .call();
-      commit(git, String.format("FitNesse directory %s deleted.", dir.getName()));
-    } catch (GitAPIException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @Override

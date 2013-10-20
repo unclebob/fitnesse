@@ -8,16 +8,9 @@ public interface FileVersionsController {
 
   /**
    * Create or update a file
-   * @param file The file to create
-   * @param contentFile A (temporary) file with content
+   * @param fileVersions The file to create
    */
-  void addFile(File file, File contentFile) throws IOException;
-
-  /**
-   * Delete a file.
-   * @param file
-   */
-  void deleteFile(File file);
+  void addFile(FileVersion... fileVersions) throws IOException;
 
   /**
    * Add a new directory under version control.
@@ -26,10 +19,10 @@ public interface FileVersionsController {
   void addDirectory(File dir);
 
   /**
-   * Delete a directory. If the directory contains files, those will also be removed.
-   * @param dir
+   * Delete a file or directory.
+   * @param file
    */
-  void deleteDirectory(File dir);
+  void delete(File file);
 
   /**
    * Rename a file.

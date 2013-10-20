@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +19,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.fs.FileVersion;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -27,10 +32,32 @@ public class UploadResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
 
     String resource = URLDecoder.decode(request.getResource(), "UTF-8");
-    UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+    final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
     if (uploadedFile.isUsable()) {
-      File file = makeFileToCreate(uploadedFile, resource);
-      FileVersionsControllerFactory.getVersionsController(context).addFile(file, uploadedFile.getFile());
+      final File file = makeFileToCreate(uploadedFile, resource);
+      FileVersionsControllerFactory.getVersionsController(context).addFile(new FileVersion() {
+
+        @Override
+        public File getFile() {
+          return file;
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+          return new BufferedInputStream(new FileInputStream(uploadedFile.getFile()) {
+            @Override
+            public void close() throws IOException {
+              super.close();
+              uploadedFile.getFile().delete();
+            }
+          });
+        }
+
+        @Override
+        public VersionInfo getVersionInfo() {
+          return null;
+        }
+      });
     }
 
     response.redirect("/" + request.getResource());
