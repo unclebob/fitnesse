@@ -34,6 +34,7 @@ public class UploadResponder implements SecureResponder {
 
     String resource = URLDecoder.decode(request.getResource(), "UTF-8");
     final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+    final String user = request.getAuthorizationUsername();
     if (uploadedFile.isUsable()) {
       final File file = makeFileToCreate(uploadedFile, resource);
       context.versionsController.makeVersion(new FileVersion() {
@@ -56,8 +57,7 @@ public class UploadResponder implements SecureResponder {
 
         @Override
         public String getAuthor() {
-          // TODO: find authenticated user
-          return null;
+          return user != null ? user : "";
         }
 
         @Override
