@@ -43,7 +43,7 @@ public class FileResponder implements Responder {
       return new ErrorResponder(e);
     }
 
-    File requestedFile = new File(rootPath + "/" + resource);
+    File requestedFile = new File(rootPath, resource);
     
     if (requestedFile.isDirectory())
       return new DirectoryResponder(resource, requestedFile);

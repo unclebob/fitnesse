@@ -87,7 +87,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public WikiPage addChildPage(String name) {
-    File path = new File(getFileSystemPath() + "/" + name);
+    File path = new File(getFileSystemPath(), name);
     if (hasContentChild(path)) {
       return new FileSystemPage(name, this);
     } else if (hasHtmlChild(path)) {
