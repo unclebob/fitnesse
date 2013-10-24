@@ -223,16 +223,22 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   private String loadContent(final FileVersion fileVersion) throws IOException {
+    InputStream content = fileVersion.getContent();
     try {
-      return FileUtil.toString(fileVersion.getContent());
+      return FileUtil.toString(content);
     } finally {
-      fileVersion.getContent().close();
+      content.close();
     }
   }
 
   private WikiPageProperties loadAttributes(final FileVersion fileVersion) throws IOException {
     final WikiPageProperties props = new WikiPageProperties();
-    props.loadFromXml(fileVersion.getContent());
+    InputStream content = fileVersion.getContent();
+    try {
+      props.loadFromXml(content);
+    } finally {
+      content.close();
+    }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
   }
