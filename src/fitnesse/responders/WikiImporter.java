@@ -154,7 +154,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
       PageData remoteData = new PageXmlizer().deXmlizeData(doc);
 
       WikiPageProperties remoteProps = remoteData.getProperties();
-      remoteProps.remove("Edit");
+      remoteProps.remove(PageData.PropertyEDIT);
 
       WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
       Date lastModificationTime = remoteProps.getLastModificationTime();
