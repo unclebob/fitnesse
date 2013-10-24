@@ -11,35 +11,40 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import fitnesse.wiki.fs.FileSystem;
-import util.Clock;
 import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
     private final Hashtable<String, Payload> files = new Hashtable<String, Payload>();
 
-    public void makeFile(String path, String content) {
-        files.put(path, payload(content));
+    @Override
+    public void makeFile(File file, String content) {
+        files.put(file.getPath(), payload(content));
     }
 
     @Override
-    public void makeFile(String path, InputStream content) throws IOException {
+    public void makeFile(File file, InputStream content) throws IOException {
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       FileUtil.copyBytes(content, buf);
-      makeFile(path, buf.toString());
+      makeFile(file, buf.toString());
     }
 
-    public void makeDirectory(String path) {
-        files.put(path, payload(""));
+    @Override
+    public void makeDirectory(File path) {
+        files.put(path.getPath(), payload(""));
     }
 
-    public boolean exists(String path) {
+    @Override
+    public boolean exists(File file) {
+        String path = file.getPath();
         for (String filePath: files.keySet()) {
             if (filePath.startsWith(path)) return true;
         }
         return false;
     }
 
-    public String[] list(String path) {
+    @Override
+    public String[] list(File file) {
+        String path = file.getPath();
         ArrayList<String> result = new ArrayList<String>();
         for (String filePath: files.keySet()) {
             if (!filePath.startsWith(path)) continue;
@@ -54,17 +59,18 @@ public class MemoryFileSystem implements FileSystem {
     }
 
     @Override
-    public String getContent(String path) {
-        return files.get(path).payload;
+    public String getContent(File file) {
+        return files.get(file.getPath()).payload;
     }
 
   @Override
-  public InputStream getInputStream(String path) throws IOException {
-    return new ByteArrayInputStream(files.get(path).payload.getBytes());
+  public InputStream getInputStream(File file) throws IOException {
+    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes());
   }
 
   @Override
-  public void delete(String pathToDelete) {
+  public void delete(File fileToDelete) {
+    String pathToDelete = fileToDelete.getPath();
     for (Iterator<String> iter = files.keySet().iterator(); iter.hasNext(); ) {
       String f = iter.next();
       if (f.startsWith(pathToDelete))
@@ -73,8 +79,8 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public long lastModified(String path) {
-    return files.get(path).lastModified;
+  public long lastModified(File file) {
+    return files.get(file.getPath()).lastModified;
   }
 
   private Payload payload(String payload) {

@@ -32,7 +32,7 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
     FileVersion[] versions = new FileVersion[files.length];
     int counter = 0;
     for (File file : files) {
-      if (fileSystem.exists(file.getPath()))
+      if (fileSystem.exists(file))
         versions[counter++] = new RevisionFileVersion(file, "");
     }
     return versions;
@@ -55,7 +55,7 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
 
     @Override
     public InputStream getContent() throws IOException {
-      return new BufferedInputStream(fileSystem.getInputStream(file.getPath()));
+      return new BufferedInputStream(fileSystem.getInputStream(file));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
 
     @Override
     public Date getLastModificationTime() {
-      return new Date(fileSystem.lastModified(file.getPath()));
+      return new Date(fileSystem.lastModified(file));
     }
   }
 
@@ -77,8 +77,8 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
   @Override
   public VersionInfo makeVersion(FileVersion... fileVersions) throws IOException {
     for (FileVersion fileVersion : fileVersions) {
-      createDirectory(fileVersion.getFile().getParent());
-      fileSystem.makeFile(fileVersion.getFile().getPath(), fileVersion.getContent());
+      createDirectory(fileVersion.getFile().getParentFile());
+      fileSystem.makeFile(fileVersion.getFile(), fileVersion.getContent());
     }
     return VersionInfo.makeVersionInfo(fileVersions[0].getAuthor(), fileVersions[0].getLastModificationTime());
   }
@@ -86,11 +86,11 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
   @Override
   public void delete(File... files) {
     for (File file : files) {
-      fileSystem.delete(file.getPath());
+      fileSystem.delete(file);
     }
   }
 
-  private void createDirectory(final String filePath) throws IOException {
+  private void createDirectory(final File filePath) throws IOException {
     if (!fileSystem.exists(filePath)) {
       fileSystem.makeDirectory(filePath);
     }

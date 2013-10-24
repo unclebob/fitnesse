@@ -77,7 +77,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public boolean hasChildPage(final String pageName) {
-    final String file = getFileSystemPath() + "/" + pageName;
+    final File file = new File(getFileSystemPath(), pageName);
     if (fileSystem.exists(file)) {
       addChildPage(pageName);
       return true;
@@ -87,7 +87,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public WikiPage addChildPage(String name) {
-    String path = getFileSystemPath() + "/" + name;
+    File path = new File(getFileSystemPath() + "/" + name);
     if (hasContentChild(path)) {
       return new FileSystemPage(name, this);
     } else if (hasHtmlChild(path)) {
@@ -99,17 +99,17 @@ public class FileSystemPage extends BaseWikiPage {
     }
   }
 
-  private boolean hasContentChild(String path) {
+  private boolean hasContentChild(File path) {
     for (String child : fileSystem.list(path)) {
       if (child.equals("content.txt")) return true;
     }
     return false;
   }
 
-  private boolean hasHtmlChild(String path) {
-    if (path.endsWith(".html")) return true;
+  private boolean hasHtmlChild(File path) {
+    if (path.getName().endsWith(".html")) return true;
     for (String child : fileSystem.list(path)) {
-      if (hasHtmlChild(path + "/" + child)) return true;
+      if (hasHtmlChild(new File(path, child))) return true;
     }
     return false;
   }
@@ -117,7 +117,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public List<WikiPage> getNormalChildren() {
-    final String thisDir = getFileSystemPath();
+    final File thisDir = new File(getFileSystemPath());
     final List<WikiPage> children = new ArrayList<WikiPage>();
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
@@ -132,7 +132,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   protected WikiPage getNormalChildPage(String pageName) {
-    final String file = getFileSystemPath() + "/" + pageName;
+    final File file = new File(getFileSystemPath(), pageName);
     if (fileSystem.exists(file)) {
       return addChildPage(pageName);
     }
@@ -149,9 +149,9 @@ public class FileSystemPage extends BaseWikiPage {
     return getData();
   }
 
-  private boolean fileIsValid(final String filename, final String dir) {
+  private boolean fileIsValid(final String filename, final File dir) {
     if (WikiWordPath.isWikiWord(filename)) {
-      if (fileSystem.exists(dir + "/" + filename)) {
+      if (fileSystem.exists(new File(dir, filename))) {
         return true;
       }
     }
@@ -236,12 +236,6 @@ public class FileSystemPage extends BaseWikiPage {
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
   }
-
-  private long getLastModifiedTime(final FileSystemPage page) {
-    final String path = page.contentFile().getPath();
-    return fileSystem.lastModified(path);
-  }
-
 
   class ContentFileVersion implements FileVersion {
 

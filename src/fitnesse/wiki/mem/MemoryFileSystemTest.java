@@ -1,5 +1,7 @@
 package fitnesse.wiki.mem;
 
+import java.io.File;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -8,27 +10,30 @@ import org.junit.Test;
 
 public class MemoryFileSystemTest {
 
+  private static final File pageOne = new File("PageOne");
+  private static final File contentFile = new File(pageOne, "content.txt");
+
   MemoryFileSystem fileSystem;
 
   @Before
   public void setUp() {
     fileSystem = new MemoryFileSystem();
 
-    fileSystem.makeDirectory("PageOne");
-    fileSystem.makeFile("PageOne/content.txt", "content");
+    fileSystem.makeDirectory(pageOne);
+    fileSystem.makeFile(contentFile, "content");
   }
 
   @Test
   public void shouldAddPages() {
-    assertTrue(fileSystem.exists("PageOne"));
-    assertTrue(fileSystem.exists("PageOne/content.txt"));
+    assertTrue(fileSystem.exists(pageOne));
+    assertTrue(fileSystem.exists(contentFile));
   }
 
   @Test
   public void shouldDeletePages() {
-    fileSystem.delete("PageOne");
+    fileSystem.delete(pageOne);
 
-    assertFalse(fileSystem.exists("PageOne"));
-    assertFalse(fileSystem.exists("PageOne/content.txt"));
+    assertFalse(fileSystem.exists(pageOne));
+    assertFalse(fileSystem.exists(contentFile));
   }
 }

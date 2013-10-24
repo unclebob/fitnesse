@@ -5,18 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface FileSystem {
-  void makeFile(String path, String content) throws IOException;
-  void makeFile(String path, InputStream content) throws IOException;
+  void makeFile(File file, String content) throws IOException;
+  void makeFile(File file, InputStream content) throws IOException;
 
-  void makeDirectory(String path) throws IOException;
-  boolean exists(String path);
-  String[] list(String path);
+  void makeDirectory(File path) throws IOException;
+  boolean exists(File file);
+  String[] list(File path);
 
-  String getContent(String path) throws IOException;
+  String getContent(File file) throws IOException;
 
-  InputStream getInputStream(String path) throws IOException;
+  InputStream getInputStream(File file) throws IOException;
 
-  void delete(String path);
+  void delete(File path);
 
-  long lastModified(String path);
+  long lastModified(File file);
 }
