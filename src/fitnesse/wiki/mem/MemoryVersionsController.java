@@ -54,7 +54,7 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public VersionInfo addDirectory(File filePath) throws IOException {
+  public VersionInfo addDirectory(FileVersion filePath) throws IOException {
     return persistence.addDirectory(filePath);
   }
 

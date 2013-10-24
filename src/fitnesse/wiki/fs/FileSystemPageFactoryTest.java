@@ -137,7 +137,7 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public VersionInfo addDirectory(File filePath) {
+    public VersionInfo addDirectory(FileVersion filePath) {
       return null;
     }
 

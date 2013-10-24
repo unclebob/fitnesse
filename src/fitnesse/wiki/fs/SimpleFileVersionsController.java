@@ -96,13 +96,18 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   @Override
-  public VersionInfo addDirectory(final File filePath) throws IOException {
+  public VersionInfo addDirectory(final FileVersion dir) throws IOException {
+    final File filePath = dir.getFile();
+    addDirectory(filePath);
+    return VersionInfo.makeVersionInfo(dir.getAuthor(), new Date(fileSystem.lastModified(filePath)));
+  }
+
+  private void addDirectory(final File filePath) throws IOException {
     if (!fileSystem.exists(filePath)) {
       fileSystem.makeDirectory(filePath);
     }
-    return VersionInfo.makeVersionInfo("", new Date(fileSystem.lastModified(filePath)));
-  }
 
+  }
   @Override
   public void rename(File file, File oldFile) throws IOException {
     fileSystem.rename(file, oldFile);

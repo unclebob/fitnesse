@@ -252,7 +252,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public VersionInfo addDirectory(File dir) throws IOException {
+  public VersionInfo addDirectory(FileVersion dir) throws IOException {
     return persistence.addDirectory(dir);
   }
 
