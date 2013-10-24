@@ -1,6 +1,0 @@
-!include <LoginExample.ScenarioLibrary
-
-!|import|
-|login.fixtures|
-
-!|script|Driver|
