@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -133,6 +134,15 @@ public class FileSystemPageFactoryTest {
     @Override
     public VersionInfo makeVersion(final FileVersion... fileVersions) {
       return null;
+    }
+
+    @Override
+    public VersionInfo addDirectory(File filePath) {
+      return null;
+    }
+
+    @Override
+    public void rename(File file, File originalFile) {
     }
 
     @Override

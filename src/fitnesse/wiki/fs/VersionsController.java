@@ -17,5 +17,9 @@ public interface VersionsController {
 
   VersionInfo makeVersion(FileVersion... fileVersion) throws IOException;
 
+  VersionInfo addDirectory(final File filePath) throws IOException;
+
+  void rename(File file, File originalFile) throws IOException;
+
   void delete(File... files);
 }

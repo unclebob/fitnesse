@@ -19,4 +19,6 @@ public interface FileSystem {
   void delete(File path);
 
   long lastModified(File file);
+
+  void rename(File file, File originalFile) throws IOException;
 }

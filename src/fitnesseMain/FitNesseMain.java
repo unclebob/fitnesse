@@ -15,6 +15,8 @@ import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.fs.VersionsController;
+import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
 import util.CommandLine;
 
@@ -117,6 +119,8 @@ public class FitNesseMain {
     builder.rootPath = arguments.getRootPath();
     builder.rootDirectoryName = arguments.getRootDirectory();
 
+    builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
+    builder.versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     // This should be done before the root wiki page is created:

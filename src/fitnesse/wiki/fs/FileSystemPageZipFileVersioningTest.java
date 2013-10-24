@@ -117,7 +117,6 @@ public class FileSystemPageZipFileVersioningTest {
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex1 = format(modificationTime);
     data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex1));
-    //versionsController.makeZipVersion(page, data);
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex2 = format(modificationTime);

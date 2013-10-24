@@ -14,7 +14,7 @@ import java.util.Date;
 import fitnesse.wiki.VersionInfo;
 import util.FileUtil;
 
-public class SimpleFileVersionsController implements VersionsController, FileVersionsController {
+public class SimpleFileVersionsController implements VersionsController {
 
   private final FileSystem fileSystem;
 
@@ -77,7 +77,7 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
   @Override
   public VersionInfo makeVersion(FileVersion... fileVersions) throws IOException {
     for (FileVersion fileVersion : fileVersions) {
-      createDirectory(fileVersion.getFile().getParentFile());
+      addDirectory(fileVersion.getFile().getParentFile());
       InputStream content = fileVersion.getContent();
       try {
         fileSystem.makeFile(fileVersion.getFile(), content);
@@ -95,45 +95,16 @@ public class SimpleFileVersionsController implements VersionsController, FileVer
     }
   }
 
-  private void createDirectory(final File filePath) throws IOException {
+  @Override
+  public VersionInfo addDirectory(final File filePath) throws IOException {
     if (!fileSystem.exists(filePath)) {
       fileSystem.makeDirectory(filePath);
     }
+    return VersionInfo.makeVersionInfo("", new Date(fileSystem.lastModified(filePath)));
   }
 
   @Override
-  public void addFile(FileVersion... fileVersions) throws IOException {
-    for (FileVersion fileVersion : fileVersions) {
-      InputStream input = null;
-      OutputStream output = null;
-      try {
-        input = fileVersion.getContent();
-        output = new BufferedOutputStream(new FileOutputStream(fileVersion.getFile()));
-        FileUtil.copyBytes(input, output);
-      } finally {
-        if (input != null)
-          input.close();
-        if (output != null)
-          output.close();
-      }
-    }
-  }
-
-  @Override
-  public void delete(File file) {
-    if (file.isDirectory())
-      FileUtil.deleteFileSystemDirectory(file);
-    else
-      file.delete();
-  }
-
-  @Override
-  public void addDirectory(File dir) {
-    dir.mkdirs();
-  }
-
-  @Override
-  public void renameFile(File file, File oldFile) {
-    oldFile.renameTo(file);
+  public void rename(File file, File oldFile) throws IOException {
+    fileSystem.rename(file, oldFile);
   }
 }

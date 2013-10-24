@@ -3,6 +3,7 @@
 package fitnesse.responders.files;
 
 import java.io.File;
+import java.io.IOException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -13,7 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class CreateDirectoryResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();
@@ -21,7 +22,7 @@ public class CreateDirectoryResponder implements SecureResponder {
     String pathname = context.getRootPagePath() + "/" + resource + dirname;
     File file = new File(pathname);
     if (!file.exists())
-      FileVersionsControllerFactory.getVersionsController(context).addDirectory(file);
+      context.versionsController.addDirectory(file);
 
     response.redirect("/" + resource);
     return response;

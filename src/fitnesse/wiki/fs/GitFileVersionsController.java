@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * This class requires jGit to be available.
  */
-public class GitFileVersionsController implements VersionsController, RecentChanges, FileVersionsController {
+public class GitFileVersionsController implements VersionsController, RecentChanges {
 
   private static final int RECENT_CHANGES_DEPTH = 100;
 
@@ -170,21 +170,6 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     return pagePath;
   }
 
-  private String getPath(FileSystemPage page, Repository repository) {
-    return getPath(new File(page.getFileSystemPath()), repository);
-  }
-
-  private VersionInfo getCurrentVersion(Repository repository) {
-    try {
-      ObjectId head = repository.resolve("HEAD");
-      RevWalk walk = new RevWalk(repository);
-      RevCommit revCommit = walk.parseCommit(head);
-      return makeVersionInfo(revCommit);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private GitVersionInfo makeVersionInfo(RevCommit revCommit) {
     PersonIdent authorIdent = revCommit.getAuthorIdent();
     return new GitVersionInfo(revCommit.name(), authorIdent.getName(), authorIdent.getWhen(), revCommit.getShortMessage());
@@ -249,49 +234,14 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void addFile(FileVersion... fileVersions) throws IOException {
-    Repository repository = getRepository(fileVersions[0].getFile());
-    persistence.addFile(fileVersions);
-    Git git = new Git(repository);
-    try {
-      AddCommand addCommand = git.add();
-      for (FileVersion fileVersion : fileVersions) {
-        addCommand.addFilepattern(getPath(fileVersion.getFile(), repository));
-
-      }
-      addCommand.call();
-      // TODO: read message from VersionInfo.
-      commit(git, "FitNesse files updated.");
-    } catch (GitAPIException e) {
-      throw new RuntimeException(e);
-    }
+  public VersionInfo addDirectory(File dir) throws IOException {
+    return persistence.addDirectory(dir);
   }
 
   @Override
-  public void delete(File file) {
+  public void rename(File file, File oldFile) throws IOException {
     Repository repository = getRepository(file);
-    persistence.delete(file);
-    Git git = new Git(repository);
-    try {
-      git.rm()
-              .addFilepattern(getPath(file, repository))
-              .call();
-      // TODO: read message from VersionInfo.
-      commit(git, String.format("FitNesse file %s deleted.", file.getName()));
-    } catch (GitAPIException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public void addDirectory(File dir) {
-    persistence.addDirectory(dir);
-  }
-
-  @Override
-  public void renameFile(File file, File oldFile) {
-    Repository repository = getRepository(file);
-    persistence.renameFile(file, oldFile);
+    persistence.rename(file, oldFile);
     Git git = new Git(repository);
     try {
       git.add()

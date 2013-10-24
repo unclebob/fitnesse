@@ -22,7 +22,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public void makeDirectory(File path) throws IOException {
     if (!path.mkdirs()) {
-      throw new IOException("make directory failed: " + path);
+      throw new IOException("make directory failed: " + path.getAbsolutePath());
     }
   }
 
@@ -58,5 +58,12 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public long lastModified(File file) {
     return file.exists() ? file.lastModified() : Clock.currentTimeInMillis();
+  }
+
+  @Override
+  public void rename(File file, File originalFile) throws IOException {
+    if (!originalFile.renameTo(file)) {
+      throw new IOException("file rename failed: " + originalFile.getAbsolutePath());
+    }
   }
 }

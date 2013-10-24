@@ -36,7 +36,7 @@ public class UploadResponder implements SecureResponder {
     final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
     if (uploadedFile.isUsable()) {
       final File file = makeFileToCreate(uploadedFile, resource);
-      FileVersionsControllerFactory.getVersionsController(context).addFile(new FileVersion() {
+      context.versionsController.makeVersion(new FileVersion() {
 
         @Override
         public File getFile() {

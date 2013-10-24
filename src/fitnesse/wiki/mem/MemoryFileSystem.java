@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import fitnesse.wiki.fs.FileSystem;
+import util.Clock;
 import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
@@ -80,7 +81,13 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public long lastModified(File file) {
-    return files.get(file.getPath()).lastModified;
+    Payload payload = files.get(file.getPath());
+    return payload != null ? payload.lastModified : Clock.currentTimeInMillis();
+  }
+
+  @Override
+  public void rename(File file, File originalFile) {
+    throw new RuntimeException("FileSystem.rename() has not been implemented for Memory file system.");
   }
 
   private Payload payload(String payload) {

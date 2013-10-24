@@ -92,6 +92,16 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
+  public VersionInfo addDirectory(File filePath) throws IOException {
+    return persistence.addDirectory(filePath);
+  }
+
+  @Override
+  public void rename(File file, File originalFile) throws IOException {
+    persistence.rename(file, originalFile);
+  }
+
+  @Override
   public void delete(File... files) {
     persistence.delete(files);
   }
