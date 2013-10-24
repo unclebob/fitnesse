@@ -1,11 +1,14 @@
 package fitnesse.wiki.fs;
 
+import java.io.File;
+
 import fitnesse.wiki.WikiPage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -51,6 +54,21 @@ public class GitFileVersionsControllerTest {
     GitFileVersionsController versionsController = new GitFileVersionsController();
     WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
 
-    assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith("|FitNesse content updated."));
+    assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith("|[FitNesse] Updated files: TestDir/RooT/TestPage/content.txt and TestDir/RooT/TestPage/properties.xml.|"));
   }
+
+  @Test
+  public void shouldFormatSingleFileNameForCommit() {
+    GitFileVersionsController versionsController = new GitFileVersionsController();
+    String formatted = versionsController.formatFiles(new File[] {new File("simple.txt")});
+    assertEquals("simple.txt", formatted);
+  }
+
+  @Test
+  public void shouldFormatFileNamesForCommit() {
+    GitFileVersionsController versionsController = new GitFileVersionsController();
+    String formatted = versionsController.formatFiles(new File[] {new File("simple.txt"), new File("middle.xml"), new File("complex/name.txt")});
+    assertEquals("simple.txt, middle.xml and complex/name.txt", formatted);
+  }
+
 }

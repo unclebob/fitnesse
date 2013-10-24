@@ -125,7 +125,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
         adder.addFilepattern(getPath(fileVersion.getFile(), repository));
       }
       adder.call();
-      commit(git, String.format("FitNesse content updated."));
+      commit(git, String.format("[FitNesse] Updated files: %s.", formatFileVersions(fileVersions)));
     } catch (GitAPIException e) {
       throw new IOException("Unable to commit changes", e);
     }
@@ -142,11 +142,33 @@ public class GitFileVersionsController implements VersionsController, RecentChan
         remover.addFilepattern(getPath(file, repository));
       }
       remover.call();
-      commit(git, String.format("FitNesse pages deleted."));
+      commit(git, String.format("[FitNesse] Deleted files: %s.", formatFiles(files)));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     persistence.delete(files);
+  }
+
+  private String formatFileVersions(FileVersion[] fileVersions) {
+    File[] files = new File[fileVersions.length];
+    int counter = 0;
+    for (FileVersion fileVersion : fileVersions) {
+      files[counter++] = fileVersion.getFile();
+    }
+    return formatFiles(files);
+  }
+
+  String formatFiles(File[] files) {
+    StringBuilder builder = new StringBuilder(128);
+    int counter = 0;
+    for (File file : files) {
+      if (counter > 0) {
+        builder.append(counter == files.length - 1 ? " and " : ", ");
+      }
+      builder.append(file.getPath());
+      counter++;
+    }
+    return builder.toString();
   }
 
   private void commit(Git git, String message) throws GitAPIException {
@@ -185,10 +207,6 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     } catch (IOException e) {
       throw new RuntimeException("No Git repository found", e);
     }
-  }
-
-  public static Repository getRepository(FileSystemPage page) {
-    return getRepository(new File(page.getFileSystemPath()));
   }
 
   @Override
@@ -250,7 +268,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
       git.rm()
               .addFilepattern(getPath(oldFile, repository))
               .call();
-      commit(git, String.format("FitNesse file %s moved to %s.", oldFile.getName(), file.getName()));
+      commit(git, String.format("[FitNesse] Renamed file %s to %s.", oldFile.getPath(), file.getPath()));
     } catch (GitAPIException e) {
       throw new RuntimeException(e);
     }
