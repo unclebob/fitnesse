@@ -22,10 +22,7 @@ public class DeleteFileResponder implements SecureResponder {
     String pathname = context.getRootPagePath() + "/" + resource + filename;
     File file = new File(pathname);
 
-    if (file.isDirectory())
-      FileVersionsControllerFactory.getVersionsController(context).deleteDirectory(file);
-    else
-      FileVersionsControllerFactory.getVersionsController(context).deleteFile(file);
+    context.versionsController.delete(file);
 
     response.redirect("/" + resource);
     return response;

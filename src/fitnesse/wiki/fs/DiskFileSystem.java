@@ -3,36 +3,51 @@ package fitnesse.wiki.fs;
 import util.Clock;
 import util.FileUtil;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class DiskFileSystem implements FileSystem {
-  public void makeFile(String path, String content) throws IOException {
-    FileUtil.createFile(path, content);
-  }
-
-  public void makeDirectory(String path) throws IOException {
-    if (!new File(path).mkdirs()) {
-      throw new IOException("make directory failed: " + path);
-    }
-  }
-
-  public boolean exists(String path) {
-    return new File(path).exists();
-  }
-
-  public String[] list(String path) {
-    File file = new File(path);
-    return file.isDirectory() ? file.list() : new String[]{};
-  }
-
-  public String getContent(String path) throws IOException {
-    return FileUtil.getFileContent(path);
+  public void makeFile(File file, String content) throws IOException {
+    FileUtil.createFile(file, content);
   }
 
   @Override
-  public void delete(String pathToDelete) {
-    final File fileToBeDeleted = new File(pathToDelete);
+  public void makeFile(File file, InputStream content) throws IOException {
+    FileUtil.createFile(file, content);
+  }
+
+  @Override
+  public void makeDirectory(File path) throws IOException {
+    if (!path.mkdirs()) {
+      throw new IOException("make directory failed: " + path.getAbsolutePath());
+    }
+  }
+
+  @Override
+  public boolean exists(File file) {
+    return file.exists();
+  }
+
+  @Override
+  public String[] list(File path) {
+    return path.isDirectory() ? path.list() : new String[]{};
+  }
+
+  @Override
+  public String getContent(File file) throws IOException {
+    return FileUtil.getFileContent(file);
+  }
+
+  @Override
+  public InputStream getInputStream(File file) throws IOException {
+    return new BufferedInputStream(new FileInputStream(file));
+  }
+
+  @Override
+  public void delete(File fileToBeDeleted) {
     if (fileToBeDeleted.isDirectory()) {
       FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
     } else {
@@ -41,8 +56,14 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public long lastModified(String path) {
-    File file = new File(path);
+  public long lastModified(File file) {
     return file.exists() ? file.lastModified() : Clock.currentTimeInMillis();
+  }
+
+  @Override
+  public void rename(File file, File originalFile) throws IOException {
+    if (!originalFile.renameTo(file)) {
+      throw new IOException("file rename failed: " + originalFile.getAbsolutePath());
+    }
   }
 }

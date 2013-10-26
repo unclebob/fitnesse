@@ -20,6 +20,7 @@ public class WikiImportTestEventListener implements TestEventListener {
     this.importerFactory = importerFactory;
   }
 
+  @Override
   public void notifyPreTest(TestResponder testResponder, PageData data) {
     TestEventProcessor eventProcessor;
     if (testResponder instanceof SuiteResponder)

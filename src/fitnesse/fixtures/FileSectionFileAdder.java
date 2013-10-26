@@ -9,12 +9,12 @@ public class FileSectionFileAdder {
   private String type;
 
   public boolean valid() throws Exception {
-    File file = null;
+    File file;
     if ("dir".equals(type)) {
-      file = new File(FileSection.getFileSection().getPath() + "/" + path);
+      file = new File(FileSection.getFileSection(), path);
       file.mkdir();
     } else {
-      file = new File(FileSection.getFileSection().getPath() + "/" + path);
+      file = new File(FileSection.getFileSection(), path);
       file.createNewFile();
     }
     return file.exists();

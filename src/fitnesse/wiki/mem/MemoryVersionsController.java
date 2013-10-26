@@ -1,5 +1,7 @@
 package fitnesse.wiki.mem;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,10 +10,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fitnesse.wiki.NoSuchVersionException;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.FileVersion;
 import fitnesse.wiki.fs.SimpleFileVersionsController;
 import fitnesse.wiki.fs.VersionsController;
 
@@ -31,42 +32,44 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public PageData getRevisionData(FileSystemPage page, String label) {
+  public FileVersion[] getRevisionData(String label, File... files) {
     if (label == null) {
-      return persistence.getRevisionData(page, null);
+      return persistence.getRevisionData(null, files);
     }
-    FileVersions fileVersions = getFileVersions(page);
-    if (fileVersions == null) return null;
-    return fileVersions.getRevisionData(label);
+    return getFileVersions(files[0]).getRevisionData(label);
   }
 
   @Override
-  public Collection<VersionInfo> history(FileSystemPage page) {
-    FileVersions fileVersions = getFileVersions(page);
+  public Collection<VersionInfo> history(File... files) {
+    FileVersions fileVersions = getFileVersions(files[0]);
     if (fileVersions == null) return null;
     return fileVersions.history();
   }
 
   @Override
-  public VersionInfo makeVersion(FileSystemPage page, PageData data) {
-    FileVersions fileVersions = getFileVersions(page);
+  public VersionInfo makeVersion(FileVersion... fileVersions) throws IOException {
     // For FilePageFactory, it does some lookups in the file system.
-    persistence.makeVersion(page, data);
-    return fileVersions.makeVersion(data);
+    persistence.makeVersion(fileVersions);
+    return getFileVersions(fileVersions[0].getFile()).makeVersion(fileVersions);
   }
 
   @Override
-  public VersionInfo getCurrentVersion(FileSystemPage page) {
-    return persistence.getCurrentVersion(page);
+  public VersionInfo addDirectory(FileVersion filePath) throws IOException {
+    return persistence.addDirectory(filePath);
   }
 
   @Override
-  public void delete(FileSystemPage page) {
-    persistence.delete(page);
+  public void rename(File file, File originalFile) throws IOException {
+    persistence.rename(file, originalFile);
   }
 
-  private FileVersions getFileVersions(FileSystemPage page) {
-    final String key = page.getFileSystemPath();
+  @Override
+  public void delete(File... files) {
+    persistence.delete(files);
+  }
+
+  private FileVersions getFileVersions(File file) {
+    String key = file.getPath();
     FileVersions fileVersions = versions.get(key);
     if (fileVersions == null) {
       fileVersions = new FileVersions();
@@ -76,40 +79,40 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   private static class FileVersions {
-    protected Map<String, PageData> versions = new TreeMap<String, PageData>();
+    protected Map<String, FileVersion[]> versions = new TreeMap<String, FileVersion[]>();
 
-    protected VersionInfo makeVersion(PageData current) {
-      VersionInfo version = makeVersionInfo(current);
-      versions.put(version.getName(), new PageData(current));
+    protected VersionInfo makeVersion(FileVersion... current) {
+      VersionInfo version = makeVersionInfo(current[0]);
+      versions.put(version.getName(), current);
       return version;
     }
 
-    private VersionInfo makeVersionInfo(PageData current) {
+    private VersionInfo makeVersionInfo(FileVersion current) {
       String name = String.valueOf(versions.size());
       return makeVersionInfo(current, name);
     }
 
     public Collection<VersionInfo> history() {
       LinkedList<VersionInfo> set = new LinkedList<VersionInfo>();
-      for (Map.Entry<String, PageData> entry : versions.entrySet()) {
-        set.add(makeVersionInfo(entry.getValue(), entry.getKey()));
+      for (Map.Entry<String, FileVersion[]> entry : versions.entrySet()) {
+        set.add(makeVersionInfo(entry.getValue()[0], entry.getKey()));
       }
       return set;
     }
 
-    public PageData getRevisionData(String versionName) {
-      PageData version = versions.get(versionName);
+    public FileVersion[] getRevisionData(String versionName) {
+      FileVersion[] version = versions.get(versionName);
       if (version == null)
         throw new NoSuchVersionException("There is no version '" + versionName + "'");
 
-      return new PageData(version);
+      return version;
     }
 
-    protected VersionInfo makeVersionInfo(PageData current, String name) {
-      String author = current.getAttribute(PageData.LAST_MODIFYING_USER);
+    protected VersionInfo makeVersionInfo(FileVersion current, String name) {
+      String author = current.getAuthor();
       if (author == null)
         author = "";
-      Date date = current.getProperties().getLastModificationTime();
+      Date date = current.getLastModificationTime();
       return new VersionInfo(name, author, date);
     }
 

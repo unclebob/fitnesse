@@ -1,21 +1,62 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.VersionInfo;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+
+import fitnesse.wiki.VersionInfo;
 
 public interface VersionsController {
 
+  /**
+   * Set the number of elements (either in days or number) that will be returned by the history() method.
+   * @param historyDepth
+   */
   void setHistoryDepth(int historyDepth);
 
-  PageData getRevisionData(FileSystemPage page, String label);
+  /**
+   * Obtain data for the files requested at a specific revision,
+   * @param revision The revision to look for
+   * @param files Files to obtain data for
+   * @return An array of FileVersion elements is returned. The size is equal to the number of files requested,
+   *    although there is no grarantee all files will be found at a specific revision.
+   */
+  FileVersion[] getRevisionData(String revision, File... files);
 
-  Collection<? extends VersionInfo> history(FileSystemPage page);
+  /**
+   * Get history information for a set of files.
+   * @param files Files to look for.
+   * @return history
+   */
+  Collection<? extends VersionInfo> history(File... files);
 
-  VersionInfo makeVersion(FileSystemPage page, PageData data);
+  /**
+   * Store files as one revision.
+   * @param fileVersion The files to store
+   * @return Version information. VersionInfo.label should refer to this revision, so it can be retrieved later.
+   * @throws IOException
+   */
+  VersionInfo makeVersion(FileVersion... fileVersion) throws IOException;
 
-  VersionInfo getCurrentVersion(FileSystemPage page);
+  /**
+   * Add a directory. We only add them one at a time.
+   * @param filePath
+   * @return
+   * @throws IOException
+   */
+  VersionInfo addDirectory(final FileVersion filePath) throws IOException;
 
-  void delete(FileSystemPage page);
+  /**
+   * Rename a file. Used for the files/ section. No author information is stored here.
+   * @param file File to rename to.
+   * @param originalFile The original file.
+   * @throws IOException
+   */
+  void rename(File file, File originalFile) throws IOException;
+
+  /**
+   * Delete a bunch of files.
+   * @param files
+   */
+  void delete(File... files);
 }

@@ -11,6 +11,7 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 import org.junit.Before;
 import org.junit.Test;
 

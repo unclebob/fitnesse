@@ -1,5 +1,7 @@
 package fitnesse.wiki.fs;
 
+import java.io.File;
+
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.mem.MemoryFileSystem;
@@ -26,7 +28,7 @@ public class ExternalTestPageTest {
 
   private ExternalTestPage makePage(String directory, String name, String content) throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    String path = directory + "/" + name;
+    File path = new File(directory, name);
     fileSystem.makeFile(path, content);
     FileSystemPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), new SystemVariableSource()).makeRootPage("", "RooT");
     return new ExternalTestPage(path, name, rootPage, fileSystem);

@@ -9,6 +9,8 @@ import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -29,37 +31,37 @@ public class FileSystemPageFactoryTest {
 
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/ExternalSuite/myfile.html"), "stuff");
         WikiPage page = rootPage.addChildPage("ExternalSuite");
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
     @Test
     public void DirectoryOfDirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/ExternalSuite/subsuite/myfile.html"), "stuff");
         WikiPage page = rootPage.addChildPage("ExternalSuite");
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
     @Test
     public void DirectoryWithoutHtmlFilesIsFileSystemPage() throws Exception {
-        fileSystem.makeFile("./somepath/WikiPage/myfile.txt", "stuff");
-        fileSystem.makeFile("./somepath/OtherPage/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/WikiPage/myfile.txt"), "stuff");
+        fileSystem.makeFile(new File("./somepath/OtherPage/myfile.html"), "stuff");
         WikiPage page = rootPage.addChildPage("WikiPage");
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
     @Test
     public void DirectoryWithContentIsFileSystemPage() throws Exception {
-        fileSystem.makeFile("./somepath/WikiPage/content.txt", "stuff");
-        fileSystem.makeFile("./somepath/WikiPage/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/WikiPage/content.txt"), "stuff");
+        fileSystem.makeFile(new File("./somepath/WikiPage/subsuite/myfile.html"), "stuff");
         WikiPage page = rootPage.addChildPage("WikiPage");
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
     @Test
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/ExternalSuite/myfile.html"), "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getNormalChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
@@ -68,7 +70,7 @@ public class FileSystemPageFactoryTest {
 
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(new File("./somepath/ExternalSuite/subsuite/myfile.html"), "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getNormalChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
@@ -120,31 +122,31 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public PageData getRevisionData(final FileSystemPage page, final String label) {
-      try {
-        return page.getData();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+    public FileVersion[] getRevisionData(final String label, final File... files) {
+      return null;
     }
 
     @Override
-    public Collection<VersionInfo> history(final FileSystemPage page) {
+    public Collection<VersionInfo> history(final File... files) {
       return new HashSet<VersionInfo>();
     }
 
     @Override
-    public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
+    public VersionInfo makeVersion(final FileVersion... fileVersions) {
       return null;
     }
 
     @Override
-    public VersionInfo getCurrentVersion(FileSystemPage page) {
+    public VersionInfo addDirectory(FileVersion filePath) {
       return null;
     }
 
     @Override
-    public void delete(FileSystemPage page) {
+    public void rename(File file, File originalFile) {
+    }
+
+    @Override
+    public void delete(File... files) {
     }
   }
 
