@@ -47,17 +47,25 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public void start() {
     client.start();
-    testSystemStarted(this, descriptor.getTestSystemName(), descriptor.getTestRunner());
+    testSystemStarted(this);
   }
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
     processingQueue.addLast(pageToTest);
     String html = pageToTest.getDecoratedData().getHtml();
-    if (html.length() == 0)
-      client.send(EMPTY_PAGE_CONTENT);
-    else
-      client.send(html);
+    try {
+      if (html.length() == 0)
+        client.send(EMPTY_PAGE_CONTENT);
+      else
+        client.send(html);
+    } catch (InterruptedException e) {
+      exceptionOccurred(e);
+      throw e;
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
+    }
   }
 
   @Override
@@ -70,7 +78,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public void kill() {
     client.kill();
-    testSystemStopped(client.getExecutionLog(), null);
   }
 
   @Override
@@ -105,7 +112,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  private void testSystemStarted(TestSystem testSystem) {
     testSystemListener.testSystemStarted(testSystem);
   }
 

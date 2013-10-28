@@ -15,7 +15,7 @@ public class PageTitle {
   private String pageTags;
 
   public PageTitle(WikiPagePath pagePath) {
-    pagePath = pagePath.clone();
+    pagePath = pagePath.copy();
     List<String> names = pagePath.getNames();
     link = PathParser.render(pagePath);
     if (names.size() > 0) {
@@ -56,11 +56,11 @@ public class PageTitle {
   public PageTitle(String path, String separator) {
     String[] crumbs = path.split(separator);
     String crumb;
-    String trail = "";
+    StringBuilder trail = new StringBuilder(64);
     for (int i = 0; i < crumbs.length - 1; i++) {
       crumb = crumbs[i];
       breadCrumbs.add(new BreadCrumb(crumb, trail + crumb));
-      trail = trail + crumb + separator;
+      trail.append(crumb).append(separator);
     }
     if (crumbs.length > 0) {
       crumb = crumbs[crumbs.length - 1];
@@ -110,8 +110,7 @@ public class PageTitle {
   }
   
   public void setPageTags(String pageTags) {
-    if(pageTags == null) return;
-    if(pageTags == "") return;
+    if(pageTags == null || "".equals(pageTags)) return;
     this.pageTags = pageTags;
   }   
 

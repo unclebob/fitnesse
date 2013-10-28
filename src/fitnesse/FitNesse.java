@@ -18,7 +18,7 @@ import java.net.BindException;
 public class FitNesse {
   private final FitNesseContext context;
   private boolean makeDirs = true;
-  private SocketService theService;
+  private volatile SocketService theService;
 
   public FitNesse(FitNesseContext context) {
     this.context = context;

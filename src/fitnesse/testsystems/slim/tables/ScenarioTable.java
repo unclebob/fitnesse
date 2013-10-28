@@ -154,7 +154,7 @@ public class ScenarioTable extends SlimTable {
                    SlimTable parentTable, int row) throws SyntaxError {
     Table newTable = getTable().asTemplate(new Table.CellContentSubstitution() {
       @Override
-      public String substitute(int col, int row, String content) throws SyntaxError {
+      public String substitute(String content) throws SyntaxError {
         for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {

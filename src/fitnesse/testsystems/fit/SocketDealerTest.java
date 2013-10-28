@@ -17,7 +17,6 @@ import org.junit.Test;
 public class SocketDealerTest {
   private SocketDealer dealer;
   private SimpleSocketSeeker seeker;
-  private int ticket;
   private SimpleDoner doner;
 
   @Before
@@ -27,14 +26,12 @@ public class SocketDealerTest {
 
   public static class SimpleDoner implements SocketDoner {
     public MockSocket socket = new MockSocket("");
-    boolean finished = false;
 
     public Socket donateSocket() {
       return socket;
     }
 
     public void finishedWithSocket() {
-      finished = true;
     }
   }
 
@@ -63,7 +60,7 @@ public class SocketDealerTest {
 
   private void doSimpleDealing() throws Exception {
     seeker = new SimpleSocketSeeker();
-    ticket = dealer.seekingSocket(seeker);
+    int ticket = dealer.seekingSocket(seeker);
     doner = new SimpleDoner();
     dealer.dealSocketTo(ticket, doner);
   }

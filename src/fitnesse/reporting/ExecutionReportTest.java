@@ -29,12 +29,11 @@ import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
-  private WikiPage root;
   private FitNesseContext context;
 
   @Before
   public void setup() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
   }
 

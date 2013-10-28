@@ -52,7 +52,8 @@ public class SlimService {
     slimservice.accept();
   }
 
-  public static void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
+  // For testing only -- for now
+  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
       System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
       service.interrupt();

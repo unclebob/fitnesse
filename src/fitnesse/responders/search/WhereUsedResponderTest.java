@@ -19,14 +19,13 @@ import org.junit.Test;
 
 public class WhereUsedResponderTest {
   private WikiPage root;
-  private WikiPage pageTwo;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
     WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "PageOne");
-    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+    WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne");
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
   }
 

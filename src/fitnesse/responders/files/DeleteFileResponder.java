@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import java.io.File;
 
-import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -23,10 +22,7 @@ public class DeleteFileResponder implements SecureResponder {
     String pathname = context.getRootPagePath() + "/" + resource + filename;
     File file = new File(pathname);
 
-    if (file.isDirectory())
-      FileUtil.deleteFileSystemDirectory(file);
-    else
-      file.delete();
+    context.versionsController.delete(file);
 
     response.redirect("/" + resource);
     return response;

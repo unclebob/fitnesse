@@ -2,6 +2,7 @@ package fitnesse.wiki.fs;
 
 import fitnesse.wiki.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,9 +18,9 @@ import fitnesse.wiki.WikiPage;
 public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
   private FileSystem fileSystem;
-  private String path;
+  private File path;
 
-  public ExternalTestPage(String path, String name, BaseWikiPage parent, FileSystem fileSystem) {
+  public ExternalTestPage(File path, String name, BaseWikiPage parent, FileSystem fileSystem) {
     super(name, parent);
     this.path = path;
     this.fileSystem = fileSystem;

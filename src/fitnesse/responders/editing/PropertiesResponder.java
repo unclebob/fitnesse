@@ -128,9 +128,9 @@ public class PropertiesResponder implements SecureResponder {
 
   private void makePropertiesForm() {
     makePageTypeRadiosHtml(pageData);
-    makeTestActionCheckboxesHtml(pageData);
-    makeNavigationCheckboxesHtml(pageData);
-    makeSecurityCheckboxesHtml(pageData);
+    makeTestActionCheckboxesHtml();
+    makeNavigationCheckboxesHtml();
+    makeSecurityCheckboxesHtml();
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -201,15 +201,15 @@ public class PropertiesResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public void makeTestActionCheckboxesHtml(PageData pageData) {
+  public void makeTestActionCheckboxesHtml() {
     html.put("actionTypes", ACTION_ATTRIBUTES);
   }
 
-  public void makeNavigationCheckboxesHtml(PageData pageData) {
+  public void makeNavigationCheckboxesHtml() {
     html.put("navigationTypes", NAVIGATION_ATTRIBUTES);
   }
 
-  public void makeSecurityCheckboxesHtml(PageData pageData) {
+  public void makeSecurityCheckboxesHtml() {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
   }
 

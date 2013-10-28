@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
@@ -78,6 +79,7 @@ public class FitNesseUtil {
     builder.rootDirectoryName = rootDirectoryName;
     builder.port = port;
     builder.authenticator = authenticator;
+    builder.versionsController = new ZipFileVersionsController();
     builder.recentChanges = new RecentChangesWikiPage();
     builder.properties = new Properties();
     FitNesseContext context = builder.createFitNesseContext();

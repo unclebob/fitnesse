@@ -26,13 +26,11 @@ import org.junit.Test;
 public class VersionResponderTest {
   private String oldVersion;
   private SimpleResponse response;
-  private WikiPage root;
-  private WikiPage page;
 
   private void makeTestResponse(String pageName) throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     
     WikiPageProperties properties = data.getProperties();

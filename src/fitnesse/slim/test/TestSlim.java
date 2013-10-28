@@ -29,10 +29,6 @@ public class TestSlim implements TestSlimInterface {
 
   }
 
-  public void runForever() {
-    while (true) {}
-  }
-
   public TestSlim(int constructorArg) {
     this.constructorArg = constructorArg;
   }

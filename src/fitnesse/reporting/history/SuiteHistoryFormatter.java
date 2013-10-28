@@ -38,6 +38,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
 
   @Override
   public void close() throws IOException {
+    if (suiteTime == null) return;
     suiteTime.stop();
     super.close();
     if (writerFactory != null)

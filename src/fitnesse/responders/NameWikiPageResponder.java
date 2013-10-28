@@ -47,23 +47,25 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
   private String makeLine(WikiPage child, String prefix) {
     int numberOfChildren = child.getChildren().size();
 	
-    String line = prefix + child.getName();
+    StringBuilder line = new StringBuilder(64)
+            .append(prefix)
+            .append(child.getName());
 	
     if (request.hasInput("ShowChildCount")) {
-      line += " " + numberOfChildren;
+      line.append(" ").append(numberOfChildren);
     }
 	
     if (request.hasInput("ShowTags")) {
 	  Set<String> tags = getTags(child);
 	  if(!tags.isEmpty()) {
-	    line += " ";
+	    line.append(" ");
 		for(String tag : tags) {
-          line += "[" + tag + "]";
+          line.append("[").append(tag).append("]");
 		}
       }
 	}
 	
-    return line;
+    return line.toString();
   }
   
   private Set<String> getTags(WikiPage page) {

@@ -19,9 +19,7 @@ import org.junit.Test;
 
 public class AuthenticatorTest {
   SimpleAuthenticator authenticator;
-  private WikiPage root;
   private MockRequest request;
-  private Responder responder;
   private Class<? extends Responder> responderType;
   private DummySecureResponder privilegedResponder;
   private FitNesseContext context;
@@ -42,7 +40,7 @@ public class AuthenticatorTest {
   
   @Before
   public void setUp() {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage frontpage = root.addChildPage("FrontPage");
     makeReadSecure(frontpage);
     authenticator = new SimpleAuthenticator();
@@ -73,7 +71,7 @@ public class AuthenticatorTest {
   }
 
   private void makeResponder() {
-    responder = authenticator.authenticate(context, request, privilegedResponder);
+    Responder responder = authenticator.authenticate(context, request, privilegedResponder);
     responderType = responder.getClass();
   }
 }

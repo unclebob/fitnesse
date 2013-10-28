@@ -20,7 +20,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
 public class CompositeExecutionLogTest {
-  private WikiPage testPage;
   private MockCommandRunner runner;
   private CompositeExecutionLog log;
   private WikiPage root;
@@ -35,7 +34,7 @@ public class CompositeExecutionLogTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    testPage = root.addChildPage("TestPage");
+    WikiPage testPage = root.addChildPage("TestPage");
     PageData data = testPage.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");

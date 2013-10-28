@@ -17,8 +17,6 @@ public class VersionComparerResponderTest {
   private String firstVersion;
   private String secondVersion;
   private SimpleResponse response;
-  private WikiPage root;
-  private WikiPage page;
   private VersionComparerResponder responder;
   private MockRequest request;
   private FitNesseContext context;
@@ -26,9 +24,9 @@ public class VersionComparerResponderTest {
   
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    page = WikiPageUtil.addPage(root, PathParser.parse("ComparedPage"), "original content");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();
 

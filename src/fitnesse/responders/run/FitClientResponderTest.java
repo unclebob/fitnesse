@@ -21,17 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FitClientResponderTest {
-  private WikiPage root;
   private FitClientResponder responder;
   private MockRequest request;
   private FitNesseContext context;
-  private Response response;
-  private MockResponseSender sender;
   private WikiPage suite;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     responder = new FitClientResponder();
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(root);
@@ -106,8 +103,8 @@ public class FitClientResponderTest {
     request.setResource(name);
     if (addPaths)
       request.addInput("includePaths", "blah");
-    response = responder.makeResponse(context, request);
-    sender = new MockResponseSender();
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String result = sender.sentData();
     return result;

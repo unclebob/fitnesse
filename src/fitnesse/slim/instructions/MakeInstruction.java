@@ -50,9 +50,8 @@ public class MakeInstruction extends Instruction {
     // Probably incorrect - comparing Object[] arrays with Arrays.equals
     if (!Arrays.equals(args, that.args)) return false;
     if (!className.equals(that.className)) return false;
-    if (!instanceName.equals(that.instanceName)) return false;
+    return instanceName.equals(that.instanceName);
 
-    return true;
   }
 
   @Override

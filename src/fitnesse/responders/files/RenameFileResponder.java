@@ -3,6 +3,7 @@
 package fitnesse.responders.files;
 
 import java.io.File;
+import java.io.IOException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -13,19 +14,18 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class RenameFileResponder implements SecureResponder {
-  private String resource;
   String newFilename;
 
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     Response response = new SimpleResponse();
-    resource = request.getResource();
+    String resource = request.getResource();
     String filename = (String) request.getInput("filename");
     newFilename = (String) request.getInput("newName");
     newFilename = newFilename.trim();
 
     String pathname = context.getRootPagePath() + "/" + resource;
-    File file = new File(pathname + filename);
-    file.renameTo(new File(pathname + newFilename));
+    context.versionsController.rename(
+            new File(pathname + newFilename), new File(pathname + filename));
     response.redirect("/" + resource);
     return response;
   }

@@ -191,7 +191,7 @@ public class SlimCommandRunningClient implements SlimClient {
     	length = Integer.parseInt(resultLength);
     }
     catch (NumberFormatException e){
-    	throw new RuntimeException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    	throw new IOException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
     }
 	return length;
   }
@@ -209,7 +209,7 @@ public class SlimCommandRunningClient implements SlimClient {
     kill();
   }
 
-  public static Map<String, Object> resultToMap(List<? extends Object> slimResults) {
+  public static Map<String, Object> resultToMap(List<?> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
       List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);

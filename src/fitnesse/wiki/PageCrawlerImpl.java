@@ -91,7 +91,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return name.toString();
   }
 
-  public WikiPage getClosestInheritedPage(WikiPage context, final String pageName) {
+  public WikiPage getClosestInheritedPage(final String pageName) {
     final WikiPage[] foundPage = new WikiPage[1];
     traversePageAndAncestors(new TraversalListener<WikiPage>() {
       @Override

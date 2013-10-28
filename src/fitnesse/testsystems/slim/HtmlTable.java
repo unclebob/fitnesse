@@ -359,7 +359,7 @@ public class HtmlTable implements Table {
   public HtmlTable asTemplate(CellContentSubstitution substitution) throws SyntaxError {
     String script = this.toHtml();
     // Quick 'n' Dirty
-    script = substitution.substitute(0, 0, script);
+    script = substitution.substitute(script);
     return new HtmlTableScanner(script).getTable(0);
   }
 

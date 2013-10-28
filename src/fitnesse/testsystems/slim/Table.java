@@ -36,6 +36,6 @@ public interface Table {
   String toString();
 
   interface CellContentSubstitution {
-    String substitute(int col, int row, String content) throws SyntaxError;
+    String substitute(String content) throws SyntaxError;
   }
 }

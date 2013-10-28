@@ -17,11 +17,9 @@ public class HtmlPageTest {
   private HtmlPage page;
   private String html;
 
-  private FitNesseContext context;
-
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null);
+    FitNesseContext context = FitNesseUtil.makeTestContext(null);
     page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme");
     html = page.html();
   }

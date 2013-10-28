@@ -18,14 +18,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SearchResponderTest {
-  private WikiPage root;
   private SearchResponder responder;
   private MockRequest request;
   private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "has something in it");
     request = new MockRequest();
     request.addInput("searchString", "blah");

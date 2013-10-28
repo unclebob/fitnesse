@@ -41,7 +41,7 @@ public class MockResponseSender implements ResponseSender {
 
   public void doSending(Response response) throws IOException {
     response.sendTo(this);
-    assert closed == true;
+    assert closed;
   }
 
   public boolean isClosed() {
@@ -55,7 +55,7 @@ public class MockResponseSender implements ResponseSender {
 
     public void doSending(Response response) throws IOException {
       response.sendTo(this);
-      assert closed == true;
+      assert closed;
     }
   }
 }

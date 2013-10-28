@@ -13,17 +13,17 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
 public class RenameFileConfirmationResponder implements SecureResponder {
-  private String resource;
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    resource = request.getResource();
+    String resource = request.getResource();
     String filename = (String) request.getInput("filename");
     
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
-    page.setMainTemplate("renameFileConfirmation.vm");
+    page.setMainTemplate("renameFileConfirmation");
     page.put("filename", filename);
+    page.put("resource", resource);
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());

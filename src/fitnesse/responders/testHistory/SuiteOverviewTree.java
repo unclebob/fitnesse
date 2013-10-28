@@ -15,12 +15,8 @@ public class SuiteOverviewTree {
 
   private TreeItem treeRoot = new TreeItem("root", "");
 
-  SuiteOverviewTree(List<String> aPagelist, String anotherone) {
-    makeTree(aPagelist);
-  }
-
   public SuiteOverviewTree(List<WikiPage> wikiPagelist) {
-    this(convertToPageList(wikiPagelist), null);
+    makeTree(convertToPageList(wikiPagelist));
   }
   
   private void makeTree(List<String> pageList) {

@@ -47,9 +47,12 @@ public class SymbolProvider {
           SymbolType.ClosePreformat, SymbolType.Text
     });
 
+    static final SymbolProvider preformatProvider = new SymbolProvider(
+          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
+
   private static final char defaultMatch = '\0';
 
-    private HashMap<Character, ArrayList<Matchable>> currentDispatch;
+  private HashMap<Character, ArrayList<Matchable>> currentDispatch;
     private ArrayList<SymbolType> symbolTypes;
     private SymbolProvider parent = null;
 

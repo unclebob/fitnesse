@@ -18,19 +18,17 @@ import org.junit.Test;
 
 public class ShutdownResponderTest {
   private FitNesseContext context;
-  private FitNesse fitnesse;
   private boolean doneShuttingDown;
 
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(FitNesseUtil.PORT);
-    fitnesse = new FitNesse(context);
-    fitnesse.start();
+    context.fitNesse.start();
   }
 
   @After
   public void tearDown() throws Exception {
-    fitnesse.stop();
+    context.fitNesse.stop();
   }
 
   @Test
@@ -38,7 +36,7 @@ public class ShutdownResponderTest {
     ShutdownResponder responder = new ShutdownResponder();
     responder.makeResponse(context, new MockRequest());
     Thread.sleep(200);
-    assertFalse(fitnesse.isRunning());
+    assertFalse(context.fitNesse.isRunning());
   }
 
   @Test
@@ -60,11 +58,11 @@ public class ShutdownResponderTest {
     Thread.sleep(500);
 
     assertTrue(doneShuttingDown);
-    assertFalse(fitnesse.isRunning());
+    assertFalse(context.fitNesse.isRunning());
   }
 
   @Test
   public void testIsSecure() throws Exception {
-    assertTrue((new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation) == true);
+    assertTrue((new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation));
   }
 }

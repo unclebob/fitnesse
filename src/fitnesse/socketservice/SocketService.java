@@ -45,7 +45,7 @@ public class SocketService {
 
   private void waitForServiceThreadToStart() {
     if (everRan) return;
-    while (running == false) Thread.yield();
+    while (!running) Thread.yield();
   }
 
   private void serviceThread() {

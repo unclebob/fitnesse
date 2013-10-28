@@ -15,7 +15,6 @@ import fitnesse.wikitext.parser.WikiWordPath;
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
   private String childName;
-  private WikiPagePath currentPagePath;
   private WikiPagePath childPath;
   private String childContent;
   private String pageType;
@@ -40,7 +39,7 @@ public class AddChildPageResponder implements SecureResponder {
     childName = (String) request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
-    currentPagePath = PathParser.parse(request.getResource());
+    WikiPagePath currentPagePath = PathParser.parse(request.getResource());
     PageCrawler pageCrawler = context.root.getPageCrawler();
     currentPage = pageCrawler.getPage(currentPagePath);
     childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
@@ -64,9 +63,7 @@ public class AddChildPageResponder implements SecureResponder {
   private boolean nameIsInvalid(String name) {
     if (name.equals(""))
       return true;
-    if (!WikiWordPath.isSingleWikiWord(name))
-      return true;
-    return false;
+    return !WikiWordPath.isSingleWikiWord(name);
   }
 
   private void createChildPage(Request request) {

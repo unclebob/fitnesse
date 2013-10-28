@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.SymbolicPageFactory;
 import fitnesse.wikitext.parser.VariableSource;
 
@@ -88,11 +87,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public WikiPage getHeaderPage() {
-    return getPageCrawler().getClosestInheritedPage(this, "PageHeader");
+    return getPageCrawler().getClosestInheritedPage("PageHeader");
   }
 
   public WikiPage getFooterPage() {
-    return getPageCrawler().getClosestInheritedPage(this, "PageFooter");
+    return getPageCrawler().getClosestInheritedPage("PageFooter");
   }
 
   public String toString() {

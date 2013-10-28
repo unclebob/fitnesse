@@ -1,5 +1,7 @@
 package fitnesse.wiki.fs;
 
+import java.io.File;
+
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Assert;
@@ -19,12 +21,12 @@ public class ExternalSuitePageTest {
 
     @Test
     public void ContentIsTableOfContents() throws Exception {
-        Assert.assertEquals("!contents", new ExternalSuitePage("somewhere", "MyTest", rootPage, fileSystem).getData().getContent());
+        Assert.assertEquals("!contents", new ExternalSuitePage(new File("somewhere"), "MyTest", rootPage, fileSystem).getData().getContent());
     }
 
     @Test
     public void ChildrenAreLoaded() throws Exception {
-        fileSystem.makeFile("somewhere/MyTest/myfile.html", "stuff");
-        Assert.assertEquals(1, new ExternalSuitePage("somewhere/MyTest", "MyTest", rootPage, fileSystem).getChildren().size());
+        fileSystem.makeFile(new File("somewhere/MyTest/myfile.html"), "stuff");
+        Assert.assertEquals(1, new ExternalSuitePage(new File("somewhere/MyTest"), "MyTest", rootPage, fileSystem).getChildren().size());
     }
 }

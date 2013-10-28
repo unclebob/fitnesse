@@ -19,7 +19,6 @@ public class HistoryComparer {
 
   private HtmlTableScanner firstScanner;
   private HtmlTableScanner secondScanner;
-  private TableListComparer comparer;
 
   String firstFileContent = "";
   String secondFileContent = "";
@@ -95,7 +94,7 @@ public class HistoryComparer {
     initializeComparerHelpers();
     if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
       return false;
-    comparer = new TableListComparer(firstScanner, secondScanner);
+    TableListComparer comparer = new TableListComparer(firstScanner, secondScanner);
     comparer.compareAllTables();
     matchedTables = comparer.tableMatches;
     getTableTextFromScanners();

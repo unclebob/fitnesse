@@ -21,13 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class AddChildPageResponderTest {
-  private WikiPage root;
-  private WikiPage childPage;
   private PageData childPageData;
   private PageCrawler crawler;
   private String childName;
-  private String childContent;
-  private String pagetype;
   private MockRequest request;
   private FitNesseContext context;
   private Responder responder;
@@ -35,13 +31,13 @@ public class AddChildPageResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
+    WikiPage root = InMemoryPage.makeRoot("root");
     
     crawler = root.getPageCrawler();
     WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
-    childContent = "child content";
-    pagetype = "";
+    String childContent = "child content";
+    String pagetype = "";
     request = new MockRequest();
     request.setResource("TestPage");
     request.addInput("pageName", childName);
@@ -175,7 +171,7 @@ public class AddChildPageResponderTest {
   }
 
   private void getChildPage(String childName) throws Exception {
-    childPage = crawler.getPage(PathParser.parse("TestPage."+ childName));
+    WikiPage childPage = crawler.getPage(PathParser.parse("TestPage." + childName));
     childPageData = childPage.getData();
   }
 }

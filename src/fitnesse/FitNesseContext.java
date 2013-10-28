@@ -11,6 +11,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.fs.VersionsController;
 
 import java.io.File;
 import java.util.Properties;
@@ -32,6 +33,7 @@ public class FitNesseContext {
 
     public Logger logger;
     public Authenticator authenticator = new PromiscuousAuthenticator();
+    public VersionsController versionsController;
     public RecentChanges recentChanges;
     public Properties properties = new Properties();
 
@@ -48,6 +50,7 @@ public class FitNesseContext {
         rootDirectoryName = context.rootDirectoryName;
         logger = context.logger;
         authenticator = context.authenticator;
+        versionsController = context.versionsController;
         recentChanges = context.recentChanges;
         properties = context.properties;
       }
@@ -65,6 +68,7 @@ public class FitNesseContext {
           root,
           rootPath,
           rootDirectoryName,
+          versionsController,
           recentChanges,
           port,
           authenticator,
@@ -84,6 +88,7 @@ public class FitNesseContext {
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory = new PageFactory(this);
 
+  public final VersionsController versionsController;
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
@@ -92,7 +97,7 @@ public class FitNesseContext {
 
 
   private FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
-      String rootDirectoryName,
+      String rootDirectoryName, VersionsController versionsController,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger, Properties properties) {
     super();
@@ -100,6 +105,7 @@ public class FitNesseContext {
     this.root = root;
     this.rootPath = rootPath != null ? rootPath : ".";
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
+    this.versionsController = versionsController;
     this.recentChanges = recentChanges;
     this.port = port >= 0 ? port : 80;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
@@ -132,6 +138,10 @@ public class FitNesseContext {
 
   public String getRootPagePath() {
     return String.format("%s/%s", rootPath, rootDirectoryName);
+  }
+
+  public Properties getProperties() {
+    return properties;
   }
 
   public String getProperty(String name) {

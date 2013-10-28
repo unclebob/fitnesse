@@ -11,19 +11,18 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.fs.SimpleFileVersionsController;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MemoryVersionsControllerTest {
 
-  private FileSystem fileSystem;
-  private MemoryVersionsController memoryVersionsController;
   private FileSystemPageFactory wikiPageFactory;
 
   @Before
   public void setUp() {
-    fileSystem = new MemoryFileSystem();
-    memoryVersionsController = new MemoryVersionsController(fileSystem);
+    FileSystem fileSystem = new MemoryFileSystem();
+    MemoryVersionsController memoryVersionsController = new MemoryVersionsController(fileSystem);
     wikiPageFactory = new FileSystemPageFactory(fileSystem, memoryVersionsController, new SystemVariableSource());
   }
 

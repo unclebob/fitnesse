@@ -35,9 +35,8 @@ public class ImportInstruction extends Instruction {
 
     ImportInstruction that = (ImportInstruction) o;
 
-    if (!path.equals(that.path)) return false;
+    return path.equals(that.path);
 
-    return true;
   }
 
   @Override

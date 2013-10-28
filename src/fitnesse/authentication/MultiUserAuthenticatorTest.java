@@ -16,14 +16,13 @@ import org.junit.Test;
 
 public class MultiUserAuthenticatorTest {
   private File passwd;
-  private PrintStream ps;
-  private final String passwordFilename = "testpasswd";
   private MultiUserAuthenticator a;
 
   @Before
   public void setUp() throws Exception {
+    String passwordFilename = "testpasswd";
     passwd = new File(passwordFilename);
-    ps = new PrintStream(new FileOutputStream(passwd));
+    PrintStream ps = new PrintStream(new FileOutputStream(passwd));
     ps.println("uncle:bob");
     ps.println("micah:boy");
     ps.close();

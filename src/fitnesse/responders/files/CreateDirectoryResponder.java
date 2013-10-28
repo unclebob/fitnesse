@@ -3,6 +3,9 @@
 package fitnesse.responders.files;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -11,17 +14,40 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.fs.FileVersion;
 
 public class CreateDirectoryResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();
     String dirname = (String) request.getInput("dirname");
     String pathname = context.getRootPagePath() + "/" + resource + dirname;
-    File file = new File(pathname);
+    final File file = new File(pathname);
+    final String user = request.getAuthorizationUsername();
     if (!file.exists())
-      file.mkdir();
+      context.versionsController.addDirectory(new FileVersion() {
+
+        @Override
+        public File getFile() {
+          return file;
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+          return null;
+        }
+
+        @Override
+        public String getAuthor() {
+          return user != null ? user : "";
+        }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+      });
 
     response.redirect("/" + resource);
     return response;

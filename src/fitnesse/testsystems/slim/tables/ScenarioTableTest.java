@@ -23,9 +23,8 @@ public class ScenarioTableTest {
     private WikiPage root;
     private List<Object> instructions;
     public ScenarioTable st;
-    private SlimTestContextImpl testContext;
 
-    @Before
+  @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
         instructions = new ArrayList<Object>();
@@ -37,7 +36,7 @@ public class ScenarioTableTest {
 
         TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
         Table t = ts.getTable(0);
-        testContext = new SlimTestContextImpl();
+      SlimTestContextImpl testContext = new SlimTestContextImpl();
         st = new ScenarioTable(t, "id", testContext);
         instructions.addAll(st.getAssertions());
 

@@ -3,13 +3,12 @@
 package fitnesse.responders.files;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import util.FileUtil;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.fs.FileVersion;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -31,32 +31,45 @@ public class UploadResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
-    String resource = request.getResource().replace("%20", " ");
-    UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+
+    String resource = URLDecoder.decode(request.getResource(), "UTF-8");
+    final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+    final String user = request.getAuthorizationUsername();
     if (uploadedFile.isUsable()) {
-      File file = makeFileToCreate(uploadedFile, resource);
-      writeFile(file, uploadedFile);
+      final File file = makeFileToCreate(uploadedFile, resource);
+      context.versionsController.makeVersion(new FileVersion() {
+
+        @Override
+        public File getFile() {
+          return file;
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+          return new BufferedInputStream(new FileInputStream(uploadedFile.getFile()) {
+            @Override
+            public void close() throws IOException {
+              super.close();
+              uploadedFile.getFile().delete();
+            }
+          });
+        }
+
+        @Override
+        public String getAuthor() {
+          return user != null ? user : "";
+        }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+
+      });
     }
 
-    response.redirect("/" + resource.replace(" ", "%20"));
+    response.redirect("/" + request.getResource());
     return response;
-  }
-
-  public void writeFile(File file, UploadedFile uploadedFile) throws IOException {
-    boolean renamed = uploadedFile.getFile().renameTo(file);
-    if (!renamed) {
-      InputStream input = null;
-      OutputStream output = null;
-      try {
-        input = new BufferedInputStream(new FileInputStream(uploadedFile.getFile()));
-        output = new BufferedOutputStream(new FileOutputStream(file));
-        FileUtil.copyBytes(input, output);
-      } finally {
-        input.close();
-        output.close();
-        uploadedFile.delete();
-      }
-    }
   }
 
   private File makeFileToCreate(UploadedFile uploadedFile, String resource) {

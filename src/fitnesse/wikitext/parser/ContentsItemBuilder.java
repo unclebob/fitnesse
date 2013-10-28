@@ -140,7 +140,7 @@ public class ContentsItemBuilder {
         	}
         else {
         	result += "static";
-        };
+        }
         if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += " linked";
         if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += " pruned";
         return result;

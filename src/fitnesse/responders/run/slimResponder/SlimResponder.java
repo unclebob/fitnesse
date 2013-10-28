@@ -29,12 +29,10 @@ This responder is a test rig for SlimTestSystemTest, which makes sure that the S
 responders in general.
 */
 public abstract class SlimResponder implements Responder, TestSystemListener {
-  private boolean slimOpen = false;
   protected boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
   private PageData pageData;
-  private PageCrawler crawler;
   private FitNesseContext context;
   private Throwable slimException;
   private StringBuilder output;
@@ -55,7 +53,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
 
   protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
-    crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.root.getPageCrawler();
     page = crawler.getPage(path);
     if (page != null)
       pageData = page.getData();
@@ -108,6 +106,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   boolean slimOpen() {
+    boolean slimOpen = false;
     return slimOpen;
   }
 

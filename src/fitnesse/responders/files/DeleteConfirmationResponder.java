@@ -30,6 +30,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
     page.put("pageName", "/" + pageName);
+    page.put("resource", resource);
     makeConfirmationHTML(page, filename, context);
     page.setMainTemplate("deleteConfirmation");
 

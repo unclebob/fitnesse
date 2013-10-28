@@ -22,14 +22,12 @@ public class TemplateUtilTest {
   private static final String ROOT_PARENT_PATH = ".TemplateLibrary.TemplateFromRoot";
   
   private WikiPage root;
-  private MockRequest request;
-  private EditResponder responder;
 
   @Before public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-    request = new MockRequest();
-    responder = new EditResponder();
+    MockRequest request = new MockRequest();
+    EditResponder responder = new EditResponder();
   }
   
   @Test public void testGetTemplatesFromUncles() {

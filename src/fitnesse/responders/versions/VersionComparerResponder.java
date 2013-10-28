@@ -28,7 +28,6 @@ public class VersionComparerResponder implements Responder {
   private String secondVersion;
   private FitNesseContext context;
   public boolean testing;
-  private String resource;
 
   public VersionComparerResponder(VersionComparer comparer) {
     this.comparer = comparer;
@@ -41,7 +40,7 @@ public class VersionComparerResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
-    resource = request.getResource();
+    String resource = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
@@ -80,9 +79,7 @@ public class VersionComparerResponder implements Responder {
         if (setFileNames(key))
           return false;
     }
-    if (firstVersion.equals("") || secondVersion.equals(""))
-      return false;
-    return true;
+    return !(firstVersion.equals("") || secondVersion.equals(""));
   }
 
   private boolean setFileNames(String key) {

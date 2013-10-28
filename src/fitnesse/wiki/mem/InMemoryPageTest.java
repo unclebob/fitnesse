@@ -18,13 +18,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class InMemoryPageTest {
-  private WikiPage root;
   private WikiPage page1;
   private WikiPage page2;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
     page1 = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "page one");
     page2 = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "page two");
   }

@@ -43,7 +43,6 @@ public class SuiteResponderTest {
   private WikiPage suite;
   private FitNesseContext context;
   private FitSocketReceiver receiver;
-  private String suitePageName;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
@@ -53,7 +52,7 @@ public class SuiteResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    suitePageName = "SuitePage";
+    String suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     PageData data = root.getData();
     data.setContent(classpathWidgets());

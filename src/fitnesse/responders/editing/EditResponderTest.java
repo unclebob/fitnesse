@@ -56,7 +56,7 @@ public class EditResponderTest {
     assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
     
     assertSubString("type=\"submit\"", body);
-    assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString("textarea", body);
     assertSubString("<h5> Edit Page tags</h5>", body);
   }
 
@@ -126,7 +126,7 @@ public class EditResponderTest {
     assertSubString("option value=\"" + ".TemplateLibrary.TemplateTwo" + "\"", body);
     
     assertSubString("type=\"submit\"", body);
-    assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString("textarea", body);
   }
 
   @Test

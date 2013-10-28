@@ -1,5 +1,5 @@
 ## ... for deleting files and directories
-<form method="get" action="">
+<form method="post" action="/$resource">
  <p>Are you sure you would like to delete <strong>$filename</strong>
  #if( $isDir ) and all $nFiles files inside?#end</p>
  <input type="submit" name="" value="Yes" accesskey="y"/>

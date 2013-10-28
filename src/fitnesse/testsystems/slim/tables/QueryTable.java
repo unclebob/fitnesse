@@ -20,7 +20,6 @@ import static util.ListUtility.list;
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
   private String queryId;
-  private String tableInstruction;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
@@ -58,7 +57,7 @@ public class QueryTable extends SlimTable {
             new SilentReturnExpectation(0, 0));
     SlimAssertion qi = makeAssertion(callFunction(getTableName(), "query"),
             new QueryTableExpectation());
-    tableInstruction = ti.getInstruction().getId();
+    String tableInstruction = ti.getInstruction().getId();
     queryId = qi.getInstruction().getId();
     return list(make, ti, qi);
   }

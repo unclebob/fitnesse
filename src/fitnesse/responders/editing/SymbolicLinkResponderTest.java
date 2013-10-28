@@ -25,7 +25,8 @@ import util.FileUtil;
 
 public class SymbolicLinkResponderTest {
   private WikiPage root;
-  private WikiPage pageOne, pageTwo, childTwo;
+  private WikiPage pageOne;
+  private WikiPage childTwo;
   private MockRequest request;
   private Responder responder;
 
@@ -34,7 +35,7 @@ public class SymbolicLinkResponderTest {
     root = InMemoryPage.makeRoot("RooT");          //#  root
     pageOne = root.addChildPage("PageOne");       //#    |--PageOne
     pageOne.addChildPage("ChildOne");   //#    |    `--ChildOne
-    pageTwo = root.addChildPage("PageTwo");       //#    `--PageTwo
+    WikiPage pageTwo = root.addChildPage("PageTwo");
     childTwo = pageTwo.addChildPage("ChildTwo");   //#         |--ChildTwo
     pageTwo.addChildPage("ChildThree"); //#         `--ChildThree
 

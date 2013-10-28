@@ -9,7 +9,6 @@ import fitnesse.wiki.WikiPage;
 
 public class SearchReplaceResponder extends ResultResponder implements TraversalListener<WikiPage> {
 
-  private PageFinder finder;
   private TraversalListener<? super WikiPage> contentReplaceObserver;
   private TraversalListener<? super WikiPage> webOutputObserver;
 
@@ -42,7 +41,7 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
     String replacementString = getReplacementString();
 
     contentReplaceObserver = new ContentReplacingSearchObserver(searchString, replacementString);
-    finder = new RegularExpressionWikiPageFinder(searchString, this);
+    PageFinder finder = new RegularExpressionWikiPageFinder(searchString, this);
     finder.search(page);
   }
 

@@ -15,12 +15,11 @@ import fitnesse.wiki.mem.InMemoryPage;
 
 public class TraverseDirectiveTest {
 
-  private WikiPage root;
   private FitNesseContext context;
   
   @Before
   public void setUp() {
-    root = InMemoryPage.makeRoot("root");
+    WikiPage root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
     context.pageFactory.getVelocityEngine().loadDirective(TraverseDirective.class.getName());
   }

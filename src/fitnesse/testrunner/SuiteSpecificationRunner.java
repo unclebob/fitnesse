@@ -15,12 +15,10 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String contentRegEx;
   public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
   public WikiPage searchRoot;
-  private WikiPage root;
   public PageCrawler crawler;
 
 
   public SuiteSpecificationRunner(WikiPage root) {
-    this.root = root;
     searchRoot = root;
     titleRegEx = "";
     contentRegEx = "";
@@ -104,9 +102,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
 
 
   private static boolean tableIsTooSmall(Table table) {
-    if (table.getRowCount() < 3)
-      return true;
-    return false;
+    return table.getRowCount() < 3;
   }
 
   public static boolean isASuiteSpecificationsTable(Table table) {

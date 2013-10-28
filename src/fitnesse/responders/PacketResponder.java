@@ -94,7 +94,7 @@ public class PacketResponder implements SecureResponder {
 
   private int getIndent(List<String> rowList) {
     for (int indent = 0; indent < rowList.size(); indent++) {
-      if ("".equals(rowList.get(indent)) == false)
+      if (!"".equals(rowList.get(indent)))
         return indent;
     }
     return -1;

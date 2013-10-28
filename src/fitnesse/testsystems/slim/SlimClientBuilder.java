@@ -54,30 +54,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return String.format("%s %d", slimFlags, slimSocket);
   }
 
-  //For testing only.  Makes responder faster.
-  void createSlimService(String args) throws IOException {
-    while (!tryCreateSlimService(args))
-      try {
-        Thread.sleep(10);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-  }
-
-  // For testing only
-  private boolean tryCreateSlimService(String args) throws IOException {
-    try {
-      SlimService.Options options = SlimService.parseCommandLine(args.trim().split(" "));
-      SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
-      return true;
-    } catch (IOException e) {
-      throw e;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
-  }
-
   public int getSlimPort() {
     return slimPort;
   }
@@ -102,7 +78,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       return findFreePort();
     }
 
-    synchronized (slimPortOffset) {
+    synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
       offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);

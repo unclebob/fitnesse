@@ -25,7 +25,6 @@ import static util.ListUtility.list;
 public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
   private WikiPage root;
   private List<SlimAssertion> assertions;
-  private ScenarioTable st;
   private ScriptTable script;
 
   @Before
@@ -39,7 +38,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    st = new ScenarioTable(t, "s_id", this);
+    ScenarioTable st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
     script = new ScriptTable(t, "id", this);
     assertions.addAll(st.getAssertions());

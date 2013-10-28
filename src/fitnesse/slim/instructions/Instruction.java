@@ -56,9 +56,8 @@ public abstract class Instruction {
 
     Instruction that = (Instruction) o;
 
-    if (!id.equals(that.id)) return false;
+    return id.equals(that.id);
 
-    return true;
   }
 
   @Override

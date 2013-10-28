@@ -11,5 +11,4 @@ public class DummyClassForWizardTests extends ColumnFixture {
     return 0;
   }
 
-  ;
 }

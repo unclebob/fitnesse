@@ -20,12 +20,12 @@ public class RefactorPageResponderTest {
   WikiPage root;
   private MockRequest request;
   private Responder responder;
-  private String childPage = "ChildPage";
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
+    String childPage = "ChildPage";
     WikiPageUtil.addPage(root, PathParser.parse(childPage));
 
     request = new MockRequest();
