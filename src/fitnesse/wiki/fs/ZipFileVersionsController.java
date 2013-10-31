@@ -1,12 +1,9 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.NoSuchVersionException;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPageProperties;
 import util.FileUtil;
-import util.StreamReader;
 
 import java.io.*;
 import java.util.*;
@@ -97,8 +94,8 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void rename(File file, File originalFile) throws IOException {
-    persistence.rename(file, originalFile);
+  public void rename(FileVersion fileVersion, File originalFile) throws IOException {
+    persistence.rename(fileVersion, originalFile);
   }
 
   @Override

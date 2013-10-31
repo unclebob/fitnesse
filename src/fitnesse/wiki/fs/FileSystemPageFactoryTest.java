@@ -1,7 +1,6 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.components.ComponentFactory;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
@@ -10,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -142,7 +140,7 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public void rename(File file, File originalFile) {
+    public void rename(FileVersion fileVersion, File originalFile) {
     }
 
     @Override

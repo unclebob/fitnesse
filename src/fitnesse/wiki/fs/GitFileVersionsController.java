@@ -257,18 +257,19 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void rename(File file, File oldFile) throws IOException {
-    Repository repository = getRepository(file);
-    persistence.rename(file, oldFile);
+  public void rename(FileVersion fileVersion, File oldFile) throws IOException {
+    File renameTo = fileVersion.getFile();
+    Repository repository = getRepository(renameTo);
+    persistence.rename(fileVersion, oldFile);
     Git git = new Git(repository);
     try {
       git.add()
-              .addFilepattern(getPath(file, repository))
+              .addFilepattern(getPath(renameTo, repository))
               .call();
       git.rm()
               .addFilepattern(getPath(oldFile, repository))
               .call();
-      commit(git, String.format("[FitNesse] Renamed file %s to %s.", oldFile.getPath(), file.getPath()));
+      commit(git, String.format("[FitNesse] Renamed file %s to %s.", oldFile.getPath(), renameTo.getPath()));
     } catch (GitAPIException e) {
       throw new RuntimeException(e);
     }

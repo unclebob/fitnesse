@@ -1,18 +1,14 @@
 package fitnesse.wiki.fs;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
 import fitnesse.wiki.VersionInfo;
-import util.FileUtil;
 
 public class SimpleFileVersionsController implements VersionsController {
 
@@ -109,7 +105,7 @@ public class SimpleFileVersionsController implements VersionsController {
 
   }
   @Override
-  public void rename(File file, File oldFile) throws IOException {
-    fileSystem.rename(file, oldFile);
+  public void rename(FileVersion fileVersion, File oldFile) throws IOException {
+    fileSystem.rename(fileVersion.getFile(), oldFile);
   }
 }

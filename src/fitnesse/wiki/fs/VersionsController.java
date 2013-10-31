@@ -48,11 +48,13 @@ public interface VersionsController {
 
   /**
    * Rename a file. Used for the files/ section. No author information is stored here.
-   * @param file File to rename to.
+   *
+   *
+   * @param fileVersion File to rename to.
    * @param originalFile The original file.
    * @throws IOException
    */
-  void rename(File file, File originalFile) throws IOException;
+  void rename(FileVersion fileVersion, File originalFile) throws IOException;
 
   /**
    * Delete a bunch of files.
