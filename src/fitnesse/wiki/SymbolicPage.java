@@ -25,14 +25,17 @@ public class SymbolicPage extends BaseWikiPage {
     return realPage;
   }
 
+  @Override
   public WikiPage addChildPage(String name) {
     return realPage.addChildPage(name);
   }
 
+  @Override
   public boolean hasChildPage(String name) {
     return realPage.hasChildPage(name);
   }
 
+  @Override
   protected WikiPage getNormalChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
     if (childPage != null && !(childPage instanceof SymbolicPage))
@@ -40,10 +43,12 @@ public class SymbolicPage extends BaseWikiPage {
     return childPage;
   }
 
+  @Override
   public void removeChildPage(String name) {
     realPage.removeChildPage(name);
   }
 
+  @Override
   public List<WikiPage> getNormalChildren() {
     List<?> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<WikiPage>();
@@ -57,12 +62,14 @@ public class SymbolicPage extends BaseWikiPage {
     return symChildren;
   }
 
+  @Override
   public PageData getData() {
     PageData data = realPage.getData();
     data.setWikiPage(this);
     return data;
   }
 
+  @Override
   public ReadOnlyPageData readOnlyData() { return getData(); }
 
   @Override
