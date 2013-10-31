@@ -60,5 +60,5 @@ public interface VersionsController {
    * Delete a bunch of files.
    * @param files
    */
-  void delete(File... files);
+  void delete(FileVersion... files);
 }

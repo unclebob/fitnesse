@@ -64,7 +64,7 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public void delete(File... files) {
+  public void delete(FileVersion... files) {
     persistence.delete(files);
   }
 

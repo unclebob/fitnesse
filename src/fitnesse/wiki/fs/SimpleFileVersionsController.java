@@ -85,9 +85,9 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void delete(File... files) {
-    for (File file : files) {
-      fileSystem.delete(file);
+  public void delete(FileVersion... files) {
+    for (FileVersion fileVersion : files) {
+      fileSystem.delete(fileVersion.getFile());
     }
   }
 

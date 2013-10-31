@@ -133,16 +133,16 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void delete(File... files) {
-    Repository repository = getRepository(files[0]);
+  public void delete(FileVersion... files) {
+    Repository repository = getRepository(files[0].getFile());
     Git git = new Git(repository);
     try {
       RmCommand remover = git.rm();
-      for (File file : files) {
-        remover.addFilepattern(getPath(file, repository));
+      for (FileVersion fileVersion : files) {
+        remover.addFilepattern(getPath(fileVersion.getFile(), repository));
       }
       remover.call();
-      commit(git, String.format("[FitNesse] Deleted files: %s.", formatFiles(files)));
+      commit(git, String.format("[FitNesse] Deleted files: %s.", formatFileVersions(files)));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

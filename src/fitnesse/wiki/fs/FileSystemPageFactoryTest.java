@@ -144,7 +144,7 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public void delete(File... files) {
+    public void delete(FileVersion... files) {
     }
   }
 
