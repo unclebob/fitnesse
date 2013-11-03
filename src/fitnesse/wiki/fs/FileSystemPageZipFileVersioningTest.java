@@ -57,7 +57,7 @@ public class FileSystemPageZipFileVersioningTest {
   }
 
   @Test
-  public void testSave() throws Exception {
+  public void aZipFileIsCreatedAfterUpdatingPageContent() throws Exception {
     String dirPath = page.getFileSystemPath();
     File dir = new File(dirPath);
     String[] filenames = dir.list();
@@ -67,20 +67,13 @@ public class FileSystemPageZipFileVersioningTest {
   }
 
   @Test
-  public void testLoad() throws Exception {
+  public void originalContentCanBeRetrievedViaVersionInfo() throws Exception {
     PageData data = page.getData();
     data.setContent("new content");
     VersionInfo version = page.commit(data);
 
     PageData loadedData = page.getDataVersion(version.getName());
     assertEquals("original content", loadedData.getContent());
-  }
-
-  @Test
-  public void testGetVersions() throws Exception {
-    Collection<VersionInfo> versionNames = page.getVersions();
-    assertEquals(1, versionNames.size());
-    assertTrue(versionNames.contains(firstVersion));
   }
 
   @Test
@@ -94,7 +87,7 @@ public class FileSystemPageZipFileVersioningTest {
   }
 
   @Test
-  public void testTwoVersions() throws Exception {
+  public void canRetrieveVersions() throws Exception {
     PageData data = page.getData();
     data.setContent("new content");
     page.commit(data);
@@ -109,7 +102,7 @@ public class FileSystemPageZipFileVersioningTest {
   }
 
   @Test
-  public void testVersionsExpire() throws Exception {
+  public void oldVersionsAreRemovedOnCommit() throws Exception {
     versionsController.setHistoryDepth(3);
     PageData data = page.getData();
 
