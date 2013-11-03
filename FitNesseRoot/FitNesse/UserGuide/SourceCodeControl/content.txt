@@ -8,29 +8,32 @@ For those of us who fancy a more tight integration with their source control sys
 To configure the Git version controller, add the following to your plugins.propeties:
 
 {{{VersionsController=fitnesse.wiki.fs.GitFileVersionsController
-RecentChanges=fitnesse.wiki.fs.GitFileVersionsController}}}
-The result is that the files are managed by Git and the Recent changes page is showing those changes.
+RecentChanges=fitnesse.wiki.fs.GitFileVersionsController}}}The result is that the files are managed by Git and the Recent changes page is showing those changes.
 
 This version controller takes into account ignored files. If you change a file that is listed as ignored (normally in a .gitignore file), it will not be added to version control.
 
 !2 Description of !-fitnesse.wiki.fs.VersionsController-!
-To create a version controller 2 things are important:
+To create a version controller 3 things are important:
 
  1 The pages should be stored in a File system. The filesystem based wiki page is currently the only supported page type (but you're free to create your own)
  1 You'll need to implement the !-fitnesse.wiki.fs.VersionsController-! interface.
  1 To support recent changes you'll have to provide a class that implements the !-fitnesse.wiki.RecentChanges-! interface.
 
-The !-VersionsController-! interface is quite straightforward. It consists of the following methods:
+The !-VersionsController-! interface is quite straightforward. All the relevant information is provided through the !-fitnesse.wiki.fs.FileVersion-! interface. This interface provides the file name, content, author and time information.
 
-{{{  VersionInfo makeVersion(FileSystemPage page, PageData data);}}}Create a new version. This is typically called then a page is saved.
+The !-VersionsController-! interface consists of the following methods:
 
-{{{  VersionInfo getCurrentVersion(FileSystemPage page);}}}Get version information about the current page.
+{{{  VersionInfo makeVersion(FileVersion... fileVersion) throws IOException;}}}Create a new version/revision. This is typically called then a page is saved. Each !-FileVersion-! contains infomation about the file that is to be saved, the author and the content. Time information is usually less important. It might be that the author information is taken from the first file version provided (since all changes are to be saved as one commit anyway). Note that, since files are saved in directories, the directories are not mentioned as files-to-be-saved. It's up to the versions controller to take care of this.
 
-{{{  PageData getRevisionData(FileSystemPage page, String label);}}}Get a specific version of the Page data, given a label. The label is either a property also provided by the !-VersionInfo-! object (typically name) or null, denoting the most recent version.
+{{{  FileVersion[] getRevisionData(String revision, File... files);}}}Get a specific version of the files requested, given a revision indentifier. The label is either a property also provided by the !-VersionInfo-! object (typically name) or null, denoting the most recent version.
 
-{{{  Collection<? extends VersionInfo> history(FileSystemPage page);}}}Obtain the history of a page. The history is as big as the depth set by setHistoryDepth(int) (see below).
+{{{  Collection<? extends VersionInfo> history(File... files);}}}Obtain the history of a page. The history is as big as the depth set by setHistoryDepth(int) (see below).
 
-{{{  void delete(FileSystemPage page);}}}Delete the page.
+{{{  void addDirectory(FileVersion... files) throws IOException;}}}Create a new (versioned) directory. This operation is called from the http://files/ handlers.
+
+{{{  void rename(FileVersion fileVersion, File originalFile) throws IOException;}}}Rename a versioned file. This operation is called from the http://files/ handlers.
+
+{{{  void delete(FileVersion... files);}}}Delete the page. The author has to be set to the user performing the delete operation.
 
 {{{  void setHistoryDepth(int historyDepth);}}}Configure the depth for which versions need to be stored (in case of zip files) or the history depth for which changes are fetched (see history() above)
 
