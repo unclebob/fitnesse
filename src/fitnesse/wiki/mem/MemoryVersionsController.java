@@ -59,12 +59,12 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public void rename(File file, File originalFile) throws IOException {
-    persistence.rename(file, originalFile);
+  public void rename(FileVersion fileVersion, File originalFile) throws IOException {
+    persistence.rename(fileVersion, originalFile);
   }
 
   @Override
-  public void delete(File... files) {
+  public void delete(FileVersion... files) {
     persistence.delete(files);
   }
 

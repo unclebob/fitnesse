@@ -60,18 +60,32 @@ public class FileSystemPage extends BaseWikiPage {
     this.versionsController = versionsController;
   }
 
-  public static WikiPageProperties parsePropertiesXml(InputStream propertiesXml, long lastModifiedTime) {
-    final WikiPageProperties props = new WikiPageProperties();
-    props.loadFromXml(propertiesXml);
-    props.setLastModificationTime(new Date(lastModifiedTime));
-    return props;
-  }
-
   @Override
   public void removeChildPage(final String name) {
-    WikiPage childPage = getChildPage(name);
+    final WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
-      versionsController.delete(new File(((FileSystemPage) childPage).getFileSystemPath()));
+      versionsController.delete(new FileVersion() {
+        @Override
+        public File getFile() {
+          return new File(((FileSystemPage) childPage).getFileSystemPath());
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+          return null;
+        }
+
+        @Override
+        public String getAuthor() {
+          // Who is deleting this page??
+          return "";
+        }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+      });
     }
   }
 
