@@ -165,6 +165,26 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testRename() throws Exception {
+    prepareSymlinkOnPageOne();
+    request.addInput("newname", "NewLink");
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    checkPageOneRedirectToProperties(response);
+
+    assertNotNull(pageOne.getChildPage("NewLink"));
+  }
+
+  @Test
+  public void linkNameShouldBeAValidWikiWordWhenRenaming() throws Exception {
+    prepareSymlinkOnPageOne();
+    request.addInput("newname", "Newlink");
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    assertEquals(412, response.getStatus());
+    String content = ((SimpleResponse) response).getContent();
+    assertSubString("WikiWord", content);
+  }
+
+  private void prepareSymlinkOnPageOne() {
     PageData data = pageOne.getData();
     WikiPageProperty symLinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
     symLinks.set("SymLink", "PageTwo");
@@ -172,12 +192,8 @@ public class SymbolicLinkResponderTest {
     assertNotNull(pageOne.getChildPage("SymLink"));
 
     request.addInput("rename", "SymLink");
-    request.addInput("newname", "NewLink");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-    checkPageOneRedirectToProperties(response);
-
-    assertNotNull(pageOne.getChildPage("NewLink"));
   }
+
 
   @Test
   public void testNoPageAtPath() throws Exception {
@@ -189,6 +205,17 @@ public class SymbolicLinkResponderTest {
     String content = ((SimpleResponse) response).getContent();
     assertSubString("doesn't exist", content);
     assertSubString("Error Occured", content);
+  }
+
+  @Test
+  public void linkNameShouldBeAValidWikiWord() throws Exception {
+    request.addInput("linkName", "Symlink");
+    request.addInput("linkPath", "PageTwo");
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    assertEquals(412, response.getStatus());
+    String content = ((SimpleResponse) response).getContent();
+    assertSubString("WikiWord", content);
   }
 
   @Test
