@@ -51,7 +51,7 @@ public class MemoryFileSystem implements FileSystem {
             if (!filePath.startsWith(path)) continue;
             if (filePath.equals(path)) continue;
             String rest = filePath.substring(path.length() + 1);
-            int size = rest.indexOf("/");
+            int size = rest.indexOf(File.separator);
             if (size < 0) size = rest.length();
             String newPath = rest.substring(0, size);
             if (!result.contains(newPath)) result.add(newPath);
