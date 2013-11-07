@@ -53,8 +53,9 @@ public class GitFileVersionsControllerTest {
 
     GitFileVersionsController versionsController = new GitFileVersionsController();
     WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
-
-    assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith("|[FitNesse] Updated files: TestDir/RooT/TestPage/content.txt and TestDir/RooT/TestPage/properties.xml.|"));
+    String expected = "|[FitNesse] Updated files: TestDir/RooT/TestPage/content.txt and TestDir/RooT/TestPage/properties.xml.|";
+    expected = expected.replace("/", File.pathSeparator);
+    assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith(expected));
   }
 
   @Test
@@ -68,7 +69,9 @@ public class GitFileVersionsControllerTest {
   public void shouldFormatFileNamesForCommit() {
     GitFileVersionsController versionsController = new GitFileVersionsController();
     String formatted = versionsController.formatFiles(new File[] {new File("simple.txt"), new File("middle.xml"), new File("complex/name.txt")});
-    assertEquals("simple.txt, middle.xml and complex/name.txt", formatted);
+    String expected = "simple.txt, middle.xml and complex/name.txt";
+    expected = expected.replace("/", File.pathSeparator);
+    assertEquals(expected , formatted);
   }
 
 }
