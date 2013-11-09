@@ -80,13 +80,13 @@ public class FitNesseContext {
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
   public final WikiPage root;
-  public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
+  public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
   public final String rootPath;
   public final String rootDirectoryName;
   public final ResponderFactory responderFactory;
-  public final PageFactory pageFactory = new PageFactory(this);
+  public final PageFactory pageFactory;
 
   public final VersionsController versionsController;
   public final RecentChanges recentChanges;
@@ -111,8 +111,10 @@ public class FitNesseContext {
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
     this.properties = properties;
+    runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
     fitNesse = new FitNesse(this);
+    pageFactory = new PageFactory(this);
   }
 
   public String toString() {
