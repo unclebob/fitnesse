@@ -1,4 +1,4 @@
-!2 2013-11-09
+!2 2013-11-10
  * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.
  * Git version control and recent-changes support
  * Page caching is removed. Changes on the file system are now directly reflected in the wiki
