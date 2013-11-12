@@ -19,9 +19,9 @@
  #if( $actions.withEdit)
  <li id="add"><a href="$localPath?new" class="label">Add</a>
   <ul>
-   <li><a href="$localPath?new&amp;pageType=Static">Static page</a></li>
-   <li><a href="$localPath?new&amp;pageType=Test">Test page</a></li>
-   <li><a href="$localPath?new&amp;pageType=Suite">Suite page</a></li>
+   #foreach ($tmpl in $actions.newPageTemplates.entrySet())
+   <li><a href="$localPath?new&pageTemplate=$tmpl.value">$tmpl.key</a></li>
+   #end
   </ul>
  </li>
  #end

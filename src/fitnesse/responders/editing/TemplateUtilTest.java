@@ -17,10 +17,11 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public class TemplateUtilTest {
-  
+
   private static final String REGULAR_PARENT_PATH = ".LibraryParent.TemplateLibrary.TemplateOne";
   private static final String ROOT_PARENT_PATH = ".TemplateLibrary.TemplateFromRoot";
-  
+  private static final String ROOT_OVERRIDDEN_PATH = ".TemplateLibrary.TemplateOne";
+
   private WikiPage root;
 
   @Before public void setUp() throws Exception {
@@ -29,7 +30,7 @@ public class TemplateUtilTest {
     MockRequest request = new MockRequest();
     EditResponder responder = new EditResponder();
   }
-  
+
   @Test public void testGetTemplatesFromUncles() {
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
@@ -41,11 +42,11 @@ public class TemplateUtilTest {
     WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
     
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
-    
+
     assertTrue(pathList.contains(REGULAR_PARENT_PATH));
     assertTrue(pathList.contains(ROOT_PARENT_PATH));
   }
-  
+
   @Test public void testGetTemplatesFromUnclesDoesntTakeTemplatesChildren() {
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
@@ -55,7 +56,7 @@ public class TemplateUtilTest {
     WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
     
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
-    
+
     assertTrue(pathList.contains(ROOT_PARENT_PATH));
     assertFalse(pathList.contains(ROOT_PARENT_PATH + ".TemplateFromRootChild"));
   }
@@ -63,20 +64,41 @@ public class TemplateUtilTest {
   @Test public void testGetShortTemplateName() {
     String parsed = TemplateUtil.getShortTemplateName(REGULAR_PARENT_PATH);
     assertEquals("LibraryParent._.TemplateOne", parsed);
-    
+
     String parsed2 = TemplateUtil.getShortTemplateName(ROOT_PARENT_PATH);
     assertEquals("._.TemplateFromRoot", parsed2);
   }
-  
+
   @Test public void testGetShortTemplateNames() {
     List<String> pathList = new ArrayList<String>();
     pathList.add(REGULAR_PARENT_PATH);
     pathList.add(ROOT_PARENT_PATH);
-    
+
     Map<String, String> pathMap = TemplateUtil.getShortTemplateNames(pathList);
-    assertEquals("LibraryParent._.TemplateOne", pathMap.get(REGULAR_PARENT_PATH));
-    assertEquals("._.TemplateFromRoot", pathMap.get(ROOT_PARENT_PATH));
+    assertEquals(REGULAR_PARENT_PATH, pathMap.get("LibraryParent._.TemplateOne"));
+    assertEquals(ROOT_PARENT_PATH, pathMap.get("._.TemplateFromRoot"));
   }
-  
+
+  @Test public void testGetPageNames() {
+    List<String> pathList = new ArrayList<String>();
+    pathList.add(REGULAR_PARENT_PATH);
+    pathList.add(ROOT_PARENT_PATH);
+
+    Map<String, String> pathMap = TemplateUtil.getPageNames(pathList);
+    assertEquals(REGULAR_PARENT_PATH, pathMap.get("Template One"));
+    assertEquals(ROOT_PARENT_PATH, pathMap.get("Template From Root"));
+  }
+
+  @Test public void shouldShowOnlyOneTemplateWithASpecificName() {
+    List<String> pathList = new ArrayList<String>();
+    pathList.add(REGULAR_PARENT_PATH);
+    pathList.add(ROOT_PARENT_PATH);
+    pathList.add(ROOT_OVERRIDDEN_PATH);
+
+    Map<String, String> pathMap = TemplateUtil.getPageNames(pathList);
+    assertEquals(2, pathMap.size());
+    assertEquals(REGULAR_PARENT_PATH, pathMap.get("Template One"));
+    assertEquals(ROOT_PARENT_PATH, pathMap.get("Template From Root"));
+  }
 
 }

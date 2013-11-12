@@ -8,11 +8,11 @@ import static util.RegexTestCase.assertHasRegexp;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.fit.FitTestSystem;
+import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testsystems.fit.SimpleSocketSeeker;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
 import org.junit.Test;
