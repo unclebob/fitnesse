@@ -5,8 +5,11 @@ package fitnesse.testrunner;
 import fitnesse.wiki.*;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SuiteContentsFinder {
+  public static final Logger LOG = Logger.getLogger(SuiteContentsFinder.class.getName());
 
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
@@ -71,7 +74,7 @@ public class SuiteContentsFinder {
           return path1.compareTo(path2);
         }
         catch (Exception e) {
-          e.printStackTrace();
+          LOG.log(Level.WARNING, "Unable to compare " + p1 + " and " + p2, e);
           return 0;
         }
       }

@@ -12,8 +12,12 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
+  private final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
+
   private WikiPage page;
 
   public Response makeResponse(FitNesseContext context, Request request) throws MalformedURLException {
@@ -56,7 +60,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
   }
 
   public void pageImportError(WikiPage localPage, Exception e) {
-    e.printStackTrace();
+    LOG.log(Level.WARNING, "Page import error", e);
   }
 
   public SecureOperation getSecureOperation() {

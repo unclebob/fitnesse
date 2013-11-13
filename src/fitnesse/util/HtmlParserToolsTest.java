@@ -26,9 +26,6 @@ public class HtmlParserToolsTest {
 
     NodeList cloneTree = deepClone(tree);
 
-    System.out.println(tree.toString());
-    System.out.println(cloneTree.toString());
-
     assertEquals(html, cloneTree.toHtml());
     assertEquals(tree.toString(), cloneTree.toString());
     assertFalse(tree.elementAt(0).getChildren().elementAt(1) == cloneTree.elementAt(0).getChildren().elementAt(1));

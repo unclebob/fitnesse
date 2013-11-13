@@ -68,9 +68,7 @@ public class PluginsLoaderTest {
 
     assertMatch("!today", false);
 
-    String output = loader.loadPlugins(responderFactory, testProvider);
-
-    assertSubString(DummyPlugin.class.getName(), output);
+    loader.loadPlugins(responderFactory, testProvider);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
@@ -88,10 +86,7 @@ public class PluginsLoaderTest {
     testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
     ResponderFactory responderFactory = new ResponderFactory(".");
-    String output = loader.loadResponders(responderFactory);
-
-    assertSubString("custom1:" + WikiPageResponder.class.getName(), output);
-    assertSubString("custom2:" + EditResponder.class.getName(), output);
+    loader.loadResponders(responderFactory);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
@@ -102,9 +97,7 @@ public class PluginsLoaderTest {
     String symbolValues = Today.class.getName();
     testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
 
-    String output = loader.loadSymbolTypes(testProvider);
-
-    assertSubString(Today.class.getName(), output);
+    loader.loadSymbolTypes(testProvider);
 
     assertMatch("!today", true);
   }
@@ -153,13 +146,12 @@ public class PluginsLoaderTest {
 
   @Test
   public void testContentFilterCreation() throws Exception {
-    assertEquals("", loader.loadContentFilter());
+    loader.loadContentFilter();
     assertEquals(null, SaveResponder.contentFilter);
 
     testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
 
-    String content = loader.loadContentFilter();
-    assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
+    loader.loadContentFilter();
     assertNotNull(SaveResponder.contentFilter);
     assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
   }
@@ -167,10 +159,7 @@ public class PluginsLoaderTest {
   @Test
   public void testSlimTablesCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
-    String content = loader.loadSlimTables();
-
-    assertTrue(content.contains("test:"));
-    assertTrue(content.contains("TestSlimTable"));
+    loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test");
     SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
@@ -180,10 +169,7 @@ public class PluginsLoaderTest {
   @Test
   public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
-    String content = loader.loadSlimTables();
-
-    assertTrue(content.contains("test:"));
-    assertTrue(content.contains("TestSlimTable"));
+    loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test:");
     SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());

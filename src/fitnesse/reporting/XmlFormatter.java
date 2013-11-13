@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class XmlFormatter extends BaseFormatter {
   public interface WriterFactory {
@@ -89,7 +90,7 @@ public class XmlFormatter extends BaseFormatter {
         expectationResult.row = Integer.toString(cell.getRow());
       }
     } catch (Throwable e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with test result " + testResult, e);
     }
   }
 
@@ -111,7 +112,7 @@ public class XmlFormatter extends BaseFormatter {
       expectationResult.evaluationMessage = exceptionResult.getMessage();
       expectationResult.status = exceptionResult.getExecutionResult().toString();
     } catch (Throwable e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with exception result " + exceptionResult, e);
     }
   }
 

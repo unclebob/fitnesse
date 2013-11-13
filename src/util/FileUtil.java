@@ -7,6 +7,7 @@ import java.util.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 public class FileUtil {
 
@@ -105,7 +106,6 @@ public class FileUtil {
     int i = 10;
     while (file.exists()) {
       if (--i <= 0) {
-        System.out.println("Breaking out of delete wait");
         break;
       }
       waitFor(500);

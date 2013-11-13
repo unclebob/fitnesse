@@ -7,8 +7,12 @@ import fitnesse.wikitext.parser.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
+  private static final Logger LOG = Logger.getLogger(WhereUsedPageFinder.class.getName());
+
   private WikiPage subjectPage;
   private TraversalListener<? super WikiPage> observer;
   private WikiPage currentPage;
@@ -48,7 +52,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.log(Level.WARNING, "Can not complete 'WhereUsed' search", e);
             throw new RuntimeException(e);
         }
         return true;

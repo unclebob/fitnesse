@@ -58,7 +58,7 @@ public class ClassPathBuilder {
   public String getPathSeparator(WikiPage page) {
     String separator = page.getData().getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
-      separator = (String) System.getProperties().get("path.separator");
+      separator = System.getProperty("path.separator");
     return separator;
   }
 

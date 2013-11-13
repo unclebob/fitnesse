@@ -7,6 +7,7 @@ import java.awt.Point;
 import fit.TypeAdapter;
 import fit.decorator.util.ClassDelegatePointParser;
 
+// Used in acceptance suite
 public class ClassTranslatePoint extends TranslatePoint {
   static {
     TypeAdapter.registerParseDelegate(Point.class, ClassDelegatePointParser.class);

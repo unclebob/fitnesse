@@ -5,6 +5,7 @@
 package fitnesse;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
@@ -12,8 +13,10 @@ import fitnesse.http.ResponseParser;
 import util.CommandLine;
 
 public class Shutdown {
+  private static final Logger LOG = Logger.getLogger(Shutdown.class.getName());
+
   public String hostname = "localhost";
-  public int port = Arguments.DEFAULT_PORT;
+  public int port = FitNesseContext.DEFAULT_PORT;
   public String username;
   public String password;
   private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");
@@ -31,8 +34,7 @@ public class Shutdown {
 
     String status = checkResponse(response);
     if (!"OK".equals(status)) {
-      System.err.println("Failed to shutdown.");
-      System.err.println(status);
+      LOG.warning("Failed to shutdown. Status = " + status);
       System.exit(response.getStatus());
     }
   }
@@ -79,7 +81,7 @@ public class Shutdown {
   public void usage() {
     System.err.println("Usage: java fitnesse.Shutdown [-hpc]");
     System.err.println("\t-h <hostname> {localhost}");
-    System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
+    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
     System.err.println("\t-c <username> <password> Supply user credentials.  Use when FitNesse has authentication activated.");
     System.exit(-1);
   }

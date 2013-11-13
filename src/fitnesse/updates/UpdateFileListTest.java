@@ -115,7 +115,6 @@ public class UpdateFileListTest {
     UpdateFileList.testUpdater = updaterMock;
     when(updaterMock.directoriesAreValid()).thenReturn(false);
     UpdateFileList.main(args);
-    verify(updaterMock).printMessage("Some directories are invalid.");
     verify(updaterMock).exit();
   }
 

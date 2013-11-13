@@ -1,6 +1,7 @@
 package fitnesse.junit;
 
 import java.io.Closeable;
+import java.util.logging.Logger;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
@@ -14,12 +15,14 @@ import fitnesse.wiki.WikiPagePath;
 import util.TimeMeasurement;
 
 public class PrintTestListener implements TestSystemListener<WikiTestPage>, Closeable {
+  private final static Logger LOG = Logger.getLogger(PrintTestListener.class.getName());
+
   private TimeMeasurement timeMeasurement;
   private TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
 
   @Override
   public void close() {
-    System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
+    LOG.info("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
   }
 
   @Override
@@ -29,7 +32,7 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
+    LOG.info(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
         + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }

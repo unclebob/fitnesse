@@ -6,6 +6,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.StringUtil;
 import fitnesse.Responder;
@@ -44,6 +46,8 @@ import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
+  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
+
   private final String rootPath;
   private final Map<String, Class<?>> responderMap;
 
@@ -149,7 +153,7 @@ public class ResponderFactory {
       try {
         return newResponderInstance(responderClass);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Unable to instantiate responder " + responderKey, e);
         throw new InstantiationException("Unable to instantiate responder " + responderKey);
       }
     }

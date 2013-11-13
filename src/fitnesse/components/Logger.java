@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+// TODO: Convert to java.util.logging.Formatter
 public class Logger {
   private File directory;
 

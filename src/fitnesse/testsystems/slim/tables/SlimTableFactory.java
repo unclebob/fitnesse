@@ -3,12 +3,15 @@ package fitnesse.testsystems.slim.tables;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
+  private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
 
   private static final Map<String, Class<? extends SlimTable>> tableTypes;
 
@@ -74,7 +77,7 @@ public class SlimTableFactory {
       Constructor<? extends SlimTable> constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
       return constructor.newInstance(table, tableId, slimTestContext);
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Can not create new table instance for class " + tableClass, e);
       return new SlimErrorTable(table, tableId, slimTestContext);
     }
   }

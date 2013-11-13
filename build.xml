@@ -33,6 +33,7 @@
 	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
+			<arg value="-v" />
 			<arg value="-p" />
 			<arg value="${port}" />
 		</java>
@@ -51,7 +52,7 @@
 			<exclude name="**/*TestSuite.class" />
 			<include name="fitnesse/resources/**" />
 			<include name="Resources/**" />
-			<include name="tasks.properties" />
+			<include name="**/*.properties" />
 			<include name="META-INF/FitNesseVersion.txt" />
 
 			<fileset dir="${classes.dir}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
@@ -116,6 +117,7 @@
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}">
 				<include name="fitnesse/resources/**" />
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
 	</target>

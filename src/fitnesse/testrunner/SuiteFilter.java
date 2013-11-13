@@ -6,6 +6,8 @@ package fitnesse.testrunner;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -14,6 +16,8 @@ import fitnesse.wiki.WikiPagePath;
 import util.StringUtil;
 
 public class SuiteFilter {
+  public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
+
   final private SuiteTagMatcher notMatchTags;
   final private SuiteTagMatcher matchTags;
   final private boolean andStrategy;
@@ -145,7 +149,7 @@ public class SuiteFilter {
       try {
         return context.getData().getAttribute(PageData.PropertySUITES);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Unable to retrieve tags for page " + context, e);
         return null;
       }
     }

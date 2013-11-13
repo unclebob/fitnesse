@@ -10,7 +10,7 @@ import fitnesse.wiki.*;
 public abstract class SecurePageOperation implements SecureOperation {
   protected abstract String getSecurityMode();
 
-  public boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception {
+  public boolean shouldAuthenticate(FitNesseContext context, Request request) {
     WikiPagePath path = PathParser.parse(request.getResource());
     PageCrawler crawler = context.root.getPageCrawler();
     WikiPage page = crawler.getPage(path, new MockingPageCrawler());

@@ -14,8 +14,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class ChunkingResponder implements Responder, ChunkedDataProvider {
+  private final Logger LOG = Logger.getLogger(ChunkingResponder.class.getName());
+
   protected WikiPage root;
   public WikiPage page;
   protected WikiPagePath path;
@@ -66,8 +70,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
       doSending();
     }
     catch (SocketException e) {
-      System.out.println("Socket Exception at: " + System.currentTimeMillis());
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Socket Exception at: " + System.currentTimeMillis(), e);
       // normal. someone stopped the request.
     }
     catch (Exception e) {

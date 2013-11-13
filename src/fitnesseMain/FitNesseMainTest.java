@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 
-import fitnesse.Arguments;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
@@ -99,13 +98,13 @@ public class FitNesseMainTest {
 
   private String runFitnesseMainWith(String... args) throws Exception {
     //FitNesseMain.dontExitAfterSingleCommand = true;
-    PrintStream out = System.out;
+    PrintStream err = System.err;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputBytes));
+    System.setErr(new PrintStream(outputBytes));
     Arguments arguments = FitNesseMain.parseCommandLine(args);
     int exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
-    System.setOut(out);
+    System.setErr(err);
     String response = outputBytes.toString();
     return response;
   }

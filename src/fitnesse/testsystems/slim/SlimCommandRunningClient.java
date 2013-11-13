@@ -21,10 +21,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static util.ListUtility.list;
 
 public class SlimCommandRunningClient implements SlimClient {
+  private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());
+
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
 
@@ -88,7 +91,7 @@ public class SlimCommandRunningClient implements SlimClient {
     }
     else {
       slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
-      System.out.println("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
+      LOG.warning("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
     }
   }
 

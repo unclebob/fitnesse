@@ -20,6 +20,7 @@ public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
+  public static final int DEFAULT_PORT = 80;
 
   /**
    * Use the builder to create your FitNesse contexts.
@@ -107,7 +108,7 @@ public class FitNesseContext {
     this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;
-    this.port = port >= 0 ? port : 80;
+    this.port = port >= 0 ? port : DEFAULT_PORT;
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
     this.properties = properties;
@@ -115,19 +116,6 @@ public class FitNesseContext {
     responderFactory = new ResponderFactory(getRootPagePath());
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
-  }
-
-  public String toString() {
-    String endl = System.getProperty("line.separator");
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("\t").append("port:              ").append(port).append(endl);
-    buffer.append("\t").append("root page:         ").append(root).append(endl);
-    buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
-    buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
-    buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
-    buffer.append("\t").append("page theme:        ").append(pageFactory.getTheme()).append(endl);
-
-    return buffer.toString();
   }
 
   public File getTestHistoryDirectory() {

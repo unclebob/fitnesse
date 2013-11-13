@@ -7,31 +7,24 @@ import java.util.StringTokenizer;
 import fit.ColumnFixture;
 import fitnesse.wiki.*;
 
-public class
-  PageCreator extends ColumnFixture {
+public class PageCreator extends ColumnFixture {
   public String pageName;
   public String pageContents;
   public String pageAttributes = "";
 
   public boolean valid() throws Exception {
-    try {
-      if (pageContents != null)  {
-        pageContents = pageContents.replaceAll("<br>", "\n");
-        pageContents = pageContents.replaceAll("<br/>", "\n");
-      }
-      WikiPage root = FitnesseFixtureContext.root;
-      WikiPagePath pagePath = PathParser.parse(pageName);
-      WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
-      if (!"".equals(pageAttributes)) {
-        PageData data = thePage.getData();
-        setAttributes(data);
-        thePage.commit(data);
-        setPageAttributes("");
-      }
+    if (pageContents != null)  {
+      pageContents = pageContents.replaceAll("<br>", "\n");
+      pageContents = pageContents.replaceAll("<br/>", "\n");
     }
-    catch (Exception e) {
-      e.printStackTrace();
-      return false;
+    WikiPage root = FitnesseFixtureContext.root;
+    WikiPagePath pagePath = PathParser.parse(pageName);
+    WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
+    if (!"".equals(pageAttributes)) {
+      PageData data = thePage.getData();
+      setAttributes(data);
+      thePage.commit(data);
+      setPageAttributes("");
     }
     return true;
   }

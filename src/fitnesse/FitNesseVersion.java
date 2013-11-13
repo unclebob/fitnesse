@@ -5,12 +5,16 @@ package fitnesse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a version of a fitnesse release. Versions have the following format: v20100103[suffix]
  * I.e. the suffix is optional.
  **/
 public class FitNesseVersion {
+  private static final Logger LOG = Logger.getLogger(FitNesseVersion.class.getName());
+
   private final String version;
 
   public FitNesseVersion() {
@@ -32,14 +36,14 @@ public class FitNesseVersion {
       int len = is.read(b);
       return new String(b, 0, len, Charset.forName("ISO-8859-1"));
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to read FitNesse version", e);
       return "unknown";
     } finally {
       if (is != null) {
         try {
           is.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          LOG.log(Level.SEVERE, "Unable to close FitNesse version file (should never happen)", e);
         }
       }
     }

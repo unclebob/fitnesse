@@ -1,6 +1,5 @@
 package fitnesseMain;
 
-import fitnesse.Arguments;
 import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -22,8 +21,13 @@ import util.CommandLine;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class FitNesseMain {
+  private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
+
   private String extraOutput = "";
 
   public static void main(String[] args) throws Exception {
@@ -43,6 +47,7 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
+    configureLogging(arguments.hasVerboseLogging());
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
 
@@ -66,7 +71,6 @@ public class FitNesseMain {
     if (!arguments.isInstallOnly()) {
       boolean started = context.fitNesse.start();
       if (started) {
-        printStartMessage(arguments, context);
         if (arguments.getCommand() != null) {
           return executeSingleCommand(arguments, context);
         }
@@ -77,17 +81,17 @@ public class FitNesseMain {
 
   private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
-    System.out.println("Executing command: " + arguments.getCommand());
+    LOG.info("Executing command: " + arguments.getCommand());
 
     OutputStream os;
 
     boolean outputRedirectedToFile = arguments.getOutput() != null;
 
     if (outputRedirectedToFile) {
-      System.out.println("-----Command Output redirected to " + arguments.getOutput() + "-----");
+      LOG.info("-----Command Output redirected to " + arguments.getOutput() + "-----");
       os = new FileOutputStream(arguments.getOutput());
     } else {
-      System.out.println("-----Command Output-----");
+      LOG.info("-----Command Output-----");
       os = System.out;
     }
 
@@ -97,7 +101,7 @@ public class FitNesseMain {
     if (outputRedirectedToFile) {
       os.close();
     } else {
-      System.out.println("-----Command Complete-----");
+      LOG.info("-----Command Complete-----");
     }
 
     return TestTextFormatter.finalErrorCount;
@@ -123,9 +127,6 @@ public class FitNesseMain {
     builder.versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
-    // This should be done before the root wiki page is created:
-    //extraOutput = componentFactory.loadVersionsController(arguments.getDaysTillVersionsExpire());
-
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
             builder.rootDirectoryName);
 
@@ -138,15 +139,21 @@ public class FitNesseMain {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    extraOutput += pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
-    extraOutput += pluginsLoader.loadResponders(context.responderFactory);
-    extraOutput += pluginsLoader.loadSymbolTypes(symbolProvider);
-    extraOutput += pluginsLoader.loadContentFilter();
-    extraOutput += pluginsLoader.loadSlimTables();
-    extraOutput += pluginsLoader.loadCustomComparators();
-
+    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadSymbolTypes(symbolProvider);
+    pluginsLoader.loadContentFilter();
+    pluginsLoader.loadSlimTables();
+    pluginsLoader.loadCustomComparators();
 
     WikiImportTestEventListener.register();
+
+    LOG.info("root page: " + context.root);
+    LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
+    LOG.info("authenticator: " + context.authenticator);
+    LOG.info("page factory: " + context.pageFactory);
+    LOG.info("page theme: " + context.pageFactory.getTheme());
+    LOG.info("Starting FitNesse on port: " + context.port);
 
     return context;
   }
@@ -159,9 +166,9 @@ public class FitNesseMain {
       propertiesStream = new FileInputStream(configurationFile);
     } catch (FileNotFoundException e) {
       try {
-        System.err.println(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
+        LOG.info(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
       } catch (IOException e1) {
-        System.err.println(String.format("No configuration file found (%s)", propertiesFile));
+        LOG.info(String.format("No configuration file found (%s)", propertiesFile));
       }
     }
 
@@ -170,20 +177,46 @@ public class FitNesseMain {
         properties.load(propertiesStream);
         propertiesStream.close();
       } catch (IOException e) {
-        System.err.println(String.format("Error reading configuration: %s", e.getMessage()));
+        LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
 
     return properties;
   }
 
+  public static void configureLogging(boolean verbose) {
+    if (System.getProperty("java.util.logging.config.class") != null ||
+            System.getProperty("java.util.logging.config.file") != null) {
+      // Do not reconfigure logging if explicitly set from the command line
+      return;
+    }
+
+    InputStream in = FitNesseMain.class.getResourceAsStream((verbose ? "verbose-" : "") + "logging.properties");
+    try {
+      LogManager.getLogManager().readConfiguration(in);
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Log configuration failed", e);
+    } finally {
+      if (in != null) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          LOG.log(Level.SEVERE, "Unable to close Log configuration file", e);
+        }
+      }
+    }
+    LOG.finest("Configured verbose logging");
+  }
+
   // Move to Arguments class.
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-      "[-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
+      "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
+      if (commandLine.hasOption("v"))
+        arguments.setVerboseLogging(true);
       if (commandLine.hasOption("p"))
         arguments.setPort(commandLine.getOptionArgument("p", "port"));
       if (commandLine.hasOption("d"))
@@ -209,8 +242,8 @@ public class FitNesseMain {
   }
 
   private static void printUsage() {
-    System.err.println("Usage: java -jar fitnesse.jar [-pdrleoab]");
-    System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
+    System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
+    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
       + "}");
     System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
@@ -225,13 +258,6 @@ public class FitNesseMain {
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
     System.err.println("\t-b <filename> redirect command output.");
+    System.err.println("\t-v {off} Verbose logging");
   }
-
-  private void printStartMessage(Arguments args, FitNesseContext context) {
-    System.out.println("FitNesse (" + context.version + ") Started...");
-    System.out.print(context.toString());
-    if (extraOutput != null)
-      System.out.print(extraOutput);
-  }
-
 }

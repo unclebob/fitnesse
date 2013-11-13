@@ -18,8 +18,12 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FitNesseExpediter implements ResponseSender {
+  private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
+
   private final Socket socket;
   private final InputStream input;
   private final OutputStream output;
@@ -49,7 +53,7 @@ public class FitNesseExpediter implements ResponseSender {
       // can be thrown by makeResponse or sendResponse.
     }
     catch (Throwable e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unexpected exception", e);
     }
   }
 
@@ -66,8 +70,8 @@ public class FitNesseExpediter implements ResponseSender {
       output.write(bytes);
       output.flush();
     }
-    catch (IOException stopButtonPressed_probably) {
-      // TODO: Log this
+    catch (IOException e) {
+      LOG.log(Level.INFO, "Output stream closed unexpectedly (Stop button pressed?)", e);
     }
   }
 
@@ -77,7 +81,7 @@ public class FitNesseExpediter implements ResponseSender {
       socket.close();
     }
     catch (IOException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Error while closing socket", e);
     }
   }
 
@@ -176,7 +180,7 @@ public class FitNesseExpediter implements ResponseSender {
       hasError = true;
     }
     catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Can not report error (status = " + status + ", message = " + message + ")", e);
     }
   }
 

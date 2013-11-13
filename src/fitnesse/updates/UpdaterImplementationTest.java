@@ -122,7 +122,6 @@ public class UpdaterImplementationTest {
   public void updatesShouldBeRunIfCurrentVersionNotAlreadyUpdated() throws Exception {
     String version = "TestVersion";
     updater.setFitNesseVersion(version);
-    updater.testing = true;
 
     File propertiesFile = new File("testDir/RooT/properties");
     FileUtil.deleteFile(propertiesFile);

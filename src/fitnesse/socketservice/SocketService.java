@@ -8,8 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketService {
+  private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
+
   private final ServerSocket serverSocket;
   private final Thread serviceThread;
   private volatile boolean running = false;
@@ -30,7 +34,6 @@ public class SocketService {
     serviceThread.start();
   }
 
-  
   public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
@@ -39,7 +42,7 @@ public class SocketService {
       serviceThread.join();
       waitForServerThreads();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Thread joining interrupted", e);
     }
   }
 
@@ -56,8 +59,7 @@ public class SocketService {
         Socket s = serverSocket.accept();
         startServerThread(s);
       } catch (java.lang.OutOfMemoryError e) {
-        System.err.println("Can't create new thread.  Out of Memory.  Aborting");
-        e.printStackTrace();
+        LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
         running = false;// do nothing

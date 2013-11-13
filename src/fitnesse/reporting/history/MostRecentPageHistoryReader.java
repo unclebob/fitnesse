@@ -2,10 +2,13 @@ package fitnesse.reporting.history;
 
 import java.io.File;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.reporting.TestResultRecord;
 
 public class MostRecentPageHistoryReader extends PageHistoryReader {
+  private final static Logger LOG = Logger.getLogger(MostRecentPageHistoryReader.class.getName());
 
   TestResultRecord mostRecentRecord = null;
   File directory = null;
@@ -18,8 +21,7 @@ public class MostRecentPageHistoryReader extends PageHistoryReader {
     try {
       readHistoryFromPageDirectory(directory);
     } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unable to read history from page directory", e);
     }
     return mostRecentRecord;
   }

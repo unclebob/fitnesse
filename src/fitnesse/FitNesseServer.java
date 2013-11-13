@@ -3,10 +3,14 @@
 package fitnesse;
 
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketServer;
 
 public class FitNesseServer implements SocketServer {
+  private static final Logger LOG = Logger.getLogger(FitNesseServer.class.getName());
+
   private FitNesseContext context;
 
   public FitNesseServer(FitNesseContext context) {
@@ -24,7 +28,7 @@ public class FitNesseServer implements SocketServer {
       sender.start();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.SEVERE, "Error while serving socket " + s, e);
     }
   }
 }

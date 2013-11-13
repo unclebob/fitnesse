@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdaterImplementation extends UpdaterBase {
-  public static boolean testing = false;
 
   private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
   private ArrayList<String> updateList = new ArrayList<String>();
@@ -96,26 +95,21 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public boolean update() throws IOException {
     if (shouldUpdate()) {
-      System.err.println("Unpacking new version of FitNesse resources. Please be patient.");
+      LOG.info("Unpacking new version of FitNesse resources. Please be patient...");
       super.update();
-      System.err.println("\n\n" +
-          "********************************************************************************\n" +
-          "    Files have been updated to a new version. Please read the release notes\n" +
-          "    on http://localhost:" + (context != null ? context.port : "xxx") +
-          "/FitNesse.ReleaseNotes to find out about the new\n" +
-          "    features and fixes.\n" +
-          "********************************************************************************\n\n");
+      LOG.info("**********************************************************");
+      LOG.info("Files have been updated to a new version.");
+      LOG.info("Please read the release notes on ");
+      LOG.info("http://localhost:" + (context != null ? context.port : "xxx") +
+          "/FitNesse.ReleaseNotes");
+      LOG.info("to find out about the new features and fixes.");
+      LOG.info("**********************************************************");
 
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
       return true;
     }
     return false;
-  }
-
-  private void exit() {
-    if (!testing)
-      System.exit(0);
   }
 
   private boolean shouldUpdate() {

@@ -5,12 +5,16 @@ package fitnesse.testsystems.fit;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketFactory;
 
 import fitnesse.http.Request;
 
 public class FitSocketReceiver {
+  private static final Logger LOG = Logger.getLogger(FitSocketReceiver.class.getName());
+
   public static final int DEFAULT_SOCKET = 9123;
 
   public ServerSocket serverSocket;
@@ -38,9 +42,10 @@ public class FitSocketReceiver {
           dealSocket(ticket);
         }
         catch (SocketException se) {
+          LOG.log(Level.FINE, "Socket exception", se);
         }
         catch (Exception e) {
-          e.printStackTrace();
+          LOG.log(Level.WARNING, "Failed to receive socket", e);
         }
       }
     }.start();

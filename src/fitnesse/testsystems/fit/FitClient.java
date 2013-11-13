@@ -5,6 +5,8 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fit.Counts;
 import fit.FitProtocol;
@@ -12,6 +14,7 @@ import fitnesse.testsystems.TestSummary;
 import util.StreamReader;
 
 public class FitClient {
+  private static final Logger LOG = Logger.getLogger(FitClient.class.getName());
 
   private FitClientListener listener;
   private Socket fitSocket;
@@ -56,7 +59,7 @@ public class FitClient {
       try {
         fitListeningThread.join();
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        LOG.log(Level.FINE, "Wait for join of listening thread interrupted", e);
       }
   }
 
@@ -100,7 +103,7 @@ public class FitClient {
     try {
       Thread.sleep(10);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.FINE, "sleep interrupted", e);
     }
   }
 

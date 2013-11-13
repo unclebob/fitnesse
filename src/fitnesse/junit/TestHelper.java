@@ -1,6 +1,6 @@
 package fitnesse.junit;
 
-import fitnesse.Arguments;
+import fitnesseMain.Arguments;
 import fitnesse.reporting.JavaFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
