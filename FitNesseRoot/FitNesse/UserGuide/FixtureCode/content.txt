@@ -51,7 +51,7 @@ Sounds pretty straightforward. Let's first set up a ClassPath that points to whe
 !path C:\workspace\TriviaGameFitNesseExample\
 
 How about this for a test table?
-!| org.fitnesse.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
+!| eg.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
 | playerName   | addPlayer?  | countPlayers?  |
 | Al           | true        | 1              |
 | Bertha       | true        | 2              |
@@ -125,19 +125,19 @@ OK. Let's justify that !-StaticGame-! thing a bit more thoroughly. Say we have a
 
 For this test, we'll ask the game to take a fake turn by specifying that the player whose turn it is "rolls" a 6. That should start the game. We'll check the result of that by checking to see which player it was who actually took the turn (we expect it to be Al), and whether indeed the game has started. Note that this fixture, in order to work properly, will need to talk to the same Game object that our !-AddRemovePlayerFixture-! talked to above. That's what !-StaticGame-! does for us.
 
-!|org.fitnesse.triviaGameExample.fitnesseFixtures.GameTurnFixture|
+!|eg.triviaGameExample.fitnesseFixtures.GameTurnFixture|
 |roll | player?  | gameHasStarted? |
 |6    | Al       | true            |
 
 Now that the game has started, we'll try to add a new player to the game, and this should fail (we should get back false from addPlayer()). And we should still have only two players in the game:
 
-!| org.fitnesse.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
+!| eg.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
 | playerName   | addPlayer?  | countPlayers?  |
 | Joe          | false       | 2              |
 
 Finally, we'll try to remove a player from the game, and this too should fail:
 
-!| org.fitnesse.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
+!| eg.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture|
 | playerName   | removePlayer?  | countPlayers?  |
 | Al           | false          | 2              |
 

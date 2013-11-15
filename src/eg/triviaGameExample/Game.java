@@ -1,4 +1,4 @@
-package org.fitnesse.triviaGameExample;
+package eg.triviaGameExample;
 
 import java.util.ArrayList;
 

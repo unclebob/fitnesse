@@ -1,7 +1,7 @@
-package org.fitnesse.triviaGameExample.fitnesseFixtures;
+package eg.triviaGameExample.fitnesseFixtures;
 
-import org.fitnesse.triviaGameExample.Game;
-import org.fitnesse.triviaGameExample.Player;
+import eg.triviaGameExample.Game;
+import eg.triviaGameExample.Player;
 
 public class AddRemovePlayerFixture {
   private String playerName;

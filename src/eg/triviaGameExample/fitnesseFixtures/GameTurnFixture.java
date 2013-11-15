@@ -1,6 +1,6 @@
-package org.fitnesse.triviaGameExample.fitnesseFixtures;
+package eg.triviaGameExample.fitnesseFixtures;
 
-import org.fitnesse.triviaGameExample.Game;
+import eg.triviaGameExample.Game;
 
 public class GameTurnFixture {
   private int roll;
