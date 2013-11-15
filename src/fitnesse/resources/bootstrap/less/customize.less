@@ -35,7 +35,7 @@ label {
   margin: 0;
   #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
   background-color: transparent;
-  .border-radius(0);
+  border-radius: 0;
 }
 
 .breadcrumb li+li:before {
@@ -78,7 +78,7 @@ input[type="checkbox"] {
 /** Rich text editor style */
 .editor-toggle label {
   .radio;
-  .radio.inline;
+  .radio-inline;
 }
 
 .editor-toggle input {
@@ -91,7 +91,7 @@ input[type="checkbox"] {
   margin: 5px 0px 5px 0px;
   border: 1px solid #e5e5e5;
   padding: 4px;
-  .border-radius(4px);
+  border-radius: 4px;
 }
 
 .collapsible > div {
@@ -144,29 +144,20 @@ tr.scenario.closed > td:first-child {
 
 .pass,
 span.pass * {
-  background-color: darken(@successBackground, 10%);
-  color: darken(@successText, 30%);
-}
-.fail,
-span.fail * {
-  background-color: darken(@errorBackground, 15%);
-  color: darken(@errorText, 30%);
-}
-.error {
-  background-color: darken(@warningBackground, 10%);
-  color: darken(@warningText, 30%);
+  background-color: darken(@alert-success-bg, 10%);
+  color: darken(@alert-success-text, 30%);
 }
 span.error,
 span.error *{
   background-position: 0, -2px;
   padding-right: 3px;
-  border: 1px solid darken(@warningBorder, 30%);
-  .border-radius(4px);
+  border: 1px solid darken(@brand-warning, 30%);
+  border-radius: 4px;
 }
 .ignore,
 span.ignore * {
-  background-color: darken(@infoBackground, 10%);
-  color: darken(@infoText, 30%);
+  background-color: darken(@alert-info-bg, 10%);
+  color: darken(@alert-info-text, 30%);
 }
 #test-action {
   .test-button(@bgColor) {
@@ -180,11 +171,11 @@ span.ignore * {
   }
   .output,
   .ok {
-    .test-button(@successText);
+    .test-button(@brand-success);
   }
   .error,
   .stop {
-    .test-button(@errorText);
+    .test-button(@brand-danger);
   }
 }
 
@@ -192,33 +183,33 @@ span.ignore * {
   .progress;
   padding: 0;
   #progressBar {
-    .progress .bar;
+    .progress-bar;
     padding: 0 0 0 .5em;
     &.pass {
-      .progress .bar-success;
+      .progress-bar-success;
     }
     &.fail {
-      .progress .bar-danger;
+      .progress-bar-danger;
     }
     &.error {
-      .progress .bar-warning;
+      .progress-bar-warning;
     }
   }
   &.pass {
     .label;
-    .progress .bar-success;
+    .progress-bar-success;
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
   &.fail {
     .label;
-    .progress .bar-danger;
+    .progress-bar-danger;
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
   &.error {
     .label;
-    .progress .bar-warning;
+    .progress-bar-warning;
     height: 18px;
     padding: 2px 0 0 0.5em;
   }
@@ -229,21 +220,21 @@ span.ignore * {
   .pass {
     .label;
     padding-left: 18px;
-    background-color: @successText;
+    background-color: @brand-success;
   }
   .fail {
     .label;
     padding-left: 18px;
-    background-color: @errorText;
+    background-color: @brand-danger;
   }
   .error {
     .label;
     padding-left: 18px;
-    background-color: @warningText;
+    background-color: @brand-warning;
   }
   .ignore {
     .label;
-    background-color: @infoText;
+    background-color: @brand-info;
   }
 }
 
@@ -254,8 +245,8 @@ span.ignore * {
     top: 0;
     width: 290px;
     position: relative;
-    background-color: darken(@errorBackground, 15%);
-    color: darken(@errorText, 30%);
+    background-color: darken(@alert-danger-bg, 15%);
+    color: darken(@alert-warning-text, 30%);
 }
 #error-nav-label {
     float: left;
@@ -312,17 +303,17 @@ span.ignore * {
 .editPage #pagename,
 .editPage #helptext {
     margin-bottom: 0.5em;
-    .input-xxlarge;
+    //.input-xxlarge;
 }
 
 .tagsinput .tag {
     .badge;
-    background-color: @infoText;
+    background-color: @brand-info;
     border: none;
 }
 
 .tagsinput .tag a {
-    color: @errorText;
+    color: @alert-danger-text;
 }
 
 body.editing {
