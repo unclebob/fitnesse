@@ -1,7 +1,7 @@
-<ul class="breadcrumb">
+<ol class="breadcrumb">
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)
  <li><a href="/$breadCrumb.Link">$breadCrumb.Name</a></li>
 #end
  #if($pageTitle.Link)<li><a href="/$pageTitle.Link">$pageTitle.Title</a></li>#end
-</ul>
+</ol>
 
