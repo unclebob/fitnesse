@@ -137,45 +137,6 @@ public class FileUtilTest {
     assertEquals("a" + separator + "b" + separator + "c", FileUtil.buildPath(new String[]{"a", "b", "c"}));
   }
 
-  @Test
-  public void testAddUrlToClasspath() throws Exception {
-    ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-    assertTrue(systemClassLoader instanceof URLClassLoader);
-    URLClassLoader classLoader = (URLClassLoader) systemClassLoader;
-
-    URL sampleUrl = new File("src").toURI().toURL();
-
-    String classpath = classpathAsString(classLoader);
-    assertNotSubString(sampleUrl.toString(), classpath);
-
-    FileUtil.addUrlToClasspath(sampleUrl);
-    classpath = classpathAsString(classLoader);
-    assertSubString(sampleUrl.toString(), classpath);
-  }
-
-  @Test
-  public void testAddMultipleUrlsToClasspath() throws Exception {
-    String separator = System.getProperty("path.separator");
-    String paths = "/blah/blah" + separator + "C" + otherSeperator(separator) + "\\foo\\bar";
-    FileUtil.addItemsToClasspath(paths);
-    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-    String classpath = classpathAsString(classLoader);
-    assertSubString("/blah/blah", classpath);
-    assertMatches("[C" + otherSeperator(separator) + "?foo?bar]", classpath);
-  }
-
-  private String otherSeperator(String separator) {
-    return separator.equals(";") ? ":" : ";";
-  }
-
-  private String classpathAsString(URLClassLoader classLoader) {
-    URL[] urls = classLoader.getURLs();
-    StringBuffer urlString = new StringBuffer();
-    for (int i = 0; i < urls.length; i++)
-      urlString.append(urls[i].toString()).append(":");
-    return urlString.toString();
-  }
-
 
 }
 
