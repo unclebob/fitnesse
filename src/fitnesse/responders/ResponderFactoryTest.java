@@ -247,11 +247,6 @@ public class ResponderFactoryTest {
   }
 
   @Test
-  public void testTestResultFormattingResponder() throws Exception {
-    assertResponderTypeMatchesInput("format", TestResultFormattingResponder.class);
-  }
-
-  @Test
   public void testSymbolicLinkResponder() throws Exception {
     assertResponderTypeMatchesInput("symlink", SymbolicLinkResponder.class);
   }
