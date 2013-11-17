@@ -190,13 +190,13 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   public static LogData makeLogData(Socket socket, Request request, Response response) {
-    LogData data = new LogData();
-    data.host = ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress();
-    data.time = new GregorianCalendar();
-    data.requestLine = request.getRequestLine();
-    data.status = response.getStatus();
-    data.size = response.getContentSize();
-    data.username = request.getAuthorizationUsername();
+    LogData data = new LogData(
+        ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress(),
+        new GregorianCalendar(),
+        request.getRequestLine(),
+        response.getStatus(),
+        response.getContentSize(),
+        request.getAuthorizationUsername());
 
     return data;
   }

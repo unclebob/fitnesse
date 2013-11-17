@@ -29,7 +29,7 @@ public class Logger {
   }
 
   private PrintWriter writer;
-  private GregorianCalendar currentFileCreationDate;
+  private Calendar currentFileCreationDate;
 
   public Logger(String dirPath) {
     directory = new File(dirPath);
@@ -64,7 +64,7 @@ public class Logger {
     writer.flush();
   }
 
-  private boolean needNewFile(GregorianCalendar time) {
+  private boolean needNewFile(Calendar time) {
     if (writer == null)
       return true;
     else {

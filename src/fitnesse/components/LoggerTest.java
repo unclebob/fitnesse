@@ -34,14 +34,16 @@ public class LoggerTest {
     saveLocale = Locale.getDefault();
     Locale.setDefault(Locale.US);
     l = new Logger(dirPath);
-    ld = new LogData();
-    ld.host = "myHost";
-    ld.requestLine = "request";
-    ld.size = 666;
-    ld.status = 42;
     TimeZone z = TimeZone.getTimeZone("GMT-1:00");
-    ld.time = new GregorianCalendar(2003, 2, 6, 13, 42, 5);
-    ld.time.setTimeZone(z);
+    Calendar time = new GregorianCalendar(2003, 2, 6, 13, 42, 5);
+    time.setTimeZone(z);
+    ld = new LogData(
+            "myHost",
+            time,
+            "request",
+            42,
+            666,
+            null);
   }
 
   @After
@@ -99,8 +101,13 @@ public class LoggerTest {
   @Test
   public void testLogSecondLineInSameFile() throws Exception {
     l.log(ld);
-    LogData ld2 = (LogData) ld.clone();
-    ld2.host = "newHost";
+    LogData ld2 = new LogData(
+            "newHost",
+            ld.time,
+            ld.requestLine,
+            ld.status,
+            ld.size,
+            ld.username);
     l.log(ld2);
     File dir = l.getDirectory();
     File file = new File(dir, filename);
@@ -113,8 +120,15 @@ public class LoggerTest {
 
   @Test
   public void testLogLineInNewFile() throws Exception {
-    LogData nextDay = (LogData) ld.clone();
-    nextDay.time.add(Calendar.DATE, 1);
+    Calendar time = (Calendar) ld.time.clone();
+    time.add(Calendar.DATE, 1);
+    LogData nextDay = new LogData(
+            ld.host,
+            time,
+            ld.requestLine,
+            ld.status,
+            ld.size,
+            ld.username);
     l.log(ld);
     l.log(nextDay);
     l.close();
@@ -130,7 +144,13 @@ public class LoggerTest {
 
   @Test
   public void testLoggingIncludesUsername() throws Exception {
-    ld.username = "Joe";
+    ld = new LogData(
+            ld.host,
+            ld.time,
+            ld.requestLine,
+            ld.status,
+            ld.size,
+            "Joe");
     l.log(ld);
     l.close();
     File dir = l.getDirectory();

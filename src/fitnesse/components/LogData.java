@@ -2,20 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 
-public class LogData implements Cloneable {
-  public String host;
-  public GregorianCalendar time;
-  public String requestLine;
-  public int status;
-  public int size;
-  public String username;
+public class LogData {
+  public final String host;
+  public final Calendar time;
+  public final String requestLine;
+  public final int status;
+  public final int size;
+  public final String username;
 
-  public Object clone() throws CloneNotSupportedException {
-    LogData newData = (LogData) super.clone();
-    newData.time = (GregorianCalendar) time.clone();
-
-    return newData;
+  public LogData(String host, Calendar time, String requestLine, int status, int size, String username) {
+    this.host = host;
+    this.time = time;
+    this.requestLine = requestLine;
+    this.status = status;
+    this.size = size;
+    this.username = username;
   }
 }
