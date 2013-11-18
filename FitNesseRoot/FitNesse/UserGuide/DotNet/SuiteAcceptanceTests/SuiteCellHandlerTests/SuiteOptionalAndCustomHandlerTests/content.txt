@@ -1,3 +1,0 @@
-!3 There are several optional handlers that you can load explicitly (using the !-CellHandlerLoader-!). You can also create and load your own custom handlers.
-
-!contents
