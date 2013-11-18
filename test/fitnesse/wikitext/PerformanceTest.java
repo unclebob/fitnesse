@@ -9,7 +9,7 @@ import fitnesse.slim.protocol.SlimSerializer;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.test.TestRoot;
+import fitnesse.wikitext.parser.TestRoot;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
