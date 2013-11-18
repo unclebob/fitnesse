@@ -172,6 +172,7 @@
 
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes.dir}" />
+		<delete dir="${test.classes.dir}" />
 		<delete dir="${results.dir}" />
 		<delete dir="${lib.dir}" />
 		<delete dir="${dist.dir}" />
