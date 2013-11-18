@@ -27,7 +27,7 @@ import util.ListUtility;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public abstract class QueryTableBaseTest {
+public abstract class QueryTableTestBase {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   private String queryTableHeader;

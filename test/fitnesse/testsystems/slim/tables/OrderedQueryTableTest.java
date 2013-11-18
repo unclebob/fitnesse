@@ -5,7 +5,7 @@ import util.ListUtility;
 
 import static util.ListUtility.list;
 
-public class OrderedQueryTableTest extends QueryTableBaseTest {
+public class OrderedQueryTableTest extends QueryTableTestBase {
   @Override
   protected Class<? extends QueryTable> queryTableClass() {
     return OrderedQueryTable.class;

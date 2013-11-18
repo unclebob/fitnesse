@@ -4,7 +4,7 @@ package fitnesse.testsystems.slim.tables;
 
 import org.junit.Test;
 
-public class QueryTableTest extends QueryTableBaseTest {
+public class QueryTableTest extends QueryTableTestBase {
 
   protected String tableType() {
     return "query";
