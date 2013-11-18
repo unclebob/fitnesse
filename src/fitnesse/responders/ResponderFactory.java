@@ -32,7 +32,6 @@ import fitnesse.responders.run.SocketCatchingResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
-import fitnesse.responders.run.TestResultFormattingResponder;
 import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
@@ -89,7 +88,6 @@ public class ResponderFactory {
     addResponder("import", WikiImportingResponder.class);
     addResponder("files", FileResponder.class);
     addResponder("shutdown", ShutdownResponder.class);
-    addResponder("format", TestResultFormattingResponder.class);
     addResponder("symlink", SymbolicLinkResponder.class);
     addResponder("importAndView", ImportAndViewResponder.class);
     addResponder("getPage", WikiPageResponder.class);

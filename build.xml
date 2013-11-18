@@ -113,7 +113,6 @@
 	<target name="compile" depends="stamp-version, resolve" description="compile the source (make)">
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
-		<copy file="extra/ant/tasks.properties" todir="${classes.dir}" />
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}">
 				<include name="fitnesse/resources/**" />
