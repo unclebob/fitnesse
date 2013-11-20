@@ -1,5 +1,5 @@
 body {
-  padding-top: 80px;
+  padding-top: 86px;
 }
 
 header,
@@ -179,62 +179,61 @@ span.ignore * {
   }
 }
 
-#test-summary {
-  .progress;
+.progress-variant(@background) {
+  .progress-bar-variant(@background);
+  padding-left: 18px;
+  color: @progress-bar-color;
+}
+
+#progressBar {
+  // unset default styles
   padding: 0;
-  #progressBar {
-    .progress-bar;
-    padding: 0 0 0 .5em;
-    &.pass {
-      .progress-bar-success;
-    }
-    &.fail {
-      .progress-bar-danger;
-    }
-    &.error {
-      .progress-bar-warning;
-    }
-  }
+  .progress-bar;
   &.pass {
-    .label;
     .progress-bar-success;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
   }
   &.fail {
-    .label;
     .progress-bar-danger;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
   }
   &.error {
-    .label;
     .progress-bar-warning;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
   }
 }
 
+#test-summary {
+  .progress;
+  // unset default styles
+  padding: 0;
+  background-position: 0;
+  &.pass {
+    .progress-variant(@progress-bar-success-bg);
+  }
+  &.fail {
+    .progress-variant(@progress-bar-danger-bg);
+  }
+  &.error {
+    .progress-variant(@progress-bar-warning-bg);
+  }
+}
+
+.test-summary-item(@background) {
+  .label;
+  .label-variant(@background);
+  padding-left: 18px;
+}
 
 #test-summaries {
   .pass {
-    .label;
-    padding-left: 18px;
-    background-color: @brand-success;
+    .test-summary-item(@label-success-bg);
   }
   .fail {
-    .label;
-    padding-left: 18px;
-    background-color: @brand-danger;
+    .test-summary-item(@label-danger-bg);
   }
   .error {
-    .label;
-    padding-left: 18px;
-    background-color: @brand-warning;
+    .test-summary-item(@label-warning-bg);
   }
   .ignore {
-    .label;
-    background-color: @brand-info;
+    .test-summary-item(@label-info-bg);
   }
 }
 
