@@ -167,7 +167,7 @@ span.ignore * {
     float: left;
     font-size: 14px;
     margin-top: 10px;
-    padding: 3px 6px 3px;
+    padding: 9px 6px;
   }
   .output,
   .ok {
@@ -181,14 +181,13 @@ span.ignore * {
 
 .progress-variant(@background) {
   .progress-bar-variant(@background);
-  padding-left: 18px;
+//  padding: 0 0 0 18px;
   color: @progress-bar-color;
 }
 
 #progressBar {
-  // unset default styles
-  padding: 0;
   .progress-bar;
+  height: auto;
   &.pass {
     .progress-bar-success;
   }
@@ -202,9 +201,7 @@ span.ignore * {
 
 #test-summary {
   .progress;
-  // unset default styles
-  padding: 0;
-  background-position: 0;
+  height: auto;
   &.pass {
     .progress-variant(@progress-bar-success-bg);
   }
@@ -238,35 +235,15 @@ span.ignore * {
 }
 
 #error-nav {
-    float: left;
-    margin-left: 15px;
-    position: relative;
-    top: 0;
-    width: 290px;
-    position: relative;
-    background-color: darken(@alert-danger-bg, 15%);
-    color: darken(@alert-warning-text, 30%);
-}
-#error-nav-label {
-    float: left;
-    margin-left: 10px;
-    margin-top: 13px;
-}
-#error-nav-controls {
-    position: absolute;
-    top: 0;
-    width: 170px;
-    postition: absolute;
-    left: 130px;
-    margin-top: 5px;
+  margin-top: 8px;
 }
 #error-nav button {
-    top: 0;
-    width: 30px;
-}
-#error-nav input {
-    top: 0;
-    width: 40px;
+  .btn-sm;
+  .btn-danger;
+  font-size: 150%;
+  padding: 6px 12px;
+  line-height: 1;
+  margin: 0 0 3px 0
 }
 .error-nav-hidden{
     display: none;
