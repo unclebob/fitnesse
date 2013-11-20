@@ -2,11 +2,11 @@
 #if($pageHistory)
 <script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
 <form action= "" method="get" name="compareHistory">
- <fieldset class="buttons">
+ <fieldset>
   <input type="hidden" value="compareHistory" name="responder"/>
   <input type="submit" value="Compare" />
   <a class="button" href="$viewLocation">Cancel</a>
-  <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
+  <label for="hidePassedTests"><input type="checkbox" id="hidePassedTests">Hide passed tests</label>
  </fieldset>
  <table>
   <tr>

@@ -1,12 +1,12 @@
 #set($noHistory = true)
 <script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
-<div class="buttons">
+<div>
  <a class="button" href="?responder=overview">View as Overview</a>
  <a class="button" href="?responder=purgeHistory&days=30">Purge &gt; 30 days</a>
  <a class="button" href="?responder=purgeHistory&days=7">Purge &gt; 7 days</a>
  <a class="button" href="?responder=purgeHistory&days=0">Purge all</a>
  <a class="button" href="$viewLocation">Cancel</a>
- <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
+ <label for="hidePassedTests"><input type="checkbox" id="hidePassedTests"/>Hide passed tests</label>
 </div>
 
 <table>
