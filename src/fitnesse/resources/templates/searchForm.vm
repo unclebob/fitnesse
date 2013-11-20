@@ -13,11 +13,11 @@
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>
 
+<h2>Search Properties</h2>
 <form>
 #macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
- <h2>Search Properties</h2>
  <input type="hidden" name="responder" value="executeSearchProperties"/>
 
  <fieldset>

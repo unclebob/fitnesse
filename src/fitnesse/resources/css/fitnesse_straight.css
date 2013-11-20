@@ -241,3 +241,9 @@ article th {
   border-color:SlateGray;
 }
 
+.propertiesPage form,
+.searchForm form,
+.refactorForm form {
+    padding-bottom: 1em;
+    border-bottom: 1px solid #984D00;
+}

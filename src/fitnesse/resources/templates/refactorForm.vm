@@ -1,6 +1,6 @@
 #if( !$type || $type == "replace" )
+<h2>Replace</h2>
 <form action="$refactoredRootPage" method="post">
- <h2>Replace</h2>
  <input type="hidden" name="responder" value="replace"/>
  <fieldset>
   <label for="searchString">Search String:</label>
@@ -20,10 +20,10 @@
 </form>
 #end
 
-#if( !$type || $type == "delete" ) 
+#if( !$type || $type == "delete" )
+<h2>Delete page</h2>
 <form method="get" action="$refactoredRootPage">
- <h2>Delete page</h2>
- <p>Delete this entire sub-wiki.</p>		
+ <p>Delete this entire sub-wiki.</p>
  <input type="hidden" name="responder" value="deletePage"/>
  <fieldset class="buttons">
   <input type="submit" name="" value="Delete Page"/>
@@ -33,8 +33,8 @@
 #end
 
 #if( !$type || $type == "rename" )
+<h2>Rename page</h2>
 <form method="get" action="$refactoredRootPage">
- <h2>Rename page</h2>
  <input type="hidden" name="responder" value="renamePage"/>
  <fieldset>
   <label for="newName">New Name:</label>
@@ -51,8 +51,8 @@
 #end
 
 #if( !$type || $type == "move" )
+<h2>Move page</h2>
 <form method="get" action="$refactoredRootPage">
- <h2>Move page</h2>
  <input type="hidden" name="responder" value="movePage"/>
  <fieldset>
   <label for="newLocation">New Location:</label>

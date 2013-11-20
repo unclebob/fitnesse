@@ -1,16 +1,12 @@
 fieldset {
 	border: none;
 	padding: 0;
-	margin: 0;
+    margin: 0 0 0.5em 0;
 }
 label {
     display: inline-block;
-    padding-right: 16px;
     text-align: right;
-    width: 124px;
-}
-label input {
-    margin-right: 8px;
+    width: 140px;
 }
 .validationerror {
     color: maroon;
@@ -106,12 +102,6 @@ label input {
 }
 
 /** Properties page / Search form / Directory page**/
-.propertiesPage form,
-.searchForm form,
-.refactorForm form {
-	padding-bottom: 1em;
-	border-bottom: 1px solid #984D00;
-}
 .propertiesPage .properties,
 .searchForm .properties {
     margin-left: 145px;
@@ -132,12 +122,10 @@ legend {
 	margin-bottom: 0.5em;
 	padding: 0;
 }
-label input {
-	margin-right: 0.5em;
-}
 label.checkbox {
 	margin-left: 145px;
 	width: auto;
+    text-align: left;
 }
 #virtual-wiki-properties {
 	margin-top: 1em;
