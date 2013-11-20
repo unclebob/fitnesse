@@ -1,16 +1,12 @@
 fieldset {
 	border: none;
 	padding: 0;
-	margin: 0;
+    margin: 0 0 0.5em 0;
 }
 label {
     display: inline-block;
-    padding-right: 16px;
     text-align: right;
-    width: 124px;
-}
-label input {
-    margin-right: 8px;
+    width: 140px;
 }
 .validationerror {
     color: maroon;
@@ -39,10 +35,6 @@ label input {
     margin: 0;
 }
 
-.editPage #editor {
-    margin: 8px 0 0 0;
-}
-
 .editPage #editor label {
 	width: auto;
 }
@@ -53,14 +45,13 @@ label input {
 .editPage #pagename,
 .editPage #helptext {
 	width: 55em;
-	margin-bottom: 0.5em;
-}
-.editPage #pagetypes {
-	margin: 0 0 0.5em 7em;
 }
 .editPage #pagetypes label {
 	display: inline;
 	float: none;
+}
+.editPage #pagetypes label:first-child {
+    margin-left: 145px;
 }
 .editPage textarea, .editPage iframe {
 	display: block;
@@ -76,8 +67,7 @@ label input {
 }
 .editPage #save_buttons {
     bottom: 0;
-    margin-top: 16px;
-    margin-bottom: 7px; /* buttons have 9px bottom padding */
+    margin-top: 9px;
     position: fixed;
 }
 
@@ -97,21 +87,9 @@ label input {
     text-decoration: none;
     margin-left: 4px;
 }
-.tagsinput input {
-    background: none repeat scroll 0 0 transparent;
-    color: #000000;
-    margin: 0 ;
-    outline: 0 none;
-    width: 80px;
-}
+
 
 /** Properties page / Search form / Directory page**/
-.propertiesPage form,
-.searchForm form,
-.refactorForm form {
-	padding-bottom: 1em;
-	border-bottom: 1px solid #984D00;
-}
 .propertiesPage .properties,
 .searchForm .properties {
     margin-left: 145px;
@@ -132,12 +110,10 @@ legend {
 	margin-bottom: 0.5em;
 	padding: 0;
 }
-label input {
-	margin-right: 0.5em;
-}
 label.checkbox {
 	margin-left: 145px;
 	width: auto;
+    text-align: left;
 }
 #virtual-wiki-properties {
 	margin-top: 1em;
@@ -192,11 +168,15 @@ tr.closed-detail {
 tr.exception-detail {
     background-color: #ffffaa;
 }
-#test-summary, #progressBar {
-	padding: 0.5em;
+
+#progressBar,
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error {
+    padding: 0.5em;
     padding-left: 1.5em;
-    background-position: 0 0.3em;
 }
+
 #test-summaries ul {
 	list-style: none;
 	padding-left: 0;
@@ -208,23 +188,32 @@ tr.exception-detail {
 #test-summaries .fail,
 #test-summaries .error,
 span.error {
-  padding: 0px 0px 0px 20px;
+    padding: 0px 0px 0px 20px;
 }
+
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error,
+#test-summaries .pass,
+#test-summaries .fail,
+#test-summaries .error,
+span.error {
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
 #test-summary.pass,
 #test-summaries .pass {
   background-image: url("../images/checkmark.png");
-  background-repeat: no-repeat;
 }
 #test-summary.fail,
 #test-summaries .fail {
   background-image: url("../images/wrong.png");
-  background-repeat: no-repeat;
 }
 #test-summary.error,
 #test-summaries .error,
 span.error {
   background-image: url("../images/exception.png");
-  background-repeat: no-repeat;
 }
 #test-action .stop {
 	background-color: red;

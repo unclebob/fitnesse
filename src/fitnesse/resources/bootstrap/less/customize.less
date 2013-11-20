@@ -1,5 +1,5 @@
 body {
-  padding-top: 80px;
+  padding-top: 86px;
 }
 
 header,
@@ -35,7 +35,7 @@ label {
   margin: 0;
   #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
   background-color: transparent;
-  .border-radius(0);
+  border-radius: 0;
 }
 
 .breadcrumb li+li:before {
@@ -78,7 +78,7 @@ input[type="checkbox"] {
 /** Rich text editor style */
 .editor-toggle label {
   .radio;
-  .radio.inline;
+  .radio-inline;
 }
 
 .editor-toggle input {
@@ -91,7 +91,7 @@ input[type="checkbox"] {
   margin: 5px 0px 5px 0px;
   border: 1px solid #e5e5e5;
   padding: 4px;
-  .border-radius(4px);
+  border-radius: 4px;
 }
 
 .collapsible > div {
@@ -144,29 +144,20 @@ tr.scenario.closed > td:first-child {
 
 .pass,
 span.pass * {
-  background-color: darken(@successBackground, 10%);
-  color: darken(@successText, 30%);
-}
-.fail,
-span.fail * {
-  background-color: darken(@errorBackground, 15%);
-  color: darken(@errorText, 30%);
-}
-.error {
-  background-color: darken(@warningBackground, 10%);
-  color: darken(@warningText, 30%);
+  background-color: darken(@alert-success-bg, 10%);
+  color: darken(@alert-success-text, 30%);
 }
 span.error,
 span.error *{
   background-position: 0, -2px;
   padding-right: 3px;
-  border: 1px solid darken(@warningBorder, 30%);
-  .border-radius(4px);
+  border: 1px solid darken(@brand-warning, 30%);
+  border-radius: 4px;
 }
 .ignore,
 span.ignore * {
-  background-color: darken(@infoBackground, 10%);
-  color: darken(@infoText, 30%);
+  background-color: darken(@alert-info-bg, 10%);
+  color: darken(@alert-info-text, 30%);
 }
 #test-action {
   .test-button(@bgColor) {
@@ -176,155 +167,146 @@ span.ignore * {
     float: left;
     font-size: 14px;
     margin-top: 10px;
-    padding: 3px 6px 3px;
+    padding: 9px 6px;
   }
   .output,
   .ok {
-    .test-button(@successText);
+    .test-button(@brand-success);
   }
   .error,
   .stop {
-    .test-button(@errorText);
+    .test-button(@brand-danger);
+  }
+}
+
+.progress-variant(@background) {
+  .progress-bar-variant(@background);
+//  padding: 0 0 0 18px;
+  color: @progress-bar-color;
+}
+
+#progressBar {
+  .progress-bar;
+  height: auto;
+  &.pass {
+    .progress-bar-success;
+  }
+  &.fail {
+    .progress-bar-danger;
+  }
+  &.error {
+    .progress-bar-warning;
   }
 }
 
 #test-summary {
   .progress;
-  padding: 0;
-  #progressBar {
-    .progress .bar;
-    padding: 0 0 0 .5em;
-    &.pass {
-      .progress .bar-success;
-    }
-    &.fail {
-      .progress .bar-danger;
-    }
-    &.error {
-      .progress .bar-warning;
-    }
-  }
+  height: auto;
   &.pass {
-    .label;
-    .progress .bar-success;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
+    .progress-variant(@progress-bar-success-bg);
   }
   &.fail {
-    .label;
-    .progress .bar-danger;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
+    .progress-variant(@progress-bar-danger-bg);
   }
   &.error {
-    .label;
-    .progress .bar-warning;
-    height: 18px;
-    padding: 2px 0 0 0.5em;
+    .progress-variant(@progress-bar-warning-bg);
   }
 }
 
+.test-summary-item(@background) {
+  .label;
+  .label-variant(@background);
+  padding-left: 18px;
+}
 
 #test-summaries {
   .pass {
-    .label;
-    padding-left: 18px;
-    background-color: @successText;
+    .test-summary-item(@label-success-bg);
   }
   .fail {
-    .label;
-    padding-left: 18px;
-    background-color: @errorText;
+    .test-summary-item(@label-danger-bg);
   }
   .error {
-    .label;
-    padding-left: 18px;
-    background-color: @warningText;
+    .test-summary-item(@label-warning-bg);
   }
   .ignore {
-    .label;
-    background-color: @infoText;
+    .test-summary-item(@label-info-bg);
   }
 }
 
 #error-nav {
-    float: left;
-    margin-left: 15px;
-    position: relative;
-    top: 0;
-    width: 290px;
-    position: relative;
-    background-color: darken(@errorBackground, 15%);
-    color: darken(@errorText, 30%);
-}
-#error-nav-label {
-    float: left;
-    margin-left: 10px;
-    margin-top: 13px;
-}
-#error-nav-controls {
-    position: absolute;
-    top: 0;
-    width: 170px;
-    postition: absolute;
-    left: 130px;
-    margin-top: 5px;
+  margin-top: 8px;
 }
 #error-nav button {
-    top: 0;
-    width: 30px;
-}
-#error-nav input {
-    top: 0;
-    width: 40px;
+  .btn-sm;
+  .btn-danger;
+  font-size: 150%;
+  padding: 6px 12px;
+  line-height: 1;
+  margin: 0 0 3px 0
 }
 .error-nav-hidden{
     display: none;
 }
 
+.propertiesPage form,
+.searchForm form,
+.refactorForm form,
+.deletePage form {
+  .well;
+  .well-sm;
+}
 
+fieldset {
+  margin: 0 0 0.5em 0;
+}
 
 // Specific pages:
 
-.propertiesPage form,
-.searchForm form,
-.refactorForm form {
-  border-bottom: none;
-}
 
-.editPage fieldset {
-    margin-left: 40px;
-    margin-right: 40px;
-}
 .editPage .textarea-toolbar,
 .editPage .wysiwyg-toolbar {
-    margin-left: 40px;
+    margin-left: 4px;
 }
 
 .editPage textarea#pageContent {
     border-left: none;
     border-right: none;
+    padding: 4px;
 }
 .editPage iframe.wysiwyg {
     border-left: none;
     border-right: none;
 }
-.editPage #pagename,
-.editPage #helptext {
-    margin-bottom: 0.5em;
-    .input-xxlarge;
+
+.editPage .textarea-toolbar input[type="button"] {
+  .btn-default;
+  .btn-xs;
+  margin: 3px 0 6px 0;
 }
 
 .tagsinput .tag {
     .badge;
-    background-color: @infoText;
+    background-color: @brand-info;
     border: none;
 }
 
 .tagsinput .tag a {
-    color: @errorText;
+    color: @alert-danger-text;
 }
 
 body.editing {
     padding: 0 40px;
+}
+
+.editPage #save_buttons {
+  margin-left: @padding-base-horizontal;
+}
+
+#tt-wrap-text {
+  font-weight: normal;
+}
+
+.wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
+  .box-sizing(content-box);
 }
