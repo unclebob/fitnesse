@@ -8,7 +8,6 @@ div.trac-resizable {
     clear: both;
 }
 textarea#pageContent {
-    padding: 4px 0;
     border: 1px solid #d7d7d7;
 }
 

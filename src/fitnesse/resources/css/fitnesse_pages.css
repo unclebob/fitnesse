@@ -35,10 +35,6 @@ label {
     margin: 0;
 }
 
-.editPage #editor {
-    margin: 8px 0 0 0;
-}
-
 .editPage #editor label {
 	width: auto;
 }
@@ -49,14 +45,13 @@ label {
 .editPage #pagename,
 .editPage #helptext {
 	width: 55em;
-	margin-bottom: 0.5em;
-}
-.editPage #pagetypes {
-	margin: 0 0 0.5em 7em;
 }
 .editPage #pagetypes label {
 	display: inline;
 	float: none;
+}
+.editPage #pagetypes label:first-child {
+    margin-left: 145px;
 }
 .editPage textarea, .editPage iframe {
 	display: block;
@@ -72,8 +67,7 @@ label {
 }
 .editPage #save_buttons {
     bottom: 0;
-    margin-top: 16px;
-    margin-bottom: 7px; /* buttons have 9px bottom padding */
+    margin-top: 9px;
     position: fixed;
 }
 
@@ -93,13 +87,7 @@ label {
     text-decoration: none;
     margin-left: 4px;
 }
-.tagsinput input {
-    background: none repeat scroll 0 0 transparent;
-    color: #000000;
-    margin: 0 ;
-    outline: 0 none;
-    width: 80px;
-}
+
 
 /** Properties page / Search form / Directory page**/
 .propertiesPage .properties,

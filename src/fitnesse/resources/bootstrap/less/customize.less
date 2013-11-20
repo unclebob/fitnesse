@@ -286,27 +286,26 @@ fieldset {
 
 // Specific pages:
 
-.editPage fieldset {
-    margin-left: 40px;
-    margin-right: 40px;
-}
+
 .editPage .textarea-toolbar,
 .editPage .wysiwyg-toolbar {
-    margin-left: 40px;
+    margin-left: 4px;
 }
 
 .editPage textarea#pageContent {
     border-left: none;
     border-right: none;
+    padding: 4px;
 }
 .editPage iframe.wysiwyg {
     border-left: none;
     border-right: none;
 }
-.editPage #pagename,
-.editPage #helptext {
-    margin-bottom: 0.5em;
-    //.input-xxlarge;
+
+.editPage .textarea-toolbar input[type="button"] {
+  .btn-default;
+  .btn-xs;
+  margin: 3px 0 6px 0;
 }
 
 .tagsinput .tag {
@@ -321,4 +320,16 @@ fieldset {
 
 body.editing {
     padding: 0 40px;
+}
+
+.editPage #save_buttons {
+  margin-left: @padding-base-horizontal;
+}
+
+#tt-wrap-text {
+  font-weight: normal;
+}
+
+.wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
+  .box-sizing(content-box);
 }
