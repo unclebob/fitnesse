@@ -104,11 +104,3 @@ There are a few things to keep in mind when working from an IDE:
    will download the dependencies and copy them to lib/, from where your
    IDE can pick them up.
 
-
-### .NET Support (8/6/2008)
-
-We re-installed the dotnet/*.dll and dotnet/*.exe files, taking them from the
-`fitnessedotnet` release on Sourceforge. This will allow the .NET Acceptance
-Tests to run right out of this distribution. However, you should consider using
-[FitSharp](http://www.syterra.com/FitSharp.html). See the page `FitNesseRoot/FitNesse/DotNet/context.txt` for
-more information.

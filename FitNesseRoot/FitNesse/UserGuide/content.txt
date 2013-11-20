@@ -94,7 +94,6 @@ Acceptance tests are what !-FitNesse-! is about. Learn why and how to make, run,
 !2 !-FitNesse-! for Integrators
 | [[Source Code Control][>SourceCodeControl]] | ''How to create a plugin for marrying !-FitNesse-! to your SCM system.'' |
 | [[Customizing Test Execution][>CustomizingTestExecution]] | ''Modify the way tests are executed.'' |
-| [[Multi-Language Fitnesse][>MultiLanguageFitNesse]] | ''Using fixtures written in programming languages other than Java.'' |
 | [[Executing Tests from Outside The UI][>ExecutingTestsOutsideTheUserInterface]] | ''How to run tests from IDEs, commandline and build scripts.'' |
 | [[Plugin Usage][>PluginUsage]] | ''How to create and use plugins.'' |
 
