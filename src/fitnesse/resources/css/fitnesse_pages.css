@@ -168,11 +168,15 @@ tr.closed-detail {
 tr.exception-detail {
     background-color: #ffffaa;
 }
-#test-summary, #progressBar {
-	padding: 0.5em;
+
+#progressBar,
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error {
+    padding: 0.5em;
     padding-left: 1.5em;
-    background-position: 0 0.3em;
 }
+
 #test-summaries ul {
 	list-style: none;
 	padding-left: 0;
@@ -184,23 +188,32 @@ tr.exception-detail {
 #test-summaries .fail,
 #test-summaries .error,
 span.error {
-  padding: 0px 0px 0px 20px;
+    padding: 0px 0px 0px 20px;
 }
+
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error,
+#test-summaries .pass,
+#test-summaries .fail,
+#test-summaries .error,
+span.error {
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
 #test-summary.pass,
 #test-summaries .pass {
   background-image: url("../images/checkmark.png");
-  background-repeat: no-repeat;
 }
 #test-summary.fail,
 #test-summaries .fail {
   background-image: url("../images/wrong.png");
-  background-repeat: no-repeat;
 }
 #test-summary.error,
 #test-summaries .error,
 span.error {
   background-image: url("../images/exception.png");
-  background-repeat: no-repeat;
 }
 #test-action .stop {
 	background-color: red;
