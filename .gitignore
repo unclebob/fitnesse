@@ -13,6 +13,7 @@ jsunit/*
 agitar/*
 dist/*
 classes/*
+test-classes/*
 antlib/*
 javadoc/*
 lib/*
