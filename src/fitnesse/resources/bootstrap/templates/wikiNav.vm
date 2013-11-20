@@ -17,6 +17,7 @@
  #end
 
  #if( $actions.withEdit)
+  #if($actions.newPageTemplates.size() > 0)
  <li id="add" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
   <ul class="dropdown-menu">
    #foreach ($tmpl in $actions.newPageTemplates.entrySet())
@@ -24,6 +25,9 @@
    #end
   </ul>
  </li>
+  #else
+ <li><a href="$localPath?new">Add</a></li>
+  #end
  #end
  
  <li id="tools" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <b class="caret"></b></a>
