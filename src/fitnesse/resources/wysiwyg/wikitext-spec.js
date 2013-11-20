@@ -344,9 +344,9 @@ describe("parser and formatter", function () {
         generate(dom, wikitext);
     });
 
-    it("escape !{ .. }! - hashtable", function() {
+    it("escape !{ .. } - hashtable", function() {
         var dom = element("p", "foo ", element("tt", {'class': 'hashtable'}, "bar: val"), " baz");
-        var wikitext = "foo !{bar: val}! baz";
+        var wikitext = "foo !{bar: val} baz";
         generate(dom, wikitext);
     });
 
@@ -359,6 +359,17 @@ describe("parser and formatter", function () {
     it("escape ![ .. ]! - plain text table", function() {
         var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
         var wikitext = "foo ![bar\nbaz]! bee";
+        generate(dom, wikitext);
+    });
+
+    it("hashtable in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:id1,$contactId2:id2"), " "))));
+
+        var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
         generate(dom, wikitext);
     });
 

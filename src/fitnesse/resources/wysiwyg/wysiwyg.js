@@ -1573,7 +1573,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("\\{\\{\\{");              // 5. code block (open)
     wikiInlineRules.push("\\}\\}\\}");              // 6. code block (close)
     wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
-    wikiInlineRules.push("[->})\\]]!");             // 8. escaped (close)
+    wikiInlineRules.push("[->)\\]]!|\\}");          // 8. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 10. WikiPageName
 
@@ -2707,7 +2707,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     var tags = {
                         'escape': [ "!-", "-!" ],
                         'htmlescape': [ "!<", ">!" ],
-                        'hashtable': [ "!{", "}!" ],
+                        'hashtable': [ "!{", "}" ],
                         'nested': [ "!(", ")!" ],
                         'plaintexttable': [ "![", "]!" ],
                         'inlinecode': [ "{{{", "}}}" ]
