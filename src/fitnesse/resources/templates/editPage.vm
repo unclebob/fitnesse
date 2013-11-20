@@ -14,7 +14,8 @@
 #if($!isNewPage)
  <input type="hidden" name="responder" value="addChild"/>
  <fieldset>
-  <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
+  <label for="pagename">Page name:</label>
+  <input type="text" id="pagename" name="pageName" value="" class="wikiword" />
  </fieldset>
  #if($!pageTemplate)
  <input type="hidden" name="pageTemplate" value="$pageTemplate"/>
@@ -32,10 +33,12 @@
  <input type="hidden" name="responder" value="saveData"/>
 #end
  <fieldset>
-  <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
+  <label for="helptext">Help text:</label>
+  <input type="text" id="helptext" name="helpText" value="$!helpText" />
  </fieldset>
  <fieldset>
-  <label for="suites">Tags:</label><input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
+  <label for="suites">Tags:</label>
+  <input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
  </fieldset>
 
  <div id="backingData" class="hidden">

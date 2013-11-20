@@ -86,7 +86,8 @@ public class DeletePageResponder implements SecureResponder {
     }
       
     html.setTitle("Delete Confirmation");
-    html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/", tags));
+    html.setPageTitle(new PageTitle("Confirm Deletion", PathParser.parse(qualifiedPageName), tags));
+
     makeMainContent(html, root, qualifiedPageName);
     html.setMainTemplate("deletePage");
     return html.html();

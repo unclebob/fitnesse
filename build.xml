@@ -123,7 +123,7 @@
 
 	<target name="bootstrap-needs-update">
 		<uptodate property="bootstrap-css-up-to-date" targetfile="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
-			<srcfiles dir="${basedir}" includes="${src.dir}/fitnesse/resources/bootstrap/less/*.less" />
+			<srcfiles dir="${src.dir}/fitnesse/resources/bootstrap/less" includes="*.less" />
 		</uptodate>
 	</target>
 
@@ -135,7 +135,7 @@
 			failonerror="true"
 			fork="true"
 			output="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css">
-			<arg value="extra/lesscss/less-rhino-1.3.3.js" />
+			<arg value="extra/lesscss/less-rhino-1.4.0.js" />
 			<arg value="${src.dir}/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less" />
 		</java>
 	</target>
