@@ -17,7 +17,7 @@ public class WikiRunner extends FileRunner {
     try {
       String tags[] = {"wiki", "table", "tr", "td"};
       tables = new Parse(input, tags);    // look for wiki tag enclosing tables
-  	  dispatcher.doTables(tables.parts);
+      fixture.doTables(tables.parts);     // only do tables within that tag
     } catch (Exception e) {
       exception(e);
     }
