@@ -14,7 +14,7 @@
 | !meta name | !meta inputs | !meta description |
 | addChild | | Creates a new child page beneath the selected page |
 | | pageName | The name of the page to be created. |
-| | content | The contents of the new page. |
+| | pageContent | The contents of the new page. |
 | | pageTemplate | If present must point to a valid wiki page. The new page will have the same properties as the referred page. |
 | | pageType | If present must be {Test, Suite, Static} and sets the page type accordingly.  Otherwise page type is set based on the name of the page as usual. This option does nothing if the ''pageTemplate'' option is set. |
 | compareHistory | | Generates a report comparing two test results. |
