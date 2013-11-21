@@ -9,8 +9,8 @@ import fitnesse.testsystems.TestSystemListener;
  */
 public class InProcessFitTestSystem extends FitTestSystem {
 
-  public InProcessFitTestSystem(FitNesseContext context, Descriptor descriptor, TestSystemListener listener) {
-    super(context, descriptor, listener);
+  public InProcessFitTestSystem(Descriptor descriptor, int port, TestSystemListener listener) {
+    super(descriptor, port, listener);
   }
 
   @Override

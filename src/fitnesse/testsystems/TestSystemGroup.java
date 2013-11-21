@@ -53,13 +53,13 @@ public class TestSystemGroup {
 
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
     TestSystemFactory factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
-    TestSystem testSystem = factory.create(context, descriptor, testSystemListener);
+    TestSystem testSystem = factory.create(descriptor, testSystemListener);
     return testSystem;
   }
 
   public static class HtmlSlimTestSystemFactory implements TestSystemFactory {
 
-    public final TestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+    public final TestSystem create(Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
       SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
@@ -69,7 +69,7 @@ public class TestSystemGroup {
 
   public static class InProcessHtmlSlimTestSystemFactory implements TestSystemFactory {
 
-    public TestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+    public TestSystem create(Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
       SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
 
@@ -79,8 +79,9 @@ public class TestSystemGroup {
 
   public static class FitTestSystemFactory implements TestSystemFactory {
 
-    public FitTestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
-      FitTestSystem testSystem = new FitTestSystem(context, descriptor, testSystemListener);
+    public FitTestSystem create(Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
+      FitTestSystem testSystem = new FitTestSystem(descriptor, port, testSystemListener);
       testSystem.build();
 
       return testSystem;
@@ -89,8 +90,9 @@ public class TestSystemGroup {
 
   public static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
-    public FitTestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
-      FitTestSystem testSystem = new InProcessFitTestSystem(context, descriptor, testSystemListener);
+    public FitTestSystem create(Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
+      FitTestSystem testSystem = new InProcessFitTestSystem(descriptor, port, testSystemListener);
       testSystem.build();
 
       return testSystem;

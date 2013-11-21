@@ -21,16 +21,17 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   private static SocketDealer socketDealer = new SocketDealer();
 
-  private final FitNesseContext context;
   private final CompositeTestSystemListener testSystemListener;
   private CommandRunningFitClient client;
   private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
+  private final int port;
 
-  public FitTestSystem(FitNesseContext context, Descriptor descriptor,
+  public FitTestSystem(Descriptor descriptor,
+                       int port,
                        TestSystemListener listener) {
     super(descriptor);
-    this.context = context;
+    this.port = port;
     this.testSystemListener = new CompositeTestSystemListener();
     this.testSystemListener.addTestSystemListener(listener);
   }
@@ -140,8 +141,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
-    client = new CommandRunningFitClient(this, context.port, socketDealer, runningStrategy);
-
+    client = new CommandRunningFitClient(this, port, socketDealer, runningStrategy);
     return client;
   }
 

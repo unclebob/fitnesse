@@ -12,9 +12,9 @@ public interface TestSystemFactory {
   /**
    * Create a test system given a descriptor.
    *
-   * @param descriptor
+   * @param descriptor Configuration for the test system.
    * @return a new TestSystem
    */
-  TestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener listener) throws IOException;
+  TestSystem create(Descriptor descriptor, TestSystemListener listener) throws IOException;
 
 }

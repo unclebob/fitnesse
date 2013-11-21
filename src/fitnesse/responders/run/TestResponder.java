@@ -111,6 +111,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return debug;
   }
 
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
+
   public class WikiPageFooterRenderer {
     public String render() {
         return WikiPageUtil.getFooterPageHtml(page);

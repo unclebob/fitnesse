@@ -20,6 +20,7 @@ import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,13 +74,14 @@ public class TestResponderTest {
     debug = true;
     File testDir = new File("TestDir");
     testDir.mkdir();
-    root = InMemoryPage.makeRoot("RooT");
+    Properties properties = new Properties();
+    root = InMemoryPage.makeRoot("Root", properties);
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
-    context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
-    context = FitNesseUtil.makeTestContext(context, receiver.receiveSocket());
+    context = FitNesseUtil.makeTestContext(root, receiver.receiveSocket());
+    properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
