@@ -21,8 +21,8 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private final CompositeFormatter formatters;
   private final FitNesseContext fitNesseContext;
   private final List<WikiPage> testPagesToRun;
-  private boolean isFastTest = false;
-  private boolean isRemoteDebug = false;
+  private boolean inProcess = false;
+  private boolean remoteDebug = false;
 
   private TestSystemGroup testSystemGroup = null;
   private volatile boolean isStopped = false;
@@ -43,12 +43,12 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.formatters.addTestSystemListener(listener);
   }
 
-  public void setDebug(boolean isDebug) {
-    isRemoteDebug = isDebug;
+  public void setRemoteDebug(boolean isDebug) {
+    remoteDebug = isDebug;
   }
 
-  public void setFastTest(boolean isFastTest) {
-    this.isFastTest = isFastTest;
+  public void setInProcess(boolean inProcess) {
+    this.inProcess = inProcess;
   }
 
   public void executeTestPages() throws IOException, InterruptedException {
@@ -63,8 +63,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private void internalExecuteTestPages() throws IOException, InterruptedException {
     testSystemGroup = new TestSystemGroup(fitNesseContext, this);
     stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
-
-    testSystemGroup.setFastTest(isFastTest);
 
     formatters.setTrackingId(stopId);
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
@@ -128,7 +126,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     WikiTestPage testPage = new WikiTestPage(wikiPage);
-    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), inProcess, remoteDebug, "");
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 

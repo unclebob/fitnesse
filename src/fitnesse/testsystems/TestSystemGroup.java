@@ -3,6 +3,7 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,6 @@ public class TestSystemGroup {
   private Map<Descriptor, TestSystem> testSystems = new HashMap<Descriptor, TestSystem>();
   private FitNesseContext context;
   private TestSystemListener testSystemListener;
-  private boolean fastTest = false;
 
   public TestSystemGroup(FitNesseContext context, TestSystemListener listener) {
     this.context = context;
@@ -29,10 +29,6 @@ public class TestSystemGroup {
     for (TestSystem testSystem : testSystems.values()) {
       testSystem.kill();
     }
-  }
-
-  public void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
   }
 
   public TestSystem startTestSystem(Descriptor descriptor) throws IOException {
@@ -46,39 +42,58 @@ public class TestSystemGroup {
     return testSystem;
   }
 
+  private static Map<String, TestSystemFactory> testSystemFactories;
+  static {
+    testSystemFactories = new HashMap<String, TestSystemFactory>(4);
+    testSystemFactories.put("slim", new HtmlSlimTestSystemFactory());
+    testSystemFactories.put("slim^inprocess", new InProcessHtmlSlimTestSystemFactory());
+    testSystemFactories.put("fit", new FitTestSystemFactory());
+    testSystemFactories.put("fit^inprocess", new InProcessFitTestSystemFactory());
+  }
+
   private TestSystem makeTestSystem(Descriptor descriptor) throws IOException {
-    if ("slim".equalsIgnoreCase(descriptor.getTestSystemType()))
-      return fastTest ? createInProcessHtmlSlimTestSystem(descriptor) : createHtmlSlimTestSystem(descriptor);
-    else
-      return fastTest ? createInProcessFitTestSystem(descriptor) : createFitTestSystem(descriptor);
-  }
-
-  private HtmlSlimTestSystem createHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
-
+    TestSystemFactory factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
+    TestSystem testSystem = factory.create(context, descriptor, testSystemListener);
     return testSystem;
   }
 
-  private HtmlSlimTestSystem createInProcessHtmlSlimTestSystem(Descriptor descriptor) throws IOException {
-    SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-    HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
+  public static class HtmlSlimTestSystemFactory implements TestSystemFactory {
 
-    return testSystem;
+    public final TestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
+
+      return testSystem;
+    }
   }
 
-  private FitTestSystem createFitTestSystem(Descriptor descriptor) throws IOException {
-    FitTestSystem testSystem = new FitTestSystem(context, descriptor, testSystemListener);
-    testSystem.build();
+  public static class InProcessHtmlSlimTestSystemFactory implements TestSystemFactory {
 
-    return testSystem;
+    public TestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, testSystemListener);
+
+      return testSystem;
+    }
   }
 
-  private FitTestSystem createInProcessFitTestSystem(Descriptor descriptor) throws IOException {
-    FitTestSystem testSystem = new InProcessFitTestSystem(context, descriptor, testSystemListener);
-    testSystem.build();
+  public static class FitTestSystemFactory implements TestSystemFactory {
 
-    return testSystem;
+    public FitTestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      FitTestSystem testSystem = new FitTestSystem(context, descriptor, testSystemListener);
+      testSystem.build();
+
+      return testSystem;
+    }
   }
 
+  public static class InProcessFitTestSystemFactory implements TestSystemFactory {
+
+    public FitTestSystem create(FitNesseContext context, Descriptor descriptor, TestSystemListener testSystemListener) throws IOException {
+      FitTestSystem testSystem = new InProcessFitTestSystem(context, descriptor, testSystemListener);
+      testSystem.build();
+
+      return testSystem;
+    }
+  }
 }

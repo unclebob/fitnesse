@@ -36,28 +36,55 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!define TEST_SYSTEM {system}\n" +
                     "!define TEST_RUNNER {runner}\n");
-    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, "").getTestSystemName();
+    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, false, "").getTestSystemName();
     Assert.assertEquals("system:runner", testSystemName);
+  }
+
+  @Test
+  public void buildFullySpecifiedTestSystemNameForDebugRun() throws Exception {
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define TEST_SYSTEM {system}\n" +
+                    "!define TEST_RUNNER {runner}\n");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    String testSystemName = wikiPageDescriptor.getTestSystemName();
+    String testSystemType = wikiPageDescriptor.getTestSystemType();
+    Assert.assertEquals("system^inprocess:runner", testSystemName);
+    Assert.assertEquals("system^inprocess", testSystemType);
+  }
+
+  @Test
+  public void buildFullySpecifiedTestSystemNameAndIdentifierForDebugRun() throws Exception {
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define TEST_SYSTEM {system:A}\n" +
+                    "!define TEST_RUNNER {runner}\n");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    String testSystemName = wikiPageDescriptor.getTestSystemName();
+    String testSystemType = wikiPageDescriptor.getTestSystemType();
+    Assert.assertEquals("system:A^inprocess:runner", testSystemName);
+    Assert.assertEquals("system^inprocess", testSystemType);
   }
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
-    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage)).getTestSystemName();
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
+    String testSystemName = wikiPageDescriptor.getTestSystemName();
+    String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("fit:fit.FitServer", testSystemName);
+    Assert.assertEquals("fit", testSystemType);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsSlim() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n");
-    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, "").getTestSystemName();
+    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, false, "").getTestSystemName();
     Assert.assertEquals("slim:fitnesse.slim.SlimService", testSystemName);
   }
 
   @Test
   public void buildTestSystemNameWhenTestSystemIsUnknownDefaultsToFit() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {X}\n");
-    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, "").getTestSystemName();
+    String testSystemName = new WikiPageDescriptor(testPage.readOnlyData(), false, false, "").getTestSystemName();
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }
 
@@ -90,10 +117,10 @@ public class WikiPageDescriptorTest {
     String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", descriptor.getCommandPattern());
 
-    Descriptor descriptor1 = new WikiPageDescriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    Descriptor descriptor1 = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", descriptor1.getCommandPattern());
   }
 
@@ -104,11 +131,11 @@ public class WikiPageDescriptorTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     String sep = System.getProperty("path.separator");
     assertEquals("java -cp fitnesse.jar" + sep + "%p %m", descriptor.getCommandPattern());
 
-    Descriptor debugDescriptor = new WikiPageDescriptor(page.readOnlyData(), true, getClassPath(page));
+    Descriptor debugDescriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     assertEquals(
             "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
             debugDescriptor.getCommandPattern());
@@ -120,10 +147,10 @@ public class WikiPageDescriptorTest {
             + "!define REMOTE_DEBUG_COMMAND {java -remoteDebug -cp %p %m}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals("java -specialParam -cp %p %m", descriptor.getCommandPattern());
 
-    Descriptor debugDescriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    Descriptor debugDescriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     assertEquals("java -remoteDebug -cp %p %m", debugDescriptor.getCommandPattern());
   }
 
@@ -133,7 +160,7 @@ public class WikiPageDescriptorTest {
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals("rubyslim %p %m", descriptor.getCommandPattern());
   }
 
@@ -143,7 +170,7 @@ public class WikiPageDescriptorTest {
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals("rubyslim.rb", descriptor.getTestRunner());
   }
 
@@ -152,9 +179,9 @@ public class WikiPageDescriptorTest {
     String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", descriptor.getTestRunner());
-    Descriptor debugDescriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    Descriptor debugDescriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", debugDescriptor.getTestRunner());
   }
 
@@ -163,9 +190,9 @@ public class WikiPageDescriptorTest {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     assertEquals("fitnesse.slim.SlimService", descriptor.getTestRunner());
-    Descriptor debugDescriptor = new WikiPageDescriptor(page.readOnlyData(), true, getClassPath(page));
+    Descriptor debugDescriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     assertEquals("fitnesse.slim.SlimService", debugDescriptor.getTestRunner());
   }
 
@@ -174,7 +201,7 @@ public class WikiPageDescriptorTest {
     String specifiedPageText = "!define REMOTE_DEBUG_RUNNER {Different runner}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), true, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     assertEquals("Different runner", descriptor.getTestRunner());
   }
 
@@ -190,7 +217,7 @@ public class WikiPageDescriptorTest {
     String specifiedPageText = "!define TEST_RUNNER (${user.home}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, getClassPath(specifiedPage));
+    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     assertEquals(fitnesseRootpath + "/rubyslim.rb", descriptor.getTestRunner());
   }
 
@@ -200,7 +227,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("test.property", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
     assertEquals("bar", descriptor.getVariable("test.property"));
   }
@@ -211,7 +238,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("TEST_PROPERTY", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
   }
 

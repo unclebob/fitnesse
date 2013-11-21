@@ -61,8 +61,8 @@ public class MultipleTestsRunnerTest {
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
-    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
-    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
+    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(slimPage));
     List<WikiTestPage> fitList = map.get(fitDescriptor);
     List<WikiTestPage> slimList = map.get(slimDescriptor);
 
@@ -86,8 +86,8 @@ public class MultipleTestsRunnerTest {
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
-    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
-    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
+    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
+    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(slimPage));
 
     List<WikiTestPage> fitList = map.get(fitDescriptor);
     List<WikiTestPage> slimList = map.get(slimDescriptor);

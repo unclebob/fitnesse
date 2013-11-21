@@ -47,7 +47,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
-  private boolean fastTest = false;
+  private boolean debug = false;
   private boolean remoteDebug = false;
   int exitCode;
 
@@ -107,6 +107,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return htmlPage;
   }
 
+  public boolean isDebug() {
+    return debug;
+  }
+
   public class WikiPageFooterRenderer {
     public String render() {
         return WikiPageUtil.getFooterPageHtml(page);
@@ -120,7 +124,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void checkArguments() {
-    fastTest |= request.hasInput("debug");
+    debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
   }
 
@@ -206,8 +210,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     MultipleTestsRunner runner = new MultipleTestsRunner(pages, context);
 
-    runner.setFastTest(fastTest);
-    runner.setDebug(remoteDebug);
+    runner.setInProcess(debug);
+    runner.setRemoteDebug(remoteDebug);
 
     addFormatters(runner);
 
@@ -225,14 +229,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public static void registerListener(TestEventListener listener) {
     eventListeners.add(listener);
-  }
-
-  public void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
-  }
-
-  public boolean isFastTest() {
-    return fastTest;
   }
 
   public void addToResponse(String output) {
