@@ -24,20 +24,22 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private boolean inProcess = false;
   private boolean remoteDebug = false;
 
-  private final MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory();
-  private TestSystem testSystem;
+  private final TestSystemFactory testSystemFactory;
 
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
+  private TestSystem testSystem;
 
   private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext) {
+                             final FitNesseContext fitNesseContext,
+                             final TestSystemFactory testSystemFactory) {
     this.testPagesToRun = testPagesToRun;
     this.formatters = new CompositeFormatter();
     this.fitNesseContext = fitNesseContext;
+    this.testSystemFactory = testSystemFactory;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
   }
 

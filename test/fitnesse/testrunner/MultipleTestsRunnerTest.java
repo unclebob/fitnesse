@@ -58,7 +58,7 @@ public class MultipleTestsRunnerTest {
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, new MultipleTestSystemFactory());
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
 
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
@@ -84,7 +84,7 @@ public class MultipleTestsRunnerTest {
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, new MultipleTestSystemFactory());
     Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(slimPage));
@@ -129,7 +129,7 @@ public class MultipleTestsRunnerTest {
     TestSystemListener listener = mock(TestSystemListener.class);
     resultsListener.addTestSystemListener(listener);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, new MultipleTestSystemFactory());
     runner.addTestSystemListener(resultsListener);
 
     runner.testStarted(page);
@@ -145,7 +145,7 @@ public class MultipleTestsRunnerTest {
     TestSystemListener listener = mock(TestSystemListener.class);
     resultsListener.addTestSystemListener(listener);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context, new MultipleTestSystemFactory());
     runner.addTestSystemListener(resultsListener);
 
     TestSummary testSummary = mock(TestSummary.class);
