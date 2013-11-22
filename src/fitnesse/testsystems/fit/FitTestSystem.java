@@ -28,12 +28,10 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   private final int port;
 
   public FitTestSystem(Descriptor descriptor,
-                       int port,
-                       TestSystemListener listener) {
+                       int port) {
     super(descriptor);
     this.port = port;
     this.testSystemListener = new CompositeTestSystemListener();
-    this.testSystemListener.addTestSystemListener(listener);
   }
 
   public static SocketDealer socketDealer() {

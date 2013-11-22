@@ -20,7 +20,9 @@ public class HtmlSlimResponder extends SlimResponder {
     } else {
       slimClient = new SlimClientBuilder(getDescriptor()).build();
     }
-    return new HtmlSlimTestSystem("slim", slimClient, this);
+    SlimTestSystem testSystem = new HtmlSlimTestSystem("slim", slimClient);
+    testSystem.addTestSystemListener(this);
+    return testSystem;
   }
 
 }

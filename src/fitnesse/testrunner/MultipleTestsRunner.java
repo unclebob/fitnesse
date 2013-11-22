@@ -24,7 +24,9 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private boolean inProcess = false;
   private boolean remoteDebug = false;
 
-  private TestSystemGroup testSystemGroup = null;
+  private final MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory();
+  private TestSystem testSystem;
+
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
@@ -51,6 +53,13 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.inProcess = inProcess;
   }
 
+  public TestSystem startTestSystem(Descriptor descriptor) throws IOException {
+    testSystem = testSystemFactory.create(descriptor);
+    testSystem.addTestSystemListener(this);
+    testSystem.start();
+    return testSystem;
+  }
+
   public void executeTestPages() throws IOException, InterruptedException {
     internalExecuteTestPages();
     allTestingComplete();
@@ -61,7 +70,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    testSystemGroup = new TestSystemGroup(fitNesseContext, this);
     stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
 
     formatters.setTrackingId(stopId);
@@ -79,15 +87,13 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = testSystemGroup.startTestSystem(new WikiPageDescriptor(descriptor,
+        testSystem = startTestSystem(new WikiPageDescriptor(descriptor,
                 new ClassPathBuilder().buildClassPath(testPagesToRun)));
       }
 
-      if (testSystem != null) {
-        if (testSystem.isSuccessfullyStarted()) {
-          executeTestSystemPages(testSystemPages, testSystem);
-          waitForTestSystemToSendResults();
-        }
+      if (testSystem != null && testSystem.isSuccessfullyStarted()) {
+        executeTestSystemPages(testSystemPages, testSystem);
+        waitForTestSystemToSendResults();
       }
     } finally {
       if (!isStopped && testSystem != null) {
@@ -212,7 +218,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
     if (wasNotStopped) {
       try {
-        testSystemGroup.kill();
+        testSystem.kill();
       } catch (IOException e) {
         LOG.log(Level.WARNING, "Unable to stop test systems", e);
       }
