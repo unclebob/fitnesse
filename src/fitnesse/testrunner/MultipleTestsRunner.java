@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
-  public static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
+  private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
   private final FitNesseContext fitNesseContext;
@@ -55,7 +55,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.inProcess = inProcess;
   }
 
-  public TestSystem startTestSystem(Descriptor descriptor) throws IOException {
+  private TestSystem startTestSystem(Descriptor descriptor) throws IOException {
     testSystem = testSystemFactory.create(descriptor);
     testSystem.addTestSystemListener(this);
     testSystem.start();
@@ -218,7 +218,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
     }
 
-    if (wasNotStopped) {
+    if (wasNotStopped && testSystem != null) {
       try {
         testSystem.kill();
       } catch (IOException e) {
