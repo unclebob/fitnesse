@@ -19,26 +19,28 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
-  private final FitNesseContext fitNesseContext;
   private final List<WikiPage> testPagesToRun;
   private boolean inProcess = false;
   private boolean remoteDebug = false;
 
   private final TestSystemFactory testSystemFactory;
+  private final TestingTracker testingTracker;
 
   private volatile boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  private TestSystem testSystem;
 
+  private TestSystem testSystem;
   private volatile int testsInProgressCount;
 
+  // TODO: Get rid of the FitNesseContext parameter
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
+                             final TestingTracker testingTracker,
                              final TestSystemFactory testSystemFactory) {
     this.testPagesToRun = testPagesToRun;
     this.formatters = new CompositeFormatter();
-    this.fitNesseContext = fitNesseContext;
+    this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
     surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
   }
@@ -72,17 +74,17 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
+    stopId = testingTracker.addStartedProcess(this);
 
     formatters.setTrackingId(stopId);
-    PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
+    PagesByTestSystem pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
     announceTotalTestsToRun(pagesByTestSystem);
 
     for (Map.Entry<WikiPageDescriptor, LinkedList<WikiTestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
       startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
     }
 
-    fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+    testingTracker.removeEndedProcess(stopId);
   }
 
   private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
@@ -115,10 +117,6 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     // TODO: use testSystemStopped event to wait for tests to end.
     while (testsInProgressCount > 0 && isNotStopped())
       Thread.sleep(50);
-  }
-
-  PagesByTestSystem makeMapOfPagesByTestSystem() {
-    return addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
   }
 
   private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() {
@@ -215,7 +213,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
     if (stopId != null) {
-      fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+      testingTracker.removeEndedProcess(stopId);
     }
 
     if (wasNotStopped && testSystem != null) {
