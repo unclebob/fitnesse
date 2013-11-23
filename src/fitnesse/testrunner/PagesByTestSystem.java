@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testsystems.Descriptor;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.WikiPage;
 
@@ -15,23 +16,19 @@ import fitnesse.wiki.WikiPage;
 public class PagesByTestSystem {
   private final List<WikiPage> pages;
   private final WikiPage root;
-  private final boolean inProcess;
-  private final boolean remoteDebug;
-  private final Map<WikiPageDescriptor, LinkedList<WikiTestPage>> pagesByTestSystem;
-  private final String classPath;
+  private final Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem;
+  private final DescriptorFactory descriptorFactory;
 
-  public PagesByTestSystem(List<WikiPage> pages, WikiPage root, boolean inProcess, boolean remoteDebug) {
+  public PagesByTestSystem(List<WikiPage> pages, WikiPage root, DescriptorFactory descriptorFactory) {
     this.pages = pages;
     this.root = root;
-    this.inProcess = inProcess;
-    this.remoteDebug = remoteDebug;
-    this.classPath = new ClassPathBuilder().buildClassPath(pages);
+    this.descriptorFactory = descriptorFactory;
     this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
   }
 
 
-  private Map<WikiPageDescriptor, LinkedList<WikiTestPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
-    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> pagesByTestSystem = new HashMap<WikiPageDescriptor, LinkedList<WikiTestPage>>();
+  private Map<Descriptor, LinkedList<WikiTestPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
+    Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem = new HashMap<Descriptor, LinkedList<WikiTestPage>>();
 
     for (WikiPage testPage : pages) {
       if (!SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
@@ -41,13 +38,14 @@ public class PagesByTestSystem {
     return pagesByTestSystem;
   }
 
-  private void addPageToListWithinMap(Map<WikiPageDescriptor, LinkedList<WikiTestPage>> pagesByTestSystem, WikiPage wikiPage) {
+  private void addPageToListWithinMap(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem, WikiPage wikiPage) {
     WikiTestPage testPage = new WikiTestPage(wikiPage);
-    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), inProcess, remoteDebug, classPath);
+    Descriptor descriptor = descriptorFactory.create(wikiPage);
+
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
-  private LinkedList<WikiTestPage> getOrMakeListWithinMap(Map<WikiPageDescriptor, LinkedList<WikiTestPage>> pagesByTestSystem, WikiPageDescriptor descriptor) {
+  private LinkedList<WikiTestPage> getOrMakeListWithinMap(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem, Descriptor descriptor) {
     LinkedList<WikiTestPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
       pagesForTestSystem = new LinkedList<WikiTestPage>();
@@ -58,7 +56,7 @@ public class PagesByTestSystem {
     return pagesForTestSystem;
   }
 
-  private Map<WikiPageDescriptor, LinkedList<WikiTestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<WikiPageDescriptor, LinkedList<WikiTestPage>> pagesByTestSystem) {
+  private Map<Descriptor, LinkedList<WikiTestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem) {
     if (pages.size() > 0) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
@@ -76,11 +74,15 @@ public class PagesByTestSystem {
     return tests;
   }
 
-  public Collection<WikiPageDescriptor> descriptors() {
+  public Collection<Descriptor> descriptors() {
     return pagesByTestSystem.keySet();
   }
 
-  public List<WikiTestPage> testPageForDescriptor(WikiPageDescriptor descriptor) {
+  public List<WikiTestPage> testPageForDescriptor(Descriptor descriptor) {
     return pagesByTestSystem.get(descriptor);
+  }
+
+  public static interface DescriptorFactory {
+    Descriptor create(WikiPage page);
   }
 }

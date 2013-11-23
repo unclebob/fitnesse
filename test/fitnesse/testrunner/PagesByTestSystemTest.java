@@ -2,6 +2,7 @@ package fitnesse.testrunner;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.Descriptor;
@@ -14,6 +15,7 @@ import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PagesByTestSystemTest{
@@ -44,27 +46,27 @@ public class PagesByTestSystemTest{
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root, false, false);
-    Collection<WikiPageDescriptor> descriptors = pagesByTestSystem.descriptors();
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root, new StubDescriptorFactory());
+    Collection<Descriptor> descriptors = pagesByTestSystem.descriptors();
     Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, "");
     Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, false, "");
 
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
 
-//    List<WikiTestPage> fitList = descriptors.get(fitDescriptor);
-//    List<WikiTestPage> slimList = descriptors.get(slimDescriptor);
-//
-//    assertEquals(3, fitList.size());
-//    assertEquals(3, slimList.size());
-//
-//    assertEquals(setUp, fitList.get(0).getSourcePage());
-//    assertEquals(testPage, fitList.get(1).getSourcePage());
-//    assertEquals(tearDown, fitList.get(2).getSourcePage());
-//
-//    assertEquals(setUp, slimList.get(0).getSourcePage());
-//    assertEquals(slimPage, slimList.get(1).getSourcePage());
-//    assertEquals(tearDown, slimList.get(2).getSourcePage());
+    List<WikiTestPage> fitList = pagesByTestSystem.testPageForDescriptor(fitDescriptor);
+    List<WikiTestPage> slimList = pagesByTestSystem.testPageForDescriptor(slimDescriptor);
+
+    assertEquals(3, fitList.size());
+    assertEquals(3, slimList.size());
+
+    assertEquals(setUp, fitList.get(0).getSourcePage());
+    assertEquals(testPage, fitList.get(1).getSourcePage());
+    assertEquals(tearDown, fitList.get(2).getSourcePage());
+
+    assertEquals(setUp, slimList.get(0).getSourcePage());
+    assertEquals(slimPage, slimList.get(1).getSourcePage());
+    assertEquals(tearDown, slimList.get(2).getSourcePage());
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) {
@@ -74,5 +76,14 @@ public class PagesByTestSystemTest{
     testPage.commit(data);
     return testPage;
   }
+
+  static private class StubDescriptorFactory implements PagesByTestSystem.DescriptorFactory {
+
+    @Override
+    public Descriptor create(WikiPage page) {
+      return new WikiPageDescriptor(page.getData(), false, false, "");
+    }
+  }
+
 
 }

@@ -53,14 +53,14 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (WikiPageDescriptor descriptor : pagesByTestSystem.descriptors()) {
+    for (Descriptor descriptor : pagesByTestSystem.descriptors()) {
       startTestSystemAndExecutePages(descriptor, pagesByTestSystem.testPageForDescriptor(descriptor));
     }
 
     testingTracker.removeEndedProcess(stopId);
   }
 
-  private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
