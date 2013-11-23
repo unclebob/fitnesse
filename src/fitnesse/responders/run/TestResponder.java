@@ -219,7 +219,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     final String classPath = new ClassPathBuilder().buildClassPath(pages);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
       @Override
       public Descriptor create(WikiPage page) {
         return new WikiPageDescriptor(page.readOnlyData(), debug, remoteDebug, classPath);

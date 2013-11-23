@@ -38,10 +38,6 @@ public class WikiPageDescriptor implements Descriptor {
     this.classPath = classPath;
   }
 
-  public WikiPageDescriptor(WikiPageDescriptor descriptor, String classPath) {
-    this(descriptor.data, descriptor.inProcess, descriptor.remoteDebug, classPath);
-  }
-
   protected static String fitnesseJar(String classpath) {
     for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
       String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));

@@ -54,19 +54,19 @@ public class PagesByTestSystemTest{
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
 
-    List<WikiTestPage> fitList = pagesByTestSystem.testPageForDescriptor(fitDescriptor);
-    List<WikiTestPage> slimList = pagesByTestSystem.testPageForDescriptor(slimDescriptor);
+    List<WikiPage> fitList = pagesByTestSystem.testPageForDescriptor(fitDescriptor);
+    List<WikiPage> slimList = pagesByTestSystem.testPageForDescriptor(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
 
-    assertEquals(setUp, fitList.get(0).getSourcePage());
-    assertEquals(testPage, fitList.get(1).getSourcePage());
-    assertEquals(tearDown, fitList.get(2).getSourcePage());
+    assertEquals(setUp, fitList.get(0));
+    assertEquals(testPage, fitList.get(1));
+    assertEquals(tearDown, fitList.get(2));
 
-    assertEquals(setUp, slimList.get(0).getSourcePage());
-    assertEquals(slimPage, slimList.get(1).getSourcePage());
-    assertEquals(tearDown, slimList.get(2).getSourcePage());
+    assertEquals(setUp, slimList.get(0));
+    assertEquals(slimPage, slimList.get(1));
+    assertEquals(tearDown, slimList.get(2));
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) {

@@ -4,6 +4,7 @@ package fitnesse.testrunner;
 
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
+import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,7 +61,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     testingTracker.removeEndedProcess(stopId);
   }
 
-  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -85,10 +86,10 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     return testSystem;
   }
 
-  private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
-    for (TestPage testPage : pagesInTestSystem) {
+  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+    for (WikiPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
-      testSystem.runTests(testPage);
+      testSystem.runTests(new WikiTestPage(testPage));
     }
   }
 

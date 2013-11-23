@@ -35,23 +35,23 @@ public class PageListSetUpTearDownSurrounderTest {
     WikiPage setUp2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteSetUp"));
     WikiPage tearDown2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteTearDown"));
 
-    ArrayList<WikiTestPage> testPages = MakeTestPageList();
+    ArrayList<WikiPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
 
     assertEquals(6, testPages.size());
 
-    assertEquals(setUp2, testPages.get(0).getSourcePage());
-    assertEquals(slimPage, testPages.get(1).getSourcePage());
-    assertEquals(tearDown2, testPages.get(2).getSourcePage());
-    assertEquals(setUp, testPages.get(3).getSourcePage());
-    assertEquals(testPage, testPages.get(4).getSourcePage());
-    assertEquals(tearDown, testPages.get(5).getSourcePage());
+    assertEquals(setUp2, testPages.get(0));
+    assertEquals(slimPage, testPages.get(1));
+    assertEquals(tearDown2, testPages.get(2));
+    assertEquals(setUp, testPages.get(3));
+    assertEquals(testPage, testPages.get(4));
+    assertEquals(tearDown, testPages.get(5));
   }
 
-    private ArrayList<WikiTestPage> MakeTestPageList() throws Exception {
+    private ArrayList<WikiPage> MakeTestPageList() throws Exception {
         SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-        ArrayList<WikiTestPage> testPages = new ArrayList<WikiTestPage>();
-        for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(new WikiTestPage(page));
+        ArrayList<WikiPage> testPages = new ArrayList<WikiPage>();
+        for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(page);
         return testPages;
     }
 
@@ -60,11 +60,11 @@ public class PageListSetUpTearDownSurrounderTest {
     WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    ArrayList<WikiTestPage> testPages = MakeTestPageList();
+    ArrayList<WikiPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
     assertEquals(3, testPages.size());
-    assertEquals(setUp, testPages.get(0).getSourcePage());
-    assertEquals(testPage, testPages.get(1).getSourcePage());
-    assertEquals(tearDown, testPages.get(2).getSourcePage());
+    assertEquals(setUp, testPages.get(0));
+    assertEquals(testPage, testPages.get(1));
+    assertEquals(tearDown, testPages.get(2));
   }
 }

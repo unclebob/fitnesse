@@ -1,13 +1,13 @@
 package fitnesse.testrunner;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import fitnesse.testsystems.Descriptor;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.WikiPage;
 
 /**
@@ -16,7 +16,7 @@ import fitnesse.wiki.WikiPage;
 public class PagesByTestSystem {
   private final List<WikiPage> pages;
   private final WikiPage root;
-  private final Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem;
+  private final Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem;
   private final DescriptorFactory descriptorFactory;
 
   public PagesByTestSystem(List<WikiPage> pages, WikiPage root, DescriptorFactory descriptorFactory) {
@@ -27,28 +27,25 @@ public class PagesByTestSystem {
   }
 
 
-  private Map<Descriptor, LinkedList<WikiTestPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
-    Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem = new HashMap<Descriptor, LinkedList<WikiTestPage>>();
+  private Map<Descriptor, LinkedList<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
+    Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, LinkedList<WikiPage>>();
 
-    for (WikiPage testPage : pages) {
-      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
-        addPageToListWithinMap(pagesByTestSystem, testPage);
+    for (WikiPage wikiPage : pages) {
+      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(wikiPage)) {
+        Descriptor descriptor = descriptorFactory.create(wikiPage);
+        getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(wikiPage);
       }
     }
     return pagesByTestSystem;
   }
 
-  private void addPageToListWithinMap(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem, WikiPage wikiPage) {
-    WikiTestPage testPage = new WikiTestPage(wikiPage);
-    Descriptor descriptor = descriptorFactory.create(wikiPage);
-
-    getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
+  private void addPageToListWithinMap(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem, WikiPage wikiPage) {
   }
 
-  private LinkedList<WikiTestPage> getOrMakeListWithinMap(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem, Descriptor descriptor) {
-    LinkedList<WikiTestPage> pagesForTestSystem;
+  private LinkedList<WikiPage> getOrMakeListWithinMap(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem, Descriptor descriptor) {
+    LinkedList<WikiPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<WikiTestPage>();
+      pagesForTestSystem = new LinkedList<WikiPage>();
       pagesByTestSystem.put(descriptor, pagesForTestSystem);
     } else {
       pagesForTestSystem = pagesByTestSystem.get(descriptor);
@@ -56,11 +53,11 @@ public class PagesByTestSystem {
     return pagesForTestSystem;
   }
 
-  private Map<Descriptor, LinkedList<WikiTestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, LinkedList<WikiTestPage>> pagesByTestSystem) {
+  private Map<Descriptor, LinkedList<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem) {
     if (pages.size() > 0) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
-      for (LinkedList<WikiTestPage> pagesForTestSystem : pagesByTestSystem.values())
+      for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values())
         surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
     }
     return pagesByTestSystem;
@@ -68,7 +65,7 @@ public class PagesByTestSystem {
 
   public int totalTestsToRun() {
     int tests = 0;
-    for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
+    for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
     return tests;
@@ -78,8 +75,8 @@ public class PagesByTestSystem {
     return pagesByTestSystem.keySet();
   }
 
-  public List<WikiTestPage> testPageForDescriptor(Descriptor descriptor) {
-    return pagesByTestSystem.get(descriptor);
+  public List<WikiPage> testPageForDescriptor(Descriptor descriptor) {
+    return Collections.unmodifiableList(pagesByTestSystem.get(descriptor));
   }
 
   public static interface DescriptorFactory {
