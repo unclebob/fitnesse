@@ -2,16 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.FitNesseContext;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
-import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,49 +14,28 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
-  private final List<WikiPage> testPagesToRun;
-  private boolean inProcess = false;
-  private boolean remoteDebug = false;
+  private final PagesByTestSystem pagesByTestSystem;
 
   private final TestSystemFactory testSystemFactory;
   private final TestingTracker testingTracker;
 
   private volatile boolean isStopped = false;
   private String stopId = null;
-  private PageListSetUpTearDownSurrounder surrounder;
 
   private TestSystem testSystem;
   private volatile int testsInProgressCount;
 
-  // TODO: Get rid of the FitNesseContext parameter
-  public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext,
+  public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
                              final TestingTracker testingTracker,
                              final TestSystemFactory testSystemFactory) {
-    this.testPagesToRun = testPagesToRun;
-    this.formatters = new CompositeFormatter();
+    this.pagesByTestSystem = pagesByTestSystem;
     this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
-    surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
+    this.formatters = new CompositeFormatter();
   }
 
   public void addTestSystemListener(TestSystemListener listener) {
     this.formatters.addTestSystemListener(listener);
-  }
-
-  public void setRemoteDebug(boolean isDebug) {
-    remoteDebug = isDebug;
-  }
-
-  public void setInProcess(boolean inProcess) {
-    this.inProcess = inProcess;
-  }
-
-  private TestSystem startTestSystem(Descriptor descriptor) throws IOException {
-    testSystem = testSystemFactory.create(descriptor);
-    testSystem.addTestSystemListener(this);
-    testSystem.start();
-    return testSystem;
   }
 
   public void executeTestPages() throws IOException, InterruptedException {
@@ -77,11 +51,10 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     stopId = testingTracker.addStartedProcess(this);
 
     formatters.setTrackingId(stopId);
-    PagesByTestSystem pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Map.Entry<WikiPageDescriptor, LinkedList<WikiTestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
-      startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
+    for (WikiPageDescriptor descriptor : pagesByTestSystem.descriptors()) {
+      startTestSystemAndExecutePages(descriptor, pagesByTestSystem.testPageForDescriptor(descriptor));
     }
 
     testingTracker.removeEndedProcess(stopId);
@@ -91,8 +64,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = startTestSystem(new WikiPageDescriptor(descriptor,
-                new ClassPathBuilder().buildClassPath(testPagesToRun)));
+        testSystem = startTestSystem(descriptor);
       }
 
       if (testSystem != null && testSystem.isSuccessfullyStarted()) {
@@ -104,6 +76,13 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
         testSystem.bye();
       }
     }
+  }
+
+  private TestSystem startTestSystem(Descriptor descriptor) throws IOException {
+    testSystem = testSystemFactory.create(descriptor);
+    testSystem.addTestSystemListener(this);
+    testSystem.start();
+    return testSystem;
   }
 
   private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
@@ -119,49 +98,8 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       Thread.sleep(50);
   }
 
-  private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() {
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem();
-
-    for (WikiPage testPage : testPagesToRun) {
-      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
-        addPageToListWithinMap(pagesByTestSystem, testPage);
-      }
-    }
-    return pagesByTestSystem;
-  }
-
-  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
-    WikiTestPage testPage = new WikiTestPage(wikiPage);
-    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), inProcess, remoteDebug, "");
-    getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
-  }
-
-  private LinkedList<WikiTestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPageDescriptor descriptor) {
-    LinkedList<WikiTestPage> pagesForTestSystem;
-    if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<WikiTestPage>();
-      pagesByTestSystem.put(descriptor, pagesForTestSystem);
-    } else {
-      pagesForTestSystem = pagesByTestSystem.get(descriptor);
-    }
-    return pagesForTestSystem;
-  }
-
-  private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) {
-    if (testPagesToRun.size() == 0)
-      return pagesByTestSystem;
-    for (LinkedList<WikiTestPage> pagesForTestSystem : pagesByTestSystem.values())
-      surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
-
-    return pagesByTestSystem;
-  }
-
   void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
-    int tests = 0;
-    for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
-      tests += listOfPagesToRun.size();
-    }
-    formatters.announceNumberTestsToRun(tests);
+    formatters.announceNumberTestsToRun(pagesByTestSystem.totalTestsToRun());
   }
 
   @Override
@@ -224,8 +162,4 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       }
     }
   }
-}
-
-class PagesByTestSystem extends HashMap<WikiPageDescriptor, LinkedList<WikiTestPage>> {
-  private static final long serialVersionUID = 1L;
 }

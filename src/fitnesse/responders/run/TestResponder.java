@@ -29,6 +29,7 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
@@ -213,10 +214,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context, context.runningTestingTracker, context.testSystemFactory);
-
-    runner.setInProcess(debug);
-    runner.setRemoteDebug(remoteDebug);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, debug, remoteDebug);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
 
     addFormatters(runner);
 
