@@ -18,7 +18,7 @@ import util.Wildcard;
 
 public class ClassPathBuilder {
   private List<String> allPaths;
-  private StringBuffer pathsString;
+  private StringBuilder pathsString;
   private Set<String> addedPaths;
 
   public String getClasspath(WikiPage page) {
@@ -39,7 +39,6 @@ public class ClassPathBuilder {
   }
 
   public String buildClassPath(List<WikiPage> testPages) {
-    final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = getPathSeparator(testPages.get(0));
     List<String> classPathElements = new ArrayList<String>();
 
@@ -47,11 +46,11 @@ public class ClassPathBuilder {
       addClassPathElements(testPage, classPathElements);
     }
 
-    return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
+    return createClassPathString(classPathElements, pathSeparator);
   }
 
   private void addClassPathElements(WikiPage page, List<String> classPathElements) {
-    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page);
+    List<String> pathElements = getInheritedPathElements(page);
     classPathElements.addAll(pathElements);
   }
 
@@ -67,7 +66,7 @@ public class ClassPathBuilder {
     if (paths.isEmpty())
       return "defaultPath";
 
-    pathsString = new StringBuffer();
+    pathsString = new StringBuilder();
     paths = expandWildcards(paths);
     addedPaths = new HashSet<String>();
 
@@ -82,7 +81,8 @@ public class ClassPathBuilder {
 
     if (!addedPaths.contains(path)) {
       addedPaths.add(path);
-      addSeparatorIfNecessary(pathsString, separator);
+      if (pathsString.length() > 0)
+        pathsString.append(separator);
       pathsString.append(path);
     }
   }
@@ -152,11 +152,6 @@ public class ClassPathBuilder {
       if (file.isDirectory())
         addMatchingSubfiles(path, file);
     }
-  }
-
-  private void addSeparatorIfNecessary(StringBuffer pathsString, String separator) {
-    if (pathsString.length() > 0)
-      pathsString.append(separator);
   }
 
   private void addItemsFromPage(WikiPage itemPage, List<String> items) {
