@@ -16,7 +16,7 @@ import fitnesse.wiki.WikiPage;
 public class PagesByTestSystem {
   private final List<WikiPage> pages;
   private final WikiPage root;
-  private final Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem;
+  private final Map<Descriptor, List<WikiPage>> pagesByTestSystem;
   private final DescriptorFactory descriptorFactory;
 
   public PagesByTestSystem(List<WikiPage> pages, WikiPage root, DescriptorFactory descriptorFactory) {
@@ -27,8 +27,8 @@ public class PagesByTestSystem {
   }
 
 
-  private Map<Descriptor, LinkedList<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
-    Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, LinkedList<WikiPage>>();
+  private Map<Descriptor, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
+    Map<Descriptor, List<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(2);
 
     for (WikiPage wikiPage : pages) {
       if (!SuiteContentsFinder.isSuiteSetupOrTearDown(wikiPage)) {
@@ -39,11 +39,8 @@ public class PagesByTestSystem {
     return pagesByTestSystem;
   }
 
-  private void addPageToListWithinMap(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem, WikiPage wikiPage) {
-  }
-
-  private LinkedList<WikiPage> getOrMakeListWithinMap(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem, Descriptor descriptor) {
-    LinkedList<WikiPage> pagesForTestSystem;
+  private List<WikiPage> getOrMakeListWithinMap(Map<Descriptor, List<WikiPage>> pagesByTestSystem, Descriptor descriptor) {
+    List<WikiPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
       pagesForTestSystem = new LinkedList<WikiPage>();
       pagesByTestSystem.put(descriptor, pagesForTestSystem);
@@ -53,19 +50,21 @@ public class PagesByTestSystem {
     return pagesForTestSystem;
   }
 
-  private Map<Descriptor, LinkedList<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem) {
+  private Map<Descriptor, List<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, List<WikiPage>> pagesByTestSystem) {
+    Map<Descriptor, List<WikiPage>> orderedPagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(pagesByTestSystem.size());
+
     if (pages.size() > 0) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
-      for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values())
-        surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
+      for (Map.Entry<Descriptor, List<WikiPage>> pages : pagesByTestSystem.entrySet())
+        orderedPagesByTestSystem.put(pages.getKey(), surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pages.getValue()));
     }
-    return pagesByTestSystem;
+    return orderedPagesByTestSystem;
   }
 
   public int totalTestsToRun() {
     int tests = 0;
-    for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
+    for (List<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
     return tests;
