@@ -14,7 +14,7 @@ import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 
-public class MultipleTestSystemFactory implements TestSystemFactory {
+public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistrar {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
   public MultipleTestSystemFactory() {
@@ -24,6 +24,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory {
     registerTestSystemFactory("fit^inprocess", new InProcessFitTestSystemFactory());
   }
 
+  @Override
   public void registerTestSystemFactory(String name, TestSystemFactory testSystemFactory) {
     testSystemFactories.put(name, testSystemFactory);
   }

@@ -13,6 +13,8 @@ import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTable;
@@ -73,7 +75,7 @@ public class PluginsLoader {
         String key = values[0];
         String className = values[1];
         responderFactory.addResponder(key, className);
-        LOG.info("Loaded responder " + key + ":" + className);
+        LOG.info("Loaded responder " + key + ": " + className);
       }
     }
   }
@@ -144,17 +146,32 @@ public class PluginsLoader {
   }
 
   public void loadCustomComparators() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-      String[] tableList = getListFromProperties(CUSTOM_COMPARATORS);
-      if (tableList != null) {
-        for (String table : tableList) {
-          table = table.trim();
-          int colonIndex = table.lastIndexOf(':');
-          String prefix = table.substring(0, colonIndex);
-          String className = table.substring(colonIndex + 1, table.length());
-          
-          CustomComparatorRegistry.addCustomComparator(prefix, (CustomComparator) Class.forName(className).newInstance());
-          LOG.info("Loaded custom comparator: " + className);
-        }
+    String[] tableList = getListFromProperties(CUSTOM_COMPARATORS);
+    if (tableList != null) {
+      for (String table : tableList) {
+        table = table.trim();
+        int colonIndex = table.lastIndexOf(':');
+        String prefix = table.substring(0, colonIndex);
+        String className = table.substring(colonIndex + 1, table.length());
+
+        CustomComparatorRegistry.addCustomComparator(prefix, (CustomComparator) Class.forName(className).newInstance());
+        LOG.info("Loaded custom comparator " + prefix + ": " + className);
       }
     }
+  }
+
+  public void loadTestSystems(TestSystemFactoryRegistrar registrar) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    String[] tableList = getListFromProperties(TEST_SYSTEMS);
+    if (tableList != null) {
+      for (String table : tableList) {
+        table = table.trim();
+        int colonIndex = table.lastIndexOf(':');
+        String prefix = table.substring(0, colonIndex);
+        String className = table.substring(colonIndex + 1, table.length());
+
+        registrar.registerTestSystemFactory(prefix, (TestSystemFactory) Class.forName(className).newInstance());
+        LOG.info("Loaded test system " + prefix + ": " + className);
+      }
+    }
+  }
 }

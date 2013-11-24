@@ -10,6 +10,7 @@ public class ComponentFactory {
   public static final String WIKI_PAGE_FACTORY_CLASS = "WikiPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
+  public static final String TEST_SYSTEMS = "TestSystems";
   public static final String SYMBOL_TYPES = "SymbolTypes";
   public static final String SLIM_TABLES = "SlimTables";
   public static final String AUTHENTICATOR = "Authenticator";
