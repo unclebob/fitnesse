@@ -176,18 +176,17 @@ public class PluginsLoaderTest {
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
+  @Test
   public void testCustomComparatorsCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     testProperties.setProperty(ComponentFactory.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
-    String content = loader.loadCustomComparators();
-
-    assertTrue(content.contains("test:"));
-    assertTrue(content.contains("TestCustomComparator"));
+    loader.loadCustomComparators();
 
     CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
     assertNotNull(customComparator);
     assertTrue(customComparator instanceof TestCustomComparator);
   }
 
+  
   private HtmlTable makeMockTable(String tableIdentifier) {
     // Create just enough "table" to test if
     TableTag tableTag = new TableTag();

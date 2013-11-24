@@ -128,7 +128,6 @@ public class PluginsLoader {
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void loadSlimTables() throws ClassNotFoundException {
     String[] tableList = getListFromProperties(SLIM_TABLES);
     if (tableList != null) {
@@ -144,8 +143,7 @@ public class PluginsLoader {
     }
   }
 
-  public String loadCustomComparators() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-      StringBuffer buffer = new StringBuffer();
+  public void loadCustomComparators() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
       String[] tableList = getListFromProperties(CUSTOM_COMPARATORS);
       if (tableList != null) {
         for (String table : tableList) {
@@ -158,6 +156,5 @@ public class PluginsLoader {
           LOG.info("Loaded custom comparator: " + className);
         }
       }
-      return buffer.toString();
     }
 }
