@@ -166,7 +166,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testSlimTablesCreation() throws ClassNotFoundException {
+  public void testSlimTablesCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
@@ -176,7 +176,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testSlimTablesWithColonCreation() throws ClassNotFoundException {
+  public void testSlimTablesWithColonCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 

@@ -50,7 +50,7 @@ public class PluginsLoader {
     try {
       Method method = pluginClass.getMethod("registerResponders", ResponderFactory.class);
       method.invoke(pluginClass, responderFactory);
-      LOG.info("Loaded responder : " + pluginClass.getName());
+      LOG.info("Loaded responder: " + pluginClass.getName());
     } catch (NoSuchMethodException e) {
       // ok, no responders to register in this plugin
     }
@@ -67,17 +67,13 @@ public class PluginsLoader {
     }
   }
 
-  public void loadResponders(ResponderFactory responderFactory) throws ClassNotFoundException {
-    String[] responderList = getListFromProperties(RESPONDERS);
-    if (responderList != null) {
-      for (String responder : responderList) {
-        String[] values = responder.trim().split(":");
-        String key = values[0];
-        String className = values[1];
-        responderFactory.addResponder(key, className);
-        LOG.info("Loaded responder " + key + ": " + className);
+  public void loadResponders(final ResponderFactory responderFactory) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    forEachNamedObject(RESPONDERS, new Registrar() {
+      @Override public void register(String key, Class clazz) {
+        responderFactory.addResponder(key, clazz);
+        LOG.info("Loaded responder " + key + ": " + clazz.getName());
       }
-    }
+    });
   }
 
   private String[] getListFromProperties(String propertyName) {
@@ -130,48 +126,48 @@ public class PluginsLoader {
     }
   }
 
-  public void loadSlimTables() throws ClassNotFoundException {
-    String[] tableList = getListFromProperties(SLIM_TABLES);
-    if (tableList != null) {
-      for (String table : tableList) {
-        table = table.trim();
-        int colonIndex = table.lastIndexOf(':');
-        String key = table.substring(0, colonIndex);
-        String className = table.substring(colonIndex + 1, table.length());
-
-        SlimTableFactory.addTableType(key, (Class<? extends SlimTable>) Class.forName(className));
-        LOG.info("Loaded custom SLiM table type "+ key + ":" + className);
+  public void loadSlimTables() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    forEachNamedObject(SLIM_TABLES, new Registrar() {
+      @Override public void register(String key, Class clazz) {
+        SlimTableFactory.addTableType(key, (Class<? extends SlimTable>) clazz);
+        LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
       }
-    }
+    });
   }
 
   public void loadCustomComparators() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    String[] tableList = getListFromProperties(CUSTOM_COMPARATORS);
-    if (tableList != null) {
-      for (String table : tableList) {
-        table = table.trim();
-        int colonIndex = table.lastIndexOf(':');
-        String prefix = table.substring(0, colonIndex);
-        String className = table.substring(colonIndex + 1, table.length());
+    forEachNamedObject(CUSTOM_COMPARATORS, new Registrar() {
+      @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
+        CustomComparatorRegistry.addCustomComparator(key, (CustomComparator) clazz.newInstance());
+        LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
+      }
+    });
+  }
 
-        CustomComparatorRegistry.addCustomComparator(prefix, (CustomComparator) Class.forName(className).newInstance());
-        LOG.info("Loaded custom comparator " + prefix + ": " + className);
+  public void loadTestSystems(final TestSystemFactoryRegistrar registrar) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    forEachNamedObject(TEST_SYSTEMS, new Registrar() {
+      @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
+        registrar.registerTestSystemFactory(key, (TestSystemFactory) clazz.newInstance());
+        LOG.info("Loaded test system " + key + ": " + clazz.getName());
+      }
+    });
+  }
+
+  private void forEachNamedObject(final String property, Registrar registrar) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    String[] propList = getListFromProperties(property);
+    if (propList != null) {
+      for (String entry : propList) {
+        entry = entry.trim();
+        int colonIndex = entry.lastIndexOf(':');
+        String prefix = entry.substring(0, colonIndex);
+        String className = entry.substring(colonIndex + 1, entry.length());
+
+        registrar.register(prefix, Class.forName(className));
       }
     }
   }
 
-  public void loadTestSystems(TestSystemFactoryRegistrar registrar) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-    String[] tableList = getListFromProperties(TEST_SYSTEMS);
-    if (tableList != null) {
-      for (String table : tableList) {
-        table = table.trim();
-        int colonIndex = table.lastIndexOf(':');
-        String prefix = table.substring(0, colonIndex);
-        String className = table.substring(colonIndex + 1, table.length());
-
-        registrar.registerTestSystemFactory(prefix, (TestSystemFactory) Class.forName(className).newInstance());
-        LOG.info("Loaded test system " + prefix + ": " + className);
-      }
-    }
+  static private interface Registrar {
+    void register(String key, Class<?> clazz) throws IllegalAccessException, InstantiationException;
   }
 }
