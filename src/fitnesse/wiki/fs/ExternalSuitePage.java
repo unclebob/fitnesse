@@ -89,10 +89,10 @@ public class ExternalSuitePage extends BaseWikiPage {
       File childPath = new File(path, child);
       if (child.endsWith(HTML)) {
         children.add(new ExternalTestPage(childPath,
-                WikiWordPath.makeWikiWord(child.replace(HTML, "")), parent, fileSystem));
+                WikiWordPath.makeWikiWord(child.replace(HTML, "")), this, fileSystem));
       } else if (hasHtmlChild(childPath)) {
         children.add(new ExternalSuitePage(childPath,
-                WikiWordPath.makeWikiWord(child), parent, fileSystem));
+                WikiWordPath.makeWikiWord(child), this, fileSystem));
       }
     }
     return children;
