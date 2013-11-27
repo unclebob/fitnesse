@@ -111,6 +111,7 @@ public class FitNesseExpediter implements ResponseSender {
       throw se;
     }
     catch (Exception e) {
+      LOG.log(Level.WARNING, "Unable to handle request", e);
       response = new ErrorResponder(e).makeResponse(context, request);
     }
     // Add those as default headers?
