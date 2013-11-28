@@ -7,23 +7,18 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class ArgumentsTest {
-  private Arguments args;
 
   @Test
   public void testSimpleCommandline() throws Exception {
-    args = makeArgs(new String[0]);
+    Arguments args = new Arguments(new String[0]);
     assertNotNull(args);
     assertEquals(80, args.getPort());
     assertEquals(".", args.getRootPath());
   }
 
-  private Arguments makeArgs(String... argArray) {
-    return args = FitNesseMain.parseCommandLine(argArray);
-  }
-
   @Test
   public void testArgumentsDefaults() throws Exception {
-    makeArgs();
+    Arguments args = new Arguments();
     assertEquals(80, args.getPort());
     assertEquals(".", args.getRootPath());
     assertEquals("FitNesseRoot", args.getRootDirectory());
@@ -38,7 +33,7 @@ public class ArgumentsTest {
   @Test
   public void testArgumentsAlternates() throws Exception {
     String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
-    makeArgs(argString.split(" "));
+    Arguments args = new Arguments(argString.split(" "));
     assertEquals(123, args.getPort());
     assertEquals("MyWd", args.getRootPath());
     assertEquals("MyRoot", args.getRootDirectory());
@@ -51,7 +46,7 @@ public class ArgumentsTest {
 
   @Test
   public void testAllArguments() throws Exception {
-    args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
+    Arguments args = new Arguments("-p", "81", "-d", "directory", "-r", "root",
         "-l", "myLogDirectory", "-o", "-e", "22");
     assertNotNull(args);
     assertEquals(81, args.getPort());
@@ -64,7 +59,7 @@ public class ArgumentsTest {
 
   @Test
   public void testNotOmitUpdates() throws Exception {
-    args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
+    Arguments args = new Arguments("-p", "81", "-d", "directory", "-r", "root",
         "-l", "myLogDirectory");
     assertNotNull(args);
     assertEquals(81, args.getPort());
@@ -76,39 +71,38 @@ public class ArgumentsTest {
 
   @Test
   public void commandShouldUseDifferentDefaultPort() throws Exception {
-    args = makeArgs("-c", "someCommand");
+    Arguments args = new Arguments("-c", "someCommand");
     assertNotNull(args);
     assertEquals(Arguments.DEFAULT_COMMAND_PORT, args.getPort());
   }
 
   @Test
   public void commandShouldAllowPortToBeSet() throws Exception {
-    args = makeArgs("-c", "someCommand", "-p", "666");
+    Arguments args = new Arguments("-c", "someCommand", "-p", "666");
     assertNotNull(args);
     assertEquals(666, args.getPort());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testBadArgument() throws Exception {
-    args = makeArgs("-x");
-    assertNull(args);
+    new Arguments("-x");
   }
 
   @Test
   public void defaultConfigLocation() {
-    args = makeArgs();
+    Arguments args = new Arguments();
     assertEquals("./plugins.properties", args.getConfigFile());
   }
 
   @Test
   public void configLocationWithDifferentRootPath() {
-    args = makeArgs("-d", "customDir");
+    Arguments args = new Arguments("-d", "customDir");
     assertEquals("customDir/plugins.properties", args.getConfigFile());
   }
 
   @Test
   public void customConfigLocation() {
-    args = makeArgs("-f", "custom.properties");
+    Arguments args = new Arguments("-f", "custom.properties");
     assertEquals("custom.properties", args.getConfigFile());
   }
 

@@ -65,11 +65,17 @@ public class CommandLine extends Option {
   }
 
   public String getOptionArgument(String optionName, String argName) {
+    return getOptionArgument(optionName, argName, null);
+  }
+
+  public String getOptionArgument(String optionName, String argName, String defaultValue) {
     Option option = possibleOptions.get(optionName);
     if (option == null)
       return null;
-    else
-      return option.getArgument(argName);
+    else {
+      String v = option.getArgument(argName);
+      return v != null ? v : defaultValue;
+    }
   }
 }
 

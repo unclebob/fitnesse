@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.Updater;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -36,8 +35,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testInstallOnly() throws Exception {
-    Arguments args = new Arguments();
-    args.setInstallOnly(true);
+    Arguments args = new Arguments("-i");
     FitNesse fitnesse = mockFitNesse();
     new FitNesseMain().launch(args, context);
     verify(fitnesse, never()).start();
@@ -45,9 +43,7 @@ public class FitNesseMainTest {
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    Arguments args = new Arguments();
-    args.setCommand("command");
-    args.setOmitUpdates(true);
+    Arguments args = new Arguments("-o", "-c", "command");
     FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
     int exitCode = new FitNesseMain().launch(args, context);
@@ -101,7 +97,7 @@ public class FitNesseMainTest {
     PrintStream err = System.err;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setErr(new PrintStream(outputBytes));
-    Arguments arguments = FitNesseMain.parseCommandLine(args);
+    Arguments arguments = new Arguments(args);
     int exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
     System.setErr(err);

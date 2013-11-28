@@ -1,7 +1,6 @@
 package fitnesseMain;
 
 import fitnesse.components.ComponentFactory;
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
@@ -18,7 +17,6 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
-import util.CommandLine;
 
 import java.io.*;
 import java.util.Properties;
@@ -29,12 +27,12 @@ import java.util.logging.Logger;
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
 
-  private String extraOutput = "";
-
   public static void main(String[] args) throws Exception {
-    Arguments arguments = parseCommandLine(args);
-    if (arguments == null) {
-      printUsage();
+    Arguments arguments = null;
+    try {
+      arguments = new Arguments(args);
+    } catch (IllegalArgumentException e) {
+      Arguments.printUsage();
       exit(1);
     }
     Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
@@ -186,7 +184,7 @@ public class FitNesseMain {
     return properties;
   }
 
-  public static void configureLogging(boolean verbose) {
+  public void configureLogging(boolean verbose) {
     if (System.getProperty("java.util.logging.config.class") != null ||
             System.getProperty("java.util.logging.config.file") != null) {
       // Do not reconfigure logging if explicitly set from the command line
@@ -210,56 +208,4 @@ public class FitNesseMain {
     LOG.finest("Configured verbose logging");
   }
 
-  // Move to Arguments class.
-  public static Arguments parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine(
-      "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
-    Arguments arguments = null;
-    if (commandLine.parse(args)) {
-      arguments = new Arguments();
-      if (commandLine.hasOption("v"))
-        arguments.setVerboseLogging(true);
-      if (commandLine.hasOption("p"))
-        arguments.setPort(commandLine.getOptionArgument("p", "port"));
-      if (commandLine.hasOption("d"))
-        arguments.setRootPath(commandLine.getOptionArgument("d", "dir"));
-      if (commandLine.hasOption("r"))
-        arguments.setRootDirectory(commandLine.getOptionArgument("r", "root"));
-      if (commandLine.hasOption("l"))
-        arguments.setLogDirectory(commandLine.getOptionArgument("l", "logDir"));
-      if (commandLine.hasOption("e"))
-        arguments.setDaysTillVersionsExpire(commandLine.getOptionArgument("e", "days"));
-      if (commandLine.hasOption("a"))
-        arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
-      if (commandLine.hasOption("c"))
-        arguments.setCommand(commandLine.getOptionArgument("c", "command"));
-      if (commandLine.hasOption("b"))
-        arguments.setOutput(commandLine.getOptionArgument("b", "output"));
-      if (commandLine.hasOption("f"))
-        arguments.setConfigFile(commandLine.getOptionArgument("f", "config"));
-      arguments.setOmitUpdates(commandLine.hasOption("o"));
-      arguments.setInstallOnly(commandLine.hasOption("i"));
-    }
-    return arguments;
-  }
-
-  private static void printUsage() {
-    System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
-    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
-    System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
-      + "}");
-    System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
-      + "}");
-    System.err.println("\t-l <log directory> {no logging}");
-    System.err.println("\t-f <config properties file> {" + Arguments.DEFAULT_CONFIG_FILE + "}");
-    System.err.println("\t-e <days> {" + Arguments.DEFAULT_VERSION_DAYS
-      + "} Number of days before page versions expire");
-    System.err.println("\t-o omit updates");
-    System.err
-      .println("\t-a {user:pwd | user-file-name} enable authentication.");
-    System.err.println("\t-i Install only, then quit.");
-    System.err.println("\t-c <command> execute single command.");
-    System.err.println("\t-b <filename> redirect command output.");
-    System.err.println("\t-v {off} Verbose logging");
-  }
 }
