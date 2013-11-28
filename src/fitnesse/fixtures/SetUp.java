@@ -23,7 +23,7 @@ public class SetUp extends Fixture {
 
     final int port = 9123;
     Properties properties = new Properties();
-    properties.setProperty("FITNESSE_PORT", String.valueOf(9123));
+    properties.setProperty("FITNESSE_PORT", String.valueOf(port));
     root = InMemoryPage.makeRoot("RooT", properties);
     context = FitNesseUtil.makeTestContext(root, port, new Authenticator() {
       @Override public boolean isAuthenticated(String username, String password) {
