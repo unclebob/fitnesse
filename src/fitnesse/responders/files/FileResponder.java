@@ -151,6 +151,12 @@ public class FileResponder implements Responder {
         contentType = "text/javascript";
       } else if (filename.endsWith(".jar")) {
         contentType = "application/x-java-archive";
+      } else if ((filename.endsWith(".jpg")) || (filename.endsWith(".jpeg"))) {
+          contentType = "image/jpeg";
+      } else if (filename.endsWith(".png")) {
+          contentType = "image/png";
+      } else if (filename.endsWith(".gif")) {
+          contentType = "image/gif";
       } else {
         contentType = "text/plain";
       }
