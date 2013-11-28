@@ -39,14 +39,14 @@ public class FixtureLoader {
     }
   };
 
-  public BaseFixture disgraceThenLoad(String tableName) throws Throwable {
+  public Fixture disgraceThenLoad(String tableName) throws Throwable {
     FixtureName fixtureName = new FixtureName(tableName);
-    BaseFixture fixture = instantiateFirstValidFixtureClass(fixtureName);
+    Fixture fixture = instantiateFirstValidFixtureClass(fixtureName);
     addPackageToFixturePath(fixture);
     return fixture;
   }
 
-  private void addPackageToFixturePath(BaseFixture fixture) {
+  private void addPackageToFixturePath(Fixture fixture) {
     Package fixturePackage = fixture.getClass().getPackage();
     if (fixturePackage != null)
       addPackageToPath(fixturePackage.getName());
@@ -56,7 +56,7 @@ public class FixtureLoader {
     fixturePathElements.add(name);
   }
 
-  private BaseFixture instantiateFixture(String fixtureName) throws Throwable {
+  private Fixture instantiateFixture(String fixtureName) throws Throwable {
     Class<?> classForFixture = loadFixtureClass(fixtureName);
     FixtureClass fixtureClass = new FixtureClass(classForFixture);
     return fixtureClass.newInstance();
@@ -75,7 +75,7 @@ public class FixtureLoader {
     }
   }
 
-  private BaseFixture instantiateFirstValidFixtureClass(FixtureName fixtureName)
+  private Fixture instantiateFirstValidFixtureClass(FixtureName fixtureName)
     throws Throwable {
     for (Iterator<String> i = fixtureName.getPotentialFixtureClassNames(
       fixturePathElements).iterator(); i.hasNext();) {

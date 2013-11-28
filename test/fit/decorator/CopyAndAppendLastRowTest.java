@@ -44,7 +44,7 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
   @Test
   public void testShouldLeaveTableAsItIsIfCounterValueIsZero() throws Exception {
     String fitPage = "<table>" + FIRST_HTML_ROW + "<tr><td>fit.decorator.TestFixture</td></tr></table>";
-    decorator.doTable(new Parse(fitPage));
+    decorator.doTables(new Parse(fitPage));
     TestCaseHelper.assertCounts(TestCaseHelper.counts(0, 0, 0, 0), decorator.counts);
   }
 
@@ -54,7 +54,7 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
       + "</td><td>times</td></tr><tr><td>eg.Division</td></tr>"
       + "<tr><td>numerator</td><td>denominator</td><td>quotient()</td></tr>"
       + "<tr><td>10</td><td>2</td><td>5</td></tr></table>";
-    decorator.doTable(new Parse(fitPage));
+    decorator.doTables(new Parse(fitPage));
     TestCaseHelper.assertCounts(TestCaseHelper.counts(2, 0, 0, 0), decorator.counts);
   }
 
@@ -63,7 +63,7 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
     String fitPage = "<table><tr><td>" + CopyAndAppendLastRow.class.getName() + "</td>"
       + "<td>0</td><td>times</td></tr><tr><td>eg.Division</td></tr>"
       + "<tr><td>numerator</td><td>denominator</td><td>quotient()</td></tr></table>";
-    decorator.doTable(new Parse(fitPage));
+    decorator.doTables(new Parse(fitPage));
     TestCaseHelper.assertCounts(TestCaseHelper.counts(0, 0, 0, 0), decorator.counts);
   }
 
@@ -87,4 +87,5 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
     decorator.doTable(new Parse(fitPage));
     TestCaseHelper.assertCounts(TestCaseHelper.counts(COUNTER + 3, 0, 0, 0), decorator.counts);
   }
+
 }

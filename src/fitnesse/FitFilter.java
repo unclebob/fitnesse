@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import fit.Dispatcher;
 import fit.Fixture;
 import fit.Parse;
 
@@ -15,7 +14,7 @@ public class FitFilter {
 
   public String input;
   public Parse tables;
-  public Dispatcher dispatcher = new Dispatcher();
+  public Fixture fixture = new Fixture();
   public PrintWriter output;
 
   public static void main(String argv[]) {
@@ -31,8 +30,9 @@ public class FitFilter {
   public void process() {
     try {
       tables = new Parse(input);
-      dispatcher.doTables(tables);
-    } catch (Exception e) {
+      fixture.doTables(tables);
+    }
+    catch (Exception e) {
       exception(e);
     }
     tables.print(output);
@@ -46,7 +46,8 @@ public class FitFilter {
     try {
       input = read();
       output = new PrintWriter(System.out);
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       System.err.println(e.getMessage());
       System.exit(-1);
     }
@@ -63,12 +64,12 @@ public class FitFilter {
 
   protected void exception(Exception e) {
     tables = new Parse("body", "Unable to parse input. Input ignored.", null, null);
-    dispatcher.exception(tables, e);
+    fixture.exception(tables, e);
   }
 
   protected void exit() {
     output.close();
-    System.exit(dispatcher.counts.wrong + dispatcher.counts.exceptions);
+    System.exit(fixture.counts.wrong + fixture.counts.exceptions);
   }
 
 }
