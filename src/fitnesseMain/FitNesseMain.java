@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.PluginsLoader;
+import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -45,9 +46,14 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
+    Properties properties = loadConfigFile(arguments.getConfigFile());
+    return launchFitNesse(arguments, properties);
+  }
+
+  public Integer launchFitNesse(Arguments arguments, Properties properties) throws Exception {
     configureLogging(arguments.hasVerboseLogging());
     loadPlugins();
-    FitNesseContext context = loadContext(arguments);
+    FitNesseContext context = loadContext(arguments, properties);
 
     update(arguments, context);
     return launch(arguments, context);
@@ -105,9 +111,7 @@ public class FitNesseMain {
     return TestTextFormatter.finalErrorCount;
   }
 
-  private FitNesseContext loadContext(Arguments arguments)
-    throws Exception {
-    Properties properties = loadConfigFile(arguments.getConfigFile());
+  private FitNesseContext loadContext(Arguments arguments, Properties properties) throws Exception {
     // Enrich properties with command line values:
     properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
 
@@ -139,6 +143,7 @@ public class FitNesseMain {
 
     pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
     pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadTestSystems((TestSystemFactoryRegistrar) context.testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadContentFilter();
     pluginsLoader.loadSlimTables();
@@ -179,13 +184,13 @@ public class FitNesseMain {
       }
     }
 
+    // Overload with System properties
+
     return properties;
   }
 
   public void configureLogging(boolean verbose) {
-    if (System.getProperty("java.util.logging.config.class") != null ||
-            System.getProperty("java.util.logging.config.file") != null) {
-      // Do not reconfigure logging if explicitly set from the command line
+    if (loggingSystemPropertiesDefined()) {
       return;
     }
 
@@ -204,6 +209,11 @@ public class FitNesseMain {
       }
     }
     LOG.finest("Configured verbose logging");
+  }
+
+  private boolean loggingSystemPropertiesDefined() {
+    return System.getProperty("java.util.logging.config.class") != null ||
+            System.getProperty("java.util.logging.config.file") != null;
   }
 
 }

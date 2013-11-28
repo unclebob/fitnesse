@@ -102,10 +102,6 @@ public class ResponderFactory {
     addResponder("compareVersions", VersionComparerResponder.class);
   }
 
-  public final void addResponder(String key, String responderClassName) throws ClassNotFoundException {
-    addResponder(key, Class.forName(responderClassName));
-  }
-
   public final void addResponder(String key, Class<?> responderClass) {
     responderMap.put(key, responderClass);
   }

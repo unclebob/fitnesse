@@ -2,156 +2,227 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.ClassPathBuilder;
-import fitnesse.testsystems.*;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
-import static util.RegexTestCase.assertSubString;
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-@SuppressWarnings("unchecked")
 public class MultipleTestsRunnerTest {
   private WikiPage root;
   private WikiPage suite;
-  private WikiPage testPage;
-  private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
-    "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
-    "|string|get string arg?|\n" +
-    "|wow|wow|\n";
-  private List<WikiPage> testPages;
   private FitNesseContext context;
+
+  private TestingTracker testingTracker;
+  private TestSystemFactory testSystemFactory;
+  private TestSystem testSystem;
 
   @Before
   public void setUp() throws Exception {
-    String suitePageName = "SuitePage";
+    testingTracker = mock(TestingTracker.class);
+    testSystemFactory = mock(TestSystemFactory.class);
+    testSystem = mock(TestSystem.class);
+    when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
+
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
-    PageData data = root.getData();
-    data.setContent(classpathWidgets());
-    root.commit(data);
-    suite = WikiPageUtil.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
-    testPages = new LinkedList<WikiPage>();
-    testPage = addTestPage(suite, "TestOne", "My test");
+    suite = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"), "This is the test suite\n");
  }
 
   @Test
-  public void testBuildClassPath() throws Exception {
-    String classpath = new ClassPathBuilder().buildClassPath(testPages);
-    assertSubString("classes", classpath);
-    assertSubString("dummy.jar", classpath);
+  public void shouldExecuteTestPagesGroupedByTestSystem() throws IOException, InterruptedException {
+    WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
+
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root, new StubDescriptorFactory());
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+
+    runner.executeTestPages();
+
+    verify(testSystemFactory).create(forTestSystem("B"));
+    verify(testSystemFactory).create(forTestSystem("A"));
   }
 
   @Test
-  public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
-    WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
-    
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
-    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
+  public void shouldForwardTestSystemStartedEvent() {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    TestSystem testSystem = mock(TestSystem.class);
 
-    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
-    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
-    List<WikiTestPage> fitList = map.get(fitDescriptor);
-    List<WikiTestPage> slimList = map.get(slimDescriptor);
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
 
-    assertEquals(1, fitList.size());
-    assertEquals(1, slimList.size());
-    assertEquals(testPage, fitList.get(0).getSourcePage());
-    assertEquals(slimPage, slimList.get(0).getSourcePage());
+    runner.testSystemStarted(testSystem);
+
+    verify(listener).testSystemStarted(testSystem);
   }
-  
+
   @Test
-  public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
-    
-    testPages = new LinkedList<WikiPage>();
-    testPages.add(setUp);
-    testPages.add(slimPage);
-    testPages.add(testPage);
-    testPages.add(tearDown);
+  public void shouldForwardTestSystemStoppedEvent() {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    TestSystem testSystem = mock(TestSystem.class);
+    ExecutionLog executionLog = mock(ExecutionLog.class);
+    Exception cause = new Exception();
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context);
-    Map<WikiPageDescriptor, LinkedList<WikiTestPage>> map = runner.makeMapOfPagesByTestSystem();
-    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(testPage));
-    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, new ClassPathBuilder().getClasspath(slimPage));
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
 
-    List<WikiTestPage> fitList = map.get(fitDescriptor);
-    List<WikiTestPage> slimList = map.get(slimDescriptor);
+    runner.testSystemStopped(testSystem, executionLog, cause);
 
-    assertEquals(3, fitList.size());
-    assertEquals(3, slimList.size());
-
-    assertEquals(setUp, fitList.get(0).getSourcePage());
-    assertEquals(testPage, fitList.get(1).getSourcePage());
-    assertEquals(tearDown, fitList.get(2).getSourcePage());
-
-    assertEquals(setUp, slimList.get(0).getSourcePage());
-    assertEquals(slimPage, slimList.get(1).getSourcePage());
-    assertEquals(tearDown, slimList.get(2).getSourcePage());
+    verify(listener).testSystemStopped(testSystem, executionLog, cause);
   }
 
-  
-  private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
+  @Test
+  public void shouldForwardTestStartedEvent() throws IOException {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    WikiTestPage testPage = new WikiTestPage((WikiPage) null);
+
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
+
+    runner.testStarted(testPage);
+
+    verify(listener).testStarted(testPage);
+  }
+
+  @Test
+  public void shouldForwardTestCompleteEvent() throws IOException {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    WikiTestPage testPage = new WikiTestPage((WikiPage) null);
+    TestSummary testSummary = new TestSummary();
+
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
+
+    runner.testComplete(testPage, testSummary);
+
+    verify(listener).testComplete(testPage, testSummary);
+  }
+
+  @Test
+  public void shouldForwardTestSystemOutputChunkEvent() throws IOException {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    String chunk = "foobar";
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
+
+    runner.testOutputChunk(chunk);
+
+    verify(listener).testOutputChunk(chunk);
+  }
+
+  @Test
+  public void shouldForwardTestSystemAssertionVerifiedEvent() throws IOException {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    String chunk = "foobar";
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
+
+    Assertion assertion = mock(Assertion.class);
+    TestResult testResult = mock(TestResult.class);
+    runner.testAssertionVerified(assertion, testResult);
+
+    verify(listener).testAssertionVerified(assertion, testResult);
+  }
+
+  @Test
+  public void shouldForwardTestSystemExceptionOccurredEvent() throws IOException {
+    TestSystemListener listener = mock(TestSystemListener.class);
+    String chunk = "foobar";
+    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
+
+    Assertion assertion = mock(Assertion.class);
+    ExceptionResult exceptionResult = mock(ExceptionResult.class);
+    runner.testExceptionOccurred(assertion, exceptionResult);
+
+    verify(listener).testExceptionOccurred(assertion, exceptionResult);
+  }
+
+  @Test
+  public void shouldCallCloseOnClosableTestSystemListener() throws IOException, InterruptedException {
+    WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
+
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, new StubDescriptorFactory());
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+    runner.addTestSystemListener(listener);
+    runner.executeTestPages();
+
+    verify(listener).close();
+  }
+
+  @Test
+  public void callsTestingTrackerBeforeAndAfterTestExecution() throws IOException, InterruptedException {
+    final String stopId = "42";
+    WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
+    when(testingTracker.addStartedProcess(any(Stoppable.class))).thenReturn(stopId);
+
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, new StubDescriptorFactory());
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+    runner.addTestSystemListener(listener);
+    runner.executeTestPages();
+
+    verify(testingTracker).addStartedProcess(runner);
+    verify(testingTracker).removeEndedProcess(stopId);
+  }
+
+  private WikiPage addTestPage(WikiPage page, String name, String content) {
     WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
     testPage.commit(data);
-    testPages.add(testPage);
-
     return testPage;
   }
-  
-  private String classpathWidgets() {
-    return "!path classes\n" +
-      "!path lib/dummy.jar\n";
-  }
-  
-  @Test
-  public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    WikiTestPage page = new WikiTestPage(slimPage);
-    CompositeFormatter resultsListener = new CompositeFormatter();
-    TestSystemListener listener = mock(TestSystemListener.class);
-    resultsListener.addTestSystemListener(listener);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
-    runner.addTestSystemListener(resultsListener);
-
-    runner.testStarted(page);
-    verify(listener).testStarted(same(page));
+  private MultipleTestsRunner newTestRunnerWithListener(TestSystemListener listener) {
+    WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem((List) asList(testPage), context.root, new StubDescriptorFactory());
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+    runner.addTestSystemListener(listener);
+    return runner;
   }
 
-  @Test
-  public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
-    List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
-    WikiTestPage page = new WikiTestPage(slimPage);
-    CompositeFormatter resultsListener = new CompositeFormatter();
-    TestSystemListener listener = mock(TestSystemListener.class);
-    resultsListener.addTestSystemListener(listener);
-    
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, context);
-    runner.addTestSystemListener(resultsListener);
 
-    TestSummary testSummary = mock(TestSummary.class);
-
-    runner.testStarted(page);
-    runner.testComplete(page, testSummary);
-    verify(listener).testComplete(same(page), same(testSummary));
+  private Descriptor forTestSystem(String type) {
+    return argThat(new ForTestSystem(type));
   }
+
+  class ForTestSystem extends ArgumentMatcher<Descriptor> {
+
+    private final String testSystemType;
+
+    public ForTestSystem(String testSystemType) {
+      this.testSystemType = testSystemType;
+    }
+    public boolean matches(Object descriptor) {
+      return testSystemType.equals(((Descriptor) descriptor).getTestSystemType());
+    }
+  }
+
+  static private class StubDescriptorFactory implements PagesByTestSystem.DescriptorFactory {
+
+    @Override
+    public Descriptor create(WikiPage page) {
+      return new WikiPageDescriptor(page.getData(), false, false, "");
+    }
+  }
+
+  static interface ClosableTestSystemListener extends TestSystemListener, Closeable {
+  }
+
 }

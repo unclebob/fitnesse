@@ -24,19 +24,18 @@ public class WikiPageDescriptor implements Descriptor {
   public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
   public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
+  public static final String IN_PROCESS = "^inprocess";
 
   private final ReadOnlyPageData data;
+  private final boolean inProcess;
   private final boolean remoteDebug;
   private final String classPath;
 
-  public WikiPageDescriptor(ReadOnlyPageData data, boolean remoteDebug, String classPath) {
+  public WikiPageDescriptor(ReadOnlyPageData data, boolean inProcess, boolean remoteDebug, String classPath) {
     this.data = data;
+    this.inProcess = inProcess;
     this.remoteDebug = remoteDebug;
     this.classPath = classPath;
-  }
-
-  public WikiPageDescriptor(WikiPageDescriptor descriptor, String classPath) {
-    this(descriptor.data, descriptor.remoteDebug, classPath);
   }
 
   protected static String fitnesseJar(String classpath) {
@@ -67,13 +66,21 @@ public class WikiPageDescriptor implements Descriptor {
 
   @Override
   public String getTestSystemType() {
+    String type = getRawTestSystemType();
+    if (inProcess) type += IN_PROCESS;
+    return type;
+  }
+
+  private String getRawTestSystemType() {
     return getTestSystem().split(":")[0];
   }
 
   @Override
   public String getTestSystemName() {
     String testSystemName = getTestSystem();
-    String testRunner = getTestRunnerNormal();
+    if (inProcess)
+      testSystemName += "^inprocess";
+              String testRunner = getTestRunnerNormal();
     return String.format("%s:%s", testSystemName, testRunner);
   }
 
@@ -96,7 +103,7 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   String defaultTestRunner() {
-    String testSystemType = getTestSystemType();
+    String testSystemType = getRawTestSystemType();
     if ("slim".equalsIgnoreCase(testSystemType))
       return "fitnesse.slim.SlimService";
     else

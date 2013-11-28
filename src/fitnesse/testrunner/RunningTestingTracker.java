@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import fitnesse.testrunner.Stoppable;
 
-public class RunningTestingTracker {
+public class RunningTestingTracker implements TestingTracker {
   public static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
 
   private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
@@ -19,7 +19,7 @@ public class RunningTestingTracker {
    * @return id used to identify this process for use with the stop responder
    */
   public synchronized String addStartedProcess(Stoppable process) {
-    int ticketNumber = 0;
+    int ticketNumber;
     synchronized (this) {
       ticketNumber = nextTicketNumber++;
     }

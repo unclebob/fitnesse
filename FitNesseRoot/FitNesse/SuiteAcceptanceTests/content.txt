@@ -11,6 +11,7 @@
 | >SuiteSlimTests | ''Slim Specific Tests'' |
 | >SuiteTestHistory | ''Test History tests'' |
 | >SuiteVersionsControllerTests | Versions controller tests |
+| >SuiteTestSystems | Versions controller tests |
 
 !2 ''Classpaths''
 !define SUT_PATH (!-

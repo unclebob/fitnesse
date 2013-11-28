@@ -5,6 +5,8 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
+import fitnesse.testrunner.MultipleTestSystemFactory;
+import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
@@ -81,6 +83,8 @@ public class FitNesseContext {
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
   public final WikiPage root;
+
+  public TestSystemFactory testSystemFactory;
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
@@ -112,6 +116,7 @@ public class FitNesseContext {
     this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
     this.logger = logger;
     this.properties = properties;
+    testSystemFactory = new MultipleTestSystemFactory();
     runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
     fitNesse = new FitNesse(this);
