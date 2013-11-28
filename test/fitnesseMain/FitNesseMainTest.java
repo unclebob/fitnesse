@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.util.Properties;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -88,12 +89,27 @@ public class FitNesseMainTest {
 
   @Test
   public void canRunSingleCommandWithAuthentication() throws Exception {
-    String response = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
-    assertThat(response, containsString("fitnesse.authentication.OneUserAuthenticator"));
+    String output = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
+    assertThat(output, containsString("fitnesse.authentication.OneUserAuthenticator"));
+  }
+
+  @Test
+  public void systemPropertiesTakePrecedenceOverConfiguredProperties() throws Exception {
+    final String configFileName = "systemPropertiesTakePrecedenceOverConfiguredProperties.properties";
+    FileUtil.createFile(configFileName, "Theme=example");
+
+    System.setProperty("Theme", "othertheme");
+    try {
+      // Checked via logging:
+      String output = runFitnesseMainWith("-o", "-c", "/root", "-f", configFileName);
+      assertThat(output, containsString("othertheme"));
+    } finally {
+      System.getProperties().remove("Theme");
+      FileUtil.deleteFile(configFileName);
+    }
   }
 
   private String runFitnesseMainWith(String... args) throws Exception {
-    //FitNesseMain.dontExitAfterSingleCommand = true;
     PrintStream err = System.err;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setErr(new PrintStream(outputBytes));

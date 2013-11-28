@@ -112,11 +112,13 @@ public class FitNesseMain {
   }
 
   private FitNesseContext loadContext(Arguments arguments, Properties properties) throws Exception {
+    final Properties allProperties = wrapPropertiesBySystemProperties(properties);
+
     // Enrich properties with command line values:
     properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
 
     Builder builder = new Builder();
-    ComponentFactory componentFactory = new ComponentFactory(properties);
+    ComponentFactory componentFactory = new ComponentFactory(allProperties);
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
@@ -126,7 +128,7 @@ public class FitNesseMain {
     builder.rootDirectoryName = arguments.getRootDirectory();
 
     builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    builder.versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
+    builder.versionsController.setHistoryDepth(Integer.parseInt(allProperties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
     builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
@@ -159,6 +161,12 @@ public class FitNesseMain {
     LOG.info("Starting FitNesse on port: " + context.port);
 
     return context;
+  }
+
+  private Properties wrapPropertiesBySystemProperties(Properties properties) {
+    Properties allProperties = new Properties(properties);
+    allProperties.putAll(System.getProperties());
+    return allProperties;
   }
 
   public Properties loadConfigFile(final String propertiesFile) {
