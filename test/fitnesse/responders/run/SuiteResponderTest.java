@@ -12,6 +12,7 @@ import static util.RegexTestCase.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
@@ -49,11 +50,14 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
+  private Properties properties;
 
   @Before
   public void setUp() throws Exception {
     String suitePageName = "SuitePage";
-    root = InMemoryPage.makeRoot("RooT");
+    properties = new Properties();
+    root = InMemoryPage.makeRoot("Root", properties);
+    context = FitNesseUtil.makeTestContext(root);
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
@@ -62,10 +66,9 @@ public class SuiteResponderTest {
 
     request = new MockRequest();
     request.setResource(suitePageName);
+    request.addInput("debug", "");
     responder = new SuiteResponder();
-    responder.setFastTest(true);
     responder.page = suite;
-    context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
@@ -97,6 +100,8 @@ public class SuiteResponderTest {
   private String runSuite() throws Exception {
     int port = receiver.receiveSocket();
     FitNesseContext localContext = FitNesseUtil.makeTestContext(context, port);
+    // Use this port, so the test system will talk back.
+    properties.setProperty("FITNESSE_PORT", String.valueOf(port));
     Response response = responder.makeResponse(localContext, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -335,8 +340,8 @@ public class SuiteResponderTest {
     String results = runSuite();
     assertHasRegexp("<td>fitnesse.testutil.PassFixture</td>", results);
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
-    assertHasRegexp("<h3>fit:fit.FitServer</h3>", results);
-    assertHasRegexp("<h3>slim:fitnesse.slim.SlimService", results);
+    assertHasRegexp("<h3>fit\\^inprocess:fit.FitServer</h3>", results);
+    assertHasRegexp("<h3>slim\\^inprocess:fitnesse.slim.SlimService", results);
   }
 
   @Test

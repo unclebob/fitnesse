@@ -27,10 +27,15 @@ import fitnesse.reporting.XmlFormatter;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.reporting.history.PageHistory;
+import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.WikiPageDescriptor;
+import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -47,7 +52,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
-  private boolean fastTest = false;
+  private boolean debug = false;
   private boolean remoteDebug = false;
   int exitCode;
 
@@ -107,6 +112,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return htmlPage;
   }
 
+  public boolean isDebug() {
+    return debug;
+  }
+
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
+
   public class WikiPageFooterRenderer {
     public String render() {
         return WikiPageUtil.getFooterPageHtml(page);
@@ -120,7 +133,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void checkArguments() {
-    fastTest |= request.hasInput("debug");
+    debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
   }
 
@@ -204,10 +217,16 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context);
+    final String classPath = new ClassPathBuilder().buildClassPath(pages);
 
-    runner.setFastTest(fastTest);
-    runner.setDebug(remoteDebug);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
+      @Override
+      public Descriptor create(WikiPage page) {
+        return new WikiPageDescriptor(page.readOnlyData(), debug, remoteDebug, classPath);
+      }
+    });
+
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
 
     addFormatters(runner);
 
@@ -225,14 +244,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public static void registerListener(TestEventListener listener) {
     eventListeners.add(listener);
-  }
-
-  public void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
-  }
-
-  public boolean isFastTest() {
-    return fastTest;
   }
 
   public void addToResponse(String output) {

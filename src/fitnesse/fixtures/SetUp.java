@@ -6,10 +6,10 @@ import static fitnesse.fixtures.FitnesseFixtureContext.context;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.File;
+import java.util.Properties;
 
 import util.FileUtil;
 import fit.Fixture;
-import fitnesse.FitNesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -21,8 +21,11 @@ public class SetUp extends Fixture {
     //TODO - MdM - There's got to be a better way.
     WikiImportTestEventListener.register();
 
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root, 9123, new Authenticator() {
+    final int port = 9123;
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(9123));
+    root = InMemoryPage.makeRoot("RooT", properties);
+    context = FitNesseUtil.makeTestContext(root, port, new Authenticator() {
       @Override public boolean isAuthenticated(String username, String password) {
         if (FitnesseFixtureContext.authenticator != null) {
           return FitnesseFixtureContext.authenticator.isAuthenticated(username, password);

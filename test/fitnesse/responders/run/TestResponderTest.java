@@ -20,6 +20,7 @@ import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,19 +67,21 @@ public class TestResponderTest {
   private WikiPage errorLogsParentPage;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
+  private boolean debug;
 
   @Before
   public void setUp() throws Exception {
+    debug = true;
     File testDir = new File("TestDir");
     testDir.mkdir();
-    root = InMemoryPage.makeRoot("RooT");
+    Properties properties = new Properties();
+    root = InMemoryPage.makeRoot("Root", properties);
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
-    responder.setFastTest(true);
-    context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
-    context = FitNesseUtil.makeTestContext(context, receiver.receiveSocket());
+    context = FitNesseUtil.makeTestContext(root, receiver.receiveSocket());
+    properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
@@ -122,6 +125,7 @@ public class TestResponderTest {
   }
 
   private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
+    if (debug) request.addInput("debug", "true");
     String simpleRunPageName = "TestPage";
     testPage = WikiPageUtil.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     if (tags != null) {
@@ -165,7 +169,6 @@ public class TestResponderTest {
 
   @Test
   public void testStandardOutput() throws Exception {
-    responder.setFastTest(false);
     String content = classpathWidgets()
       + outputWritingTable("output1")
       + outputWritingTable("output2")
@@ -180,7 +183,6 @@ public class TestResponderTest {
 
   @Test
   public void testErrorOutput() throws Exception {
-    responder.setFastTest(false);
     String content = classpathWidgets()
       + errorWritingTable("error1")
       + errorWritingTable("error2")
@@ -237,7 +239,6 @@ public class TestResponderTest {
 
   @Test
   public void testFixtureThatCrashes() throws Exception {
-    responder.setFastTest(false);
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
     request.setResource(testPage.getName());
 
@@ -380,17 +381,16 @@ public class TestResponderTest {
 
   @Test
   public void debugTest() throws Exception {
-    responder.setFastTest(false);
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
     assertTrue(results.contains(">Tests Executed OK<"));
     assertTrue(results.contains("\\\"ok\\\""));
-    assertTrue("should be fast test", responder.isFastTest());
+    assertTrue("should be fast test", responder.isDebug());
   }
 
   @Test
   public void testExecutionStatusOutputCaptured() throws Exception {
-    responder.setFastTest(false);
+    debug = false;
     doSimpleRun(outputWritingTable("blah"));
     assertTrue(results.contains(">Output Captured<"));
     assertTrue(results.contains("\\\"output\\\""));
@@ -398,7 +398,7 @@ public class TestResponderTest {
 
   @Test
   public void testExecutionStatusError() throws Exception {
-    responder.setFastTest(false);
+    debug = false;
     doSimpleRun(crashFixtureTable());
     assertTrue(results.contains(">Errors Occurred<"));
     assertTrue(results.contains("\\\"error\\\""));
@@ -406,7 +406,7 @@ public class TestResponderTest {
 
   @Test
   public void testExecutionStatusErrorHasPriority() throws Exception {
-    responder.setFastTest(false);
+    debug = false;
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
     assertTrue(results.contains(">Errors Occurred<"));
   }
@@ -504,7 +504,6 @@ public class TestResponderTest {
 
   @Test
   public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
-    responder.setFastTest(false);
     WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
     WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
@@ -537,7 +536,6 @@ public class TestResponderTest {
 
   @Test
   public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
-    responder.setFastTest(false);
     WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
     WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
@@ -560,7 +558,6 @@ public class TestResponderTest {
 
   @Test
   public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
-    responder.setFastTest(false);
     WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
     WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
@@ -583,7 +580,6 @@ public class TestResponderTest {
 
   @Test
   public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
-    responder.setFastTest(false);
     WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
     WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));

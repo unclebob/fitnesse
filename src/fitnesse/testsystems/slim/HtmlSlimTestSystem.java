@@ -23,8 +23,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   private HtmlTableScanner tableScanner;
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
 
-  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
-    super(testSystemName, slimClient, listener);
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient) {
+    super(testSystemName, slimClient);
   }
 
   @Override

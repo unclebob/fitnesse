@@ -39,7 +39,9 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext() {
-    return makeTestContext(InMemoryPage.makeRoot("root"));
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(PORT));
+    return makeTestContext(InMemoryPage.makeRoot("RooT", properties));
   }
 
   public static FitNesseContext makeTestContext(WikiPage root) {

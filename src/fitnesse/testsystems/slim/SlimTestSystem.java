@@ -46,11 +46,10 @@ public abstract class SlimTestSystem implements TestSystem {
   private boolean testSystemIsStopped;
 
 
-  public SlimTestSystem(String testSystemName, SlimClient slimClient, TestSystemListener listener) {
+  public SlimTestSystem(String testSystemName, SlimClient slimClient) {
     this.testSystemName = testSystemName;
     this.slimClient = slimClient;
     this.testSystemListener = new CompositeTestSystemListener();
-    this.testSystemListener.addTestSystemListener(listener);
   }
 
   public SlimTestContext getTestContext() {

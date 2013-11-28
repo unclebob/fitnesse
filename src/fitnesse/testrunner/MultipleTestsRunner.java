@@ -2,53 +2,41 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.FitNesseContext;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
-  public static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
+  private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
-  private final FitNesseContext fitNesseContext;
-  private final List<WikiPage> testPagesToRun;
-  private boolean isFastTest = false;
-  private boolean isRemoteDebug = false;
+  private final PagesByTestSystem pagesByTestSystem;
 
-  private TestSystemGroup testSystemGroup = null;
+  private final TestSystemFactory testSystemFactory;
+  private final TestingTracker testingTracker;
+
   private volatile boolean isStopped = false;
   private String stopId = null;
-  private PageListSetUpTearDownSurrounder surrounder;
 
+  private TestSystem testSystem;
   private volatile int testsInProgressCount;
 
-  public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext) {
-    this.testPagesToRun = testPagesToRun;
+  public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
+                             final TestingTracker testingTracker,
+                             final TestSystemFactory testSystemFactory) {
+    this.pagesByTestSystem = pagesByTestSystem;
+    this.testingTracker = testingTracker;
+    this.testSystemFactory = testSystemFactory;
     this.formatters = new CompositeFormatter();
-    this.fitNesseContext = fitNesseContext;
-    surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
   }
 
   public void addTestSystemListener(TestSystemListener listener) {
     this.formatters.addTestSystemListener(listener);
-  }
-
-  public void setDebug(boolean isDebug) {
-    isRemoteDebug = isDebug;
-  }
-
-  public void setFastTest(boolean isFastTest) {
-    this.isFastTest = isFastTest;
   }
 
   public void executeTestPages() throws IOException, InterruptedException {
@@ -61,35 +49,28 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    testSystemGroup = new TestSystemGroup(fitNesseContext, this);
-    stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
-
-    testSystemGroup.setFastTest(isFastTest);
+    stopId = testingTracker.addStartedProcess(this);
 
     formatters.setTrackingId(stopId);
-    PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Map.Entry<WikiPageDescriptor, LinkedList<WikiTestPage>> PagesByTestSystem : pagesByTestSystem.entrySet()) {
-      startTestSystemAndExecutePages(PagesByTestSystem.getKey(), PagesByTestSystem.getValue());
+    for (Descriptor descriptor : pagesByTestSystem.descriptors()) {
+      startTestSystemAndExecutePages(descriptor, pagesByTestSystem.testPageForDescriptor(descriptor));
     }
 
-    fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+    testingTracker.removeEndedProcess(stopId);
   }
 
-  private void startTestSystemAndExecutePages(WikiPageDescriptor descriptor, List<WikiTestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = testSystemGroup.startTestSystem(new WikiPageDescriptor(descriptor,
-                new ClassPathBuilder().buildClassPath(testPagesToRun)));
+        testSystem = startTestSystem(descriptor);
       }
 
-      if (testSystem != null) {
-        if (testSystem.isSuccessfullyStarted()) {
-          executeTestSystemPages(testSystemPages, testSystem);
-          waitForTestSystemToSendResults();
-        }
+      if (testSystem != null && testSystem.isSuccessfullyStarted()) {
+        executeTestSystemPages(testSystemPages, testSystem);
+        waitForTestSystemToSendResults();
       }
     } finally {
       if (!isStopped && testSystem != null) {
@@ -98,10 +79,17 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     }
   }
 
-  private void executeTestSystemPages(List<WikiTestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
-    for (TestPage testPage : pagesInTestSystem) {
+  private TestSystem startTestSystem(Descriptor descriptor) throws IOException {
+    testSystem = testSystemFactory.create(descriptor);
+    testSystem.addTestSystemListener(this);
+    testSystem.start();
+    return testSystem;
+  }
+
+  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+    for (WikiPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
-      testSystem.runTests(testPage);
+      testSystem.runTests(new WikiTestPage(testPage));
     }
   }
 
@@ -111,53 +99,8 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       Thread.sleep(50);
   }
 
-  PagesByTestSystem makeMapOfPagesByTestSystem() {
-    return addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
-  }
-
-  private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() {
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem();
-
-    for (WikiPage testPage : testPagesToRun) {
-      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
-        addPageToListWithinMap(pagesByTestSystem, testPage);
-      }
-    }
-    return pagesByTestSystem;
-  }
-
-  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
-    WikiTestPage testPage = new WikiTestPage(wikiPage);
-    WikiPageDescriptor descriptor = new WikiPageDescriptor(wikiPage.readOnlyData(), isRemoteDebug, "");
-    getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
-  }
-
-  private LinkedList<WikiTestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPageDescriptor descriptor) {
-    LinkedList<WikiTestPage> pagesForTestSystem;
-    if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<WikiTestPage>();
-      pagesByTestSystem.put(descriptor, pagesForTestSystem);
-    } else {
-      pagesForTestSystem = pagesByTestSystem.get(descriptor);
-    }
-    return pagesForTestSystem;
-  }
-
-  private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) {
-    if (testPagesToRun.size() == 0)
-      return pagesByTestSystem;
-    for (LinkedList<WikiTestPage> pagesForTestSystem : pagesByTestSystem.values())
-      surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
-
-    return pagesByTestSystem;
-  }
-
   void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
-    int tests = 0;
-    for (LinkedList<WikiTestPage> listOfPagesToRun : pagesByTestSystem.values()) {
-      tests += listOfPagesToRun.size();
-    }
-    formatters.announceNumberTestsToRun(tests);
+    formatters.announceNumberTestsToRun(pagesByTestSystem.totalTestsToRun());
   }
 
   @Override
@@ -209,19 +152,15 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
     if (stopId != null) {
-      fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+      testingTracker.removeEndedProcess(stopId);
     }
 
-    if (wasNotStopped) {
+    if (wasNotStopped && testSystem != null) {
       try {
-        testSystemGroup.kill();
+        testSystem.kill();
       } catch (IOException e) {
         LOG.log(Level.WARNING, "Unable to stop test systems", e);
       }
     }
   }
-}
-
-class PagesByTestSystem extends HashMap<WikiPageDescriptor, LinkedList<WikiTestPage>> {
-  private static final long serialVersionUID = 1L;
 }

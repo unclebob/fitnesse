@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.PluginsLoader;
+import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -139,6 +140,7 @@ public class FitNesseMain {
 
     pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
     pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadTestSystems((TestSystemFactoryRegistrar) context.testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadContentFilter();
     pluginsLoader.loadSlimTables();
