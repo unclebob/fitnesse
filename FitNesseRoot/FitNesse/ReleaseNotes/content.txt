@@ -1,3 +1,15 @@
+!2 Edge
+ * Updated bootstrap theme to bootstrap 3.
+ * Added hooks to add custom test systems.
+ * Pages can now be defined in a .TemplateLibrary. You can add your own page scaffolding.
+ * java.util.logging is now used for logging, instead of System.out/err.
+ * support for more content types (in particular image types).
+ * Cleanup: removed packages fitnesse.runner, fitnesse.schedule
+ * Issues fixed:
+   * Bug in Fit that caused flow mode for !-FitLibrary's-! !-DoFixture-! to break.
+   * Bug where external HTML page suites were not displayed.
+   * Hash map rendering in rich text editor.
+
 !2 2013-11-10
  * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.
  * Git version control and recent-changes support
