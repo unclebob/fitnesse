@@ -44,7 +44,7 @@ public class ContentsTest {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R2",
            contentsWithPages("PageThree", "PageTwo",
-             nestedContents("\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild ...</a>", "")));
+             nestedContents("\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild</a>",  " ...")));
      }
 
     @Test public void translatesContentsWithInvalidRecursionLimit() throws Exception {

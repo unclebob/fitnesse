@@ -9,7 +9,7 @@ public class TagGroup extends HtmlTag {
 
   public String html(int depth) {
     StringBuffer buffer = new StringBuffer();
-    for (HtmlElement element : childTags) {
+    for (HtmlElement element : this) {
       if (element instanceof HtmlTag)
         buffer.append(((HtmlTag) element).html(depth));
       else

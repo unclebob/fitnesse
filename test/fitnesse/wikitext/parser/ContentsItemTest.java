@@ -26,7 +26,7 @@ public class ContentsItemTest {
 
     @Test
     public void buildsHelp() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{"Help=help"}, "-h", "HELP_TOC", "<a href=\"PlainItem\" class=\"static\">PlainItem</a><span class=\"pageHelp\">: help</span>");
+        assertBuildsOption("PlainItem", new String[]{"Help=help"}, "-h", "HELP_TOC", "<a href=\"PlainItem\" class=\"static\">PlainItem</a>" + HtmlElement.endl + "\t<span class=\"pageHelp\">: help</span>");
     }
 
     @Test
@@ -56,7 +56,8 @@ public class ContentsItemTest {
         contents.add(new Symbol(SymbolType.Text, option));
         contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
-        assertEquals(result + HtmlElement.endl, builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());
+        assertEquals("<li>" + HtmlElement.endl + "\t" + result + HtmlElement.endl + "</li>" + HtmlElement.endl,
+                builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());
     }
 
     private WikiPage withProperties(WikiPage page, String[] propList) throws Exception {

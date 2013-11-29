@@ -30,15 +30,13 @@ public class ContentsItemBuilder {
     }
 
     private HtmlTag buildListItem(SourcePage child) {
-        HtmlTag listItem = new HtmlTag("li");
-        HtmlTag childItem = buildItem(child);
-        listItem.add(childItem);
+        HtmlTag listItem = buildItem(child);
         if (child.getChildren().size() > 0) {
             if (level < getRecursionLimit()) {
                 listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
-                childItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
+                listItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
             }
         }
         return listItem;
@@ -51,19 +49,21 @@ public class ContentsItemBuilder {
     }
 
     public HtmlTag buildItem(SourcePage page) {
-        HtmlTag result = new HtmlTag("a", buildBody(page));
-        result.addAttribute("href", buildReference(page));
-        result.addAttribute("class", getBooleanPropertiesClasses(page));
+        HtmlTag listItem = new HtmlTag("li");
+        HtmlTag link = new HtmlTag("a", buildBody(page));
+        link.addAttribute("href", buildReference(page));
+        link.addAttribute("class", getBooleanPropertiesClasses(page));
+        listItem.add(link);
         String help = page.getProperty(PageData.PropertyHELP);
         if (help.length() > 0) {
             if (hasOption("-h", Contents.HELP_TOC)) {
-                result.tail = HtmlUtil.makeSpanTag("pageHelp", ": " + help).htmlInline();
+                listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
             }
             else {
-                result.addAttribute("title", help);
+                link.addAttribute("title", help);
             }
         }
-        return result;
+        return listItem;
     }
 
     private String buildBody(SourcePage page) {

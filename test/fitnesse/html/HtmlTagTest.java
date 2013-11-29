@@ -22,18 +22,6 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void givenNonNullHead_HeadIsPrepended() throws Exception {
-    tag.head = "head";
-    assertEquals("head<aTag/>" + endl, tag.html());
-  }
-
-  @Test
-  public void givenNonNullTail_TailIsAppended() throws Exception {
-    tag.tail = "tail";
-    assertEquals("<aTag/>tail" +endl, tag.html());
-  }
-
-  @Test
   public void testWithText() throws Exception {
     tag.add("some text");
     assertEquals("<aTag>some text</aTag>" + endl, tag.html());
