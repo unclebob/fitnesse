@@ -3,12 +3,17 @@ Various plugins are supported by FitNesse.
 !3 Overview
 Below are a list of customizations you can make via this plugin architecture.  Each plugin will require an entry in the ''plugins.properties'' file.  This should be located in the working directory of FitNesse.   If the file does not exist FitNesse will run normally.  To enable a plugin, create this file, and add the specified entries.  All plugins will require complied Java code so make sure that the classpath contains an entry to locate your plugins.
 
-!3 Wiki Page
-''required property:'' '''!-WikiPage-! = <class name>'''
+!3 Theme
+''required property:'' '''!-Theme-! = <theme name>'''
+
+''motivation:'' Customize the look and feel to match your liking. See WikiTheming for details.
+
+!3 Wiki Page Factory
+''required property:'' '''!-WikiPageFactory-! = <class name>'''
 
 ''motivation:'' By default, wiki pages are stored as files on a file system (using the !-FileSystemWikiPage-! class). Providing a custom wiki page plugin allows pages to be stored using other means such as a database. Alternatively, !-FileSystemWikiPage-! can be extended to provide custom behavior when pages are create, saved, deleted, etc.
 
-The class specified must implement the ''fitnesse.wiki.!-WikiPage-!'' interface. It must provide a public constructor of the form:''public !-MyWikiPage-!(String rootPath, String rootPageName, !-ComponentFactory-! componentFactory)'' The rootPath parameter is the path to the root page (by default, "."). The rootPageName parameter is the name of the root wiki page (by default, "!-FitNesseRoot-!"). The !-ComponentFactory-! parameter can be used to locate other loaded components and properties entries in plugins.properties.
+The class specified must implement the ''fitnesse.wiki.!-WikiPageFactory-!'' interface. It must provide a public default constructor or a constructor with the form:''public !-WikiPageFactory-!(Properties properties).'' The Properties define the properties defined in the configuration properties file and on the command line.
 
 !3 Html Page Factory
 ''required property:'' '''!-HtmlPageFactory-! = <class name>'''
@@ -17,8 +22,22 @@ The class specified must implement the ''fitnesse.wiki.!-WikiPage-!'' interface.
 
 The class specified must extend the ''fitnesse.html.!-HtmlPageFactory-!'' class and it must also provide a constructor that accept a Properties object.  The custom !-HtmlPageFactory-! will over ride the newPage() method to return a derivative of ''fitnesse.html.!-HtmlPage-!''.  The custom !-HtmlPage-! class should make use of any of the public !-HtmlTag-! member variables.
 
+!3 Versions Controller
+''required property:'' '''!-VersionsController-! = <class name>'''
+
+''motivation:'' Custom version management for file system pages.
+
+By default FitNesse makes backups of pages (as zip files). This property can be used to define version management for the wiki pages. By default FitNesse supports a Git based versions controller (!-fitnesse.wiki.fs.GitFileVersionsController-!) and a simple implementation that does not track changes (!-fitnesse.wiki.fs.SimpleFileVersionsController-!). Custom versions controllers can be defined, as long as they implement the !-fitnesse.wiki.fs.VersionsController-! interface.
+
+!3 Recent Changes
+''required property:'' '''!-RecentChanges-! = <class name>'''
+
+''motivation:'' If you have a custom versions controller installed, it's nice to see those changes on the recent changes page
+
+By default FitNesse maintains a page ([[RecentChanges][.RecentChanges]]) that keeps track of changes made to the wiki. If you're using Git versioning, it's much more convenient to just list the changes from the SCM, instead of the ones maintained in the files (let alone the potential merge conflicts). For Git, !-fitnesse.wiki.fs.GitFileVersionsController-! supports the !-fitnesse.wiki.RecentChanges-! interface, so changes of the repository can be displayed, instead of the ones maintained in the !-RecentChanges-! file.
+
 !3 Responders
-''required property:'' '''!-Responders-! = <key:classname>[,<key:classname>]'''
+''required property:'' '''!-Responders-! = <key:class name>[,<key:class name>]'''
 
 ''motivation:'' Allows functional customization.  With this plugin you can customize the way FitNesse responds to HTTP requests.
 
@@ -51,7 +70,6 @@ The fourth is the htmlTranslation. This is an object that renders the symbol typ
 
 Example:
 
-
 {{{
 public class PiSymbolType extends SymbolType implements Translation {
     public PiSymbolType () {
@@ -65,6 +83,7 @@ public class PiSymbolType extends SymbolType implements Translation {
     }
 }
 }}}
+
 !3 !-Content Filter-!
 ''required property:'' '''!-ContentFilter-! = <class name>'''
 
@@ -77,13 +96,12 @@ The classes supplied must extend ''!-fitnesse.responders.editing.ContentFilter-!
 
 ''motivation:'' Allow for custom SLiM table types to be supported.
 
-There may be certain (rare) situations where the default table types are not sufficient. This hook allows for custom SLiM table types. A custom table must extend fitnesse.slimTables.
+There may be certain (rare) situations where the default table types are not sufficient. This hook allows for custom SLiM table types. A custom table must extend fitnesse.slimTables.
 
 !3 !-Custom Comparators-!
-''required property:'' '''!-CustomComparators-! = <prefix>:<class name>'''
+''required property:'' '''!-CustomComparators-! = <prefix:class name>[,<prefix:class name>]'''
 
-''motivation:'' The Slim protocol is all String values. It means that comparison of an expected and actual result for complex datatypes is limited to String equality or Regular Expression matching.
-If that is not sufficient, a Custom Comparator can do more sophisticated comparisons. Once registered, a Custom Comparator is triggered by its prefix, followed by a colon, in front of the expected value.
+''motivation:'' The Slim protocol is all String values. It means that comparison of an expected and actual result for complex datatypes is limited to String equality or Regular Expression matching. If that is not sufficient, a Custom Comparator can do more sophisticated comparisons. Once registered, a Custom Comparator is triggered by its prefix, followed by a colon, in front of the expected value.
 
 Example Comparator implementation:
 
@@ -114,7 +132,14 @@ Example !-ScriptTable-! usage:
 |check|get|cust1|json:{id:cust1,name:"John Doe"}|
 }}}
 
-!3 !-Plugins-!
+!3 !-Test Systems-!
+''required property:'' '''!-TestSystems-! = <key:class name>[,<key:class name>]'''
+
+''motivation:'' Allow for custom test systems to be supported.
+
+In case there are situations where you can not get your tests working with the default test systems (Fit and Slim), you have the ability to define custom test systems. Classes should implement the !-fitnesse.testsystems.TestSystemFactory-! interface.
+
+!3 !-Plug-ins-!
 ''required property:'' '''!-Plugins-! = <class name>[,<class name>]'''
 
 ''motivation:'' Register multiple Responders, !-WikiWidgets-!, and !-WikiPage-! components in a single Java class, instead of multiple entries in plugins.properties.
@@ -122,5 +147,4 @@ Example !-ScriptTable-! usage:
 Plugins classes can provide one or more of the following methods to register components:
 
  * '''registerResponders(!-ResponderFactory-! responderFactory)''' - register responders using ''!-ResponderFactory.addResponder(String key, Class responderClass)-!''
- * '''registerWikiWidgets(!-WidgetBuilder-! widgetBuilder)''' - register wiki widgets using ''!-WidgetBuilder.addWidgetClass(Class widgetClass)-!''
- * '''registerWikiPage(!-WikiPageFactory-! wikiPageFactory)''' - override the default wiki page implementation using ''!-WikiPageFactory.setWikiPageClass(Class wikiPageClass)-!''
+ * '''registerSymbolTypes(!-SymbolProvider-! symbolProvider)''' - register wiki symbol types using ''!-symbolProvider.add(SymbolType symbolType)-!''
