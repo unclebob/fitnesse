@@ -36,9 +36,9 @@ The character set for properties may be changed via the PROPERTY_CHARACTERS vari
 !note (See the ''root'' page for overrides)
 
 !3 AcceptanceTests for the ''' !contents ''' widget
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContents
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursion
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegraced
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursion
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegraced
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters
+ * .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp

@@ -20,15 +20,13 @@ public class ContentsItemBuilder {
         this.level = level;
     }
 
-    public HtmlTag buildLevel(SourcePage page, HtmlTag contentsDiv) {
-        HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
+    public HtmlTag buildLevel(SourcePage page) {
         HtmlTag list = new HtmlTag("ul");
+        list.addAttribute("class", "toc" + level);
         for (SourcePage child: getSortedChildren(page)) {
             list.add(buildListItem(child));
         }
-        contentsDiv.add(list);
-        div.add(contentsDiv);
-        return div;
+        return list;
     }
 
     private HtmlTag buildListItem(SourcePage child) {
@@ -37,8 +35,7 @@ public class ContentsItemBuilder {
         listItem.add(childItem);
         if (child.getChildren().size() > 0) {
             if (level < getRecursionLimit()) {
-                HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
-                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
+                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
                 childItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));

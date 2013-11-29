@@ -36,15 +36,15 @@ public class ContentsTest {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R",
            contentsWithPages("PageThree", "PageTwo",
-             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild</a>",
-               nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\" class=\"static\">PageTwoGrandChild</a>", ""))));
+             nestedContents("\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild</a>",
+               nestedContents("\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\" class=\"static\">PageTwoGrandChild</a>", ""))));
      }
 
     @Test public void translatesRecursiveContentsToLevel() throws Exception {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R2",
            contentsWithPages("PageThree", "PageTwo",
-             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild ...</a>", "")));
+             nestedContents("\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\" class=\"static\">PageTwoChild ...</a>", "")));
      }
 
     @Test public void translatesContentsWithInvalidRecursionLimit() throws Exception {
@@ -64,32 +64,27 @@ public class ContentsTest {
     }
 
     private String contentsWithPages(String name1, String name2, String nested) {
-        return "<div class=\"toc1\">" + HtmlElement.endl +
-        "\t<div class=\"contents\">" + HtmlElement.endl +
-        "\t\t<b>Contents:</b>" + HtmlElement.endl +
-        "\t\t<ul>" + HtmlElement.endl +
-        "\t\t\t<li>" + HtmlElement.endl +
-        "\t\t\t\t<a href=\"PageOne.PageThree\" class=\"static\">" + name1 + "</a>" + HtmlElement.endl +
-        "\t\t\t</li>" + HtmlElement.endl +
-        "\t\t\t<li>" + HtmlElement.endl +
-        "\t\t\t\t<a href=\"PageOne.PageTwo\" class=\"static\">" + name2 + "</a>" + HtmlElement.endl + nested +
-        "\t\t\t</li>" + HtmlElement.endl +
-        "\t\t</ul>" + HtmlElement.endl +
-        "\t</div>" + HtmlElement.endl +
+        return
+        "<div class=\"contents\">" + HtmlElement.endl +
+        "\t<b>Contents:</b>" + HtmlElement.endl +
+        "\t<ul class=\"toc1\">" + HtmlElement.endl +
+        "\t\t<li>" + HtmlElement.endl +
+        "\t\t\t<a href=\"PageOne.PageThree\" class=\"static\">" + name1 + "</a>" + HtmlElement.endl +
+        "\t\t</li>" + HtmlElement.endl +
+        "\t\t<li>" + HtmlElement.endl +
+        "\t\t\t<a href=\"PageOne.PageTwo\" class=\"static\">" + name2 + "</a>" + HtmlElement.endl + nested +
+        "\t\t</li>" + HtmlElement.endl +
+        "\t</ul>" + HtmlElement.endl +
         "</div>" + HtmlElement.endl;
     }
 
     private String nestedContents(String indent, String level, String pageReference, String nested) {
         return
-                indent + "<div class=\"toc" + level + "\">" + HtmlElement.endl +
-                indent + "\t<div class=\"nested-contents\">" + HtmlElement.endl +
-                indent + "\t\t<ul>" + HtmlElement.endl +
-                indent + "\t\t\t<li>" + HtmlElement.endl +
-                indent + "\t\t\t\t" + pageReference + HtmlElement.endl + nested +
-                indent + "\t\t\t</li>" + HtmlElement.endl +
-                indent + "\t\t</ul>" + HtmlElement.endl +
-                indent + "\t</div>" + HtmlElement.endl +
-                indent + "</div>" + HtmlElement.endl;
+                indent + "<ul class=\"toc" + level + "\">" + HtmlElement.endl +
+                indent + "\t<li>" + HtmlElement.endl +
+                indent + "\t\t" + pageReference + HtmlElement.endl + nested +
+                indent + "\t</li>" + HtmlElement.endl +
+                indent + "</ul>" + HtmlElement.endl;
     }
 
     private void assertContains(String result, String substring) {
