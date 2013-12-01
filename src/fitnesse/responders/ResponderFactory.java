@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -120,7 +121,7 @@ public class ResponderFactory {
     return (argStart <= 0) ? fullQuery : fullQuery.substring(0, argStart);
   }
 
-  public Responder makeResponder(Request request) throws InstantiationException {
+  public Responder makeResponder(Request request) throws InstantiationException, IOException {
     String resource = request.getResource();
     String responderKey = getResponderKey(request);
 

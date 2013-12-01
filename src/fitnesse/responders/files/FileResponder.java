@@ -34,7 +34,7 @@ public class FileResponder implements Responder {
   final public File requestedFile;
   public Date lastModifiedDate;
 
-  public static Responder makeResponder(Request request, String rootPath) {
+  public static Responder makeResponder(Request request, String rootPath) throws IOException {
     String resource = request.getResource();
 
     try {
@@ -44,8 +44,10 @@ public class FileResponder implements Responder {
     }
 
     File requestedFile = new File(rootPath, resource);
-    
-    if (requestedFile.isDirectory())
+
+    if (!isInFilesDirectory(new File(rootPath), requestedFile)) {
+      return new ErrorResponder("Invalid path: " + resource);
+    } else if (requestedFile.isDirectory())
       return new DirectoryResponder(resource, requestedFile);
     else
       return new FileResponder(resource, requestedFile);
@@ -162,5 +164,14 @@ public class FileResponder implements Responder {
       }
     }
     return contentType;
+  }
+
+  public static boolean isInFilesDirectory(File rootPath, File file) throws IOException {
+    return isInSubDirectory(new File(rootPath, "files").getCanonicalFile(),
+            file.getCanonicalFile());
+  }
+
+  private static boolean isInSubDirectory(File dir, File file) {
+    return file != null && (file.equals(dir) || isInSubDirectory(dir, file.getParentFile()));
   }
 }

@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static fitnesse.responders.files.FileResponder.isInFilesDirectory;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
@@ -22,6 +22,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;
@@ -177,4 +178,32 @@ public class FileResponderTest {
     sender.doSending(response);
     assertSubString("<a href=\"/FrontPage\" id=\"art_niche\"", sender.sentData());
   }
+
+  @Test
+  public void shouldTellIfFileIsInFilesFolder() throws IOException {
+    File rootPath = new File("./FitNesseRoot");
+    assertTrue(isInFilesDirectory(rootPath, new File(rootPath, "files")));
+    assertTrue(isInFilesDirectory(rootPath, new File(rootPath, "files/subfile")));
+    assertFalse(isInFilesDirectory(rootPath, new File(rootPath, "files/..")));
+    assertFalse(isInFilesDirectory(rootPath, new File("files")));
+  }
+
+  @Test
+  public void shouldNotDealWithDirectoryOutsideFilesFolder() throws Exception {
+    request.setResource("/files/../../");
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Response response = responder.makeResponse(context, request);
+    assertTrue(responder instanceof ErrorResponder);
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  public void shouldNotDealWithEscapedDirectoryOutsideFilesFolder() throws Exception {
+    request.setResource("/files/..%2f/");
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Response response = responder.makeResponse(context, request);
+    assertTrue(responder instanceof ErrorResponder);
+    assertEquals(400, response.getStatus());
+  }
+
 }
