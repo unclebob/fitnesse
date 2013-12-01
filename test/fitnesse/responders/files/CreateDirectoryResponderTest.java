@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import fitnesse.http.SimpleResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,15 +37,37 @@ public class CreateDirectoryResponderTest {
     CreateDirectoryResponder responder = new CreateDirectoryResponder();
     MockRequest request = new MockRequest();
     request.addInput("dirname", "subdir");
-    request.setResource("");
+    request.setResource("files/");
 
     Response response = responder.makeResponse(context, request);
 
-    File file = new File(context.getRootPagePath() + "/subdir");
+    File file = new File(context.getRootPagePath() + "/files/subdir");
     assertTrue(file.exists());
     assertTrue(file.isDirectory());
 
     assertEquals(303, response.getStatus());
-    assertEquals("/", response.getHeader("Location"));
+    assertEquals("/files/", response.getHeader("Location"));
   }
+
+  @Test
+  public void canNotCreateDirectoryOutsideFilesSection() throws Exception {
+    CreateDirectoryResponder responder = new CreateDirectoryResponder();
+    MockRequest request = new MockRequest();
+    request.addInput("dirname", "../../dir");
+    request.setResource("files/");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: dir"));
+  }
+
+  @Test
+  public void canNotCreateDirectoryOutsideFilesSectionWithInvalidResource() throws Exception {
+    CreateDirectoryResponder responder = new CreateDirectoryResponder();
+    MockRequest request = new MockRequest();
+    request.addInput("dirname", "dir");
+    request.setResource("files/../../");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: dir"));
+  }
+
+
 }
