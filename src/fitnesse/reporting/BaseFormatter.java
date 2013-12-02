@@ -21,13 +21,11 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
 
   protected WikiPage page = null;
   protected FitNesseContext context;
-  // Thsi counter is used by the command line executor and a few tests
+  // This counter is used by the command line executor and a few tests
   @Deprecated
   public static int finalErrorCount = 0;
   protected int testCount = 0;
   protected int failCount = 0;
-
-//  public abstract void writeHead(String pageType) throws Exception;
 
   protected BaseFormatter() {
   }
@@ -44,11 +42,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
   public void errorOccurred(Throwable cause) {
     if (cause != null) {
       LOG.log(Level.INFO, "error registered in test system", cause);
-    }
-    try {
-      close();
-    } catch (IOException e) {
-      LOG.log(Level.WARNING, "Unable to close formatter after error occurred", e);
     }
   }
 
