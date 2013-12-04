@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WikiPageUtil {
 
-  public static void setPageContents(WikiPage page, String pageContents) throws Exception {
+  public static void setPageContents(WikiPage page, String pageContents) {
     PageData pageData = page.getData();
     pageData.setContent(pageContents);
     page.commit(pageData);
