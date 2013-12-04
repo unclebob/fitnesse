@@ -76,11 +76,13 @@ public class QueryTable extends SlimTable {
       if (queryId == null || queryReturn == null) {
         testResult = SlimTestResult.error("query method did not return a list");
         table.updateContent(0, 0, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       } else if (queryReturn instanceof List) {
         testResult = new SlimTestResult(scanRowsForMatches((List<Object>) queryReturn));
       } else {
         testResult = SlimTestResult.error(String.format("The query method returned: %s", queryReturn));
         table.updateContent(0, 0, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       }
       return testResult;
     }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallInstruction;
@@ -31,7 +33,7 @@ public abstract class QueryTableTestBase {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   private String queryTableHeader;
-  public QueryTable qt;
+  private QueryTable qt;
   private SlimTestContextImpl testContext;
   protected String headRow;
 
@@ -49,7 +51,7 @@ public abstract class QueryTableTestBase {
 
   protected abstract Class<? extends QueryTable> queryTableClass();
 
-  private QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
+  protected QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
     qt = makeQueryTable(pageContents);
     assertions.addAll(qt.getAssertions());
     return qt;
@@ -342,6 +344,26 @@ public abstract class QueryTableTestBase {
         "[pass(2<5), pass(4)]" +
         "]"
     );
+  }
+
+  @Test
+  public void anErrorShouldBeRegisteredIfQueryDoesNotReturnAList() throws Exception {
+    makeQueryTableAndBuildInstructions("|a|\n|b|\n");
+    QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
+    TestResult result = expectation.evaluateExpectation("String result");
+
+    assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
+    assertEquals(1, testContext.getTestSummary().exceptions);
+  }
+
+  @Test
+  public void anErrorShouldBeRegisteredIfQueryResultIsNull() throws Exception {
+    makeQueryTableAndBuildInstructions("|a|\n|b|\n");
+    QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
+    TestResult result = expectation.evaluateExpectation(null);
+
+    assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
+    assertEquals(1, testContext.getTestSummary().exceptions);
   }
 
 }
