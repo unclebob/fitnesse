@@ -14,10 +14,12 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testStarted(WikiTestPage testedPage) {
+  public void testStarted(WikiTestPage testPage) {
     testResponse = new TestExecutionReport();
-    setPage(testedPage.getSourcePage());
-    super.testStarted(testedPage);
+    WikiPage sourcePage = testPage.getSourcePage();
+    setPageForHistory(sourcePage);
+    testResponse.rootPath = sourcePage.getName();
+    super.testStarted(testPage);
   }
 
   @Override

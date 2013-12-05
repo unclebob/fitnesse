@@ -148,7 +148,7 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldKnowVersionAndRootPage() throws Exception {
-    assertEquals("RooT", formatter.page.getName());
+    assertEquals("RooT", formatter.getPage().getName());
     assertEquals(new FitNesseVersion().toString(), formatter.getFitNesseVersion().toString());
   }
 

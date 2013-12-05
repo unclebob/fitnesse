@@ -42,7 +42,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     suiteTime.stop();
     super.close();
     if (writerFactory != null)
-      writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime.startedAt());
+      writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", suiteExecutionReport);
     VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();

@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class XmlFormatter extends BaseFormatter {
+  private WikiPage pageForHistory;
+
   public interface WriterFactory {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
   }
@@ -120,11 +122,11 @@ public class XmlFormatter extends BaseFormatter {
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
     super.testComplete(test, testSummary);
-    processTestResults(test.getName(), testSummary);
+    processTestResults(test, testSummary);
     testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
   }
 
-  public void processTestResults(final String relativeTestName, TestSummary testSummary) {
+  public void processTestResults(final WikiTestPage testPage, TestSummary testSummary) {
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
     currentResult.startTime = currentTestStartTime.startedAt();
@@ -132,8 +134,8 @@ public class XmlFormatter extends BaseFormatter {
     outputBuffer = null;
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
-    currentResult.relativePageName = relativeTestName;
-    currentResult.tags = page.readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.relativePageName = testPage.getName();
+    currentResult.tags = testPage.getSourcePage().readOnlyData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
     instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
@@ -141,11 +143,6 @@ public class XmlFormatter extends BaseFormatter {
 
   protected TestExecutionReport.TestResult newTestResult() {
     return new TestExecutionReport.TestResult();
-  }
-
-  protected void setPage(WikiPage testPage) {
-    this.page = testPage;
-    testResponse.rootPath = testPage.getName();
   }
 
   @Override
@@ -163,8 +160,14 @@ public class XmlFormatter extends BaseFormatter {
     writeResults(writerFactory.getWriter(context, getPageForHistory(), getPageCounts(), currentTestStartTime.startedAt()));
   }
 
+  @Deprecated
   protected WikiPage getPageForHistory() {
-    return page;
+    return pageForHistory;
+  }
+
+  @Deprecated
+  protected void setPageForHistory(WikiPage pageForHistory) {
+    this.pageForHistory = pageForHistory;
   }
 
   @Override

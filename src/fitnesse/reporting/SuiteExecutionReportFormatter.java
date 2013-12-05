@@ -22,7 +22,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     super(context, page);
     suiteExecutionReport = new SuiteExecutionReport();
     suiteExecutionReport.version = new FitNesseVersion().toString();
-    suiteExecutionReport.rootPath = this.page.getName();
+    suiteExecutionReport.rootPath = getPage().getName();
     totalTimeMeasurement = new TimeMeasurement().start();
   }
 

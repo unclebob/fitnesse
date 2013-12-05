@@ -19,15 +19,21 @@ import java.util.logging.Logger;
 public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>, Closeable {
   protected final Logger LOG = Logger.getLogger(getClass().getName());
 
-  protected WikiPage page = null;
-  protected FitNesseContext context;
+  private final WikiPage page;
+  protected final FitNesseContext context;
   // This counter is used by the command line executor and a few tests
   @Deprecated
   public static int finalErrorCount = 0;
+
+  // TODO: testCount and failCount are only used in TestTextFormatter
+  @Deprecated
   protected int testCount = 0;
+  @Deprecated
   protected int failCount = 0;
 
   protected BaseFormatter() {
+    this.page = null;
+    this.context = null;
   }
 
   protected BaseFormatter(FitNesseContext context, final WikiPage page) {
