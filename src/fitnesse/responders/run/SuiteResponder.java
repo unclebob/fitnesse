@@ -60,10 +60,7 @@ public class SuiteResponder extends TestResponder {
   @Override
   protected TestSystemListener newTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
-    CompositeFormatter f = new CompositeFormatter();
-    f.addTestSystemListener(new PageHistoryFormatter(context, page, source));
-    f.addTestSystemListener(new SuiteHistoryFormatter(context, page, source));
-    return f;
+    return new SuiteHistoryFormatter(context, page, source);
   }
 
   @Override
