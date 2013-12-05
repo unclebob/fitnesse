@@ -173,8 +173,12 @@ public class FileUtil {
   }
 
   public static String toString(InputStream input) throws IOException {
-    Scanner s = new Scanner(input, "UTF-8").useDelimiter("\\A");
-    return s.hasNext() ? s.next() : "";
+    String result = "";
+    Scanner s = new Scanner(input, "UTF-8");
+    s.useDelimiter("\\A");
+    result = s.hasNext() ? s.next() : "";
+    s.close();
+    return result;
    }
 
   public static File createDir(String path) {
