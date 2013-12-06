@@ -297,10 +297,10 @@ public class PageHistoryResponderTest {
     makeResultForDate("TestPage", "20090503110451");
     assertHasRegexp(fitNesseVersion.toString(), response.getContent());
     assertHasRegexp("relativePageName", response.getContent());
-    assertHasRegexp("11 Right", response.getContent());
-    assertHasRegexp("22 Wrong", response.getContent());
-    assertHasRegexp("33 Ignores", response.getContent());
-    assertHasRegexp("44 Exceptions", response.getContent());
+    assertHasRegexp("11 right", response.getContent());
+    assertHasRegexp("22 wrong", response.getContent());
+    assertHasRegexp("33 ignored", response.getContent());
+    assertHasRegexp("44 exceptions", response.getContent());
     assertHasRegexp("99 ms", response.getContent());
     assertHasRegexp("wad of HTML content", response.getContent());
   }
