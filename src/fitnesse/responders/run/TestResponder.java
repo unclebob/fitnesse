@@ -21,7 +21,6 @@ import fitnesse.reporting.JavaFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.TestHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
@@ -59,19 +58,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public TestResponder() {
     super();
-  }
-
-  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
-    return String.format("%s/%s/%s",
-      context.getTestHistoryDirectory(),
-      page.getPageCrawler().getFullPath().toString(),
-      makeResultFileName(counts, time));
-  }
-
-  public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-    String datePart = format.format(new Date(time));
-    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
   private boolean isInteractive() {
@@ -135,17 +121,17 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public class WikiPageFooterRenderer {
+
     public String render() {
         return WikiPageUtil.getFooterPageHtml(page);
     }
   }
-
   public class TestExecutor {
+
     public void execute() {
         doExecuteTests();
     }
   }
-
   protected void checkArguments() {
     debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
@@ -207,7 +193,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected TestSystemListener newTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-    return new PageHistoryFormatter(context, page, writerFactory);
+    return new XmlFormatter(context, page, writerFactory);
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -255,10 +241,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return new SecureTestOperation();
   }
 
-
   public static void registerListener(TestEventListener listener) {
     eventListeners.add(listener);
   }
+
 
   public void addToResponse(String output) {
     if (!isClosed()) {
@@ -289,6 +275,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
+
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
@@ -296,5 +283,18 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       File resultFile = new File(resultDirectory, resultPath.getName());
       return new PrintWriter(resultFile, "UTF-8");
     }
+  }
+
+  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
+    return String.format("%s/%s/%s",
+            context.getTestHistoryDirectory(),
+            page.getPageCrawler().getFullPath().toString(),
+            makeResultFileName(counts, time));
+  }
+
+  public static String makeResultFileName(TestSummary summary, long time) {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    String datePart = format.format(new Date(time));
+    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 }

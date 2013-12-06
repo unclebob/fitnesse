@@ -36,13 +36,15 @@ public class XmlFormatter extends BaseFormatter {
   private TimeMeasurement currentTestStartTime;
   protected TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
-  protected TestExecutionReport testResponse = new TestExecutionReport();
+  protected final TestExecutionReport testResponse = new TestExecutionReport();
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
+    testResponse.rootPath = page.getName();
+
   }
 
   @Override

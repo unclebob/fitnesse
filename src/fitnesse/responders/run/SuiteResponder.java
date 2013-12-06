@@ -7,8 +7,6 @@ import java.io.IOException;
 import fitnesse.http.Request;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.CachingSuiteXmlFormatter;
-import fitnesse.testrunner.CompositeFormatter;
-import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;

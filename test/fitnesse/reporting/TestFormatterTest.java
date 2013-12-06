@@ -34,7 +34,7 @@ public class TestFormatterTest {
       protected void writeData(String output) {
       }
     };
-    private PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, dummyPage, writerFactory) {
+    private XmlFormatter pageHistoryFormatter = new XmlFormatter(context, dummyPage, writerFactory) {
       protected void writeResults() {
       }
     };
@@ -92,7 +92,7 @@ public class TestFormatterTest {
 
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);
-    if (!(formatter instanceof PageHistoryFormatter))
+    if (!(formatter instanceof XmlFormatter))
       assertEquals(2, BaseFormatter.finalErrorCount);
   }
 

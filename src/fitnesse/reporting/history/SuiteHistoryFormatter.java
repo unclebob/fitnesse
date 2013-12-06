@@ -3,7 +3,6 @@ package fitnesse.reporting.history;
 import java.io.IOException;
 import java.io.Writer;
 
-import fitnesse.reporting.PageHistoryFormatter;
 import fitnesse.reporting.SuiteExecutionReportFormatter;
 import fitnesse.reporting.XmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
@@ -24,7 +23,7 @@ import fitnesse.wiki.WikiPage;
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   private XmlFormatter.WriterFactory writerFactory;
   private TimeMeasurement suiteTime;
-  private PageHistoryFormatter pageHistoryFormatter;
+  private XmlFormatter testHistoryFormatter;
 
   public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) {
     super(context, page);
@@ -45,41 +44,41 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
 
   @Override
   public void testStarted(WikiTestPage test) {
-    pageHistoryFormatter = new PageHistoryFormatter(context, test.getSourcePage(), writerFactory);
-    pageHistoryFormatter.testStarted(test);
+    testHistoryFormatter = new XmlFormatter(context, test.getSourcePage(), writerFactory);
+    testHistoryFormatter.testStarted(test);
     super.testStarted(test);
   }
 
   @Override
   public void testOutputChunk(String output) {
-    pageHistoryFormatter.testOutputChunk(output);
+    testHistoryFormatter.testOutputChunk(output);
     super.testOutputChunk(output);
   }
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
-    pageHistoryFormatter.testComplete(test, testSummary);
-    pageHistoryFormatter.close();
-    pageHistoryFormatter = null;
+    testHistoryFormatter.testComplete(test, testSummary);
+    testHistoryFormatter.close();
+    testHistoryFormatter = null;
     super.testComplete(test, testSummary);
   }
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    pageHistoryFormatter.testAssertionVerified(assertion, testResult);
+    testHistoryFormatter.testAssertionVerified(assertion, testResult);
     super.testAssertionVerified(assertion, testResult);
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    pageHistoryFormatter.testExceptionOccurred(assertion, exceptionResult);
+    testHistoryFormatter.testExceptionOccurred(assertion, exceptionResult);
     super.testExceptionOccurred(assertion, exceptionResult);
   }
 
   @Override
   public void errorOccurred(Throwable cause) {
-    if (pageHistoryFormatter != null) {
-      pageHistoryFormatter.errorOccurred(cause);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.errorOccurred(cause);
     }
     super.errorOccurred(cause);
   }
@@ -89,6 +88,9 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     if (suiteTime == null) return;
     suiteTime.stop();
     super.close();
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.close();
+    }
     Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
     try {
       VelocityContext velocityContext = new VelocityContext();
