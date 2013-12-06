@@ -18,7 +18,7 @@
 	<property name="antlib.dir" location="antlib"/>
 	<property name="port" value="8001"/>
   
-	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
+	<target name="all" depends="unit_tests, acceptance_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
   
 	<target name="build" depends="clean, compile" description="clean, then compile the source"/>
   	
