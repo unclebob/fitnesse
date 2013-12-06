@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import fitnesse.responders.run.TestResponder;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -18,13 +19,10 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
-import fitnesse.FitNesseContext.Builder;
 import fitnesse.FitNesseExpediter;
-import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.reporting.history.TestHistory;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -197,7 +195,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
     return dateFormat.format(date);
   }
 

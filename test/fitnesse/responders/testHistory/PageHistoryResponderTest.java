@@ -16,6 +16,7 @@ import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
+import fitnesse.responders.run.TestResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -40,7 +41,7 @@ import fitnesse.wiki.WikiPage;
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;

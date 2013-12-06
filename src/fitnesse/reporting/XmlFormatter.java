@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class XmlFormatter extends BaseFormatter {
-  private WikiPage pageForHistory;
 
   public interface WriterFactory {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
@@ -157,17 +156,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPageForHistory(), getPageCounts(), currentTestStartTime.startedAt()));
-  }
-
-  @Deprecated
-  protected WikiPage getPageForHistory() {
-    return pageForHistory;
-  }
-
-  @Deprecated
-  protected void setPageForHistory(WikiPage pageForHistory) {
-    this.pageForHistory = pageForHistory;
+    writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), currentTestStartTime.startedAt()));
   }
 
   @Override

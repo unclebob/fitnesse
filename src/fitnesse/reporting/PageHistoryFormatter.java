@@ -16,9 +16,7 @@ public class PageHistoryFormatter extends XmlFormatter {
   @Override
   public void testStarted(WikiTestPage testPage) {
     testResponse = new TestExecutionReport();
-    WikiPage sourcePage = testPage.getSourcePage();
-    setPageForHistory(sourcePage);
-    testResponse.rootPath = sourcePage.getName();
+    testResponse.rootPath = testPage.getName();
     super.testStarted(testPage);
   }
 

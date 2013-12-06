@@ -1,7 +1,6 @@
 package fitnesse.reporting;
 
-import fitnesse.reporting.history.TestHistory;
-import fitnesse.testsystems.ExecutionResult;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
 import org.apache.velocity.Template;
@@ -160,7 +159,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
       return pageHistoryFormatter.format(new Date(time));
     }
 

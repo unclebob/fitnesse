@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +28,6 @@ import fitnesse.reporting.TestTextFormatter;
 import fitnesse.reporting.XmlFormatter;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
-import fitnesse.reporting.history.PageHistory;
-import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
@@ -45,6 +45,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
+  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   // TODO: move this to FitNesseContext
   private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
 
@@ -58,6 +59,19 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public TestResponder() {
     super();
+  }
+
+  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
+    return String.format("%s/%s/%s",
+      context.getTestHistoryDirectory(),
+      page.getPageCrawler().getFullPath().toString(),
+      makeResultFileName(counts, time));
+  }
+
+  public static String makeResultFileName(TestSummary summary, long time) {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    String datePart = format.format(new Date(time));
+    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
   private boolean isInteractive() {
@@ -276,7 +290,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-      File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
+      File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();
       File resultFile = new File(resultDirectory, resultPath.getName());
