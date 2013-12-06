@@ -43,7 +43,7 @@ public class XmlFormatter extends BaseFormatter {
     super(context, page);
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testResponse.rootPath = page.getName();
+    testResponse.rootPath = page.getPageCrawler().getFullPath().toString();
 
   }
 
