@@ -2,9 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
-import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Date;
 
 import static org.mockito.Mockito.mock;
