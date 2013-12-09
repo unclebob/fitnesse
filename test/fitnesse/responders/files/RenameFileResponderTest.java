@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import fitnesse.http.SimpleResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,30 +36,66 @@ public class RenameFileResponderTest {
 
   @Test
   public void testMakeResponse() throws Exception {
-    File file = new File(context.getRootPagePath() + "/testfile");
+    File files = new File(context.getRootPagePath(), "files");
+    assertTrue(files.mkdirs());
+    File file = new File(files, "testfile");
     assertTrue(file.createNewFile());
     RenameFileResponder responder = new RenameFileResponder();
     request.addInput("filename", "testfile");
     request.addInput("newName", "newName");
-    request.setResource("");
+    request.setResource("files/");
     Response response = responder.makeResponse(context, request);
     assertFalse(file.exists());
-    assertTrue(new File(context.getRootPagePath() + "/newName").exists());
+    assertTrue(new File(context.getRootPagePath() + "/files/newName").exists());
     assertEquals(303, response.getStatus());
-    assertEquals("/", response.getHeader("Location"));
+    assertEquals("/files/", response.getHeader("Location"));
   }
 
   @Test
   public void testRenameWithTrailingSpace() throws Exception {
-    File file = new File(context.getRootPagePath() + "/testfile");
-    assertTrue(file.createNewFile());
+    File files = new File(context.getRootPagePath(), "files");
+    files.mkdirs();
+    File file = new File(files, "testfile");
+    file.createNewFile();
     RenameFileResponder responder = new RenameFileResponder();
     request.addInput("filename", "testfile");
     request.addInput("newName", "new Name With Space ");
-    request.setResource("");
+    request.setResource("files/");
     responder.makeResponse(context, request);
     assertFalse(file.exists());
-    assertTrue(new File(context.getRootPagePath() + "/new Name With Space").exists());
+    assertTrue(new File(context.getRootPagePath() + "/files/new Name With Space").exists());
   }
+
+  @Test
+  public void canNotRenameFileFromLocationOutsideFilesSection() throws Exception {
+    RenameFileResponder responder = new RenameFileResponder();
+    request.addInput("filename", "oldname");
+    request.addInput("newName", "newname");
+    request.setResource("files/../../");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: files/../../"));
+  }
+
+
+  @Test
+  public void canNotRenameToFileOutsideFilesSection() throws Exception {
+    RenameFileResponder responder = new RenameFileResponder();
+    request.addInput("filename", "oldname");
+    request.addInput("newName", "../../newname");
+    request.setResource("files/");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: ../../newname"));
+  }
+
+  @Test
+  public void canNotRenameFilesOutsideFilesSection() throws Exception {
+    RenameFileResponder responder = new RenameFileResponder();
+    request.addInput("filename", "../../oldname");
+    request.addInput("newName", "newname");
+    request.setResource("files/");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: ../../oldname"));
+  }
+
 
 }

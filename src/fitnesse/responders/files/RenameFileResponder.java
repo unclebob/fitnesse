@@ -14,24 +14,40 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.fs.FileVersion;
 
 public class RenameFileResponder implements SecureResponder {
-  String newFilename;
 
   public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
     Response response = new SimpleResponse();
     String resource = request.getResource();
-    final String pathname = context.getRootPagePath() + "/" + resource;
-    final String filename = (String) request.getInput("filename");
-    newFilename = (String) request.getInput("newName");
-    newFilename = newFilename.trim();
+    File rootPath = new File(context.getRootPagePath());
+    final File pathName = new File(rootPath, resource);
+
+    if (!FileResponder.isInFilesDirectory(rootPath, pathName)) {
+      return new ErrorResponder("Invalid path: " + resource).makeResponse(context, request);
+    }
+
+    final String oldFileName = (String) request.getInput("filename");
+    final String newFileName = ((String) request.getInput("newName")).trim();
+
+    final File oldFile = new File(pathName, oldFileName);
+    final File newFile = new File(pathName, newFileName);
+
+    if (!FileResponder.isInFilesDirectory(rootPath, oldFile)) {
+      return new ErrorResponder("Invalid path: " + oldFileName).makeResponse(context, request);
+    }
+
+    if (!FileResponder.isInFilesDirectory(rootPath, newFile)) {
+      return new ErrorResponder("Invalid path: " + newFileName).makeResponse(context, request);
+    }
 
     context.versionsController.rename(new FileVersion() {
 
       @Override
       public File getFile() {
-        return new File(pathname + newFilename);
+        return newFile;
       }
 
       @Override
@@ -49,7 +65,7 @@ public class RenameFileResponder implements SecureResponder {
       public Date getLastModificationTime() {
         return new Date();
       }
-    }, new File(pathname + filename));
+    }, oldFile);
 
     response.redirect("/" + resource);
     return response;

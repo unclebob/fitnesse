@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import fitnesse.http.SimpleResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,4 +106,15 @@ public class UploadResponderTest {
     assertEquals("a.b.c.d_copy2.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
     assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
   }
+
+  @Test
+  public void canNotUploadFileOutsideFilesSectionWithInvalidResource() throws Exception {
+    UploadResponder responder = new UploadResponder();
+    request.addInput("file", new UploadedFile("name", "text/plain", new File("file")));
+    request.setResource("files/../../");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getContent(), response.getContent().contains("Invalid path: name"));
+  }
+
+
 }
