@@ -14,6 +14,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.fs.FileVersion;
 
 public class CreateDirectoryResponder implements SecureResponder {
@@ -22,8 +23,12 @@ public class CreateDirectoryResponder implements SecureResponder {
 
     String resource = request.getResource();
     String dirname = (String) request.getInput("dirname");
-    String pathname = context.getRootPagePath() + "/" + resource + dirname;
-    final File file = new File(pathname);
+    final File file = new File(new File(context.getRootPagePath(), resource), dirname);
+
+    if (!FileResponder.isInFilesDirectory(new File(context.getRootPagePath()), file)) {
+      return new ErrorResponder("Invalid path: " + file.getName()).makeResponse(context, request);
+    }
+
     final String user = request.getAuthorizationUsername();
     if (!file.exists())
       context.versionsController.addDirectory(new FileVersion() {
