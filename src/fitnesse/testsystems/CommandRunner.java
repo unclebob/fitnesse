@@ -81,8 +81,9 @@ public class CommandRunner {
 
   private void waitForDeathOf(Process process) {
     int timeStep = 100;
+    int maxDelay = 2000;
     try {
-      for (int maxDelay = 2000; maxDelay > 0; maxDelay -= timeStep) {
+      for (int delayed = 0; delayed < maxDelay; delayed += timeStep) {
         if (isDead(process)) {
           return;
         }
