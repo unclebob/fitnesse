@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -23,10 +24,10 @@ public class MemoryFileSystem implements FileSystem {
     }
 
     @Override
-    public void makeFile(File file, InputStream content) throws IOException {
+    public void makeFile(File file, InputStream content) throws IOException, UnsupportedEncodingException {
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       FileUtil.copyBytes(content, buf);
-      makeFile(file, buf.toString());
+      makeFile(file, buf.toString("UTF-8"));
     }
 
     @Override
@@ -65,8 +66,8 @@ public class MemoryFileSystem implements FileSystem {
     }
 
   @Override
-  public InputStream getInputStream(File file) throws IOException {
-    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes());
+  public InputStream getInputStream(File file) throws IOException, UnsupportedEncodingException {
+    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes("UTF-8"));
   }
 
   @Override
