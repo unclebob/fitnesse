@@ -76,7 +76,9 @@ public class CommandRunner {
   public void join() {
     waitForDeathOf(process);
     timeMeasurement.stop();
-    exitCode = process.exitValue();
+    if (isDead(process)) {
+      exitCode = process.exitValue();
+    }
   }
 
   private void waitForDeathOf(Process process) {
@@ -95,7 +97,7 @@ public class CommandRunner {
     LOG.warning("Could not detect death of command line test runner.");
   }
 
-  private boolean isDead(Process process) throws InterruptedException {
+  private boolean isDead(Process process) {
     try {
       process.exitValue();
       return true;
