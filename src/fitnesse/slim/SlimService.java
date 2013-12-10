@@ -8,28 +8,38 @@ import util.CommandLine;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import fitnesse.socketservice.SocketFactory;
 
 public class SlimService {
-  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] port";
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-d] port";
   static Class<? extends DefaultInteraction> interactionClass;
 
   public static class Options {
     final boolean verbose;
     final int port;
     final Class<? extends DefaultInteraction> interactionClass;
+    /** daemon mode: keep accepting new connections indefinitely. */
+    final boolean daemon;
 
-    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass) {
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon) {
       this.verbose = verbose;
       this.port = port;
       this.interactionClass = interactionClass;
+      this.daemon = daemon;
     }
   }
 
   private final ServerSocket serverSocket;
   private final SlimServer slimServer;
+  private final boolean daemon;
+  private final Executor executor = Executors.newFixedThreadPool(5);
   static Thread service;
 
   public static void main(String[] args) throws IOException {
@@ -48,7 +58,7 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
     slimservice.accept();
   }
 
@@ -59,7 +69,7 @@ public class SlimService {
       service.interrupt();
       throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass);
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
     service = new Thread() {
       public void run() {
         try {
@@ -89,13 +99,15 @@ public class SlimService {
       String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
       int port = (portString == null) ? 8099 : Integer.parseInt(portString);
-      return new Options(verbose, port, getInteractionClass(interactionClassName));
+      boolean daemon = commandLine.hasOption("d");
+      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon);
     }
     return null;
   }
 
-  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass) throws IOException {
+  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon) throws IOException {
     SlimService.interactionClass = interactionClass;
+    this.daemon = daemon;
     this.slimServer = slimServer;
 
     try {
@@ -110,20 +122,49 @@ public class SlimService {
   }
 
   public void accept() throws IOException {
-    Socket socket = null;
     try {
-      socket = serverSocket.accept();
-      slimServer.serve(socket);
+      if (daemon) {
+        acceptMany();
+      } else {
+        acceptOne();
+      }
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting");
       e.printStackTrace();
       System.exit(99);
     } finally {
-      if (socket != null) {
-        socket.close();
-      }
       serverSocket.close();
     }
+  }
+
+  private void acceptMany() throws IOException {
+    while (true) {
+      final Socket socket = serverSocket.accept();
+      executor.execute(new Runnable() {
+
+        @Override
+        public void run() {
+          try {
+            handle(socket);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      });
+    }
+  }
+
+  private void handle(Socket socket) throws IOException {
+    try {
+      slimServer.serve(socket);
+    } finally {
+      socket.close();
+    }
+  }
+
+  private void acceptOne() throws IOException {
+    Socket socket = serverSocket.accept();
+    handle(socket);
   }
 
   @SuppressWarnings("unchecked")
