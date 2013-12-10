@@ -166,7 +166,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testSlimTablesCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public void testSlimTablesCreation() throws PluginException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
@@ -176,7 +176,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testSlimTablesWithColonCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public void testSlimTablesWithColonCreation() throws PluginException {
     testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
@@ -186,7 +186,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testCustomComparatorsCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public void testCustomComparatorsCreation() throws PluginException {
     testProperties.setProperty(ComponentFactory.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
     loader.loadCustomComparators();
 
@@ -196,7 +196,7 @@ public class PluginsLoaderTest {
   }
 
   @Test
-  public void testTestSystemCreation() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+  public void testTestSystemCreation() throws PluginException {
     testProperties.setProperty(ComponentFactory.TEST_SYSTEMS, "foo:" + FooTestSystemFactory.class.getName());
     TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
     loader.loadTestSystems(registrar);

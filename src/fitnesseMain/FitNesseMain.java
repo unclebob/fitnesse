@@ -1,5 +1,6 @@
 package fitnesseMain;
 
+import fitnesse.PluginException;
 import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
@@ -53,7 +54,10 @@ public class FitNesseMain {
   public Integer launchFitNesse(Arguments arguments, Properties properties) throws Exception {
     configureLogging(arguments.hasVerboseLogging());
     loadPlugins();
+
     FitNesseContext context = loadContext(arguments, properties);
+
+    logStartupInfo(context);
 
     update(arguments, context);
     return launch(arguments, context);
@@ -111,7 +115,7 @@ public class FitNesseMain {
     return TestTextFormatter.finalErrorCount;
   }
 
-  private FitNesseContext loadContext(Arguments arguments, Properties properties) throws Exception {
+  private FitNesseContext loadContext(Arguments arguments, Properties properties) throws IOException, PluginException {
     final Properties allProperties = wrapPropertiesBySystemProperties(properties);
 
     // Enrich properties with command line values:
@@ -153,14 +157,16 @@ public class FitNesseMain {
 
     WikiImportTestEventListener.register();
 
+    return context;
+  }
+
+  private void logStartupInfo(FitNesseContext context) {
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
-
-    return context;
   }
 
   private Properties wrapPropertiesBySystemProperties(Properties properties) {
