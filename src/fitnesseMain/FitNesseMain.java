@@ -1,23 +1,12 @@
 package fitnesseMain;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.PluginException;
-import fitnesse.components.ComponentFactory;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.PluginsLoader;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
-import fitnesse.wiki.RecentChanges;
-import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.fs.VersionsController;
-import fitnesse.wiki.fs.ZipFileVersionsController;
-import fitnesse.wikitext.parser.SymbolProvider;
 
 import java.io.*;
 import java.util.Properties;
@@ -116,48 +105,9 @@ public class FitNesseMain {
   }
 
   private FitNesseContext loadContext(Arguments arguments, Properties properties) throws IOException, PluginException {
-    final Properties allProperties = wrapPropertiesBySystemProperties(properties);
-
-    // Enrich properties with command line values:
-    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
-
-    Builder builder = new Builder();
-    ComponentFactory componentFactory = new ComponentFactory(allProperties);
-
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
-
-    builder.properties = properties;
-    builder.port = arguments.getPort();
-    builder.rootPath = arguments.getRootPath();
-    builder.rootDirectoryName = arguments.getRootDirectory();
-
-    builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    builder.versionsController.setHistoryDepth(Integer.parseInt(allProperties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
-    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
-
-    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-            builder.rootDirectoryName);
-
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
-
-    builder.logger = pluginsLoader.makeLogger(arguments.getLogDirectory());
-    builder.authenticator = pluginsLoader.makeAuthenticator(arguments.getUserpass());
-
-    FitNesseContext context = builder.createFitNesseContext();
-
-    SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
-
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
-    pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadTestSystems((TestSystemFactoryRegistrar) context.testSystemFactory);
-    pluginsLoader.loadSymbolTypes(symbolProvider);
-    pluginsLoader.loadContentFilter();
-    pluginsLoader.loadSlimTables();
-    pluginsLoader.loadCustomComparators();
-
-    WikiImportTestEventListener.register();
-
-    return context;
+    Properties cascadedProperties = new Properties(properties);
+    cascadedProperties.putAll(arguments.asProperties());
+    return new ContextConfigurator(cascadedProperties).makeFitNesseContext();
   }
 
   private void logStartupInfo(FitNesseContext context) {
@@ -167,12 +117,6 @@ public class FitNesseMain {
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
-  }
-
-  private Properties wrapPropertiesBySystemProperties(Properties properties) {
-    Properties allProperties = new Properties(properties);
-    allProperties.putAll(System.getProperties());
-    return allProperties;
   }
 
   public Properties loadConfigFile(final String propertiesFile) {
@@ -197,8 +141,6 @@ public class FitNesseMain {
         LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
-
-    // Overload with System properties
 
     return properties;
   }

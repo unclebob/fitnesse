@@ -154,15 +154,18 @@ public class PluginsLoaderTest {
 
 
   @Test
-  public void testContentFilterCreation() throws Exception {
-    loader.loadContentFilter();
-    assertEquals(null, SaveResponder.contentFilter);
+  public void noContentFilter() throws Exception {
+    ContentFilter filter = loader.loadContentFilter();
+    assertNull(filter);
+  }
 
+  @Test
+  public void haveContentFilter() throws Exception {
     testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
 
-    loader.loadContentFilter();
-    assertNotNull(SaveResponder.contentFilter);
-    assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
+    ContentFilter filter = loader.loadContentFilter();
+    assertNotNull(filter);
+    assertEquals(TestContentFilter.class, filter.getClass());
   }
 
   @Test

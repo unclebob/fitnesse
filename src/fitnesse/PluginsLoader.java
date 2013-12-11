@@ -13,7 +13,6 @@ import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
@@ -127,12 +126,12 @@ public class PluginsLoader {
     }
   }
 
-  public void loadContentFilter() {
+  public ContentFilter loadContentFilter() {
     ContentFilter filter = (ContentFilter) componentFactory.createComponent(CONTENT_FILTER);
     if (filter != null) {
-      SaveResponder.contentFilter = filter;
       LOG.info("Content filter installed: " + filter.getClass().getName());
     }
+    return filter;
   }
 
   public void loadSlimTables() throws PluginException {

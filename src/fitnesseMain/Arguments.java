@@ -2,25 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import fitnesse.FitNesseContext;
+import java.util.Properties;
+
+import fitnesse.ContextConfigurator;
 import util.CommandLine;
 
+import static org.junit.Assert.assertEquals;
+
 public class Arguments {
-  public static final String DEFAULT_PATH = ".";
-  public static final String DEFAULT_ROOT = "FitNesseRoot";
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
-  public static final int DEFAULT_COMMAND_PORT = 9123;
-  public static final int DEFAULT_VERSION_DAYS = 14;
 
   private final CommandLine commandLine = new CommandLine(
           "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
 
   private final String rootPath;
-  private final int port;
+  private final Integer port;
   private final String rootDirectory;
   private final String logDirectory;
   private final boolean omitUpdate;
-  private final int daysTillVersionsExpire;
+  private final Integer daysTillVersionsExpire;
   private final String userpass;
   private final boolean installOnly;
   private final String command;
@@ -32,11 +32,13 @@ public class Arguments {
     if (!commandLine.parse(args)) {
       throw new IllegalArgumentException("Can not parse command line");
     }
-    this.port = Integer.parseInt(commandLine.getOptionArgument("p", "port", "-1"));
-    this.rootPath = commandLine.getOptionArgument("d", "dir", DEFAULT_PATH);
-    this.rootDirectory = commandLine.getOptionArgument("r", "root", DEFAULT_ROOT);
+    String port = commandLine.getOptionArgument("p", "port");
+    this.port = port != null ? Integer.valueOf(port) : null;
+    this.rootPath = commandLine.getOptionArgument("d", "dir");
+    this.rootDirectory = commandLine.getOptionArgument("r", "root");
     this.logDirectory = commandLine.getOptionArgument("l", "logDir");
-    this.daysTillVersionsExpire = Integer.parseInt(commandLine.getOptionArgument("e", "days", "" + DEFAULT_VERSION_DAYS));
+    final String days = commandLine.getOptionArgument("e", "days");
+    this.daysTillVersionsExpire = days != null ? Integer.valueOf(days) : null;
     this.userpass = commandLine.getOptionArgument("a", "userpass");
     this.command = commandLine.getOptionArgument("c", "command");
     this.output = commandLine.getOptionArgument("b", "output");
@@ -48,14 +50,14 @@ public class Arguments {
 
   static void printUsage() {
     System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
-    System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
-    System.err.println("\t-d <working directory> {" + DEFAULT_PATH
+    System.err.println("\t-p <port number> {" + ContextConfigurator.DEFAULT_PORT + "}");
+    System.err.println("\t-d <working directory> {" + ContextConfigurator.DEFAULT_PATH
       + "}");
-    System.err.println("\t-r <page root directory> {" + DEFAULT_ROOT
+    System.err.println("\t-r <page root directory> {" + ContextConfigurator.DEFAULT_ROOT
       + "}");
     System.err.println("\t-l <log directory> {no logging}");
     System.err.println("\t-f <config properties file> {" + DEFAULT_CONFIG_FILE + "}");
-    System.err.println("\t-e <days> {" + DEFAULT_VERSION_DAYS
+    System.err.println("\t-e <days> {" + ContextConfigurator.DEFAULT_VERSION_DAYS
       + "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
     System.err
@@ -67,19 +69,19 @@ public class Arguments {
   }
 
   public String getRootPath() {
-    return rootPath;
+    return rootPath == null ? ContextConfigurator.DEFAULT_PATH : rootPath;
   }
 
   public int getPort() {
-    return port == -1 ? getDefaultPort() : port;
+    return port == null ? getDefaultPort() : port;
   }
 
   private int getDefaultPort() {
-    return command == null ? FitNesseContext.DEFAULT_PORT : DEFAULT_COMMAND_PORT;
+    return command == null ? ContextConfigurator.DEFAULT_PORT : ContextConfigurator.DEFAULT_COMMAND_PORT;
   }
 
   public String getRootDirectory() {
-    return rootDirectory;
+    return rootDirectory == null ? ContextConfigurator.DEFAULT_ROOT : rootDirectory;
   }
 
   public String getLogDirectory() {
@@ -98,7 +100,7 @@ public class Arguments {
   }
 
   public int getDaysTillVersionsExpire() {
-    return daysTillVersionsExpire;
+    return daysTillVersionsExpire == null ? ContextConfigurator.DEFAULT_VERSION_DAYS : daysTillVersionsExpire;
   }
 
   public boolean isInstallOnly() {
@@ -114,10 +116,27 @@ public class Arguments {
   }
 
   public String getConfigFile() {
-    return configFile == null ? (rootPath + "/" + DEFAULT_CONFIG_FILE) : configFile;
+    return configFile == null ? (getRootPath() + "/" + DEFAULT_CONFIG_FILE) : configFile;
   }
 
   public boolean hasVerboseLogging() {
     return verboseLogging;
+  }
+
+  public Properties asProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("LogLevel", verboseLogging ? "verbose" : "normal");
+    if (configFile != null) properties.setProperty("config.properties", configFile);
+    if (port != null) properties.setProperty("Port", port.toString());
+    if (rootPath != null) properties.setProperty("RootPath", rootPath);
+    if (rootDirectory != null) properties.setProperty("RootDirectory", rootDirectory);
+    if (output != null) properties.setProperty("RedirectOutput", output);
+    if (logDirectory != null) properties.setProperty("LogDirectory", logDirectory);
+    if (daysTillVersionsExpire != null) properties.setProperty("VersionsController.days", daysTillVersionsExpire.toString());
+    if (omitUpdate) properties.setProperty("OmittingUpdates", "true");
+    if (installOnly) properties.setProperty("InstallOnly", "true");
+    if (command != null) properties.setProperty("Command", command);
+    if (userpass != null) properties.setProperty("Credentials", userpass);
+    return properties;
   }
 }
