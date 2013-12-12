@@ -79,8 +79,12 @@ public class FileResponderTest {
   @Test
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
-    responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
-    assertEquals(context.rootDirectoryName + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
+    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
+    assertEquals(context.getRootPagePath() + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
+  }
+
+  @Test
+  public void testUrlEncodedSpacesInFileName() throws Exception {
     request.setResource("files/file4%20with%20spaces%32.txt");
     responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
     assertEquals("files/file4 with spaces2.txt", responder.resource);
