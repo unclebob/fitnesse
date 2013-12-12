@@ -4,10 +4,10 @@ package fitnesseMain;
 
 import java.util.Properties;
 
-import fitnesse.ContextConfigurator;
+import fitnesse.components.ComponentFactory;
 import util.CommandLine;
 
-import static org.junit.Assert.assertEquals;
+import static fitnesse.ContextConfigurator.*;
 
 public class Arguments {
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
@@ -50,14 +50,14 @@ public class Arguments {
 
   static void printUsage() {
     System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
-    System.err.println("\t-p <port number> {" + ContextConfigurator.DEFAULT_PORT + "}");
-    System.err.println("\t-d <working directory> {" + ContextConfigurator.DEFAULT_PATH
+    System.err.println("\t-p <port number> {" + DEFAULT_PORT + "}");
+    System.err.println("\t-d <working directory> {" + DEFAULT_PATH
       + "}");
-    System.err.println("\t-r <page root directory> {" + ContextConfigurator.DEFAULT_ROOT
+    System.err.println("\t-r <page root directory> {" + DEFAULT_ROOT
       + "}");
     System.err.println("\t-l <log directory> {no logging}");
     System.err.println("\t-f <config properties file> {" + DEFAULT_CONFIG_FILE + "}");
-    System.err.println("\t-e <days> {" + ContextConfigurator.DEFAULT_VERSION_DAYS
+    System.err.println("\t-e <days> {" + DEFAULT_VERSION_DAYS
       + "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
     System.err
@@ -69,7 +69,7 @@ public class Arguments {
   }
 
   public String getRootPath() {
-    return rootPath == null ? ContextConfigurator.DEFAULT_PATH : rootPath;
+    return rootPath == null ? DEFAULT_PATH : rootPath;
   }
 
   public int getPort() {
@@ -77,11 +77,11 @@ public class Arguments {
   }
 
   private int getDefaultPort() {
-    return command == null ? ContextConfigurator.DEFAULT_PORT : ContextConfigurator.DEFAULT_COMMAND_PORT;
+    return command == null ? DEFAULT_PORT : DEFAULT_COMMAND_PORT;
   }
 
   public String getRootDirectory() {
-    return rootDirectory == null ? ContextConfigurator.DEFAULT_ROOT : rootDirectory;
+    return rootDirectory == null ? DEFAULT_ROOT : rootDirectory;
   }
 
   public String getLogDirectory() {
@@ -100,7 +100,7 @@ public class Arguments {
   }
 
   public int getDaysTillVersionsExpire() {
-    return daysTillVersionsExpire == null ? ContextConfigurator.DEFAULT_VERSION_DAYS : daysTillVersionsExpire;
+    return daysTillVersionsExpire == null ? DEFAULT_VERSION_DAYS : daysTillVersionsExpire;
   }
 
   public boolean isInstallOnly() {
@@ -125,18 +125,18 @@ public class Arguments {
 
   public Properties asProperties() {
     Properties properties = new Properties();
-    properties.setProperty("LogLevel", verboseLogging ? "verbose" : "normal");
-    if (configFile != null) properties.setProperty("config.properties", configFile);
-    if (port != null) properties.setProperty("Port", port.toString());
-    if (rootPath != null) properties.setProperty("RootPath", rootPath);
-    if (rootDirectory != null) properties.setProperty("RootDirectory", rootDirectory);
-    if (output != null) properties.setProperty("RedirectOutput", output);
-    if (logDirectory != null) properties.setProperty("LogDirectory", logDirectory);
-    if (daysTillVersionsExpire != null) properties.setProperty("VersionsController.days", daysTillVersionsExpire.toString());
-    if (omitUpdate) properties.setProperty("OmittingUpdates", "true");
-    if (installOnly) properties.setProperty("InstallOnly", "true");
-    if (command != null) properties.setProperty("Command", command);
-    if (userpass != null) properties.setProperty("Credentials", userpass);
+    properties.setProperty(LOG_LEVEL, verboseLogging ? "verbose" : "normal");
+    if (configFile != null) properties.setProperty(CONFIG_FILE, configFile);
+    if (port != null) properties.setProperty(PORT, port.toString());
+    if (rootPath != null) properties.setProperty(ROOT_PATH, rootPath);
+    if (rootDirectory != null) properties.setProperty(ROOT_DIRECTORY, rootDirectory);
+    if (output != null) properties.setProperty(OUTPUT, output);
+    if (logDirectory != null) properties.setProperty(LOG_DIRECTORY, logDirectory);
+    if (daysTillVersionsExpire != null) properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, daysTillVersionsExpire.toString());
+    if (omitUpdate) properties.setProperty(OMITTING_UPDATES, "true");
+    if (installOnly) properties.setProperty(INSTALL_ONLY, "true");
+    if (command != null) properties.setProperty(COMMAND, command);
+    if (userpass != null) properties.setProperty(CREDENTIALS, userpass);
     return properties;
   }
 }

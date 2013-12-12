@@ -123,7 +123,7 @@ public class ArgumentsTest {
     assertEquals("myLogDirectory", properties.getProperty("LogDirectory"));
     assertEquals("true", properties.getProperty("OmittingUpdates"));
     assertEquals("22", properties.getProperty("VersionsController.days"));
-    assertEquals("fitnesse.properties", properties.getProperty("config.properties"));
+    assertEquals("fitnesse.properties", properties.getProperty("ConfigFile"));
     assertEquals("true", properties.getProperty("InstallOnly"));
     assertEquals("SomeCommand", properties.getProperty("Command"));
     assertEquals("user:pass", properties.getProperty("Credentials"));
@@ -135,7 +135,7 @@ public class ArgumentsTest {
     Properties properties = args.asProperties();
 
     assertEquals("normal", properties.getProperty("LogLevel"));
-    assertNull(properties.getProperty("config.properties"));
+    assertNull(properties.getProperty("ConfigFile"));
     assertNull(properties.getProperty("Port"));
     assertNull(properties.getProperty("RootPath"));
     assertNull(properties.getProperty("RootDirectory"));

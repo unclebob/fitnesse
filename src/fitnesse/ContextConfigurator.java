@@ -3,9 +3,6 @@ package fitnesse;
 import java.io.IOException;
 import java.util.Properties;
 
-import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
-import fitnesse.PluginsLoader;
 import fitnesse.components.ComponentFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.editing.ContentFilter;
@@ -25,6 +22,18 @@ import fitnesse.wikitext.parser.SymbolProvider;
  * Please call this only once: some features are registered on (static) factories.
  */
 public class ContextConfigurator {
+  public static final String CONFIG_FILE = "ConfigFile";
+  public static final String LOG_LEVEL = "LogLevel";
+  public static final String LOG_DIRECTORY = "LogDirectory";
+  public static final String CREDENTIALS = "Credentials";
+  public static final String ROOT_PATH = "RootPath";
+  public static final String ROOT_DIRECTORY = "RootDirectory";
+  public static final String PORT = "Port";
+  public static final String OUTPUT = "RedirectOutput";
+  public static final String OMITTING_UPDATES = "OmittingUpdates";
+  public static final String INSTALL_ONLY = "InstallOnly";
+  public static final String COMMAND = "Command";
+
   public static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
   public static final int DEFAULT_VERSION_DAYS = 14;
@@ -46,8 +55,8 @@ public class ContextConfigurator {
     FitNesseContext.Builder builder = new FitNesseContext.Builder();
     builder.properties = properties;
     builder.port = getPort();
-    builder.rootPath = properties.getProperty("RootPath", DEFAULT_PATH);
-    builder.rootDirectoryName = properties.getProperty("RootDirectory", DEFAULT_ROOT);
+    builder.rootPath = properties.getProperty(ROOT_PATH, DEFAULT_PATH);
+    builder.rootDirectoryName = properties.getProperty(ROOT_DIRECTORY, DEFAULT_ROOT);
 
     builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     builder.versionsController.setHistoryDepth(getVersionDays());
@@ -58,8 +67,8 @@ public class ContextConfigurator {
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
 
-    builder.logger = pluginsLoader.makeLogger(properties.getProperty("LogDirectory"));
-    builder.authenticator = pluginsLoader.makeAuthenticator(properties.getProperty("Credentials"));
+    builder.logger = pluginsLoader.makeLogger(properties.getProperty(LOG_DIRECTORY));
+    builder.authenticator = pluginsLoader.makeAuthenticator(properties.getProperty(CREDENTIALS));
 
     FitNesseContext context = builder.createFitNesseContext();
 

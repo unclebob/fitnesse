@@ -1,6 +1,7 @@
 package fitnesseMain;
 
 import fitnesse.ContextConfigurator;
+import fitnesse.FitNesse;
 import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
@@ -37,23 +38,26 @@ public class FitNesseMain {
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
     Properties properties = loadConfigFile(arguments.getConfigFile());
-    return launchFitNesse(arguments, properties);
+    Properties cascadedProperties = cascadeProperties(arguments, properties);
+
+    return launchFitNesse(cascadedProperties);
   }
 
-  public Integer launchFitNesse(Arguments arguments, Properties properties) throws Exception {
-    configureLogging(arguments.hasVerboseLogging());
+  public Integer launchFitNesse(Properties properties) throws Exception {
+    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(ContextConfigurator.LOG_LEVEL)));
     loadPlugins();
 
-    FitNesseContext context = loadContext(arguments, properties);
+    FitNesseContext context = loadContext(properties);
 
     logStartupInfo(context);
 
-    update(arguments, context);
-    return launch(arguments, context);
+    update(context);
+
+    return launch(context);
   }
 
-  boolean update(Arguments arguments, FitNesseContext context) throws IOException {
-    if (!arguments.isOmittingUpdates()) {
+  private boolean update(FitNesseContext context) throws IOException {
+    if (!"true".equalsIgnoreCase(context.getProperty(ContextConfigurator.OMITTING_UPDATES))) {
       Updater updater = new UpdaterImplementation(context);
       return updater.update();
     }
@@ -64,36 +68,39 @@ public class FitNesseMain {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  Integer launch(Arguments arguments, FitNesseContext context) throws Exception {
-    if (!arguments.isInstallOnly()) {
+  Integer launch(FitNesseContext context) throws Exception {
+    if (!"true".equalsIgnoreCase(context.getProperty(ContextConfigurator.INSTALL_ONLY))) {
       boolean started = context.fitNesse.start();
       if (started) {
-        if (arguments.getCommand() != null) {
-          return executeSingleCommand(arguments, context);
+        String command = context.getProperty(ContextConfigurator.COMMAND);
+        if (command != null) {
+          String output = context.getProperty(ContextConfigurator.OUTPUT);
+          return executeSingleCommand(context.fitNesse, command, output);
         }
       }
     }
     return null;
   }
 
-  private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
-    LOG.info("Executing command: " + arguments.getCommand());
+
+    LOG.info("Executing command: " + command);
 
     OutputStream os;
 
-    boolean outputRedirectedToFile = arguments.getOutput() != null;
+    boolean outputRedirectedToFile = outputFile != null;
 
     if (outputRedirectedToFile) {
-      LOG.info("-----Command Output redirected to " + arguments.getOutput() + "-----");
-      os = new FileOutputStream(arguments.getOutput());
+      LOG.info("-----Command Output redirected to " + outputFile + "-----");
+      os = new FileOutputStream(outputFile);
     } else {
       LOG.info("-----Command Output-----");
       os = System.out;
     }
 
-    context.fitNesse.executeSingleCommand(arguments.getCommand(), os);
-    context.fitNesse.stop();
+    fitNesse.executeSingleCommand(command, os);
+    fitNesse.stop();
 
     if (outputRedirectedToFile) {
       os.close();
@@ -104,10 +111,16 @@ public class FitNesseMain {
     return TestTextFormatter.finalErrorCount;
   }
 
-  private FitNesseContext loadContext(Arguments arguments, Properties properties) throws IOException, PluginException {
-    Properties cascadedProperties = new Properties(properties);
-    cascadedProperties.putAll(arguments.asProperties());
-    return new ContextConfigurator(cascadedProperties).makeFitNesseContext();
+  private FitNesseContext loadContext(Properties properties) throws IOException, PluginException {
+    return new ContextConfigurator(properties).makeFitNesseContext();
+  }
+
+  private Properties cascadeProperties(Arguments arguments, Properties properties) {
+    Properties configProperties = new Properties(System.getProperties());
+    configProperties.putAll(properties);
+    Properties argumentProperties = new Properties(configProperties);
+    argumentProperties.putAll(arguments.asProperties());
+    return argumentProperties;
   }
 
   private void logStartupInfo(FitNesseContext context) {

@@ -10,8 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
-import java.util.Properties;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -36,18 +36,19 @@ public class FitNesseMainTest {
 
   @Test
   public void testInstallOnly() throws Exception {
-    Arguments args = new Arguments("-i");
+    context.getProperties().setProperty(ContextConfigurator.INSTALL_ONLY, "true");
     FitNesse fitnesse = mockFitNesse();
-    new FitNesseMain().launch(args, context);
+    new FitNesseMain().launch(context);
     verify(fitnesse, never()).start();
   }
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    Arguments args = new Arguments("-o", "-c", "command");
+    context.getProperties().setProperty(ContextConfigurator.OMITTING_UPDATES, "true");
+    context.getProperties().setProperty(ContextConfigurator.COMMAND, "command");
     FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
-    int exitCode = new FitNesseMain().launch(args, context);
+    int exitCode = new FitNesseMain().launch(context);
     assertThat(exitCode, is(0));
     verify(fitnesse, times(1)).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
