@@ -87,8 +87,8 @@ public class FitNesseContext {
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
-  public final String rootPath;
-  public final String rootDirectoryName;
+  private final String rootPath;
+  private final String rootDirectoryName;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
 
