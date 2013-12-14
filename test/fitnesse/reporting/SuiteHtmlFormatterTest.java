@@ -2,9 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
-import java.text.DecimalFormatSymbols;
 import java.util.Date;
 
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparatorForRegExp;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
@@ -212,13 +213,5 @@ public class SuiteHtmlFormatterTest {
         return theElapsedTime;
       }
     };
-  }
-
-  private String getDecimalSeparator() {
-    return String.valueOf(DecimalFormatSymbols.getInstance().getDecimalSeparator());
-  }
-
-  private String getDecimalSeparatorForRegExp() {
-    return getDecimalSeparator().replace(".", "\\.");
   }
 }
