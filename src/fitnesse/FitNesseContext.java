@@ -107,12 +107,12 @@ public class FitNesseContext {
     super();
     this.version = version;
     this.root = root;
-    this.rootPath = rootPath != null ? rootPath : ".";
-    this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
+    this.rootPath = rootPath;
+    this.rootDirectoryName = rootDirectoryName;
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;
-    this.port = port >= 0 ? port : ContextConfigurator.DEFAULT_PORT;
-    this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
+    this.port = port;
+    this.authenticator = authenticator;
     this.logger = logger;
     this.properties = properties;
     testSystemFactory = new MultipleTestSystemFactory();

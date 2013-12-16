@@ -8,8 +8,10 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.net.BindException;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
@@ -26,7 +28,7 @@ public class FitNesseMainTest {
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null, null, "testFitnesseRoot", 80);
+    context = FitNesseUtil.makeTestContext(null, ".", "testFitnesseRoot", 80);
   }
 
   @After
@@ -56,7 +58,7 @@ public class FitNesseMainTest {
   }
 
   @Test
-  public void testDirCreations() throws Exception {
+  public void testDirCreations() throws IOException {
     FitNesse fitnesse = context.fitNesse;
     fitnesse.start();
 
