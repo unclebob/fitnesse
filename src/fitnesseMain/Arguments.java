@@ -13,7 +13,7 @@ public class Arguments {
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   private final CommandLine commandLine = new CommandLine(
-          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a userpass][-c command][-b output]");
+          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output]");
 
   private final String rootPath;
   private final Integer port;
@@ -21,7 +21,7 @@ public class Arguments {
   private final String logDirectory;
   private final boolean omitUpdate;
   private final Integer daysTillVersionsExpire;
-  private final String userpass;
+  private final String credentials;
   private final boolean installOnly;
   private final String command;
   private final String output;
@@ -39,7 +39,7 @@ public class Arguments {
     this.logDirectory = commandLine.getOptionArgument("l", "logDir");
     final String days = commandLine.getOptionArgument("e", "days");
     this.daysTillVersionsExpire = days != null ? Integer.valueOf(days) : null;
-    this.userpass = commandLine.getOptionArgument("a", "userpass");
+    this.credentials = commandLine.getOptionArgument("a", "credentials");
     this.command = commandLine.getOptionArgument("c", "command");
     this.output = commandLine.getOptionArgument("b", "output");
     this.configFile = commandLine.getOptionArgument("f", "config");
@@ -72,55 +72,8 @@ public class Arguments {
     return rootPath == null ? DEFAULT_PATH : rootPath;
   }
 
-  public int getPort() {
-    return port == null ? getDefaultPort() : port;
-  }
-
-  private int getDefaultPort() {
-    return command == null ? DEFAULT_PORT : DEFAULT_COMMAND_PORT;
-  }
-
-  public String getRootDirectory() {
-    return rootDirectory == null ? DEFAULT_ROOT : rootDirectory;
-  }
-
-  public String getLogDirectory() {
-    return logDirectory;
-  }
-
-  public boolean isOmittingUpdates() {
-    return omitUpdate;
-  }
-
-  public String getUserpass() {
-    if (userpass == null || userpass.length() == 0)
-      return null;
-    else
-      return userpass;
-  }
-
-  public int getDaysTillVersionsExpire() {
-    return daysTillVersionsExpire == null ? DEFAULT_VERSION_DAYS : daysTillVersionsExpire;
-  }
-
-  public boolean isInstallOnly() {
-    return installOnly;
-  }
-
-  public String getCommand() {
-    return command;
-  }
-
-  public String getOutput() {
-    return output;
-  }
-
   public String getConfigFile() {
     return configFile == null ? (getRootPath() + "/" + DEFAULT_CONFIG_FILE) : configFile;
-  }
-
-  public boolean hasVerboseLogging() {
-    return verboseLogging;
   }
 
   public Properties asProperties() {
@@ -136,7 +89,7 @@ public class Arguments {
     if (omitUpdate) properties.setProperty(OMITTING_UPDATES, "true");
     if (installOnly) properties.setProperty(INSTALL_ONLY, "true");
     if (command != null) properties.setProperty(COMMAND, command);
-    if (userpass != null) properties.setProperty(CREDENTIALS, userpass);
+    if (credentials != null) properties.setProperty(CREDENTIALS, credentials);
     return properties;
   }
 }

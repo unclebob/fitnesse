@@ -27,7 +27,7 @@ public class ContextConfigurator {
   public static final String LOG_DIRECTORY = "LogDirectory";
   public static final String CREDENTIALS = "Credentials";
   public static final String ROOT_PATH = "RootPath";
-  public static final String ROOT_DIRECTORY = "RootDirectory";
+  public static final String ROOT_DIRECTORY = "FitNesseRoot";
   public static final String PORT = "Port";
   public static final String OUTPUT = "RedirectOutput";
   public static final String OMITTING_UPDATES = "OmittingUpdates";
