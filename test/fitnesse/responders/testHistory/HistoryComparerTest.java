@@ -297,7 +297,7 @@ public class HistoryComparerTest {
     result.exceptions = "0";
     result.content = generateHtmlFromWiki(passOrFail);
     result.relativePageName = "testPageOne";
-    report.results.add(result);
+    report.addResult(result);
     Writer writer = new StringWriter();
     VelocityEngine engine = context.pageFactory.getVelocityEngine();
     report.toXml(writer, engine);

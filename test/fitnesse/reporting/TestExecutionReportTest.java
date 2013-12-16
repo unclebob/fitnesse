@@ -61,7 +61,7 @@ public class TestExecutionReportTest {
     result.relativePageName = "relativePageName";
     result.tags = "tags";
     result.runTimeInMillis = "234";
-    expected.results.add(result);
+    expected.addResult(result);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class TestExecutionReportTest {
   public void tablesShouldBeDeserialized() throws Exception {
     addTablesToResult();
     serializeAndDeserialize();
-    List<Table> tables = actual.results.get(0).tables;
+    List<Table> tables = actual.getResults().get(0).tables;
     assertEquals(1, tables.size());
     Table table = tables.get(0);
     assertEquals(2, table.size());
@@ -121,7 +121,7 @@ public class TestExecutionReportTest {
     addDummyResult();
     addInstructionsToResult();
     serializeAndDeserialize();
-    List<InstructionResult> instructions = actual.results.get(0).instructions;
+    List<InstructionResult> instructions = actual.getResults().get(0).instructions;
     assertEquals(2, instructions.size());
     InstructionResult ir1 = instructions.get(0);
     InstructionResult ir2 = instructions.get(1);

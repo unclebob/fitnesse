@@ -129,7 +129,7 @@ public class XmlFormatter extends BaseFormatter {
 
   public void processTestResults(final WikiTestPage testPage, TestSummary testSummary) {
     TestExecutionReport.TestResult currentResult = newTestResult();
-    testResponse.results.add(currentResult);
+    testResponse.addResult(currentResult);
     currentResult.startTime = currentTestStartTime.startedAt();
     currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
     outputBuffer = null;

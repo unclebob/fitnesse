@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestExecutionReport extends ExecutionReport {
-  public List<TestResult> results = new ArrayList<TestResult>();
+  private List<TestResult> results = new ArrayList<TestResult>();
 
   public TestExecutionReport() {
   }
@@ -56,7 +56,6 @@ public class TestExecutionReport extends ExecutionReport {
   private void unpackResult(NodeList xmlResults, int resultIndex) {
     Element xmlResult = (Element) xmlResults.item(resultIndex);
     TestResult result = new TestResult();
-    results.add(result);
     result.content = XmlUtil.getTextValue(xmlResult, "content");
     result.right = XmlUtil.getTextValue(xmlResult, "right");
     result.wrong = XmlUtil.getTextValue(xmlResult, "wrong");
@@ -65,6 +64,7 @@ public class TestExecutionReport extends ExecutionReport {
     result.relativePageName = XmlUtil.getTextValue(xmlResult, "relativePageName");
     result.tags = XmlUtil.getTextValue(xmlResult, "tags");
     result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
+    addResult(result);
 
     unpackTables(xmlResult, result);
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
@@ -136,6 +136,10 @@ public class TestExecutionReport extends ExecutionReport {
 
   public List<TestResult> getResults() {
     return results;
+  }
+
+  public void addResult(TestResult currentResult) {
+    results.add(currentResult);
   }
 
   public void toXml(Writer writer, VelocityEngine velocityEngine) {

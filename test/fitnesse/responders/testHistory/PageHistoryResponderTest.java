@@ -398,7 +398,7 @@ public class PageHistoryResponderTest {
     testResponse.rootPath = "rootPath";
     testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.results.add(result);
+    testResponse.addResult(result);
     result.right = "11";
     result.wrong = "22";
     result.ignores = "33";
@@ -475,7 +475,7 @@ public class PageHistoryResponderTest {
     testResponse.rootPath = "rootPath";
     testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.results.add(result);
+    testResponse.addResult(result);
     result.right = "xx";
     result.wrong = "22";
     result.ignores = "33";
