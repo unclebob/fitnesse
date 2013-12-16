@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.List;
 
+import fitnesse.FitNesseVersion;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,15 +29,9 @@ public class TestExecutionReportTest {
 
   @Before
   public void setup() throws Exception {
-    expected = new TestExecutionReport();
-    makeHeader();
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
-  }
-
-  private void makeHeader() {
-    expected.version = "version";
+    expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    expected.rootPath = "rootPath";
+    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
   }
 
   private String reportToXml(TestExecutionReport report) throws Exception {

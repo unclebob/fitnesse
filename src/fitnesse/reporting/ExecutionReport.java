@@ -14,26 +14,24 @@ import util.TimeMeasurement;
 import util.XmlUtil;
 
 public abstract class ExecutionReport {
-  public String version;
-  public String rootPath;
+  private String version;
+  private String rootPath;
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
-  protected Document xmlDoc;
   private long totalRunTimeInMillis = 0;
-
-  protected ExecutionReport(Document xmlDocument) {
-    this();
-    xmlDoc = xmlDocument;
-  }
 
   protected ExecutionReport() {
     version = new FitNesseVersion().toString();
   }
 
+  public ExecutionReport(FitNesseVersion version, String rootPath) {
+    this.version = version == null ? "null" : version.toString();
+    this.rootPath = rootPath;
+  }
+
   public void tallyPageCounts(ExecutionResult result) {
     finalCounts.tallyPageCounts(result);
   }
-
 
   @Override
   public String toString() {
@@ -97,7 +95,7 @@ public abstract class ExecutionReport {
     }
   }
 
-  protected void unpackXml() {
+  protected void unpackXml(Document xmlDoc) {
     Element historyDocument = xmlDoc.getDocumentElement();
     unpackCommonFields(historyDocument);
     unpackResults(historyDocument);

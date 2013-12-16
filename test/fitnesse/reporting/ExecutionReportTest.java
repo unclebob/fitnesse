@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.StringWriter;
 
+import fitnesse.FitNesseVersion;
 import fitnesse.reporting.ExecutionReport;
 import fitnesse.reporting.SuiteExecutionReport;
 import fitnesse.reporting.TestExecutionReport;
@@ -39,9 +40,7 @@ public class ExecutionReportTest {
 
   @Test
   public void canReadTestExecutionReport() throws Exception {
-    TestExecutionReport original = new TestExecutionReport();
-    original.version = "version";
-    original.rootPath = "rootPath";
+    TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(42));
 
     StringWriter writer = new StringWriter();
@@ -63,9 +62,7 @@ public class ExecutionReportTest {
 
   @Test
   public void canMakeSuiteExecutionReport() throws Exception {
-    SuiteExecutionReport original = new SuiteExecutionReport();
-    original.version = "version";
-    original.rootPath = "rootPath";
+    SuiteExecutionReport original = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
     original.date = DateTimeUtil.getDateFromString("12/31/1969 18:00:00");
     original.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(41));
@@ -83,7 +80,7 @@ public class ExecutionReportTest {
   
   @Test
   public void shouldHandleMissingRunTimesGraceFully() throws Exception {
-    TestExecutionReport report = new TestExecutionReport();
+    TestExecutionReport report = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     Element element = mock(Element.class);
     NodeList emptyNodeList = mock(NodeList.class);
     when(element.getElementsByTagName("totalRunTimeInMillis")).thenReturn(emptyNodeList);

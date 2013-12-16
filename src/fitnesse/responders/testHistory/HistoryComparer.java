@@ -40,7 +40,7 @@ public class HistoryComparer {
   }
 
   private TestExecutionReport readTestExecutionReport(String filePath) throws IOException, SAXException {
-    return new TestExecutionReport().read(new File(filePath));
+    return new TestExecutionReport(new File(filePath));
   }
 
   private boolean exactlyOneReport(TestExecutionReport report) {

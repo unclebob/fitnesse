@@ -20,9 +20,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
 
   public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) {
     super(context, page);
-    suiteExecutionReport = new SuiteExecutionReport();
-    suiteExecutionReport.version = new FitNesseVersion().toString();
-    suiteExecutionReport.rootPath = getPage().getPageCrawler().getFullPath().toString();
+    suiteExecutionReport = new SuiteExecutionReport(context.version, getPage().getPageCrawler().getFullPath().toString());
     totalTimeMeasurement = new TimeMeasurement().start();
   }
 

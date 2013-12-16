@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import fitnesse.FitNesseVersion;
 import fitnesse.reporting.SuiteExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,23 +24,24 @@ public class SuiteExecutionReportTest {
 
    @Before
   public void setUp() throws Exception {
-    report1 = new SuiteExecutionReport();
-    report2 = new SuiteExecutionReport();
+    report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
+    report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
   }
 
   @Test
   public void degeneratesShouldBeEqual() throws Exception {
-    assertEquals(new SuiteExecutionReport(), new SuiteExecutionReport());
+    assertEquals(new SuiteExecutionReport(new FitNesseVersion("version"), "here"),
+            new SuiteExecutionReport(new FitNesseVersion("version"), "here"));
   }
   @Test
   public void shouldNotBeEqualIfDifferentTypes() throws Exception {
-    assertFalse(new SuiteExecutionReport().equals(new Integer(0)));
+    assertFalse(new SuiteExecutionReport(new FitNesseVersion("version"), "here").equals(new Integer(0)));
   }
 
   @Test
   public void shouldNotBeEqualWithDifferentRootPaths()throws Exception  {
-    report1.rootPath = "here";
-    report2.rootPath = "there";
+    SuiteExecutionReport report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "here");
+    SuiteExecutionReport report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "there");
     assertFalse(report1.equals(report2));
   }
 
@@ -63,8 +65,8 @@ public class SuiteExecutionReportTest {
 
   @Test
   public void shouldNotBeEqualIfVersionIsDifferent() throws Exception {
-    report1.version = "x";
-    report2.version = "y";
+    report1 = new SuiteExecutionReport(new FitNesseVersion("x"), "rootPath");
+    report2 = new SuiteExecutionReport(new FitNesseVersion("y"), "rootPath");
     assertFalse(report1.equals(report2));
   }
 
@@ -91,11 +93,9 @@ public class SuiteExecutionReportTest {
 
   @Test
   public void shouldBeEqualWithAllFieldsEqual() throws Exception {
-    report1.version = report2.version = "version";
     report1.date = report2.date = new Date(1);
     report1.getFinalCounts().add(new TestSummary(4,5,6,7));
     report2.getFinalCounts().add(new TestSummary(4,5,6,7));
-    report1.rootPath = report2.rootPath = "rootPath";
     PageHistoryReference r1a = new PageHistoryReference("testPage", 1234, 5);
     PageHistoryReference r2a = new PageHistoryReference("testPage", 1234, 5);
     PageHistoryReference r1b = new PageHistoryReference("myPage", 7734, 6);
@@ -106,6 +106,7 @@ public class SuiteExecutionReportTest {
     report1.addPageHistoryReference(r1b);
     report2.addPageHistoryReference(r2a);
     report2.addPageHistoryReference(r2b);
+
     assertEquals(report1, report2);
   }
   

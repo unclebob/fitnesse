@@ -127,7 +127,7 @@ public class CachingSuiteXmlFormatterTest {
     final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
     CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), null) {
       @Override
-      TestExecutionReport makeTestExecutionReport() {
+      TestExecutionReport makeTestExecutionReport(File file) {
         return expectedReport;
       }
     };
@@ -137,7 +137,6 @@ public class CachingSuiteXmlFormatterTest {
     when(testHistory.getPageHistory("TestPage")).thenReturn(pageHistory);
     when(expectedRecord.getFile()).thenReturn(file);
     when(pageHistory.get(referenceDate)).thenReturn(expectedRecord);
-    when(expectedReport.read(file)).thenReturn(expectedReport);
     SuiteExecutionReport.PageHistoryReference reference;
     reference = new SuiteExecutionReport.PageHistoryReference("TestPage", referenceDate.getTime(), 27);
     TestExecutionReport actualReport = formatter.getTestExecutionReport(reference);
@@ -178,7 +177,7 @@ public class CachingSuiteXmlFormatterTest {
     testResult.content = "<html>blah\" <a class=unquoted>link</a>";
     CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), writer) {
       @Override
-      TestExecutionReport makeTestExecutionReport() {
+      TestExecutionReport makeTestExecutionReport(File file) {
         return expectedReport;
       }
     };
@@ -186,7 +185,6 @@ public class CachingSuiteXmlFormatterTest {
     when(testHistory.getPageHistory(anyString())).thenReturn(pageHistory);
     when(pageHistory.get(any(Date.class))).thenReturn(testResultRecord);
     when(testResultRecord.getFile()).thenReturn(file);
-    when(expectedReport.read(file)).thenReturn(expectedReport);
     when(expectedReport.getResults()).thenReturn(testResults);
 
     formatter.setTestHistoryForTests(testHistory);

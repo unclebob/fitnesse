@@ -1,5 +1,6 @@
 package fitnesse.reporting;
 
+import fitnesse.FitNesseVersion;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -22,28 +23,28 @@ import java.util.List;
 public class TestExecutionReport extends ExecutionReport {
   private List<TestResult> results = new ArrayList<TestResult>();
 
-  public TestExecutionReport() {
+  public TestExecutionReport(FitNesseVersion version, String rootPath) {
+    super(version, rootPath);
   }
 
   public TestExecutionReport(InputStream input) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(input);
-    unpackXml();
+    Document xmlDoc = XmlUtil.newDocument(input);
+    unpackXml(xmlDoc);
   }
 
   public TestExecutionReport(String string) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(string);
-    unpackXml();
+    Document xmlDoc = XmlUtil.newDocument(string);
+    unpackXml(xmlDoc);
+  }
+
+  public TestExecutionReport(File file) throws IOException, SAXException {
+    Document xmlDoc = XmlUtil.newDocument(file);
+    unpackXml(xmlDoc);
   }
 
   public TestExecutionReport(Document xmlDocument) {
-    super(xmlDocument);
-    unpackXml();
-  }
-
-  public TestExecutionReport read(File file) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(file);
-    unpackXml();
-    return this;
+    super();
+    unpackXml(xmlDocument);
   }
 
   protected void unpackResults(Element testResults) {

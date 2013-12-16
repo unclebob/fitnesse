@@ -1,5 +1,6 @@
 package fitnesse.reporting;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
@@ -10,6 +11,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import org.xml.sax.SAXException;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
@@ -55,17 +57,18 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     writer.close();
   }
 
-  public TestExecutionReport getTestExecutionReport(SuiteExecutionReport.PageHistoryReference reference) throws Exception {
+  public TestExecutionReport getTestExecutionReport(SuiteExecutionReport.PageHistoryReference reference) throws IOException, SAXException {
     PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
     Date date;
     date = new Date(reference.getTime());
     TestResultRecord record = pageHistory.get(date);
-    return makeTestExecutionReport().read(record.getFile());
+    return makeTestExecutionReport(record.getFile());
   }
 
-  TestExecutionReport makeTestExecutionReport() {
-    return new TestExecutionReport();
+  TestExecutionReport makeTestExecutionReport(File file) throws IOException, SAXException {
+    return new TestExecutionReport(file);
   }
+
 
   public void includeHtml() {
     includeHtml = true;

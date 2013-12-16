@@ -1,5 +1,6 @@
 package fitnesse.reporting;
 
+import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
@@ -23,11 +24,12 @@ public class SuiteExecutionReport extends ExecutionReport {
   private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
 
   public SuiteExecutionReport(Document xmlDocument) throws Exception {
-    super(xmlDocument);
-    unpackXml();
+    super();
+    unpackXml(xmlDocument);
   }
 
-  public SuiteExecutionReport() {
+  public SuiteExecutionReport(FitNesseVersion version, String rootPath) {
+    super(version, rootPath);
   }
 
   @Override
