@@ -32,18 +32,12 @@ public class TestExecutionReport extends ExecutionReport {
     unpackXml(xmlDoc);
   }
 
-  public TestExecutionReport(String string) throws IOException, SAXException {
-    Document xmlDoc = XmlUtil.newDocument(string);
-    unpackXml(xmlDoc);
-  }
-
   public TestExecutionReport(File file) throws IOException, SAXException {
     Document xmlDoc = XmlUtil.newDocument(file);
     unpackXml(xmlDoc);
   }
 
   public TestExecutionReport(Document xmlDocument) {
-    super();
     unpackXml(xmlDocument);
   }
 
