@@ -27,16 +27,16 @@ public class TestFormatterTest {
   private ChunkedResponse response = mock(ChunkedResponse.class);
   private WikiPage dummyPage = root.addChildPage("testPage");
   private Writer writer = mock(Writer.class);
-  private XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);
+  private TestXmlFormatter.WriterFactory writerFactory = mock(TestXmlFormatter.WriterFactory.class);
 
   private TestTextFormatter testTextFormatter = new TestTextFormatter(response);
-  private XmlFormatter xmlFormatter = new XmlFormatter(context, dummyPage, writerFactory);
+  private TestXmlFormatter xmlFormatter = new TestXmlFormatter(context, dummyPage, writerFactory);
   private InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, dummyPage) {
     @Override
     protected void writeData(String output) {
     }
   };
-  private XmlFormatter pageHistoryFormatter = new XmlFormatter(context, dummyPage, writerFactory);
+  private TestXmlFormatter pageHistoryFormatter = new TestXmlFormatter(context, dummyPage, writerFactory);
 
   private WikiTestPage page;
   private TestSummary right;
@@ -92,7 +92,7 @@ public class TestFormatterTest {
 
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);
-    if (!(formatter instanceof XmlFormatter))
+    if (!(formatter instanceof TestXmlFormatter))
       assertEquals(2, BaseFormatter.finalErrorCount);
   }
 

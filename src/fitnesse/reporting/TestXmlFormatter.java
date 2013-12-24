@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class XmlFormatter extends BaseFormatter {
+public class TestXmlFormatter extends BaseFormatter {
 
   public interface WriterFactory {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
@@ -39,12 +39,11 @@ public class XmlFormatter extends BaseFormatter {
   protected final TestExecutionReport testResponse;
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
-  public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
+  public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(context, page);
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
-
   }
 
   @Override

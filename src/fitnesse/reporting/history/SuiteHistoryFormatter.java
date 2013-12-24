@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import fitnesse.reporting.SuiteExecutionReportFormatter;
-import fitnesse.reporting.XmlFormatter;
+import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
@@ -21,11 +21,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
-  private XmlFormatter.WriterFactory writerFactory;
+  private TestXmlFormatter.WriterFactory writerFactory;
   private TimeMeasurement suiteTime;
-  private XmlFormatter testHistoryFormatter;
+  private TestXmlFormatter testHistoryFormatter;
 
-  public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) {
+  public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, TestXmlFormatter.WriterFactory source) {
     super(context, page);
     writerFactory = source;
   }
@@ -44,7 +44,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
 
   @Override
   public void testStarted(WikiTestPage test) {
-    testHistoryFormatter = new XmlFormatter(context, test.getSourcePage(), writerFactory);
+    testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
     testHistoryFormatter.testStarted(test);
     super.testStarted(test);
   }

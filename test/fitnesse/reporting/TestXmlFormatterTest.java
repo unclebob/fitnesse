@@ -19,13 +19,13 @@ import util.DateAlteringClock;
 import util.DateTimeUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.TestExecutionReport.TestResult;
-import fitnesse.reporting.XmlFormatter.WriterFactory;
+import fitnesse.reporting.TestXmlFormatter.WriterFactory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
-public class XmlFormatterTest {
+public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
   private DateAlteringClock clock;
   
@@ -54,7 +54,7 @@ public class XmlFormatterTest {
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();
-    XmlFormatter formatter = new XmlFormatter(context , page.getSourcePage(), writerFactory) {
+    TestXmlFormatter formatter = new TestXmlFormatter(context , page.getSourcePage(), writerFactory) {
       @Override
       protected TestResult newTestResult() {
         return testResult;
@@ -89,7 +89,7 @@ public class XmlFormatterTest {
     FitNesseContext context = mock(FitNesseContext.class);
     WikiPage page = new WikiPageDummy("name", "content");
     WriterFactory writerFactory = mock(WriterFactory.class);
-    XmlFormatter formatter = new XmlFormatter(context , page, writerFactory) {
+    TestXmlFormatter formatter = new TestXmlFormatter(context , page, writerFactory) {
       @Override
       protected void writeResults() {
       }

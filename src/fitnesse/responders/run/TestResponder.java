@@ -18,13 +18,13 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.JavaFormatter;
+import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.TestHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
-import fitnesse.reporting.XmlFormatter;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.MultipleTestsRunner;
@@ -166,12 +166,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter newXmlFormatter() {
-    XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
+    TestXmlFormatter.WriterFactory writerSource = new TestXmlFormatter.WriterFactory() {
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return response.getWriter();
       }
     };
-    return new XmlFormatter(context, page, writerSource);
+    return new TestXmlFormatter(context, page, writerSource);
   }
 
   BaseFormatter newTextFormatter() {
@@ -193,7 +193,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected TestSystemListener newTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-    return new XmlFormatter(context, page, writerFactory);
+    return new TestXmlFormatter(context, page, writerFactory);
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -274,7 +274,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return response;
   }
 
-  public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
+  public static class HistoryWriterFactory implements TestXmlFormatter.WriterFactory {
 
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));

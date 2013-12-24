@@ -3,7 +3,7 @@ package fitnesse.reporting.history;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.reporting.XmlFormatter;
+import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
@@ -46,7 +46,7 @@ public class SuiteHistoryFormatterTest {
     WikiPage suitePage = root.addChildPage("SuitePage");
     testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<StringWriter>();
-    formatter = new SuiteHistoryFormatter(context, suitePage, new XmlFormatter.WriterFactory() {
+    formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
         StringWriter w = new StringWriter();
