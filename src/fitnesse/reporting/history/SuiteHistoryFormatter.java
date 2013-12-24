@@ -20,6 +20,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
+// TODO: Merge with parent class.
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   private TestXmlFormatter.WriterFactory writerFactory;
   private TimeMeasurement suiteTime;

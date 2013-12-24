@@ -16,6 +16,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
+@Deprecated // This should just read the page history and reformat it.
 public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   private final TimeMeasurement totalTimeMeasurement;
   private TestHistory testHistory = new TestHistory();
