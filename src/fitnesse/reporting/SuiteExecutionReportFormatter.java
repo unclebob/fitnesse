@@ -14,7 +14,7 @@ import util.TimeMeasurement;
 
 public class SuiteExecutionReportFormatter extends BaseFormatter {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
-  protected SuiteExecutionReport suiteExecutionReport;
+  private SuiteExecutionReport suiteExecutionReport;
   private TimeMeasurement timeMeasurement;
   private final TimeMeasurement totalTimeMeasurement;
 
@@ -37,14 +37,6 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
 
   @Override
   public void testOutputChunk(String output) {
-  }
-
-  public String getRootPageName() {
-     return suiteExecutionReport.getRootPath();
-  }
-
-  public String getFitNesseVersion() {
-    return new FitNesseVersion().toString();
   }
 
   @Override

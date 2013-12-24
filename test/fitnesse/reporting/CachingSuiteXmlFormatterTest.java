@@ -82,14 +82,7 @@ public class CachingSuiteXmlFormatterTest {
 
     clock.elapse(10);
     formatter.close();
-    assertEquals(49, formatter.suiteExecutionReport.getTotalRunTimeInMillis());
-  }
-  
-  @Test
-  public void shouldDelegateToReportForTotalRunTime() throws Exception {
-    formatter.suiteExecutionReport = mock(SuiteExecutionReport.class);
-    formatter.getTotalRunTimeInMillis();
-    verify(formatter.suiteExecutionReport).getTotalRunTimeInMillis(); 
+    assertEquals(49, formatter.getSuiteExecutionReport().getTotalRunTimeInMillis());
   }
 
   private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {

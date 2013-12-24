@@ -47,8 +47,8 @@ public class SuiteExecutionReportFormatterTest {
     TestSummary testSummary = new TestSummary(4, 2, 7, 3);
     formatter.testComplete(page, testSummary);
 
-    assertThat(formatter.suiteExecutionReport.getPageHistoryReferences().size(), is(1));
-    PageHistoryReference reference = formatter.suiteExecutionReport.getPageHistoryReferences().get(0);
+    assertThat(formatter.getSuiteExecutionReport().getPageHistoryReferences().size(), is(1));
+    PageHistoryReference reference = formatter.getSuiteExecutionReport().getPageHistoryReferences().get(0);
     assertThat(reference.getTestSummary(), equalTo(testSummary));
     assertThat(reference.getRunTimeInMillis(), is(99L));
   }
@@ -61,7 +61,7 @@ public class SuiteExecutionReportFormatterTest {
 
     clock.elapse(50);
     formatter.close();
-    assertThat(formatter.suiteExecutionReport.getTotalRunTimeInMillis(),
+    assertThat(formatter.getSuiteExecutionReport().getTotalRunTimeInMillis(),
       is(50L));
   }
 

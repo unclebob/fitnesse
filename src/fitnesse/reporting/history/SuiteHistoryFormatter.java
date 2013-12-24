@@ -3,6 +3,7 @@ package fitnesse.reporting.history;
 import java.io.IOException;
 import java.io.Writer;
 
+import fitnesse.FitNesseVersion;
 import fitnesse.reporting.SuiteExecutionReportFormatter;
 import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
@@ -95,7 +96,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
     try {
       VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("suiteExecutionReport", suiteExecutionReport);
+      velocityContext.put("suiteExecutionReport", getSuiteExecutionReport());
       VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
       Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
       template.merge(velocityContext, writer);

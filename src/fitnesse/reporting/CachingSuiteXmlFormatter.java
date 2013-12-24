@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
+import fitnesse.FitNesseVersion;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
 import org.apache.velocity.Template;
@@ -71,6 +72,14 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   }
 
 
+  public String getRootPageName() {
+    return getSuiteExecutionReport().getRootPath();
+  }
+
+  public String getFitNesseVersion() {
+    return new FitNesseVersion().toString();
+  }
+
   public void includeHtml() {
     includeHtml = true;
   }
@@ -82,6 +91,6 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   public long getTotalRunTimeInMillis() {
     // for velocity macro only -- would be nicer to rewrite the macro
     // so that it reads from the report directly as per SuiteHistoryFormatter
-    return suiteExecutionReport.getTotalRunTimeInMillis();
+    return getSuiteExecutionReport().getTotalRunTimeInMillis();
   }
 }
