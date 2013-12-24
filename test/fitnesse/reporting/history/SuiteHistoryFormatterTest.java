@@ -2,14 +2,22 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +28,7 @@ import org.w3c.dom.NodeList;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 import util.XmlUtil;
 
 import java.io.IOException;
@@ -59,6 +68,27 @@ public class SuiteHistoryFormatterTest {
   @After
   public void restoreDefaultClock() {
     Clock.restoreDefaultClock();
+  }
+
+  @Test
+  public void testCompleteShouldSetFailedCount() throws Exception {
+    FitNesseContext context = mock(FitNesseContext.class);
+
+    TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
+    when(timeMeasurement.startedAt()).thenReturn(65L);
+    when(timeMeasurement.elapsed()).thenReturn(2L);
+    formatter.testStarted(testPage);
+
+    when(timeMeasurement.elapsed()).thenReturn(99L);
+    TestSummary testSummary = new TestSummary(4, 2, 7, 3);
+    formatter.testComplete(testPage, testSummary);
+
+    assertThat(formatter.getErrorCount(), is(1));
+
+    formatter.close();
+
+    assertThat(BaseFormatter.finalErrorCount, is(2));
+
   }
 
   @Test
