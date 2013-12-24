@@ -4,6 +4,7 @@ import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -146,8 +147,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getRelativePageName() {
-      String[] parts = pageName.split(".");
-      return parts[parts.length - 1];
+      return PathParser.parse(pageName).last();
     }
 
     public long getTime() {
