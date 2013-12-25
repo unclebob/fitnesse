@@ -80,9 +80,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
     }
   }
 
-  public void addMessageForBlankHtml() {
-  }
-
   public int getErrorCount() {
     return 0;
   }

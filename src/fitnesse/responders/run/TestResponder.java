@@ -211,8 +211,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     MultipleTestsRunner runner = newMultipleTestsRunner(test2run);
 
-    if (isEmpty(page))
-      mainFormatter.addMessageForBlankHtml();
     runner.executeTestPages();
   }
 
@@ -231,10 +229,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     addFormatters(runner);
 
     return runner;
-  }
-
-  private boolean isEmpty(WikiPage page) {
-    return page.getData().getContent().length() == 0;
   }
 
   public SecureOperation getSecureOperation() {
