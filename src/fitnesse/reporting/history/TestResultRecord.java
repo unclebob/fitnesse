@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import java.io.File;
 import java.util.Date;

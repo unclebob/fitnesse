@@ -17,7 +17,7 @@ import java.util.Set;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.reporting.TestResultRecord;
+import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.responders.run.TestResponder;
 import org.junit.After;
 import org.junit.Before;

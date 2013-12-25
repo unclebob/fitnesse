@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -18,8 +18,8 @@ import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport.TestResult;
-import fitnesse.reporting.TestXmlFormatter.WriterFactory;
+import fitnesse.reporting.history.TestExecutionReport.TestResult;
+import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;

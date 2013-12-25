@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import fitnesse.FitNesseVersion;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.SuiteExecutionReport;
-import fitnesse.reporting.TestXmlFormatter;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;

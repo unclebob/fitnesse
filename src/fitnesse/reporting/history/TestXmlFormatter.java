@@ -1,8 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;

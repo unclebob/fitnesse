@@ -3,16 +3,13 @@ package fitnesse.reporting.history;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.reporting.TestXmlFormatter;
+import fitnesse.reporting.history.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

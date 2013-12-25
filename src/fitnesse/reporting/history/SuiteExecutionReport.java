@@ -1,11 +1,10 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPagePath;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

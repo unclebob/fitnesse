@@ -4,6 +4,7 @@ import java.io.Writer;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;

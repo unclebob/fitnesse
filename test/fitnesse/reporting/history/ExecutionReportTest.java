@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -11,9 +11,9 @@ import static org.mockito.Mockito.when;
 import java.io.StringWriter;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.ExecutionReport;
-import fitnesse.reporting.SuiteExecutionReport;
-import fitnesse.reporting.TestExecutionReport;
+import fitnesse.reporting.history.ExecutionReport;
+import fitnesse.reporting.history.SuiteExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;

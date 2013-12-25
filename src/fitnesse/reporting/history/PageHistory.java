@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import fitnesse.reporting.TestResultRecord;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.ExecutionResult;
 

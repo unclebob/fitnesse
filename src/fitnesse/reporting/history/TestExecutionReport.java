@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
 import org.apache.velocity.Template;

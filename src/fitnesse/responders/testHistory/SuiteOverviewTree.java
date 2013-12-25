@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.reporting.history.MostRecentPageHistoryReader;
-import fitnesse.reporting.TestResultRecord;
+import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.wiki.WikiPage;
 import util.GracefulNamer;

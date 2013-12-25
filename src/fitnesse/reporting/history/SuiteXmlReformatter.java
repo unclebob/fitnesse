@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,9 +6,13 @@ import java.io.Writer;
 import java.util.Date;
 
 import fitnesse.FitNesseContext;
+import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.SuiteExecutionReport;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;

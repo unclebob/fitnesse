@@ -18,7 +18,7 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.JavaFormatter;
-import fitnesse.reporting.TestXmlFormatter;
+import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;

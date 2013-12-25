@@ -1,12 +1,12 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
-import static fitnesse.reporting.SuiteExecutionReport.PageHistoryReference;
+import static fitnesse.reporting.history.SuiteExecutionReport.PageHistoryReference;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.SuiteExecutionReport;
+import fitnesse.reporting.history.SuiteExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
