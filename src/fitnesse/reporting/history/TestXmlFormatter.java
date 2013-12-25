@@ -55,10 +55,6 @@ public class TestXmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
-  @Override
   public void testOutputChunk(String output) {
     appendHtmlToBuffer(output);
   }

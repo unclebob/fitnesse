@@ -56,6 +56,19 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
     finalErrorCount = failCount;
   }
 
+
+  @Override
+  public void testSystemStarted(TestSystem testSystem) {
+  }
+
+  @Override
+  public void testStarted(WikiTestPage testPage) throws IOException {
+  }
+
+  @Override
+  public void testOutputChunk(String output) throws IOException {
+  }
+
   @Override
   public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
     testCount++;

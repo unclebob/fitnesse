@@ -30,10 +30,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
-  @Override
   public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
     latestTestTime.stop();
     super.testComplete(testPage, testSummary);

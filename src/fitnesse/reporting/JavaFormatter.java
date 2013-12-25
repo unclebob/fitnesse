@@ -163,10 +163,6 @@ public class JavaFormatter extends BaseFormatter {
     resultsRepository.write(output);
   }
 
-  @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
   private ResultsRepository resultsRepository;
 
   public TestSummary getTotalSummary() {
@@ -179,7 +175,6 @@ public class JavaFormatter extends BaseFormatter {
 
   public void setResultsRepository(ResultsRepository mockResultsRepository) {
     this.resultsRepository = mockResultsRepository;
-
   }
 
   /**

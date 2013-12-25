@@ -39,18 +39,6 @@ public class SuiteXmlReformatter extends BaseFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
-  @Override
-  public void testOutputChunk(String output) throws IOException {
-  }
-
-  @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
-  }
-
-  @Override
   public void close() throws IOException {
     super.close();
 
