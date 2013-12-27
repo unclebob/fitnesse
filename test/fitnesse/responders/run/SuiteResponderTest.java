@@ -102,6 +102,7 @@ public class SuiteResponderTest {
     FitNesseContext localContext = FitNesseUtil.makeTestContext(context, port);
     // Use this port, so the test system will talk back.
     properties.setProperty("FITNESSE_PORT", String.valueOf(port));
+
     Response response = responder.makeResponse(localContext, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);

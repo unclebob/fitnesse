@@ -6,11 +6,9 @@ import java.io.IOException;
 
 import fitnesse.http.Request;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CachingSuiteXmlFormatter;
-import fitnesse.testrunner.CompositeFormatter;
-import fitnesse.reporting.PageHistoryFormatter;
-import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
+import fitnesse.reporting.history.SuiteXmlReformatter;
+import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -23,6 +21,7 @@ public class SuiteResponder extends TestResponder {
   private static final String OR_FILTER_ARG_2 = "suiteFilter";
 
   private boolean includeHtml;
+  private SuiteHistoryFormatter suiteHistoryFormatter;
 
   @Override
   protected String getTitle() {
@@ -42,7 +41,8 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   BaseFormatter newXmlFormatter() {
-    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, response.getWriter());
+    // For suites, we use the page history as a basis.
+    SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
     if (includeHtml)
       xmlFormatter.includeHtml();
     return xmlFormatter;
@@ -59,11 +59,8 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   protected TestSystemListener newTestHistoryFormatter() {
-    HistoryWriterFactory source = new HistoryWriterFactory();
-    CompositeFormatter f = new CompositeFormatter();
-    f.addTestSystemListener(new PageHistoryFormatter(context, page, source));
-    f.addTestSystemListener(new SuiteHistoryFormatter(context, page, source));
-    return f;
+    suiteHistoryFormatter = getSuiteHistoryFormatter();
+    return suiteHistoryFormatter;
   }
 
   @Override
@@ -120,4 +117,11 @@ public class SuiteResponder extends TestResponder {
     return startTest;
   }
 
+  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+    if (suiteHistoryFormatter == null) {
+      HistoryWriterFactory source = new HistoryWriterFactory();
+      suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);
+    }
+    return suiteHistoryFormatter;
+  }
 }

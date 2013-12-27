@@ -11,7 +11,6 @@ import java.util.*;
 
 public class TestHistory {
   Map<String, File> pageDirectoryMap = new HashMap<String, File>();
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
 
   public void readHistoryDirectory(File historyDirectory) {
     File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
@@ -48,9 +47,4 @@ public class TestHistory {
         pageDirectoryMap.put(file.getName(), file);
   }
 
-  public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-    String datePart = format.format(new Date(time));
-    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
-  }
 }

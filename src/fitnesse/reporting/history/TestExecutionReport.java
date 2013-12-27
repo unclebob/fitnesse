@@ -1,5 +1,6 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
+import fitnesse.FitNesseVersion;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -20,30 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestExecutionReport extends ExecutionReport {
-  public List<TestResult> results = new ArrayList<TestResult>();
+  private List<TestResult> results = new ArrayList<TestResult>();
 
-  public TestExecutionReport() {
+  public TestExecutionReport(FitNesseVersion version, String rootPath) {
+    super(version, rootPath);
   }
 
   public TestExecutionReport(InputStream input) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(input);
-    unpackXml();
+    Document xmlDoc = XmlUtil.newDocument(input);
+    unpackXml(xmlDoc);
   }
 
-  public TestExecutionReport(String string) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(string);
-    unpackXml();
+  public TestExecutionReport(File file) throws IOException, SAXException {
+    Document xmlDoc = XmlUtil.newDocument(file);
+    unpackXml(xmlDoc);
   }
 
   public TestExecutionReport(Document xmlDocument) {
-    super(xmlDocument);
-    unpackXml();
-  }
-
-  public TestExecutionReport read(File file) throws IOException, SAXException {
-    xmlDoc = XmlUtil.newDocument(file);
-    unpackXml();
-    return this;
+    unpackXml(xmlDocument);
   }
 
   protected void unpackResults(Element testResults) {
@@ -56,7 +51,6 @@ public class TestExecutionReport extends ExecutionReport {
   private void unpackResult(NodeList xmlResults, int resultIndex) {
     Element xmlResult = (Element) xmlResults.item(resultIndex);
     TestResult result = new TestResult();
-    results.add(result);
     result.content = XmlUtil.getTextValue(xmlResult, "content");
     result.right = XmlUtil.getTextValue(xmlResult, "right");
     result.wrong = XmlUtil.getTextValue(xmlResult, "wrong");
@@ -65,6 +59,7 @@ public class TestExecutionReport extends ExecutionReport {
     result.relativePageName = XmlUtil.getTextValue(xmlResult, "relativePageName");
     result.tags = XmlUtil.getTextValue(xmlResult, "tags");
     result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
+    addResult(result);
 
     unpackTables(xmlResult, result);
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
@@ -136,6 +131,10 @@ public class TestExecutionReport extends ExecutionReport {
 
   public List<TestResult> getResults() {
     return results;
+  }
+
+  public void addResult(TestResult currentResult) {
+    results.add(currentResult);
   }
 
   public void toXml(Writer writer, VelocityEngine velocityEngine) {

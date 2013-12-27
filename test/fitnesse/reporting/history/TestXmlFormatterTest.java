@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
 
-import fitnesse.reporting.history.TestHistory;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
 import org.junit.Before;
@@ -18,14 +18,14 @@ import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport.TestResult;
-import fitnesse.reporting.XmlFormatter.WriterFactory;
+import fitnesse.reporting.history.TestExecutionReport.TestResult;
+import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
-public class XmlFormatterTest {
+public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
   private DateAlteringClock clock;
   
@@ -44,7 +44,7 @@ public class XmlFormatterTest {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
       "20090413152143_1_2_3_4.xml", 
-      TestHistory.makeResultFileName(summary, clock.currentClockTimeInMillis()));
+      TestResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test
@@ -54,7 +54,7 @@ public class XmlFormatterTest {
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();
-    XmlFormatter formatter = new XmlFormatter(context , page.getSourcePage(), writerFactory) {
+    TestXmlFormatter formatter = new TestXmlFormatter(context , page.getSourcePage(), writerFactory) {
       @Override
       protected TestResult newTestResult() {
         return testResult;
@@ -71,8 +71,8 @@ public class XmlFormatterTest {
     TestSummary summary = new TestSummary(9,8,7,6);
     formatter.testComplete(page, summary);
     assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0,1,0,0)));
-    assertThat(formatter.testResponse.results.size(), is(1));
-    assertThat(formatter.testResponse.results.get(0), is(testResult));
+    assertThat(formatter.testResponse.getResults().size(), is(1));
+    assertThat(formatter.testResponse.getResults().get(0), is(testResult));
     assertThat(testResult.startTime, is(startTime));
     assertThat(testResult.content, is("outputChunk"));
     assertThat(testResult.right, is("9"));
@@ -89,7 +89,7 @@ public class XmlFormatterTest {
     FitNesseContext context = mock(FitNesseContext.class);
     WikiPage page = new WikiPageDummy("name", "content");
     WriterFactory writerFactory = mock(WriterFactory.class);
-    XmlFormatter formatter = new XmlFormatter(context , page, writerFactory) {
+    TestXmlFormatter formatter = new TestXmlFormatter(context , page, writerFactory) {
       @Override
       protected void writeResults() {
       }
