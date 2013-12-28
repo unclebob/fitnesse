@@ -1,6 +1,5 @@
 package fitnesseMain;
 
-import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.PluginException;
@@ -15,6 +14,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import static fitnesse.ConfigurationParameter.*;
 
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
@@ -45,7 +46,7 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Properties properties) throws Exception {
-    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(ConfigurationParameter.LOG_LEVEL)));
+    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(LOG_LEVEL.getKey())));
     loadPlugins();
 
     FitNesseContext context = loadContext(properties);
@@ -58,7 +59,7 @@ public class FitNesseMain {
   }
 
   private boolean update(FitNesseContext context) throws IOException {
-    if (!"true".equalsIgnoreCase(context.getProperty(ConfigurationParameter.OMITTING_UPDATES))) {
+    if (!"true".equalsIgnoreCase(context.getProperty(OMITTING_UPDATES.getKey()))) {
       Updater updater = new UpdaterImplementation(context);
       return updater.update();
     }
@@ -70,12 +71,12 @@ public class FitNesseMain {
   }
 
   Integer launch(FitNesseContext context) throws Exception {
-    if (!"true".equalsIgnoreCase(context.getProperty(ConfigurationParameter.INSTALL_ONLY))) {
+    if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       boolean started = context.fitNesse.start();
       if (started) {
-        String command = context.getProperty(ConfigurationParameter.COMMAND);
+        String command = context.getProperty(COMMAND.getKey());
         if (command != null) {
-          String output = context.getProperty(ConfigurationParameter.OUTPUT);
+          String output = context.getProperty(OUTPUT.getKey());
           return executeSingleCommand(context.fitNesse, command, output);
         }
       }

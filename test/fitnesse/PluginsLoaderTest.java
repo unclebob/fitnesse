@@ -62,12 +62,12 @@ public class PluginsLoaderTest {
   public void setUp() throws Exception {
     testProperties = new Properties();
     testProvider = new SymbolProvider(new SymbolType[] {});
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), testProperties);
   }
 
   @Test
   public void testAddPlugins() throws Exception {
-    testProperties.setProperty(ConfigurationParameter.PLUGINS, DummyPlugin.class.getName());
+    testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
     FileSystemPageFactory wikiPageFactory = new FileSystemPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
@@ -89,7 +89,7 @@ public class PluginsLoaderTest {
   @Test
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
-    testProperties.setProperty(ConfigurationParameter.RESPONDERS, respondersValue);
+    testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
 
     ResponderFactory responderFactory = new ResponderFactory(".");
     loader.loadResponders(responderFactory);
@@ -101,7 +101,7 @@ public class PluginsLoaderTest {
   @Test
   public void testWikiWidgetPlugins() throws Exception {
     String symbolValues = Today.class.getName();
-    testProperties.setProperty(ConfigurationParameter.SYMBOL_TYPES, symbolValues);
+    testProperties.setProperty(ConfigurationParameter.SYMBOL_TYPES.getKey(), symbolValues);
 
     loader.loadSymbolTypes(testProvider);
 
@@ -117,7 +117,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testAuthenticatorCustomCreation() throws Exception {
-    testProperties.setProperty(ConfigurationParameter.AUTHENTICATOR, SimpleAuthenticator.class.getName());
+    testProperties.setProperty(ConfigurationParameter.AUTHENTICATOR.getKey(), SimpleAuthenticator.class.getName());
 
     Authenticator authenticator = loader.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
@@ -158,7 +158,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void haveContentFilter() throws Exception {
-    testProperties.setProperty(ConfigurationParameter.CONTENT_FILTER, TestContentFilter.class.getName());
+    testProperties.setProperty(ConfigurationParameter.CONTENT_FILTER.getKey(), TestContentFilter.class.getName());
 
     ContentFilter filter = loader.loadContentFilter();
     assertNotNull(filter);
@@ -167,7 +167,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testSlimTablesCreation() throws PluginException {
-    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test");
@@ -177,7 +177,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testSlimTablesWithColonCreation() throws PluginException {
-    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test::" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test:");
@@ -187,7 +187,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testCustomComparatorsCreation() throws PluginException {
-    testProperties.setProperty(ConfigurationParameter.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
+    testProperties.setProperty(ConfigurationParameter.CUSTOM_COMPARATORS.getKey(), "test:" + TestCustomComparator.class.getName());
     loader.loadCustomComparators();
 
     CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
@@ -197,7 +197,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testTestSystemCreation() throws PluginException {
-    testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS, "foo:" + FooTestSystemFactory.class.getName());
+    testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS.getKey(), "foo:" + FooTestSystemFactory.class.getName());
     TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
     loader.loadTestSystems(registrar);
 

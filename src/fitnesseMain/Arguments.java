@@ -7,6 +7,7 @@ import java.util.Properties;
 import fitnesse.ConfigurationParameter;
 import util.CommandLine;
 
+import static fitnesse.ConfigurationParameter.*;
 import static fitnesse.ContextConfigurator.*;
 
 public class Arguments {
@@ -78,18 +79,18 @@ public class Arguments {
 
   public Properties asProperties() {
     Properties properties = new Properties();
-    properties.setProperty(ConfigurationParameter.LOG_LEVEL, verboseLogging ? "verbose" : "normal");
-    if (configFile != null) properties.setProperty(ConfigurationParameter.CONFIG_FILE, configFile);
-    if (port != null) properties.setProperty(ConfigurationParameter.PORT, port.toString());
-    if (rootPath != null) properties.setProperty(ConfigurationParameter.ROOT_PATH, rootPath);
-    if (rootDirectory != null) properties.setProperty(ConfigurationParameter.ROOT_DIRECTORY, rootDirectory);
-    if (output != null) properties.setProperty(ConfigurationParameter.OUTPUT, output);
-    if (logDirectory != null) properties.setProperty(ConfigurationParameter.LOG_DIRECTORY, logDirectory);
-    if (daysTillVersionsExpire != null) properties.setProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS, daysTillVersionsExpire.toString());
-    if (omitUpdate) properties.setProperty(ConfigurationParameter.OMITTING_UPDATES, "true");
-    if (installOnly) properties.setProperty(ConfigurationParameter.INSTALL_ONLY, "true");
-    if (command != null) properties.setProperty(ConfigurationParameter.COMMAND, command);
-    if (credentials != null) properties.setProperty(ConfigurationParameter.CREDENTIALS, credentials);
+    properties.setProperty(LOG_LEVEL.getKey(), verboseLogging ? "verbose" : "normal");
+    if (configFile != null) properties.setProperty(CONFIG_FILE.getKey(), configFile);
+    if (port != null) properties.setProperty(PORT.getKey(), port.toString());
+    if (rootPath != null) properties.setProperty(ROOT_PATH.getKey(), rootPath);
+    if (rootDirectory != null) properties.setProperty(ROOT_DIRECTORY.getKey(), rootDirectory);
+    if (output != null) properties.setProperty(OUTPUT.getKey(), output);
+    if (logDirectory != null) properties.setProperty(LOG_DIRECTORY.getKey(), logDirectory);
+    if (daysTillVersionsExpire != null) properties.setProperty(VERSIONS_CONTROLLER_DAYS.getKey(), daysTillVersionsExpire.toString());
+    if (omitUpdate) properties.setProperty(OMITTING_UPDATES.getKey(), "true");
+    if (installOnly) properties.setProperty(INSTALL_ONLY.getKey(), "true");
+    if (command != null) properties.setProperty(COMMAND.getKey(), command);
+    if (credentials != null) properties.setProperty(CREDENTIALS.getKey(), credentials);
     return properties;
   }
 }

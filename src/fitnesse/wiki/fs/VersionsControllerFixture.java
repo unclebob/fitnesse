@@ -24,7 +24,7 @@ public class VersionsControllerFixture {
 
   public VersionsControllerFixture(String versionsControllerClassName) {
     Properties properties = new Properties();
-    properties.setProperty(ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, versionsControllerClassName);
+    properties.setProperty(ConfigurationParameter.VERSIONS_CONTROLLER_CLASS.getKey(), versionsControllerClassName);
 
     pageFactory = new FileSystemPageFactory(properties);
   }

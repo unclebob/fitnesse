@@ -5,6 +5,8 @@ package fitnesse.components;
 import java.lang.reflect.Constructor;
 import java.util.Properties;
 
+import fitnesse.ConfigurationParameter;
+
 public class ComponentFactory {
 
   private final Properties properties;
@@ -12,7 +14,6 @@ public class ComponentFactory {
   public ComponentFactory(Properties properties) {
     this.properties = properties;
   }
-
 
   public Object createComponent(String componentType, Class<?> defaultComponent) {
     String componentClassName = properties.getProperty(componentType);
@@ -22,7 +23,7 @@ public class ComponentFactory {
         componentClass = Class.forName(componentClassName);
       else
         componentClass = defaultComponent;
-  
+
       if (componentClass != null) {
         try {
           Constructor<?> constructor = componentClass.getConstructor(Properties.class);
@@ -38,11 +39,11 @@ public class ComponentFactory {
     return null;
   }
 
-  public Object createComponent(String componentType) {
-    return createComponent(componentType, null);
+  public Object createComponent(ConfigurationParameter componentType, Class<?> defaultComponent) {
+    return createComponent(componentType.getKey(), defaultComponent);
   }
 
-  public String getProperty(String propertyName) {
-    return properties.getProperty(propertyName);
+  public Object createComponent(ConfigurationParameter componentType) {
+    return createComponent(componentType, null);
   }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -23,13 +24,14 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
 public class PluginsLoader {
-
-  java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
+  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
+  private final Properties properties;
 
-  public PluginsLoader(ComponentFactory componentFactory) {
+  public PluginsLoader(ComponentFactory componentFactory, Properties properties) {
     this.componentFactory = componentFactory;
+    this.properties = properties;
   }
 
   public void loadPlugins(ResponderFactory responderFactory, SymbolProvider symbolProvider) throws PluginException {
@@ -82,8 +84,8 @@ public class PluginsLoader {
     });
   }
 
-  private String[] getListFromProperties(String propertyName) {
-    String value = componentFactory.getProperty(propertyName);
+  private String[] getListFromProperties(ConfigurationParameter propertyName) {
+    String value = properties.getProperty(propertyName.getKey());
     if (value == null)
       return null;
     else
@@ -159,8 +161,8 @@ public class PluginsLoader {
     });
   }
 
-  private void forEachNamedObject(final String property, Registrar registrar) throws PluginException {
-    String[] propList = getListFromProperties(property);
+  private void forEachNamedObject(final ConfigurationParameter parameter, Registrar registrar) throws PluginException {
+    String[] propList = getListFromProperties(parameter);
     if (propList != null) {
       for (String entry : propList) {
         entry = entry.trim();
