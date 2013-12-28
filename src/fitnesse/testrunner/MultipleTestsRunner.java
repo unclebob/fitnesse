@@ -40,11 +40,14 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   public void executeTestPages() throws IOException, InterruptedException {
-    internalExecuteTestPages();
-    allTestingComplete();
+    try {
+      internalExecuteTestPages();
+    } finally {
+      allTestingComplete();
+    }
   }
 
-  void allTestingComplete() throws IOException {
+  private void allTestingComplete() throws IOException {
     formatters.close();
   }
 

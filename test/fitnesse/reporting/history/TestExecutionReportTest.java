@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -7,15 +7,17 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.List;
 
+import fitnesse.FitNesseVersion;
+import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport.Expectation;
-import fitnesse.reporting.TestExecutionReport.InstructionResult;
-import fitnesse.reporting.TestExecutionReport.Row;
-import fitnesse.reporting.TestExecutionReport.Table;
-import fitnesse.reporting.TestExecutionReport.TestResult;
+import fitnesse.reporting.history.TestExecutionReport.Expectation;
+import fitnesse.reporting.history.TestExecutionReport.InstructionResult;
+import fitnesse.reporting.history.TestExecutionReport.Row;
+import fitnesse.reporting.history.TestExecutionReport.Table;
+import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -28,15 +30,9 @@ public class TestExecutionReportTest {
 
   @Before
   public void setup() throws Exception {
-    expected = new TestExecutionReport();
-    makeHeader();
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
-  }
-
-  private void makeHeader() {
-    expected.version = "version";
+    expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    expected.rootPath = "rootPath";
+    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
   }
 
   private String reportToXml(TestExecutionReport report) throws Exception {
@@ -61,7 +57,7 @@ public class TestExecutionReportTest {
     result.relativePageName = "relativePageName";
     result.tags = "tags";
     result.runTimeInMillis = "234";
-    expected.results.add(result);
+    expected.addResult(result);
   }
 
   @Test
@@ -90,7 +86,7 @@ public class TestExecutionReportTest {
   public void tablesShouldBeDeserialized() throws Exception {
     addTablesToResult();
     serializeAndDeserialize();
-    List<Table> tables = actual.results.get(0).tables;
+    List<Table> tables = actual.getResults().get(0).tables;
     assertEquals(1, tables.size());
     Table table = tables.get(0);
     assertEquals(2, table.size());
@@ -121,7 +117,7 @@ public class TestExecutionReportTest {
     addDummyResult();
     addInstructionsToResult();
     serializeAndDeserialize();
-    List<InstructionResult> instructions = actual.results.get(0).instructions;
+    List<InstructionResult> instructions = actual.getResults().get(0).instructions;
     assertEquals(2, instructions.size());
     InstructionResult ir1 = instructions.get(0);
     InstructionResult ir2 = instructions.get(1);

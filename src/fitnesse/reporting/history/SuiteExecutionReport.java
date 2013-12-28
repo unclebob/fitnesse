@@ -1,9 +1,10 @@
-package fitnesse.reporting;
+package fitnesse.reporting.history;
 
-import fitnesse.reporting.history.TestHistory;
-import fitnesse.testsystems.ExecutionResult;
+import fitnesse.FitNesseVersion;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
+import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -24,11 +25,12 @@ public class SuiteExecutionReport extends ExecutionReport {
   private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
 
   public SuiteExecutionReport(Document xmlDocument) throws Exception {
-    super(xmlDocument);
-    unpackXml();
+    super();
+    unpackXml(xmlDocument);
   }
 
-  public SuiteExecutionReport() {
+  public SuiteExecutionReport(FitNesseVersion version, String rootPath) {
+    super(version, rootPath);
   }
 
   @Override
@@ -143,6 +145,10 @@ public class SuiteExecutionReport extends ExecutionReport {
       return pageName;
     }
 
+    public String getRelativePageName() {
+      return PathParser.parse(pageName).last();
+    }
+
     public long getTime() {
       return time;
     }
@@ -160,7 +166,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
       return pageHistoryFormatter.format(new Date(time));
     }
 

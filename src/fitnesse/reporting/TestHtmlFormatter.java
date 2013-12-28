@@ -23,14 +23,22 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
+  public void testSystemStarted(TestSystem testSystem) {
+    super.testSystemStarted(testSystem);
+    if (isEmpty(getPage())) {
+      addMessageForBlankHtml();
+    }
+  }
+
+  @Override
   public void testStarted(WikiTestPage testPage) {
     latestTestTime = new TimeMeasurement().start();
 	  super.testStarted(testPage);
     writeData(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
-  @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  private boolean isEmpty(WikiPage page) {
+    return page.getData().getContent().length() == 0;
   }
 
   @Override
@@ -65,8 +73,7 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     return summaryContent;
   }
 
-  @Override
-  public void addMessageForBlankHtml() {
+  private void addMessageForBlankHtml() {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");
     h2.add("Oops!  Did you forget to add to some content to this ?");

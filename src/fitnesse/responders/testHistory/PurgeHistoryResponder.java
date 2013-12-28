@@ -12,8 +12,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.reporting.history.TestHistory;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.run.TestResponder;
 import util.Clock;
 import util.FileUtil;
 
@@ -128,7 +128,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   private Date tryExtractDateFromTestHistoryName(String testHistoryName) throws ParseException {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
     String dateString = testHistoryName.split("_")[0];
     return dateFormat.parse(dateString);
   }

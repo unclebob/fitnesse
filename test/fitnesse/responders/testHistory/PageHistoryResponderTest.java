@@ -16,6 +16,7 @@ import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
+import fitnesse.responders.run.TestResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -30,8 +31,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.reporting.SuiteExecutionReport;
-import fitnesse.reporting.TestExecutionReport;
+import fitnesse.reporting.history.SuiteExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -40,7 +41,7 @@ import fitnesse.wiki.WikiPage;
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
@@ -338,11 +339,9 @@ public class PageHistoryResponderTest {
   }
 
   private void addDummySuiteResult(File resultFile) throws Exception {
-    SuiteExecutionReport report = makeDummySuiteResponse();
-    report.version = fitNesseVersion.toString();
+    SuiteExecutionReport report = new SuiteExecutionReport(fitNesseVersion, "SuitePage");
     report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
     report.getFinalCounts().add(new TestSummary(4,5,6,7));
-    report.rootPath = "SuitePage";
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when (timeMeasurement.elapsed()).thenReturn(12321L);
     report.setTotalRunTimeInMillis(timeMeasurement);
@@ -364,10 +363,7 @@ public class PageHistoryResponderTest {
     Template template = context.pageFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
     FileWriter fileWriter = new FileWriter(resultFile);
     template.merge(velocityContext, fileWriter);
-    fileWriter.close();  }
-
-  private SuiteExecutionReport makeDummySuiteResponse() {
-    return new SuiteExecutionReport();
+    fileWriter.close();
   }
 
   private void makeResultForDate(String page, String resultDate) throws Exception {
@@ -392,12 +388,10 @@ public class PageHistoryResponderTest {
   }
 
   private TestExecutionReport makeDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport();
-    testResponse.version = fitNesseVersion.toString();
-    testResponse.rootPath = "rootPath";
+    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
     testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.results.add(result);
+    testResponse.addResult(result);
     result.right = "11";
     result.wrong = "22";
     result.ignores = "33";
@@ -469,12 +463,10 @@ public class PageHistoryResponderTest {
 
 
   private TestExecutionReport makeBadDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport();
-    testResponse.version = "v1";
-    testResponse.rootPath = "rootPath";
+    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
     testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.results.add(result);
+    testResponse.addResult(result);
     result.right = "xx";
     result.wrong = "22";
     result.ignores = "33";
