@@ -29,14 +29,9 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class TestXmlFormatter extends BaseFormatter {
-
-  public interface WriterFactory {
-    Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
-  }
-
   private WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
-  protected TimeMeasurement totalTimeMeasurement;
+  private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
   protected final TestExecutionReport testResponse;
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
@@ -46,11 +41,20 @@ public class TestXmlFormatter extends BaseFormatter {
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
+    resetTimer();
+  }
+
+  public long startedAt() {
+    return currentTestStartTime.startedAt();
+  }
+
+  public long runTime() {
+    return currentTestStartTime.elapsed();
   }
 
   @Override
   public void testStarted(WikiTestPage test) {
-    currentTestStartTime = new TimeMeasurement().start();
+    resetTimer();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
   }
 
@@ -150,12 +154,16 @@ public class TestXmlFormatter extends BaseFormatter {
     writeResults();
   }
 
+  private void resetTimer() {
+    currentTestStartTime = new TimeMeasurement().start();
+  }
+
   protected void setTotalRunTimeOnReport(TimeMeasurement totalTimeMeasurement) {
     testResponse.setTotalRunTimeInMillis(totalTimeMeasurement);
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), currentTestStartTime.startedAt()));
+    writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), totalTimeMeasurement.startedAt()));
   }
 
   @Override
@@ -186,6 +194,10 @@ public class TestXmlFormatter extends BaseFormatter {
     if (outputBuffer == null)
       outputBuffer = new StringBuilder();
     outputBuffer.append(output);
+  }
+
+  public interface WriterFactory {
+    Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
   }
 
 }

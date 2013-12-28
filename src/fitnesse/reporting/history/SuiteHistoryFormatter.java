@@ -25,7 +25,6 @@ import fitnesse.wiki.WikiPage;
 public class SuiteHistoryFormatter extends BaseFormatter {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   private SuiteExecutionReport suiteExecutionReport;
-  private TimeMeasurement timeMeasurement;
   private final TimeMeasurement totalTimeMeasurement;
   private TestXmlFormatter.WriterFactory writerFactory;
   private TimeMeasurement suiteTime;
@@ -54,8 +53,7 @@ public class SuiteHistoryFormatter extends BaseFormatter {
     String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
     testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
     testHistoryFormatter.testStarted(test);
-    timeMeasurement = new TimeMeasurement().start();
-    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt());
+    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
   }
 
   @Override
@@ -67,12 +65,11 @@ public class SuiteHistoryFormatter extends BaseFormatter {
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     testHistoryFormatter.testComplete(test, testSummary);
     testHistoryFormatter.close();
-    testHistoryFormatter = null;
-    timeMeasurement.stop();
     referenceToCurrentTest.setTestSummary(testSummary);
-    referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
+    referenceToCurrentTest.setRunTimeInMillis(testHistoryFormatter.runTime());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
+    testHistoryFormatter = null;
     super.testComplete(test, testSummary);
   }
 
