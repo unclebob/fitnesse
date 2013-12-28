@@ -30,6 +30,7 @@ public class ContextConfigurator {
   public static final int DEFAULT_VERSION_DAYS = 14;
   public static final int DEFAULT_COMMAND_PORT = 9123;
   public static final int DEFAULT_PORT = 80;
+  public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   private final Properties properties;
 

@@ -4,14 +4,12 @@ package fitnesseMain;
 
 import java.util.Properties;
 
-import fitnesse.ConfigurationParameter;
 import util.CommandLine;
 
 import static fitnesse.ConfigurationParameter.*;
 import static fitnesse.ContextConfigurator.*;
 
 public class Arguments {
-  public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   private final CommandLine commandLine = new CommandLine(
           "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output]");
