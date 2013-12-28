@@ -22,17 +22,6 @@ import fitnesse.wikitext.parser.SymbolProvider;
  * Please call this only once: some features are registered on (static) factories.
  */
 public class ContextConfigurator {
-  public static final String CONFIG_FILE = "ConfigFile";
-  public static final String LOG_LEVEL = "LogLevel";
-  public static final String LOG_DIRECTORY = "LogDirectory";
-  public static final String CREDENTIALS = "Credentials";
-  public static final String ROOT_PATH = "RootPath";
-  public static final String ROOT_DIRECTORY = "FitNesseRoot";
-  public static final String PORT = "Port";
-  public static final String OUTPUT = "RedirectOutput";
-  public static final String OMITTING_UPDATES = "OmittingUpdates";
-  public static final String INSTALL_ONLY = "InstallOnly";
-  public static final String COMMAND = "Command";
 
   public static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
@@ -50,25 +39,25 @@ public class ContextConfigurator {
 
     ComponentFactory componentFactory = new ComponentFactory(properties);
 
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ConfigurationParameter.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     FitNesseContext.Builder builder = new FitNesseContext.Builder();
     builder.properties = properties;
     builder.port = getPort();
-    builder.rootPath = properties.getProperty(ROOT_PATH, DEFAULT_PATH);
-    builder.rootDirectoryName = properties.getProperty(ROOT_DIRECTORY, DEFAULT_ROOT);
+    builder.rootPath = properties.getProperty(ConfigurationParameter.ROOT_PATH, DEFAULT_PATH);
+    builder.rootDirectoryName = properties.getProperty(ConfigurationParameter.ROOT_DIRECTORY, DEFAULT_ROOT);
 
-    builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
+    builder.versionsController = (VersionsController) componentFactory.createComponent(ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     builder.versionsController.setHistoryDepth(getVersionDays());
-    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ConfigurationParameter.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
 
     builder.root = wikiPageFactory.makeRootPage(builder.rootPath, builder.rootDirectoryName);
 
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
 
-    builder.logger = pluginsLoader.makeLogger(properties.getProperty(LOG_DIRECTORY));
-    builder.authenticator = pluginsLoader.makeAuthenticator(properties.getProperty(CREDENTIALS));
+    builder.logger = pluginsLoader.makeLogger(properties.getProperty(ConfigurationParameter.LOG_DIRECTORY));
+    builder.authenticator = pluginsLoader.makeAuthenticator(properties.getProperty(ConfigurationParameter.CREDENTIALS));
 
     FitNesseContext context = builder.createFitNesseContext();
 
@@ -103,7 +92,7 @@ public class ContextConfigurator {
   }
 
   public int getVersionDays() {
-    String days = properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS);
+    String days = properties.getProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS);
     return days == null ? DEFAULT_VERSION_DAYS : Integer.parseInt(days);
   }
 

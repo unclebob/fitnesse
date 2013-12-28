@@ -1,5 +1,6 @@
 package fitnesseMain;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.PluginException;
@@ -44,7 +45,7 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Properties properties) throws Exception {
-    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(ContextConfigurator.LOG_LEVEL)));
+    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(ConfigurationParameter.LOG_LEVEL)));
     loadPlugins();
 
     FitNesseContext context = loadContext(properties);
@@ -57,7 +58,7 @@ public class FitNesseMain {
   }
 
   private boolean update(FitNesseContext context) throws IOException {
-    if (!"true".equalsIgnoreCase(context.getProperty(ContextConfigurator.OMITTING_UPDATES))) {
+    if (!"true".equalsIgnoreCase(context.getProperty(ConfigurationParameter.OMITTING_UPDATES))) {
       Updater updater = new UpdaterImplementation(context);
       return updater.update();
     }
@@ -69,12 +70,12 @@ public class FitNesseMain {
   }
 
   Integer launch(FitNesseContext context) throws Exception {
-    if (!"true".equalsIgnoreCase(context.getProperty(ContextConfigurator.INSTALL_ONLY))) {
+    if (!"true".equalsIgnoreCase(context.getProperty(ConfigurationParameter.INSTALL_ONLY))) {
       boolean started = context.fitNesse.start();
       if (started) {
-        String command = context.getProperty(ContextConfigurator.COMMAND);
+        String command = context.getProperty(ConfigurationParameter.COMMAND);
         if (command != null) {
-          String output = context.getProperty(ContextConfigurator.OUTPUT);
+          String output = context.getProperty(ConfigurationParameter.OUTPUT);
           return executeSingleCommand(context.fitNesse, command, output);
         }
       }

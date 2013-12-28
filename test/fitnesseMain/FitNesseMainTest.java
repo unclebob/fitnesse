@@ -11,9 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
-import java.net.BindException;
 
-import fitnesse.ContextConfigurator;
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -38,7 +37,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testInstallOnly() throws Exception {
-    context.getProperties().setProperty(ContextConfigurator.INSTALL_ONLY, "true");
+    context.getProperties().setProperty(ConfigurationParameter.INSTALL_ONLY, "true");
     FitNesse fitnesse = mockFitNesse();
     new FitNesseMain().launch(context);
     verify(fitnesse, never()).start();
@@ -46,8 +45,8 @@ public class FitNesseMainTest {
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    context.getProperties().setProperty(ContextConfigurator.OMITTING_UPDATES, "true");
-    context.getProperties().setProperty(ContextConfigurator.COMMAND, "command");
+    context.getProperties().setProperty(ConfigurationParameter.OMITTING_UPDATES, "true");
+    context.getProperties().setProperty(ConfigurationParameter.COMMAND, "command");
     FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
     int exitCode = new FitNesseMain().launch(context);

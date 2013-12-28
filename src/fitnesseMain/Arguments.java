@@ -4,7 +4,7 @@ package fitnesseMain;
 
 import java.util.Properties;
 
-import fitnesse.components.ComponentFactory;
+import fitnesse.ConfigurationParameter;
 import util.CommandLine;
 
 import static fitnesse.ContextConfigurator.*;
@@ -78,18 +78,18 @@ public class Arguments {
 
   public Properties asProperties() {
     Properties properties = new Properties();
-    properties.setProperty(LOG_LEVEL, verboseLogging ? "verbose" : "normal");
-    if (configFile != null) properties.setProperty(CONFIG_FILE, configFile);
-    if (port != null) properties.setProperty(PORT, port.toString());
-    if (rootPath != null) properties.setProperty(ROOT_PATH, rootPath);
-    if (rootDirectory != null) properties.setProperty(ROOT_DIRECTORY, rootDirectory);
-    if (output != null) properties.setProperty(OUTPUT, output);
-    if (logDirectory != null) properties.setProperty(LOG_DIRECTORY, logDirectory);
-    if (daysTillVersionsExpire != null) properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, daysTillVersionsExpire.toString());
-    if (omitUpdate) properties.setProperty(OMITTING_UPDATES, "true");
-    if (installOnly) properties.setProperty(INSTALL_ONLY, "true");
-    if (command != null) properties.setProperty(COMMAND, command);
-    if (credentials != null) properties.setProperty(CREDENTIALS, credentials);
+    properties.setProperty(ConfigurationParameter.LOG_LEVEL, verboseLogging ? "verbose" : "normal");
+    if (configFile != null) properties.setProperty(ConfigurationParameter.CONFIG_FILE, configFile);
+    if (port != null) properties.setProperty(ConfigurationParameter.PORT, port.toString());
+    if (rootPath != null) properties.setProperty(ConfigurationParameter.ROOT_PATH, rootPath);
+    if (rootDirectory != null) properties.setProperty(ConfigurationParameter.ROOT_DIRECTORY, rootDirectory);
+    if (output != null) properties.setProperty(ConfigurationParameter.OUTPUT, output);
+    if (logDirectory != null) properties.setProperty(ConfigurationParameter.LOG_DIRECTORY, logDirectory);
+    if (daysTillVersionsExpire != null) properties.setProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS, daysTillVersionsExpire.toString());
+    if (omitUpdate) properties.setProperty(ConfigurationParameter.OMITTING_UPDATES, "true");
+    if (installOnly) properties.setProperty(ConfigurationParameter.INSTALL_ONLY, "true");
+    if (command != null) properties.setProperty(ConfigurationParameter.COMMAND, command);
+    if (credentials != null) properties.setProperty(ConfigurationParameter.CREDENTIALS, credentials);
     return properties;
   }
 }

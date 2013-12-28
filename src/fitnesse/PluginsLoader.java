@@ -22,8 +22,6 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
-import static fitnesse.components.ComponentFactory.*;
-
 public class PluginsLoader {
 
   java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
@@ -35,7 +33,7 @@ public class PluginsLoader {
   }
 
   public void loadPlugins(ResponderFactory responderFactory, SymbolProvider symbolProvider) throws PluginException {
-    String[] responderPlugins = getListFromProperties(PLUGINS);
+    String[] responderPlugins = getListFromProperties(ConfigurationParameter.PLUGINS);
     if (responderPlugins != null) {
       for (String responderPlugin : responderPlugins) {
         Class<?> pluginClass = forName(responderPlugin);
@@ -76,7 +74,7 @@ public class PluginsLoader {
   }
 
   public void loadResponders(final ResponderFactory responderFactory) throws PluginException {
-    forEachNamedObject(RESPONDERS, new Registrar() {
+    forEachNamedObject(ConfigurationParameter.RESPONDERS, new Registrar() {
       @Override public void register(String key, Class clazz) {
         responderFactory.addResponder(key, clazz);
         LOG.info("Loaded responder " + key + ": " + clazz.getName());
@@ -111,12 +109,12 @@ public class PluginsLoader {
   }
 
   public Authenticator getAuthenticator(Authenticator defaultAuthenticator) {
-    Authenticator authenticator = (Authenticator) componentFactory.createComponent(AUTHENTICATOR);
+    Authenticator authenticator = (Authenticator) componentFactory.createComponent(ConfigurationParameter.AUTHENTICATOR);
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
   public void loadSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
-    String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
+    String[] symbolTypeNames = getListFromProperties(ConfigurationParameter.SYMBOL_TYPES);
     if (symbolTypeNames != null) {
       for (String symbolTypeName : symbolTypeNames) {
         Class<?> symbolTypeClass = forName(symbolTypeName.trim());
@@ -127,7 +125,7 @@ public class PluginsLoader {
   }
 
   public ContentFilter loadContentFilter() {
-    ContentFilter filter = (ContentFilter) componentFactory.createComponent(CONTENT_FILTER);
+    ContentFilter filter = (ContentFilter) componentFactory.createComponent(ConfigurationParameter.CONTENT_FILTER);
     if (filter != null) {
       LOG.info("Content filter installed: " + filter.getClass().getName());
     }
@@ -135,7 +133,7 @@ public class PluginsLoader {
   }
 
   public void loadSlimTables() throws PluginException {
-    forEachNamedObject(SLIM_TABLES, new Registrar() {
+    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar() {
       @Override public void register(String key, Class clazz) {
         SlimTableFactory.addTableType(key, (Class<? extends SlimTable>) clazz);
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
@@ -144,7 +142,7 @@ public class PluginsLoader {
   }
 
   public void loadCustomComparators() throws PluginException {
-    forEachNamedObject(CUSTOM_COMPARATORS, new Registrar() {
+    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar() {
       @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
         CustomComparatorRegistry.addCustomComparator(key, (CustomComparator) clazz.newInstance());
         LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
@@ -153,7 +151,7 @@ public class PluginsLoader {
   }
 
   public void loadTestSystems(final TestSystemFactoryRegistrar registrar) throws PluginException {
-    forEachNamedObject(TEST_SYSTEMS, new Registrar() {
+    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar() {
       @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
         registrar.registerTestSystemFactory(key, (TestSystemFactory) clazz.newInstance());
         LOG.info("Loaded test system " + key + ": " + clazz.getName());

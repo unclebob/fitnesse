@@ -16,13 +16,10 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlTable;
@@ -70,7 +67,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testAddPlugins() throws Exception {
-    testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
+    testProperties.setProperty(ConfigurationParameter.PLUGINS, DummyPlugin.class.getName());
 
     FileSystemPageFactory wikiPageFactory = new FileSystemPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
@@ -92,7 +89,7 @@ public class PluginsLoaderTest {
   @Test
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
-    testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
+    testProperties.setProperty(ConfigurationParameter.RESPONDERS, respondersValue);
 
     ResponderFactory responderFactory = new ResponderFactory(".");
     loader.loadResponders(responderFactory);
@@ -104,7 +101,7 @@ public class PluginsLoaderTest {
   @Test
   public void testWikiWidgetPlugins() throws Exception {
     String symbolValues = Today.class.getName();
-    testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
+    testProperties.setProperty(ConfigurationParameter.SYMBOL_TYPES, symbolValues);
 
     loader.loadSymbolTypes(testProvider);
 
@@ -120,7 +117,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testAuthenticatorCustomCreation() throws Exception {
-    testProperties.setProperty(ComponentFactory.AUTHENTICATOR, SimpleAuthenticator.class.getName());
+    testProperties.setProperty(ConfigurationParameter.AUTHENTICATOR, SimpleAuthenticator.class.getName());
 
     Authenticator authenticator = loader.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
@@ -161,7 +158,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void haveContentFilter() throws Exception {
-    testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
+    testProperties.setProperty(ConfigurationParameter.CONTENT_FILTER, TestContentFilter.class.getName());
 
     ContentFilter filter = loader.loadContentFilter();
     assertNotNull(filter);
@@ -170,7 +167,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testSlimTablesCreation() throws PluginException {
-    testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test");
@@ -180,7 +177,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testSlimTablesWithColonCreation() throws PluginException {
-    testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
     loader.loadSlimTables();
 
     HtmlTable table = makeMockTable("test:");
@@ -190,7 +187,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testCustomComparatorsCreation() throws PluginException {
-    testProperties.setProperty(ComponentFactory.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
+    testProperties.setProperty(ConfigurationParameter.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
     loader.loadCustomComparators();
 
     CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
@@ -200,7 +197,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testTestSystemCreation() throws PluginException {
-    testProperties.setProperty(ComponentFactory.TEST_SYSTEMS, "foo:" + FooTestSystemFactory.class.getName());
+    testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS, "foo:" + FooTestSystemFactory.class.getName());
     TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
     loader.loadTestSystems(registrar);
 
