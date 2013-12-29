@@ -201,8 +201,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     @Override
     public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
-      String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
-      String[] arguments = ("-x " + fitArguments).trim().split(" ");
+      String[] arguments = new String[] { "-x", hostName, Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
       this.commandRunner = new MockCommandRunner();

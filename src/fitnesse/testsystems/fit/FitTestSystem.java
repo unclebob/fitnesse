@@ -45,6 +45,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public void start() {
+    // TODO: start a server socket (thread) here
     client.start();
     testSystemStarted(this);
   }
@@ -71,6 +72,7 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
+    // TODO: stop socket catcher thread
     testSystemStopped(client.getExecutionLog(), null);
   }
 
