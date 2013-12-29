@@ -11,7 +11,6 @@ public class TestHelper {
   private final String fitNesseRootPath;
   private final String outputPath;
   private final TestSystemListener resultListener;
-  
   private boolean debug = true;
   
   public static final String PAGE_TYPE_SUITE="suite";
@@ -48,29 +47,12 @@ public class TestHelper {
             "-o",
             "-p", String.valueOf(port),
             "-d", fitNesseRootPath,
-            "-c", getCommand(pageName, pageType, suiteFilter, excludeSuiteFilter));
+            "-c", new CommandBuilder(pageName, pageType).withSuiteFilter(suiteFilter).withExcludeSuiteFilter(excludeSuiteFilter).withDebug(debug).build());
     new FitNesseMain().launchFitNesse(arguments);
     return testFormatter.getTotalSummary();
   }
   public  TestSummary run(String pageName, String pageType, String suiteFilter) throws Exception{
     return run(pageName, pageType, suiteFilter, 0);
-  }
-  String getCommand(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) {
-    String command = pageName+"?"+pageType+getCommandArgs();
-    if (suiteFilter!=null)
-      command = command + "&suiteFilter=" + suiteFilter;
-    if (excludeSuiteFilter!=null)
-      command = command + "&excludeSuiteFilter=" + excludeSuiteFilter;
-    return command;
-  }
-
-  private static final String COMMON_ARGS = "&nohistory=true&format=java";
-  private static final String DEBUG_ARG = "&debug=true";
-  private String getCommandArgs() {
-    if (debug) {
-      return DEBUG_ARG + COMMON_ARGS;
-    }
-    return COMMON_ARGS;
   }
   
   public void setDebugMode(boolean enabled) {
