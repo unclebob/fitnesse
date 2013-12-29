@@ -77,7 +77,7 @@ public class JUnitHelperExampleTest {
 
   @Test
   public void assertSuitePasses_appliesSuiteFilterIfDefined() throws Exception {
-    helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "testSuite");
+    helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "testSuite", null);
 
     JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
     assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
@@ -88,7 +88,7 @@ public class JUnitHelperExampleTest {
   @Test
   public void helperWillFailTestsIfNoTestsAreExecuted() throws Exception{
     try{
-      helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "nonExistingFilter");
+      helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "nonExistingFilter", null);
     
     }
     catch (AssertionError ae){

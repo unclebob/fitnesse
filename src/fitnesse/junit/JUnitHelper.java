@@ -42,26 +42,14 @@ public class JUnitHelper {
   }
 
   public void assertTestPasses(String testName) throws Exception {
-    assertPasses(testName, PAGE_TYPE_TEST, null);
-  }
-
-  public void assertSuitePasses(String suiteName) throws Exception {
-    assertPasses(suiteName, PAGE_TYPE_SUITE, null);
-  }
-
-  public void assertSuitePasses(String suiteName, String suiteFilter) throws Exception {
-    assertPasses(suiteName, PAGE_TYPE_SUITE, suiteFilter);
+    assertPasses(testName, PAGE_TYPE_TEST, null, null);
   }
 
   public void assertSuitePasses(String suiteName, String suiteFilter, String excludeSuiteFilter) throws Exception {
     assertPasses(suiteName, PAGE_TYPE_SUITE, suiteFilter, excludeSuiteFilter);
   }
 
-  public void assertPasses(String pageName, String pageType, String suiteFilter) throws Exception {
-    assertPasses(pageName, pageType, suiteFilter, null);
-  }
-
-  public void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception {
+  private void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception {
     TestSummary summary = run(pageName, pageType, suiteFilter, excludeSuiteFilter);
     assertEquals("wrong", 0, summary.wrong);
     assertEquals("exceptions", 0, summary.exceptions);
@@ -73,7 +61,7 @@ public class JUnitHelper {
               pageName, summary.toString());
   }
 
-  public  TestSummary run(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception{
+  private TestSummary run(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception{
     JavaFormatter testFormatter=JavaFormatter.getInstance(pageName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath));
     testFormatter.setListener(resultListener);
