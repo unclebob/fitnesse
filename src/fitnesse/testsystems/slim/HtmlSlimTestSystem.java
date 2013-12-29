@@ -9,8 +9,10 @@ import java.util.List;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wikitext.parser.ParsedPage;
 import org.htmlparser.Parser;
@@ -40,7 +42,12 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
-        processTable(theTable);
+        try {
+          processTable(theTable);
+        } catch (SyntaxError e) {
+          String tableName = theTable.getTable().getCellContents(0, 0);
+          theTable.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+        }
 
         String html = createHtmlResults(startWithTable, nextTable);
         testOutputChunk(html);

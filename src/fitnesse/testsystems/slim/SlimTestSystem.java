@@ -113,7 +113,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
-  protected void processTable(SlimTable table) throws IOException {
+  protected void processTable(SlimTable table) throws IOException, SyntaxError {
     List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
     if (!stopTestCalled) {
@@ -132,15 +132,9 @@ public abstract class SlimTestSystem implements TestSystem {
     evaluateTables(assertions, instructionResults);
   }
 
-  private List<SlimAssertion> createAssertions(SlimTable table) {
+  private List<SlimAssertion> createAssertions(SlimTable table) throws SyntaxError {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    try {
-      assertions.addAll(table.getAssertions());
-    } catch (SyntaxError e) {
-      String tableName = table.getTable().getCellContents(0, 0);
-      // TODO: remove: raise TableFormatException or something like that.
-      table.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
-    }
+    assertions.addAll(table.getAssertions());
     return assertions;
   }
 
