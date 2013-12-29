@@ -3,6 +3,8 @@ Various plugins are supported by FitNesse.
 !3 Overview
 Below are a list of customizations you can make via this plugin architecture.  Each plugin will require an entry in the ''plugins.properties'' file.  This should be located in the working directory of FitNesse.   If the file does not exist FitNesse will run normally.  To enable a plugin, create this file, and add the specified entries.  All plugins will require complied Java code so make sure that the classpath contains an entry to locate your plugins.
 
+See also: CommandLineArguments.
+
 !3 Theme
 ''required property:'' '''!-Theme-! = <theme name>'''
 
