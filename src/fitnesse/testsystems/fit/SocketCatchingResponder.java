@@ -1,18 +1,15 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.testsystems.fit;
 
 import java.net.Socket;
 
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.testsystems.fit.FitTestSystem;
-import fitnesse.testsystems.fit.SocketDealer;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
-import fitnesse.testsystems.fit.SocketDoner;
 
 public class SocketCatchingResponder implements Responder, SocketDoner, ResponsePuppeteer {
   private int ticketNumber;

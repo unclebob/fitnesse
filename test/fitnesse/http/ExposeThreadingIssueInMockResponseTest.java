@@ -1,28 +1,23 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.http;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.testsystems.fit.FitTestSystem;
-import fitnesse.testsystems.fit.SocketDealer;
-import fitnesse.wiki.WikiPageUtil;
-import org.junit.Assert;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.fit.FitSocketReceiver;
+import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ExposeThreadingIssueInMockResponseTest {
   private WikiPage root;

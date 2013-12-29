@@ -20,6 +20,7 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.testsystems.fit.SocketCatchingResponder;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
@@ -219,11 +220,6 @@ public class ResponderFactoryTest {
   @Test
   public void testSocketCatcher() throws Exception {
     assertResponderTypeMatchesInput("socketCatcher", SocketCatchingResponder.class);
-  }
-
-  @Test
-  public void testFitClient() throws Exception {
-    assertResponderTypeMatchesInput("fitClient", FitClientResponder.class);
   }
 
   @Test
