@@ -363,7 +363,7 @@ public class ScriptTable extends SlimTable {
       try {
         table.addColumnToRow(getRow(), actual);
       } catch (Throwable e) {
-        return SlimTestResult.fail(actual, SlimTestSystem.exceptionToString(e));
+        return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();
     }

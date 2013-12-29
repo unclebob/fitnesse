@@ -66,7 +66,7 @@ public class ScriptTableExtensionTest {
           int addedColumn = table.getColumnCountInRow(row) - 1;
           table.substitute(addedColumn, row, actual);
         } catch (Throwable e) {
-          return SlimTestResult.fail(actual, SlimTestSystem.exceptionToString(e));
+          return SlimTestResult.fail(actual, e.getMessage());
         }
         return SlimTestResult.plain();
       }

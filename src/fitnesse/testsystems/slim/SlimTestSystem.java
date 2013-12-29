@@ -164,12 +164,6 @@ public abstract class SlimTestSystem implements TestSystem {
     return exceptionMessage;
   }
 
-  public static String exceptionToString(Throwable e) {
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter pw = new PrintWriter(stringWriter);
-    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
-  }
-
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
     for (SlimAssertion a : assertions) {
       try {
