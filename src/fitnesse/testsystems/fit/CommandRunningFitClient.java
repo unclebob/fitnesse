@@ -24,12 +24,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
     this.commandRunningStrategy = commandRunningStrategy;
-    commandRunningStrategy.init(this);
   }
 
   public void start() {
     try {
-      commandRunningStrategy.start();
+      commandRunningStrategy.start(this);
       waitForConnection();
     } catch (Exception e) {
       exceptionOccurred(e);
@@ -75,9 +74,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   public interface CommandRunningStrategy {
-    void init(CommandRunningFitClient fitClient);
-
-    void start() throws IOException;
+    void start(CommandRunningFitClient fitClient) throws IOException;
 
     void join();
 
@@ -96,19 +93,12 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     private Thread timeoutThread;
     private Thread earlyTerminationThread;
     private CommandRunner commandRunner;
-    private CommandRunningFitClient fitClient;
 
     public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables, int port, int ticketNumber) {
       this.command = command;
       this.environmentVariables = environmentVariables;
       this.port = port;
       this.ticketNumber = ticketNumber;
-    }
-
-    @Override
-    public void init(CommandRunningFitClient fitClient) {
-      this.fitClient = fitClient;
-      makeCommandRunner();
     }
 
     private void makeCommandRunner() {
@@ -118,7 +108,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
 
     @Override
-    public void start() throws IOException {
+    public void start(CommandRunningFitClient fitClient) throws IOException {
+      makeCommandRunner();
       commandRunner.asynchronousStart();
       timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
       timeoutThread.start();
@@ -216,15 +207,12 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
 
     @Override
-    public void init(CommandRunningFitClient fitClient) {
+    public void start(CommandRunningFitClient fitClient) throws IOException {
       String[] arguments = new String[] { "-x", getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
       this.commandRunner = new MockCommandRunner();
-    }
 
-    @Override
-    public void start() throws IOException {
       commandRunner.asynchronousStart();
     }
 
