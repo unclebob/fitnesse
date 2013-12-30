@@ -141,7 +141,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   }
 
   protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
-    client = new CommandRunningFitClient(this, port, socketDealer, runningStrategy);
+    client = new CommandRunningFitClient(port, socketDealer, runningStrategy);
+    client.addFitClientListener(this);
     return client;
   }
 

@@ -30,8 +30,9 @@ public class FitClientTest implements FitClientListener {
   @Before
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
-    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
+    client = new CommandRunningFitClient(port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner(
         "java -cp classes fit.FitServer -v", null));
+    client.addFitClientListener(this);
     receiver = new CustomFitSocketReceiver(port);
   }
 
@@ -92,7 +93,8 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client.addFitClientListener(this);
     client.start();
     Thread.sleep(100);
     client.join();
@@ -104,7 +106,8 @@ public class FitClientTest implements FitClientListener {
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient(this, port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(port, new SocketDealer(), new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client.addFitClientListener(this);
     client.start();
     Thread.sleep(50);
     client.join();

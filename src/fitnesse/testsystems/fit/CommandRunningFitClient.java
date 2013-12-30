@@ -22,8 +22,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   private final CommandRunningStrategy commandRunningStrategy;
 
-  public CommandRunningFitClient(FitClientListener listener, int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
-    super(listener);
+  public CommandRunningFitClient(int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
+    super();
     this.commandRunningStrategy = commandRunningStrategy;
     int ticketNumber = socketDealer.seekingSocket(this);
     String hostName = getLocalhostName();
