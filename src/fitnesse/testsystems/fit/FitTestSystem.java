@@ -140,9 +140,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
     int ticketNumber = socketDealer.seekingSocket(this);
-    String hostName = getLocalhostName();
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, hostName, port, ticketNumber);
+            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, port, ticketNumber);
 
     return buildFitClient(runningStrategy);
   }
@@ -151,14 +150,6 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     client = new CommandRunningFitClient(runningStrategy);
     client.addFitClientListener(this);
     return client;
-  }
-
-  protected static String getLocalhostName() {
-    try {
-      return java.net.InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
   }
 
   @Override
