@@ -16,19 +16,20 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
+  private final int ticketNumber;
+  private final CommandRunningStrategy commandRunningStrategy;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
-  private final CommandRunningStrategy commandRunningStrategy;
-
   public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
+    this.ticketNumber = FitTestSystem.socketDealer().seekingSocket(this);
     this.commandRunningStrategy = commandRunningStrategy;
   }
 
   public void start() {
     try {
-      commandRunningStrategy.start(this);
+      commandRunningStrategy.start(this, ticketNumber);
       waitForConnection();
     } catch (Exception e) {
       exceptionOccurred(e);
@@ -74,7 +75,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   public interface CommandRunningStrategy {
-    void start(CommandRunningFitClient fitClient) throws IOException;
+    void start(CommandRunningFitClient fitClient, int ticketNumber) throws IOException;
 
     void join();
 
@@ -89,27 +90,25 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     private final String command;
     private final Map<String, String> environmentVariables;
     private final int port;
-    private final int ticketNumber;
     private Thread timeoutThread;
     private Thread earlyTerminationThread;
     private CommandRunner commandRunner;
 
-    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables, int port, int ticketNumber) {
+    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables, int port) {
       this.command = command;
       this.environmentVariables = environmentVariables;
       this.port = port;
-      this.ticketNumber = ticketNumber;
     }
 
-    private void makeCommandRunner() {
+    private void makeCommandRunner(int ticketNumber) {
       String fitArguments = getLocalhostName() + SPACE + port + SPACE + ticketNumber;
       String commandLine = command + SPACE + fitArguments;
       this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
     }
 
     @Override
-    public void start(CommandRunningFitClient fitClient) throws IOException {
-      makeCommandRunner();
+    public void start(CommandRunningFitClient fitClient, int ticketNumber) throws IOException {
+      makeCommandRunner(ticketNumber);
       commandRunner.asynchronousStart();
       timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
       timeoutThread.start();
@@ -196,18 +195,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private final String testRunner;
     private final int port;
-    private final int ticketNumber;
     private Thread fastFitServer;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(String testRunner, int port, int ticketNumber) {
+    public InProcessCommandRunner(String testRunner, int port) {
       this.testRunner = testRunner;
       this.port = port;
-      this.ticketNumber = ticketNumber;
     }
 
     @Override
-    public void start(CommandRunningFitClient fitClient) throws IOException {
+    public void start(CommandRunningFitClient fitClient, int ticketNumber) throws IOException {
       String[] arguments = new String[] { "-x", getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();

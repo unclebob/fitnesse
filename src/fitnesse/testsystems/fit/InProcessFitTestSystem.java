@@ -19,7 +19,7 @@ public class InProcessFitTestSystem extends FitTestSystem {
     int ticketNumber = FitTestSystem.socketDealer().seekingSocket(this);
 
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.InProcessCommandRunner(testRunner, getPort(), ticketNumber);
+            new CommandRunningFitClient.InProcessCommandRunner(testRunner, getPort());
 
     return buildFitClient(runningStrategy);
   }

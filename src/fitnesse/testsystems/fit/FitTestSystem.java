@@ -139,9 +139,8 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     String classPath = descriptor.getClassPath();
     String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
-    int ticketNumber = socketDealer.seekingSocket(this);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, port, ticketNumber);
+            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, port);
 
     return buildFitClient(runningStrategy);
   }
