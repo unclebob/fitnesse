@@ -16,8 +16,11 @@ public class InProcessFitTestSystem extends FitTestSystem {
   @Override
   public FitClient build() {
     String testRunner = descriptor.getTestRunner();
+    int ticketNumber = FitTestSystem.socketDealer().seekingSocket(this);
+    String hostName = getLocalhostName();
+
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.InProcessCommandRunner(testRunner);
+            new CommandRunningFitClient.InProcessCommandRunner(testRunner, hostName, getPort(), ticketNumber);
 
     return buildFitClient(runningStrategy);
   }

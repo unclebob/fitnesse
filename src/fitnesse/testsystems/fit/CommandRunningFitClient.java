@@ -22,12 +22,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   private final CommandRunningStrategy commandRunningStrategy;
 
-  public CommandRunningFitClient(int port, SocketDealer socketDealer, CommandRunningStrategy commandRunningStrategy) {
+  public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
     this.commandRunningStrategy = commandRunningStrategy;
-    int ticketNumber = socketDealer.seekingSocket(this);
-    String hostName = getLocalhostName();
-    this.commandRunner = commandRunningStrategy.init(this, hostName, port, ticketNumber);
+    this.commandRunner = commandRunningStrategy.init(this);
   }
 
   public void start() {
@@ -44,6 +42,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     return new CommandRunnerExecutionLog(commandRunner);
   }
 
+  @Override
   public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
     this.donor = donor;
     acceptSocket(donor.donateSocket());
@@ -79,7 +78,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   public interface CommandRunningStrategy {
-    CommandRunner init(CommandRunningFitClient fitClient, String hostname, int port, int ticketNumber);
+    CommandRunner init(CommandRunningFitClient fitClient);
 
     void start() throws IOException;
 
@@ -91,20 +90,26 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   /** Runs commands by starting a new process. */
   public static class OutOfProcessCommandRunner implements CommandRunningStrategy {
 
-    private Map<String, String> environmentVariables;
     private final String command;
+    private final Map<String, String> environmentVariables;
+    private final String hostName;
+    private final int port;
+    private final int ticketNumber;
     private Thread timeoutThread;
     private Thread earlyTerminationThread;
     private CommandRunner commandRunner;
     private CommandRunningFitClient fitClient;
 
-    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables) {
+    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables, String hostName, int port, int ticketNumber) {
       this.command = command;
       this.environmentVariables = environmentVariables;
+      this.hostName = hostName;
+      this.port = port;
+      this.ticketNumber = ticketNumber;
     }
 
     @Override
-    public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
+    public CommandRunner init(CommandRunningFitClient fitClient) {
       this.fitClient = fitClient;
       String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
       String commandLine = command + SPACE + fitArguments;
@@ -191,16 +196,22 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
-    private Thread fastFitServer;
     private final String testRunner;
+    private final String hostName;
+    private final int port;
+    private final int ticketNumber;
+    private Thread fastFitServer;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(String testRunner) {
+    public InProcessCommandRunner(String testRunner, String hostName, int port, int ticketNumber) {
       this.testRunner = testRunner;
+      this.hostName = hostName;
+      this.port = port;
+      this.ticketNumber = ticketNumber;
     }
 
     @Override
-    public CommandRunner init(CommandRunningFitClient fitClient, String hostName, int port, int ticketNumber) {
+    public CommandRunner init(CommandRunningFitClient fitClient) {
       String[] arguments = new String[] { "-x", hostName, Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
@@ -256,13 +267,5 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       }
     }
 
-  }
-
-  private static String getLocalhostName() {
-    try {
-      return java.net.InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
   }
 }

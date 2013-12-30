@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 
-public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener {
+public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener, SocketSeeker {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private static SocketDealer socketDealer = new SocketDealer();
@@ -41,6 +42,10 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public String getName() {
     return descriptor.getTestSystemName();
+  }
+
+  public int getPort() {
+    return port;
   }
 
   @Override
@@ -134,16 +139,30 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
     String classPath = descriptor.getClassPath();
     String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
+    int ticketNumber = socketDealer.seekingSocket(this);
+    String hostName = getLocalhostName();
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
+            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, hostName, port, ticketNumber);
 
     return buildFitClient(runningStrategy);
   }
 
   protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
-    client = new CommandRunningFitClient(port, socketDealer, runningStrategy);
+    client = new CommandRunningFitClient(runningStrategy);
     client.addFitClientListener(this);
     return client;
   }
 
+  protected static String getLocalhostName() {
+    try {
+      return java.net.InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public void acceptSocketFrom(SocketDoner donor) throws Exception {
+    client.acceptSocketFrom(donor);
+  }
 }
