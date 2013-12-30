@@ -16,7 +16,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
-  private final CommandRunner commandRunner;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
 
@@ -25,12 +24,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
     this.commandRunningStrategy = commandRunningStrategy;
-    this.commandRunner = commandRunningStrategy.init(this);
+    commandRunningStrategy.init(this);
   }
 
   public void start() {
     try {
-      commandRunner.asynchronousStart();
       commandRunningStrategy.start();
       waitForConnection();
     } catch (Exception e) {
@@ -39,7 +37,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   public ExecutionLog getExecutionLog() {
-    return new CommandRunnerExecutionLog(commandRunner);
+    return new CommandRunnerExecutionLog(commandRunningStrategy.getCommandRunner());
   }
 
   @Override
@@ -73,18 +71,19 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   public void kill() {
     super.kill();
-    commandRunner.kill();
     commandRunningStrategy.kill();
   }
 
   public interface CommandRunningStrategy {
-    CommandRunner init(CommandRunningFitClient fitClient);
+    void init(CommandRunningFitClient fitClient);
 
     void start() throws IOException;
 
     void join();
 
     void kill();
+
+    CommandRunner getCommandRunner();
   }
 
   /** Runs commands by starting a new process. */
@@ -109,16 +108,20 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
 
     @Override
-    public CommandRunner init(CommandRunningFitClient fitClient) {
+    public void init(CommandRunningFitClient fitClient) {
       this.fitClient = fitClient;
+      makeCommandRunner();
+    }
+
+    private void makeCommandRunner() {
       String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
       String commandLine = command + SPACE + fitArguments;
       this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
-      return commandRunner;
     }
 
     @Override
     public void start() throws IOException {
+      commandRunner.asynchronousStart();
       timeoutThread = new Thread(new TimeoutRunnable(fitClient), "FitClient timeout");
       timeoutThread.start();
       earlyTerminationThread = new Thread(new EarlyTerminationRunnable(fitClient, commandRunner), "FitClient early termination");
@@ -133,7 +136,13 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     @Override
     public void kill() {
+      commandRunner.kill();
       killVigilantThreads();
+    }
+
+    @Override
+    public CommandRunner getCommandRunner() {
+      return commandRunner;
     }
 
     private void killVigilantThreads() {
@@ -211,17 +220,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
 
     @Override
-    public CommandRunner init(CommandRunningFitClient fitClient) {
+    public void init(CommandRunningFitClient fitClient) {
       String[] arguments = new String[] { "-x", hostName, Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
       this.commandRunner = new MockCommandRunner();
-      return commandRunner;
     }
 
     @Override
     public void start() throws IOException {
-      // do nothing
+      commandRunner.asynchronousStart();
     }
 
     @Override
@@ -235,7 +243,12 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     @Override
     public void kill() {
-      // do nothing
+      commandRunner.kill();
+    }
+
+    @Override
+    public CommandRunner getCommandRunner() {
+      return commandRunner;
     }
 
     protected Thread createTestRunnerThread(final String testRunner, final String[] args) {
