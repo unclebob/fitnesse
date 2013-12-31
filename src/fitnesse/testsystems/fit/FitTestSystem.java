@@ -3,11 +3,9 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Map;
 
-import fitnesse.FitNesseContext;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.Descriptor;
@@ -16,23 +14,27 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.SlimClient;
 
-public class FitTestSystem extends ClientBuilder<FitClient> implements TestSystem, FitClientListener, SocketSeeker {
+public class FitTestSystem implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private static SocketDealer socketDealer = new SocketDealer();
 
   private final CompositeTestSystemListener testSystemListener;
-  private CommandRunningFitClient client;
+  private final String testSystemName;
+  private final int port;
+  private final CommandRunningFitClient client;
   private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
-  private final int port;
 
-  public FitTestSystem(Descriptor descriptor,
+  public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient,
                        int port) {
-    super(descriptor);
-    this.port = port;
     this.testSystemListener = new CompositeTestSystemListener();
+    this.testSystemName = testSystemName;
+    this.client = fitClient;
+    this.port = port;
+    client.addFitClientListener(this);
   }
 
   public static SocketDealer socketDealer() {
@@ -41,17 +43,13 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
 
   @Override
   public String getName() {
-    return descriptor.getTestSystemName();
-  }
-
-  public int getPort() {
-    return port;
+    return testSystemName;
   }
 
   @Override
   public void start() {
     // TODO: start a server socket (thread) here
-    client.start();
+    client.start(port);
     testSystemStarted(this);
   }
 
@@ -131,28 +129,5 @@ public class FitTestSystem extends ClientBuilder<FitClient> implements TestSyste
   @Override
   public boolean isSuccessfullyStarted() {
     return client.isSuccessfullyStarted();
-  }
-
-  @Override
-  public FitClient build() {
-    String testRunner = descriptor.getTestRunner();
-    String classPath = descriptor.getClassPath();
-    String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
-    Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
-    CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, port);
-
-    return buildFitClient(runningStrategy);
-  }
-
-  protected FitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {
-    client = new CommandRunningFitClient(runningStrategy);
-    client.addFitClientListener(this);
-    return client;
-  }
-
-  @Override
-  public void acceptSocketFrom(SocketDoner donor) throws Exception {
-    client.acceptSocketFrom(donor);
   }
 }

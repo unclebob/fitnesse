@@ -31,7 +31,7 @@ public class FitClientTest implements FitClientListener {
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(
-        "java -cp classes fit.FitServer -v", null, port));
+        "java -cp classes fit.FitServer -v", null));
     client.addFitClientListener(this);
     receiver = new CustomFitSocketReceiver(port);
   }
@@ -84,7 +84,7 @@ public class FitClientTest implements FitClientListener {
 
   private void doSimpleRun() throws Exception {
     receiver.receiveSocket();
-    client.start();
+    client.start(port);
     Thread.sleep(100);
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
     client.done();
@@ -93,9 +93,9 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null, port));
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.addFitClientListener(this);
-    client.start();
+    client.start(port);
     Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
@@ -106,9 +106,9 @@ public class FitClientTest implements FitClientListener {
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null, port));
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.addFitClientListener(this);
-    client.start();
+    client.start(port);
     Thread.sleep(50);
     client.join();
     assertTrue(exceptionOccurred);
@@ -118,7 +118,7 @@ public class FitClientTest implements FitClientListener {
   @Test
   public void testOneRunWithManyTables() throws Exception {
     receiver.receiveSocket();
-    client.start();
+    client.start(port);
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
         "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
         "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
@@ -136,7 +136,7 @@ public class FitClientTest implements FitClientListener {
   @Test
   public void testManyRuns() throws Exception {
     receiver.receiveSocket();
-    client.start();
+    client.start(port);
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
     client.send("<html><table><tr><td>fitnesse.testutil.FailFixture</td></tr></table></html>");
     client.send("<html><table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
@@ -163,7 +163,7 @@ public class FitClientTest implements FitClientListener {
     Thread startThread = new Thread() {
       public void run() {
         try {
-          client.start();
+          client.start(port);
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -184,7 +184,7 @@ public class FitClientTest implements FitClientListener {
   @Test
   public void testUnicodeCharacters() throws Exception {
     receiver.receiveSocket();
-    client.start();
+    client.start(port);
     client.send("<html><table><tr><td>fitnesse.testutil.EchoFixture</td><td>\uba80\uba81\uba82\uba83</td></tr></table></html>");
     client.done();
     client.join();

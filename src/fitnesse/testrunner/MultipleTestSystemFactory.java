@@ -7,8 +7,11 @@ import java.util.Map;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.fit.CommandRunningFitClient;
+import fitnesse.testsystems.fit.FitClient;
+import fitnesse.testsystems.fit.FitClientBuilder;
 import fitnesse.testsystems.fit.FitTestSystem;
-import fitnesse.testsystems.fit.InProcessFitTestSystem;
+import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -59,10 +62,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
       int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
-      FitTestSystem testSystem = new FitTestSystem(descriptor, port);
-      testSystem.build();
+      CommandRunningFitClient fitClient = new FitClientBuilder(descriptor).build();
 
-      return testSystem;
+      return new FitTestSystem(descriptor.getTestSystemName(), fitClient, port);
     }
   }
 
@@ -70,10 +72,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
       int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
-      FitTestSystem testSystem = new InProcessFitTestSystem(descriptor, port);
-      testSystem.build();
+      CommandRunningFitClient fitClient = new InProcessFitClientBuilder(descriptor).build();
 
-      return testSystem;
+      return new FitTestSystem(descriptor.getTestSystemName(), fitClient, port);
     }
   }
 }
