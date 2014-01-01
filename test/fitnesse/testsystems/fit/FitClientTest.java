@@ -152,12 +152,6 @@ public class FitClientTest implements FitClientListener {
   }
 
   @Test
-  public void testDonerIsNotifiedWhenFinished_success() throws Exception {
-    doSimpleRun();
-    assertTrue(doner.finished);
-  }
-
-  @Test
   public void testReadyForSending() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     Thread startThread = new Thread() {

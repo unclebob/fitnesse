@@ -4,15 +4,20 @@ package fitnesse.testsystems.fit;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.CommandRunnerExecutionLog;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.MockCommandRunner;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
+  private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
@@ -20,6 +25,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   private final CommandRunningStrategy commandRunningStrategy;
   private SocketDoner donor;
   private boolean connectionEstablished = false;
+  private SocketService server;
 
   public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
@@ -27,7 +33,9 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     this.commandRunningStrategy = commandRunningStrategy;
   }
 
-  public void start(int port) {
+  public void start(int xxport) throws IOException {
+    server = new SocketService(0, new SocketCatcher(this, ticketNumber));
+    int port = server.getPort();
     try {
       commandRunningStrategy.start(this, port, ticketNumber);
       waitForConnection();
@@ -44,6 +52,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
     this.donor = donor;
     acceptSocket(donor.donateSocket());
+  }
+
+  @Override
+  public void acceptSocket(Socket s) throws IOException, InterruptedException {
+    super.acceptSocket(s);
     connectionEstablished = true;
     synchronized (this) {
       notify();
@@ -66,7 +79,17 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     super.join();
     if (donor != null)
       donor.finishedWithSocket();
+
     commandRunningStrategy.kill();
+    closeServer();
+  }
+
+  private void closeServer() {
+    try {
+      server.close();
+    } catch (IOException e) {
+      LOG.log(Level.WARNING, "Unable to close FitClient socket server", e);
+    }
   }
 
   public void kill() {

@@ -47,7 +47,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void start() {
+  public void start() throws IOException {
     // TODO: start a server socket (thread) here
     client.start(port);
     testSystemStarted(this);
