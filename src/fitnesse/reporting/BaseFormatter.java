@@ -47,7 +47,7 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
 
   public void errorOccurred(Throwable cause) {
     if (cause != null) {
-      LOG.log(Level.INFO, "error registered in test system", cause);
+      LOG.log(Level.WARNING, "error registered in test system", cause);
     }
   }
 

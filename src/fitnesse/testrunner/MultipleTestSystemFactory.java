@@ -61,20 +61,18 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class FitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
       CommandRunningFitClient fitClient = new FitClientBuilder(descriptor).build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient, port);
+      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
     }
   }
 
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      int port = Integer.parseInt(descriptor.getVariable("FITNESSE_PORT"));
       CommandRunningFitClient fitClient = new InProcessFitClientBuilder(descriptor).build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient, port);
+      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
     }
   }
 }

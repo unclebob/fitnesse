@@ -4,41 +4,28 @@ package fitnesse.testsystems.fit;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Map;
 
-import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.SlimClient;
 
 public class FitTestSystem implements TestSystem, FitClientListener {
   protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
-  private static SocketDealer socketDealer = new SocketDealer();
-
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
-  private final int port;
   private final CommandRunningFitClient client;
   private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
 
-  public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient,
-                       int port) {
+  public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient) {
     this.testSystemListener = new CompositeTestSystemListener();
     this.testSystemName = testSystemName;
     this.client = fitClient;
-    this.port = port;
     client.addFitClientListener(this);
-  }
-
-  public static SocketDealer socketDealer() {
-    return socketDealer;
   }
 
   @Override
@@ -49,7 +36,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   @Override
   public void start() throws IOException {
     // TODO: start a server socket (thread) here
-    client.start(port);
+    client.start();
     testSystemStarted(this);
   }
 
@@ -75,7 +62,6 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
-    // TODO: stop socket catcher thread
     testSystemStopped(client.getExecutionLog(), null);
   }
 

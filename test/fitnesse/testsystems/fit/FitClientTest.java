@@ -13,7 +13,6 @@ import java.util.List;
 
 import fitnesse.testsystems.TestSummary;
 import fitnesse.util.MockSocket;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
@@ -24,8 +23,6 @@ public class FitClientTest implements FitClientListener {
   private CommandRunningFitClient client;
   private boolean exceptionOccurred = false;
   private int port = 9080;
-  private FitSocketReceiver receiver;
-  private SimpleSocketDoner doner;
 
   @Before
   public void setUp() throws Exception {
@@ -33,23 +30,6 @@ public class FitClientTest implements FitClientListener {
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(
         "java -cp classes fit.FitServer -v", null));
     client.addFitClientListener(this);
-    receiver = new CustomFitSocketReceiver(port);
-  }
-
-  private class CustomFitSocketReceiver extends FitSocketReceiver {
-    public CustomFitSocketReceiver(int port) {
-      super(port, null);
-    }
-
-    protected void dealSocket(int ticket) throws Exception {
-      doner = new SimpleSocketDoner(socket);
-      client.acceptSocketFrom(doner);
-    }
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    receiver.close();
   }
 
   @Override
@@ -83,8 +63,7 @@ public class FitClientTest implements FitClientListener {
   }
 
   private void doSimpleRun() throws Exception {
-    receiver.receiveSocket();
-    client.start(port);
+    client.start();
     Thread.sleep(100);
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
     client.done();
@@ -95,7 +74,7 @@ public class FitClientTest implements FitClientListener {
   public void testStandardError() throws Exception {
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.addFitClientListener(this);
-    client.start(port);
+    client.start();
     Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
@@ -108,7 +87,7 @@ public class FitClientTest implements FitClientListener {
     TimeMeasurement measurement = new TimeMeasurement().start();
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
     client.addFitClientListener(this);
-    client.start(port);
+    client.start();
     Thread.sleep(50);
     client.join();
     assertTrue(exceptionOccurred);
@@ -117,8 +96,7 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testOneRunWithManyTables() throws Exception {
-    receiver.receiveSocket();
-    client.start(port);
+    client.start();
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
         "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
         "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
@@ -135,8 +113,7 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testManyRuns() throws Exception {
-    receiver.receiveSocket();
-    client.start(port);
+    client.start();
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
     client.send("<html><table><tr><td>fitnesse.testutil.FailFixture</td></tr></table></html>");
     client.send("<html><table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
@@ -157,7 +134,7 @@ public class FitClientTest implements FitClientListener {
     Thread startThread = new Thread() {
       public void run() {
         try {
-          client.start(port);
+          client.start();
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -168,7 +145,7 @@ public class FitClientTest implements FitClientListener {
     Thread.sleep(100);
     assertFalse(client.isSuccessfullyStarted());
 
-    client.acceptSocketFrom(new SimpleSocketDoner(new MockSocket("")));
+    client.acceptSocket(new MockSocket(""));
     Thread.sleep(100);
     assertTrue(client.isSuccessfullyStarted());
 
@@ -177,8 +154,7 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testUnicodeCharacters() throws Exception {
-    receiver.receiveSocket();
-    client.start(port);
+    client.start();
     client.send("<html><table><tr><td>fitnesse.testutil.EchoFixture</td><td>\uba80\uba81\uba82\uba83</td></tr></table></html>");
     client.done();
     client.join();

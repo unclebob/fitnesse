@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,25 +17,28 @@ import fitnesse.testsystems.CommandRunnerExecutionLog;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.MockCommandRunner;
 
-public class CommandRunningFitClient extends FitClient implements SocketSeeker {
+public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
 
   private final int ticketNumber;
   private final CommandRunningStrategy commandRunningStrategy;
-  private SocketDoner donor;
   private boolean connectionEstablished = false;
   private SocketService server;
 
   public CommandRunningFitClient(CommandRunningStrategy commandRunningStrategy) {
     super();
-    this.ticketNumber = FitTestSystem.socketDealer().seekingSocket(this);
+    this.ticketNumber = generateTicketNumber();
     this.commandRunningStrategy = commandRunningStrategy;
   }
 
-  public void start(int xxport) throws IOException {
-    server = new SocketService(0, new SocketCatcher(this, ticketNumber));
+  private int generateTicketNumber() {
+    return 0xF17;
+  }
+
+  public void start() throws IOException {
+    server = new SocketService(0, new SocketCatcher(this, ticketNumber), true);
     int port = server.getPort();
     try {
       commandRunningStrategy.start(this, port, ticketNumber);
@@ -46,12 +50,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   public ExecutionLog getExecutionLog() {
     return new CommandRunnerExecutionLog(commandRunningStrategy.getCommandRunner());
-  }
-
-  @Override
-  public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
-    this.donor = donor;
-    acceptSocket(donor.donateSocket());
   }
 
   @Override
@@ -75,13 +73,14 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   public void join() {
-    commandRunningStrategy.join();
-    super.join();
-    if (donor != null)
-      donor.finishedWithSocket();
+    try {
+      commandRunningStrategy.join();
+      super.join();
 
-    commandRunningStrategy.kill();
-    closeServer();
+      commandRunningStrategy.kill();
+    } finally {
+      closeServer();
+    }
   }
 
   private void closeServer() {

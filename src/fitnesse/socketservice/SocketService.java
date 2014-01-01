@@ -22,6 +22,10 @@ public class SocketService {
   private volatile boolean everRan = false;
 
   public SocketService(int port, SocketServer server) throws IOException {
+    this(port, server, false);
+  }
+
+  public SocketService(int port, SocketServer server, boolean daemon) throws IOException {
     this.server = server;
     serverSocket = SocketFactory.tryCreateServerSocket(port);
     serviceThread = new Thread(
@@ -31,6 +35,7 @@ public class SocketService {
         }
       }
     );
+    serviceThread.setDaemon(daemon);
     serviceThread.start();
   }
 

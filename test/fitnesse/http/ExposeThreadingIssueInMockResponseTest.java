@@ -7,14 +7,11 @@ import java.util.regex.Pattern;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestResponder;
-import fitnesse.testsystems.fit.FitSocketReceiver;
-import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +22,6 @@ public class ExposeThreadingIssueInMockResponseTest {
   private TestResponder responder;
   private FitNesseContext context;
   private String results;
-  private FitSocketReceiver receiver;
 
   @Before
   public void setUp() throws Exception {
@@ -34,14 +30,6 @@ public class ExposeThreadingIssueInMockResponseTest {
     responder = new TestResponder();
     int port = 9123;
     context = FitNesseUtil.makeTestContext(root, port);
-
-    receiver = new FitSocketReceiver(port, FitTestSystem.socketDealer());
-    receiver.receiveSocket();
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    receiver.close();
   }
 
   public static void assertHasRegexp(String regexp, String output) {
