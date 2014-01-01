@@ -90,6 +90,8 @@ public abstract class SlimTestSystem implements TestSystem {
     } catch (IOException e) {
       exceptionOccurred(e);
       throw e;
+    } catch (Exception e) {
+      exceptionOccurred(e);
     }
   }
 
