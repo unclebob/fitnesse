@@ -28,8 +28,6 @@ import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.*;
-import fitnesse.responders.run.FitClientResponder;
-import fitnesse.responders.run.SocketCatchingResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
@@ -78,8 +76,6 @@ public class ResponderFactory {
     addResponder("pageData", PageDataWikiPageResponder.class);
     addResponder("createDir", CreateDirectoryResponder.class);
     addResponder("upload", UploadResponder.class);
-    addResponder("socketCatcher", SocketCatchingResponder.class);
-    addResponder("fitClient", FitClientResponder.class);
     addResponder("deleteFile", DeleteFileResponder.class);
     addResponder("renameFile", RenameFileResponder.class);
     addResponder("deleteConfirmation", DeleteConfirmationResponder.class);

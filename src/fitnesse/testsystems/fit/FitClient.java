@@ -5,6 +5,8 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,10 +15,10 @@ import fit.FitProtocol;
 import fitnesse.testsystems.TestSummary;
 import util.StreamReader;
 
-public class FitClient {
+public class FitClient implements SocketAccepter {
   private static final Logger LOG = Logger.getLogger(FitClient.class.getName());
 
-  private FitClientListener listener;
+  private List<FitClientListener> listeners;
   private Socket fitSocket;
   private OutputStream fitInput;
   private StreamReader fitOutput;
@@ -27,8 +29,12 @@ public class FitClient {
   private volatile boolean killed = false;
   private Thread fitListeningThread;
 
-  public FitClient(FitClientListener listener) {
-    this.listener = listener;
+  public FitClient() {
+    this.listeners = new LinkedList<FitClientListener>();
+  }
+
+  public void addFitClientListener(FitClientListener listener) {
+    listeners.add(listener);
   }
 
   public synchronized void acceptSocket(Socket socket) throws IOException, InterruptedException {
@@ -73,10 +79,6 @@ public class FitClient {
     return fitSocket != null;
   }
 
-  public void exceptionOccurred(Exception e) {
-    listener.exceptionOccurred(e);
-  }
-
   protected void checkForPulse() throws InterruptedException {
     if (killed)
       throw new InterruptedException("FitClient was killed");
@@ -107,6 +109,11 @@ public class FitClient {
     }
   }
 
+  public void exceptionOccurred(Exception e) {
+    for (FitClientListener listener : listeners)
+      listener.exceptionOccurred(e);
+  }
+
   private class FitListeningRunnable implements Runnable {
     public void run() {
       listenToFit();
@@ -129,7 +136,7 @@ public class FitClient {
           String readValue = fitOutput.read(size);
           if (fitOutput.byteCount() < size)
             throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-          listener.testOutputChunk(readValue);
+          testOutputChunk(readValue);
         } else {
           Counts counts = FitProtocol.readCounts(fitOutput);
           TestSummary summary = new TestSummary();
@@ -137,10 +144,20 @@ public class FitClient {
           summary.wrong = counts.wrong;
           summary.ignores = counts.ignores;
           summary.exceptions = counts.exceptions;
-          listener.testComplete(summary);
+          testComplete(summary);
           received++;
         }
       }
+    }
+
+    private void testComplete(TestSummary summary) throws IOException {
+      for (FitClientListener listener : listeners)
+        listener.testComplete(summary);
+    }
+
+    private void testOutputChunk(String value) throws IOException {
+      for (FitClientListener listener : listeners)
+        listener.testOutputChunk(value);
     }
   }
 
