@@ -9,7 +9,7 @@
     <property name="src.dir" location="src"/>
     <property name="test.src.dir" location="test"/>
 	<property name="classes.dir" location="classes"/>
-    <property name="test.classes.dir" location="classes"/>
+    <property name="test.classes.dir" location="test-classes"/>
     <property name="fitnesseRoot" value="FitNesseRoot"/>
 	<property name="results.dir" location="test-results"/>
 	<property name="dist.dir" location="dist"/>
