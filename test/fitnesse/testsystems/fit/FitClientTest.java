@@ -142,11 +142,9 @@ public class FitClientTest implements FitClientListener {
       }
     };
     startThread.start();
-    Thread.sleep(100);
     assertFalse(client.isSuccessfullyStarted());
 
     client.acceptSocket(new MockSocket(""));
-    Thread.sleep(100);
     assertTrue(client.isSuccessfullyStarted());
 
     startThread.interrupt();
