@@ -17,7 +17,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.reporting.InteractiveFormatter;
-import fitnesse.reporting.JavaFormatter;
+import fitnesse.junit.JavaFormatter;
 import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportingResponder;
@@ -150,8 +150,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
       mainFormatter = newTextFormatter();
-    } else if (response.isJavaFormat()) {
-      mainFormatter = newJavaFormatter();
     } else {
       mainFormatter = newHtmlFormatter();
     }
@@ -176,10 +174,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   BaseFormatter newTextFormatter() {
     return new TestTextFormatter(response);
-  }
-
-  BaseFormatter newJavaFormatter() {
-    return JavaFormatter.getInstance(new WikiPagePath(page).toString());
   }
 
   BaseFormatter newHtmlFormatter() {

@@ -40,17 +40,6 @@ public class JUnitXmlTestListenerIntegrationTest {
     System.clearProperty("slim.port");
   }
 
-  @Test  
-  public void checkJunitXmlTestListenerPrintsXmlFiles() throws Exception{
-    JUnitHelper helper = new JUnitHelper(fitNesseRootDir,htmlOutputDir,xmlTestListener);
-    helper.assertTestPasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim");
-    
-    File expectedFile=new File(new File(xmlOutputDir),"TEST-FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim.xml");
-    Assert.assertTrue("file exists", expectedFile.exists());
-    String contents=readContents(expectedFile);
-    Assert.assertTrue("file contents are "+contents, Pattern.matches(expectedCorrectResultPattern, contents));
-  }
-
   @Test
   public void failuresAreRecordedCorrectly() throws Exception{
     xmlTestListener.recordTestResult("testName", new TestSummary(1,2,0,0), 100);
