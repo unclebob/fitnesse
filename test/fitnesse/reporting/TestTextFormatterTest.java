@@ -1,5 +1,6 @@
 package fitnesse.reporting;
 
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
 import static org.mockito.Mockito.*;
 
 import java.text.ParseException;
@@ -44,7 +45,7 @@ public class TestTextFormatterTest {
     formatter.testStarted(page);
     clock.elapse(9800);
     formatter.testComplete(page, summary);
-    verify(response).add("F " + START_TIME + " R:1    W:2    I:3    E:4    page\t()\t9.800 seconds\n");
+    verify(response).add("F " + START_TIME + " R:1    W:2    I:3    E:4    page\t()\t9" + getDecimalSeparator() + "800 seconds\n");
   }
   
   @Test
@@ -55,6 +56,6 @@ public class TestTextFormatterTest {
     clock.elapse(7600);
 
     formatter.close();
-    verify(response).add("--------\n0 Tests,\t0 Failures\t7.600 seconds.\n");
+    verify(response).add("--------\n0 Tests,\t0 Failures\t7" + getDecimalSeparator() + "600 seconds.\n");
   }
 }
