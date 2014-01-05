@@ -36,7 +36,7 @@ public abstract class SlimTable {
   private List<SlimTable> children = new LinkedList<SlimTable>();
   private SlimTable parent = null;
 
-  private SlimTestContext testContext;
+  private final SlimTestContext testContext;
 
   protected final Table table;
   protected String id;

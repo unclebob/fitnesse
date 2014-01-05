@@ -72,7 +72,6 @@ public class PluginsLoaderTest {
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
 
-    FileSystemPageFactory wikiPageFactory = new FileSystemPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
 
     assertMatch("!today", false);

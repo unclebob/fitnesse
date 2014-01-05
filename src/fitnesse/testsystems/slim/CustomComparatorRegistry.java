@@ -10,7 +10,7 @@ public class CustomComparatorRegistry {
 
   public static  CustomComparator getCustomComparatorForPrefix(String prefix) {
     if (customComparators.containsKey(prefix))
-      return (CustomComparator) customComparators.get(prefix);
+      return customComparators.get(prefix);
     else
       return null;
   }
