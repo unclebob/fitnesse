@@ -6,6 +6,7 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -53,17 +54,17 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
-    return makeTestContext(root, null, FitNesseUtil.base, port, null);
+    return makeTestContext(root, ".", FitNesseUtil.base, port, new PromiscuousAuthenticator());
   }
 
   public static FitNesseContext makeTestContext(WikiPage root,
       Authenticator authenticator) {
-    return makeTestContext(root, null, FitNesseUtil.base, PORT, authenticator);
+    return makeTestContext(root, ".", FitNesseUtil.base, PORT, authenticator);
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port,
       Authenticator authenticator) {
-    return makeTestContext(root, null, FitNesseUtil.base, port, authenticator);
+    return makeTestContext(root, ".", FitNesseUtil.base, port, authenticator);
   }
 
 

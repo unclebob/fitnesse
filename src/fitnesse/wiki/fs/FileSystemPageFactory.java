@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
@@ -27,8 +28,8 @@ public class FileSystemPageFactory implements WikiPageFactory {
   public FileSystemPageFactory(Properties properties) {
     fileSystem = new DiskFileSystem();
     versionsController = (VersionsController) new ComponentFactory(properties).createComponent(
-            ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
+            ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
+    versionsController.setHistoryDepth(Integer.parseInt(properties.getProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS.getKey(), "14")));
     variableSource = new SystemVariableSource(properties);
   }
 

@@ -25,7 +25,6 @@ public class UpdaterImplementationTest {
   public static final String rootName = "RooT";
 
   protected WikiPage root;
-  protected Update update;
   protected UpdaterImplementation updater;
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
@@ -55,25 +54,25 @@ public class UpdaterImplementationTest {
   private void createFakeUpdateListFiles() {
     updateList = new File("classes/Resources/updateList");
     updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
-    FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
-    FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
+    FileUtil.createFile(updateList, "FitNesseRoot/files/TestFile\nFitNesseRoot/files/BestFile\n");
+    FileUtil.createFile(updateDoNotCopyOver, "FitNesseRoot/SpecialFile");
   }
 
   private void createFakeJarFileResources() throws IOException {
-    FileUtil.createFile("classes/Resources/files/TestFile","") ;
-    FileUtil.createFile("classes/Resources/files/BestFile","") ;
-    FileUtil.createFile("classes/Resources/SpecialFile","");
+    FileUtil.createFile("classes/Resources/FitNesseRoot/files/TestFile","") ;
+    FileUtil.createFile("classes/Resources/FitNesseRoot/files/BestFile","") ;
+    FileUtil.createFile("classes/Resources/FitNesseRoot/SpecialFile","");
   }
 
   @Test
   public void shouldBeAbleToGetUpdateFilesAndMakeAlistFromThem() throws Exception {
     ArrayList<String> updateArrayList = new ArrayList<String>();
     updater.tryToParseTheFileIntoTheList(updateList, updateArrayList);
-    assertEquals("files/TestFile", updateArrayList.get(0));
-    assertEquals("files/BestFile", updateArrayList.get(1));
+    assertEquals("FitNesseRoot/files/TestFile", updateArrayList.get(0));
+    assertEquals("FitNesseRoot/files/BestFile", updateArrayList.get(1));
     updateArrayList = new ArrayList<String>();
     updater.tryToParseTheFileIntoTheList(updateDoNotCopyOver, updateArrayList);
-    assertEquals("SpecialFile", updateArrayList.get(0));
+    assertEquals("FitNesseRoot/SpecialFile", updateArrayList.get(0));
   }
 
   @Test
@@ -95,12 +94,12 @@ public class UpdaterImplementationTest {
   @Test
   public void shouldCreateSomeFilesInTheRooTDirectory() throws Exception {
     for (Update update : updater.updates) {
-      if (update.getClass() == ReplacingFileUpdate.class || update.getClass() == FileUpdate.class)
+//      if (update.getClass() == ReplacingFileUpdate.class || update.getClass() == FileUpdate.class)
         update.doUpdate();
     }
-    File testFile = new File(context.rootPath, "files/TestFile");
-    File bestFile = new File(context.rootPath, "files/BestFile");
-    File specialFile = new File(context.rootPath, "SpecialFile");
+    File testFile = new File(context.getRootPagePath(), "files/TestFile");
+    File bestFile = new File(context.getRootPagePath(), "files/BestFile");
+    File specialFile = new File(context.getRootPagePath(), "SpecialFile");
     assertTrue(testFile.exists());
     assertTrue(bestFile.exists());
     assertTrue(specialFile.exists());
@@ -115,7 +114,7 @@ public class UpdaterImplementationTest {
     setTheContext("MyNewRoot");
     updater = new UpdaterImplementation(context);
     String updatedPath = updater.getCorrectPathForTheDestination(filePath);
-    assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
+    assertEquals(portablePath("testDir/MyNewRoot/someFolder"), updatedPath);
   }
 
   @Test

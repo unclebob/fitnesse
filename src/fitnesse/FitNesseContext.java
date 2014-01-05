@@ -22,7 +22,6 @@ public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
-  public static final int DEFAULT_PORT = 80;
 
   /**
    * Use the builder to create your FitNesse contexts.
@@ -88,8 +87,8 @@ public class FitNesseContext {
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
-  public final String rootPath;
-  public final String rootDirectoryName;
+  private final String rootPath;
+  private final String rootDirectoryName;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
 
@@ -108,12 +107,12 @@ public class FitNesseContext {
     super();
     this.version = version;
     this.root = root;
-    this.rootPath = rootPath != null ? rootPath : ".";
-    this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
+    this.rootPath = rootPath;
+    this.rootDirectoryName = rootDirectoryName;
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;
-    this.port = port >= 0 ? port : DEFAULT_PORT;
-    this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
+    this.port = port;
+    this.authenticator = authenticator;
     this.logger = logger;
     this.properties = properties;
     testSystemFactory = new MultipleTestSystemFactory();
