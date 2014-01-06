@@ -22,7 +22,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
+public class ScenarioAndScriptTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   private ScriptTable script;
@@ -31,18 +31,19 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
-    clearTestSummary();
   }
 
-  private void makeTables(String tableText) throws Exception {
+  private SlimTestContextImpl makeTables(String tableText) throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    ScenarioTable st = new ScenarioTable(t, "s_id", this);
+    ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);
-    script = new ScriptTable(t, "id", this);
+    script = new ScriptTable(t, "id", testContext);
     assertions.addAll(st.getAssertions());
     assertions.addAll(script.getAssertions());
+    return testContext;
   }
 
   private List<Instruction> instructions() {
@@ -102,12 +103,12 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
 
   @Test
   public void simpleInputAndOutputPassing() throws Exception {
-    makeTables(
-      "!|scenario|echo|input|giving|output|\n" +
-        "|check|echo|@input|@output|\n" +
-        "\n" +
-        "!|script|\n" +
-        "|echo|7|giving|7|\n"
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|input|giving|output|\n" +
+                    "|check|echo|@input|@output|\n" +
+                    "\n" +
+                    "!|script|\n" +
+                    "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -121,16 +122,15 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = script.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
   public void simpleInputAndOutputFailing() throws Exception {
-    makeTables(
+    SlimTestContextImpl testContext = makeTables(
       "!|scenario|echo|input|giving|output|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
@@ -148,16 +148,15 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = script.getTable().toString();
-    assertEquals(0, getTestSummary().getRight());
-    assertEquals(1, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(0, testContext.getTestSummary().getRight());
+    assertEquals(1, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
   public void inputAndOutputWithSymbol() throws Exception {
-    makeTables(
+    SlimTestContextImpl testContext = makeTables(
       "!|scenario|echo|input|giving|output|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
@@ -205,7 +204,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
 
   @Test
   public void scenarioExtraArgumentsAreIgnored() throws Exception {
-    makeTables(
+    SlimTestContextImpl testContext = makeTables(
       "!|scenario|echo|input|giving|output||output2|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
@@ -225,10 +224,10 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
       "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = script.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
@@ -265,6 +264,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
 
   @Test
   public void matchesScenarioWithMostArguments() throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|Login user|name|\n" +
         "|should not get here|\n" +
@@ -275,9 +275,9 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|Login user Bob with password xyzzy|\n");
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
-    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
-    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
-    script = new ScriptTable(ts.getTable(2), "id", this);
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
+    script = new ScriptTable(ts.getTable(2), "id", testContext);
     assertions.addAll(st1.getAssertions());
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());
@@ -290,6 +290,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
 
   @Test
   public void doesntMatchScenarioWithNoArgumentsThatSharesFirstWord() throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login |\n" +
         "|should not get here|\n" +
@@ -300,9 +301,9 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|connect to  |Bob| with password| xyzzy|\n");
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
-    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
-    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
-    script = new ScriptTable(ts.getTable(2), "id", this);
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
+    script = new ScriptTable(ts.getTable(2), "id", testContext);
     assertions.addAll(st1.getAssertions());
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());
@@ -316,6 +317,7 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
 
   @Test
   public void dontTryParameterizedForRowWithMultipleCells() throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login with |name|\n" +
         "|should not get here|\n" +
@@ -326,9 +328,9 @@ public class ScenarioAndScriptTableTest extends SlimTestContextImpl {
         "!|script|\n" +
         "|connect to  |Bob| with password| xyzzy|\n");
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
-    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
-    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
-    script = new ScriptTable(ts.getTable(2), "id", this);
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
+    script = new ScriptTable(ts.getTable(2), "id", testContext);
     assertions.addAll(st1.getAssertions());
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());

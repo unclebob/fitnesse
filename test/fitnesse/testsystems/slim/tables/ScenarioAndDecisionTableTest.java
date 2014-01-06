@@ -10,6 +10,7 @@ import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
@@ -22,7 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
+public class ScenarioAndDecisionTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   private DecisionTable dt;
@@ -35,29 +36,30 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
-    clearTestSummary();
   }
 
-  private void makeTables(String tableText) throws Exception {
+  private SlimTestContextImpl makeTables(String tableText) throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    ScenarioTable st = new ScenarioTable(t, "s_id", this);
+    ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);
-    dt = new DecisionTable(t, "did", this);
+    dt = new DecisionTable(t, "did", testContext);
     assertions.addAll(st.getAssertions());
     assertions.addAll(dt.getAssertions());
+    return testContext;
   }
 
   @Test
   public void bracesArountArgumentInTable() throws Exception {
-    makeTables(
-      "!|scenario|echo|user|giving|user_old|\n" +
-        "|check|echo|@{user}|@{user_old}|\n" +
-        "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|user|user_old|\n" +
-        "|7|7|\n"
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|user|giving|user_old|\n" +
+                    "|check|echo|@{user}|@{user_old}|\n" +
+                    "\n" +
+                    "!|DT:EchoGiving|\n" +
+                    "|user|user_old|\n" +
+                    "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -71,10 +73,10 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
       "[[scenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
@@ -115,13 +117,13 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
 
   @Test
   public void simpleInputAndOutputPassing() throws Exception {
-    makeTables(
-      "!|scenario|echo|input|giving|output|\n" +
-        "|check|echo|@input|@output|\n" +
-        "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|7|\n"
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|input|giving|output|\n" +
+                    "|check|echo|@input|@output|\n" +
+                    "\n" +
+                    "!|DT:EchoGiving|\n" +
+                    "|input|output|\n" +
+                    "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -135,21 +137,21 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
   public void simpleInputAndOutputFailing() throws Exception {
-    makeTables(
-      "!|scenario|echo|input|giving|output|\n" +
-        "|check|echo|@input|@output|\n" +
-        "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|8|\n"
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|input|giving|output|\n" +
+                    "|check|echo|@input|@output|\n" +
+                    "\n" +
+                    "!|DT:EchoGiving|\n" +
+                    "|input|output|\n" +
+                    "|7|8|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -163,10 +165,10 @@ public class ScenarioAndDecisionTableTest extends SlimTestContextImpl {
       "[[scenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertEquals(0, getTestSummary().getRight());
-    assertEquals(1, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(0, testContext.getTestSummary().getRight());
+    assertEquals(1, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test(expected=SyntaxError.class)
