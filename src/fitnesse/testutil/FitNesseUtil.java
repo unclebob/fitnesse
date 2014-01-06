@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -84,6 +85,7 @@ public class FitNesseUtil {
     builder.authenticator = authenticator;
     builder.versionsController = new ZipFileVersionsController();
     builder.recentChanges = new RecentChangesWikiPage();
+    builder.testSystemFactory = new MultipleTestSystemFactory();
     builder.properties = new Properties();
     FitNesseContext context = builder.createFitNesseContext();
 

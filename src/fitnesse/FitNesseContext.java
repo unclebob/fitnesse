@@ -37,6 +37,7 @@ public class FitNesseContext {
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public VersionsController versionsController;
     public RecentChanges recentChanges;
+    public TestSystemFactory testSystemFactory = new MultipleTestSystemFactory();
     public Properties properties = new Properties();
 
     public Builder() {
@@ -54,6 +55,7 @@ public class FitNesseContext {
         authenticator = context.authenticator;
         versionsController = context.versionsController;
         recentChanges = context.recentChanges;
+        testSystemFactory = context.testSystemFactory;
         properties = context.properties;
       }
     }
@@ -75,6 +77,7 @@ public class FitNesseContext {
           port,
           authenticator,
           logger,
+          testSystemFactory,
           properties);
     }
   }
@@ -83,7 +86,7 @@ public class FitNesseContext {
   public final FitNesse fitNesse;
   public final WikiPage root;
 
-  public TestSystemFactory testSystemFactory;
+  public final TestSystemFactory testSystemFactory;
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
@@ -103,7 +106,8 @@ public class FitNesseContext {
   private FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
       String rootDirectoryName, VersionsController versionsController,
       RecentChanges recentChanges, int port,
-      Authenticator authenticator, Logger logger, Properties properties) {
+      Authenticator authenticator, Logger logger,
+      TestSystemFactory testSystemFactory, Properties properties) {
     super();
     this.version = version;
     this.root = root;
@@ -114,8 +118,8 @@ public class FitNesseContext {
     this.port = port;
     this.authenticator = authenticator;
     this.logger = logger;
+    this.testSystemFactory = testSystemFactory;
     this.properties = properties;
-    testSystemFactory = new MultipleTestSystemFactory();
     runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
     fitNesse = new FitNesse(this);
