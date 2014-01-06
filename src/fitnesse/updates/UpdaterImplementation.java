@@ -35,7 +35,7 @@ public class UpdaterImplementation extends UpdaterBase {
     for (String nonCopyableFile : updateDoNotCopyOver) {
       String path = getCorrectPathForTheDestination(nonCopyableFile);
       String source = getCorrectPathFromJar(nonCopyableFile);
-      updates.add(new FileUpdate(context.rootPath, source, path));
+      updates.add(new FileUpdate(source, path));
     }
   }
 
@@ -43,7 +43,7 @@ public class UpdaterImplementation extends UpdaterBase {
     for (String updateableFile : updateList) {
       String path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);
-      updates.add(new ReplacingFileUpdate(context.rootPath, source, path));
+      updates.add(new ReplacingFileUpdate(source, path));
     }
   }
 
@@ -54,7 +54,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public String getCorrectPathForTheDestination(String updateableFile) {
     if (updateableFile.startsWith("FitNesseRoot"))
-      updateableFile = updateableFile.replace("FitNesseRoot", context.rootDirectoryName);
+      updateableFile = updateableFile.replace("FitNesseRoot", context.getRootPagePath());
     return FileUtil.getPathOfFile(updateableFile);
   }
 
@@ -67,9 +67,9 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   public void getUpdateFilesFromJarFile() throws IOException {
-    Update update = new FileUpdate(context.getRootPagePath(), "Resources/updateList", ".");
+    Update update = new FileUpdate("Resources/updateList", context.getRootPagePath());
     update.doUpdate();
-    update = new FileUpdate(this.context.getRootPagePath(), "Resources/updateDoNotCopyOverList", ".");
+    update = new FileUpdate("Resources/updateDoNotCopyOverList", context.getRootPagePath());
     update.doUpdate();
   }
 

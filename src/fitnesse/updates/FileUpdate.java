@@ -13,17 +13,15 @@ import java.util.regex.Pattern;
 
 public class FileUpdate implements Update {
 
-  protected String destination;
-  protected String source;
-  protected File destinationDir;
-  protected String rootDir;
-  protected String filename;
+  protected final String destination;
+  protected final String source;
+  protected final File destinationDir;
+  protected final String filename;
 
-  public FileUpdate(String rootDirectory, String source, String destination) {
+  public FileUpdate(String source, String destination) {
     this.destination = destination;
     this.source = source;
-    rootDir = rootDirectory;
-    destinationDir = new File(new File(rootDir), destination);
+    destinationDir = new File(destination);
 
     filename = new File(source).getName();
   }

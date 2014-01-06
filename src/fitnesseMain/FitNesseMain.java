@@ -1,28 +1,21 @@
 package fitnesseMain;
 
-import fitnesse.components.ComponentFactory;
+import fitnesse.ContextConfigurator;
+import fitnesse.FitNesse;
+import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.PluginsLoader;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
-import fitnesse.wiki.RecentChanges;
-import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.fs.VersionsController;
-import fitnesse.wiki.fs.ZipFileVersionsController;
-import fitnesse.wikitext.parser.SymbolProvider;
 
 import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import static fitnesse.ConfigurationParameter.*;
 
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
@@ -47,20 +40,26 @@ public class FitNesseMain {
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
     Properties properties = loadConfigFile(arguments.getConfigFile());
-    return launchFitNesse(arguments, properties);
+    Properties cascadedProperties = cascadeProperties(arguments, properties);
+
+    return launchFitNesse(cascadedProperties);
   }
 
-  public Integer launchFitNesse(Arguments arguments, Properties properties) throws Exception {
-    configureLogging(arguments.hasVerboseLogging());
+  public Integer launchFitNesse(Properties properties) throws Exception {
+    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(LOG_LEVEL.getKey())));
     loadPlugins();
-    FitNesseContext context = loadContext(arguments, properties);
 
-    update(arguments, context);
-    return launch(arguments, context);
+    FitNesseContext context = loadContext(properties);
+
+    logStartupInfo(context);
+
+    update(context);
+
+    return launch(context);
   }
 
-  boolean update(Arguments arguments, FitNesseContext context) throws IOException {
-    if (!arguments.isOmittingUpdates()) {
+  private boolean update(FitNesseContext context) throws IOException {
+    if (!"true".equalsIgnoreCase(context.getProperty(OMITTING_UPDATES.getKey()))) {
       Updater updater = new UpdaterImplementation(context);
       return updater.update();
     }
@@ -71,36 +70,39 @@ public class FitNesseMain {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 
-  Integer launch(Arguments arguments, FitNesseContext context) throws Exception {
-    if (!arguments.isInstallOnly()) {
+  Integer launch(FitNesseContext context) throws Exception {
+    if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       boolean started = context.fitNesse.start();
       if (started) {
-        if (arguments.getCommand() != null) {
-          return executeSingleCommand(arguments, context);
+        String command = context.getProperty(COMMAND.getKey());
+        if (command != null) {
+          String output = context.getProperty(OUTPUT.getKey());
+          return executeSingleCommand(context.fitNesse, command, output);
         }
       }
     }
     return null;
   }
 
-  private int executeSingleCommand(Arguments arguments, FitNesseContext context) throws Exception {
+  private int executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
     TestTextFormatter.finalErrorCount = 0;
-    LOG.info("Executing command: " + arguments.getCommand());
+
+    LOG.info("Executing command: " + command);
 
     OutputStream os;
 
-    boolean outputRedirectedToFile = arguments.getOutput() != null;
+    boolean outputRedirectedToFile = outputFile != null;
 
     if (outputRedirectedToFile) {
-      LOG.info("-----Command Output redirected to " + arguments.getOutput() + "-----");
-      os = new FileOutputStream(arguments.getOutput());
+      LOG.info("-----Command Output redirected to " + outputFile + "-----");
+      os = new FileOutputStream(outputFile);
     } else {
       LOG.info("-----Command Output-----");
       os = System.out;
     }
 
-    context.fitNesse.executeSingleCommand(arguments.getCommand(), os);
-    context.fitNesse.stop();
+    fitNesse.executeSingleCommand(command, os);
+    fitNesse.stop();
 
     if (outputRedirectedToFile) {
       os.close();
@@ -111,62 +113,25 @@ public class FitNesseMain {
     return TestTextFormatter.finalErrorCount;
   }
 
-  private FitNesseContext loadContext(Arguments arguments, Properties properties) throws Exception {
-    final Properties allProperties = wrapPropertiesBySystemProperties(properties);
+  private FitNesseContext loadContext(Properties properties) throws IOException, PluginException {
+    return new ContextConfigurator(properties).makeFitNesseContext();
+  }
 
-    // Enrich properties with command line values:
-    properties.setProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, Integer.toString(arguments.getDaysTillVersionsExpire()));
+  private Properties cascadeProperties(Arguments arguments, Properties properties) {
+    Properties configProperties = new Properties(System.getProperties());
+    configProperties.putAll(properties);
+    Properties argumentProperties = new Properties(configProperties);
+    argumentProperties.putAll(arguments.asProperties());
+    return argumentProperties;
+  }
 
-    Builder builder = new Builder();
-    ComponentFactory componentFactory = new ComponentFactory(allProperties);
-
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(ComponentFactory.WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
-
-    builder.properties = properties;
-    builder.port = arguments.getPort();
-    builder.rootPath = arguments.getRootPath();
-    builder.rootDirectoryName = arguments.getRootDirectory();
-
-    builder.versionsController = (VersionsController) componentFactory.createComponent(ComponentFactory.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    builder.versionsController.setHistoryDepth(Integer.parseInt(allProperties.getProperty(ComponentFactory.VERSIONS_CONTROLLER_DAYS, "14")));
-    builder.recentChanges = (RecentChanges) componentFactory.createComponent(ComponentFactory.RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
-
-    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-            builder.rootDirectoryName);
-
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
-
-    builder.logger = pluginsLoader.makeLogger(arguments.getLogDirectory());
-    builder.authenticator = pluginsLoader.makeAuthenticator(arguments.getUserpass());
-
-    FitNesseContext context = builder.createFitNesseContext();
-
-    SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
-
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
-    pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadTestSystems((TestSystemFactoryRegistrar) context.testSystemFactory);
-    pluginsLoader.loadSymbolTypes(symbolProvider);
-    pluginsLoader.loadContentFilter();
-    pluginsLoader.loadSlimTables();
-    pluginsLoader.loadCustomComparators();
-
-    WikiImportTestEventListener.register();
-
+  private void logStartupInfo(FitNesseContext context) {
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
-
-    return context;
-  }
-
-  private Properties wrapPropertiesBySystemProperties(Properties properties) {
-    Properties allProperties = new Properties(properties);
-    allProperties.putAll(System.getProperties());
-    return allProperties;
   }
 
   public Properties loadConfigFile(final String propertiesFile) {
@@ -191,8 +156,6 @@ public class FitNesseMain {
         LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
       }
     }
-
-    // Overload with System properties
 
     return properties;
   }
