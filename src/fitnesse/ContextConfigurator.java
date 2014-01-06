@@ -9,6 +9,7 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
@@ -73,8 +74,9 @@ public class ContextConfigurator {
     builder.authenticator = pluginsLoader.makeAuthenticator(getProperty(CREDENTIALS));
 
     SlimTableFactory slimTableFactory = new SlimTableFactory();
+    CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
-    MultipleTestSystemFactory multipleTestSystemFactory = new MultipleTestSystemFactory(slimTableFactory);
+    MultipleTestSystemFactory multipleTestSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
     builder.testSystemFactory = multipleTestSystemFactory;
 
     FitNesseContext context = builder.createFitNesseContext();
@@ -86,7 +88,7 @@ public class ContextConfigurator {
     pluginsLoader.loadTestSystems(multipleTestSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
-    pluginsLoader.loadCustomComparators();
+    pluginsLoader.loadCustomComparators(customComparatorRegistry);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 

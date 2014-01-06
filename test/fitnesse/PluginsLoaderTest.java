@@ -188,10 +188,11 @@ public class PluginsLoaderTest {
 
   @Test
   public void testCustomComparatorsCreation() throws PluginException {
+    CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
     testProperties.setProperty(ConfigurationParameter.CUSTOM_COMPARATORS.getKey(), "test:" + TestCustomComparator.class.getName());
-    loader.loadCustomComparators();
+    loader.loadCustomComparators(customComparatorRegistry);
 
-    CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
+    CustomComparator customComparator = customComparatorRegistry.getCustomComparatorForPrefix("test");
     assertNotNull(customComparator);
     assertTrue(customComparator instanceof TestCustomComparator);
   }

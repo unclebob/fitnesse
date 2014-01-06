@@ -7,6 +7,7 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.html.template.PageFactory;
@@ -38,7 +39,7 @@ public class FitNesseContext {
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public VersionsController versionsController;
     public RecentChanges recentChanges;
-    public TestSystemFactory testSystemFactory = new MultipleTestSystemFactory(new SlimTableFactory());
+    public TestSystemFactory testSystemFactory = new MultipleTestSystemFactory(new SlimTableFactory(), new CustomComparatorRegistry());
     public Properties properties = new Properties();
 
     public Builder() {

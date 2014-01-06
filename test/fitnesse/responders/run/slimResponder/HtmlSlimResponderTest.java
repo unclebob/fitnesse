@@ -32,7 +32,7 @@ public class HtmlSlimResponderTest {
   private WikiPage testPage;
   public String testResults;
   protected SimpleResponse response;
-  private TestSystemListener dummyListener = new DummyListener();
+  private CustomComparatorRegistry customComparatorRegistry;
 
   private void assertTestResultsContain(String fragment) {
     String unescapedResults = unescape(testResults);
@@ -58,7 +58,9 @@ public class HtmlSlimResponderTest {
     WikiPage root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
-    responder = getSlimResponder();
+    customComparatorRegistry = new CustomComparatorRegistry();
+
+    responder = getSlimResponder(customComparatorRegistry);
     responder.setFastTest(true);
     // Enforce the test runner here, to make sure we're talking to the right
     // system
@@ -67,8 +69,8 @@ public class HtmlSlimResponderTest {
     SlimClientBuilder.clearSlimPortOffset();
   }
 
-  protected SlimResponder getSlimResponder() {
-    return new HtmlSlimResponder();
+  protected SlimResponder getSlimResponder(CustomComparatorRegistry customComparatorRegistry) {
+    return new HtmlSlimResponder(customComparatorRegistry);
   }
 
   @Test
@@ -371,7 +373,7 @@ public class HtmlSlimResponderTest {
 
   @Test
   public void customComparatorReturnsPass() throws Exception {
-    CustomComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    customComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
     getResultsForPageContents("!|script|\n"
         + "|start|fitnesse.slim.test.TestSlim|\n"
         + "|check|return string|equalsIgnoreCase:STRING|\n");
@@ -380,7 +382,7 @@ public class HtmlSlimResponderTest {
 
   @Test
   public void customComparatorReturnsFail() throws Exception {
-    CustomComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    customComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
     getResultsForPageContents("!|script|\n"
         + "|start|fitnesse.slim.test.TestSlim|\n"
         + "|check|return string|equalsIgnoreCase:STRINGS|\n");
@@ -389,7 +391,7 @@ public class HtmlSlimResponderTest {
 
   @Test
   public void customComparatorReturnsMessage() throws Exception {
-    CustomComparatorRegistry.addCustomComparator("exceptionMessage", new ExceptionMessageComparator());
+    customComparatorRegistry.addCustomComparator("exceptionMessage", new ExceptionMessageComparator());
     getResultsForPageContents("!|script|\n"
         + "|start|fitnesse.slim.test.TestSlim|\n"
         + "|check|return string|exceptionMessage:STRINGS|\n");

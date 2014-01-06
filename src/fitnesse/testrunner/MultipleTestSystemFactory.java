@@ -12,6 +12,7 @@ import fitnesse.testsystems.fit.FitClient;
 import fitnesse.testsystems.fit.FitClientBuilder;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -21,9 +22,9 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistrar {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
-  public MultipleTestSystemFactory(SlimTableFactory slimTableFactory) {
-    registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory));
-    registerTestSystemFactory("slim^inprocess", new InProcessHtmlSlimTestSystemFactory(slimTableFactory));
+  public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
+    registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
+    registerTestSystemFactory("slim^inprocess", new InProcessHtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
     registerTestSystemFactory("fit^inprocess", new InProcessFitTestSystemFactory());
   }
@@ -41,14 +42,18 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
   static class HtmlSlimTestSystemFactory implements TestSystemFactory {
     private final SlimTableFactory slimTableFactory;
+    private final CustomComparatorRegistry customComparatorRegistry;
 
-    public HtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory) {
+    public HtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory,
+                                     CustomComparatorRegistry customComparatorRegistry) {
       this.slimTableFactory = slimTableFactory;
+      this.customComparatorRegistry = customComparatorRegistry;
     }
 
     public final TestSystem create(Descriptor descriptor) throws IOException {
       SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, slimTableFactory);
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
+              slimTableFactory, customComparatorRegistry);
 
       return testSystem;
     }
@@ -56,14 +61,18 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
   static class InProcessHtmlSlimTestSystemFactory implements TestSystemFactory {
     private final SlimTableFactory slimTableFactory;
+    private final CustomComparatorRegistry customComparatorRegistry;
 
-    public InProcessHtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory) {
+    public InProcessHtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory,
+                                              CustomComparatorRegistry customComparatorRegistry) {
       this.slimTableFactory = slimTableFactory;
+      this.customComparatorRegistry = customComparatorRegistry;
     }
 
     public TestSystem create(Descriptor descriptor) throws IOException {
       SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, slimTableFactory);
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
+              slimTableFactory, customComparatorRegistry);
 
       return testSystem;
     }

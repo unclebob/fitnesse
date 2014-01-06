@@ -144,10 +144,10 @@ public class PluginsLoader {
     });
   }
 
-  public void loadCustomComparators() throws PluginException {
+  public void loadCustomComparators(final CustomComparatorRegistry customComparatorRegistry) throws PluginException {
     forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar<CustomComparator>() {
       @Override public void register(String key, Class<CustomComparator> clazz) {
-        CustomComparatorRegistry.addCustomComparator(key, componentFactory.createComponent(clazz));
+        customComparatorRegistry.addCustomComparator(key, componentFactory.createComponent(clazz));
         LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
       }
     });

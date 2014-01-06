@@ -23,11 +23,15 @@ import org.htmlparser.util.ParserException;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
   private final SlimTableFactory slimTableFactory;
+  private final CustomComparatorRegistry customComparatorRegistry;
   private HtmlTableScanner tableScanner;
 
-  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient, SlimTableFactory slimTableFactory) {
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient,
+                            SlimTableFactory slimTableFactory,
+                            CustomComparatorRegistry customComparatorRegistry) {
     super(testSystemName, slimClient);
     this.slimTableFactory = slimTableFactory;
+    this.customComparatorRegistry = customComparatorRegistry;
   }
 
   @Override
@@ -90,6 +94,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     String tableId = "" + allTables.size();
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, getTestContext());
     if (slimTable != null) {
+      slimTable.setCustomComparatorRegistry(customComparatorRegistry);
       allTables.add(slimTable);
     }
   }

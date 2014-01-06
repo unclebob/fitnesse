@@ -40,6 +40,7 @@ public abstract class SlimTable {
 
   protected final Table table;
   protected String id;
+  private CustomComparatorRegistry customComparatorRegistry;
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -173,6 +174,10 @@ public abstract class SlimTable {
 
   public List<SlimTable> getChildren() {
     return children;
+  }
+
+  public void setCustomComparatorRegistry(CustomComparatorRegistry customComparatorRegistry) {
+    this.customComparatorRegistry = customComparatorRegistry;
   }
 
   static class Disgracer {
@@ -562,10 +567,13 @@ public abstract class SlimTable {
 
     private SlimTestResult evaluateCustomComparatorIfPresent() {
       SlimTestResult message = null;
+      if (customComparatorRegistry == null) {
+        return null;
+      }
       Matcher customComparatorMatcher = customComparatorPattern.matcher(expression);
       if (customComparatorMatcher.matches()) {
         String prefix = customComparatorMatcher.group(1);
-        CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix(prefix);
+        CustomComparator customComparator = customComparatorRegistry.getCustomComparatorForPrefix(prefix);
         if (customComparator != null) {
           String expectedString = customComparatorMatcher.group(2);
           try {
