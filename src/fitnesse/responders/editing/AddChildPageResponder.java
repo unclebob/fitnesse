@@ -58,7 +58,7 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private Response createChildPageAndMakeResponse(Request request) {
-    createChildPage(request);
+    createChildPage();
     SimpleResponse response = new SimpleResponse();
     WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
     response.redirect(fullPathOfCurrentPage.toString());
@@ -71,10 +71,9 @@ public class AddChildPageResponder implements SecureResponder {
     return !WikiWordPath.isSingleWikiWord(name);
   }
 
-  private void createChildPage(Request request) {
+  private void createChildPage() {
     WikiPage childPage = WikiPageUtil.addPage(currentPage, childPath, childContent);
     setAttributes(childPage);
-    
   }
 
   private void setAttributes(WikiPage childPage) {
@@ -85,6 +84,8 @@ public class AddChildPageResponder implements SecureResponder {
       childPageData.getProperties().remove("Test");
       childPageData.getProperties().remove("Suite");
     } else if ("Test".equals(pageType) || "Suite".equals(pageType)) {
+      childPageData.getProperties().remove("Test");
+      childPageData.getProperties().remove("Suite");
       childPageData.setAttribute(pageType);
     }
     childPageData.setAttribute(PageData.PropertyHELP, helpText);

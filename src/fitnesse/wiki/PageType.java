@@ -38,7 +38,7 @@ public enum PageType {
 
   public static PageType fromWikiPage(WikiPage page) {
     PageData data = page.getData();
-    if (data.hasAttribute("Suite")) {
+    if (data.hasAttribute(SUITE.toString())) {
       return SUITE;
     }
 
