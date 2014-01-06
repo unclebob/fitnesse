@@ -37,8 +37,9 @@ public class ScenarioAndDecisionTableExtensionTest {
 
   @Before
   public void setUp() throws Exception {
-    SlimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
-    SlimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    slimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
+    slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
   }

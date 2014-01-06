@@ -7,7 +7,9 @@ import fitnesse.components.ComponentFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.WikiPageFactory;
@@ -70,15 +72,20 @@ public class ContextConfigurator {
     builder.logger = pluginsLoader.makeLogger(getProperty(LOG_DIRECTORY));
     builder.authenticator = pluginsLoader.makeAuthenticator(getProperty(CREDENTIALS));
 
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+
+    MultipleTestSystemFactory multipleTestSystemFactory = new MultipleTestSystemFactory(slimTableFactory);
+    builder.testSystemFactory = multipleTestSystemFactory;
+
     FitNesseContext context = builder.createFitNesseContext();
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
     pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
     pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadTestSystems((TestSystemFactoryRegistrar) context.testSystemFactory);
+    pluginsLoader.loadTestSystems(multipleTestSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
-    pluginsLoader.loadSlimTables();
+    pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators();
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();

@@ -13,9 +13,10 @@ import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
 
-  private static final Map<String, Class<? extends SlimTable>> tableTypes;
+  private final Map<String, Class<? extends SlimTable>> tableTypes;
+  private Map<String, String> tableTypeArrays = new HashMap<String, String>();
 
-  static {
+  public  SlimTableFactory() {
     tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
     addTableType("dt:", DecisionTable.class);
     addTableType("decision:", DecisionTable.class);
@@ -29,9 +30,7 @@ public class SlimTableFactory {
     addTableType("library", LibraryTable.class);
   }
 
-  private Map<String, String> tableTypeArrays = new HashMap<String, String>();
-
-  public static void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
+  public void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
     if (tableTypes.get(nameOrPrefix) != null) {
       throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
     }

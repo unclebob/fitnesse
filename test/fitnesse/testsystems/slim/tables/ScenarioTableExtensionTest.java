@@ -33,7 +33,6 @@ public class ScenarioTableExtensionTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     instructions = new ArrayList<Object>();
-    SlimTableFactory.addTableType(EXTENSION_NAME, AutoArgScenarioTable.class);
   }
 
   private ScenarioTable makeScenarioTable(String contents)

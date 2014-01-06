@@ -7,6 +7,7 @@ import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimTestSystem;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class HtmlSlimResponder extends SlimResponder {
     } else {
       slimClient = new SlimClientBuilder(getDescriptor()).build();
     }
-    SlimTestSystem testSystem = new HtmlSlimTestSystem("slim", slimClient);
+    SlimTestSystem testSystem = new HtmlSlimTestSystem("slim", slimClient, new SlimTableFactory());
     testSystem.addTestSystemListener(this);
     return testSystem;
   }

@@ -16,13 +16,14 @@ import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistrar {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
-  public MultipleTestSystemFactory() {
-    registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory());
-    registerTestSystemFactory("slim^inprocess", new InProcessHtmlSlimTestSystemFactory());
+  public MultipleTestSystemFactory(SlimTableFactory slimTableFactory) {
+    registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory));
+    registerTestSystemFactory("slim^inprocess", new InProcessHtmlSlimTestSystemFactory(slimTableFactory));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
     registerTestSystemFactory("fit^inprocess", new InProcessFitTestSystemFactory());
   }
@@ -39,20 +40,30 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   }
 
   static class HtmlSlimTestSystemFactory implements TestSystemFactory {
+    private final SlimTableFactory slimTableFactory;
+
+    public HtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory) {
+      this.slimTableFactory = slimTableFactory;
+    }
 
     public final TestSystem create(Descriptor descriptor) throws IOException {
       SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient);
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, slimTableFactory);
 
       return testSystem;
     }
   }
 
   static class InProcessHtmlSlimTestSystemFactory implements TestSystemFactory {
+    private final SlimTableFactory slimTableFactory;
+
+    public InProcessHtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory) {
+      this.slimTableFactory = slimTableFactory;
+    }
 
     public TestSystem create(Descriptor descriptor) throws IOException {
       SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient);
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient, slimTableFactory);
 
       return testSystem;
     }

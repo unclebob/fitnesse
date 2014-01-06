@@ -166,21 +166,23 @@ public class PluginsLoaderTest {
 
   @Test
   public void testSlimTablesCreation() throws PluginException {
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
     testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
-    loader.loadSlimTables();
+    loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   @Test
   public void testSlimTablesWithColonCreation() throws PluginException {
     testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test::" + TestSlimTable.class.getName());
-    loader.loadSlimTables();
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 

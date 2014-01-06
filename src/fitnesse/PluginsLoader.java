@@ -135,10 +135,10 @@ public class PluginsLoader {
     return filter;
   }
 
-  public void loadSlimTables() throws PluginException {
+  public void loadSlimTables(final SlimTableFactory slimTableFactory) throws PluginException {
     forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar<SlimTable>() {
       @Override public void register(String key, Class<SlimTable> clazz) {
-        SlimTableFactory.addTableType(key, clazz);
+        slimTableFactory.addTableType(key, clazz);
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
       }
     });

@@ -22,11 +22,12 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
+  private final SlimTableFactory slimTableFactory;
   private HtmlTableScanner tableScanner;
-  private SlimTableFactory slimTableFactory = new SlimTableFactory();
 
-  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient) {
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient, SlimTableFactory slimTableFactory) {
     super(testSystemName, slimClient);
+    this.slimTableFactory = slimTableFactory;
   }
 
   @Override
