@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +50,7 @@ public class ResponderFactory {
 
   private final String rootPath;
   private final Map<String, Class<?>> responderMap;
+  private final Map<String, List<Class<?>>> filterMap;
 
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
@@ -97,10 +100,22 @@ public class ResponderFactory {
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
+    filterMap = new HashMap<String, List<Class<?>>>();
+//    addFilter("test", WikiImportTestEventListener.class);
+//    addFilter("suite", WikiImportTestEventListener.class);
   }
 
   public final void addResponder(String key, Class<?> responderClass) {
     responderMap.put(key, responderClass);
+  }
+
+  public void addFilter(String key, Class<?> filterClass) {
+    List<Class<?>> filters = filterMap.get(key);
+    if (filters == null) {
+      filters = new LinkedList<Class<?>>();
+      filterMap.put(key, filters);
+    }
+    filters.add(filterClass);
   }
 
   public String getResponderKey(Request request) {
@@ -121,19 +136,17 @@ public class ResponderFactory {
     String resource = request.getResource();
     String responderKey = getResponderKey(request);
 
-    Responder responder;
+    final Responder responder;
 
-    if (usingResponderKey(responderKey))
-      responder = lookupResponder(responderKey);
-    else if (StringUtil.isBlank(resource))
-      responder = new WikiPageResponder();
-    else if (resource.startsWith("files/") || resource.equals("files"))
-      responder = FileResponder.makeResponder(request, rootPath);
-    else if (WikiWordPath.isWikiWord(resource) || "root".equals(resource))
-      responder = new WikiPageResponder();
-    else
+    if (usingResponderKey(responderKey)) {
+      responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
+    } else if (StringUtil.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
+      responder = wrapWithFilters("wiki", new WikiPageResponder());
+    } else if (resource.startsWith("files/") || resource.equals("files")) {
+      responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));
+    } else {
       responder = new NotFoundResponder();
-
+    }
     return responder;
   }
 
@@ -161,6 +174,29 @@ public class ResponderFactory {
       Constructor<?> constructor = responderClass.getConstructor();
       return (Responder) constructor.newInstance();
     }
+  }
+
+  private Responder wrapWithFilters(String key, Responder responder) throws InstantiationException {
+    List<Class<?>> filters = filterMap.get(key);
+    if (filters == null || filters.isEmpty()) {
+      return responder;
+    }
+
+    try {
+      return new FilteringResponder(newResponderInstances(filters), responder);
+    } catch (Exception e) {
+      LOG.log(Level.WARNING, "Unable to instantiate filters for responder " + key, e);
+      throw new InstantiationException("Unable to instantiate filters for responder " + key);
+    }
+  }
+
+  private List<Responder> newResponderInstances(List<Class<?>> filterClasses) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    List<Responder> filters = new LinkedList<Responder>();
+
+    for (Class<?> filterClass : filterClasses) {
+      filters.add(newResponderInstance(filterClass));
+    }
+    return filters;
   }
 
   public Class<?> getResponderClass(String responderKey) {

@@ -4,9 +4,13 @@ package fitnesse.responders;
 
 
 import java.io.File;
+import java.io.IOException;
 
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
 import fitnesse.responders.editing.AddChildPageResponder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.PropertiesResponder;
@@ -51,15 +55,11 @@ import static org.junit.Assert.assertEquals;
 public class ResponderFactoryTest {
   private ResponderFactory factory;
   private MockRequest request;
-  private WikiPageDummy nonExistantPage;
-  private WikiPage root;
 
   @Before
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     request = new MockRequest();
-    root = InMemoryPage.makeRoot("root");
-    nonExistantPage = new WikiPageDummy();
   }
 
   @Test
@@ -104,7 +104,6 @@ public class ResponderFactoryTest {
   public void testEditResponder() throws Exception {
     request.addInput("responder", "edit");
     request.setResource("SomePage");
-    assertResponderType(EditResponder.class);
     assertResponderType(EditResponder.class);
   }
 
