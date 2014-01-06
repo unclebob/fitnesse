@@ -11,6 +11,7 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
+import fitnesse.components.ComponentInstantiationException;
 import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
@@ -119,8 +120,8 @@ public class PluginsLoader {
     String[] symbolTypeNames = getListFromProperties(ConfigurationParameter.SYMBOL_TYPES);
     if (symbolTypeNames != null) {
       for (String symbolTypeName : symbolTypeNames) {
-        Class<?> symbolTypeClass = forName(symbolTypeName.trim());
-        symbolProvider.add((SymbolType) newInstance(symbolTypeClass));
+        Class<SymbolType> symbolTypeClass = forName(symbolTypeName.trim());
+        symbolProvider.add(componentFactory.createComponent(symbolTypeClass));
         LOG.info("Loaded SymbolType " + symbolTypeClass.getName());
       }
     }
@@ -135,27 +136,27 @@ public class PluginsLoader {
   }
 
   public void loadSlimTables() throws PluginException {
-    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar() {
-      @Override public void register(String key, Class clazz) {
-        SlimTableFactory.addTableType(key, (Class<? extends SlimTable>) clazz);
+    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar<SlimTable>() {
+      @Override public void register(String key, Class<SlimTable> clazz) {
+        SlimTableFactory.addTableType(key, clazz);
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
       }
     });
   }
 
   public void loadCustomComparators() throws PluginException {
-    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar() {
-      @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
-        CustomComparatorRegistry.addCustomComparator(key, (CustomComparator) clazz.newInstance());
+    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar<CustomComparator>() {
+      @Override public void register(String key, Class<CustomComparator> clazz) {
+        CustomComparatorRegistry.addCustomComparator(key, componentFactory.createComponent(clazz));
         LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
       }
     });
   }
 
   public void loadTestSystems(final TestSystemFactoryRegistrar registrar) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar() {
-      @Override public void register(String key, Class clazz) throws IllegalAccessException, InstantiationException {
-        registrar.registerTestSystemFactory(key, (TestSystemFactory) clazz.newInstance());
+    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar<TestSystemFactory>() {
+      @Override public void register(String key, Class<TestSystemFactory> clazz) {
+        registrar.registerTestSystemFactory(key, componentFactory.createComponent(clazz));
         LOG.info("Loaded test system " + key + ": " + clazz.getName());
       }
     });
@@ -178,32 +179,20 @@ public class PluginsLoader {
   private void register(Registrar registrar, String prefix, String className) throws PluginException {
     try {
       registrar.register(prefix, forName(className));
-    } catch (IllegalAccessException e) {
-      throw new PluginException("Can not register class " + className, e);
-    } catch (InstantiationException e) {
-      throw new PluginException("Can not instantiate class " + className, e);
+    } catch (ComponentInstantiationException e) {
+      throw new PluginException("Can not register plug in " + className, e);
     }
   }
 
-  private Class<?> forName(String className) throws PluginException {
+  private <T> Class<T> forName(String className) throws PluginException {
     try {
-      return Class.forName(className);
+      return (Class<T>) Class.forName(className);
     } catch (ClassNotFoundException e) {
       throw new PluginException("Unable to load class " + className, e);
     }
   }
 
-  private <T> T newInstance(Class<T> clazz) throws PluginException {
-    try {
-      return clazz.newInstance();
-    } catch (IllegalAccessException e) {
-      throw new PluginException("Can not register class " + clazz.getName(), e);
-    } catch (InstantiationException e) {
-      throw new PluginException("Can not instantiate class " + clazz.getName(), e);
-    }
-  }
-
-  static private interface Registrar {
-    void register(String key, Class<?> clazz) throws IllegalAccessException, InstantiationException;
+  static private interface Registrar<T> {
+    void register(String key, Class<T> clazz);
   }
 }

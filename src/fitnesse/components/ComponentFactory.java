@@ -15,7 +15,7 @@ public class ComponentFactory {
     this.properties = properties;
   }
 
-  public Object createComponent(String componentType, Class<?> defaultComponent) {
+  public Object createComponent(String componentType, Class<?> defaultComponent) throws ComponentInstantiationException {
     String componentClassName = properties.getProperty(componentType);
     Class<?> componentClass;
     try {
@@ -23,20 +23,28 @@ public class ComponentFactory {
         componentClass = Class.forName(componentClassName);
       else
         componentClass = defaultComponent;
-
-      if (componentClass != null) {
-        try {
-          Constructor<?> constructor = componentClass.getConstructor(Properties.class);
-          return constructor.newInstance(properties);
-        } catch (NoSuchMethodException e) {
-          Constructor<?> constructor = componentClass.getConstructor();
-          return constructor.newInstance();
-        }
-      }
     } catch (Exception e) {
-      throw new RuntimeException("Unable to instantiate component for type " + componentType, e);
+      throw new ComponentInstantiationException("Unable to look up component for type " + componentType, e);
+    }
+
+    if (componentClass != null) {
+      return createComponent(componentClass);
     }
     return null;
+  }
+
+  public <T> T createComponent(Class<T> componentClass) throws ComponentInstantiationException {
+    try {
+      try {
+        Constructor<?> constructor = componentClass.getConstructor(Properties.class);
+        return (T) constructor.newInstance(properties);
+      } catch (NoSuchMethodException e) {
+        Constructor<?> constructor = componentClass.getConstructor();
+        return (T) constructor.newInstance();
+      }
+    } catch (Exception e) {
+      throw new ComponentInstantiationException("Unable to instantiate component for type " + componentClass.getName(), e);
+    }
   }
 
   public Object createComponent(ConfigurationParameter componentType, Class<?> defaultComponent) {
@@ -46,4 +54,5 @@ public class ComponentFactory {
   public Object createComponent(ConfigurationParameter componentType) {
     return createComponent(componentType, null);
   }
+
 }
