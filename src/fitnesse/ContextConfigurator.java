@@ -6,6 +6,7 @@ import java.util.Properties;
 import fitnesse.components.ComponentFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.editing.ContentFilter;
+import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
@@ -93,7 +94,8 @@ public class ContextConfigurator {
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
     // Need something like pre- and post- notifications to hook up this kind of functionality
-    SaveResponder.contentFilter = contentFilter;
+    if (contentFilter != null)
+      context.responderFactory.addFilter("save", new ContentFilterResponder(contentFilter));
     WikiImportTestEventListener.register();
 
     return context;
