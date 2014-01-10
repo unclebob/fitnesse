@@ -17,12 +17,21 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
 public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser<Object> {
+  private final WikiImporter importer;
+
   private boolean isUpdate;
   private boolean isNonRoot;
-  public PageData data;
 
-  private WikiImporter importer = new WikiImporter();
+  public PageData data;
   private TraversalListener<Object> traversalListener;
+
+  public WikiImportingResponder() {
+    this(new WikiImporter());
+  }
+
+  public WikiImportingResponder(WikiImporter wikiImporter) {
+    this.importer = wikiImporter;
+  }
 
   public static void handleImportProperties(HtmlPage html, WikiPage page) {
     PageData pageData = page.getData();
@@ -31,10 +40,6 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       html.put("sourceUrl", importProperty.getSourceUrl());
     }
-  }
-
-  public void setImporter(WikiImporter importer) {
-    this.importer = importer;
   }
 
   protected void doSending() throws Exception {
@@ -135,22 +140,21 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     this.response = response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
 
   // Callback from importer
+  @Override
   public void pageImported(WikiPage localPage) {
     traversalListener.process(localPage);
   }
 
   // Callback from importer
+  @Override
   public void pageImportError(WikiPage localPage, Exception e) {
     traversalListener.process(new ImportError("PAGEERROR", e.getMessage(), e));
-  }
-
-  public WikiImporter getImporter() {
-    return importer;
   }
 
   public static class ImportError {

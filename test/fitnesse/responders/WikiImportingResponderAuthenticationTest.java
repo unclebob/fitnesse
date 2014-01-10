@@ -39,12 +39,13 @@ public class WikiImportingResponderAuthenticationTest {
   }
 
   private void createResponder() throws Exception {
-    responder = new WikiImportingResponder();
+    WikiImporter importer = new WikiImporter();
+    importer.setDeleteOrphanOption(false);
+    responder = new WikiImportingResponder(importer);
     responder.path = new WikiPagePath();
     ChunkedResponse response = new ChunkedResponse("html", new MockChunkedDataProvider());
     response.sendTo(new MockResponseSender());
     responder.setResponse(response);
-    responder.getImporter().setDeleteOrphanOption(false);
   }
 
   @After

@@ -94,12 +94,15 @@ public class WikiImportTestEventListener implements TestEventListener {
 
     protected void updatePagePassedIn() {
       wikiImporter.importRemotePageContent(wikiPage);
+      // FixMe: Ugle hack to ensure ChunkedResponder.data is updated as well as any child pages!
       data.setContent(wikiPage.getData().getContent());
     }
 
+    @Override
     public void pageImported(WikiPage localPage) {
     }
 
+    @Override
     public void pageImportError(WikiPage localPage, Exception e) {
       errorOccured = true;
       LOG.log(Level.WARNING, "Exception while importing \"local page\": " + localPage.getName(), e);
