@@ -29,6 +29,7 @@
 		<include name="FrontPage/**"/>
 		<include name="PageHeader/**"/>
 		<include name="PageFooter/**"/>
+		<include name="TemplateLibrary/**"/>
 		<exclude name="**/*.zip"/>
 	</zipfileset>
 
@@ -96,10 +97,20 @@
 			<arg value="-doNotReplace:FitNesseRoot/PageHeader/properties.xml" />
 			<arg value="-doNotReplace:FitNesseRoot/PageFooter/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
+			<arg value="FitNesseRoot/TemplateLibrary" />
 		</java>
 	</target>
 
