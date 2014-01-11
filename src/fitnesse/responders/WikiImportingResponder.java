@@ -92,33 +92,4 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
-
-  public static class ImportError {
-    private String message;
-    private String type;
-    private Exception exception;
-
-    public ImportError(String type, String message) {
-      this(type, message, null);
-    }
-
-    public ImportError(String type, String message, Exception exception) {
-      super();
-      this.type = type;
-      this.message = message;
-      this.exception = exception;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public Exception getException() {
-      return exception;
-    }
-  }
 }

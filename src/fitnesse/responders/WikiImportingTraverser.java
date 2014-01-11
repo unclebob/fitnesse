@@ -1,7 +1,6 @@
 package fitnesse.responders;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
@@ -38,6 +37,10 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
     initializeImporter();
   }
 
+  public WikiImportingTraverser(WikiImporter wikiImporter, WikiPage page) throws IOException {
+    this(wikiImporter, page, null);
+  }
+
   private void initializeImporter() throws IOException {
     importer.setWikiImporterClient(this);
     importer.setLocalPath(pagePath);
@@ -62,11 +65,11 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
         page.commit(data);
       }
     } catch (WikiImporter.WikiImporterException e) {
-      traversalListener.process(new WikiImportingResponder.ImportError("ERROR", "The remote resource, " + importer.remoteUrl() + ", was not found."));
+      traversalListener.process(new ImportError("ERROR", "The remote resource, " + importer.remoteUrl() + ", was not found."));
     } catch (WikiImporter.AuthenticationRequiredException e) {
-      traversalListener.process(new WikiImportingResponder.ImportError("AUTH", e.getMessage()));
+      traversalListener.process(new ImportError("AUTH", e.getMessage()));
     } catch (Exception e) {
-      traversalListener.process(new WikiImportingResponder.ImportError("ERROR", e.getMessage(), e));
+      traversalListener.process(new ImportError("ERROR", e.getMessage(), e));
     }
 
   }
@@ -78,6 +81,35 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
 
   @Override
   public void pageImportError(WikiPage localPage, Exception e) {
-    traversalListener.process(new WikiImportingResponder.ImportError("PAGEERROR", e.getMessage(), e));
+    traversalListener.process(new ImportError("PAGEERROR", e.getMessage(), e));
+  }
+
+  public static class ImportError {
+    private String message;
+    private String type;
+    private Exception exception;
+
+    public ImportError(String type, String message) {
+      this(type, message, null);
+    }
+
+    public ImportError(String type, String message, Exception exception) {
+      super();
+      this.type = type;
+      this.message = message;
+      this.exception = exception;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
+    public Exception getException() {
+      return exception;
+    }
   }
 }
