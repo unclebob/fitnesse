@@ -272,7 +272,8 @@ public class WikiImportingResponderTest {
   public void testAutoUpdatingTurnedOn() throws Exception {
     MockRequest request = makeRequest(baseUrl);
     responder.setRequest(request);
-    responder.data = new PageData(new WikiPageDummy());
+    responder.page = new WikiPageDummy();
+    responder.data = new PageData(responder.page);
 
     responder.initializeImporter();
     assertFalse(importer.getAutoUpdateSetting());
