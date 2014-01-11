@@ -29,7 +29,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
   public static void handleImportProperties(HtmlPage html, WikiPage page) {
     PageData pageData = page.getData();
-    if (WikiImportProperty.isImported(pageData)) {
+    if (WikiImportProperty.isImportedSubWiki(pageData)) {
       html.setBodyClass("imported");
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       html.put("sourceUrl", importProperty.getSourceUrl());

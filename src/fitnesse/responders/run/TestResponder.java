@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
@@ -21,7 +20,6 @@ import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.JavaFormatter;
 import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.MockWikiImporter;
 import fitnesse.responders.WikiImporter;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.reporting.BaseFormatter;

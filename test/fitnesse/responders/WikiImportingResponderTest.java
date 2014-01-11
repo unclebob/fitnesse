@@ -339,7 +339,7 @@ public class WikiImportingResponderTest {
     page.commit(data);
     content = getContentAfterSpecialImportHandling();
 
-    assertTrue(WikiImportProperty.isImported(data));
+    assertTrue(WikiImportProperty.isImportedSubWiki(data));
     assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
     assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
   }
