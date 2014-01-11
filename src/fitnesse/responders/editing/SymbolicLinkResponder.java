@@ -150,6 +150,9 @@ public class SymbolicLinkResponder implements Responder {
   private boolean isInternalPageThatDoesntExist(String linkPath) {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
+    if (path == null) {
+      return false;
+    }
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
     return !start.getPageCrawler().pageExists(path);
   }
