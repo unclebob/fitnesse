@@ -64,13 +64,13 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   private HtmlPage makeHtml() throws Exception {
     HtmlPage html = context.pageFactory.newPage();
     String title = "Wiki Import";
-    if (importer.getAutoUpdateSetting())
+    if (wikiImportingTraverser.isUpdate())
       title += " Update";
     String localPathName = PathParser.render(path);
     html.setTitle(title + ": " + localPathName);
     html.setPageTitle(new PageTitle(title, path));
     html.setMainTemplate("wikiImportingPage");
-    html.put("isUpdate", importer.getAutoUpdateSetting());
+    html.put("isUpdate", wikiImportingTraverser.isUpdate());
     String pageName = PathParser.render(path);
     html.put("pageName", pageName);
     html.put("remoteUrl", importer.remoteUrl());
@@ -92,4 +92,5 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
+
 }

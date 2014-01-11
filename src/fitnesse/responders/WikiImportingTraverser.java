@@ -47,6 +47,10 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
     importer.parseUrl(remoteWikiUrl);
   }
 
+  public boolean isUpdate() {
+    return isUpdate;
+  }
+
   @Override
   public void traverse(TraversalListener<Object> traversalListener) {
     this.traversalListener = traversalListener;
