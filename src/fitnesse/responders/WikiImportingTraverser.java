@@ -111,5 +111,9 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
     public Exception getException() {
       return exception;
     }
+
+    public String toString() {
+      return getClass().getName() + ": " + getMessage();
+    }
   }
 }

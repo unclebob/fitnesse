@@ -2,29 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import util.StandardOutAndErrorRecorder;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.StandardOutAndErrorRecorder;
 
-public class WikiImportTestEventListenerTest {
-  private WikiImportTestEventListener eventListener;
+import static org.junit.Assert.assertEquals;
+
+public class TestResponderWikiImportingTest {
+  public MockWikiImporter mockWikiImporter;
   private MockTestResponder testResponder;
   private MockSuiteResponder suiteResponder;
   private WikiPage pageOne;
-  private MockWikiImporterFactory importerFactory;
   private WikiPage childOne;
   private WikiPage childTwo;
   private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
@@ -38,10 +36,12 @@ public class WikiImportTestEventListenerTest {
     childOne = pageOne.addChildPage("ChildOne");
     childTwo = pageOne.addChildPage("ChildTwo");
 
-    importerFactory = new MockWikiImporterFactory();
-    eventListener = new WikiImportTestEventListener(importerFactory);
-    testResponder = new MockTestResponder();
-    suiteResponder = new MockSuiteResponder();
+    mockWikiImporter = new MockWikiImporter();
+
+    testResponder = new MockTestResponder(mockWikiImporter);
+    suiteResponder = new MockSuiteResponder(mockWikiImporter);
+
+    testResponder.page = suiteResponder.page = pageOne;
   }
 
   @After
@@ -53,12 +53,11 @@ public class WikiImportTestEventListenerTest {
   public void testRunWithTestingOnePage() throws Exception {
     addImportPropertyToPage(pageOne, false, true);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(testResponder, data);
+    testResponder.importWikiPages();
 
     assertEquals(MockWikiImporter.mockContent, pageOne.getData().getContent());
-    assertEquals(MockWikiImporter.mockContent, data.getContent());
-    assertEquals("Updating imported content...done", sentMessages);
+//    assertEquals(MockWikiImporter.mockContent, data.getContent());
+    assertEquals("Updating imported content... Done.", sentMessages);
   }
 
   @Test
@@ -66,8 +65,7 @@ public class WikiImportTestEventListenerTest {
     testResponder.setXmlFormat();
     addImportPropertyToPage(pageOne, false, true);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(testResponder, data);
+    testResponder.importWikiPages();
     assertEquals("", sentMessages);
   }
 
@@ -75,51 +73,45 @@ public class WikiImportTestEventListenerTest {
   public void testRunWithTestingOnePageWithoutAutoUpdate() throws Exception {
     addImportPropertyToPage(pageOne, false, false);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(testResponder, data);
+    testResponder.importWikiPages();
 
     assertEquals("", pageOne.getData().getContent());
-    assertEquals("", data.getContent());
     assertEquals("", sentMessages);
   }
 
   @Test
   public void testErrorOccured() throws Exception {
-    importerFactory.mockWikiImporter.fail = true;
+    mockWikiImporter.fail = true;
     addImportPropertyToPage(pageOne, false, true);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(testResponder, data);
+    testResponder.importWikiPages();
 
+    assertEquals("Updating imported content... fitnesse.responders.WikiImportingTraverser$ImportError: blah. Done.", sentMessages);
     assertEquals("", pageOne.getData().getContent());
-    assertEquals("", data.getContent());
-    assertEquals("Updating imported content...java.lang.Exception: blah", sentMessages);
   }
 
   @Test
   public void testRunWithSuiteFromRoot() throws Exception {
     addImportPropertyToPage(pageOne, true, true);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(suiteResponder, data);
+    suiteResponder.importWikiPages();
 
     assertEquals("", pageOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childTwo.getData().getContent());
-    assertEquals("Updating imported content...done", sentMessages);
+    assertEquals("Updating imported content... Done.", sentMessages);
   }
 
   @Test
   public void testRunWithSuiteFromNonRoot() throws Exception {
     addImportPropertyToPage(pageOne, false, true);
 
-    PageData data = pageOne.getData();
-    eventListener.notifyPreTest(suiteResponder, data);
+    suiteResponder.importWikiPages();
 
     assertEquals(MockWikiImporter.mockContent, pageOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childTwo.getData().getContent());
-    assertEquals("Updating imported content...done", sentMessages);
+    assertEquals("Updating imported content... Done.", sentMessages);
   }
 
   private void addImportPropertyToPage(WikiPage page, boolean isRoot, boolean autoUpdate) throws Exception {
@@ -139,7 +131,9 @@ public class WikiImportTestEventListenerTest {
   }
 
   private class MockTestResponder extends TestResponder {
-    private MockTestResponder() {
+
+    public MockTestResponder(MockWikiImporter mockWikiImporter) {
+      super(mockWikiImporter);
       response = new ChunkedResponse("html", new MockChunkedDataProvider());
     }
 
@@ -153,7 +147,8 @@ public class WikiImportTestEventListenerTest {
   }
 
   private class MockSuiteResponder extends SuiteResponder {
-    private MockSuiteResponder() {
+    private MockSuiteResponder(MockWikiImporter mockWikiImporter) {
+      super(mockWikiImporter);
       response = new ChunkedResponse("html", new MockChunkedDataProvider());
     }
 

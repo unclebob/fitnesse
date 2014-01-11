@@ -12,15 +12,11 @@ import util.FileUtil;
 import fit.Fixture;
 import fitnesse.authentication.Authenticator;
 import fitnesse.responders.editing.SaveRecorder;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
-    //TODO - MdM - There's got to be a better way.
-    WikiImportTestEventListener.register();
-
     final int port = 9123;
     Properties properties = new Properties();
     properties.setProperty("FITNESSE_PORT", String.valueOf(port));
