@@ -113,6 +113,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
+  @Deprecated
   public @interface Port {
     public int value() default 0;
 
