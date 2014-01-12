@@ -14,9 +14,7 @@ import java.util.Properties;
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
 import fitnesse.PluginException;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
@@ -27,10 +25,7 @@ import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -124,28 +119,37 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     public String systemProperty() default "";
   }
 
+  /**
+   * The <code>ConfigFile</code> annotation specifies the configuration file to load.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface ConfigFile {
+    public String value();
+  }
+
   private final Class<?> suiteClass;
   private final String suiteName;
-  private final String fitNesseDir;
   private final String outputDir;
   private final String suiteFilter;
   private final String excludeSuiteFilter;
   private final boolean debugMode;
-  private final int port;
   private final FitNesseContext context;
   private final List<WikiPage> children;
 
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
     super(suiteClass);
+    String rootPath = getFitnesseDir(suiteClass);
+    int port = getPort(suiteClass);
+    File configFile = getConfigFile(rootPath, suiteClass);
+
     this.suiteClass = suiteClass;
     this.suiteName = getSuiteName(suiteClass);
-    this.fitNesseDir = getFitnesseDir(suiteClass);
     this.outputDir = getOutputDir(suiteClass);
     this.suiteFilter = getSuiteFilter(suiteClass);
     this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
     this.debugMode = useDebugMode(suiteClass);
-    this.port = getPort(suiteClass);
-    this.context = initContext(this.fitNesseDir, port);
+    this.context = initContext(configFile, rootPath, port);
     this.children = initChildren(context);
   }
 
@@ -241,6 +245,14 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return lport;
   }
 
+  private File getConfigFile(String rootPath, Class<?> klass) {
+    ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
+    if (null == configFileAnnotation) {
+      return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
+    }
+    return new File(configFileAnnotation.value());
+  }
+
   @Override
   public void run(final RunNotifier notifier) {
     if (isFilteredForChildTest()) {
@@ -277,9 +289,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return list;
   }
 
-  private FitNesseContext initContext(String rootPath, int port) throws IOException, PluginException {
-
-    Properties properties = ConfigurationParameter.makeProperties(
+  private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
+    Properties configFileProperties = ConfigurationParameter.makeProperties(System.getProperties(), configFile);
+    Properties properties = ConfigurationParameter.makeProperties(configFileProperties,
             ConfigurationParameter.PORT, port,
             ConfigurationParameter.ROOT_PATH, rootPath,
             ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
