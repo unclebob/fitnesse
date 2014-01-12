@@ -44,7 +44,7 @@ public class SlimTableFactory {
     if (tableType.equalsIgnoreCase("define table type")) {
       parseDefineTableTypeTable(table);
       return null;
-    } else if (tableType.equalsIgnoreCase("comment")) {
+    } else if (tableType.equalsIgnoreCase("comment") || tableType.startsWith("comment:")) {
       return null;
     }
 
