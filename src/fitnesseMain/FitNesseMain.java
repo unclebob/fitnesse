@@ -1,5 +1,6 @@
 package fitnesseMain;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.PluginException;
@@ -39,10 +40,10 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
-    Properties properties = loadConfigFile(arguments.getConfigFile());
-    Properties cascadedProperties = cascadeProperties(arguments, properties);
+    Properties properties = ConfigurationParameter.makeProperties(System.getProperties(), new File(arguments.getConfigFile()));
+    properties = arguments.asProperties(properties);
 
-    return launchFitNesse(cascadedProperties);
+    return launchFitNesse(properties);
   }
 
   public Integer launchFitNesse(Properties properties) throws Exception {
@@ -117,14 +118,6 @@ public class FitNesseMain {
     return new ContextConfigurator(properties).makeFitNesseContext();
   }
 
-  private Properties cascadeProperties(Arguments arguments, Properties properties) {
-    Properties configProperties = new Properties(System.getProperties());
-    configProperties.putAll(properties);
-    Properties argumentProperties = new Properties(configProperties);
-    argumentProperties.putAll(arguments.asProperties());
-    return argumentProperties;
-  }
-
   private void logStartupInfo(FitNesseContext context) {
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
@@ -135,29 +128,7 @@ public class FitNesseMain {
   }
 
   public Properties loadConfigFile(final String propertiesFile) {
-    FileInputStream propertiesStream = null;
-    Properties properties = new Properties();
-    File configurationFile = new File(propertiesFile);
-    try {
-      propertiesStream = new FileInputStream(configurationFile);
-    } catch (FileNotFoundException e) {
-      try {
-        LOG.info(String.format("No configuration file found (%s)", configurationFile.getCanonicalPath()));
-      } catch (IOException e1) {
-        LOG.info(String.format("No configuration file found (%s)", propertiesFile));
-      }
-    }
-
-    if (propertiesStream != null) {
-      try {
-        properties.load(propertiesStream);
-        propertiesStream.close();
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
-      }
-    }
-
-    return properties;
+    return ConfigurationParameter.makeProperties(System.getProperties(), new File(propertiesFile));
   }
 
   public void configureLogging(boolean verbose) {
