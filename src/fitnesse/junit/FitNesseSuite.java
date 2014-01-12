@@ -9,9 +9,13 @@ import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import fitnesse.ConfigurationParameter;
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContext.Builder;
+import fitnesse.PluginException;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
@@ -122,16 +126,16 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
 
   private final Class<?> suiteClass;
   private final String suiteName;
-  private String fitNesseDir;
-  private String outputDir;
-  private String suiteFilter;
-  private String excludeSuiteFilter;
-  private boolean debugMode = false;
-  private int port = 0;
+  private final String fitNesseDir;
+  private final String outputDir;
+  private final String suiteFilter;
+  private final String excludeSuiteFilter;
+  private final boolean debugMode;
+  private final int port;
   private final FitNesseContext context;
-  private List<WikiPage> children;
+  private final List<WikiPage> children;
 
-  public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
+  public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
     super(suiteClass);
     this.suiteClass = suiteClass;
     this.suiteName = getSuiteName(suiteClass);
@@ -142,12 +146,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     this.debugMode = useDebugMode(suiteClass);
     this.port = getPort(suiteClass);
     this.context = initContext(this.fitNesseDir, port);
-
-    try {
-      this.children = initChildren(context);
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
-    }
+    this.children = initChildren(context);
   }
 
   private List<WikiPage> initChildren(FitNesseContext context) {
@@ -278,21 +277,15 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return list;
   }
 
-  private FitNesseContext initContext(String rootPath, int port) {
-    Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
+  private FitNesseContext initContext(String rootPath, int port) throws IOException, PluginException {
 
-    builder.port = port;
-    builder.rootPath = rootPath;
-    builder.rootDirectoryName = "FitNesseRoot";
+    Properties properties = ConfigurationParameter.makeProperties(
+            ConfigurationParameter.PORT, port,
+            ConfigurationParameter.ROOT_PATH, rootPath,
+            ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
 
-    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-        builder.rootDirectoryName);
+    return new ContextConfigurator(properties).makeFitNesseContext();
 
-    builder.logger = null;
-    builder.authenticator = new PromiscuousAuthenticator();
-
-    return builder.createFitNesseContext();
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
