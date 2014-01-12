@@ -153,16 +153,6 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     this.children = initChildren(context);
   }
 
-  private List<WikiPage> initChildren(FitNesseContext context) {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage suiteRoot = crawler.getPage(path);
-    if (!suiteRoot.getData().hasAttribute("Suite")) {
-      throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
-    }
-    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
-  }
-
   @Override
   protected Description describeChild(WikiPage child) {
     return Description.createTestDescription(suiteClass, child.getPageCrawler().getFullPath().toString());
@@ -262,6 +252,10 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     }
   }
 
+  private boolean isFilteredForChildTest() {
+    return getDescription().getChildren().size() < getChildren().size();
+  }
+
   @Override
   protected void runChild(WikiPage page, RunNotifier notifier) {
     runPages(listOf(page), notifier);
@@ -279,14 +273,14 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     }
   }
 
-  private boolean isFilteredForChildTest() {
-    return getDescription().getChildren().size() < getChildren().size();
-  }
-
-  private List<WikiPage> listOf(WikiPage page) {
-    List<WikiPage> list = new ArrayList<WikiPage>(1);
-    list.add(page);
-    return list;
+  private List<WikiPage> initChildren(FitNesseContext context) {
+    WikiPagePath path = PathParser.parse(this.suiteName);
+    PageCrawler crawler = context.root.getPageCrawler();
+    WikiPage suiteRoot = crawler.getPage(path);
+    if (!suiteRoot.getData().hasAttribute("Suite")) {
+      throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
+    }
+    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
   private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
@@ -329,5 +323,11 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {
     return MessageFormat.format("at least one test executed in {0}\n{1}",
             pageName, summary.toString());
+  }
+
+  private List<WikiPage> listOf(WikiPage page) {
+    List<WikiPage> list = new ArrayList<WikiPage>(1);
+    list.add(page);
+    return list;
   }
 }
