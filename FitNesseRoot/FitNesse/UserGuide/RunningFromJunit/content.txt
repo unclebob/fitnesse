@@ -1,25 +1,36 @@
-You can run FitNesse Java (Fit and Slim) tests from a developer IDE without starting the FitNesse server. This is a developer-centric approach to running tests and is not suitable for collaboration with customers or testers, but it is very efficient for troubleshooting purposes. FitNesse includes a set of JUnit helpers that enable you to execute a test or a suite using JUnit. These helpers will execute FitNesse tests in-process, allowing you to debug and inspect the fixture or domain code during test execution. Test pass/failure reports are integrated with JUnit but the normal page output (tables etc) gets saved to the disk for later inspection, if required.
+You can run FitNesse Java (Fit and Slim) tests from a developer IDE without starting the FitNesse server. This is a developer-centric approach to running tests and is not suitable for collaboration with customers or testers, but it is very efficient for troubleshooting purposes. FitNesse includes a set of JUnit 4 runner that enables you to execute a test or a suite using JUnit. The runner will execute FitNesse tests in-process by default, allowing you to debug and inspect the fixture or domain code during test execution. Test pass/failure reports are integrated with JUnit but the normal page output (tables etc) gets saved to the disk for later inspection, if required.
 
- - !style_code(!-import fitnesse.junit.JUnitHelper-!)
- - instantiate the helper (eg in the setup method of the test class)
+The !-FitNese-! runner will report about individual test pages being executed by JUnit. For IDE's this means that the JUnit report window and give you detailed statistics for individual tests in a suite.
 
-!style_code{JUnitHelper helper=new JUnitHelper(FITNESSE_ROOT_PATH, DIRECTORY_FOR_OUTPUT_FILES);}
+!2 Using the !-FitNese-! runner
+To use the !-FitNese-! runner, Define !-fitnesse.junit.FitNesseSuite-! as the runner for a specific test class, using @org.junit.runner.RunWith(). Set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute.[[Here's a full example.][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/FitNesseSuiteExampleTest.java]]
 
-FITNESSE_ROOT_PATH is the directory where the wiki pages are, the one which contains your !-FitNesseRoot-! directory. DIRECTORY_FOR_OUTPUT_FILES  where HTML test results will be stored. The test result directory will be created if required. For example, the following command will instantiate a helper for a project that contains !-FitNesseRoot-! in the base directory and store the results in the fitnesse subfolder of the system-specific temporary folder.   
+!2 What about JUnitHelper?
+JUitHelper is no more. Main reason for this is that !-FitNesse-! has become more modular. Now it's possible to execute a set of tests with only a few lines of code. The basics are:
 
-!style_code{JUnitHelper helper=new JUnitHelper(".", new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath());}
+ * build a context:
 
- - you can now use helper.assertTestPasses(testName) or helper.assertSuitePasses(suiteName) in JUnit code to assert that a FitNesse test or suite pass. For example:
-!style_code{!-helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");-!} [[Here's a full example][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/JUnitHelperExampleTest.java]]
+{{{FitNesseContext context = new ContextConfigurator(properties /* a java.util.Properties instance */).makeFitNesseContext();}}}
 
-!2 Integration with graphical runners
+ * get a set of pages you want to execute:
 
-For better reporting in JUnit graphical test runners, you can use the !style_code(!-fitnesse.junit.FitNesseSuite-!) JUnit 4 runner. This will list individual test pages in the JUnit report window and give you detailed statistics for individual tests in a suite. To use it, set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute. [[Here's a full example][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/FitNesseSuiteExampleTest.java]]
+{{{List<WikiPage> pagesToExecute = new SuiteContentsFinder(suiteRoot, null /* optional fitnesse.testrunner.SuiteFilter */, context.root).getAllPagesToRunForThisSuite();}}}
 
-!2 Outputing JUnit XML files
+ * build a test runner, provide a descriptor with the execution details (e.g. debug mode) for the tests:
 
-For integration with continous build systems test history statistics, override the default listener for the JUnitHelper and set it to a JUnitXMLTestListener instance. 
+{{{final String classPath = new ClassPathBuilder().buildClassPath(pages);
+final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
+    @Override
+    public Descriptor create(WikiPage page) {
+        return new WikiPageDescriptor(page.readOnlyData(), true /* run in-process */, false /* remote debug */, classPath);
+    }
+});
+MultipleTestsRunner testRunner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);}}}
 
-!style_code{JUnitHelper helper = new JUnitHelper(fitNesseRootDir,htmlOutputDir,new JUnitXMLTestListener(xmlOutputDir));}
+ * register a !-TestSystemListener-! on the test runner:
 
-Then point your CI system to pick up JUnit XML files from the folder specified as xmlOutputDir. Remember to also archive the html files from the htmlOutputDir if you want to preserve them as a build artifact
+{{{testRunner.addTestSystemListener(new TestSystemListener() { ... });}}}
+
+ * execute the tests; test results are reported through the listener:
+
+{{{testRunner.executeTestPages();}}}

@@ -1,25 +1,31 @@
 package fitnesse.junit;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-import fitnesse.components.ComponentFactory;
+import fitnesse.ConfigurationParameter;
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
-import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.PluginException;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.WikiPageDescriptor;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -27,7 +33,10 @@ import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-public class FitNesseSuite extends ParentRunner<String> {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class FitNesseSuite extends ParentRunner<WikiPage> {
 
   /**
    * The <code>Name</code> annotation specifies the name of the Fitnesse suite
@@ -104,65 +113,54 @@ public class FitNesseSuite extends ParentRunner<String> {
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
+  @Deprecated
   public @interface Port {
     public int value() default 0;
 
     public String systemProperty() default "";
   }
 
+  /**
+   * The <code>ConfigFile</code> annotation specifies the configuration file to load.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface ConfigFile {
+    public String value();
+  }
+
   private final Class<?> suiteClass;
   private final String suiteName;
-  private String fitNesseDir;
-  private String outputDir;
-  private String suiteFilter;
-  private String excludeSuiteFilter;
-  private boolean debugMode = false;
-  private int port = 0;
-  private List<String> children;
+  private final String outputDir;
+  private final String suiteFilter;
+  private final String excludeSuiteFilter;
+  private final boolean debugMode;
+  private final FitNesseContext context;
+  private final List<WikiPage> children;
 
-  public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
+  public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
     super(suiteClass);
+    String rootPath = getFitnesseDir(suiteClass);
+    int port = getPort(suiteClass);
+    File configFile = getConfigFile(rootPath, suiteClass);
+
     this.suiteClass = suiteClass;
     this.suiteName = getSuiteName(suiteClass);
-    this.fitNesseDir = getFitnesseDir(suiteClass);
     this.outputDir = getOutputDir(suiteClass);
     this.suiteFilter = getSuiteFilter(suiteClass);
     this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
     this.debugMode = useDebugMode(suiteClass);
-    this.port = getPort(suiteClass);
-
-    try {
-      FitNesseContext context = initContext(this.fitNesseDir, port);
-      this.children = initChildren(context);
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
-    }
-  }
-
-  private List<String> initChildren(FitNesseContext context) {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage suiteRoot = crawler.getPage(path);
-    if (!suiteRoot.getData().hasAttribute("Suite")) {
-      throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
-    }
-    WikiPage root = crawler.getPage(PathParser.parse("."));
-    List<WikiPage> pages = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), root).getAllPagesToRunForThisSuite();
-
-    List<String> testPages = new ArrayList<String>();
-    for (WikiPage wp : pages) {
-      testPages.add(wp.getPageCrawler().getFullPath().toString());
-    }
-    return testPages;
+    this.context = initContext(configFile, rootPath, port);
+    this.children = initChildren(context);
   }
 
   @Override
-  protected Description describeChild(String child) {
-    return Description.createTestDescription(suiteClass, child);
+  protected Description describeChild(WikiPage child) {
+    return Description.createTestDescription(suiteClass, child.getPageCrawler().getFullPath().toString());
   }
 
   @Override
-  protected List<String> getChildren() {
+  protected List<WikiPage> getChildren() {
     return this.children;
   }
 
@@ -238,23 +236,20 @@ public class FitNesseSuite extends ParentRunner<String> {
     return lport;
   }
 
+  private File getConfigFile(String rootPath, Class<?> klass) {
+    ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
+    if (null == configFileAnnotation) {
+      return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
+    }
+    return new File(configFileAnnotation.value());
+  }
+
   @Override
   public void run(final RunNotifier notifier) {
     if (isFilteredForChildTest()) {
       super.run(notifier);
     } else {
-      runFullSuite(notifier);
-    }
-  }
-
-  protected void runFullSuite(final RunNotifier notifier) {
-    JUnitHelper helper = createJUnitHelper(notifier);
-    try {
-      helper.assertSuitePasses(suiteName, suiteFilter, excludeSuiteFilter);
-    } catch (AssertionFailedError e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
-    } catch (Exception e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
+      runPages(children, notifier);
     }
   }
 
@@ -263,39 +258,77 @@ public class FitNesseSuite extends ParentRunner<String> {
   }
 
   @Override
-  protected void runChild(String test, RunNotifier notifier) {
-    JUnitHelper helper = createJUnitHelper(notifier);
+  protected void runChild(WikiPage page, RunNotifier notifier) {
+    runPages(listOf(page), notifier);
+  }
+
+  protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
+    MultipleTestsRunner testRunner = createTestRunner(pages);
+    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
     try {
-      helper.assertTestPasses(test);
-    } catch (AssertionFailedError e) {
+      executeTests(testRunner);
+    } catch (AssertionError e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
     } catch (Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
     }
   }
 
-  private JUnitHelper createJUnitHelper(final RunNotifier notifier) {
-    JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier, suiteClass));
-    jUnitHelper.setDebugMode(debugMode);
-    jUnitHelper.setPort(port);
-    return jUnitHelper;
+  private List<WikiPage> initChildren(FitNesseContext context) {
+    WikiPagePath path = PathParser.parse(this.suiteName);
+    PageCrawler crawler = context.root.getPageCrawler();
+    WikiPage suiteRoot = crawler.getPage(path);
+    if (!suiteRoot.getData().hasAttribute("Suite")) {
+      throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
+    }
+    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
-  private static FitNesseContext initContext(String rootPath, int port) throws Exception {
-    Builder builder = new Builder();
-    WikiPageFactory wikiPageFactory = new FileSystemPageFactory();
+  private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
+    Properties configFileProperties = ConfigurationParameter.makeProperties(System.getProperties(), configFile);
+    Properties properties = ConfigurationParameter.makeProperties(configFileProperties,
+            ConfigurationParameter.PORT, port,
+            ConfigurationParameter.ROOT_PATH, rootPath,
+            ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
 
-    builder.port = port;
-    builder.rootPath = rootPath;
-    builder.rootDirectoryName = "FitNesseRoot";
+    return new ContextConfigurator(properties).makeFitNesseContext();
 
-    builder.root = wikiPageFactory.makeRootPage(builder.rootPath,
-        builder.rootDirectoryName);
+  }
 
-    builder.logger = null;
-    builder.authenticator = new PromiscuousAuthenticator();
+  private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
+    final String classPath = new ClassPathBuilder().buildClassPath(pages);
 
-    FitNesseContext context = builder.createFitNesseContext();
-    return context;
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
+      @Override
+      public Descriptor create(WikiPage page) {
+        return new WikiPageDescriptor(page.readOnlyData(), debugMode, false, classPath);
+      }
+    });
+
+    return new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+  }
+
+  private void executeTests(MultipleTestsRunner testRunner) throws IOException, InterruptedException {
+    JavaFormatter testFormatter = new JavaFormatter(suiteName);
+    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
+    testRunner.addTestSystemListener(testFormatter);
+
+    testRunner.executeTestPages();
+    TestSummary summary = testFormatter.getTotalSummary();
+
+    assertEquals("wrong", 0, summary.wrong);
+    assertEquals("exceptions", 0, summary.exceptions);
+    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.right > 0);
+  }
+
+  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
+    return MessageFormat.format("at least one test executed in {0}\n{1}",
+            pageName, summary.toString());
+  }
+
+  private List<WikiPage> listOf(WikiPage page) {
+    List<WikiPage> list = new ArrayList<WikiPage>(1);
+    list.add(page);
+    return list;
   }
 }

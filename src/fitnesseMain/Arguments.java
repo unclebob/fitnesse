@@ -75,8 +75,8 @@ public class Arguments {
     return configFile == null ? (getRootPath() + "/" + DEFAULT_CONFIG_FILE) : configFile;
   }
 
-  public Properties asProperties() {
-    Properties properties = new Properties();
+  public Properties asProperties(Properties parentProperties) {
+    Properties properties = new Properties(parentProperties);
     properties.setProperty(LOG_LEVEL.getKey(), verboseLogging ? "verbose" : "normal");
     if (configFile != null) properties.setProperty(CONFIG_FILE.getKey(), configFile);
     if (port != null) properties.setProperty(PORT.getKey(), port.toString());
@@ -91,4 +91,5 @@ public class Arguments {
     if (credentials != null) properties.setProperty(CREDENTIALS.getKey(), credentials);
     return properties;
   }
+
 }

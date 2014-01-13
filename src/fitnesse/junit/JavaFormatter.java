@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.junit;
 
 import java.io.Closeable;
 import java.io.File;
@@ -13,8 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.NullListener;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
@@ -29,8 +30,6 @@ public class JavaFormatter extends BaseFormatter {
 
   private String mainPageName;
   private boolean isSuite = true;
-  private static final Map<String, JavaFormatter> allocatedInstances = new HashMap<String, JavaFormatter>();
-  private TestSystemListener listener = new NullListener();
 
 
   public interface ResultsRepository {
@@ -141,7 +140,6 @@ public class JavaFormatter extends BaseFormatter {
   @Override
   public void testStarted(WikiTestPage test) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
-    listener.testStarted(test);
   }
 
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
@@ -151,7 +149,6 @@ public class JavaFormatter extends BaseFormatter {
     testSummaries.put(fullPath, new TestSummary(testSummary));
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
-    listener.testComplete(test, testSummary);
   }
 
   TestSummary getTestSummary(String testPath) {
@@ -184,21 +181,10 @@ public class JavaFormatter extends BaseFormatter {
     this.mainPageName = suiteName;
   }
 
-  public synchronized static JavaFormatter getInstance(String testName) {
-    JavaFormatter existing = allocatedInstances.get(testName);
-    if (existing != null)
-      return existing;
-    existing = new JavaFormatter(testName);
-    allocatedInstances.put(testName, existing);
-    return existing;
-  }
-
   @Override
   public void close() throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
-    if (listener instanceof Closeable)
-      ((Closeable) listener).close();
   }
 
   public void writeSummary(String suiteName) throws IOException {
@@ -261,17 +247,4 @@ public class JavaFormatter extends BaseFormatter {
       return sb.toString();
     }
   }
-
-  public void setListener(TestSystemListener listener) {
-    this.listener = listener;
-  }
-
-  public List<String> getTestsExecuted() {
-    return visitedTestPages;
-  }
-
-  public static void dropInstance(String testName) {
-    allocatedInstances.remove(testName);
-  }
-
 }
