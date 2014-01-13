@@ -1,11 +1,19 @@
 !2 Edge
+ * '''Files outside the http://files section can no longer be accessed!'''
  * Updated bootstrap theme to bootstrap 3.
  * Added hooks to add custom test systems.
  * Pages can now be defined in a .TemplateLibrary. You can add your own page scaffolding.
  * java.util.logging is now used for logging, instead of System.out/err.
  * support for more content types (in particular image types).
- * Cleanup: removed packages fitnesse.runner, fitnesse.schedule
+ * Cleanup: removed packages fitnesse.runner, fitnesse.schedule.
+ * Refactoring: the code is a little more modular than before.
+ * Make Fit test runner no longer dependent on the wiki running: now the Fit test system starts it's own "socket catcher".
+ * The jUnit test running is starting a test runner by itself. It's no longer using !-FitNesseMain-!.
+ * Slim server can be kept running after test execution (-d option).
  * Issues fixed:
+   * Unicode issues fixed.
+   * Stability fixes for Slim.
+   * Slim tables starting with "comment:" are considered comment tables.
    * Bug in Fit that caused flow mode for !-FitLibrary's-! !-DoFixture-! to break.
    * Bug where external HTML page suites were not displayed.
    * Hash map rendering in rich text editor.
