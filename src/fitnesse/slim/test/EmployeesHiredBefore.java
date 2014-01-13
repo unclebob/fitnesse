@@ -19,11 +19,7 @@ public class EmployeesHiredBefore {
     //optional function
   }
 
-  public Object query() {
-      return "This is a test";
-  }
-
-  public List<Object> query2() {
+  public List<Object> query() {
 
     return
             ListUtility.<Object>list(
