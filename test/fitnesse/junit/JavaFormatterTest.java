@@ -1,4 +1,4 @@
-package fitnesse.reporting;
+package fitnesse.junit;
 
 import java.io.Closeable;
 
@@ -15,27 +15,24 @@ import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {
 
-  interface JavaFormatterListener extends TestSystemListener, Closeable {
-  }
-
   private final String nestedPageName = "ParentTest.ChildTest";
   private final String suiteName="MySuite";
   JavaFormatter jf;
   JavaFormatter.ResultsRepository mockResultsRepository;
-  JavaFormatterListener listener;
 
   @Before
   public void prepare(){
     jf=new JavaFormatter(suiteName);
     mockResultsRepository=mock(JavaFormatter.ResultsRepository.class);
     jf.setResultsRepository(mockResultsRepository);
-    listener=mock(JavaFormatterListener.class);
   }
+
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
     WikiTestPage wp = buildNestedTestPage();
     assertEquals(nestedPageName, jf.getFullPath(wp.getSourcePage()));
   }
+
   private WikiTestPage buildNestedTestPage() throws Exception {
     WikiPageDummy wp=new WikiPageDummy("ChildTest",null);
     WikiPageDummy parent=new WikiPageDummy("ParentTest",null);
@@ -43,12 +40,14 @@ public class JavaFormatterTest {
     parent.setParent(new WikiPageDummy("root", null));
     return new WikiTestPage(wp);
   }
+
   @Test
   public void newTestStarted_SwitchesResultRepositoryToCurrentTest() throws Exception{
     WikiTestPage wp=buildNestedTestPage();
     jf.testStarted(wp);
     verify(mockResultsRepository).open(nestedPageName);
   }
+
   @Test
   public void testComplete_closesResultRepositoryAndAddsToTotalTestSummary() throws Exception{
     jf.setTotalSummary(new TestSummary(1,2,3,4));
@@ -56,6 +55,7 @@ public class JavaFormatterTest {
     assertEquals(new TestSummary(6,8,10,12),jf.getTotalSummary());
     verify(mockResultsRepository).close();
   }
+
   @Test
   public void writeSummary_WritesSummaryOfTestExecutions() throws Exception{
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
@@ -72,6 +72,7 @@ public class JavaFormatterTest {
     verify(mockResultsRepository).open("SummaryPageName");
     verify(mockResultsRepository, times(1)).write(expectedOutput);
   }
+
   @Test
   public void testComplete_clones_TestSummary_Objects() throws Exception{
     WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
@@ -83,6 +84,7 @@ public class JavaFormatterTest {
     jf.testComplete(new WikiTestPage(secondPage), ts);
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }
+
   @Test
   public void summaryRowFormatsTestOutputRows(){
     assertEquals("pass, no errors or exceptions",
@@ -95,16 +97,13 @@ public class JavaFormatterTest {
             "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
             new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 6, 0, 7)).toString());
   }
+
   @Test
   public void testOutputChunk_forwardsWriteToResultRepository() throws Exception{
     jf.testOutputChunk("Hey there!");
     verify(mockResultsRepository).write("Hey there!");
   }
-  @Test
-  public void getInstance_ReturnsTheSameObjectForTheSameTest(){
-    assertSame(JavaFormatter.getInstance("TestOne"),JavaFormatter.getInstance("TestOne"));
-    assertNotSame(JavaFormatter.getInstance("TestOne"),JavaFormatter.getInstance("TestTwo"));    
-  }
+
   @Test
   public void allTestingComplete_writesSummaryIfMainPageWasntExecuted() throws Exception{
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
@@ -112,39 +111,13 @@ public class JavaFormatterTest {
     jf.close();
     verify(mockResultsRepository).open(suiteName);     
   }
+
   @Test
   public void allTestingComplete_doesntWriteSummaryIfMainPageWasExecuted() throws Exception{
-    jf=JavaFormatter.getInstance(nestedPageName);
+    jf= new JavaFormatter(nestedPageName);
     jf.setResultsRepository(mockResultsRepository);
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
     jf.close();
     verify(mockResultsRepository,times(0)).open(nestedPageName);     
-  }
-  @Test
-  public void ifListenerIsSet_newTestStartedFiresTestStarted() throws Exception{
-    jf.setListener(listener);
-    WikiTestPage page=buildNestedTestPage();
-    jf.testStarted(page);
-    verify(listener).testStarted(page);
-  }
-  @Test
-  public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{
-    jf.setListener(listener);
-    WikiTestPage page=buildNestedTestPage();
-    jf.testComplete(page, new TestSummary(1,2,3,4));
-    verify(listener).testComplete(page, new TestSummary(1,2,3,4));
-  }
-  @Test
-  public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception{
-    jf.setListener(listener);
-    jf.close();
-    verify(listener).close();
-  }
-  @Test
-  public void dropInstance_drops_test_results(){
-    JavaFormatter first=JavaFormatter.getInstance("TestName");
-    JavaFormatter.dropInstance("TestName");
-    JavaFormatter second=JavaFormatter.getInstance("TestName");
-    assertNotSame(first, second);
   }
 }

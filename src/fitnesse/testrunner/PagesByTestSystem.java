@@ -26,7 +26,6 @@ public class PagesByTestSystem {
     this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
   }
 
-
   private Map<Descriptor, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
     Map<Descriptor, List<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(2);
 
