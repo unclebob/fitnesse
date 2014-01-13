@@ -1,10 +1,10 @@
 The rows in a query table represent the expected results of a query.  
 You can specify them precisely if you like as in the following:
 
-|Query:employees hired before|10-Dec-1980                     |
-|employee number             |first name|last name|hire date  |
-|1429                        |Bob       |Martin   |10-Oct-1975|
-|9924                        |Bill      |Mitchell |19-Dec-1966|
+|Query:employees hired before|10-Dec-1980                                     |
+|company number              |employee number|first name|last name|hire date  |
+|4808147                     |9942           |Bill      |Mitchell |19-Dec-1966|
+|4808147                     |1429           |Bob       |Martin   |10-Oct-1975|
 
 Or you can leave cells blank and allow them to be filled in:
 
