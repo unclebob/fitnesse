@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 import fitnesse.components.ComponentFactory;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.editing.ContentFilter;
-import fitnesse.responders.editing.SaveResponder;
+import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
@@ -93,8 +91,8 @@ public class ContextConfigurator {
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
     // Need something like pre- and post- notifications to hook up this kind of functionality
-    SaveResponder.contentFilter = contentFilter;
-    WikiImportTestEventListener.register();
+    if (contentFilter != null)
+      context.responderFactory.addFilter("save", new ContentFilterResponder(contentFilter));
 
     return context;
   }

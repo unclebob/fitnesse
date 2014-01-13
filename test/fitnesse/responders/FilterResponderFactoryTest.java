@@ -33,7 +33,7 @@ public class FilterResponderFactoryTest {
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     factory.addResponder("mock", MockResponder.class);
-    factory.addFilter("mock", MockFilter.class);
+    factory.addFilter("mock", new MockFilter());
 
     request = new MockRequest();
     request.addInput("responder", "mock");
@@ -60,7 +60,7 @@ public class FilterResponderFactoryTest {
 
   @Test
   public void shouldExecuteMultipleFilters() throws Exception {
-    factory.addFilter("mock", AnotherMockFilter.class);
+    factory.addFilter("mock", new AnotherMockFilter());
     Responder responder = factory.makeResponder(request);
     expectedAnotherFilterResponse = new SimpleResponse();
     Response response = responder.makeResponse(context, request);

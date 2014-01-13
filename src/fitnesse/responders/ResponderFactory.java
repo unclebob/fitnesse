@@ -49,12 +49,12 @@ public class ResponderFactory {
   private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
 
   private final String rootPath;
-  private final Map<String, Class<?>> responderMap;
-  private final Map<String, List<Class<?>>> filterMap;
+  private final Map<String, Class<? extends Responder>> responderMap;
+  private final Map<String, List<Responder>> filterMap;
 
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
-    responderMap = new HashMap<String, Class<?>>();
+    responderMap = new HashMap<String, Class<? extends Responder>>();
     addResponder("new", NewPageResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
@@ -100,19 +100,19 @@ public class ResponderFactory {
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
-    filterMap = new HashMap<String, List<Class<?>>>();
+    filterMap = new HashMap<String, List<Responder>>();
 //    addFilter("test", WikiImportTestEventListener.class);
 //    addFilter("suite", WikiImportTestEventListener.class);
   }
 
-  public final void addResponder(String key, Class<?> responderClass) {
+  public final void addResponder(String key, Class<? extends Responder> responderClass) {
     responderMap.put(key, responderClass);
   }
 
-  public void addFilter(String key, Class<?> filterClass) {
-    List<Class<?>> filters = filterMap.get(key);
+  public void addFilter(String key, Responder filterClass) {
+    List<Responder> filters = filterMap.get(key);
     if (filters == null) {
-      filters = new LinkedList<Class<?>>();
+      filters = new LinkedList<Responder>();
       filterMap.put(key, filters);
     }
     filters.add(filterClass);
@@ -177,26 +177,12 @@ public class ResponderFactory {
   }
 
   private Responder wrapWithFilters(String key, Responder responder) throws InstantiationException {
-    List<Class<?>> filters = filterMap.get(key);
+    List<Responder> filters = filterMap.get(key);
     if (filters == null || filters.isEmpty()) {
       return responder;
     }
 
-    try {
-      return new FilteringResponder(newResponderInstances(filters), responder);
-    } catch (Exception e) {
-      LOG.log(Level.WARNING, "Unable to instantiate filters for responder " + key, e);
-      throw new InstantiationException("Unable to instantiate filters for responder " + key);
-    }
-  }
-
-  private List<Responder> newResponderInstances(List<Class<?>> filterClasses) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    List<Responder> filters = new LinkedList<Responder>();
-
-    for (Class<?> filterClass : filterClasses) {
-      filters.add(newResponderInstance(filterClass));
-    }
-    return filters;
+    return new FilteringResponder(filters, responder);
   }
 
   public Class<?> getResponderClass(String responderKey) {

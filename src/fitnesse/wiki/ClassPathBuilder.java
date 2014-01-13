@@ -39,6 +39,9 @@ public class ClassPathBuilder {
   }
 
   public String buildClassPath(List<WikiPage> testPages) {
+    if (testPages.size() == 0) {
+      return "";
+    }
     final String pathSeparator = getPathSeparator(testPages.get(0));
     List<String> classPathElements = new ArrayList<String>();
 
