@@ -9,6 +9,7 @@ import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
+import fitnesse.responders.MockWikiImporter;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -22,6 +23,13 @@ public class SuiteResponder extends TestResponder {
 
   private boolean includeHtml;
   private SuiteHistoryFormatter suiteHistoryFormatter;
+
+  public SuiteResponder() {
+  }
+
+  public SuiteResponder(MockWikiImporter mockWikiImporter) {
+    super(mockWikiImporter);
+  }
 
   @Override
   protected String getTitle() {

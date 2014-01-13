@@ -243,10 +243,12 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return remotePath;
   }
 
+  // used by template
   public int getUnmodifiedCount() {
     return unmodifiedCount;
   }
 
+  // used by template
   public int getImportCount() {
     return importCount;
   }

@@ -49,12 +49,12 @@ public class WikiImportProperty extends WikiPageProperty {
   }
 
   public static boolean isImported(PageData pageData) {
-    try {
-      WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-      return importProperty != null && !importProperty.isRoot();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return pageData.hasAttribute(PROPERTY_NAME);
+  }
+
+  public static boolean isImportedSubWiki(PageData pageData) {
+    WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+    return importProperty != null && !importProperty.isRoot();
   }
 
   public static WikiImportProperty createFrom(WikiPageProperty property) {
@@ -71,6 +71,11 @@ public class WikiImportProperty extends WikiPageProperty {
       return importProperty;
     } else
       return null;
+  }
+
+  public static boolean isAutoUpdated(PageData pageData) {
+    WikiImportProperty importProperty = createFrom(pageData.getProperties());
+    return importProperty != null && importProperty.isAutoUpdate();
   }
 
   public void addTo(WikiPageProperty rootProperty) {
