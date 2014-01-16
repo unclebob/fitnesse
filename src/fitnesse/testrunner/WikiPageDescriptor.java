@@ -34,6 +34,7 @@ public class WikiPageDescriptor implements Descriptor {
   public WikiPageDescriptor(ReadOnlyPageData data, boolean inProcess, boolean remoteDebug, String classPath) {
     this.data = data;
     this.inProcess = inProcess;
+    // Debug property should move to ClientBuilder
     this.remoteDebug = remoteDebug;
     this.classPath = classPath;
   }
@@ -57,14 +58,6 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
-  public String getTestSystem() {
-    String testSystemName = getVariable(TEST_SYSTEM);
-    if (testSystemName == null)
-      return "fit";
-    return testSystemName;
-  }
-
-  @Override
   public String getTestSystemType() {
     String type = getRawTestSystemType();
     if (inProcess) type += IN_PROCESS;
@@ -80,7 +73,7 @@ public class WikiPageDescriptor implements Descriptor {
     String testSystemName = getTestSystem();
     if (inProcess)
       testSystemName += "^inprocess";
-              String testRunner = getTestRunnerNormal();
+    String testRunner = getTestRunnerNormal();
     return String.format("%s:%s", testSystemName, testRunner);
   }
 
@@ -95,13 +88,6 @@ public class WikiPageDescriptor implements Descriptor {
     return program;
   }
 
-  private String getTestRunnerNormal() {
-    String program = getVariable(TEST_RUNNER);
-    if (program == null)
-      program = defaultTestRunner();
-    return program;
-  }
-
   String defaultTestRunner() {
     String testSystemType = getRawTestSystemType();
     if ("slim".equalsIgnoreCase(testSystemType))
@@ -109,7 +95,6 @@ public class WikiPageDescriptor implements Descriptor {
     else
       return "fit.FitServer";
   }
-
 
   @Override
   public String getTestRunner() {
@@ -130,12 +115,6 @@ public class WikiPageDescriptor implements Descriptor {
     return testRunner;
   }
 
-  private String getNormalCommandPattern() {
-    String testRunner = getVariable(COMMAND_PATTERN);
-    if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
-    return testRunner;
-  }
 
   @Override
   public String getCommandPattern() {
@@ -171,9 +150,30 @@ public class WikiPageDescriptor implements Descriptor {
     return data.getVariable(name);
   }
 
+  public String getTestSystem() {
+    String testSystemName = getVariable(TEST_SYSTEM);
+    if (testSystemName == null)
+      return "fit";
+    return testSystemName;
+  }
+
+  private String getTestRunnerNormal() {
+    String program = getVariable(TEST_RUNNER);
+    if (program == null)
+      program = defaultTestRunner();
+    return program;
+  }
+
+  private String getNormalCommandPattern() {
+    String testRunner = getVariable(COMMAND_PATTERN);
+    if (testRunner == null)
+      testRunner = DEFAULT_COMMAND_PATTERN;
+    return testRunner;
+  }
+
   @Override
   public int hashCode() {
-    return getTestSystemName().hashCode() ^ getTestRunner().hashCode() ^ getCommandPattern().hashCode();
+    return getTestSystem().hashCode() ^ getTestRunnerNormal().hashCode() ^ getNormalCommandPattern().hashCode();
   }
 
   @Override
@@ -181,10 +181,10 @@ public class WikiPageDescriptor implements Descriptor {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
 
-    Descriptor descriptor = (Descriptor) obj;
-    return descriptor.getTestSystemName().equals(getTestSystemName()) &&
-            descriptor.getTestRunner().equals(getTestRunner()) &&
-            descriptor.getCommandPattern().equals(getCommandPattern());
+    WikiPageDescriptor descriptor = (WikiPageDescriptor) obj;
+    return descriptor.getTestSystem().equals(getTestSystem()) &&
+            descriptor.getTestRunnerNormal().equals(getTestRunnerNormal()) &&
+            descriptor.getNormalCommandPattern().equals(getNormalCommandPattern());
   }
 
 }
