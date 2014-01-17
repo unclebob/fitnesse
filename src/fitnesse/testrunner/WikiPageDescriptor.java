@@ -3,26 +3,12 @@ package fitnesse.testrunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.wiki.ReadOnlyPageData;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.regex.Matcher;
-
 /**
  * Define a (hashable) extract of the test page, to be used as input for building the test system.
  */
 public class WikiPageDescriptor implements Descriptor {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String DEFAULT_COMMAND_PATTERN =
-    "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
-      System.getProperty("path.separator") +
-      "%p %m";
-  public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
-  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
-  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
-  public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
   public static final String TEST_RUNNER = "TEST_RUNNER";
-  public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
-  public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
   public static final String IN_PROCESS = "^inprocess";
 
@@ -39,24 +25,6 @@ public class WikiPageDescriptor implements Descriptor {
     this.classPath = classPath;
   }
 
-  protected static String fitnesseJar(String classpath) {
-    for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
-      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
-      String jarFile = paths[paths.length-1];
-      if ("fitnesse-standalone.jar".equals(jarFile)) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-    }
-
-    return "fitnesse.jar";
-  }
-
   @Override
   public String getTestSystemType() {
     String type = getRawTestSystemType();
@@ -66,72 +34,6 @@ public class WikiPageDescriptor implements Descriptor {
 
   private String getRawTestSystemType() {
     return getTestSystem().split(":")[0];
-  }
-
-  @Override
-  public String getTestSystemName() {
-    String testSystemName = getTestSystem();
-    if (inProcess)
-      testSystemName += "^inprocess";
-    String testRunner = getTestRunnerNormal();
-    return String.format("%s:%s", testSystemName, testRunner);
-  }
-
-  private String getTestRunnerDebug() {
-    String program = getVariable(REMOTE_DEBUG_RUNNER);
-    if (program == null) {
-      program = getTestRunnerNormal();
-      if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
-        program = program.toLowerCase().replace(DEFAULT_CSHARP_DEBUG_RUNNER_FIND,
-          DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE);
-    }
-    return program;
-  }
-
-  String defaultTestRunner() {
-    String testSystemType = getRawTestSystemType();
-    if ("slim".equalsIgnoreCase(testSystemType))
-      return "fitnesse.slim.SlimService";
-    else
-      return "fit.FitServer";
-  }
-
-  @Override
-  public String getTestRunner() {
-    if (remoteDebug)
-      return getTestRunnerDebug();
-    else
-      return getTestRunnerNormal();
-  }
-
-  private String getRemoteDebugCommandPattern() {
-    String testRunner = getVariable(REMOTE_DEBUG_COMMAND);
-    if (testRunner == null) {
-      testRunner = getVariable(COMMAND_PATTERN);
-      if (testRunner == null || testRunner.toLowerCase().contains("java")) {
-        testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
-      }
-    }
-    return testRunner;
-  }
-
-
-  @Override
-  public String getCommandPattern() {
-    if (remoteDebug)
-      return getRemoteDebugCommandPattern();
-    else
-      return getNormalCommandPattern();
-  }
-
-  @Override
-  public Map<String, String> createClasspathEnvironment(String classPath) {
-    String classpathProperty = getVariable(WikiPageDescriptor.CLASSPATH_PROPERTY);
-    Map<String, String> environmentVariables = null;
-    if (classpathProperty != null) {
-      environmentVariables = Collections.singletonMap(classpathProperty, classPath);
-    }
-    return environmentVariables;
   }
 
   @Override
@@ -150,6 +52,7 @@ public class WikiPageDescriptor implements Descriptor {
     return data.getVariable(name);
   }
 
+  @Override
   public String getTestSystem() {
     String testSystemName = getVariable(TEST_SYSTEM);
     if (testSystemName == null)
@@ -157,23 +60,23 @@ public class WikiPageDescriptor implements Descriptor {
     return testSystemName;
   }
 
-  private String getTestRunnerNormal() {
+  private String testRunner() {
     String program = getVariable(TEST_RUNNER);
     if (program == null)
-      program = defaultTestRunner();
+      program = "";
     return program;
   }
 
-  private String getNormalCommandPattern() {
+  private String commandPattern() {
     String testRunner = getVariable(COMMAND_PATTERN);
     if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
+      testRunner = "";
     return testRunner;
   }
 
   @Override
   public int hashCode() {
-    return getTestSystem().hashCode() ^ getTestRunnerNormal().hashCode() ^ getNormalCommandPattern().hashCode();
+    return getTestSystem().hashCode() ^ testRunner().hashCode() ^ commandPattern().hashCode();
   }
 
   @Override
@@ -183,8 +86,8 @@ public class WikiPageDescriptor implements Descriptor {
 
     WikiPageDescriptor descriptor = (WikiPageDescriptor) obj;
     return descriptor.getTestSystem().equals(getTestSystem()) &&
-            descriptor.getTestRunnerNormal().equals(getTestRunnerNormal()) &&
-            descriptor.getNormalCommandPattern().equals(getNormalCommandPattern());
+            descriptor.testRunner().equals(testRunner()) &&
+            descriptor.commandPattern().equals(commandPattern());
   }
 
 }

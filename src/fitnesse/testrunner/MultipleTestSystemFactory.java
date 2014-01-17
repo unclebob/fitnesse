@@ -51,8 +51,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     public final TestSystem create(Descriptor descriptor) throws IOException {
-      SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
+      SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
+      SlimCommandRunningClient slimClient = clientBuilder.build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
               slimTableFactory, customComparatorRegistry);
 
       return testSystem;
@@ -70,8 +71,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     public TestSystem create(Descriptor descriptor) throws IOException {
-      SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
+      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
+      SlimCommandRunningClient slimClient = clientBuilder.build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
               slimTableFactory, customComparatorRegistry);
 
       return testSystem;
@@ -81,18 +83,20 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class FitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      CommandRunningFitClient fitClient = new FitClientBuilder(descriptor).build();
+      FitClientBuilder clientBuilder = new FitClientBuilder(descriptor);
+      CommandRunningFitClient fitClient = clientBuilder.build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
+      return new FitTestSystem(clientBuilder.getTestSystemName(), fitClient);
     }
   }
 
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      CommandRunningFitClient fitClient = new InProcessFitClientBuilder(descriptor).build();
+      InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor);
+      CommandRunningFitClient fitClient = clientBuilder.build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
+      return new FitTestSystem(clientBuilder.getTestSystemName(), fitClient);
     }
   }
 }

@@ -39,15 +39,20 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner();
     } else {
-      commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
+      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(descriptor.getClassPath()));
     }
 
     return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
   }
 
+  @Override
+  protected String defaultTestRunner() {
+    return "fitnesse.slim.SlimService";
+  }
+
   protected String buildCommand() {
     String slimArguments = buildArguments();
-    String slimCommandPrefix = super.buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
+    String slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
     return String.format("%s %s", slimCommandPrefix, slimArguments);
   }
 
