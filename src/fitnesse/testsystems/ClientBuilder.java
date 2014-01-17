@@ -21,7 +21,7 @@ public abstract class ClientBuilder<T> {
   public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
   public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
 
-  protected final Descriptor descriptor;
+  private final Descriptor descriptor;
 
   public ClientBuilder(Descriptor descriptor) {
     this.descriptor = descriptor;
@@ -104,6 +104,10 @@ public abstract class ClientBuilder<T> {
 
   public String getClassPath() {
     return descriptor.getClassPath();
+  }
+
+  public boolean isDebug() {
+    return descriptor.isDebug();
   }
 
   public String getVariable(String name) {
