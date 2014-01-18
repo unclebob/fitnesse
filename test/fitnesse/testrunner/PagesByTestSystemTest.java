@@ -46,16 +46,16 @@ public class PagesByTestSystemTest{
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root, new StubDescriptorFactory());
-    Collection<Descriptor> descriptors = pagesByTestSystem.descriptors();
-    Descriptor fitDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, "");
-    Descriptor slimDescriptor = new WikiPageDescriptor(slimPage.readOnlyData(), false, false, "");
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root);
+    Collection<WikiPageIdentity> descriptors = pagesByTestSystem.identities();
+    WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage.readOnlyData());
+    WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage.readOnlyData());
 
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
 
-    List<WikiPage> fitList = pagesByTestSystem.testPageForDescriptor(fitDescriptor);
-    List<WikiPage> slimList = pagesByTestSystem.testPageForDescriptor(slimDescriptor);
+    List<WikiPage> fitList = pagesByTestSystem.testPageForIdentity(fitDescriptor);
+    List<WikiPage> slimList = pagesByTestSystem.testPageForIdentity(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
@@ -76,14 +76,5 @@ public class PagesByTestSystemTest{
     testPage.commit(data);
     return testPage;
   }
-
-  static private class StubDescriptorFactory implements PagesByTestSystem.DescriptorFactory {
-
-    @Override
-    public Descriptor create(WikiPage page) {
-      return new WikiPageDescriptor(page.getData(), false, false, "");
-    }
-  }
-
 
 }

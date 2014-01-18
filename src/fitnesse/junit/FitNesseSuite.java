@@ -275,13 +275,17 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   }
 
   private List<WikiPage> initChildren(FitNesseContext context) {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage suiteRoot = crawler.getPage(path);
+    WikiPage suiteRoot = getSuiteRootPage(context);
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+  }
+
+  private WikiPage getSuiteRootPage(FitNesseContext context) {
+    WikiPagePath path = PathParser.parse(this.suiteName);
+    PageCrawler crawler = context.root.getPageCrawler();
+    return crawler.getPage(path);
   }
 
   private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
@@ -298,13 +302,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
     final String classPath = new ClassPathBuilder().buildClassPath(pages);
 
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
-      @Override
-      public Descriptor create(WikiPage page) {
-        return new WikiPageDescriptor(page.readOnlyData(), debugMode, false, classPath);
-      }
-    });
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
+    // getSuiteRoorPage [suiteName] + pages
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;

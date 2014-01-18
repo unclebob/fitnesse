@@ -25,6 +25,14 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
+  public String getTestSystem() {
+    String testSystemName = getVariable(TEST_SYSTEM);
+    if (testSystemName == null)
+      return "fit";
+    return testSystemName;
+  }
+
+  @Override
   public String getTestSystemType() {
     return getTestSystem().split(":")[0];
   }
@@ -48,45 +56,6 @@ public class WikiPageDescriptor implements Descriptor {
   @Override
   public String getVariable(String name) {
     return data.getVariable(name);
-  }
-
-  @Override
-  public String getTestSystem() {
-    String testSystemName = getVariable(TEST_SYSTEM);
-    if (testSystemName == null)
-      return "fit";
-    return testSystemName;
-  }
-
-  private String testRunner() {
-    String program = getVariable(TEST_RUNNER);
-    if (program == null)
-      program = "";
-    return program;
-  }
-
-  private String commandPattern() {
-    String testRunner = getVariable(COMMAND_PATTERN);
-    if (testRunner == null)
-      testRunner = "";
-    return testRunner;
-  }
-
-  @Override
-  public int hashCode() {
-    return getTestSystem().hashCode() ^ testRunner().hashCode() ^ commandPattern().hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-
-    WikiPageDescriptor descriptor = (WikiPageDescriptor) obj;
-    return descriptor.runInProcess() == runInProcess() &&
-            descriptor.getTestSystem().equals(getTestSystem()) &&
-            descriptor.testRunner().equals(testRunner()) &&
-            descriptor.commandPattern().equals(commandPattern());
   }
 
 }

@@ -17,6 +17,8 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ClassPathBuilder;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
@@ -76,18 +78,18 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Descriptor descriptor : pagesByTestSystem.descriptors()) {
-      startTestSystemAndExecutePages(descriptor, pagesByTestSystem.testPageForDescriptor(descriptor));
+    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
+      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPageForIdentity(identity));
     }
 
     testingTracker.removeEndedProcess(stopId);
   }
 
-  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = startTestSystem(descriptor, testSystemPages);
+        testSystem = startTestSystem(identity, testSystemPages);
       }
 
       if (testSystem != null && testSystem.isSuccessfullyStarted()) {
@@ -101,16 +103,19 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     }
   }
 
-  private TestSystem startTestSystem(final Descriptor descriptor, final List<WikiPage> testPages) throws IOException {
+  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<WikiPage> testPages) throws IOException {
     testSystem = testSystemFactory.create(new Descriptor() {
       private String classPath;
 
       @Override public String getTestSystem() {
-        return descriptor.getTestSystem();
+        String testSystemName = getVariable(WikiPageDescriptor.TEST_SYSTEM);
+        if (testSystemName == null)
+          return "fit";
+        return testSystemName;
       }
 
       @Override public String getTestSystemType() {
-        return descriptor.getTestSystemType();
+        return getTestSystem().split(":")[0];
       }
 
       @Override public String getClassPath() {
@@ -129,7 +134,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       }
 
       @Override public String getVariable(String name) {
-        return descriptor.getVariable(name);
+        return identity.getVariable(name);
       }
     });
 
