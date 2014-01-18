@@ -18,9 +18,7 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -299,8 +297,6 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final String classPath = new ClassPathBuilder().buildClassPath(pages);
-
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
     // getSuiteRoorPage [suiteName] + pages
