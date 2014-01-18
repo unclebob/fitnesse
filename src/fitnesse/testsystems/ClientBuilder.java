@@ -61,7 +61,7 @@ public abstract class ClientBuilder<T> {
 
 
   public String getTestRunner() {
-    if (descriptor.isDebug())
+    if (isDebug())
       return getTestRunnerDebug();
     else
       return getTestRunnerNormal();
@@ -80,7 +80,7 @@ public abstract class ClientBuilder<T> {
 
 
   public String getCommandPattern() {
-    if (descriptor.isDebug())
+    if (isDebug())
       return getRemoteDebugCommandPattern();
     else
       return getNormalCommandPattern();
