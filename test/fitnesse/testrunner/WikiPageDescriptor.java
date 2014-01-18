@@ -7,9 +7,6 @@ import fitnesse.wiki.ReadOnlyPageData;
  * Define a (hashable) extract of the test page, to be used as input for building the test system.
  */
 public class WikiPageDescriptor implements Descriptor {
-  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String TEST_RUNNER = "TEST_RUNNER";
-  public static final String TEST_SYSTEM = "TEST_SYSTEM";
 
   private final ReadOnlyPageData data;
   private final boolean inProcess;
@@ -26,7 +23,7 @@ public class WikiPageDescriptor implements Descriptor {
 
   @Override
   public String getTestSystem() {
-    String testSystemName = getVariable(TEST_SYSTEM);
+    String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
     if (testSystemName == null)
       return "fit";
     return testSystemName;

@@ -32,8 +32,6 @@ import fitnesse.responders.WikiImportingTraverser;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.WikiPageDescriptor;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ClassPathBuilder;

@@ -17,8 +17,6 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ClassPathBuilder;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
@@ -108,7 +106,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       private String classPath;
 
       @Override public String getTestSystem() {
-        String testSystemName = getVariable(WikiPageDescriptor.TEST_SYSTEM);
+        String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
         if (testSystemName == null)
           return "fit";
         return testSystemName;

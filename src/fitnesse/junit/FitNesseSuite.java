@@ -18,7 +18,6 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.ClassPathBuilder;
