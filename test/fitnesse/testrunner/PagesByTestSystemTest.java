@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -54,8 +53,8 @@ public class PagesByTestSystemTest{
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
 
-    List<WikiPage> fitList = pagesByTestSystem.testPageForIdentity(fitDescriptor);
-    List<WikiPage> slimList = pagesByTestSystem.testPageForIdentity(slimDescriptor);
+    List<WikiPage> fitList = pagesByTestSystem.testPagesForIdentity(fitDescriptor);
+    List<WikiPage> slimList = pagesByTestSystem.testPagesForIdentity(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());

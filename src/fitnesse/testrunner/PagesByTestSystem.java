@@ -69,7 +69,7 @@ public class PagesByTestSystem {
     return pagesByTestSystem.keySet();
   }
 
-  public List<WikiPage> testPageForIdentity(WikiPageIdentity identity) {
+  public List<WikiPage> testPagesForIdentity(WikiPageIdentity identity) {
     return Collections.unmodifiableList(pagesByTestSystem.get(identity));
   }
 

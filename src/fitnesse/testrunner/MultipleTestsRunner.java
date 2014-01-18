@@ -77,7 +77,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     announceTotalTestsToRun(pagesByTestSystem);
 
     for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
-      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPageForIdentity(identity));
+      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
     }
 
     testingTracker.removeEndedProcess(stopId);
