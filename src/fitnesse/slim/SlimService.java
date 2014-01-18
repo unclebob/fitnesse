@@ -8,31 +8,34 @@ import util.CommandLine;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import fitnesse.socketservice.SocketFactory;
 
+import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
+
 public class SlimService {
-  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-d] port";
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] port";
   static Class<? extends DefaultInteraction> interactionClass;
 
   public static class Options {
     final boolean verbose;
     final int port;
     final Class<? extends DefaultInteraction> interactionClass;
-    /** daemon mode: keep accepting new connections indefinitely. */
+    /**
+     * daemon mode: keep accepting new connections indefinitely.
+     */
     final boolean daemon;
+    final Integer statementTimeout;
 
-    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon) {
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, Integer statementTimeout) {
       this.verbose = verbose;
       this.port = port;
       this.interactionClass = interactionClass;
       this.daemon = daemon;
+      this.statementTimeout = statementTimeout;
     }
   }
 
@@ -45,7 +48,7 @@ public class SlimService {
   public static void main(String[] args) throws IOException {
     Options options = parseCommandLine(args);
     if (options != null) {
-      startWithFactory(new JavaSlimFactory(), options);
+      startWithFactory(createJavaSlimFactory(options), options);
     } else {
       parseCommandLineFailed(args);
     }
@@ -99,8 +102,10 @@ public class SlimService {
       String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
       int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      String statementTimeoutString = commandLine.getOptionArgument("s", "statementTimeout");
+      Integer statementTimeout = (statementTimeoutString == null) ? null : Integer.parseInt(statementTimeoutString);
       boolean daemon = commandLine.hasOption("d");
-      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon);
+      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon, statementTimeout);
     }
     return null;
   }
