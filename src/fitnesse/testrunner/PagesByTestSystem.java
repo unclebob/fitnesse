@@ -14,19 +14,17 @@ import fitnesse.wiki.WikiPage;
  * Organize pages by test system in an appropriate order.
  */
 public class PagesByTestSystem {
-  private final List<WikiPage> pages;
   private final WikiPage root;
   private final Map<Descriptor, List<WikiPage>> pagesByTestSystem;
   private final DescriptorFactory descriptorFactory;
 
   public PagesByTestSystem(List<WikiPage> pages, WikiPage root, DescriptorFactory descriptorFactory) {
-    this.pages = pages;
     this.root = root;
     this.descriptorFactory = descriptorFactory;
-    this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
+    this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown(pages));
   }
 
-  private Map<Descriptor, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
+  private Map<Descriptor, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown(List<WikiPage> pages) {
     Map<Descriptor, List<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(2);
 
     for (WikiPage wikiPage : pages) {
@@ -52,7 +50,7 @@ public class PagesByTestSystem {
   private Map<Descriptor, List<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, List<WikiPage>> pagesByTestSystem) {
     Map<Descriptor, List<WikiPage>> orderedPagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(pagesByTestSystem.size());
 
-    if (pages.size() > 0) {
+    if (pagesByTestSystem.size() > 0) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
       for (Map.Entry<Descriptor, List<WikiPage>> pages : pagesByTestSystem.entrySet())
