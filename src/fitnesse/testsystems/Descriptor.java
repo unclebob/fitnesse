@@ -10,8 +10,9 @@ public interface Descriptor {
 
   String getTestSystemType();
 
-  // To ClientBuilder
   String getClassPath();
+
+  boolean runInProcess();
 
   boolean isDebug();
 

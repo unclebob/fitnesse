@@ -10,7 +10,6 @@ public class WikiPageDescriptor implements Descriptor {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
-  public static final String IN_PROCESS = "^inprocess";
 
   private final ReadOnlyPageData data;
   private final boolean inProcess;
@@ -27,18 +26,17 @@ public class WikiPageDescriptor implements Descriptor {
 
   @Override
   public String getTestSystemType() {
-    String type = getRawTestSystemType();
-    if (inProcess) type += IN_PROCESS;
-    return type;
-  }
-
-  private String getRawTestSystemType() {
     return getTestSystem().split(":")[0];
   }
 
   @Override
   public String getClassPath() {
     return classPath;
+  }
+
+  @Override
+  public boolean runInProcess() {
+    return inProcess;
   }
 
   @Override
@@ -85,7 +83,8 @@ public class WikiPageDescriptor implements Descriptor {
     if (getClass() != obj.getClass()) return false;
 
     WikiPageDescriptor descriptor = (WikiPageDescriptor) obj;
-    return descriptor.getTestSystem().equals(getTestSystem()) &&
+    return descriptor.runInProcess() == runInProcess() &&
+            descriptor.getTestSystem().equals(getTestSystem()) &&
             descriptor.testRunner().equals(testRunner()) &&
             descriptor.commandPattern().equals(commandPattern());
   }

@@ -38,7 +38,7 @@ public class WikiPageDescriptorTest {
                     "!define TEST_RUNNER {runner}\n");
     WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
-    Assert.assertEquals("system^inprocess", testSystemType);
+    Assert.assertEquals("system", testSystemType);
   }
 
   @Test
@@ -48,7 +48,7 @@ public class WikiPageDescriptorTest {
                     "!define TEST_RUNNER {runner}\n");
     WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
-    Assert.assertEquals("system^inprocess", testSystemType);
+    Assert.assertEquals("system", testSystemType);
   }
 
 
