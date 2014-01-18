@@ -252,7 +252,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     });
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
-
+    runner.setRunInProcess(debug);
+    runner.setEnableRemoteDebug(remoteDebug);
     addFormatters(runner);
 
     return runner;

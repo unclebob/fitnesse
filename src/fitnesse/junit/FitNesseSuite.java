@@ -305,7 +305,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
       }
     });
 
-    return new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    runner.setRunInProcess(debugMode);
+    return runner;
   }
 
   private void executeTests(MultipleTestsRunner testRunner) throws IOException, InterruptedException {
