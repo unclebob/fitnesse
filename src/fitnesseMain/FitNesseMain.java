@@ -43,14 +43,14 @@ public class FitNesseMain {
     Properties properties = ConfigurationParameter.makeProperties(System.getProperties(), new File(arguments.getConfigFile()));
     properties = arguments.asProperties(properties);
 
-    return launchFitNesse(properties);
+    return launchFitNesse(new ContextConfigurator(properties));
   }
 
-  public Integer launchFitNesse(Properties properties) throws Exception {
-    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(LOG_LEVEL.getKey())));
+  public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
+    configureLogging("verbose".equalsIgnoreCase(contextConfigurator.getProperty(LOG_LEVEL)));
     loadPlugins();
 
-    FitNesseContext context = loadContext(properties);
+    FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
     logStartupInfo(context);
 
@@ -112,10 +112,6 @@ public class FitNesseMain {
     }
 
     return TestTextFormatter.finalErrorCount;
-  }
-
-  private FitNesseContext loadContext(Properties properties) throws IOException, PluginException {
-    return new ContextConfigurator(properties).makeFitNesseContext();
   }
 
   private void logStartupInfo(FitNesseContext context) {
