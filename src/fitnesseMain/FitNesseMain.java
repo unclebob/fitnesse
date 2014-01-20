@@ -40,10 +40,12 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
-    Properties properties = ConfigurationParameter.makeProperties(System.getProperties(), new File(arguments.getConfigFile()));
-    properties = arguments.asProperties(properties);
+    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
+      .updatedWith(System.getProperties())
+      .updatedWith(ConfigurationParameter.loadProperties(new File(arguments.getConfigFile())))
+      .updatedWith(arguments.asProperties());
 
-    return launchFitNesse(ContextConfigurator.systemDefaults().updatedWith(properties));
+    return launchFitNesse(contextConfigurator);
   }
 
   public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
@@ -121,10 +123,6 @@ public class FitNesseMain {
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
-  }
-
-  public Properties loadConfigFile(final String propertiesFile) {
-    return ConfigurationParameter.makeProperties(System.getProperties(), new File(propertiesFile));
   }
 
   public void configureLogging(boolean verbose) {

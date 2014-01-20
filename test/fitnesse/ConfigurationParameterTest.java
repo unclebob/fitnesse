@@ -43,29 +43,9 @@ public class ConfigurationParameterTest {
   }
 
   @Test
-  public void canLoadPropertiesWithParentProperties() {
-    Properties parentProperties = new Properties();
-    parentProperties.setProperty("dummy", "dummyValue");
-    Properties properties = ConfigurationParameter.makeProperties(parentProperties, "key", "value");
-
-    assertThat(properties.getProperty("dummy"), is("dummyValue"));
-    assertThat(properties.getProperty("key"), is("value"));
-  }
-
-  @Test
   public void canLoadPropertiesFromFile() {
-    Properties properties = ConfigurationParameter.makeProperties(new File("configuration-parameter-test.properties"));
+    Properties properties = ConfigurationParameter.loadProperties(new File("configuration-parameter-test.properties"));
 
-    assertThat(properties.getProperty("unitTestProperty"), is("found"));
-  }
-
-  @Test
-  public void canLoadPropertiesFromFileWithParentProperties() {
-    Properties parentProperties = new Properties();
-    parentProperties.setProperty("dummy", "dummyValue");
-    Properties properties = ConfigurationParameter.makeProperties(parentProperties, new File("configuration-parameter-test.properties"));
-
-    assertThat(properties.getProperty("dummy"), is("dummyValue"));
     assertThat(properties.getProperty("unitTestProperty"), is("found"));
   }
 

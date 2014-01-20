@@ -280,14 +280,14 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   }
 
   private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
-    Properties configFileProperties = ConfigurationParameter.makeProperties(System.getProperties(), configFile);
-    Properties properties = ConfigurationParameter.makeProperties(configFileProperties,
+    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
+      .updatedWith(System.getProperties())
+      .updatedWith(ConfigurationParameter.loadProperties(configFile))
+      .updatedWith(ConfigurationParameter.makeProperties(
             ConfigurationParameter.PORT, port,
-            ConfigurationParameter.ROOT_PATH, rootPath,
-            ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
+            ConfigurationParameter.ROOT_PATH, rootPath));
 
-    return ContextConfigurator.systemDefaults().updatedWith(properties).makeFitNesseContext();
-
+    return contextConfigurator.makeFitNesseContext();
   }
 
   private WikiPage getSuiteRootPage() {

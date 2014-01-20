@@ -38,7 +38,7 @@ public class ArgumentsTest {
   public void argumentsCanBeRepresentedByProperties() {
     Arguments args = new Arguments("-v", "-p", "81", "-d", "directory", "-r", "root", "-b", "someFile.txt",
               "-l", "myLogDirectory", "-o", "-e", "22", "-f", "fitnesse.properties", "-i", "-c", "SomeCommand", "-a", "user:pass");
-    Properties properties = args.asProperties(null);
+    Properties properties = args.asProperties();
 
     assertEquals("verbose", properties.getProperty("LogLevel"));
     assertEquals("81", properties.getProperty("Port"));
@@ -57,7 +57,7 @@ public class ArgumentsTest {
   @Test
   public void defaultArgumentsAsProperties() {
     Arguments args = new Arguments();
-    Properties properties = args.asProperties(null);
+    Properties properties = args.asProperties();
 
     assertEquals("normal", properties.getProperty("LogLevel"));
     assertNull(properties.getProperty("ConfigFile"));
