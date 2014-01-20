@@ -20,6 +20,7 @@ public class SuiteResponder extends TestResponder {
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
   private static final String OR_FILTER_ARG_2 = "suiteFilter";
+  private static final String CONTENT_FILTER_ARG = "content";
 
   private boolean includeHtml;
   private SuiteHistoryFormatter suiteHistoryFormatter;
@@ -81,10 +82,16 @@ public class SuiteResponder extends TestResponder {
 
   public static SuiteFilter createSuiteFilter(Request request, String suitePath) {
     return new SuiteFilter(getOrTagFilter(request),
-            getNotSuiteFilter(request),
-            getAndTagFilters(request),
-            getSuiteFirstTest(request, suitePath));
+      getNotSuiteFilter(request),
+      getAndTagFilters(request),
+      getSuiteFirstTest(request, suitePath),
+      getContentFilter(request));
   }
+
+  private static String getContentFilter(Request request) {
+    return request != null ? (String) request.getInput(CONTENT_FILTER_ARG) : null;
+  }
+
 
   private static String getOrTagFilter(Request request) {
     return request != null ? getOrFilterString(request) : null;
@@ -93,7 +100,7 @@ public class SuiteResponder extends TestResponder {
   private static String getOrFilterString(Request request) {
     //request already confirmed not-null
     String orFilterString = null;
-    if(request.getInput(OR_FILTER_ARG_1) != null){
+    if (request.getInput(OR_FILTER_ARG_1) != null) {
       orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
     } else {
       orFilterString = (String) request.getInput(OR_FILTER_ARG_2);

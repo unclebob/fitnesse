@@ -301,6 +301,19 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
 
+  @Test
+  public void testContentFilter() throws Exception {
+    addTestToSuite("MatchingTestWithNewlines", "\n\nA");
+    addTestToSuite("MatchingTestNoNewline", "A");
+    addTestToSuite("NonMatchingTest", "B");
+    addTestToSuite("AnotherNonMatchingTest", "AB");
+    request.setQueryString("content=.*A");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#NonMatchingTest", results);
+    assertDoesntHaveRegexp("#AnotherNonMatchingTest", results);
+    assertHasRegexp("#MatchingTestNoNewline", results);
+    assertHasRegexp("#MatchingTestWithNewlines", results);
+  }
 
   @Test
   public void testTagsShouldBeInheritedFromSuite() throws Exception {
@@ -380,6 +393,7 @@ public class SuiteResponderTest {
     xmlResultsStream.close();
     xmlResultsFile.delete();
   }
+
   @Test
   public void NoHistory_avoidsProducingSuiteResultFile() throws Exception {
     File xmlResultsFile = expectedXmlResultsFile();
