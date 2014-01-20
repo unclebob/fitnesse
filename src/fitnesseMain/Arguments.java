@@ -4,6 +4,7 @@ package fitnesseMain;
 
 import java.util.Properties;
 
+import fitnesse.ContextConfigurator;
 import util.CommandLine;
 
 import static fitnesse.ConfigurationParameter.*;
@@ -48,16 +49,19 @@ public class Arguments {
   }
 
   static void printUsage() {
+    ContextConfigurator defaults = ContextConfigurator.systemDefaults();
+
     System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
     System.err.println("\t-p <port number> {" + DEFAULT_PORT + "}");
-    System.err.println("\t-d <working directory> {" + DEFAULT_PATH
-      + "}");
-    System.err.println("\t-r <page root directory> {" + DEFAULT_ROOT
-      + "}");
+    System.err.println("\t-d <working directory> {" +
+      defaults.get(ROOT_PATH) + "}");
+    System.err.println("\t-r <page root directory> {" +
+      defaults.get(ROOT_DIRECTORY) + "}");
     System.err.println("\t-l <log directory> {no logging}");
-    System.err.println("\t-f <config properties file> {" + DEFAULT_CONFIG_FILE + "}");
-    System.err.println("\t-e <days> {" + DEFAULT_VERSION_DAYS
-      + "} Number of days before page versions expire");
+    System.err.println("\t-f <config properties file> {" +
+      defaults.get(CONFIG_FILE) + "}");
+    System.err.println("\t-e <days> {" + defaults.getVersionDays() +
+      "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
     System.err
       .println("\t-a {user:pwd | user-file-name} enable authentication.");

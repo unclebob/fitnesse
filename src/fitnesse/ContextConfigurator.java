@@ -35,16 +35,34 @@ public class ContextConfigurator {
 
   private final Properties properties;
 
-  public ContextConfigurator(Properties properties) {
+  private ContextConfigurator(Properties properties) {
     this.properties = properties;
   }
 
-  public String getProperty(ConfigurationParameter parameter) {
-    return properties.getProperty(parameter.getKey());
+  public static ContextConfigurator systemDefaults() {
+    Properties systemDefaults = new Properties();
+    systemDefaults.setProperty(ROOT_PATH.getKey(), DEFAULT_PATH);
+    systemDefaults.setProperty(ROOT_DIRECTORY.getKey(), DEFAULT_ROOT);
+    systemDefaults.setProperty(VERSIONS_CONTROLLER_DAYS.getKey(), Integer.toString(DEFAULT_VERSION_DAYS));
+    systemDefaults.setProperty(CONFIG_FILE.getKey(), DEFAULT_CONFIG_FILE);
+    return new ContextConfigurator(systemDefaults);
   }
 
-  public String getProperty(ConfigurationParameter parameter, String defaultValue) {
-    return properties.getProperty(parameter.getKey(), defaultValue);
+  public ContextConfigurator updatedWith(Properties newProperties) {
+    Properties combinedProperties = new Properties();
+    addAll(this.properties, combinedProperties);
+    addAll(newProperties, combinedProperties);
+    return new ContextConfigurator(combinedProperties);
+  }
+
+  private void addAll(Properties source, Properties target) {
+    for (String key : source.stringPropertyNames()) {
+      target.setProperty(key, source.getProperty(key));
+    }
+  }
+
+  public String get(ConfigurationParameter parameter) {
+    return properties.getProperty(parameter.getKey());
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
@@ -56,8 +74,8 @@ public class ContextConfigurator {
     FitNesseContext.Builder builder = new FitNesseContext.Builder();
     builder.properties = properties;
     builder.port = getPort();
-    builder.rootPath = getProperty(ROOT_PATH, DEFAULT_PATH);
-    builder.rootDirectoryName = getProperty(ROOT_DIRECTORY, DEFAULT_ROOT);
+    builder.rootPath = get(ROOT_PATH);
+    builder.rootDirectoryName = get(ROOT_DIRECTORY);
 
     builder.versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     builder.versionsController.setHistoryDepth(getVersionDays());
@@ -68,8 +86,8 @@ public class ContextConfigurator {
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);
 
-    builder.logger = pluginsLoader.makeLogger(getProperty(LOG_DIRECTORY));
-    builder.authenticator = pluginsLoader.makeAuthenticator(getProperty(CREDENTIALS));
+    builder.logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
+    builder.authenticator = pluginsLoader.makeAuthenticator(get(CREDENTIALS));
 
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
@@ -98,9 +116,9 @@ public class ContextConfigurator {
   }
 
   private int getPort() {
-    String port = getProperty(PORT);
+    String port = get(PORT);
     if (port == null) {
-      if (getProperty(COMMAND) != null) {
+      if (get(COMMAND) != null) {
         return DEFAULT_COMMAND_PORT;
       } else {
         return DEFAULT_PORT;
@@ -110,8 +128,7 @@ public class ContextConfigurator {
   }
 
   public int getVersionDays() {
-    String days = getProperty(VERSIONS_CONTROLLER_DAYS);
-    return days == null ? DEFAULT_VERSION_DAYS : Integer.parseInt(days);
+    return Integer.parseInt(get(VERSIONS_CONTROLLER_DAYS));
   }
 
 

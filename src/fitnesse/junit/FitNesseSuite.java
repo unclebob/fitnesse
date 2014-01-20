@@ -286,7 +286,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
             ConfigurationParameter.ROOT_PATH, rootPath,
             ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
 
-    return new ContextConfigurator(properties).makeFitNesseContext();
+    return ContextConfigurator.systemDefaults().updatedWith(properties).makeFitNesseContext();
 
   }
 
