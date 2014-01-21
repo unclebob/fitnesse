@@ -40,10 +40,9 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
-    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
-      .updatedWith(System.getProperties())
-      .updatedWith(ConfigurationParameter.loadProperties(new File(arguments.getConfigFile())));
-
+    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults();
+    contextConfigurator = contextConfigurator.updatedWith(System.getProperties());
+    contextConfigurator = contextConfigurator.updatedWith(ConfigurationParameter.loadProperties(new File(arguments.getConfigFile(contextConfigurator))));
     contextConfigurator = arguments.update(contextConfigurator);
 
     return launchFitNesse(contextConfigurator);

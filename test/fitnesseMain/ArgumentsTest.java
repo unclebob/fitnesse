@@ -21,19 +21,19 @@ public class ArgumentsTest {
   @Test
   public void defaultConfigLocation() {
     Arguments args = new Arguments();
-    assertEquals("./plugins.properties", args.getConfigFile());
+    assertEquals("./plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void configLocationWithDifferentRootPath() {
     Arguments args = new Arguments("-d", "customDir");
-    assertEquals("customDir/plugins.properties", args.getConfigFile());
+    assertEquals("customDir/plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void customConfigLocation() {
     Arguments args = new Arguments("-f", "custom.properties");
-    assertEquals("custom.properties", args.getConfigFile());
+    assertEquals("custom.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test

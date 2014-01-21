@@ -71,12 +71,12 @@ public class Arguments {
     System.err.println("\t-v {off} Verbose logging");
   }
 
-  public String getRootPath() {
-    return rootPath == null ? DEFAULT_PATH : rootPath;
+  public String getRootPath(ContextConfigurator configurator) {
+    return rootPath == null ? configurator.get(ROOT_PATH) : rootPath;
   }
 
-  public String getConfigFile() {
-    return configFile == null ? (getRootPath() + "/" + DEFAULT_CONFIG_FILE) : configFile;
+  public String getConfigFile(ContextConfigurator configurator) {
+    return configFile == null ? (getRootPath(configurator) + "/" + configurator.get(CONFIG_FILE)) : configFile;
   }
 
   public ContextConfigurator update(ContextConfigurator defaults) {

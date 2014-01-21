@@ -30,10 +30,10 @@ import static fitnesse.ConfigurationParameter.*;
  */
 public class ContextConfigurator {
 
-  public static final String DEFAULT_PATH = ".";
-  public static final String DEFAULT_ROOT = "FitNesseRoot";
-  public static final int DEFAULT_VERSION_DAYS = 14;
-  public static final int DEFAULT_COMMAND_PORT = 9123;
+  private static final String DEFAULT_PATH = ".";
+  private static final String DEFAULT_ROOT = "FitNesseRoot";
+  private static final int DEFAULT_VERSION_DAYS = 14;
+  private static final int DEFAULT_COMMAND_PORT = 9123;
   public static final int DEFAULT_PORT = 80;
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
