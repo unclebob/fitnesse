@@ -96,21 +96,6 @@ public class FitNesseUtil {
     return context;
   }
 
-  public static FitNesseContext makeTestContext(FitNesseContext context,
-      int port) {
-    Builder builder = new Builder(context);
-    builder.port = port;
-    return builder.createFitNesseContext();
-  }
-
-  public static FitNesseContext makeTestContext(FitNesseContext context,
-      Authenticator authenticator) {
-    Builder builder = new Builder(context);
-    builder.authenticator = authenticator;
-    return builder.createFitNesseContext();
-  }
-
-
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
