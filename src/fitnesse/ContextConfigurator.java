@@ -52,8 +52,12 @@ public class ContextConfigurator {
   private ContextConfigurator() {
   }
 
+  public static ContextConfigurator empty() {
+    return new ContextConfigurator();
+  }
+
   public static ContextConfigurator systemDefaults() {
-    return new ContextConfigurator()
+    return empty()
       .withRootPath(DEFAULT_PATH)
       .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
       .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
@@ -78,7 +82,10 @@ public class ContextConfigurator {
 
     if (versionsController == null) {
       versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-      versionsController.setHistoryDepth(getVersionDays());
+      Integer versionDays = getVersionDays();
+      if (versionDays != null) {
+        versionsController.setHistoryDepth(versionDays);
+      }
     }
     if (recentChanges == null) {
       recentChanges = (RecentChanges) componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
@@ -238,7 +245,8 @@ public class ContextConfigurator {
     }
   }
 
-  public int getVersionDays() {
-    return Integer.parseInt(get(VERSIONS_CONTROLLER_DAYS));
+  public Integer getVersionDays() {
+    String days = get(VERSIONS_CONTROLLER_DAYS);
+    return days == null ? null : Integer.parseInt(days);
   }
 }

@@ -79,21 +79,34 @@ public class Arguments {
     return configFile == null ? (getRootPath() + "/" + DEFAULT_CONFIG_FILE) : configFile;
   }
 
-  public Properties asProperties() {
-    Properties properties = new Properties();
-    properties.setProperty(LOG_LEVEL.getKey(), verboseLogging ? "verbose" : "normal");
-    if (configFile != null) properties.setProperty(CONFIG_FILE.getKey(), configFile);
-    if (port != null) properties.setProperty(PORT.getKey(), port.toString());
-    if (rootPath != null) properties.setProperty(ROOT_PATH.getKey(), rootPath);
-    if (rootDirectory != null) properties.setProperty(ROOT_DIRECTORY.getKey(), rootDirectory);
-    if (output != null) properties.setProperty(OUTPUT.getKey(), output);
-    if (logDirectory != null) properties.setProperty(LOG_DIRECTORY.getKey(), logDirectory);
-    if (daysTillVersionsExpire != null) properties.setProperty(VERSIONS_CONTROLLER_DAYS.getKey(), daysTillVersionsExpire.toString());
-    if (omitUpdate) properties.setProperty(OMITTING_UPDATES.getKey(), "true");
-    if (installOnly) properties.setProperty(INSTALL_ONLY.getKey(), "true");
-    if (command != null) properties.setProperty(COMMAND.getKey(), command);
-    if (credentials != null) properties.setProperty(CREDENTIALS.getKey(), credentials);
-    return properties;
+  public ContextConfigurator update(ContextConfigurator defaults) {
+    ContextConfigurator result = defaults;
+
+    result = result.withParameter(LOG_LEVEL, verboseLogging ? "verbose" : "normal");
+    if (configFile != null)
+      result = result.withParameter(CONFIG_FILE, configFile);
+    if (port != null)
+      result = result.withPort(port);
+    if (rootPath != null)
+      result = result.withRootPath(rootPath);
+    if (rootDirectory != null)
+      result = result.withRootDirectoryName(rootDirectory);
+    if (output != null)
+      result = result.withParameter(OUTPUT, output);
+    if (logDirectory != null)
+      result = result.withParameter(LOG_DIRECTORY, logDirectory);
+    if (daysTillVersionsExpire != null)
+      result = result.withParameter(VERSIONS_CONTROLLER_DAYS, daysTillVersionsExpire.toString());
+    if (omitUpdate)
+      result = result.withParameter(OMITTING_UPDATES, "true");
+    if (installOnly)
+      result = result.withParameter(INSTALL_ONLY, "true");
+    if (command != null)
+      result = result.withParameter(COMMAND, command);
+    if (credentials != null)
+      result = result.withParameter(CREDENTIALS, credentials);
+
+    return result;
   }
 
 }
