@@ -3,14 +3,18 @@ package fitnesse;
 import java.io.IOException;
 import java.util.Properties;
 
+import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
+import fitnesse.components.Logger;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
+import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
@@ -33,69 +37,90 @@ public class ContextConfigurator {
   public static final int DEFAULT_PORT = 80;
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
-  private final Properties properties;
+  /** Some properties are stored in typed fields: */
+  private WikiPage root;
+  private Integer port;
+  private String rootPath;
+  private String rootDirectoryName;
+  private Logger logger;
+  private Authenticator authenticator;
+  private VersionsController versionsController;
+  private RecentChanges recentChanges;
+  /** Others as name-value pairs: */
+  private final Properties properties = new Properties();
 
-  private ContextConfigurator(Properties properties) {
-    this.properties = properties;
+  private ContextConfigurator() {
   }
 
   public static ContextConfigurator systemDefaults() {
-    Properties systemDefaults = new Properties();
-    systemDefaults.setProperty(ROOT_PATH.getKey(), DEFAULT_PATH);
-    systemDefaults.setProperty(ROOT_DIRECTORY.getKey(), DEFAULT_ROOT);
-    systemDefaults.setProperty(VERSIONS_CONTROLLER_DAYS.getKey(), Integer.toString(DEFAULT_VERSION_DAYS));
-    systemDefaults.setProperty(CONFIG_FILE.getKey(), DEFAULT_CONFIG_FILE);
-    return new ContextConfigurator(systemDefaults);
+    return new ContextConfigurator()
+      .withRootPath(DEFAULT_PATH)
+      .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
+      .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
+      .withParameter(CONFIG_FILE, DEFAULT_CONFIG_FILE);
   }
 
   public ContextConfigurator updatedWith(Properties newProperties) {
     for (String key : newProperties.stringPropertyNames()) {
-      properties.setProperty(key, newProperties.getProperty(key));
+      withParameter(key, newProperties.getProperty(key));
     }
     return this;
   }
 
-  public String get(ConfigurationParameter parameter) {
-    return properties.getProperty(parameter.getKey());
-  }
-
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
-
     ComponentFactory componentFactory = new ComponentFactory(properties);
 
     WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
-    FitNesseContext.Builder builder = new FitNesseContext.Builder();
-    builder.properties = properties;
-    builder.port = getPort();
-    builder.rootPath = get(ROOT_PATH);
-    builder.rootDirectoryName = get(ROOT_DIRECTORY);
+    if (port == null) {
+      port = getPort();
+    }
 
-    builder.versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    builder.versionsController.setHistoryDepth(getVersionDays());
-    builder.recentChanges = (RecentChanges) componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+    if (versionsController == null) {
+      versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
+      versionsController.setHistoryDepth(getVersionDays());
+    }
+    if (recentChanges == null) {
+      recentChanges = (RecentChanges) componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+    }
 
-    builder.root = wikiPageFactory.makeRootPage(builder.rootPath, builder.rootDirectoryName);
-
+    if (root == null) {
+      root = wikiPageFactory.makeRootPage(rootPath, rootDirectoryName);
+    }
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);
 
-    builder.logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
-    builder.authenticator = pluginsLoader.makeAuthenticator(get(CREDENTIALS));
+    if (logger == null) {
+      logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
+    }
+    if (authenticator == null) {
+      authenticator = pluginsLoader.makeAuthenticator(get(CREDENTIALS));
+    }
 
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
-    MultipleTestSystemFactory multipleTestSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
-    builder.testSystemFactory = multipleTestSystemFactory;
+    MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
+    FitNesseVersion version = new FitNesseVersion();
+    addBackwardsCompatibleProperties(version);
 
-    FitNesseContext context = builder.createFitNesseContext();
+    FitNesseContext context = new FitNesseContext(version,
+          root,
+          rootPath,
+          rootDirectoryName,
+          versionsController,
+          recentChanges,
+          port,
+          authenticator,
+          logger,
+          testSystemFactory,
+          properties);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
     pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
     pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadTestSystems(multipleTestSystemFactory);
+    pluginsLoader.loadTestSystems(testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
@@ -109,21 +134,111 @@ public class ContextConfigurator {
     return context;
   }
 
+  private void addBackwardsCompatibleProperties(FitNesseVersion version) {
+    // Those variables are defined so they can be looked up for as wiki variables.
+    if (rootPath != null) {
+      properties.setProperty("FITNESSE_ROOTPATH", rootPath);
+    }
+    properties.setProperty("FITNESSE_PORT", Integer.toString(port));
+    properties.setProperty("FITNESSE_VERSION", version.toString());
+
+    // Some code may still expect the values in the properties file rather than their 'typed'
+    // counterparts, so provide that:
+    for (ConfigurationParameter parameter : ConfigurationParameter.values()) {
+      String value = get(parameter);
+      if (value != null) {
+        properties.setProperty(parameter.getKey(), value);
+      }
+    }
+  }
+
   private int getPort() {
-    String port = get(PORT);
     if (port == null) {
       if (get(COMMAND) != null) {
         return DEFAULT_COMMAND_PORT;
       } else {
         return DEFAULT_PORT;
       }
+    } else {
+      return port;
     }
-    return Integer.parseInt(port);
+  }
+
+  public ContextConfigurator withRoot(WikiPage root) {
+    this.root = root;
+    return this;
+  }
+
+  public ContextConfigurator withRootPath(String rootPath) {
+    this.rootPath = rootPath;
+    return this;
+  }
+
+  public ContextConfigurator withParameter(String key, String value) {
+    ConfigurationParameter parameter = ConfigurationParameter.byKey(key);
+    if (parameter == null) {
+      properties.put(key, value);
+    } else {
+      withParameter(parameter, value);
+    }
+    return this;
+  }
+
+  public ContextConfigurator withParameter(ConfigurationParameter parameter, String value) {
+    switch (parameter) {
+      case ROOT_PATH:
+        rootPath = value;
+        break;
+      case ROOT_DIRECTORY:
+        rootDirectoryName = value;
+        break;
+      case PORT:
+        port = Integer.parseInt(value);
+      default:
+        properties.setProperty(parameter.getKey(), value);
+    }
+    return this;
+  }
+
+  public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
+    this.rootDirectoryName = rootDirectoryName;
+    return this;
+  }
+
+  public ContextConfigurator withPort(int port) {
+    this.port = port;
+    return this;
+  }
+
+  public ContextConfigurator withAuthenticator(Authenticator authenticator) {
+    this.authenticator = authenticator;
+    return this;
+  }
+
+  public ContextConfigurator withVersionsController(VersionsController versionsController) {
+    this.versionsController = versionsController;
+    return this;
+  }
+
+  public ContextConfigurator withRecentChanges(RecentChanges recentChanges) {
+    this.recentChanges = recentChanges;
+    return this;
+  }
+
+  public String get(ConfigurationParameter parameter) {
+    switch(parameter) {
+      case ROOT_PATH:
+        return rootPath;
+      case ROOT_DIRECTORY:
+        return rootDirectoryName;
+      case PORT:
+        return String.valueOf(port);
+      default:
+        return properties.getProperty(parameter.getKey());
+    }
   }
 
   public int getVersionDays() {
     return Integer.parseInt(get(VERSIONS_CONTROLLER_DAYS));
   }
-
-
 }

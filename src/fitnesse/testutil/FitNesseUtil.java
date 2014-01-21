@@ -2,14 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
+import fitnesse.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.testrunner.MultipleTestSystemFactory;
-import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.mem.InMemoryPage;
@@ -79,17 +77,24 @@ public class FitNesseUtil {
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port, Authenticator authenticator) {
-    Builder builder = new Builder();
-    builder.root = root;
-    builder.rootPath = rootPath;
-    builder.rootDirectoryName = rootDirectoryName;
-    builder.port = port;
-    builder.authenticator = authenticator;
-    builder.versionsController = new ZipFileVersionsController();
-    builder.recentChanges = new RecentChangesWikiPage();
-    builder.testSystemFactory = new MultipleTestSystemFactory(new SlimTableFactory(), new CustomComparatorRegistry());
-    builder.properties = new Properties();
-    FitNesseContext context = builder.createFitNesseContext();
+
+    FitNesseContext context;
+
+    try {
+      context = ContextConfigurator.systemDefaults()
+        .withRoot(root)
+        .withRootPath(rootPath)
+        .withRootDirectoryName(rootDirectoryName)
+        .withPort(port)
+        .withAuthenticator(authenticator)
+        .withVersionsController(new ZipFileVersionsController())
+        .withRecentChanges(new RecentChangesWikiPage())
+        .makeFitNesseContext();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    } catch (PluginException e) {
+      throw new IllegalStateException(e);
+    }
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
     context.pageFactory.getVelocityEngine();

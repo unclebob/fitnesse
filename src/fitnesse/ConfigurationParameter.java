@@ -88,4 +88,12 @@ public enum ConfigurationParameter {
     return properties;
   }
 
+  public static ConfigurationParameter byKey(String key) {
+    for (ConfigurationParameter parameter : ConfigurationParameter.values()) {
+      if (parameter.getKey().equals(key)) {
+        return parameter;
+      }
+    }
+    return null;
+  }
 }
