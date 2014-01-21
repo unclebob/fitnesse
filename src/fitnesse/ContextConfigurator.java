@@ -49,16 +49,10 @@ public class ContextConfigurator {
   }
 
   public ContextConfigurator updatedWith(Properties newProperties) {
-    Properties combinedProperties = new Properties();
-    addAll(this.properties, combinedProperties);
-    addAll(newProperties, combinedProperties);
-    return new ContextConfigurator(combinedProperties);
-  }
-
-  private void addAll(Properties source, Properties target) {
-    for (String key : source.stringPropertyNames()) {
-      target.setProperty(key, source.getProperty(key));
+    for (String key : newProperties.stringPropertyNames()) {
+      properties.setProperty(key, newProperties.getProperty(key));
     }
+    return this;
   }
 
   public String get(ConfigurationParameter parameter) {
