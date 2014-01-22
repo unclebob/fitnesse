@@ -40,17 +40,19 @@ public class FitNesseMain {
   }
 
   public Integer launchFitNesse(Arguments arguments) throws Exception {
-    Properties properties = ConfigurationParameter.makeProperties(System.getProperties(), new File(arguments.getConfigFile()));
-    properties = arguments.asProperties(properties);
+    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults();
+    contextConfigurator = contextConfigurator.updatedWith(System.getProperties());
+    contextConfigurator = contextConfigurator.updatedWith(ConfigurationParameter.loadProperties(new File(arguments.getConfigFile(contextConfigurator))));
+    contextConfigurator = arguments.update(contextConfigurator);
 
-    return launchFitNesse(properties);
+    return launchFitNesse(contextConfigurator);
   }
 
-  public Integer launchFitNesse(Properties properties) throws Exception {
-    configureLogging("verbose".equalsIgnoreCase(properties.getProperty(LOG_LEVEL.getKey())));
+  public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
+    configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
     loadPlugins();
 
-    FitNesseContext context = loadContext(properties);
+    FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
     logStartupInfo(context);
 
@@ -114,10 +116,6 @@ public class FitNesseMain {
     return TestTextFormatter.finalErrorCount;
   }
 
-  private FitNesseContext loadContext(Properties properties) throws IOException, PluginException {
-    return new ContextConfigurator(properties).makeFitNesseContext();
-  }
-
   private void logStartupInfo(FitNesseContext context) {
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
@@ -125,10 +123,6 @@ public class FitNesseMain {
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
     LOG.info("Starting FitNesse on port: " + context.port);
-  }
-
-  public Properties loadConfigFile(final String propertiesFile) {
-    return ConfigurationParameter.makeProperties(System.getProperties(), new File(propertiesFile));
   }
 
   public void configureLogging(boolean verbose) {
