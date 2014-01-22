@@ -76,7 +76,7 @@ public class FitNesseContext {
   }
 
   public String getRootPagePath() {
-    return String.format("%s/%s", rootPath, rootDirectoryName);
+    return String.format("%s%s%s", rootPath, File.separator, rootDirectoryName);
   }
 
   public Properties getProperties() {
