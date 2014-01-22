@@ -24,7 +24,7 @@ public class MemoryFileSystem implements FileSystem {
     }
 
     @Override
-    public void makeFile(File file, InputStream content) throws IOException, UnsupportedEncodingException {
+    public void makeFile(File file, InputStream content) throws IOException {
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       FileUtil.copyBytes(content, buf);
       makeFile(file, buf.toString("UTF-8"));
@@ -66,7 +66,7 @@ public class MemoryFileSystem implements FileSystem {
     }
 
   @Override
-  public InputStream getInputStream(File file) throws IOException, UnsupportedEncodingException {
+  public InputStream getInputStream(File file) throws IOException {
     return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes("UTF-8"));
   }
 
