@@ -287,14 +287,15 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
-  private FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
+  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
     ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
       .updatedWith(System.getProperties())
       .updatedWith(ConfigurationParameter.loadProperties(configFile))
       .updatedWith(ConfigurationParameter.makeProperties(
             ConfigurationParameter.PORT, port,
             ConfigurationParameter.ROOT_PATH, rootPath,
-            ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot));
+            ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
+            ConfigurationParameter.OMITTING_UPDATES, true));
 
     return contextConfigurator.makeFitNesseContext();
   }
