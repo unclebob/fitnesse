@@ -31,7 +31,7 @@ import static fitnesse.ConfigurationParameter.*;
 public class ContextConfigurator {
 
   private static final String DEFAULT_PATH = ".";
-  private static final String DEFAULT_ROOT = "FitNesseRoot";
+  public static final String DEFAULT_ROOT = "FitNesseRoot";
   private static final int DEFAULT_VERSION_DAYS = 14;
   private static final int DEFAULT_COMMAND_PORT = 9123;
   public static final int DEFAULT_PORT = 80;
