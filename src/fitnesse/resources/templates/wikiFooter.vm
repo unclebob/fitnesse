@@ -1,6 +1,7 @@
 $footerContent.render()
 
 <script src="/files/fitnesse/javascript/mousetrap.min.js"></script>
+<script src="/files/fitnesse/question.mark/question.mark.js"></script>
 
 <script>
 
