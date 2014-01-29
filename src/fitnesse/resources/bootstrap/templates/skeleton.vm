@@ -32,8 +32,6 @@
 
   <script src="/files/fitnesse/bootstrap/js/bootstrap.js" type="text/javascript"></script>
 
-  <script src="/files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
-  <script src="/files/fitnesse/question.mark/question.mark.js" type="text/javascript"></script>
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end>
 
