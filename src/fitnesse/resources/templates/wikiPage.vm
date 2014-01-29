@@ -1,1 +1,36 @@
 $content.render()
+
+<script type="text/javascript">
+
+  #set( $localPath = $actions.localPageName )
+
+  #if( $actions.testPage )
+    Mousetrap.bind('t', function() { window.location.href ="$localPath?test"; });
+  #end
+  #if( $actions.withEdit && !$actions.imported)
+    Mousetrap.bind('e', function() { window.location.href ="$localPath?edit"; });
+  #end
+  #if( $actions.withEdit)
+    Mousetrap.bind('a', function() { window.location.href ="$localPath?new"; });
+  #end
+  #if( $actions.withProperties )
+    Mousetrap.bind('p', function() { window.location.href ="$localPath?properties"; });
+  #end
+  #if( $actions.withWhereUsed )
+    Mousetrap.bind('w', function() { window.location.href ="$localPath?whereUsed"; });
+  #end
+  #if( $actions.withVersions )
+    Mousetrap.bind('v', function() { window.location.href ="$localPath?versions"; });
+  #end
+  #if( $actions.withSearch )
+    Mousetrap.bind('s', function() { window.location.href ="$localPath?searchForm"; });
+    Mousetrap.bind('/', function() { 
+      document.getElementById('searchString').focus();
+      return false;  // stops the / character appearing in search box
+    });
+  #end
+  #if( $actions.withUserGuide )
+    Mousetrap.bind('g u', function() { window.location.href =".FitNesse.UserGuide"; });
+  #end
+
+</script>

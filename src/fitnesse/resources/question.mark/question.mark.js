@@ -8,10 +8,10 @@
     https://gist.github.com/jonathantneal/2415137
     (included in the repo as attachevent.js).
     Doesn't work in IE6/7, but feel free to fork and fix.
-    Included and adjusted for FitNesse bt Mark Hopkins.
+    Included and adjusted for FitNesse by Mark Hopkins.
 */
 
-(function() {
+$(function() {
 
     'use strict';
 
