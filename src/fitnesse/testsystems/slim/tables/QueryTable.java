@@ -14,10 +14,10 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
 import static util.ListUtility.list;
 
 public class QueryTable extends SlimTable {
+  private static final String COMMENT_COLUMN_MARKER = "#";
   protected List<String> fieldNames = new ArrayList<String>();
   private String queryId;
 
@@ -165,7 +165,10 @@ public class QueryTable extends SlimTable {
     String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
     SlimTestResult testResult;
-    if (actualValue == null)
+    if (fieldName.startsWith(COMMENT_COLUMN_MARKER)) {
+      testResult = SlimTestResult.plain();
+    }
+    else if (actualValue == null)
       testResult = SlimTestResult.fail(String.format("field %s not present", fieldName), expectedValue);
     else if (expectedValue == null || expectedValue.length() == 0)
       testResult = SlimTestResult.ignore(actualValue);
@@ -259,9 +262,11 @@ public class QueryTable extends SlimTable {
 
         private void eliminateRowsThatDontMatchField() {
           String fieldName = fieldNames.get(fieldIndex);
-          Iterator<Integer> rowIterator = matchCandidates.iterator();
-          while (rowIterator.hasNext())
-            eliminateUnmatchingRow(rowIterator, fieldName);
+          if (!fieldName.startsWith(COMMENT_COLUMN_MARKER)) {        	  
+	          Iterator<Integer> rowIterator = matchCandidates.iterator();
+	          while (rowIterator.hasNext())
+	            eliminateUnmatchingRow(rowIterator, fieldName);
+          }
         }
 
         private void eliminateUnmatchingRow(Iterator<Integer> rowIterator, String fieldName) {
