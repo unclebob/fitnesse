@@ -341,6 +341,46 @@ public class DecisionTableTest {
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
+  
+  @Test
+  public void commentColumn() throws Exception {
+    // TODO: a lot of copy and paste from the previous test
+    String decisionTableWithComment =
+        "|DT:fixture|argument||\n" +
+          "|var|func?|#comment|\n" +
+          "|3|5|comment|\n" +
+          "|7|9||\n";
+    DecisionTable dt = makeDecisionTableAndBuildInstructions(decisionTableWithComment);
+    int n=0;
+      Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+              list(
+                      list(id(n++), "OK"),
+                      list(id(n++), VoidConverter.VOID_TAG),
+                      list(id(n++), VoidConverter.VOID_TAG), //beginTable
+                      list(id(n++), VoidConverter.VOID_TAG), //reset
+                      list(id(n++), VoidConverter.VOID_TAG), //set
+                      list(id(n++), VoidConverter.VOID_TAG), //execute
+                      list(id(n++), "5"),
+                      list(id(n++), VoidConverter.VOID_TAG),
+                      list(id(n++), VoidConverter.VOID_TAG),
+                      list(id(n++), VoidConverter.VOID_TAG),
+                      list(id(n++), "5"),
+                      list(id(n++), VoidConverter.VOID_TAG) //endTable
+              )
+      );
+      SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+
+    String colorizedTable = dt.getTable().toString();
+    String expectedColorizedTable =
+      "[" +
+        "[pass(DT:fixture), argument, ], " +
+        "[var, func?, #comment], " +
+        "[3, pass(5), comment], " +
+        "[7, fail(a=5;e=9), ]" +
+        "]";
+    assertEquals(expectedColorizedTable, colorizedTable);
+  }
+  
 
   @Test
   public void canEvaluateReturnValuesAndColorizeTableForMultipleCallsToSameFunction() throws Exception {
