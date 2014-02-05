@@ -12,9 +12,9 @@
 !define FitNESSE {!-FitNesse-!}
 | !define OPT {''[''} | !define OPTend {'']''} | !define OR {''!-        |-!''} |
 | !define DOT {'''.'''} | !define LT {'''<'''} | !define GT {'''>'''} |
-| !define BAR {'''!-                                                                                              |-!'''} | !define LBRACE ('''{''') | !define RBRACE ('''}''') |
+| !define BAR {'''!- | -!'''} | !define LBRACE ('''{''') | !define RBRACE ('''}''') |
 | !define DIVend {!-</div>-!} | !define LPAREN {'''('''} | !define RPAREN {''')'''} |
-| !define BANG {'''!-!-!'''}                                                                                      |!define SPC {!- -!}''' | !define NL {!-<br/>-!} |
+| !define BANG {'''!-!-!'''} |!define SPC {!- -!}''' | !define NL {!-<br/>-!} |
 | !define TEXT {''text''} | | !define SLASH {'''/'''} | !define NUL {} |
 | !define PageNAME {''!-PageName-!''} | !define PagePATH {''!-PagePath-!''} |
 | !define LabelNAME {''label-name''} | !define AnyPagePATH {''!-AnyPagePath-!''} |
@@ -292,6 +292,8 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} REGRACE_LINK ${CODEend} | !c false | !c true${BAR}false | '' Makes links graceful '' |
 | ${CODE} REGRACE_TOC ${CODEend} | !c false | !c true${BAR}false | '' Makes !contents list graceful '' |
 | ${CODE} RSS_PREFIX ${CODEend} | !c | !c | '' Link prefix for [[RSS Feeds][RssFeed]] '' |
+| ${CODE} INCLUDE_SCENARIO_LIBRARIES ${CODEend} | !c false* | !c true${BAR}false | ''Test pages should include [[!-ScenarioLibrary-!][SpecialPages]] pages''!-
+-! * defaults to true if the SLiM test system is defined. |
 | ${CODE} ''PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current page'' |
 | ${CODE} ''PAGE_PATH '' ${CODEend} | !c | !c Read Only | '' Fully qualified name of parent. '' |
 | ${CODE} ''RUNNING_PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current top level running page'' |
