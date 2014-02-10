@@ -10,10 +10,12 @@ public class FitNesseSuiteArgumentsTest {
 
   @Test
   public void argumentsAreParsedCorrectly() throws InitializationError{
+	System.setProperty("fitnesse.root.dir.parent", ".");
     assertEquals(".", FitNesseSuite.getFitnesseDir(FitNesseSuiteExampleTest.class));
+    assertEquals(new File(System.getProperty("fitnesse.root.dir.parent")).getAbsolutePath(), FitNesseSuite.getFitnesseDir(FitNesseSuiteExampleFromPropertiesTest.class));
     assertEquals("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", FitNesseSuite.getSuiteName(FitNesseSuiteExampleTest.class));
-    assertEquals("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", FitNesseSuite.getSuiteName(FitNesseSuiteExampleTest.class));
-    assertEquals(new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath(),FitNesseSuite.getOutputDir(FitNesseSuiteExampleTest.class));
+    assertEquals("tmp",FitNesseSuite.getOutputDir(FitNesseSuiteExampleTest.class));
+    assertEquals(new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath(),FitNesseSuite.getOutputDir(FitNesseSuiteExampleFromPropertiesTest.class));
     assertNull("null filter allowed", FitNesseSuite.getSuiteFilter(FitNesseSuiteExampleTest.class));
     assertNull("null exclude filter allowed", FitNesseSuite.getExcludeSuiteFilter(FitNesseSuiteExampleTest.class));
     assertEquals("testSuite", FitNesseSuite.getSuiteFilter(FitNesseSuiteWithFilterExampleTest.class));
