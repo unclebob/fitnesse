@@ -283,6 +283,33 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
+  public void commentColumn() throws Exception {
+	queryTableHeader =
+			      "|" + tableType() + ":fixture|argument|\n" +
+			        "|#comment1|n|#comment2|\n";
+	
+	
+	  assertQueryResults(
+		      "|first|1|comment|\n"+
+		      "|second|2||\n"		  ,
+		            ListUtility.<Object>list(
+		            		// trying to ensure that the comment field does not participate in
+		            		// row matching
+		            		// if comments were not ignored, the best match would be set from the comment fields
+		                    list(list("#comment1", "second"), list("n", "1"), list("#comment2", "")),
+		                    list(list("#comment1", "first"), list("n", "2"), list("#comment2", "comment"))
+		            ),
+		      "[" +
+		        headRow +
+		        "[#comment1, n, #comment2], " +
+		        "[first, pass(1), comment], " +
+		        "[second, pass(2), ]" +
+		        "]"
+		    );
+	
+  }
+  
+  @Test
   public void variablesAreReplacedInExpected() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "5");
