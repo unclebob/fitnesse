@@ -100,11 +100,13 @@ public class DecisionTable extends SlimTable {
 
     private void putColumnHeaderInFunctionOrVariableList(int col) {
       String cell = table.getCellContents(col, 1);
-      if (cell.endsWith("?") || cell.endsWith("!")) {
-        String funcName = cell.substring(0, cell.length() - 1);
-        funcStore.add(funcName, col);
-      } else {
-        varStore.add(cell, col);
+      if (!cell.startsWith("#")) {
+        if (cell.endsWith("?") || cell.endsWith("!")) {
+          String funcName = cell.substring(0, cell.length() - 1);
+          funcStore.add(funcName, col);
+        } else {
+          varStore.add(cell, col);
+        }
       }
     }
 
