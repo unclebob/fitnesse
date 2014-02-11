@@ -6,7 +6,7 @@ public class ListExecutorTest extends ListExecutorTestBase {
 
   @Override
   protected ListExecutor getListExecutor() throws Exception {
-    SlimFactory slimFactory = new JavaSlimFactory();
+    SlimFactory slimFactory = JavaSlimFactory.createJavaSlimFactory();
     return slimFactory.getListExecutor(false);
   }
 

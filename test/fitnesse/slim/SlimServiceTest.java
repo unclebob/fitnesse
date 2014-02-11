@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -16,8 +17,8 @@ public class SlimServiceTest extends SlimServiceTestBase {
   }
 
   protected void startSlimService() throws IOException {
-    SlimService.Options options = SlimService.parseCommandLine(new String[] { "8099" });
-    SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
+    SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
   }
 
   protected void closeSlimService() throws InterruptedException {
@@ -33,17 +34,27 @@ public class SlimServiceTest extends SlimServiceTestBase {
     return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
   }
 
-
   @Test
-  public void nullInteractionService_returnsDefaultClass(){
-    SlimService.Options options = SlimService.parseCommandLine(new String[] { "8099" });
+  public void nullInteractionService_returnsDefaultClass() {
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
     assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interactionClass.getName());
   }
 
   @Test
   public void definedInteractionService_returnsCorrectClass() {
-    SlimService.Options options = SlimService.parseCommandLine(new String[] { "-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099" });
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099"});
     assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interactionClass.getName());
   }
 
+  @Test
+  public void undefinedStatementTimeout() {
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
+    assertNull(options.statementTimeout);
+  }
+
+  @Test
+  public void definedStatementTimeout_returnsTimeout() {
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"-s", "1000", "8099"});
+    assertEquals(1000, (int) options.statementTimeout);
+  }
 }
