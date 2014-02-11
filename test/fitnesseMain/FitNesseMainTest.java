@@ -116,7 +116,7 @@ public class FitNesseMainTest {
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setErr(new PrintStream(outputBytes));
     Arguments arguments = new Arguments(args);
-    int exitCode = new FitNesseMain().launchFitNesse(arguments);
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
     System.setErr(err);
     String response = outputBytes.toString();
