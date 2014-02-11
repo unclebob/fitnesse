@@ -77,23 +77,33 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   }
   /**
    * The <code>FitnesseDir</code> annotation specifies the absolute or relative
-   * path to the directory in which FitNesseRoot can be found
+   * path to the directory in which FitNesseRoot can be found. You can either specify
+   * <ul>
+   * <li>a relative or absolute path directly, e.g.: <code>@FitnesseDir("/parentOfFitNesseRoot")</code>,
+   * or you can specify
+   * <li>a system property the content of which will be taken as base dir and
+   * optionally give a path extension, e.g.:
+   * <code>@FitnesseDir(systemProperty = "fitnesse.root.dir.parent")</code></li>
+   * </ul>
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface FitnesseDir {
 
-    public String value();
+    public String value() default "";
+    public String systemProperty() default "";
     public String fitNesseRoot() default "FitNesseRoot";
   }
   /**
    * The <code>OutputDir</code> annotation specifies where the html reports of
-   * run suites and tests will be found after running them. You can either
-   * specify a relative or absolute path directly, e.g.: <code>@OutputDir("/tmp/trinidad-results")</code>, or you can
-   * specify a
-   * system property the content of which will be taken as base dir and
+   * run suites and tests will be found after running them. You can either specify
+   * <ul>
+   * <li>a relative or absolute path directly, e.g.: <code>@OutputDir("/tmp/trinidad-results")</code>,
+   * or you can specify
+   * <li>a system property the content of which will be taken as base dir and
    * optionally give a path extension, e.g.:
-   * <code>@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "trinidad-results")</code>
+   * <code>@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "trinidad-results")</code></li>
+   * </ul>
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
@@ -170,7 +180,16 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     if (fitnesseDirAnnotation == null) {
       throw new InitializationError("There must be a @FitnesseDir annotation");
     }
-    return fitnesseDirAnnotation.value();
+    if (!"".equals(fitnesseDirAnnotation.value())) {
+      return fitnesseDirAnnotation.value();
+    }
+    if (!"".equals(fitnesseDirAnnotation.systemProperty())) {
+      String baseDir = System.getProperty(fitnesseDirAnnotation.systemProperty());
+      File outputDir = new File(baseDir);
+      return outputDir.getAbsolutePath();
+    }
+    throw new InitializationError(
+            "In annotation @FitnesseDir you have to specify either 'value' or 'systemProperty'");
   }
 
   public static String getFitNesseRoot(Class<?> klass) {
