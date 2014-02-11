@@ -19,6 +19,7 @@
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/${theme}.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/fitnesse/question.mark/question.mark.css" />
   <link rel="wysiwyg.base" href="/" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse.css" media="screen" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/editor.css" media="screen" />
