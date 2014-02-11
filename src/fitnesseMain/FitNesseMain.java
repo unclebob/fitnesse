@@ -75,13 +75,12 @@ public class FitNesseMain {
 
   Integer launch(FitNesseContext context) throws Exception {
     if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
-      boolean started = context.fitNesse.start();
-      if (started) {
-        String command = context.getProperty(COMMAND.getKey());
-        if (command != null) {
-          String output = context.getProperty(OUTPUT.getKey());
-          return executeSingleCommand(context.fitNesse, command, output);
-        }
+      String command = context.getProperty(COMMAND.getKey());
+      if (command != null) {
+        String output = context.getProperty(OUTPUT.getKey());
+        return executeSingleCommand(context.fitNesse, command, output);
+      } else {
+        context.fitNesse.start();
       }
     }
     return null;

@@ -51,7 +51,7 @@ public class FitNesseMainTest {
     when(fitnesse.start()).thenReturn(true);
     int exitCode = new FitNesseMain().launch(context);
     assertThat(exitCode, is(0));
-    verify(fitnesse, times(1)).start();
+    verify(fitnesse, never()).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
   }
