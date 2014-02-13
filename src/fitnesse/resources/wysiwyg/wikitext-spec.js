@@ -627,7 +627,7 @@ describe("parser and formatter", function () {
                 a("http://encyclopedia.thefreedictionary.com/XUnit", "xUnit"),
                 ": Building the ", element("i", "Code Right")));
         generateFragment(dom, [
-            "!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''",
+            "!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''"
         ].join("\n"));
     });
 
@@ -1088,6 +1088,19 @@ describe("parser and formatter", function () {
         generateWikitext(dom, [
             "| a\n\nb | b |",
             "| c | d |" ].join("\n"));
+    });
+
+    it("script table", function() {
+        var dom = fragment(
+            element("p",
+                element("tt", {'class': 'plaintexttable'},
+                    " script", br(),
+                    "Build SIP call with ID 21 to 21@${SOME_IP} and state ${SOME_STATE}.", br()), br()));
+        generate(dom, [
+            "![ script",
+            "Build SIP call with ID 21 to 21@${SOME_IP} and state ${SOME_STATE}.",
+            "]!" ].join("\n"));
+
     });
 
     it("domToWikitext for code block", function() {
