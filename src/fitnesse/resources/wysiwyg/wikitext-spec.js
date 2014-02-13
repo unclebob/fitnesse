@@ -372,6 +372,16 @@ describe("parser and formatter", function () {
         var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
         generate(dom, wikitext);
     });
+    it("hashtable with variable", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:${ID1},$contactId2:id2"), " "))));
+
+        var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
+        generate(dom, wikitext);
+    });
 
     it("bold italic", function() {
         var dom = element("p", element("b", element("i", "bold italic")));

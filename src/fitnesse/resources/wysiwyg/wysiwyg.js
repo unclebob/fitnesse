@@ -1575,7 +1575,8 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
     wikiInlineRules.push("[->)\\]]!|\\}");          // 8. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
-    wikiInlineRules.push(_wikiPageName);            // 10. WikiPageName
+    wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
+    wikiInlineRules.push("\\${[^}]+}");             // 11. Variable
 
     var wikiRules = [];
     // -1. header
@@ -1924,6 +1925,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         }
     }
 
+    function handleVariable(value) {
+        holder.appendChild(contentDocument.createTextNode(matchText));
+    }
+
     function handleList(value) {
         var match = /^(\s*)([*1-9-])\s/.exec(value);
         var className, depth, start;
@@ -2246,9 +2251,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleLinks(matchText);
                 continue;
-            case 10:		// WikiPageName
+            case 10:		// WikiPage name
                 if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleWikiPageName(matchText);
+                continue;
+            case 11:    // Variable
+                handleVariable(matchText);
                 continue;
             case -1:    // header
                 currentHeader = handleHeader(matchText);
