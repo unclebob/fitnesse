@@ -9,7 +9,7 @@ First we need a page.
 Import the !-SampleWiki-!.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${FITNESSE_PORT}/FitNesse.SampleWiki|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:9123/SampleWiki|true|
 
 Request the properties view of this page.
 !|Response Requester.|
