@@ -1926,7 +1926,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     }
 
     function handleVariable(value) {
-        holder.appendChild(contentDocument.createTextNode(matchText));
+        holder.appendChild(contentDocument.createTextNode(value));
     }
 
     function handleList(value) {
