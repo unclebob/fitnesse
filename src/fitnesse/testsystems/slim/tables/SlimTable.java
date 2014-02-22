@@ -40,7 +40,7 @@ public abstract class SlimTable {
 
   protected final Table table;
   protected String id;
-  private CustomComparatorRegistry customComparatorRegistry;
+  protected CustomComparatorRegistry customComparatorRegistry;
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -109,8 +109,7 @@ public abstract class SlimTable {
   protected String getFixtureName() {
     String tableHeader = table.getCellContents(0, 0);
     String fixtureName = getFixtureName(tableHeader);
-    String disgracedFixtureName = Disgracer.disgraceClassName(fixtureName);
-    return disgracedFixtureName;
+    return Disgracer.disgraceClassName(fixtureName);
   }
 
   protected String getFixtureName(String tableHeader) {

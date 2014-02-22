@@ -9,7 +9,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the !-SampleWiki-! page.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${FITNESSE_PORT}/FitNesse.SampleWiki|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:9123/SampleWiki|true|
 
 Now we'll change the content of one of the local pages.
 !|Save Page Requester|
