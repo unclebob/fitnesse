@@ -6,20 +6,20 @@ import java.util.Map;
 
 public class CustomComparatorRegistry {
 
-  final static Map<String, CustomComparator> customComparators = new HashMap<String, CustomComparator>();
+  final Map<String, CustomComparator> customComparators = new HashMap<String, CustomComparator>();
 
-  public static  CustomComparator getCustomComparatorForPrefix(String prefix) {
+  public CustomComparator getCustomComparatorForPrefix(String prefix) {
     if (customComparators.containsKey(prefix))
-      return (CustomComparator) customComparators.get(prefix);
+      return customComparators.get(prefix);
     else
       return null;
   }
 
-  public static void addCustomComparator(String prefix, CustomComparator customComparator) {
+  public void addCustomComparator(String prefix, CustomComparator customComparator) {
     customComparators.put(prefix, customComparator);
   }
 
-  public static Map<String, CustomComparator> getCustomComparators() {
+  public Map<String, CustomComparator> getCustomComparators() {
     return Collections.unmodifiableMap(customComparators);
   }
 

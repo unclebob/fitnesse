@@ -8,9 +8,10 @@ public class CustomComparatorRegistryTest {
 
   @Test
   public void useConverterFromCustomizing() {
-    CustomComparatorRegistry.addCustomComparator("prefix", new Comparator());
+    CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
+    customComparatorRegistry.addCustomComparator("prefix", new Comparator());
 
-    CustomComparator comparator = CustomComparatorRegistry.getCustomComparatorForPrefix("prefix");
+    CustomComparator comparator = customComparatorRegistry.getCustomComparatorForPrefix("prefix");
     Assert.assertTrue(comparator.matches("SAME", "same"));
   }
 

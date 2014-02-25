@@ -2,86 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import static org.junit.Assert.*;
 
+import fitnesse.ContextConfigurator;
+import fitnesse.PluginException;
 import org.junit.Test;
 
 public class ArgumentsTest {
-
-  @Test
-  public void testSimpleCommandline() throws Exception {
-    Arguments args = new Arguments(new String[0]);
-    assertNotNull(args);
-    assertEquals(80, args.getPort());
-    assertEquals(".", args.getRootPath());
-  }
-
-  @Test
-  public void testArgumentsDefaults() throws Exception {
-    Arguments args = new Arguments();
-    assertEquals(80, args.getPort());
-    assertEquals(".", args.getRootPath());
-    assertEquals("FitNesseRoot", args.getRootDirectory());
-    assertEquals(null, args.getLogDirectory());
-    assertEquals(false, args.isOmittingUpdates());
-    assertEquals(14, args.getDaysTillVersionsExpire());
-    assertEquals(null, args.getUserpass());
-    assertEquals(false, args.isInstallOnly());
-    assertNull(args.getCommand());
-  }
-
-  @Test
-  public void testArgumentsAlternates() throws Exception {
-    String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
-    Arguments args = new Arguments(argString.split(" "));
-    assertEquals(123, args.getPort());
-    assertEquals("MyWd", args.getRootPath());
-    assertEquals("MyRoot", args.getRootDirectory());
-    assertEquals("LogDir", args.getLogDirectory());
-    assertEquals(true, args.isOmittingUpdates());
-    assertEquals(321, args.getDaysTillVersionsExpire());
-    assertEquals("userpass.txt", args.getUserpass());
-    assertEquals(true, args.isInstallOnly());
-  }
-
-  @Test
-  public void testAllArguments() throws Exception {
-    Arguments args = new Arguments("-p", "81", "-d", "directory", "-r", "root",
-        "-l", "myLogDirectory", "-o", "-e", "22");
-    assertNotNull(args);
-    assertEquals(81, args.getPort());
-    assertEquals("directory", args.getRootPath());
-    assertEquals("root", args.getRootDirectory());
-    assertEquals("myLogDirectory", args.getLogDirectory());
-    assertTrue(args.isOmittingUpdates());
-    assertEquals(22, args.getDaysTillVersionsExpire());
-  }
-
-  @Test
-  public void testNotOmitUpdates() throws Exception {
-    Arguments args = new Arguments("-p", "81", "-d", "directory", "-r", "root",
-        "-l", "myLogDirectory");
-    assertNotNull(args);
-    assertEquals(81, args.getPort());
-    assertEquals("directory", args.getRootPath());
-    assertEquals("root", args.getRootDirectory());
-    assertEquals("myLogDirectory", args.getLogDirectory());
-    assertFalse(args.isOmittingUpdates());
-  }
-
-  @Test
-  public void commandShouldUseDifferentDefaultPort() throws Exception {
-    Arguments args = new Arguments("-c", "someCommand");
-    assertNotNull(args);
-    assertEquals(Arguments.DEFAULT_COMMAND_PORT, args.getPort());
-  }
-
-  @Test
-  public void commandShouldAllowPortToBeSet() throws Exception {
-    Arguments args = new Arguments("-c", "someCommand", "-p", "666");
-    assertNotNull(args);
-    assertEquals(666, args.getPort());
-  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testBadArgument() throws Exception {
@@ -91,19 +21,57 @@ public class ArgumentsTest {
   @Test
   public void defaultConfigLocation() {
     Arguments args = new Arguments();
-    assertEquals("./plugins.properties", args.getConfigFile());
+    assertEquals("./plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void configLocationWithDifferentRootPath() {
     Arguments args = new Arguments("-d", "customDir");
-    assertEquals("customDir/plugins.properties", args.getConfigFile());
+    assertEquals("customDir/plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void customConfigLocation() {
     Arguments args = new Arguments("-f", "custom.properties");
-    assertEquals("custom.properties", args.getConfigFile());
+    assertEquals("custom.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
+  }
+
+  @Test
+  public void argumentsCanBeRepresentedByProperties() throws IOException, PluginException {
+    Arguments args = new Arguments("-v", "-p", "81", "-d", "directory", "-r", "root", "-b", "someFile.txt",
+              "-l", "myLogDirectory", "-o", "-e", "22", "-f", "fitnesse.properties", "-i", "-c", "SomeCommand", "-a", "user:pass");
+    Properties properties = args.update(ContextConfigurator.systemDefaults()).makeFitNesseContext().getProperties();
+
+    assertEquals("verbose", properties.getProperty("LogLevel"));
+    assertEquals("81", properties.getProperty("Port"));
+    assertEquals("directory", properties.getProperty("RootPath"));
+    assertEquals("root", properties.getProperty("FitNesseRoot"));
+    assertEquals("someFile.txt", properties.getProperty("RedirectOutput"));
+    assertEquals("myLogDirectory", properties.getProperty("LogDirectory"));
+    assertEquals("true", properties.getProperty("OmittingUpdates"));
+    assertEquals("22", properties.getProperty("VersionsController.days"));
+    assertEquals("fitnesse.properties", properties.getProperty("ConfigFile"));
+    assertEquals("true", properties.getProperty("InstallOnly"));
+    assertEquals("SomeCommand", properties.getProperty("Command"));
+    assertEquals("user:pass", properties.getProperty("Credentials"));
+  }
+
+  @Test
+  public void defaultArgumentsAsProperties() throws IOException, PluginException {
+    Arguments args = new Arguments();
+    Properties properties = args.update(ContextConfigurator.empty()).makeFitNesseContext().getProperties();
+
+    assertEquals("normal", properties.getProperty("LogLevel"));
+    assertNull(properties.getProperty("ConfigFile"));
+    assertNull(properties.getProperty("RootPath"));
+    assertNull(properties.getProperty("FitNesseRoot"));
+    assertNull(properties.getProperty("RedirectOutput"));
+    assertNull(properties.getProperty("LogDirectory"));
+    assertNull(properties.getProperty("OmittingUpdates"));
+    assertNull(properties.getProperty("VersionsController.days"));
+    assertNull(properties.getProperty("InstallOnly"));
+    assertNull(properties.getProperty("Command"));
+    assertNull(properties.getProperty("Credentials"));
   }
 
 }

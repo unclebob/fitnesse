@@ -16,13 +16,10 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.testrunner.TestSystemFactoryRegistrar;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlTable;
@@ -65,14 +62,13 @@ public class PluginsLoaderTest {
   public void setUp() throws Exception {
     testProperties = new Properties();
     testProvider = new SymbolProvider(new SymbolType[] {});
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), testProperties);
   }
 
   @Test
   public void testAddPlugins() throws Exception {
-    testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
+    testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    FileSystemPageFactory wikiPageFactory = new FileSystemPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
 
     assertMatch("!today", false);
@@ -92,7 +88,7 @@ public class PluginsLoaderTest {
   @Test
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
-    testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
+    testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
 
     ResponderFactory responderFactory = new ResponderFactory(".");
     loader.loadResponders(responderFactory);
@@ -104,7 +100,7 @@ public class PluginsLoaderTest {
   @Test
   public void testWikiWidgetPlugins() throws Exception {
     String symbolValues = Today.class.getName();
-    testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
+    testProperties.setProperty(ConfigurationParameter.SYMBOL_TYPES.getKey(), symbolValues);
 
     loader.loadSymbolTypes(testProvider);
 
@@ -120,7 +116,7 @@ public class PluginsLoaderTest {
 
   @Test
   public void testAuthenticatorCustomCreation() throws Exception {
-    testProperties.setProperty(ComponentFactory.AUTHENTICATOR, SimpleAuthenticator.class.getName());
+    testProperties.setProperty(ConfigurationParameter.AUTHENTICATOR.getKey(), SimpleAuthenticator.class.getName());
 
     Authenticator authenticator = loader.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
@@ -154,50 +150,56 @@ public class PluginsLoaderTest {
 
 
   @Test
-  public void testContentFilterCreation() throws Exception {
-    loader.loadContentFilter();
-    assertEquals(null, SaveResponder.contentFilter);
-
-    testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
-
-    loader.loadContentFilter();
-    assertNotNull(SaveResponder.contentFilter);
-    assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
+  public void noContentFilter() throws Exception {
+    ContentFilter filter = loader.loadContentFilter();
+    assertNull(filter);
   }
 
   @Test
-  public void testSlimTablesCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test:" + TestSlimTable.class.getName());
-    loader.loadSlimTables();
+  public void haveContentFilter() throws Exception {
+    testProperties.setProperty(ConfigurationParameter.CONTENT_FILTER.getKey(), TestContentFilter.class.getName());
+
+    ContentFilter filter = loader.loadContentFilter();
+    assertNotNull(filter);
+    assertEquals(TestContentFilter.class, filter.getClass());
+  }
+
+  @Test
+  public void testSlimTablesCreation() throws PluginException {
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
+    loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   @Test
-  public void testSlimTablesWithColonCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    testProperties.setProperty(ComponentFactory.SLIM_TABLES, "test::" + TestSlimTable.class.getName());
-    loader.loadSlimTables();
+  public void testSlimTablesWithColonCreation() throws PluginException {
+    testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test::" + TestSlimTable.class.getName());
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = new SlimTableFactory().makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
   @Test
-  public void testCustomComparatorsCreation() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    testProperties.setProperty(ComponentFactory.CUSTOM_COMPARATORS, "test:" + TestCustomComparator.class.getName());
-    loader.loadCustomComparators();
+  public void testCustomComparatorsCreation() throws PluginException {
+    CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
+    testProperties.setProperty(ConfigurationParameter.CUSTOM_COMPARATORS.getKey(), "test:" + TestCustomComparator.class.getName());
+    loader.loadCustomComparators(customComparatorRegistry);
 
-    CustomComparator customComparator = CustomComparatorRegistry.getCustomComparatorForPrefix("test");
+    CustomComparator customComparator = customComparatorRegistry.getCustomComparatorForPrefix("test");
     assertNotNull(customComparator);
     assertTrue(customComparator instanceof TestCustomComparator);
   }
 
   @Test
-  public void testTestSystemCreation() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-    testProperties.setProperty(ComponentFactory.TEST_SYSTEMS, "foo:" + FooTestSystemFactory.class.getName());
+  public void testTestSystemCreation() throws PluginException {
+    testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS.getKey(), "foo:" + FooTestSystemFactory.class.getName());
     TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
     loader.loadTestSystems(registrar);
 

@@ -41,7 +41,7 @@ public class FitNesseExpediterTest {
 
   @Test
   public void testAuthenticationGetsCalled() throws Exception {
-    context = FitNesseUtil.makeTestContext(context, new StoneWallAuthenticator());
+    context = FitNesseUtil.makeTestContext(context.root, new StoneWallAuthenticator());
     expediter = new FitNesseExpediter(socket, context);
     MockRequest request = new MockRequest();
     Response response = expediter.createGoodResponse(request);

@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <suiteResults>
-  <FitNesseVersion>$suiteExecutionReport.getVersion()</FitNesseVersion>
-  <rootPath>#escape($suiteExecutionReport.getRootPath())</rootPath>
-  #foreach ($reference in $suiteExecutionReport.getPageHistoryReferences())
+  <FitNesseVersion>$suiteExecutionReport.version</FitNesseVersion>
+  <rootPath>#escape($suiteExecutionReport.rootPath)</rootPath>
+  #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <pageHistoryReference>
-    <name>#escape($reference.getPageName())</name>
+    <name>#escape($reference.pageName)</name>
     <date>$reference.getDateString()</date>
-    <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()</pageHistoryLink>
+    <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     <counts>
-      <right>$reference.getTestSummary().getRight()</right>
-      <wrong>$reference.getTestSummary().getWrong()</wrong>
-      <ignores>$reference.getTestSummary().getIgnores()</ignores>
-      <exceptions>$reference.getTestSummary().getExceptions()</exceptions>
+      <right>$reference.testSummary.right</right>
+      <wrong>$reference.testSummary.wrong</wrong>
+      <ignores>$reference.testSummary.ignores</ignores>
+      <exceptions>$reference.testSummary.exceptions</exceptions>
     </counts>
     <runTimeInMillis>$reference.RunTimeInMillis</runTimeInMillis>
   </pageHistoryReference>
   #end
   <finalCounts>
-    <right>$suiteExecutionReport.getFinalCounts().getRight()</right>
-    <wrong>$suiteExecutionReport.getFinalCounts().getWrong()</wrong>
-    <ignores>$suiteExecutionReport.getFinalCounts().getIgnores()</ignores>
-    <exceptions>$suiteExecutionReport.getFinalCounts().getExceptions()</exceptions>
+    <right>$suiteExecutionReport.finalCounts.right</right>
+    <wrong>$suiteExecutionReport.finalCounts.wrong</wrong>
+    <ignores>$suiteExecutionReport.finalCounts.ignores</ignores>
+    <exceptions>$suiteExecutionReport.finalCounts.exceptions</exceptions>
   </finalCounts>
-  <totalRunTimeInMillis>$suiteExecutionReport.TotalRunTimeInMillis</totalRunTimeInMillis>
+  <totalRunTimeInMillis>$suiteExecutionReport.totalRunTimeInMillis</totalRunTimeInMillis>
 
 </suiteResults>
 

@@ -71,7 +71,7 @@ public class WikiPageActions {
 
   public boolean isImported() {
     PageData data = getData();
-    return data != null && WikiImportProperty.isImported(data);
+    return data != null && WikiImportProperty.isImportedSubWiki(data);
   }
 
   private boolean hasAction(String action) {

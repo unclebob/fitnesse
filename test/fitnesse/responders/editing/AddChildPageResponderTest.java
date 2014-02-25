@@ -166,6 +166,17 @@ public class AddChildPageResponderTest {
     assertTrue(isSuite());
   }
 
+
+  @Test
+  public void pageTypeShouldBeSuiteWhenPageNameWouldQualifyForTestPage() throws Exception {
+    request.addInput("pageType", "Suite");
+    request.addInput(EditResponder.PAGE_NAME, "TestChildPage");
+    responder.makeResponse(context, request);
+    getChildPage("TestChildPage");
+    assertFalse(isTest());
+    assertTrue(isSuite());
+  }
+
   @Test
   public void createNewPageBasedOnTemplate() throws Exception {
     final String newContent = "To be saved data";

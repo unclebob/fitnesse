@@ -23,7 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
+public class ScenarioAndDecisionTableExtensionTest {
   private static final String SCEN_EXTENSION_NAME = "diffScriptScenario";
   private static final String SCRIPT_EXTENSION_NAME = "diffScript";
 
@@ -37,30 +37,32 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
 
   @Before
   public void setUp() throws Exception {
-    SlimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
-    SlimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    slimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
+    slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
-    clearTestSummary();
   }
 
-  private void makeTables(String scenarioText, String scriptText) throws Exception {
+  private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     String tableText = "!|" + SCEN_EXTENSION_NAME + "|" + scenarioText + "|\n"
             + "\n"
             + "!|DT:" + scriptText + "|\n";
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", this);
+    ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", testContext);
     t = ts.getTable(1);
-    dt = new DecisionTable(t, "did", this);
+    dt = new DecisionTable(t, "did", testContext);
     assertions.addAll(st.getAssertions());
     assertions.addAll(dt.getAssertions());
+    return testContext;
   }
 
   @Test
   public void bracesAroundArgumentInTable() throws Exception {
-    makeTables(
+    SlimTestContextImpl testContext = makeTables(
       "echo|user|giving|user_old|\n" +
         "|check|echo|@{user}|@{user_old}",
       "EchoGiving|\n" +
@@ -78,11 +80,10 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
     String expectedScript =
       "[[diffScriptScenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
@@ -124,12 +125,12 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
 
   @Test
   public void simpleInputAndOutputPassing() throws Exception {
-    makeTables(
-      "echo|input|giving|output|\n" +
-        "|check|echo|@input|@output",
-      "EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|7"
+    SlimTestContextImpl testContext = makeTables(
+            "echo|input|giving|output|\n" +
+                    "|check|echo|@input|@output",
+            "EchoGiving|\n" +
+                    "|input|output|\n" +
+                    "|7|7"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -142,21 +143,20 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
     String expectedScript =
       "[[diffScriptScenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
-    assertEquals(1, getTestSummary().getRight());
-    assertEquals(0, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test
   public void simpleInputAndOutputFailing() throws Exception {
-    makeTables(
-      "echo|input|giving|output|\n" +
-        "|check|echo|@input|@output",
-      "EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|8"
+    SlimTestContextImpl testContext = makeTables(
+            "echo|input|giving|output|\n" +
+                    "|check|echo|@input|@output",
+            "EchoGiving|\n" +
+                    "|input|output|\n" +
+                    "|7|8"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
@@ -169,11 +169,10 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
     String expectedScript =
       "[[diffScriptScenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
-    assertEquals(0, getTestSummary().getRight());
-    assertEquals(1, getTestSummary().getWrong());
-    assertEquals(0, getTestSummary().getIgnores());
-    assertEquals(0, getTestSummary().getExceptions());
+    assertEquals(0, testContext.getTestSummary().getRight());
+    assertEquals(1, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
   }
 
   @Test(expected=SyntaxError.class)
@@ -207,7 +206,6 @@ public class ScenarioAndDecisionTableExtensionTest extends SlimTestContextImpl {
     String expectedScript =
       "[[diffScriptScenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
   }
 
   /**

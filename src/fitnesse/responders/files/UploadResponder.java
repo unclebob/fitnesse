@@ -20,7 +20,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import fitnesse.wiki.VersionInfo;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.fs.FileVersion;
 
 public class UploadResponder implements SecureResponder {
@@ -35,8 +35,15 @@ public class UploadResponder implements SecureResponder {
     String resource = URLDecoder.decode(request.getResource(), "UTF-8");
     final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
     final String user = request.getAuthorizationUsername();
+
     if (uploadedFile.isUsable()) {
+
       final File file = makeFileToCreate(uploadedFile, resource);
+
+      if (!FileResponder.isInFilesDirectory(new File(rootPath), file)) {
+        return new ErrorResponder("Invalid path: " + uploadedFile.getName()).makeResponse(context, request);
+      }
+
       context.versionsController.makeVersion(new FileVersion() {
 
         @Override

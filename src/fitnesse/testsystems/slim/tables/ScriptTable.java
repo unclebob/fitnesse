@@ -163,11 +163,13 @@ public class ScriptTable extends SlimTable {
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     if (scenario != null) {
+      scenario.setCustomComparatorRegistry(customComparatorRegistry);
       String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
       assertions.addAll(scenario.call(args, this, row));
     } else if (lastCol == 0) {
       String firstNameCell = table.getCellContents(0, row);
       for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
+        s.setCustomComparatorRegistry(customComparatorRegistry);
         String[] args = s.matchParameters(firstNameCell);
         if (args != null) {
           assertions.addAll(s.call(args, this, row));
@@ -363,7 +365,7 @@ public class ScriptTable extends SlimTable {
       try {
         table.addColumnToRow(getRow(), actual);
       } catch (Throwable e) {
-        return SlimTestResult.fail(actual, SlimTestSystem.exceptionToString(e));
+        return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();
     }

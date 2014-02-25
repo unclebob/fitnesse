@@ -1575,7 +1575,8 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
     wikiInlineRules.push("[->)\\]]!|\\}");          // 8. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
-    wikiInlineRules.push(_wikiPageName);            // 10. WikiPageName
+    wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
+    wikiInlineRules.push("\\${[^}]+}");             // 11. Variable
 
     var wikiRules = [];
     // -1. header
@@ -1924,6 +1925,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         }
     }
 
+    function handleVariable(value) {
+        holder.appendChild(contentDocument.createTextNode(value));
+    }
+
     function handleList(value) {
         var match = /^(\s*)([*1-9-])\s/.exec(value);
         var className, depth, start;
@@ -2034,10 +2039,13 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            holder = target.parentNode;
-        } else {
-            holder.appendChild(contentDocument.createTextNode(value));
+            console.log("Class for tt is '" + target.getAttribute('class') + "' for value '" + value + "'.");
+            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', '}': 'hashtable', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
+                holder = target.parentNode;
+                return;
+            }
         }
+        holder.appendChild(contentDocument.createTextNode(value));
     }
 
     function handleTableCell(action, escaped, hidden) {
@@ -2243,9 +2251,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleLinks(matchText);
                 continue;
-            case 10:		// WikiPageName
+            case 10:		// WikiPage name
                 if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                 handleWikiPageName(matchText);
+                continue;
+            case 11:    // Variable
+                handleVariable(matchText);
                 continue;
             case -1:    // header
                 currentHeader = handleHeader(matchText);
@@ -2274,7 +2285,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 if (inDefinition()) { break; }
                 if (inEscapedText() || inCodeBlock()) { 
                     if (/^-!/.test(matchText)) {
-                        closeEscapedText(matchText);
+                        closeEscapedText(matchText.substring(0, 2));
                         matchText = matchText.substring(2);
                         if (inTable()) {
                             handleTableCell(-1);

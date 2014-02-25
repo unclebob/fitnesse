@@ -14,32 +14,27 @@ import fitnesse.wiki.WikiPage;
  * Organize pages by test system in an appropriate order.
  */
 public class PagesByTestSystem {
-  private final List<WikiPage> pages;
   private final WikiPage root;
-  private final Map<Descriptor, List<WikiPage>> pagesByTestSystem;
-  private final DescriptorFactory descriptorFactory;
+  private final Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem;
 
-  public PagesByTestSystem(List<WikiPage> pages, WikiPage root, DescriptorFactory descriptorFactory) {
-    this.pages = pages;
+  public PagesByTestSystem(List<WikiPage> pages, WikiPage root) {
     this.root = root;
-    this.descriptorFactory = descriptorFactory;
-    this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
+    this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown(pages));
   }
 
-
-  private Map<Descriptor, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown() {
-    Map<Descriptor, List<WikiPage>> pagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(2);
+  private Map<WikiPageIdentity, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown(List<WikiPage> pages) {
+    Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem = new HashMap<WikiPageIdentity, List<WikiPage>>(2);
 
     for (WikiPage wikiPage : pages) {
       if (!SuiteContentsFinder.isSuiteSetupOrTearDown(wikiPage)) {
-        Descriptor descriptor = descriptorFactory.create(wikiPage);
-        getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(wikiPage);
+        WikiPageIdentity identity = new WikiPageIdentity(wikiPage.getData());
+        getOrMakeListWithinMap(pagesByTestSystem, identity).add(wikiPage);
       }
     }
     return pagesByTestSystem;
   }
 
-  private List<WikiPage> getOrMakeListWithinMap(Map<Descriptor, List<WikiPage>> pagesByTestSystem, Descriptor descriptor) {
+  private List<WikiPage> getOrMakeListWithinMap(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem, WikiPageIdentity descriptor) {
     List<WikiPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
       pagesForTestSystem = new LinkedList<WikiPage>();
@@ -50,13 +45,13 @@ public class PagesByTestSystem {
     return pagesForTestSystem;
   }
 
-  private Map<Descriptor, List<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<Descriptor, List<WikiPage>> pagesByTestSystem) {
-    Map<Descriptor, List<WikiPage>> orderedPagesByTestSystem = new HashMap<Descriptor, List<WikiPage>>(pagesByTestSystem.size());
+  private Map<WikiPageIdentity, List<WikiPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem) {
+    Map<WikiPageIdentity, List<WikiPage>> orderedPagesByTestSystem = new HashMap<WikiPageIdentity, List<WikiPage>>(pagesByTestSystem.size());
 
-    if (pages.size() > 0) {
+    if (pagesByTestSystem.size() > 0) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
-      for (Map.Entry<Descriptor, List<WikiPage>> pages : pagesByTestSystem.entrySet())
+      for (Map.Entry<WikiPageIdentity, List<WikiPage>> pages : pagesByTestSystem.entrySet())
         orderedPagesByTestSystem.put(pages.getKey(), surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pages.getValue()));
     }
     return orderedPagesByTestSystem;
@@ -70,15 +65,12 @@ public class PagesByTestSystem {
     return tests;
   }
 
-  public Collection<Descriptor> descriptors() {
+  public Collection<WikiPageIdentity> identities() {
     return pagesByTestSystem.keySet();
   }
 
-  public List<WikiPage> testPageForDescriptor(Descriptor descriptor) {
-    return Collections.unmodifiableList(pagesByTestSystem.get(descriptor));
+  public List<WikiPage> testPagesForIdentity(WikiPageIdentity identity) {
+    return Collections.unmodifiableList(pagesByTestSystem.get(identity));
   }
 
-  public static interface DescriptorFactory {
-    Descriptor create(WikiPage page);
-  }
 }

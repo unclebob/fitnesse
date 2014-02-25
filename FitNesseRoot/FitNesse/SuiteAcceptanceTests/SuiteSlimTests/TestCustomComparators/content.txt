@@ -1,0 +1,8 @@
+You can define a custom comparator in the plugins.properties file. This
+
+| scenario | test in scenario |
+| check | echo | test | glob:t*t |
+
+| script | echo fixture |
+| check | echo | test | glob:t*t |
+| test in scenario |

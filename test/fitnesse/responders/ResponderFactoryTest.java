@@ -3,12 +3,35 @@
 package fitnesse.responders;
 
 
+import java.io.File;
+import java.io.IOException;
+
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.responders.editing.*;
-import fitnesse.responders.files.*;
-import fitnesse.responders.refactoring.*;
-import fitnesse.responders.run.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.responders.editing.AddChildPageResponder;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.PropertiesResponder;
+import fitnesse.responders.editing.SavePropertiesResponder;
+import fitnesse.responders.editing.SaveResponder;
+import fitnesse.responders.editing.SymbolicLinkResponder;
+import fitnesse.responders.files.CreateDirectoryResponder;
+import fitnesse.responders.files.DeleteConfirmationResponder;
+import fitnesse.responders.files.DeleteFileResponder;
+import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.RenameFileConfirmationResponder;
+import fitnesse.responders.files.RenameFileResponder;
+import fitnesse.responders.files.UploadResponder;
+import fitnesse.responders.refactoring.DeletePageResponder;
+import fitnesse.responders.refactoring.MovePageResponder;
+import fitnesse.responders.refactoring.RefactorPageResponder;
+import fitnesse.responders.refactoring.RenamePageResponder;
+import fitnesse.responders.refactoring.SearchReplaceResponder;
+import fitnesse.responders.run.StopTestResponder;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
@@ -20,29 +43,23 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-
-import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
 public class ResponderFactoryTest {
   private ResponderFactory factory;
   private MockRequest request;
-  private WikiPageDummy nonExistantPage;
-  private WikiPage root;
 
   @Before
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     request = new MockRequest();
-    root = InMemoryPage.makeRoot("root");
-    nonExistantPage = new WikiPageDummy();
   }
 
   @Test
@@ -87,7 +104,6 @@ public class ResponderFactoryTest {
   public void testEditResponder() throws Exception {
     request.addInput("responder", "edit");
     request.setResource("SomePage");
-    assertResponderType(EditResponder.class);
     assertResponderType(EditResponder.class);
   }
 
@@ -214,16 +230,6 @@ public class ResponderFactoryTest {
   @Test
   public void testCreateMovePageResponer() throws Exception {
     assertResponderTypeMatchesInput("movePage", MovePageResponder.class);
-  }
-
-  @Test
-  public void testSocketCatcher() throws Exception {
-    assertResponderTypeMatchesInput("socketCatcher", SocketCatchingResponder.class);
-  }
-
-  @Test
-  public void testFitClient() throws Exception {
-    assertResponderTypeMatchesInput("fitClient", FitClientResponder.class);
   }
 
   @Test

@@ -2,14 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.wiki.ClassPathBuilder;
-import fitnesse.testsystems.*;
-import fitnesse.wiki.WikiPage;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.wiki.ClassPathBuilder;
+import fitnesse.wiki.WikiPage;
 
 public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
@@ -23,6 +31,9 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   private volatile boolean isStopped = false;
   private String stopId = null;
 
+  private boolean runInProcess;
+  private boolean enableRemoteDebug;
+
   private TestSystem testSystem;
   private volatile int testsInProgressCount;
 
@@ -35,16 +46,27 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.formatters = new CompositeFormatter();
   }
 
+  public void setRunInProcess(boolean runInProcess) {
+    this.runInProcess = runInProcess;
+  }
+
+  public void setEnableRemoteDebug(boolean enableRemoteDebug) {
+    this.enableRemoteDebug = enableRemoteDebug;
+  }
+
   public void addTestSystemListener(TestSystemListener listener) {
     this.formatters.addTestSystemListener(listener);
   }
 
   public void executeTestPages() throws IOException, InterruptedException {
-    internalExecuteTestPages();
-    allTestingComplete();
+    try {
+      internalExecuteTestPages();
+    } finally {
+      allTestingComplete();
+    }
   }
 
-  void allTestingComplete() throws IOException {
+  private void allTestingComplete() throws IOException {
     formatters.close();
   }
 
@@ -54,18 +76,18 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (Descriptor descriptor : pagesByTestSystem.descriptors()) {
-      startTestSystemAndExecutePages(descriptor, pagesByTestSystem.testPageForDescriptor(descriptor));
+    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
+      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
     }
 
     testingTracker.removeEndedProcess(stopId);
   }
 
-  private void startTestSystemAndExecutePages(Descriptor descriptor, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
-        testSystem = startTestSystem(descriptor);
+        testSystem = startTestSystem(identity, testSystemPages);
       }
 
       if (testSystem != null && testSystem.isSuccessfullyStarted()) {
@@ -79,8 +101,41 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     }
   }
 
-  private TestSystem startTestSystem(Descriptor descriptor) throws IOException {
-    testSystem = testSystemFactory.create(descriptor);
+  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<WikiPage> testPages) throws IOException {
+    testSystem = testSystemFactory.create(new Descriptor() {
+      private String classPath;
+
+      @Override public String getTestSystem() {
+        String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
+        if (testSystemName == null)
+          return "fit";
+        return testSystemName;
+      }
+
+      @Override public String getTestSystemType() {
+        return getTestSystem().split(":")[0];
+      }
+
+      @Override public String getClassPath() {
+        if (classPath == null) {
+          classPath = new ClassPathBuilder().buildClassPath(testPages);
+        }
+        return classPath;
+      }
+
+      @Override public boolean runInProcess() {
+        return runInProcess;
+      }
+
+      @Override public boolean isDebug() {
+        return enableRemoteDebug;
+      }
+
+      @Override public String getVariable(String name) {
+        return identity.getVariable(name);
+      }
+    });
+
     testSystem.addTestSystemListener(this);
     testSystem.start();
     return testSystem;

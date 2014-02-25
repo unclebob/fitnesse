@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import fitnesse.reporting.history.TestHistory;
+import fitnesse.responders.run.TestResponder;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -28,7 +28,7 @@ import fitnesse.wiki.WikiPagePath;
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(
-      TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;

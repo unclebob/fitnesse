@@ -4,10 +4,11 @@ package fitnesse.wiki;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import util.StringUtil;
 
@@ -15,7 +16,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected HashMap<String, WikiPageProperty> children = new HashMap<String, WikiPageProperty>();
+  protected SortedMap<String, WikiPageProperty> children = new TreeMap<String, WikiPageProperty>();
 
   public WikiPageProperty() {
   }
@@ -67,7 +68,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   public Set<String> keySet() {
-    return children == null ? new HashSet<String>() : children.keySet();
+    return children == null ? Collections.<String>emptySet() : children.keySet();
   }
 
   public String toString() {

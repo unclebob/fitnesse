@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static fitnesse.responders.files.FileResponder.isInFilesDirectory;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
@@ -22,6 +22,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;
@@ -78,8 +79,12 @@ public class FileResponderTest {
   @Test
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
-    responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
-    assertEquals(context.rootDirectoryName + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
+    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
+    assertEquals(context.getRootPagePath() + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
+  }
+
+  @Test
+  public void testUrlEncodedSpacesInFileName() throws Exception {
     request.setResource("files/file4%20with%20spaces%32.txt");
     responder = (FileResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
     assertEquals("files/file4 with spaces2.txt", responder.resource);
@@ -177,4 +182,32 @@ public class FileResponderTest {
     sender.doSending(response);
     assertSubString("<a href=\"/FrontPage\" id=\"art_niche\"", sender.sentData());
   }
+
+  @Test
+  public void shouldTellIfFileIsInFilesFolder() throws IOException {
+    File rootPath = new File("./FitNesseRoot");
+    assertTrue(isInFilesDirectory(rootPath, new File(rootPath, "files")));
+    assertTrue(isInFilesDirectory(rootPath, new File(rootPath, "files/subfile")));
+    assertFalse(isInFilesDirectory(rootPath, new File(rootPath, "files/..")));
+    assertFalse(isInFilesDirectory(rootPath, new File("files")));
+  }
+
+  @Test
+  public void shouldNotDealWithDirectoryOutsideFilesFolder() throws Exception {
+    request.setResource("/files/../../");
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Response response = responder.makeResponse(context, request);
+    assertTrue(responder instanceof ErrorResponder);
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  public void shouldNotDealWithEscapedDirectoryOutsideFilesFolder() throws Exception {
+    request.setResource("/files/..%2f/");
+    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Response response = responder.makeResponse(context, request);
+    assertTrue(responder instanceof ErrorResponder);
+    assertEquals(400, response.getStatus());
+  }
+
 }

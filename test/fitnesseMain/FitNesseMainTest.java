@@ -8,10 +8,11 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
-import java.util.Properties;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -26,7 +27,7 @@ public class FitNesseMainTest {
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null, null, "testFitnesseRoot", 80);
+    context = FitNesseUtil.makeTestContext(null, ".", "testFitnesseRoot", 80);
   }
 
   @After
@@ -36,26 +37,27 @@ public class FitNesseMainTest {
 
   @Test
   public void testInstallOnly() throws Exception {
-    Arguments args = new Arguments("-i");
+    context.getProperties().setProperty(ConfigurationParameter.INSTALL_ONLY.getKey(), "true");
     FitNesse fitnesse = mockFitNesse();
-    new FitNesseMain().launch(args, context);
+    new FitNesseMain().launch(context);
     verify(fitnesse, never()).start();
   }
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    Arguments args = new Arguments("-o", "-c", "command");
+    context.getProperties().setProperty(ConfigurationParameter.OMITTING_UPDATES.getKey(), "true");
+    context.getProperties().setProperty(ConfigurationParameter.COMMAND.getKey(), "command");
     FitNesse fitnesse = mockFitNesse();
     when(fitnesse.start()).thenReturn(true);
-    int exitCode = new FitNesseMain().launch(args, context);
+    int exitCode = new FitNesseMain().launch(context);
     assertThat(exitCode, is(0));
-    verify(fitnesse, times(1)).start();
+    verify(fitnesse, never()).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
   }
 
   @Test
-  public void testDirCreations() throws Exception {
+  public void testDirCreations() throws IOException {
     FitNesse fitnesse = context.fitNesse;
     fitnesse.start();
 
@@ -114,7 +116,7 @@ public class FitNesseMainTest {
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setErr(new PrintStream(outputBytes));
     Arguments arguments = new Arguments(args);
-    int exitCode = new FitNesseMain().launchFitNesse(arguments);
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
     System.setErr(err);
     String response = outputBytes.toString();

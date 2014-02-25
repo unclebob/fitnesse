@@ -9,8 +9,10 @@ import java.util.List;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wikitext.parser.ParsedPage;
 import org.htmlparser.Parser;
@@ -20,11 +22,16 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
+  private final SlimTableFactory slimTableFactory;
+  private final CustomComparatorRegistry customComparatorRegistry;
   private HtmlTableScanner tableScanner;
-  private SlimTableFactory slimTableFactory = new SlimTableFactory();
 
-  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient) {
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient,
+                            SlimTableFactory slimTableFactory,
+                            CustomComparatorRegistry customComparatorRegistry) {
     super(testSystemName, slimClient);
+    this.slimTableFactory = slimTableFactory;
+    this.customComparatorRegistry = customComparatorRegistry;
   }
 
   @Override
@@ -40,7 +47,12 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
-        processTable(theTable);
+        try {
+          processTable(theTable);
+        } catch (SyntaxError e) {
+          String tableName = theTable.getTable().getCellContents(0, 0);
+          theTable.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+        }
 
         String html = createHtmlResults(startWithTable, nextTable);
         testOutputChunk(html);
@@ -82,6 +94,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     String tableId = "" + allTables.size();
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, getTestContext());
     if (slimTable != null) {
+      slimTable.setCustomComparatorRegistry(customComparatorRegistry);
       allTables.add(slimTable);
     }
   }

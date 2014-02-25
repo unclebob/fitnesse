@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,20 @@ public class SlimTableFactoryTest {
     map.put("import", ImportTable.class);
     map.put("something", DecisionTable.class);
     map.put("library", LibraryTable.class);
+  }
+
+  @Test
+  public void commentTableShouldReturnNull() {
+    when(table.getCellContents(0, 0)).thenReturn("comment");
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    assertThat(slimTable, nullValue());
+  }
+
+  @Test
+  public void tableTypeStartingWithcommentColonShouldReturnNull() {
+    when(table.getCellContents(0, 0)).thenReturn("comment: a comment table");
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    assertThat(slimTable, nullValue());
   }
 
   @Test

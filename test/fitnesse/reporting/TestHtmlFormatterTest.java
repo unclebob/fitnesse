@@ -4,6 +4,7 @@ package fitnesse.reporting;
 
 import java.util.Date;
 
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
@@ -106,6 +107,7 @@ public class TestHtmlFormatterTest {
     formatter.testStarted(page);
     pageBuffer.setLength(0);
     formatter.errorOccurred(new Exception("test"));
+    formatter.close();
     //assert stop button added
     assertSubString("Testing was interrupted", pageBuffer.toString());
     //assert stop button removed
@@ -120,7 +122,7 @@ public class TestHtmlFormatterTest {
     clock.elapse(600);
     formatter.testComplete(page, new TestSummary(1, 2, 3, 4));
     formatter.close();
-    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.600 seconds)", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "600 seconds)", pageBuffer.toString());
   }
 
   private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {

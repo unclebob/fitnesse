@@ -173,6 +173,10 @@ function initErrorMetadata() {
         $('html, body').animate({
             scrollTop: highlight.offset().top - 200
         }, 500);
+        // Add Left-Scroll here
+        $('html, body').animate({
+            scrollLeft: highlight.offset().left - 200
+        }, 500);
 	}
 
 	$("#error-nav-prev").click(function () {

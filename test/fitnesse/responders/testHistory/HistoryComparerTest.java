@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.reporting.TestExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 
@@ -289,7 +289,7 @@ public class HistoryComparerTest {
   }
 
   private String getContentWith(String passOrFail) throws Exception {
-    TestExecutionReport report = new TestExecutionReport();
+    TestExecutionReport report = new TestExecutionReport(null, null);
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     result.right = "2";
     result.wrong = "0";
@@ -297,7 +297,7 @@ public class HistoryComparerTest {
     result.exceptions = "0";
     result.content = generateHtmlFromWiki(passOrFail);
     result.relativePageName = "testPageOne";
-    report.results.add(result);
+    report.addResult(result);
     Writer writer = new StringWriter();
     VelocityEngine engine = context.pageFactory.getVelocityEngine();
     report.toXml(writer, engine);

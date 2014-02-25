@@ -4,6 +4,8 @@ package fitnesse.reporting;
 
 import java.util.Date;
 
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
+import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparatorForRegExp;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
@@ -130,7 +132,7 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    String results = pageBuffer.toString();    
+    String results = pageBuffer.toString();
 
     assertSubString("<h2>Test Output</h2>", results);
     assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
@@ -156,7 +158,7 @@ public class SuiteHtmlFormatterTest {
     		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
     assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
     pageBuffer.setLength(0);
-    
+
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
     formatter.announceStartNewTest("RelativeName", "FullName");
 
@@ -176,20 +178,18 @@ public class SuiteHtmlFormatterTest {
 
   @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
-    formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(1);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     formatter.testStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
     formatter.close();
-    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "900 seconds)", pageBuffer.toString());
   }
 
   @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
-    formatter.page = new WikiPageDummy();
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
@@ -200,8 +200,8 @@ public class SuiteHtmlFormatterTest {
     clock.elapse(890);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
     formatter.close();
-    assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());
-    assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</li>", pageBuffer.toString());
+    assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}670 seconds\\)</span>.*</li>", pageBuffer.toString());
+    assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
   private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {

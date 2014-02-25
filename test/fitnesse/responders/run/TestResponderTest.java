@@ -2,43 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-import static util.RegexTestCase.divWithIdAndContent;
-import static util.XmlUtil.getElementByTagName;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.testsystems.fit.FitTestSystem;
-import fitnesse.testsystems.fit.SocketDealer;
-import fitnesse.wiki.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
-import util.FileUtil;
-import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -48,10 +17,34 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.fit.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wikitext.Utils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
+import util.FileUtil;
+import util.XmlUtil;
+
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
+import static util.RegexTestCase.*;
+import static util.XmlUtil.getElementByTagName;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -63,7 +56,6 @@ public class TestResponderTest {
   private MockResponseSender sender;
   private WikiPage testPage;
   private String results;
-  private FitSocketReceiver receiver;
   private WikiPage errorLogsParentPage;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
@@ -79,15 +71,13 @@ public class TestResponderTest {
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
-    receiver = new FitSocketReceiver(0, FitTestSystem.socketDealer());
-    context = FitNesseUtil.makeTestContext(root, receiver.receiveSocket());
+    context = FitNesseUtil.makeTestContext(root);
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
   @After
   public void tearDown() throws Exception {
-    receiver.close();
     FitNesseUtil.destroyTestContext();
     Clock.restoreDefaultClock();
   }
@@ -159,12 +149,6 @@ public class TestResponderTest {
     WikiPage errorLogPage = root.getPageCrawler().getPage(errorLogPath);
     String errorLogContent = errorLogPage.getData().getContent();
     assertNotSubString("Exception", errorLogContent);
-  }
-
-  @Test
-  public void testFitSocketGetsClosed() throws Exception {
-    doSimpleRun(passFixtureTable());
-    assertTrue(receiver.socket.isClosed());
   }
 
   @Test
@@ -486,20 +470,6 @@ public class TestResponderTest {
     assertTrue(responder instanceof SecureResponder);
     SecureOperation operation = responder.getSecureOperation();
     assertEquals(SecureTestOperation.class, operation.getClass());
-  }
-
-  @Test
-  public void testNotifyListeners() throws Exception {
-    MockTestEventListener listener1 = new MockTestEventListener();
-    MockTestEventListener listener2 = new MockTestEventListener();
-
-    TestResponder.registerListener(listener1);
-    TestResponder.registerListener(listener2);
-
-    doSimpleRun(passFixtureTable());
-
-    assertEquals(true, listener1.gotPreTestNotification);
-    assertEquals(true, listener2.gotPreTestNotification);
   }
 
   @Test

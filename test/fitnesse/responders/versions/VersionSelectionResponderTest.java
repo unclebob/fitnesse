@@ -42,27 +42,6 @@ public class VersionSelectionResponderTest {
   }
 
   @Test
-  @Ignore
-  public void ignore_testGetVersionsList() throws Exception {
-    // TODO: create page with test versions controller and let it return versions in arbitraty order
-    Set<VersionInfo> set = new HashSet<VersionInfo>();
-    VersionInfo v1 = new VersionInfo("1-12345678901234", "", new Date(12345678901234L * 1000));
-    VersionInfo v2 = new VersionInfo("2-45612345678901", "", new Date(45612345678901L * 1000));
-    VersionInfo v3 = new VersionInfo("3-11112345678901", "", new Date(11112345678901L * 1000));
-    VersionInfo v4 = new VersionInfo("4-12212345465679", "", new Date(12212345465679L * 1000));
-    set.add(v1);
-    set.add(v2);
-    set.add(v3);
-    set.add(v4);
-
-    List<VersionInfo> list = VersionSelectionResponder.getVersionsList(page);
-    assertEquals(v3, list.get(3));
-    assertEquals(v4, list.get(2));
-    assertEquals(v1, list.get(1));
-    assertEquals(v2, list.get(0));
-  }
-
-  @Test
   public void testMakeReponder() throws Exception {
     MockRequest request = new MockRequest();
     request.setResource("PageOne");
