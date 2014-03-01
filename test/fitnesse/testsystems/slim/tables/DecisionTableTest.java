@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import static fitnesse.slim.converters.VoidConverter.VOID_TAG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.ListUtility.list;
@@ -11,7 +12,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -254,17 +254,17 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list(id(n++), "OK"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG), // beginTable
-                    list(id(n++), VoidConverter.VOID_TAG), //reset
-                    list(id(n++), VoidConverter.VOID_TAG), //set
-                    list(id(n++), VoidConverter.VOID_TAG), //execute
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), // beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //set
+                    list(id(n++), VOID_TAG), //execute
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG) //endTable
+                    list(id(n++), VOID_TAG) //endTable
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -287,17 +287,17 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list(id(n++), "OK"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG), //beginTable
-                    list(id(n++), VoidConverter.VOID_TAG), //reset
-                    list(id(n++), VoidConverter.VOID_TAG), //set
-                    list(id(n++), VoidConverter.VOID_TAG), //execute
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), //beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //set
+                    list(id(n++), VOID_TAG), //execute
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG) //endTable
+                    list(id(n++), VOID_TAG) //endTable
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -326,17 +326,17 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
       Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
               list(
                       list(id(n++), "OK"),
-                      list(id(n++), VoidConverter.VOID_TAG),
-                      list(id(n++), VoidConverter.VOID_TAG), //beginTable
-                      list(id(n++), VoidConverter.VOID_TAG), //reset
-                      list(id(n++), VoidConverter.VOID_TAG), //set
-                      list(id(n++), VoidConverter.VOID_TAG), //execute
+                      list(id(n++), VOID_TAG),
+                      list(id(n++), VOID_TAG), //beginTable
+                      list(id(n++), VOID_TAG), //reset
+                      list(id(n++), VOID_TAG), //set
+                      list(id(n++), VOID_TAG), //execute
                       list(id(n++), "5"),
-                      list(id(n++), VoidConverter.VOID_TAG),
-                      list(id(n++), VoidConverter.VOID_TAG),
-                      list(id(n++), VoidConverter.VOID_TAG),
+                      list(id(n++), VOID_TAG),
+                      list(id(n++), VOID_TAG),
+                      list(id(n++), VOID_TAG),
                       list(id(n++), "5"),
-                      list(id(n++), VoidConverter.VOID_TAG) //endTable
+                      list(id(n++), VOID_TAG) //endTable
               )
       );
       SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -360,17 +360,17 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list(id(n++), "OK"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG), // beginTable
-                    list(id(n++), VoidConverter.VOID_TAG), //reset
-                    list(id(n++), VoidConverter.VOID_TAG), //execute
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), // beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //execute
                     list(id(n++), "4"),
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG),
-                    list(id(n++), VoidConverter.VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
                     list(id(n++), "7"),
                     list(id(n++), "5"),
-                    list(id(n++), VoidConverter.VOID_TAG) //endTable
+                    list(id(n++), VOID_TAG) //endTable
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
