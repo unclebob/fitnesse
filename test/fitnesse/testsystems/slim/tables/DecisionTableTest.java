@@ -249,23 +249,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
   @Test
   public void canEvaluateReturnValuesAndColorizeTable() throws Exception {
     makeDecisionTableAndBuildInstructions(simpleDecisionTable);
-    int n=0;
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list(id(n++), "OK"),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG), // beginTable
-                    list(id(n++), VOID_TAG), //reset
-                    list(id(n++), VOID_TAG), //set
-                    list(id(n++), VOID_TAG), //execute
-                    list(id(n++), "5"),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), "5"),
-                    list(id(n++), VOID_TAG) //endTable
-            )
-    );
+    Map<String, Object> pseudoResults = makePseudoResultsForSimpleTable();
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = decisionTable.getTable().toString();
@@ -282,23 +266,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
   @Test
   public void translatesTestTablesIntoLiteralTables() throws Exception {
     makeDecisionTableAndBuildInstructions("!" + simpleDecisionTable);
-    int n = 0;
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list(id(n++), "OK"),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG), //beginTable
-                    list(id(n++), VOID_TAG), //reset
-                    list(id(n++), VOID_TAG), //set
-                    list(id(n++), VOID_TAG), //execute
-                    list(id(n++), "5"),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), VOID_TAG),
-                    list(id(n++), "5"),
-                    list(id(n++), VOID_TAG) //endTable
-            )
-    );
+    Map<String, Object> pseudoResults = makePseudoResultsForSimpleTable();
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = decisionTable.getTable().toString();
@@ -321,24 +289,8 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
           "|3|5|comment|\n" +
           "|7|9||\n";
     makeDecisionTableAndBuildInstructions(decisionTableWithComment);
-    int n = 0;
-      Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-              list(
-                      list(id(n++), "OK"),
-                      list(id(n++), VOID_TAG),
-                      list(id(n++), VOID_TAG), //beginTable
-                      list(id(n++), VOID_TAG), //reset
-                      list(id(n++), VOID_TAG), //set
-                      list(id(n++), VOID_TAG), //execute
-                      list(id(n++), "5"),
-                      list(id(n++), VOID_TAG),
-                      list(id(n++), VOID_TAG),
-                      list(id(n++), VOID_TAG),
-                      list(id(n++), "5"),
-                      list(id(n++), VOID_TAG) //endTable
-              )
-      );
-      SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+    Map<String, Object> pseudoResults = makePseudoResultsForSimpleTable();
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String colorizedTable = decisionTable.getTable().toString();
     String expectedColorizedTable =
@@ -350,12 +302,32 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
         "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
+
+  private Map<String, Object> makePseudoResultsForSimpleTable() {
+    int n = 0;
+    return SlimCommandRunningClient.resultToMap(
+            list(
+                    list(id(n++), "OK"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), //beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //set
+                    list(id(n++), VOID_TAG), //execute
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG) //endTable
+            )
+    );
+  }
   
 
   @Test
   public void canEvaluateReturnValuesAndColorizeTableForMultipleCallsToSameFunction() throws Exception {
     makeDecisionTableAndBuildInstructions(decisionTableWithSameFunctionMultipleTimes);
-    int n=0;
+    int n = 0;
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list(id(n++), "OK"),
