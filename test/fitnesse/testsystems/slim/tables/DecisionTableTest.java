@@ -2,31 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.ListUtility.list;
+
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
+import org.junit.Test;
+
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.SlimTestContextImpl;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.TableScanner;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import org.junit.Before;
-import org.junit.Test;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.ListUtility.list;
-
-public class DecisionTableTest {
+public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
   private final String simpleDecisionTable =
     "|DT:fixture|argument|\n" +
       "|var|func?|\n" +
@@ -37,32 +29,16 @@ public class DecisionTableTest {
       "|3|5|\n" +
       "|7|9|\n";
   private DecisionTable decisionTable;
-  private SlimTestContextImpl testContext;
-  private List<SlimAssertion> assertions;
 
-  @Before
-  public void setUp() throws Exception {
-    assertions = new ArrayList<SlimAssertion>();
-    testContext = new SlimTestContextImpl();
-  }
 
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
-    decisionTable = makeDecisionTable(tableText);
-    assertions.addAll(decisionTable.getAssertions());
+    decisionTable = makeSlimTableAndBuildInstructions(tableText);
     return decisionTable;
   }
 
   private List<Instruction> instructions() {
-    return SlimAssertion.getInstructions(assertions);
-  }
-
-  private DecisionTable makeDecisionTable(String tableText) throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("root");
-    WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
-    Table t = ts.getTable(0);
-    return new DecisionTable(t, "id", testContext);
+    return instructions;
   }
 
   @Test(expected=SyntaxError.class)
