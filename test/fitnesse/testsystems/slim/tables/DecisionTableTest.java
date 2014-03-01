@@ -28,9 +28,8 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
       "|func?|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
+
   private DecisionTable decisionTable;
-
-
 
   private void makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
     decisionTable = makeSlimTableAndBuildInstructions(tableText);
