@@ -37,10 +37,6 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     return decisionTable;
   }
 
-  private List<Instruction> instructions() {
-    return instructions;
-  }
-
   @Test(expected=SyntaxError.class)
   public void aDecisionTableWithOnlyTwoRowsIsBad() throws Exception {
     makeDecisionTableWithTwoRows();
@@ -76,7 +72,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new MakeInstruction("decisionTable_id_0", "decisionTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("decisionTable_id_1", "decisionTable_id", "table", new Object[]{list()})
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list("decisionTable_id_0", "OK"),
@@ -110,7 +106,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
   }
 
   @Test
@@ -136,7 +132,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
   }
 
   @Test
@@ -158,7 +154,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
 
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
   }
 
   private String id(int n) {
@@ -187,7 +183,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
   }
 
 
@@ -221,7 +217,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "ff"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions);
   }
 
 
@@ -249,7 +245,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
             new CallInstruction(id(n++), "decisionTable_id", "func"),
             new CallInstruction(id(n++), "decisionTable_id", "endTable")
     );
-    assertEquals(expectedInstructions.toString(), instructions().toString());
+    assertEquals(expectedInstructions.toString(), instructions.toString());
   }
 
   @Test
@@ -400,7 +396,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     );
 
     Instruction makeInstruction = new MakeInstruction("decisionTable_id_0", "decisionTable_id", "SlimTest");
-    assertEquals(makeInstruction, instructions().get(0));
+    assertEquals(makeInstruction, instructions.get(0));
   }
 
   @Test
@@ -412,7 +408,7 @@ public class DecisionTableTest extends SlimTableTestSupport<DecisionTable> {
     );
     CallInstruction setInstruction = new CallInstruction("decisionTable_id_4", "decisionTable_id", "setMyVar", new Object[]{"8"});
     CallInstruction callInstruction = new CallInstruction("decisionTable_id_6", "decisionTable_id", "myFunc");
-    assertEquals(setInstruction, instructions().get(4));
-    assertEquals(callInstruction, instructions().get(6));
+    assertEquals(setInstruction, instructions.get(4));
+    assertEquals(callInstruction, instructions.get(6));
   }
 }
