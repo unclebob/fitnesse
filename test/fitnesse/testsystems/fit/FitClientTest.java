@@ -72,7 +72,7 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java -Duser.country=US -Duser.language=en blah", null));
     client.addFitClientListener(this);
     client.start();
     Thread.sleep(100);
