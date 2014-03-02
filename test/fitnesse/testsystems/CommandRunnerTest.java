@@ -22,7 +22,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testClassNotFound() throws Exception {
-    CommandRunner runner = new CommandRunner("java BadClass", "", null);
+    CommandRunner runner = new CommandRunner("java -Duser.country=US -Duser.language=en BadClass", "", null);
     runner.run();
     assertHasRegexp("Error", runner.getError());
     assertEquals("", runner.getOutput());
