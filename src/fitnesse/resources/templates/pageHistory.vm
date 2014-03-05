@@ -1,6 +1,5 @@
 <h1>Page history</h1>
 #if($pageHistory)
-<script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
 <form action= "" method="get" name="compareHistory">
  <fieldset>
   <input type="hidden" value="compareHistory" name="responder"/>
