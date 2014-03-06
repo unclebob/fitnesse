@@ -33,6 +33,7 @@ public class SlimTableFactoryTest {
     map.put("query:", QueryTable.class);
     map.put("table:", TableTable.class);
     map.put("script", ScriptTable.class);
+    map.put("script:", ScriptTable.class);
     map.put("scenario", ScenarioTable.class);
     map.put("import", ImportTable.class);
     map.put("something", DecisionTable.class);
@@ -81,6 +82,8 @@ public class SlimTableFactoryTest {
     assertThatTableTypeImportWorks("Colon is okay too", "as:Table", "Colon is okay too", TableTable.class);
 
     assertThatTableTypeImportWorks("", "", "This should be default", DecisionTable.class);
+
+    assertThatTableTypeImportWorks("My script table", "Script", "My script Table", ScriptTable.class);
   }
 
   @Test
