@@ -21,6 +21,8 @@ public class SlimTableFactory {
     tableTypeArrays = new HashMap<String, String>();
     addTableType("dt:", DecisionTable.class);
     addTableType("decision:", DecisionTable.class);
+    addTableType("ddt:", DynamicDecisionTable.class);
+    addTableType("dynamic decision:", DynamicDecisionTable.class);
     addTableType("ordered query:", OrderedQueryTable.class);
     addTableType("subset query:", SubsetQueryTable.class);
     addTableType("query:", QueryTable.class);
