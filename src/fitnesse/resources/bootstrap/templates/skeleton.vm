@@ -15,7 +15,7 @@
    </script>
   <![endif]-->
   
-  <link rel="shortcut icon" type="image/x-icon" href="/files/fitnesse/images/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/files/fitnesse/images/favicon.png" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>

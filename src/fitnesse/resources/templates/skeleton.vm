@@ -23,7 +23,7 @@
   <link rel="wysiwyg.base" href="/" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/css/fitnesse.css" media="screen" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/fitnesse/wysiwyg/editor.css" media="screen" />
-  <link rel="shortcut icon" type="image/x-icon" href="/files/fitnesse/images/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/files/fitnesse/images/favicon.png" />
   <script src="/files/fitnesse/javascript/jquery-1.7.2.min.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
   <script src="/files/fitnesse/javascript/${theme}.js" type="text/javascript"></script>
