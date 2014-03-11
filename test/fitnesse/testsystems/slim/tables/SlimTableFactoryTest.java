@@ -28,6 +28,8 @@ public class SlimTableFactoryTest {
     map.put("dt:", DecisionTable.class);
     map.put("dT:", DecisionTable.class);
     map.put("decision:", DecisionTable.class);
+    map.put("ddt:", DynamicDecisionTable.class);
+    map.put("dynamic decision:", DynamicDecisionTable.class);
     map.put("ordered query:", OrderedQueryTable.class);
     map.put("subset query:", SubsetQueryTable.class);
     map.put("query:", QueryTable.class);
