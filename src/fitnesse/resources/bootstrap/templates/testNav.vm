@@ -8,12 +8,12 @@
  });
 //--></script>
 
-<span id="test-action"></span>
-
 ## The error navigator is also hidden until page is complete.
 <div id="error-nav" class="error-nav-hidden navbar-right">
- Failure Navigator
+ <span class="title">Failure Navigator</span>
  <button id="error-nav-prev">&laquo;</button>
  <input id="error-nav-text" type="text" size="3"> of <span id="error-nav-max"></span>
  <button id="error-nav-next">&raquo;</button>
 </div>
+<span id="test-action"></span>
+

@@ -188,6 +188,11 @@ span.ignore * {
   .stop {
     .test-button(@brand-danger);
   }
+
+  @media (max-width: @screen-sm-min) {
+    float: right;
+    clear: left;
+  }
 }
 
 .progress-variant(@background) {
@@ -247,6 +252,16 @@ span.ignore * {
 
 #error-nav {
   margin-top: 8px;
+  margin-left: 10px;
+  margin-right: 8px;
+
+  @media (max-width: @screen-md-min) {
+    float: right;
+  }
+  @media (max-width: @screen-sm-min) {
+    clear: left;
+  }
+
 }
 #error-nav button {
   .btn-sm;
@@ -256,7 +271,13 @@ span.ignore * {
   line-height: 1;
   margin: 0 0 3px 0
 }
-.error-nav-hidden{
+#error-nav .title {
+  padding-left: 15px;
+  @media (max-width: @screen-md-min) {
+    display: none;
+  }
+}
+.error-nav-hidden {
     display: none;
 }
 

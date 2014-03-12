@@ -31,9 +31,7 @@
 .navbar-header {
   .clearfix();
 
-  @media (min-width: @grid-float-breakpoint) {
-    float: left;
-  }
+  float: left;
 }
 
 
@@ -175,7 +173,8 @@
 
 .navbar-toggle {
   position: relative;
-  float: right;
+  float: left;
+  margin-left: @navbar-padding-horizontal;
   margin-right: @navbar-padding-horizontal;
   padding: 9px 10px;
   .navbar-vertical-align(34px);
@@ -239,7 +238,7 @@
   }
 
   // Uncollapse the nav
-  @media (min-width: @grid-float-breakpoint) {
+  //@media (min-width: @grid-float-breakpoint) {
     float: left;
     margin: 0;
 
@@ -250,7 +249,7 @@
         padding-bottom: ((@navbar-height - @line-height-computed) / 2);
       }
     }
-  }
+  //}
 
 }
 
@@ -407,11 +406,6 @@
     .icon-bar {
       background-color: @navbar-default-toggle-icon-bar-bg;
     }
-  }
-
-  .navbar-collapse,
-  .navbar-form {
-    border-color: @navbar-default-border;
   }
 
   // Dropdown menu items and carets
