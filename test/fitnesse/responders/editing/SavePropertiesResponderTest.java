@@ -63,7 +63,7 @@ public class SavePropertiesResponderTest {
     assertEquals("Help text literal", data.getAttribute(PageData.PropertyHELP));
 
     assertEquals(303, response.getStatus());
-    assertEquals("PageOne", response.getHeader("Location"));
+    assertEquals("/PageOne", response.getHeader("Location"));
   }
 
 }

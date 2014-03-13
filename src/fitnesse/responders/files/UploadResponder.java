@@ -75,7 +75,7 @@ public class UploadResponder implements SecureResponder {
       });
     }
 
-    response.redirect("/" + request.getResource());
+    response.redirect(context.contextRoot, request.getResource());
     return response;
   }
 

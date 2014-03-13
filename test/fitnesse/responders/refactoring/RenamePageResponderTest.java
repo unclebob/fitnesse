@@ -63,7 +63,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
     Response response = doRename("OneOne.TwoOne", "ReName", true);
     assertNotNull(response);
     assertEquals(303, response.getStatus());
-    assertEquals("OneOne.ReName", response.getHeader("Location"));
+    assertEquals("/OneOne.ReName", response.getHeader("Location"));
   }
 
   @Test

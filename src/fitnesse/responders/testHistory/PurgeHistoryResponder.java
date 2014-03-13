@@ -40,7 +40,7 @@ public class PurgeHistoryResponder implements SecureResponder {
 
   private SimpleResponse makeValidResponse() {
     SimpleResponse response = new SimpleResponse();
-    response.redirect("?testHistory");
+    response.redirect("", "?testHistory");
     return response;
   }
 

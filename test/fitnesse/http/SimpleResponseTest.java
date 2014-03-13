@@ -65,10 +65,19 @@ public class SimpleResponseTest implements ResponseSender {
   @Test
   public void testRedirect() throws Exception {
     SimpleResponse response = new SimpleResponse();
-    response.redirect("some url");
+    response.redirect("", "some url");
     response.sendTo(this);
     assertEquals(303, response.getStatus());
     assertHasRegexp("Location: some url\r\n", text);
+  }
+
+  @Test
+  public void testRedirectWithContextRoot() throws Exception {
+    SimpleResponse response = new SimpleResponse();
+    response.redirect("/contextroot/", "some url");
+    response.sendTo(this);
+    assertEquals(303, response.getStatus());
+    assertHasRegexp("Location: /contextroot/some url\r\n", text);
   }
 
   @Test

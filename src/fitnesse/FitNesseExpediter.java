@@ -109,7 +109,7 @@ public class FitNesseExpediter implements ResponseSender {
       if (!hasError) {
         if (context.contextRoot.equals(request.getRequestUri() + "/")) {
           response = new SimpleResponse();
-          response.redirect(context.contextRoot);
+          response.redirect(context.contextRoot, "");
         } else {
           response = createGoodResponse(request);
         }

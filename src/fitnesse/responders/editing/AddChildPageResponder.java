@@ -33,7 +33,7 @@ public class AddChildPageResponder implements SecureResponder {
     else if (nameIsInvalid(childName))
       return errorResponse(context, request);
 
-    return createChildPageAndMakeResponse(request);
+    return createChildPageAndMakeResponse(context);
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
@@ -57,11 +57,11 @@ public class AddChildPageResponder implements SecureResponder {
       pageType = "Default";
   }
 
-  private Response createChildPageAndMakeResponse(Request request) {
+  private Response createChildPageAndMakeResponse(FitNesseContext context) {
     createChildPage();
     SimpleResponse response = new SimpleResponse();
     WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
-    response.redirect(fullPathOfCurrentPage.toString());
+    response.redirect(context.contextRoot, fullPathOfCurrentPage.toString());
     return response;
   }
 

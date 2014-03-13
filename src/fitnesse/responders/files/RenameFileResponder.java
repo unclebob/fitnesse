@@ -67,7 +67,7 @@ public class RenameFileResponder implements SecureResponder {
       }
     }, oldFile);
 
-    response.redirect("/" + resource);
+    response.redirect(context.contextRoot, resource);
     return response;
   }
 

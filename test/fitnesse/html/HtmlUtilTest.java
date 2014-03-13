@@ -86,7 +86,7 @@ public class HtmlUtilTest {
     assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
     assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);
-    assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
+    assertSubString("<a href=\"/FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
 
   @Test
