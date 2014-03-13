@@ -35,6 +35,7 @@ public class FitNesseContext {
   public final int port;
   private final String rootPath;
   private final String rootDirectoryName;
+  public final String contextRoot;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
 
@@ -45,7 +46,7 @@ public class FitNesseContext {
   private final Properties properties;
 
   protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
-      String rootDirectoryName, VersionsController versionsController,
+      String rootDirectoryName, String contextRoot, VersionsController versionsController,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger,
       TestSystemFactory testSystemFactory, Properties properties) {
@@ -54,6 +55,7 @@ public class FitNesseContext {
     this.root = root;
     this.rootPath = rootPath;
     this.rootDirectoryName = rootDirectoryName;
+    this.contextRoot = contextRoot;
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;
     this.port = port;

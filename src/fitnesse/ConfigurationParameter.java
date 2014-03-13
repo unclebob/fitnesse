@@ -35,7 +35,8 @@ public enum ConfigurationParameter {
   CONTENT_FILTER("ContentFilter"),
   VERSIONS_CONTROLLER_CLASS("VersionsController"),
   VERSIONS_CONTROLLER_DAYS("VersionsController.days"),
-  RECENT_CHANGES_CLASS("RecentChanges");
+  RECENT_CHANGES_CLASS("RecentChanges"),
+  CONTEXT_ROOT("ContextRoot");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 
