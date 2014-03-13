@@ -25,11 +25,14 @@ public class RequestTest {
   public Thread parseThread;
   public Exception exception;
   ByteArrayOutputStream messageBuffer;
+  private String contextRoot;
 
   @Before
   public void setUp() throws Exception {
+    contextRoot = "/";
     output = new PipedOutputStream();
     request = new Request(new PipedInputStream(output));
+    request.setContextRoot(contextRoot);
     messageBuffer = new ByteArrayOutputStream();
   }
 
@@ -53,11 +56,17 @@ public class RequestTest {
   private void parseMessage() throws Exception {
     ByteArrayInputStream stream = new ByteArrayInputStream(messageBuffer.toByteArray());
     request = new Request(stream);
+    request.setContextRoot(contextRoot);
     try {
       request.parse();
     } catch(Exception record) {
       exception = record;
     }
+  }
+
+  @Test
+  public void isNotParsedUntilItsParsed() {
+    assertFalse(request.hasBeenParsed());
   }
 
   @Test
@@ -70,7 +79,6 @@ public class RequestTest {
 
   @Test
   public void testSimpleRequest() throws Exception {
-    assertFalse(request.hasBeenParsed());
     appendToMessage("GET /request-uri HTTP/1.1\r\n");
     appendToMessage("\r\n");
     parseMessage();
@@ -111,6 +119,26 @@ public class RequestTest {
     parseMessage();
     assertEquals("resource", request.getResource());
     assertEquals("queryString", request.getQueryString());
+  }
+
+  @Test
+  public void testContextRoot() throws Exception {
+    contextRoot = "/fitnesse/";
+    appendToMessage("GET /fitnesse HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    assertTrue(request.hasBeenParsed());
+    assertEquals("", request.getResource());
+  }
+
+  @Test
+  public void testSimpleRequestWithContextRoot() throws Exception {
+    contextRoot = "/fitnesse/";
+    appendToMessage("GET /fitnesse/request-uri HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    assertTrue(request.hasBeenParsed());
+    assertEquals("request-uri", request.getResource());
   }
 
   @Test

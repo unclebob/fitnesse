@@ -91,6 +91,7 @@ public class FitNesseExpediter implements ResponseSender {
 
   public Request makeRequest() {
     request = new Request(input);
+    request.setContextRoot(context.contextRoot);
     return request;
   }
 
