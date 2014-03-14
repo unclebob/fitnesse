@@ -44,7 +44,7 @@ public class RollbackResponderTest {
   @Test
   public void testStuff() throws Exception {
     assertEquals(303, response.getStatus());
-    assertEquals("PageOne", response.getHeader("Location"));
+    assertEquals("/PageOne", response.getHeader("Location"));
 
     PageData data = page.getData();
     assertEquals("original content", data.getContent());

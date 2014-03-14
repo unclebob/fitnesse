@@ -42,9 +42,7 @@ public class DirectoryResponder implements SecureResponder {
   }
 
   private void setRedirectForDirectory(Response response) {
-    if (!resource.startsWith("/"))
-      resource = "/" + resource;
-    response.redirect(resource + "/");
+    response.redirect(context.contextRoot, resource + "/");
   }
 
   private String makeDirectoryListingPage() {

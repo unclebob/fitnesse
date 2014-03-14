@@ -32,7 +32,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     loadPageData();
 
     SimpleResponse response = new SimpleResponse();
-    response.redirect(resource);
+    response.redirect(context.contextRoot, resource);
 
     return response;
   }

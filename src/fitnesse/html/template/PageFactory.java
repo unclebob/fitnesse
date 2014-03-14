@@ -16,6 +16,7 @@ public class PageFactory {
   public static final String DEFAULT_THEME = "fitnesse_straight";
 
   private final String theme;
+  private final String contextRoot;
   private VelocityEngine velocityEngine = null;
 
   public PageFactory(FitNesseContext context) {
@@ -23,10 +24,11 @@ public class PageFactory {
     String theme = context.getProperty(THEME_PROPERTY);
     this.theme = theme != null ? theme : DEFAULT_THEME;
     this.velocityEngine = newVelocityEngine(context, this.theme);
+    this.contextRoot = context.contextRoot;
   }
 
   public HtmlPage newPage() {
-    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme);
+    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme, contextRoot);
   }
 
   public String render(VelocityContext context, String templateName) {

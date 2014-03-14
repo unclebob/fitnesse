@@ -1,7 +1,7 @@
-<script src="/files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
-<script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
-<script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
-<script src="/files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 
 <form method="post" action="$resource" name="f">
 #if($!editTime)
@@ -61,8 +61,8 @@
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 </form>
-<script src="/files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
-<script src="/files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
 

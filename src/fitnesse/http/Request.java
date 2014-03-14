@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.util.Base64;
 import util.StreamReader;
 
@@ -31,6 +32,7 @@ public class Request {
   public static final String NOCHUNK = "nochunk";
 
   protected StreamReader input;
+  private String contextRoot = ContextConfigurator.DEFAULT_CONTEXT_ROOT;
   protected String requestURI;
   private String resource;
   protected String queryString;
@@ -167,7 +169,7 @@ public class Request {
   public void parseRequestUri(String requestUri) {
     Matcher match = requestUriPattern.matcher(requestUri);
     match.find();
-    resource = stripLeadingSlash(match.group(1));
+    resource = stripContextRoot(match.group(1));
     queryString = match.group(2);
     parseQueryString(queryString);
   }
@@ -244,8 +246,14 @@ public class Request {
     return entityBody;
   }
 
-  private String stripLeadingSlash(String url) {
-    return url.substring(1);
+  private String stripContextRoot(String url) {
+    if (contextRoot.equals(url + "/")) {
+      return "";
+    }
+    if (url.startsWith(contextRoot)) {
+      return url.substring(contextRoot.length());
+    }
+    return url;
   }
 
   public String toString() {
@@ -329,5 +337,9 @@ public class Request {
   public void setCredentials(String username, String password) {
     authorizationUsername = username;
     authorizationPassword = password;
+  }
+
+  public void setContextRoot(String contextRoot) {
+    this.contextRoot = contextRoot;
   }
 }

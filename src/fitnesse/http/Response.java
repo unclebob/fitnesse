@@ -131,9 +131,9 @@ public abstract class Response {
     contentType = format.getContentType();
   }
 
-  public void redirect(String location) {
+  public void redirect(String contextRoot, String location) {
     status = 303;
-    addHeader("Location", location);
+    addHeader("Location", contextRoot + location);
   }
 
   public void notModified(Date lastModified, Date date) {

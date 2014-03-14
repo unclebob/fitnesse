@@ -54,7 +54,7 @@ public class DeleteFileResponder implements SecureResponder {
       }
     });
 
-    response.redirect("/" + resource);
+    response.redirect(context.contextRoot, resource);
     return response;
   }
 
