@@ -1,4 +1,4 @@
- <form method="post" action="/$resource">
+ <form method="post" action="?">
   <input type="hidden" name="responder" value="renameFile"/>
 Rename <b>$filename</b> to <br/><br/><br/>
   <input type="text" name="newName" value="$filename"/>
