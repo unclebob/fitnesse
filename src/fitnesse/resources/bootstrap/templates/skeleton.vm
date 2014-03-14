@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
  <head>
-  #if( $baseUri )<base href="$baseUri"/>#end
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>$title</title>
   ## Deal with HTML 5 element in older IE browsers
