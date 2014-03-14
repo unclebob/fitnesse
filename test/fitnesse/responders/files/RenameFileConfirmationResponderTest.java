@@ -44,7 +44,7 @@ public class RenameFileConfirmationResponderTest {
   public void testExistingFilenameIsInTextField() throws Exception {
     getContentForSimpleRename();
 
-    assertSubString("<input type=\"text\" name=\"newName\" value=\"MyFile.txt\"/>", content);
+    assertSubString("<input id=\"rename-file\" type=\"text\" name=\"newName\" value=\"MyFile.txt\"/>", content);
   }
 
   private void getContentForSimpleRename() throws Exception {
