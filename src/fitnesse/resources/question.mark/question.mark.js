@@ -79,7 +79,6 @@ $(function() {
         return charCode;
     }
 
-    // Primary function, called in checkServerResponse()
     function doQuestionMark() {
 
         var helpUnderlay = document.getElementById('helpUnderlay'),
@@ -152,67 +151,6 @@ $(function() {
 
     }
 
-    // All the Ajax stuff is below.
-    // Probably no reason to touch this unless you can optimize it.
-    function getXhrObject() {
-        var xhrObject = false;
-        // All browsers (except IE6) use the 3 lines below
-        if (window.XMLHttpRequest) {
-            xhrObject = new XMLHttpRequest();
-        }
-        // If you need IE6 support, uncomment the following else/if:
-        /*else if (window.ActiveXObject) {
-            try {
-                    xhrObject = new ActiveXObject("Msxml2.XMLHTTP");
-                } catch(err) {
-                    try {
-                        xhrObject = new ActiveXObject("Microsoft.XMLHTTP");
-                    } catch(err) {
-                        xhrObject = false;
-                    }
-            }
-        }*/
-        return xhrObject;
-    }
-
-    function insertHelp(respText, callback) {
-        // Opera kept inserting the content multiple times
-        // so I added a check to insert it just once... bug??
-        if (!document.getElementById('helpUnderlay')) {
-            document.getElementsByTagName('body')[0].innerHTML += respText;
-            callback();
-        }
-    }
-
-    function checkServerResponse(ajaxCapable) {
-        if (ajaxCapable.readyState === 4) {
-            if (ajaxCapable.status === 200 || ajaxCapable.status === 304) {
-                var respText = ajaxCapable.responseText;
-                // here's where the help modal is inserted
-                insertHelp(respText, function() {
-                    doQuestionMark();
-                });
-            }
-        }
-    }
-
-    function doAjax() {
-        var ajaxCapable = getXhrObject();
-        if (ajaxCapable) {
-            ajaxCapable.onreadystatechange = function() {
-                checkServerResponse(ajaxCapable);
-            };
-            ajaxCapable.open("POST", "/files/fitnesse/question.mark/question.mark.html", true);
-            ajaxCapable.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            ajaxCapable.send(null);
-        } else {
-            // Browser does not support ajax
-            document.getElementsByTagName('body')[0].innerHTML += 'Error: Your browser does not support Ajax';
-        }
-    }
-
-    // This fires all the Ajax stuff, and, in turn,
-    // the primary function for the modal.
-    doAjax();
+    doQuestionMark();
 
 }());
