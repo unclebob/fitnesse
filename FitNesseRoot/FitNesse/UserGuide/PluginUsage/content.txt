@@ -1,7 +1,7 @@
 Various plugins are supported by FitNesse.
 
 !3 Overview
-Below are a list of customizations you can make via this plugin architecture.  Each plugin will require an entry in the ''plugins.properties'' file.  This should be located in the working directory of FitNesse.   If the file does not exist FitNesse will run normally.  To enable a plugin, create this file, and add the specified entries.  All plugins will require complied Java code so make sure that the classpath contains an entry to locate your plugins.
+Below are a list of customizations you can make via this plugin architecture.  Each plugin will require an entry in the ''plugins.properties'' file.  This should be located in the working directory of FitNesse.   If the file does not exist FitNesse will run normally.  To enable a plugin, create this file, and add the specified entries.  All plugins will require complied Java code so make sure that the class path contains an entry to locate your plugins.
 
 See also: CommandLineArguments.
 
@@ -9,6 +9,11 @@ See also: CommandLineArguments.
 ''required property:'' '''!-Theme-! = <theme name>'''
 
 ''motivation:'' Customize the look and feel to match your liking. See WikiTheming for details.
+
+!3 Context root
+''required property:'' '''!-ContextRoot-! = <root path name>'''
+
+''motivation:'' Customize the root url of !-FitNesse-!. This is convenient if !-FitNesse-! is running behind a proxy server.
 
 !3 Wiki Page Factory
 ''required property:'' '''!-WikiPageFactory-! = <class name>'''
@@ -43,7 +48,7 @@ By default FitNesse maintains a page ([[RecentChanges][.RecentChanges]]) that ke
 
 ''motivation:'' Allows functional customization.  With this plugin you can customize the way FitNesse responds to HTTP requests.
 
-The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to gerenate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the .RecentChanges page.
+The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to generate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the .RecentChanges page.
 
 !4 Disabled Responder
 The !-DisabledResponder-! is provided as a way to turn off at a very deep level other responders.  Using the Responders property in the !style_code(plugins.properties), you can disable any existing responder by defining it to use the !-DisabledResponder-! instead.  For example, the following line, will disable the addChild and new responders.
