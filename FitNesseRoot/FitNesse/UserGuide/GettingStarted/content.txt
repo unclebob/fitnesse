@@ -1,0 +1,24 @@
+Getting Started
+
+!-FitNesse-! is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Learn how to use wiki features to create and change !-FitNesse-! pages.
+
+!-FitNesse-! is an application testing suite that allows you to test the business layer of your application. It is not a browser automation tool, although there are such tools that work with !-FitNesse-!.
+
+It is not a unit testing tool. The tests that !-FitNesse-! runs integrate the various layers of your application together, demonstrating even to non-coders that the application works as designed.
+
+It is an ''integration testing tool''. That means that it provides a method to automatically determine that your application is working correctly. Not your beautiful user interface, with all its fancy CSS and slick Ajax calls, but the stuff underneath, where the actual brains of the application live.
+
+The goal is for !-FitNesse-! to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are returned. In a sense, you could consider it an alternative user interface for the application.
+
+
+| [[A One-Minute Description][>OneMinuteDescription]] | ''What is !-FitNesse-!? Start here.'' |
+| [[A Two-Minute Example][>TwoMinuteExample]] | ''A brief example. Read this one second.'' |
+
+Before you start editing content, you might be interested in some background on why !-FitNesse-! has been built
+
+| [[Project Death by Requirements][>ProjectDeathByRequirements]] | ''Why use automated acceptance tests? What goes wrong when we don't use them?'' |
+| [[Acceptance Tests][>AcceptanceTests]] | ''What are the advantages of ''!-FitNesse-!'' automated acceptance tests?'' |
+
+Convinced? [[Download and install][http://fitnesse.org/FitNesseDownload]] on your machine.
+
+!contents -R2 -g -p -f -h

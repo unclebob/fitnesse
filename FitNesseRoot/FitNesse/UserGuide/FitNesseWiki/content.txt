@@ -1,0 +1,16 @@
+!contents -R1 -g -p -f -h
+!2 Working With !-FitNesse-! Wiki Pages
+!-FitNesse-! provides an easy-to-use [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] to create web pages that are run as tests.  Test pages have a button on them allowing all the tests on the page to be run, so any user can go to that page and click the button at any time, and see if the tests are passing.  Also, !-FitNesse-! provides means to automatically run tests, so it can be easily added to your automated build scripts.
+
+So what does a test page look like?
+
+If you'll be spending a lot of time writing tests, you'll probably want to study these tips for using the wiki:
+
+| [[Editing !-FitNesse-! Pages][>EditingFitNessePages]] | ''An intro to creating and changing ''!-FitNesse-!'' pages using the wiki markup language.'' |
+| [[Working with Wiki Pages][>WorkingWithWikiPages]] | ''More ''!-FitNesse-!'' wiki page features.'' |
+| [[Markup Language Reference][>MarkupLanguageReference]] | ''A reference for formatting ''!-FitNesse-!'' pages using the wiki markup language.'' |
+| [[Sub Wikis][>SubWiki]] | ''How to create hierarchies of ''!-FitNesse-!'' pages.'' |
+| [[Special Wiki Functions][>SpecialWikiFunctions]] | ''Special things you can do with wikis.'' |
+| [[Wiki Import][>WikiImport]] | ''Importing wiki pages from a remote ''!-FitNesse-!'' server.'' |
+| [[Symbolic Links][>SymbolicLinks]] | ''Dynamically altering the wiki page structure.'' |
+| [[Quick Reference Guide][>QuickReferenceGuide]] | ''A cheat sheet for markups and usage.'' |

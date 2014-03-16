@@ -1,41 +1,66 @@
-!1 Automated Acceptance Tests: Building the Right Code
-FitNesse automated acceptance tests are power tools for fixing a broken requirements process. Skillfully applied, such tests make it possible to avoid the problems of ProjectDeathByRequirements. (Note: if you have not yet done so, you should probably first get a quick intro on FitNesse tests at the TwoMinuteExample.)
+!contents -R2 -g -p -f -h
 
-!2 The Advantages of FitNesse Tests
-FitNesse automated acceptance tests have several advantages over many kinds of traditional black-box, GUI-based functional tests:
+Each page that has tests will consist of a series of HTML tables. Fitnesse understands various formats of tables, and if those formats are not sufficient, developers are welcome to add additional ones. Generally, the tables take the basic form of a Command cell and some Parameter cells, which are followed by some Output cells. When a test is run, the command and parameters are evaluated to see if the correct output is given. [[Here's a quick example][>TwoMinuteExample]] to get you started.
 
- * FitNesse tests can give us feature feedback '''very early''' in the project. In fact, the tests ought to be written '''first''', so programmers can ''code to'' the tests.
- * FitNesse tests can give us feature feedback '''very frequently'''. They can be run manually or automatically by anyone with web access to the server, as frequently as required. Every week, every day, every hour in a crunch.
- * FitNesse tests are '''deterministic''': they either run green or red. If they run green for a given requirement, either the requirement is done and we move on to others, or the set of tests is not yet exactly right, in which case we refine them. Either way, we are '''successively refining''' the system in an orderly way. With each new test running green, we can all see the system getting better, more valuable, closer to what we need.
- * Being based on example data, FitNesse tests '''exercise more paths through the business logic'''. When you use FitNesse, you run less risk of missing important features or functional behavior.
+Now, if you're reading this on the web site, you probably found that the Fitnesse Test button in that example didn't work as advertised. It's been disabled to minimize stress on the site. But that's ok - since among other things, Fitnesse is a wiki, you can simply download and run it, and read these same web pages as served up by your local system. When you do that, you'll be able to run the tests. Why not [[download it now][http://fitnesse.org/FitNesseDownload]]?
 
-!2 Acceptance Tests vs. Unit Tests
-If you are familiar with the emerging [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]] style of automated unit testing (e.g., using [[JUnit][http://www.junit.org]] for Java, or [[NUnit][http://www.nunit.org]] for C#), you may well wonder why both kinds of testing are necessary, and how they work together. Let's discuss that.
+!3 Creating the Table
+Okay, so you saw what Fitnesse can do. You ran a test with some inputs, checked to make sure the outputs were as expected, and saw how easy it was to determine whether the application worked correctly or not. Now you'd like to create some tests of your own. How do you do it? If you go back and edit the [[Example page][>TwoMinuteExample]], you'll see some wiki markup that looks like this:{{{
+|eg.Division|
+|numerator|denominator|quotient?|
+|10       |2          |5        |
+|12.6     |3          |4.2      |
+|100      |4          |33       |  }}}The vertical bars delimit table cells. For this table, there is not much more too it than that. You don't have to line up the vertical bars this way; we just do it to make it easier to read. Go ahead and modify this page a little. Add some extra rows with some additional numbers to test, or change some of the numbers around. Then save the page, and click the Test button. You'll see how the system is set up to show successes and failures ''each time you run the test''. This ability to modify a test and immediately see the result is a big benefit of having integration tests.
 
-!3 [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]: Building the ''Code Right''
-Automated unit tests (or programmer tests, as they are increasingly called), are white-box tests that describe and verify very low-level behavior. Especially when working test-first, programmers rely on such tests to make sure that the design is sound, and that there are no defects. Such tests are built by and largely for programmers, and can be independent of functionality.
+!1 Getting Test Tables Onto the Page
+As we have seen FitNesse expresses AcceptanceTests as tables of '''input''' data and '''expected output''' data. (If you have not done so, you should probably check out the example table tutorial in the TwoMinuteExample. You should then check out the wiki page-editing tutorial on EditingFitNessePages.) Yet again, let's look at our test table for testing the division function of a calculator application:
 
-If a team using [[JUnit][http://www.junit.org]] or [[NUnit][http://www.nunit.org]] to do Test-Driven Development is still hampered by a broken requirements process, they can easily end up building robust, lean, well-factored code with no business value. (This is, in fact, happening with increasing frequency.)
+!| eg.Division |
+| numerator | denominator | quotient? |
+| 10 | 2 | 5 |
+| 12.6 | 3 | 4.2 |
+| 100 | 4 | 33 |
 
-!3 FitNesse: Building the ''Right Code''
-FitNesse automated tests are about building the right code in the first place: the code with the most business value. While programmers may be involved in writing such tests, they are not just for programmers. FitNesse tests are especially for customers, business analysts, testing professionals, support staff, management, and all other stakeholders who need evidence that the project is producing solid return on investment.
+So how do we get this table on to the page? Well the [[wiki markup language][MarkupLanguageReference]] that defines the above table looks like this:{{{
+|eg.Division|
+|numerator|denominator|quotient?|
+|10       |2          |5        |
+|12.6     |3          |4.2      |
+|100      |4          |33       |  }}}
 
-!3 "Running, Tested Features"
-Ron Jeffries articulates the idea that the ultimate software project metric, the one closest to ROI, is '''[[Running, Tested Features][http://www.xprogramming.com/xpmag/jatRtsMetric.htm]]'''. You can read about it [[here][http://www.xprogramming.com/xpmag/jatRtsMetric.htm]]. How many RTF did we deliver last iteration, or last month, or last release? '''Only a tool like FitNesse can answer these questions.'''
+!3 Typing it In By Hand
+We can pretty easily type in the above markup code for our Division table by hand in the page editing window. The vertical bars (!-|-!) delimit cells within rows. As long as you have the right number of vertical bars between data elements, FitNesse will correctly format your table for you. For small tables that will not change frequently, that's a perfectly reasonable way to do it.
 
-Without a solid tool for automated acceptance tests, you cannot know how many RTF you produce per unit time, so perhaps you cannot easily determine what your project ROI is. Perhaps your team is headed for ProjectDeathByRequirements.
+!3 Using a Spreadsheet to Create Tables
+Let's face it: a simple text-editing frame (such as the FitNesse edit frame) is not the best tool in the world for manipulating tabular representations of data. It's not especially easy to copy and paste rows or columns, move rows or collumns, etc. That's the sort of thing that spreadsheets are great at. When you work with lots of FitNesse tables, particularly large ones, it's great to be able to work in a spreadsheet like Excel to get the table just the way you want it, then copy it over to FitNesse, formatted properly using the wiki markup language. Fortunately, FitNesse makes this easy to do.
 
-!2 Consider Using Both Tools
-If you use FitNesse without using [[JUnit][http://www.junit.org]] or [[NUnit][http://www.nunit.org]] to test-drive and refactor your code, you may end up with tremendous business value, but rotten, buggy code. Even if the bugs don't kill you, this is short-sighted; it's a way of sacrificing release 3 to release 1. You have to keep the code lean and extensible to prevent code rot. Otherwise, your rotten codebase will need to be rewritten from scratch, long before it has exhausted its business value.
+!3 Spreadsheet Example
+Let's say that you have the ''Division'' table in Excel and you want to move it into !-FitNesse-!.
 
-With both tools, you can balance production and production capacity. You can deliver the features that produce highest ROI, while producing robust, clean, extensible code. You might find that you get addicted to the early, frequent feedback that automated tests provide. Your whole team could get addicted to Building the Right Code, and Building the Code Right.
+ * Within Excel, select the table and copy it to the clipboard.
+ * Go to the !-FitNesse-! page where you want the table and ''Edit'' it (or create it).
+ * Paste the table into the edit pane. It will show up without any wiki markup formatting:
 
-!2 Summary
- * FitNesse automated acceptance tests have several advantages over traditional functional testing. These advantages are good both for requirements management and for feature verification.
- * Only automated acceptance testing (such as that provided by FitNesse) enables you to measure [[Running, Tested Features][http://www.xprogramming.com/xpmag/jatRtsMetric.htm]], which is a key metric for measuring software project progress and success.
- * FitNesse automated acceptance testing is a natural complement to [[xUnit][http://encyclopedia.thefreedictionary.com/XUnit]]-based unit testing. The former helps you build the right code, while the latter helps you build the code right. Consider using both tools.
+{{{
+eg.Division
+numerator        denominator        quotient?
+10        2        5
+12.6        3        4.2
+100        4        33 }}}
+
+ * Now click the '''!-Spreadsheet to FitNesse-!''' button on the bottom of the page.
+
+''Voila!'' FitNesse reformats the table (and any other table on the page) with the proper wiki markup delimiters:{{{
+!|eg.Division|
+|numerator|denominator|quotient?|
+|10|2|5|
+|12.6|3|4.2|
+|100|4|33| }}}
+
+'''Note: This is best done one table at a time''', one page at a time. Furthermore, the table must have '''at least two columns'''. When you click the '''!-Spreadsheet to FitNesse-!''' button, FitNesse attempts to format everything on the page that '''might''' be a table.
+
+!3 Copying Tables From FitNesse to the Spreadsheet
+You can also take an existing FitNesse table, select it, and click the '''!-FitNesse to Spreadsheet-!''' button to get it back into non-wiki markup language format. You can then easily paste it back into the spreadsheet application.
 
 !2 Learning More
-If you have not yet done so, check out the TwoMinuteExample. For more information on how teams can work together with FitNesse tests to deliver better systems, see DeliveringTheRightSystem.
-
-If you are ready to start creating FitNesse pages and test tables, check out EditingFitNessePages and CreatingTestTables.
+If you are interested in the fixture code that makes it possible to run test tables, check out FixtureCode. If you want to learn what the different styles of test tables are and how to apply them, check out TestTableStyles.

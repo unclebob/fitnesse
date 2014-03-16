@@ -4,6 +4,22 @@
 !c Patrick Wilson-Welsh &
 !c !-FitNesse-! contributors
 ----
+
+!contents -g -h -R1
+
+* >GettingStarted
+* >FitNesseWiki
+* >AcceptanceTests
+* >AdministeringFitNesse
+
+----
+
+For Fit test system users:
+ * >FitLibraryUserGuide
+ * >FixtureGallery
+
+Old Old Old Old Old Old
+
 !2 Getting Started
 What !-FitNesse-! is, a brief example, and how to install it on your computer.
 
