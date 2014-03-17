@@ -31,7 +31,7 @@ public class SavePropertiesResponder implements SecureResponder {
     VersionInfo commitRecord = page.commit(data);
     response.addHeader("Current-Version", commitRecord.getName());
     context.recentChanges.updateRecentChanges(data);
-    response.redirect(resource);
+    response.redirect(context.contextRoot, resource);
 
     return response;
   }

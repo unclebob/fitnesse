@@ -26,7 +26,7 @@ public class SaveResponderTest {
   private WikiPage root;
   private Response response;
   public MockRequest request;
-  public Responder responder;
+  public SaveResponder responder;
 
   @Before
   public void setUp() throws Exception {
@@ -44,7 +44,7 @@ public class SaveResponderTest {
 
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(303, response.getStatus());
-    assertHasRegexp("Location: ChildPage", response.makeHttpHeaders());
+    assertHasRegexp("Location: /ChildPage", response.makeHttpHeaders());
 
     String newContent = root.getChildPage("ChildPage").getData().getContent();
     assertEquals("some new content", newContent);

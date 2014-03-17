@@ -30,7 +30,7 @@ public class DeletePageResponder implements SecureResponder {
     intializeResponse(request);
 
     if (shouldNotDelete())
-      response.redirect("FrontPage");
+      response.redirect(context.contextRoot, "FrontPage");
     else
       tryToDeletePage(request);
 
@@ -65,9 +65,9 @@ public class DeletePageResponder implements SecureResponder {
   private void redirect(final WikiPagePath path, final SimpleResponse response) {
     String location = PathParser.render(path);
     if (location == null || location.length() == 0) {
-      response.redirect("root");
+      response.redirect(context.contextRoot, "root");
     } else {
-      response.redirect(location);
+      response.redirect(context.contextRoot, location);
     }
   }
 

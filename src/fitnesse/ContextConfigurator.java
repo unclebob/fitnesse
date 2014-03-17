@@ -32,6 +32,7 @@ public class ContextConfigurator {
 
   private static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
+  public static final String DEFAULT_CONTEXT_ROOT = "/";
   private static final int DEFAULT_VERSION_DAYS = 14;
   private static final int DEFAULT_COMMAND_PORT = 9123;
   public static final int DEFAULT_PORT = 80;
@@ -42,6 +43,7 @@ public class ContextConfigurator {
   private Integer port;
   private String rootPath;
   private String rootDirectoryName;
+  private String contextRoot;
   private Logger logger;
   private Authenticator authenticator;
   private VersionsController versionsController;
@@ -60,6 +62,7 @@ public class ContextConfigurator {
     return empty()
       .withRootPath(DEFAULT_PATH)
       .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
+      .withParameter(CONTEXT_ROOT, DEFAULT_CONTEXT_ROOT)
       .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
       .withParameter(CONFIG_FILE, DEFAULT_CONFIG_FILE);
   }
@@ -115,6 +118,7 @@ public class ContextConfigurator {
           root,
           rootPath,
           rootDirectoryName,
+          contextRoot,
           versionsController,
           recentChanges,
           port,
@@ -199,6 +203,15 @@ public class ContextConfigurator {
       case ROOT_DIRECTORY:
         rootDirectoryName = value;
         break;
+      case CONTEXT_ROOT:
+        contextRoot = value;
+        if (!contextRoot.startsWith("/")) {
+          contextRoot = "/" + contextRoot;
+        }
+        if (!contextRoot.endsWith("/")) {
+          contextRoot = contextRoot + "/";
+        }
+        break;
       case PORT:
         port = Integer.parseInt(value);
       default:
@@ -238,6 +251,8 @@ public class ContextConfigurator {
         return rootPath;
       case ROOT_DIRECTORY:
         return rootDirectoryName;
+      case CONTEXT_ROOT:
+        return contextRoot;
       case PORT:
         return String.valueOf(port);
       default:

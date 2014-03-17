@@ -34,7 +34,7 @@ public class RollbackResponder implements SecureResponder {
     page.commit(data);
 
     context.recentChanges.updateRecentChanges(data);
-    response.redirect(resource);
+    response.redirect(context.contextRoot, resource);
 
     return response;
   }

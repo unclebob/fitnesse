@@ -20,7 +20,7 @@
   <tr >
    <td>
 	<a href="$fileInfo.name">
-	 #if( $fileInfo.directory )<img src="/files/fitnesse/images/folder.gif" alt="folder"/>#end #prettyPrint( $fileInfo.name )
+	 #if( $fileInfo.directory )<img src="${contextRoot}files/fitnesse/images/folder.gif" alt="folder"/>#end #prettyPrint( $fileInfo.name )
 	</a>
    </td>
    <td>$fileInfo.size</td>
