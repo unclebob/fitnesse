@@ -1,7 +1,0 @@
-Variable are in scope if they are defined on the page in question or in somewhere in the parent hierarchy of the page in question.
-
-For example, lets say the variable we are interested in is X.
- * If X is defined on this page then it is definately in scope.
- * If X is not defined on this page but is defined in the page .FitNesse (this page's parent), then X is still in scope.
- * If X is defined on .FitNesse.UserGuide then X is not in scope because .FitNesse.UserGuide is not a parent of this page.
-

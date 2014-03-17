@@ -1,4 +1,3 @@
-!contents -R1 -g -p -f -h
 !2 Working With !-FitNesse-! Wiki Pages
 !-FitNesse-! provides an easy-to-use [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] to create web pages that are run as tests.  Test pages have a button on them allowing all the tests on the page to be run, so any user can go to that page and click the button at any time, and see if the tests are passing.  Also, !-FitNesse-! provides means to automatically run tests, so it can be easily added to your automated build scripts.
 

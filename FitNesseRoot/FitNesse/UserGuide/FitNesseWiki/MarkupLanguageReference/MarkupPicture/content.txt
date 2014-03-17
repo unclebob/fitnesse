@@ -13,7 +13,7 @@ You may align images to the left or right and wrap following text around the ima
 You may also set the width of the image if you wish by using '''!-!img -w nnn-!''' where nnn is the width of the image, set the border of the image using '''!-!img -b x-!''' where x is the width of the border and set the margin around the image using '''!-!img -m y-!''' where y is the margin.  You may also combine all of these attributes.
 
 |!c '''Markup Text'''|!c '''Displayed as:'''|
-|{{{!img -w 200 http://files/fitnesse/images/FitNesseLogo.png}}}|!img -w 200 http://files/fitnesse/images/FitNesseLogo.png|
-|{{{!img -b 2 http://files/fitnesse/images/FitNesseLogo.png}}}|!img -b 2 http://files/fitnesse/images/FitNesseLogo.png|
-|{{{!img -m 10 http://files/fitnesse/images/FitNesseLogo.png}}}|!img -m 10 http://files/fitnesse/images/FitNesseLogo.png|
-|{{{!img -w 200 -b 2 -m 10 http://files/fitnesse/images/FitNesseLogo.png}}}|!img -w 200 -b 2 -m 10 http://files/fitnesse/images/FitNesseLogo.png|
+|{{{!img -w 200 http://files/fitnesse/images/FitNesseLogo.png}}}|!img http://files/fitnesse/images/FitNesseLogo.png|
+|{{{!img -b 2 http://files/fitnesse/images/FitNesseLogo.png}}}|!img http://files/fitnesse/images/FitNesseLogo.png|
+|{{{!img -m 10 http://files/fitnesse/images/FitNesseLogo.png}}}|!img http://files/fitnesse/images/FitNesseLogo.png|
+|{{{!img -w 200 -b 2 -m 10 http://files/fitnesse/images/FitNesseLogo.png}}}|!img http://files/fitnesse/images/FitNesseLogo.png|

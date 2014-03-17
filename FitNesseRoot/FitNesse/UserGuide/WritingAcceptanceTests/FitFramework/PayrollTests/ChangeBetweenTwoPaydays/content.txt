@@ -1,0 +1,49 @@
+!c !1 Change an employee between two paydays
+
+!c (''To see the results see: http://files/PayrollTestResults/PayrollTestTwoResults.html''.)
+----
+First we add two employees.
+
+|Employees|
+|id|name|address|salary|
+|1400|June Languid|10 Adamant St; Laurel, MD 20707|1005|
+|1401|Kelp Holland|12B Baker St; Cottonmouth, IL 60066|2000|
+
+Then we pay them.
+
+|Pay Day|
+|pay date|check number|
+|1/31/2001|3000|
+
+Make sure their paychecks are OK.
+
+|Paycheck Inspector|
+|id|amount|name|number|
+|1400|1005|||
+|1401|2000|||
+
+Add a new employee.
+
+|Employees|
+|id|name|address|salary|
+|1500|Jane Blow|1 Sixth St; Ratus, IA 45250|1500.00|
+
+Change an existing employee.
+
+|Change Employees|
+|id|name|address|salary|
+|1400|June Bride|10 Adamant St; Laurel, MD 20707|1005.00|
+
+Pay them again.
+
+|Pay Day|
+|pay date|check number|
+|2/28/2001|4000|
+
+Make sure the paychecks are still being generated properly.
+
+|Paycheck Inspector|
+|id|amount|name|number|date|
+|1400|1005|June Bride|||
+|1401|2000|Kelp Holland|||
+|1500|1500|Jane Blow|||
