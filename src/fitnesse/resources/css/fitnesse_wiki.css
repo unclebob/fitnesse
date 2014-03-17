@@ -29,6 +29,10 @@ article .centered {
   font-size: 85%;
 }
 
+.fitnesse {
+    font-style: italic;
+}
+
 /** Collapsable section */
 .collapsible {
   background: #F9F9F9;

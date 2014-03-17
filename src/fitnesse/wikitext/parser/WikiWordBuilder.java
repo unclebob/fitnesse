@@ -45,6 +45,8 @@ public class WikiWordBuilder {
     public String buildLink(String pageSuffix, String originalName) {
       if (currentPage.targetExists(wikiWordPath)) {
         return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody, null);
+      } else if ("FitNesse".equals(originalName)) {
+        return "<span class=\"fitnesse\">" + originalName + "</span>";
       } else {
         return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
       }
