@@ -23,6 +23,10 @@ This style of !-FitNesse-! test table is called a [[Decision Table][<UserGuid
 !3 Running our test table: Click the Test button
 If you are reading this page on a local copy of !-FitNesse-!, run this test table. See the '''Test''' button in the upper-right corner? Click it and see what happens.
 
+!** Now, if you're reading this on the web site, ...
+... you probably found that the FitNesse Test button in that example didn't work as advertised. It's been disabled on purpose to minimize stress on the site. But that's ok - since among other things, FitNesse is a wiki, you can simply download and run it, and read these same web pages as served up by your local system. When you do that, you'll be able to run the tests. Why not [[download it now][http://fitnesse.org/FitNesseDownload]]?
+*!
+
 Ah, color! In the green cells, we got back the expected values from our code. When we divided 10 by 2, we expected and got back 5. When we divided 12.6 by 3, we expected and got back 4.2.
 
 What about red? A cell turns red when we get back a different value than what we expected. We also see two values: the '''expected''' value and the '''actual''' value. Above we expected 33 back when we divided 100 by 4, but we got back 25. Ah, a flaw in our test table. That happens!

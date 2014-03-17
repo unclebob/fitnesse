@@ -40,6 +40,8 @@ For more examples of wiki markup language formatting widgets (as they are called
 !3 Page Properties
 Each FitNesse page has several properties (Test, Suite, Edit, etc). You can read about setting them on PageProperties.
 
-!2 Learning More
-Now that you know a bit about creadting and editing FitNesse pages, the next thing to learn might be CreatingTestTables.
+!3 Pasting tables from Excel
 
+In the "plain text editor", there are 2 buttons on every edit window that have to do with spreadsheets like Excel.  The first '''Spreadsheet to FitNesse''' will convert copied spreadsheet content in to FitNesse tables. You have to paste the spreadsheet content into the edit window and then click.
+
+The second button,'''FitNesse to Spreadsheet''', is just as useful.  When clicked it will convert all the tables in the edit window into a format that can be copied and pasted into a spreadsheet.

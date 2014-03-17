@@ -1,11 +1,11 @@
 !contents -R2 -g -p -f -h
 
-Each page that has tests will consist of a series of HTML tables. Fitnesse understands various formats of tables, and if those formats are not sufficient, developers are welcome to add additional ones. Generally, the tables take the basic form of a Command cell and some Parameter cells, which are followed by some Output cells. When a test is run, the command and parameters are evaluated to see if the correct output is given. [[Here's a quick example][>TwoMinuteExample]] to get you started.
+Pages can be marked as ''Test'' pages. Those pages can be executes by a >TestSystem. In this section you'll learn about creating test tables, linking those to your application code and receiving feedback from you TestSuites.
 
-Now, if you're reading this on the web site, you probably found that the Fitnesse Test button in that example didn't work as advertised. It's been disabled to minimize stress on the site. But that's ok - since among other things, Fitnesse is a wiki, you can simply download and run it, and read these same web pages as served up by your local system. When you do that, you'll be able to run the tests. Why not [[download it now][http://fitnesse.org/FitNesseDownload]]?
+Each page that has tests will consist of a series of HTML tables. Fitnesse understands various formats of tables, and if those formats are not sufficient, developers are welcome to add additional ones. Generally, the tables take the basic form of a Command cell and some Parameter cells, which are followed by some Output cells. When a test is run, the command and parameters are evaluated to see if the correct output is given. [[The Two minute example][<UserGuide.GettingStarted.TwoMinuteExample]] in the GettingStarted section should get you started.
 
 !3 Creating the Table
-Okay, so you saw what Fitnesse can do. You ran a test with some inputs, checked to make sure the outputs were as expected, and saw how easy it was to determine whether the application worked correctly or not. Now you'd like to create some tests of your own. How do you do it? If you go back and edit the [[Example page][>TwoMinuteExample]], you'll see some wiki markup that looks like this:{{{
+Okay, so you saw what FitNesse can do. You ran a test with some inputs, checked to make sure the outputs were as expected, and saw how easy it was to determine whether the application worked correctly or not. Now you'd like to create some tests of your own. How do you do it? If you go back and edit the [[Example page][<UserGuide.GettingStarted.TwoMinuteExample]], you'll see some wiki markup that looks like this:{{{
 |eg.Division|
 |numerator|denominator|quotient?|
 |10       |2          |5        |
@@ -63,4 +63,4 @@ numerator        denominator        quotient?
 You can also take an existing FitNesse table, select it, and click the '''!-FitNesse to Spreadsheet-!''' button to get it back into non-wiki markup language format. You can then easily paste it back into the spreadsheet application.
 
 !2 Learning More
-If you are interested in the fixture code that makes it possible to run test tables, check out FixtureCode. If you want to learn what the different styles of test tables are and how to apply them, check out TestTableStyles.
+If you are interested in the fixture code that makes it possible to run test tables, check out >FixtureCode. If you want to learn what the different styles of test tables are and how to apply them, check out >TestSystems and their table types.

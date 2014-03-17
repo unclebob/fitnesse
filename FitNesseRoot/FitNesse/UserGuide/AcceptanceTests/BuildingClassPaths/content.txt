@@ -1,3 +1,6 @@
-Classpaths are built by finding the [[!path][MarkupPath]] directives on the current page, and on every ancestor page.  These are collected in order so that !path directives on sub pages override !path widgets on parent pages.
+Classpaths are built by finding the  directives on the current page, and on every ancestor page.  These are collected in order so that !path directives on sub pages override !path widgets on parent pages.
 
-!note The old !-ClassPath-! page method as been removed.
+!path
+
+!3 How Fit Locates Class Path Definitions in [[!-SubWikis-!][<UserGuide.FitNesseWiki.SubWiki]]
+The !r command searches back up the hierarchy of pages looking for pages named class path or !-!path-! definitions. It accumulates all the paths on the way up to the topmost level. Thus you can create global class paths, project specific class paths, and even module specific class paths.

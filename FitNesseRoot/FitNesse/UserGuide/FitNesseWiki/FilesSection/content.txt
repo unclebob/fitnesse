@@ -19,4 +19,4 @@ But that would not be taking advantage of the shortcut we have provided.
 '''Modifying the FilesSection?'''
 When you view a directory in the FilesSection you will see several controls at the bottom of the page.  They allows you to upload files from your hard drive to the current directory, add a new directory to the current directory, rename or delete an existing file.
 
-This allows you to upload and manage special documents that may be related to your FitNesseTests and link to them from the appropriate page.  You could also upload your most recent build to run tests against.
+This allows you to upload and manage special documents and link to them from the appropriate page. You could also upload your most recent build to run tests against.
