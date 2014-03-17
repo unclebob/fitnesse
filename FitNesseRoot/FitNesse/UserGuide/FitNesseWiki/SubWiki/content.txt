@@ -1,4 +1,4 @@
-!1 The SubWiki: Organizing FitNesse Pages into Hierarchies
+!1 The SubWiki: Organizing !-FitNesse-! Pages into Hierarchies
 !2 Why Do We Need Page Hierachies?
 FitNesse, you recall, is a [[wiki][EditingFitNessePages]], but more than a normal one! A normal wiki is a collection of pages with a flat structure.  All the pages are peers.  FitNesse, on the other hand, is meant to manage many projects.  We'd like each project to have its own wiki hierarchy so that name collisions can be avoided, fixture code can be found easily, etc. We might even need hierarchies within those hierarchies.
 
@@ -21,7 +21,7 @@ When a sub-page is displayed, any unqualified links are assumed to be at the cur
 !3 How Fit Locates ClassPath Definitions in !-SubWikis-!
 The !r command searches back up the hierarchy of pages looking for pages named ClassPath or !-!Path-! definitions.  It accumulates all the paths on the way up to the topmost level.  Thus you can create global classpaths, project specific classpaths, and even module specific classpaths.
 
-!3 TestSuites: the Perfect Application of the SubWiki
+!3 [[!-Test Suites-!][<UserGuide.AcceptanceTests.TestSuites]]: the Perfect Application of the SubWiki
 When you organize a suite of test pages, you will naturally want to make each of the individual test pages a child page of the main suite page.
 
 !3 Page Headers and Footers in !-SubWikis-!

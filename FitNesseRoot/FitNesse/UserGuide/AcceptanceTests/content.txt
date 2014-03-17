@@ -35,10 +35,10 @@ We can pretty easily type in the above markup code for our Division table by han
 Let's face it: a simple text-editing frame (such as the FitNesse edit frame) is not the best tool in the world for manipulating tabular representations of data. It's not especially easy to copy and paste rows or columns, move rows or collumns, etc. That's the sort of thing that spreadsheets are great at. When you work with lots of FitNesse tables, particularly large ones, it's great to be able to work in a spreadsheet like Excel to get the table just the way you want it, then copy it over to FitNesse, formatted properly using the wiki markup language. Fortunately, FitNesse makes this easy to do.
 
 !3 Spreadsheet Example
-Let's say that you have the ''Division'' table in Excel and you want to move it into !-FitNesse-!.
+Let's say that you have the ''Division'' table in Excel and you want to move it into FitNesse.
 
  * Within Excel, select the table and copy it to the clipboard.
- * Go to the !-FitNesse-! page where you want the table and ''Edit'' it (or create it).
+ * Go to the FitNesse page where you want the table and ''Edit'' it (or create it).
  * Paste the table into the edit pane. It will show up without any wiki markup formatting:
 
 {{{

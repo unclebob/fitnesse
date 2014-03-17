@@ -7,10 +7,13 @@ So what does a test page look like?
 If you'll be spending a lot of time writing tests, you'll probably want to study these tips for using the wiki:
 
 | [[Editing !-FitNesse-! Pages][>EditingFitNessePages]] | ''An intro to creating and changing ''!-FitNesse-!'' pages using the wiki markup language.'' |
-| [[Working with Wiki Pages][>WorkingWithWikiPages]] | ''More ''!-FitNesse-!'' wiki page features.'' |
+|[[Shortcut keys][>ShortcutKeys]]|''The shortcuts for the buttons.''|
 | [[Markup Language Reference][>MarkupLanguageReference]] | ''A reference for formatting ''!-FitNesse-!'' pages using the wiki markup language.'' |
 | [[Sub Wikis][>SubWiki]] | ''How to create hierarchies of ''!-FitNesse-!'' pages.'' |
-| [[Special Wiki Functions][>SpecialWikiFunctions]] | ''Special things you can do with wikis.'' |
 | [[Wiki Import][>WikiImport]] | ''Importing wiki pages from a remote ''!-FitNesse-!'' server.'' |
+|[[Page Properties][>PageProperties]]|''Enabling and disabling page properties (also called attributes).''|
 | [[Symbolic Links][>SymbolicLinks]] | ''Dynamically altering the wiki page structure.'' |
-| [[Quick Reference Guide][>QuickReferenceGuide]] | ''A cheat sheet for markups and usage.'' |
+|[[Refactoring pages][>RefactoringWikiPages]]|''Renaming, moving, and deleting existing pages.''|
+|[[Where Used][>WhereUsed]]|''Finding out which pages reference the current page.''|
+|[[Headers and footers][>MarkupHeaderAndFooter]]|''Specifying Headers and Footers for wiki pages''|
+|[[Files section][>FilesSection]]|''The location for attachments, images, etc.''|
