@@ -42,23 +42,25 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   }
 
     public boolean visit(Symbol node) {
-        if (!node.isType(WikiWord.symbolType)) return true;
-        if (hits.contains(currentPage)) return true;
-        try {
-            WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
-            if (referencedPage != null && referencedPage.equals(subjectPage)) {
-              hits.add(currentPage);
-              observer.process(currentPage);
-            }
+      if (hits.contains(currentPage)) return true;
+      if (node.isType(WikiWord.symbolType)) {
+        WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
+        if (referencedPage != null && referencedPage.equals(subjectPage)) {
+          hits.add(currentPage);
+          observer.process(currentPage);
         }
-        catch (Exception e) {
-            LOG.log(Level.WARNING, "Can not complete 'WhereUsed' search", e);
-            throw new RuntimeException(e);
+      }
+      if (node.isType(Alias.symbolType)) {
+        WikiPage referencedPage = new WikiWordReference(currentPage, node.childAt(1).childAt(0).getContent()).getReferencedPage();
+        if (referencedPage != null && referencedPage.equals(subjectPage)) {
+          hits.add(currentPage);
+          observer.process(currentPage);
         }
-        return true;
+      }
+      return true;
     }
 
     public boolean visitChildren(Symbol node) {
-        return true;
+      return true;
     }
 }
