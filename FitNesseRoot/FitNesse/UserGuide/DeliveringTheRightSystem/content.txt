@@ -1,4 +1,3 @@
-!1 How Teams Can Use FitNesse: an Introduction
 As we discussed in AcceptanceTests, FitNesse testing is about building the ''right code'', as opposed to unit-level testing, which is about building the ''code right''. By "right code" we mean "right system": the feature set with the most business value.
 
 !3 Everybody Helps Deliver the Right System

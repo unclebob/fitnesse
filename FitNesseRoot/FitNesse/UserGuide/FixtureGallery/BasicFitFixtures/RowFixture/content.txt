@@ -1,4 +1,3 @@
-
 ''Previous page: [[!-ActionFixture-!][<UserGuide.FixtureGallery.BasicFitFixtures.ActionFixture]] Next page: [[!-TableFixture-!][<UserGuide.FixtureGallery.BasicFitFixtures.TableFixture]] Parent page: [[!-Basic FIT fixtures-!][<UserGuide.FixtureGallery.BasicFitFixtures]]''
 !2 !-RowFixture-!
 '''!- RowFixture -!'''!- tests dynamic lists of objects. It will compare the expected list (FitNesse table) with the actual result (from fixture code) and report any additional or missing items. -!
@@ -78,7 +77,6 @@ class RowFixtureTest(RowFixture):
 
 !anchor figbasicfixturesrowmap
 !3 Figure 1: !-RowFixture maps rows to objects from left to right-!
-!img http://files/images/rowfixpm.png
 !-The -!'''!- query -!'''!- method does not allow you to pass any additional arguments. For more information on how to parameterise this list, see -![[!-Fixture Arguments-!][<UserGuide.FixtureGallery.ImportantConcepts.FixtureArguments]]!- .-!
 
 !-The order of elements in the list is irrelevant, -!'''!- RowFixture -!'''!- will ignore it. -!

@@ -1,8 +1,0 @@
-We built !-FitNesse-! to help us write and execute acceptance tests.  One of its uses was in the [[!-FitNesse-!][http://www.objectmentor.com/courses/xpImmersion]] classes that we teach.
-
-The first version of !-FitNesse-! was a great success in these classes.  ''Customers'' were able to create acceptance tests that the ''Developers'' would use.  However, there was a problem.  !-FitNesse-! runs on a server, and so all of the acceptance tests had to be executed on that server too.  On the other hand the ''Developers'' were writing and testing code on their local machines.  In order to run acceptance tests on their local code they had to copy the executables to the !-FitNesse-! server.
-
-Two ad-hoc solutions to this problem were tried.  The first was to create a simple tool for moving the java .class files of the application to the !-FitNesse-! server.  The other was to copy the pages from the !-FitNesse-! server to each development machine, and to run a local copy of !-FitNesse-!.  Neither of these approaches seemed ideal for two reasons:
- 1 They were clunky and inconvenient.
- 2 The !-ClassPath-! pages needed to be identical, or at least very carefully managed.
-#
