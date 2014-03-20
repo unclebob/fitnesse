@@ -105,6 +105,15 @@ public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
   }
 
   @Test
+  public void pleaseMindPagesWithSuffixAreNotFound() throws Exception {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+    WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][PageThree?edit]]");
+    List<WikiPage> resultList = whereUsed.search(root);
+    assertEquals(1, resultList.size());
+    assertEquals(newPage, resultList.get(0));
+  }
+
+  @Test
   public void testFinderShouldDealWithOtherLinks() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][http://fitnesse.org]]");

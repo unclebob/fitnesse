@@ -51,7 +51,11 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
         }
       }
       if (node.isType(Alias.symbolType)) {
-        WikiPage referencedPage = new WikiWordReference(currentPage, node.childAt(1).childAt(0).getContent()).getReferencedPage();
+        String linkText = node.childAt(1).childAt(0).getContent();
+        if (linkText.contains("?")) {
+          linkText = linkText.substring(0, linkText.indexOf('?'));
+        }
+        WikiPage referencedPage = new WikiWordReference(currentPage, linkText).getReferencedPage();
         if (referencedPage != null && referencedPage.equals(subjectPage)) {
           hits.add(currentPage);
           observer.process(currentPage);
