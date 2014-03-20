@@ -1,12 +1,14 @@
 !2 Next release
  * Introduced new logo.
- * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.SliM.DynamicDecisionTable]].
+ * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
  * Add ''script:'' prefix. Script tables can be defined as ''script:Fixture name''.
  * Wiki server is no longer started when !-FitNesse-! is started with ''-c'' option.
  * !-FitNesseRoot-! location can be changed in JUnit !-FitNesseSuite-! annotation.
  * Comment columns for slim decision and query tables.
  * Shortcut keys (press ''?'').
- * Configurable [[Context root][.FitNesse.UserGuide.PluginUsage]].
+ * Configurable [[Context root][.FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile]].
+ * Updated the .FitNesse.UserGuide structure.
+ * Improved Where Used feature in the Tools menu.
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed
 
