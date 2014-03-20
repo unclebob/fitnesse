@@ -8,7 +8,6 @@ import java.util.List;
 
 public abstract class WikiPageFinder implements TraversalListener<WikiPage>, PageFinder {
 
-  protected List<WikiPage> hits;
   protected TraversalListener<? super WikiPage> observer;
 
   protected WikiPageFinder(TraversalListener<? super WikiPage> observer) {
@@ -23,9 +22,7 @@ public abstract class WikiPageFinder implements TraversalListener<WikiPage>, Pag
     }
   }
 
-  public List<WikiPage> search(WikiPage page) {
-    hits = new ArrayList<WikiPage>();
+  public void search(WikiPage page) {
     page.getPageCrawler().traverse(this);
-    return hits;
   }
 }
