@@ -41,84 +41,84 @@ public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
   @Test
   public void testFindReferencingPagesOnSiblingAndChild() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, this);
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(2, resultList.size());
-    assertEquals(pageTwo, resultList.get(0));
-    assertEquals(pageTwoChild, resultList.get(1));
+    whereUsed.search(root);
+    assertEquals(2, hits.size());
+    assertEquals(pageTwo, hits.get(0));
+    assertEquals(pageTwoChild, hits.get(1));
   }
 
   @Test
   public void testFindReferencingPagesOnSibling() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwo, this);
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(1, resultList.size());
-    assertEquals(pageThree, resultList.get(0));
+    whereUsed.search(root);
+    assertEquals(1, hits.size());
+    assertEquals(pageThree, hits.get(0));
   }
 
   @Test
   public void testFindReferencingPagesNotReferenced() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(0, resultList.size());
+    whereUsed.search(root);
+    assertEquals(0, hits.size());
   }
 
   @Test
   public void testFindReferencingPagesFromChild() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwoChild, this);
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(2, resultList.size());
-    assertEquals(pageOne, resultList.get(0));
-    assertEquals(pageTwo, resultList.get(1));
+    whereUsed.search(root);
+    assertEquals(2, hits.size());
+    assertEquals(pageOne, hits.get(0));
+    assertEquals(pageTwo, hits.get(1));
   }
 
   @Test
   public void testObserving() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, this);
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(2, resultList.size());
+    whereUsed.search(root);
+    assertEquals(2, hits.size());
   }
 
   @Test
   public void testOnlyOneReferencePerPage() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(1, resultList.size());
-    assertEquals(newPage, resultList.get(0));
+    whereUsed.search(root);
+    assertEquals(1, hits.size());
+    assertEquals(newPage, hits.get(0));
   }
 
   @Test
   public void testWordsNotFoundInPreprocessedText() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(0, resultList.size());
+    whereUsed.search(root);
+    assertEquals(0, hits.size());
   }
 
   @Test
   public void testFindReferencingPagesWithLinksWithAlternateText() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][PageThree]]");
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(1, resultList.size());
-    assertEquals(newPage, resultList.get(0));
+    whereUsed.search(root);
+    assertEquals(1, hits.size());
+    assertEquals(newPage, hits.get(0));
   }
 
   @Test
   public void pleaseMindPagesWithSuffixAreNotFound() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][PageThree?edit]]");
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(1, resultList.size());
-    assertEquals(newPage, resultList.get(0));
+    whereUsed.search(root);
+    assertEquals(1, hits.size());
+    assertEquals(newPage, hits.get(0));
   }
 
   @Test
   public void testFinderShouldDealWithOtherLinks() throws Exception {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][http://fitnesse.org]]");
-    List<WikiPage> resultList = whereUsed.search(root);
-    assertEquals(0, resultList.size());
+    whereUsed.search(root);
+    assertEquals(0, hits.size());
   }
 
 

@@ -7,7 +7,6 @@ import fitnesse.wikitext.parser.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
@@ -35,10 +34,9 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       syntaxTree.walkPreOrder(this);
   }
 
-  public List<WikiPage> search(WikiPage page) {
+  public void search(WikiPage page) {
     hits.clear();
     page.getPageCrawler().traverse(this);
-    return hits;
   }
 
     public boolean visit(Symbol node) {
