@@ -14,7 +14,7 @@ A subset of configuration options can be provided through the command line. Comm
 | {{{-b <filename>}}} | !-RedirectOutput-! | ''stdout'' | redirect command output. This is most useful in conjunction with the ''-c'' option |
 | {{{-f <config file>}}} | n.a. | plugins.properties | Load an alternative configuration file. The file format adhere's to the java standard of property files. If this option is not provided, the default file ''plugins.properties'' will be loaded if it exists. |
 
-If you are using SliM, you can also pass in -Dslim.port to hard code the port that the SliM server uses, or configure slim.port in the configuration file.  This can be used in conjunction with Jenkins Port Allocator Plugin or the reserver-network-port mojo of the Maven build-helper plugin.
+If you are using [[Slim][<UserGuide.WritingAcceptanceTests.SliM]], you can also pass in -Dslim.port to hard code the port that the Slim server uses, or configure slim.port in the configuration file.  This can be used in conjunction with Jenkins Port Allocator Plugin or the reserver-network-port mojo of the Maven build-helper plugin.
 
-See also: PluginUsage.
+See also: ConfigurationFile.
 
