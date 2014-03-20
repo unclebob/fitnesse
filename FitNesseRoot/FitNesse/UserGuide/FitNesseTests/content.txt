@@ -1,1 +1,0 @@
-AcceptanceTests written in the FitNesse framework
