@@ -1,5 +1,5 @@
 body {
-  padding-top: 86px;
+  padding-top: 100px;
 }
 
 header,
@@ -98,15 +98,15 @@ input[type="checkbox"] {
 
 /** Collapsable section */
 .collapsible {
-  background: transparent;
-  margin: 5px 0px 5px 0px;
-  border: 1px solid #e5e5e5;
-  padding: 4px;
-  border-radius: 4px;
+  margin: 0;
+  .panel;
+  .panel-default;
+  padding: 0;
 }
 
 .collapsible > div {
-  margin-left: 16px;
+  margin: 0;
+  .panel-body;
 }
 
 .collapsible.closed > div {
@@ -117,30 +117,31 @@ input[type="checkbox"] {
   display: none;
 }
 
-.collapsible p.title {
-  color: #000;
-  font-style: italic;
-  margin: 0;
-  padding: 0 0 0 18px;
-}
-
-.collapsible p.title {
-  background: url(../img/minus-sign.png) no-repeat scroll 0 2px transparent;
+.collapsible p.title,
+.collapsible.closed p.title {
+  .panel-heading;
+  .panel-default > .panel-heading;
+  padding:  5px 15px 5px 30px;
+  background-image: url(../img/minus-sign.png);
+  background-repeat: no-repeat;
+  background-position: 12px 7px;
 }
 
 .collapsible.closed p.title {
-  background: url(../img/plus-sign.png) no-repeat scroll 0 2px transparent;
+  background-image: url(../img/plus-sign.png);
+  border-bottom: 0;
 }
 
 .collapsible > ul {
   float: right;
   margin: 0;
+  padding: 5px 15px;
 }
 
 .collapsible > ul li {
   display: inline;
-  padding: 0 .5em;
-  border-left: 1px solid #e5e5e5;
+  padding: 0 5px;
+  border-left: 1px solid @panel-bg;
 }
 
 tr.scenario > td:first-child {
