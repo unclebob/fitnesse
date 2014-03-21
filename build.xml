@@ -146,7 +146,7 @@
 			failonerror="true"
 			fork="true"
 			output="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css">
-			<arg value="extra/lesscss/less-rhino-1.4.0.js" />
+			<arg value="extra/lesscss/less-rhino-1.7.0.js" />
 			<arg value="${src.dir}/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less" />
 		</java>
 	</target>
