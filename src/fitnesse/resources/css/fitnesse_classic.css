@@ -165,10 +165,6 @@ footer {
 	width: 40px;
 }
 
-.error-nav-hidden{
-	visibility:hidden;
-}
-
 .selected-error{
 	border-style:solid;
   border-width:4px;
