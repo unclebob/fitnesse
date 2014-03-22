@@ -269,14 +269,6 @@ span.ignore * {
   }
 
 }
-#error-nav button {
-  .btn-sm;
-  .btn-danger;
-  font-size: 150%;
-  padding: 6px 12px;
-  line-height: 1;
-  margin: 0 0 3px 0
-}
 #error-nav .title {
   padding-left: 15px;
   @media (max-width: @screen-md-min) {
@@ -285,6 +277,26 @@ span.ignore * {
 }
 .error-nav-hidden {
     display: none;
+}
+
+.btn-text {
+  display: inline-block;
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid none;
+  border-color: @btn-default-border;
+  background-color: @btn-default-bg;
+  white-space: nowrap;
+  position: relative;
+  float: left;
+  padding: @padding-base-vertical/2 @padding-base-horizontal;
+}
+.btn-text input {
+  border-size: 2px;
+  height: 26px;
 }
 
 .propertiesPage form,
