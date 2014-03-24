@@ -150,7 +150,8 @@ public class ClientBuilderTest {
     Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     String sep = System.getProperty("path.separator");
-    assertEquals("java -cp fitnesse.jar" + sep + "%p %m", clientBuilder.getCommandPattern());
+    String prefix = javaExecutablePrefix();
+    assertEquals(prefix + "java -cp fitnesse.jar" + sep + "%p %m", clientBuilder.getCommandPattern());
   }
 
   @Test
@@ -161,8 +162,9 @@ public class ClientBuilderTest {
 
     Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
+    String prefix = javaExecutablePrefix();
     assertEquals(
-            "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
+            prefix + "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
             clientBuilder.getCommandPattern());
   }
 
@@ -282,6 +284,17 @@ public class ClientBuilderTest {
   private WikiPage makeTestPage(String pageText) {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     return WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageText);
+  }
+
+  private String javaExecutablePrefix() {
+    String javaHome = System.getenv("JAVA_HOME");
+    if (javaHome == null) {
+        return "";
+    }
+    else {
+        String sep = System.getProperty("file.separator");
+        return javaHome + sep + "bin" + sep;
+    }
   }
 
   public static class MockClientBuilder extends ClientBuilder<MockClient> {
