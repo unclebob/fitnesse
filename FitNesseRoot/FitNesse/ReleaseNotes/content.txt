@@ -9,6 +9,7 @@
  * Configurable [[Context root][.FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile]].
  * Updated the .FitNesse.UserGuide structure.
  * Improved Where Used feature in the Tools menu.
+ * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed
 
