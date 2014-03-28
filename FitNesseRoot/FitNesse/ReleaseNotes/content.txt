@@ -10,6 +10,8 @@
  * Updated the .FitNesse.UserGuide structure.
  * Improved Where Used feature in the Tools menu.
  * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses
+ * Issues fixed:
+   * ''Add'' menu should only show templates ending on ''-Page''
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed
 
