@@ -1,8 +1,4 @@
 /* Styles in editor that differ from the "live" layout **/
-body {
- margin: 0;
-}
-
 p, table {
  margin: 0.5em 0;
 }
