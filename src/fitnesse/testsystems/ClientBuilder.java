@@ -9,11 +9,11 @@ import fitnesse.wiki.ReadOnlyPageData;
 
 public abstract class ClientBuilder<T> {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String DEFAULT_COMMAND_PATTERN =
-          "java -cp " + fitnesseJar(System.getProperty("java.class.path")) +
+  public static final String DEFAULT_COMMAND_PATTERN = javaExecutable() +
+          " -cp " + fitnesseJar(System.getProperty("java.class.path")) +
                   System.getProperty("path.separator") +
                   "%p %m";
-  public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
+  public static final String DEFAULT_JAVA_DEBUG_COMMAND = javaExecutable() + " -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
@@ -137,5 +137,16 @@ public abstract class ClientBuilder<T> {
     }
 
     return "fitnesse.jar";
+  }
+
+  protected static String javaExecutable() {
+    String javaHome = System.getenv("JAVA_HOME");
+    if (javaHome == null) {
+      return "java";
+    }
+    else {
+      String separator = System.getProperty("file.separator");
+      return javaHome + separator + "bin" + separator + "java";
+    }
   }
 }
