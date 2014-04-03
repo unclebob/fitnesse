@@ -310,6 +310,9 @@ fieldset {
 
 // Specific pages:
 
+.editPage #editor {
+  margin: 0 40px;
+}
 
 .editPage .textarea-toolbar,
 .editPage .wysiwyg-toolbar {
@@ -317,13 +320,7 @@ fieldset {
 }
 
 .editPage textarea#pageContent {
-    border-left: none;
-    border-right: none;
     padding: 4px;
-}
-.editPage iframe.wysiwyg {
-    border-left: none;
-    border-right: none;
 }
 
 .editPage .textarea-toolbar input[type="button"] {
@@ -342,12 +339,8 @@ fieldset {
     color: @alert-danger-text;
 }
 
-body.editing {
-    padding: 0 40px;
-}
-
 .editPage #save_buttons {
-  margin-left: @padding-base-horizontal;
+  margin: 0 40px;
 }
 
 #tt-wrap-text {
