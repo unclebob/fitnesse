@@ -19,24 +19,19 @@ pre.wiki {
  white-space: pre-wrap !important;
 }
 
-div.collapsable {
- border: 1pt dotted #BF8660;
- margin: 0.5em;
- padding-left: 15px;
- background: url(../images/collapsibleOpen.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible {
  min-height: 1em;
+ padding: 5px 15px 15px 15px;
 }
 
-div.collapsable.collapsed {
- background: url(../images/collapsibleClosed.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible.collapsed {
+ display: block !important;
+ visibility: visible !important;
 }
 
-div.collapsable.hidden {
- display: block;
- background: url(../images/collapsibleHidden.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible.hidden {
+ display: block !important;
+ visibility: visible !important;
 }
 
 div.collapsable>p:first-child {

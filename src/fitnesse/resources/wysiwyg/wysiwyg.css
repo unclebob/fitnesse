@@ -146,10 +146,10 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li a#wt-escape   { background-position: 3px -422px; }
 .wysiwyg-toolbar li a#wt-unescape { background-position: 3px -485px; }
 
-.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 5px -442px; }
-.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 3px -462px; }
-.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 3px -482px; }
-.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 3px -502px; }
+.wysiwyg-toolbar li a#wt-collapsible-closed { background-position: 5px -442px; }
+.wysiwyg-toolbar li a#wt-collapsible-open   { background-position: 3px -462px; }
+.wysiwyg-toolbar li a#wt-collapsible-hidden { background-position: 3px -482px; }
+.wysiwyg-toolbar li a#wt-remove-collapsible { background-position: 3px -502px; }
 
 .wysiwyg-toolbar li a#wt-add-table          { background-position: 3px -2px; }
 .wysiwyg-toolbar li a#wt-remove-table       { background-position: 3px -22px; }

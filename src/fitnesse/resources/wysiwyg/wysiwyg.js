@@ -213,10 +213,10 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '</ul>',
         '<ul class="non-table">',
-        '<li title="Collapsable section (default closed)"><a id="wt-collapsable-closed" href="#"></a></li>',
-        '<li title="Collapsable section (default open)"><a id="wt-collapsable-open" href="#"></a></li>',
-        '<li title="Collapsable section (hidden)"><a id="wt-collapsable-hidden" href="#"></a></li>',
-        '<li title="Remove collapsable section"><a id="wt-remove-collapsable" href="#"></a></li>',
+        '<li title="Collapsible section (default closed)"><a id="wt-collapsible-closed" href="#"></a></li>',
+        '<li title="Collapsible section (default open)"><a id="wt-collapsible-open" href="#"></a></li>',
+        '<li title="Collapsible section (hidden)"><a id="wt-collapsible-hidden" href="#"></a></li>',
+        '<li title="Remove collapsible section"><a id="wt-remove-collapsible" href="#"></a></li>',
         '</ul>',
         '<ul class="in-table">',
         '<li title="Insert cell before"><a id="wt-insert-cell-before" href="#"></a></li>',
@@ -345,14 +345,14 @@ Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
 			return [ self.insertHorizontalRule ];
 		case "br":
 			return [ self.insertLineBreak ];
-		case "collapsable-closed":
-			return [ self.insertCollapsableSection, "collapsed" ];
-		case "collapsable-open":
-			return [ self.insertCollapsableSection ];
-		case "collapsable-hidden":
-			return [ self.insertCollapsableSection, "hidden" ];
-		case "remove-collapsable":
-			return [ self.deleteCollapsableSection ];
+		case "collapsible-closed":
+			return [ self.insertCollapsibleSection, "collapsed" ];
+		case "collapsible-open":
+			return [ self.insertCollapsibleSection ];
+		case "collapsible-hidden":
+			return [ self.insertCollapsibleSection, "hidden" ];
+		case "remove-collapsible":
+			return [ self.deleteCollapsibleSection ];
 		}
 		return null;
 	}
@@ -1252,7 +1252,7 @@ Wysiwyg.prototype.insertHorizontalRule = function () {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertCollapsableSection = function (mode) {
+Wysiwyg.prototype.insertCollapsibleSection = function (mode) {
     var self = this;
     var range = this.getSelectionRange();
     var d = this.contentDocument;
@@ -1279,7 +1279,7 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     
     var classes = (mode) ? " " + mode : "";
     var collapsible = d.createElement("div");
-    collapsible.setAttribute("class", "collapsable" + classes);
+    collapsible.setAttribute("class", "collapsible" + classes);
     start.parentNode.insertBefore(collapsible, start);
     var sectionName = d.createElement("p");
     sectionName.appendChild(d.createTextNode("section title"));
@@ -1292,10 +1292,10 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     this.selectNode(sectionName);
 };
 
-Wysiwyg.prototype.deleteCollapsableSection = function () {
+Wysiwyg.prototype.deleteCollapsibleSection = function () {
     var pos = this.getSelectionPosition();
-    var startCol = $(pos.start).parents("div.collapsable")[0];
-    var endCol = $(pos.end).parents("div.collapsable")[0];
+    var startCol = $(pos.start).parents("div.collapsible")[0];
+    var endCol = $(pos.end).parents("div.collapsible")[0];
     if (startCol === endCol) {
         $(startCol).before($(startCol).children());
         $(startCol).remove();
@@ -1370,10 +1370,10 @@ Wysiwyg.prototype.createAnchor = function (link, label, attrs) {
     return anchor;
 };
 
-Wysiwyg.prototype.createCollapsableSection = function () {
+Wysiwyg.prototype.createCollapsibleSection = function () {
     var collapsible = this.contentDocument.createElement("div");
 
-    $(collapsible).addClass("collapsable");
+    $(collapsible).addClass("collapsible");
     return collapsible;
 };
 
@@ -1696,7 +1696,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function handleCollapsibleBlock(value) {
         inCollapsibleBlock++;
         closeParagraph();
-        var collapsible = self.createCollapsableSection();
+        var collapsible = self.createCollapsibleSection();
 
         holder.appendChild(collapsible);
         holder = collapsible;
@@ -2023,7 +2023,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     }
 
     function closeToFragment(stopTag) {
-        // Note: we're not exceeding collapsable section boundries
+        // Note: we're not exceeding collapsible section boundries
         var element = holder;
         var _fragment = fragment;
         stopTag = stopTag ? stopTag.toLowerCase() : "div";
@@ -2645,7 +2645,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "div":
-                if ($(node).hasClass("collapsable")) {
+                if ($(node).hasClass("collapsible")) {
                     _texts.push("!***");
                     if ($(node).hasClass("collapsed")) {
                         _texts.push("> ");
@@ -2728,7 +2728,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "div":
-                if ($(node).hasClass("collapsable")) {
+                if ($(node).hasClass("collapsible")) {
                     _texts.push("*!\n");
                 }
                 break;
