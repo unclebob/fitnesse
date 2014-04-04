@@ -264,7 +264,7 @@ Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
                 self.hideAllMenus();
             }
             element.blur();
-            this.frame.focus();
+            self.frame.focus();
             if (exception) {
                 throw exception;
             }
@@ -346,7 +346,7 @@ Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
 		case "br":
 			return [ self.insertLineBreak ];
 		case "collapsible-closed":
-			return [ self.insertCollapsibleSection, "collapsed" ];
+			return [ self.insertCollapsibleSection, "closed" ];
 		case "collapsible-open":
 			return [ self.insertCollapsibleSection ];
 		case "collapsible-hidden":
@@ -665,16 +665,16 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 
     $(d).on('click', 'div.collapsable', function (event) {
-        var x = event.pageX - this.offsetLeft;
-        var y = event.pageY - this.offsetTop;
-        if (x < 15 && y < 15) {
+        var x = event.offsetX;
+        var y = event.offsetY;
+        if (x < 30 && y < 30) {
             var e = $(this);
-            if (e.hasClass('collapsed')) {
-                e.removeClass('collapsed').addClass('hidden');
+            if (e.hasClass('closed')) {
+                e.removeClass('closed').addClass('hidden');
             } else if (e.hasClass('hidden')) {
                 e.removeClass('hidden');
             } else {
-                e.addClass('collapsed');
+                e.addClass('closed');
             }
             event.stopPropagation();
         }
@@ -1712,7 +1712,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 $(collapsible).addClass("hidden");
                 break;
             case ">": // Collapsed
-                $(collapsible).addClass("collapsed");
+                $(collapsible).addClass("closed");
                 break;
             }
         }
@@ -1948,7 +1948,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            console.log("Class for tt is '" + target.getAttribute('class') + "' for value '" + value + "'.");
             if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', '}': 'hashtable', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
                 holder = target.parentNode;
                 return;
@@ -2647,7 +2646,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "div":
                 if ($(node).hasClass("collapsible")) {
                     _texts.push("!***");
-                    if ($(node).hasClass("collapsed")) {
+                    if ($(node).hasClass("closed")) {
                         _texts.push("> ");
                     } else if ($(node).hasClass("hidden")) {
                         _texts.push("< ");
@@ -2804,6 +2803,11 @@ Wysiwyg.prototype.updateElementClassName = function (element) {
             }
         } else {
             $(p).removeClass();
+        }
+        if ($(p.parentNode).hasClass('collapsible')) {
+            var collapsible = p.parentNode;
+            $(collapsible.childNodes).removeClass('title');
+            $(collapsible.firstChild).addClass('title');
         }
     }
 };

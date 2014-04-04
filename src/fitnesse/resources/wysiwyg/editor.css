@@ -21,7 +21,16 @@ pre.wiki {
 
 div.collapsible {
  min-height: 1em;
- padding: 5px 15px 15px 15px;
+}
+
+div.collapsible > * {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+div.collapsible > p.title {
+ margin-left: 0;
+ margin-right: 0;
 }
 
 div.collapsible.collapsed {
@@ -32,6 +41,10 @@ div.collapsible.collapsed {
 div.collapsible.hidden {
  display: block !important;
  visibility: visible !important;
+}
+
+div.collapsible.hidden > p.title{
+ background-image: url(../images/collapsibleHidden.png);
 }
 
 div.collapsable>p:first-child {
