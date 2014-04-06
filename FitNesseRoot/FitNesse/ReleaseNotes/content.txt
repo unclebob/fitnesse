@@ -10,6 +10,7 @@
  * Updated the .FitNesse.UserGuide structure.
  * Improved Where Used feature in the Tools menu.
  * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses
+ * The rich text editor is now an in-page editor (does not use an iframe anymore)
  * Issues fixed:
    * ''Add'' menu should only show templates ending on ''-Page''
 
