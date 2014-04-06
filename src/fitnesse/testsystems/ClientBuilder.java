@@ -141,12 +141,15 @@ public abstract class ClientBuilder<T> {
 
   protected static String javaExecutable() {
     String javaHome = System.getenv("JAVA_HOME");
-    if (javaHome == null) {
-      return "java";
-    }
-    else {
+    String result = "java";
+    if (javaHome != null) {
+      boolean wrapInQuotes = javaHome.contains(" "); 
       String separator = System.getProperty("file.separator");
-      return javaHome + separator + "bin" + separator + "java";
+      result = javaHome + separator + "bin" + separator + "java"; 
+      if (wrapInQuotes) {
+    	  result = "\"" + result + "\"";
+      };
     }
+    return result;
   }
 }

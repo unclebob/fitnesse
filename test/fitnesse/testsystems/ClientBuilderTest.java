@@ -9,12 +9,14 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static fitnesse.testsystems.ClientBuilder.replace;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ClientBuilderTest {
 
@@ -124,8 +126,7 @@ public class ClientBuilderTest {
   public void testCommandPatternCSharp() throws Exception {
     String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder.getCommandPattern());
 
@@ -135,8 +136,7 @@ public class ClientBuilderTest {
   public void testCommandPatternCSharpWithDebug() throws Exception {
     String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder.getCommandPattern());
   }
@@ -146,26 +146,23 @@ public class ClientBuilderTest {
 
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     String sep = System.getProperty("path.separator");
-    String prefix = javaExecutablePrefix();
-    assertEquals(prefix + "java -cp fitnesse.jar" + sep + "%p %m", clientBuilder.getCommandPattern());
+    String prefix = clientBuilder.getCommandPattern();
+    assertTrue(prefix.contains("java"));
+    assertTrue(prefix.contains(" -cp fitnesse.jar" + sep + "%p %m"));
   }
 
   @Test
   public void testCommandPatternJavaWithDebug() throws Exception {
-
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String prefix = javaExecutablePrefix();
-    assertEquals(
-            prefix + "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m",
-            clientBuilder.getCommandPattern());
+    String prefix = clientBuilder.getCommandPattern();
+    assertTrue(prefix.contains("java"));
+    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m"));
   }
 
   @Test
@@ -196,8 +193,7 @@ public class ClientBuilderTest {
     String specifiedPageText = "!define COMMAND_PATTERN (${MY_RUNNER} %p %m)\n"
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("rubyslim %p %m", clientBuilder.getCommandPattern());
   }
@@ -207,8 +203,7 @@ public class ClientBuilderTest {
     String specifiedPageText = "!define TEST_RUNNER (${MY_RUNNER}.rb)\n"
             + "!define MY_RUNNER {rubyslim}\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("rubyslim.rb", clientBuilder.getTestRunner());
   }
@@ -217,8 +212,7 @@ public class ClientBuilderTest {
   public void testRunnerCSharp() throws Exception {
     String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", clientBuilder.getTestRunner());
   }
@@ -227,8 +221,7 @@ public class ClientBuilderTest {
   public void testRunnerCSharpWithDebug() throws Exception {
     String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", clientBuilder.getTestRunner());
   }
@@ -237,8 +230,7 @@ public class ClientBuilderTest {
   public void testRunnerDefault() throws Exception {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals(MOCK_TEST_RUNNER, clientBuilder.getTestRunner());
   }
@@ -247,9 +239,7 @@ public class ClientBuilderTest {
   public void testRunnerDefaultWithDebug() throws Exception {
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
-
-
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals(MOCK_TEST_RUNNER, clientBuilder.getTestRunner());
   }
@@ -258,8 +248,7 @@ public class ClientBuilderTest {
   public void testCustomRunner() {
     String specifiedPageText = "!define REMOTE_DEBUG_RUNNER {Different runner}";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals("Different runner", clientBuilder.getTestRunner());
   }
@@ -267,11 +256,9 @@ public class ClientBuilderTest {
   @Test
   public void testTestRunnerWithRootPathVariable() throws Exception {
     String fitnesseRootpath = System.getProperty("user.home");
-
     String specifiedPageText = "!define TEST_RUNNER (${user.home}/rubyslim.rb)\n";
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
-
-    Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     assertEquals(fitnesseRootpath + "/rubyslim.rb", clientBuilder.getTestRunner());
   }
@@ -284,17 +271,6 @@ public class ClientBuilderTest {
   private WikiPage makeTestPage(String pageText) {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     return WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageText);
-  }
-
-  private String javaExecutablePrefix() {
-    String javaHome = System.getenv("JAVA_HOME");
-    if (javaHome == null) {
-        return "";
-    }
-    else {
-        String sep = System.getProperty("file.separator");
-        return javaHome + sep + "bin" + sep;
-    }
   }
 
   public static class MockClientBuilder extends ClientBuilder<MockClient> {

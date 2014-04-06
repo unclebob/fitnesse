@@ -1,6 +1,6 @@
 package fitnesse.wiki.search;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,8 +44,8 @@ public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, this);
     whereUsed.search(root);
     assertEquals(2, hits.size());
-    assertEquals(pageTwo, hits.get(0));
-    assertEquals(pageTwoChild, hits.get(1));
+    assertTrue(hits.contains(pageTwo));
+    assertTrue(hits.contains(pageTwoChild));
   }
 
   @Test
@@ -67,8 +68,8 @@ public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
     WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwoChild, this);
     whereUsed.search(root);
     assertEquals(2, hits.size());
-    assertEquals(pageOne, hits.get(0));
-    assertEquals(pageTwo, hits.get(1));
+    assertTrue(hits.contains(pageOne));
+    assertTrue(hits.contains(pageTwo));
   }
 
   @Test
