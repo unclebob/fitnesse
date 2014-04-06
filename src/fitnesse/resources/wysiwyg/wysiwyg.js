@@ -15,7 +15,7 @@ var Wysiwyg = function (textarea, options) {
     this.textarea = textarea;
     this.options = options || {};
 
-    this.createEditable(document, textarea);
+    this.frame = this.createEditable(document, textarea);
 
     this.contentWindow = window;
     this.contentDocument = this.contentWindow.document;
@@ -173,9 +173,9 @@ Wysiwyg.prototype.createEditable = function (d, textarea) {
     var frame = d.createElement("div");
     frame.setAttribute("class", "wysiwyg");
     frame.setAttribute("contenteditable", "true");
-    this.frame = frame;
 
     textarea.parentNode.insertBefore(frame, textarea.nextSibling);
+    return frame;
 };
 
 Wysiwyg.prototype.createWysiwygToolbar = function (d) {
@@ -513,11 +513,11 @@ Wysiwyg.prototype.execCommand = function (name, arg) {
 Wysiwyg.prototype.setupEditorEvents = function () {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var self = this;
-    var d = this.contentDocument;
+    var frame = this.frame;
     var ime = false;
     var inPasteAction = false;
 
-    $(d).keydown(function (event) {
+    $(frame).keydown(function (event) {
         var method = null;
         var args = null;
         var keyCode = event.keyCode;
@@ -590,7 +590,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 
     //noinspection JSUnresolvedFunction
-    $(d).keypress(function (event) {
+    $(frame).keypress(function (event) {
         var modifier = (event.ctrlKey ? 0x40000000 : 0)
             | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0);
         switch (event.charCode || event.keyCode) {
@@ -638,7 +638,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 
     //noinspection JSUnresolvedFunction
-    $(d).keyup(function (event) {
+    $(frame).keyup(function (event) {
         var keyCode = event.keyCode;
         if (ime) {
             switch (keyCode) {
@@ -655,16 +655,16 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 
     //noinspection JSUnresolvedFunction
-    $(d).mouseup(function () {
+    $(frame).mouseup(function () {
         self.selectionChanged();
     });
 
-    $(d).click(function () {
+    $(frame).click(function () {
         self.hideAllMenus();
         self.selectionChanged();
     });
 
-    $(d).on('click', 'div.collapsable', function (event) {
+    $(frame).on('click', 'div.collapsable', function (event) {
         var x = event.offsetX;
         var y = event.offsetY;
         if (x < 30 && y < 30) {
@@ -680,14 +680,14 @@ Wysiwyg.prototype.setupEditorEvents = function () {
         }
     });
 
-    $(d).on('click', 'a', function () {
+    $(frame).on('click', 'a', function () {
         return false;
     });
 
     /* Pasting data is forced in a specific div: pasteddata. In there, the
      * raw data is collected and fed to the wikiToDom parser.
      */
-    $(d).on('paste', 'body', function () {
+    $(frame).on('paste', 'body', function () {
         function tagNode(node) { while (node.nodeType === 3 /* TextNode */) { node = node.parentNode; } return node; }
 
         // Clone state is change in Firefox, need to extract the fields
@@ -762,7 +762,7 @@ Wysiwyg.prototype.loadWysiwygDocument = function () {
 Wysiwyg.prototype.focusWysiwyg = function () {
     var self = this;
     function lazy() {
-        this.frame.focus();
+        self.frame.focus();
         try { self.execCommand("useCSS", false); } catch (e1) { }
         try { self.execCommand("styleWithCSS", false); } catch (e2) { }
         self.selectionChanged();
