@@ -18,7 +18,7 @@ import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
   public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] port";
-  static Class<? extends DefaultInteraction> interactionClass;
+  static Class<? extends DefaultInteraction> interactionClass = DefaultInteraction.class;
 
   public static class Options {
     final boolean verbose;
