@@ -664,11 +664,10 @@ Wysiwyg.prototype.setupEditorEvents = function () {
         self.selectionChanged();
     });
 
-    $(frame).on('click', 'div.collapsable', function (event) {
-        var x = event.offsetX;
-        var y = event.offsetY;
-        if (x < 30 && y < 30) {
-            var e = $(this);
+    $(frame).on('touchstart click', 'div.collapsible > p.title', function (event) {
+        var x = event.pageX - $(this).offset().left;
+        if (x < parseInt($(this).css('padding-left'))) {
+            var e = $(this.parentNode);
             if (e.hasClass('closed')) {
                 e.removeClass('closed').addClass('hidden');
             } else if (e.hasClass('hidden')) {
@@ -676,8 +675,9 @@ Wysiwyg.prototype.setupEditorEvents = function () {
             } else {
                 e.addClass('closed');
             }
-            event.stopPropagation();
         }
+        // Avoid default open/close handling from being called
+        event.stopPropagation();
     });
 
     $(frame).on('click', 'a', function () {
