@@ -16,8 +16,6 @@ import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
-  private static final Logger LOG = Logger.getLogger(SlimClientBuilder.class.getName());
-
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
@@ -42,7 +40,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()));
     }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout());
   }
 
   @Override
@@ -126,7 +124,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return 10;
   }
 
-  String determineSlimHost() {
+  protected String determineSlimHost() {
     String slimHost = getVariable("slim.host");
     if (slimHost == null) {
       slimHost = getVariable(SLIM_HOST);
@@ -134,12 +132,26 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return slimHost == null ? "localhost" : slimHost;
   }
 
-  String getSlimFlags() {
+  protected String getSlimFlags() {
     String slimFlags = getVariable("slim.flags");
     if (slimFlags == null) {
       slimFlags = getVariable(SLIM_FLAGS);
     }
     return slimFlags == null ? "" : slimFlags;
+  }
+
+  protected int determineTimeout() {
+    if (isDebug()) {
+      try {
+        String debugTimeout = getVariable("slim.debug.timeout");
+        if (debugTimeout != null) {
+          return Integer.parseInt(debugTimeout);
+        }
+      } catch (NumberFormatException e) {
+        // stick with default
+      }
+    }
+    return 10;
   }
 
   private boolean useManualStartForTestSystem() {
