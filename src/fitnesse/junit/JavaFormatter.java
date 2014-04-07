@@ -58,7 +58,7 @@ public class JavaFormatter extends BaseFormatter {
   public static class TestResultPage {
     private OutputStreamWriter currentWriter;
 
-    public TestResultPage(String outputPath, String testName) throws IOException, UnsupportedEncodingException {
+    public TestResultPage(String outputPath, String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
       currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
       writeHeaderFor(testName);
@@ -118,7 +118,10 @@ public class JavaFormatter extends BaseFormatter {
     private void copyAssets() throws IOException {
       String base = "/fitnesse/resources/";
       String cssDir = base + "css/";
-      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse.css");
+      addFile(cssDir + "fitnesse.css", "css/fitnesse.css");
+      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse_wiki.css");
+      addFile(cssDir + "fitnesse_pages.css", "css/fitnesse_pages.css");
+      addFile(cssDir + "fitnesse_straight.css", "css/fitnesse_straight.css");
       String javascriptDir = base + "javascript/";
       addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
       addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
