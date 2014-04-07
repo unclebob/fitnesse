@@ -2008,7 +2008,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            console.log("Class for tt is '" + target.getAttribute('class') + "' for value '" + value + "'.");
             if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', '}': 'hashtable', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
                 holder = target.parentNode;
                 return;
@@ -3444,11 +3443,39 @@ if (window.getSelection) {
     Wysiwyg.prototype.insertHTML = function (html) { };
 }
 
+Wysiwyg.prototype._treeWalkEmulation = function (root, iterator) {
+    if (!root.firstChild) {
+        iterator(null);
+        return;
+    }
+    var element = root;
+    while (element) {
+        if (element.firstChild) {
+            element = element.firstChild;
+        } else if (element.nextSibling) {
+            element = element.nextSibling;
+        } else {
+            while (true) {
+                element = element.parentNode;
+                if (element === root || !element) {
+                    iterator(null);
+                    return;
+                }
+                if (element.nextSibling) {
+                    element = element.nextSibling;
+                    break;
+                }
+            }
+        }
+        iterator(element);
+    }
+};
+
 if (document.createTreeWalker) {
     Wysiwyg.prototype.treeWalk = function (root, iterator) {
         var walker = root.ownerDocument.createTreeWalker(
             root,
-            NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+                NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
             null,
             true
         );
@@ -3458,34 +3485,7 @@ if (document.createTreeWalker) {
         iterator(null);
     };
 } else {
-    Wysiwyg.prototype.treeWalk = function (root, iterator) {
-        if (!root.firstChild) {
-            iterator(null);
-            return;
-        }
-        var element = root;
-        while (element) {
-            if (element.firstChild) {
-                element = element.firstChild;
-            } else if (element.nextSibling) {
-                element = element.nextSibling;
-            } else {
-                while (true) {
-                    element = element.parentNode;
-                    if (element === root || !element) {
-                        iterator(null);
-                        return;
-                    }
-                    if (element.nextSibling) {
-                        element = element.nextSibling;
-                        break;
-                    }
-                }
-            }
-            iterator(element);
-        }
-    };
-
+    Wysiwyg.prototype.treeWalk = Wysiwyg.prototype._treeWalkEmulation;
 }
 
 Wysiwyg.instances = [];
