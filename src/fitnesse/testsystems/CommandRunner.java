@@ -31,11 +31,24 @@ public class CommandRunner {
   private TimeMeasurement timeMeasurement = new TimeMeasurement();
   private String command = "";
   private Map<String, String> environmentVariables;
+  private int timeout;
 
-  public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
+  /**
+   *
+   * @param command
+   * @param input
+   * @param environmentVariables
+   * @param timeout Time-out in seconds.
+   */
+  public CommandRunner(String command, String input, Map<String, String> environmentVariables, int timeout) {
     this.command = command;
     this.input = input;
     this.environmentVariables = environmentVariables;
+    this.timeout = timeout;
+  }
+
+  public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
+    this(command, input, environmentVariables, 2);
   }
 
   protected CommandRunner(String command, String input, int exitCode) {
@@ -86,7 +99,7 @@ public class CommandRunner {
 
   private void waitForDeathOf(Process process) {
     int timeStep = 100;
-    int maxDelay = 2000;
+    int maxDelay = timeout * 1000;
     try {
       for (int delayed = 0; delayed < maxDelay; delayed += timeStep) {
         if (isDead(process)) {

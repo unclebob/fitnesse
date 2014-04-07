@@ -37,7 +37,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner();
     } else {
-      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()));
+      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), determineTimeout());
     }
 
     return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout());
@@ -150,6 +150,14 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       } catch (NumberFormatException e) {
         // stick with default
       }
+    }
+    try {
+      String timeout = getVariable("slim.timeout");
+      if (timeout != null) {
+        return Integer.parseInt(timeout);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
     }
     return 10;
   }
