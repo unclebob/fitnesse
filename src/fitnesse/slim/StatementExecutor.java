@@ -85,6 +85,7 @@ public class StatementExecutor implements StatementExecutorInterface {
       throw new SlimException(format("%s[%d]", className, args.length), e, SlimServer.COULD_NOT_INVOKE_CONSTRUCTOR,
           true);
     } catch (InvocationTargetException e) {
+      checkExceptionForStop(e.getTargetException());
       throw new SlimException(e.getTargetException(), true);
     } catch (Throwable e) {
       checkExceptionForStop(e);

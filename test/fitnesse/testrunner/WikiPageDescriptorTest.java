@@ -2,12 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,8 +12,6 @@ import org.junit.Test;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 

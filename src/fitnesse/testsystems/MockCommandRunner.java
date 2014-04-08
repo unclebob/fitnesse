@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class MockCommandRunner extends CommandRunner {
   public MockCommandRunner() {
-    super("", "", null);
+    super("", "", null, 2);
   }
 
   public MockCommandRunner(String command, int exitCode) {
