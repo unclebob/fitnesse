@@ -7,7 +7,7 @@ describe("parser and formatter", function () {
         document.getElementById("editor").innerHTML = '<textarea class="wikitext no_wrap" id="pageContent" name="pageContent" wrap="off"></textarea>';
         jasmine.Clock.useMock();
 
-        Wysiwyg.paths = { base: ".", stylesheets: ["../css/fitnesse_wiki.css", "editor.css"] };
+        Wysiwyg.editorMode = 'wysiwyg';
         var options = Wysiwyg.getOptions();
         editor = new Wysiwyg(document.getElementById("pageContent"), options);
         jasmine.Clock.tick(1000);
@@ -16,7 +16,8 @@ describe("parser and formatter", function () {
         contentBody = contentDocument.getElementsByTagName("body")[0];
 
         // Ensure the wysiwyg editor is visible
-        $('#editor-wysiwyg-1').click();
+
+        $('#editor-wysiwyg-1').focus();
     });
 
     function fragment() {
@@ -36,7 +37,7 @@ describe("parser and formatter", function () {
             fragment.appendChild(arguments[i]);
         }
         return fragment;
-    };
+    }
 
     function element(tag) {
         var start = 0;
@@ -80,11 +81,11 @@ describe("parser and formatter", function () {
             element.appendChild(arg);
         }
         return element;
-    };
+    }
 
     function br() {
         return element("br")
-    };
+    }
 
     function a(link, label, autolink) {
         var attrs = {
@@ -95,7 +96,7 @@ describe("parser and formatter", function () {
             attrs['data-wysiwyg-autolink'] = 'true';
         }
         return element("a", attrs, label || link);
-    };
+    }
 
     function generate(dom, wikitext, options, withoutDomToWikitext, withoutWikitextToFragment) {
         dom = dom.cloneNode(true);
@@ -430,7 +431,6 @@ describe("parser and formatter", function () {
         var dom = element("p", "`monospace`",
             ", ", element("pre", "mono`s`pace"),
             ", ", "`mono", element("pre", "s"), "pace`");
-        var wikitext = "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`";
         generateFragment(dom, "`monospace`, {{{mono`s`pace}}}, `mono{{{s}}}pace`");
         generateWikitext(dom, "`monospace`,{{{mono`s`pace}}}, `mono{{{s}}}pace`");
     });
@@ -1158,16 +1158,11 @@ describe("parser and formatter", function () {
     });
 
     it("selectRange", function() {
-        var d = editor.contentDocument;
+        var d = contentDocument;
         function _element() {
             var args = [ d ];
             args.push.apply(args, arguments);
             return element.apply(this, args);
-        }
-        function _text() {
-            var args = [ d ];
-            args.push.apply(args, arguments);
-            return text.apply(this, args);
         }
         function assertRangeText(expected, start, startOffset, end, endOffset) {
             editor.selectRange(start, startOffset, end, endOffset);
@@ -1178,7 +1173,7 @@ describe("parser and formatter", function () {
                 expect(editor.getSelectionText()).toBe(expected);
             }
         }
-        var body = d.body;
+        var body = editor.frame;
         while (body.childNodes.length > 0) {
             body.removeChild(body.lastChild);
         }
@@ -1211,8 +1206,8 @@ describe("parser and formatter", function () {
 
     it("Collapsible area", function() {
         var dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "My content")),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "My content")),
             element("p", br()));
         generateFragment(dom, [
             "!*",
@@ -1225,9 +1220,9 @@ describe("parser and formatter", function () {
     });
 
     it("Collapsible area with only title", function() {
-        dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "My content"),
+        var dom = fragment(
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "My content"),
                 element("p", br())),
             element("p", br()));
         generateFragment(dom, [
@@ -1242,18 +1237,18 @@ describe("parser and formatter", function () {
 
     it("Collapsible area styles", function() {
         var dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "EXPANDED"),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "EXPANDED"),
                 element("p", br()),
                 element("p", "Expanded content")),
             element("p", br()),
-            element("div", { "class": "collapsable collapsed" },
-                element("p", "COLLAPSED"),
+            element("div", { "class": "collapsible closed" },
+                element("p", { "class": "title" }, "COLLAPSED"),
                 element("p", br()),
                 element("p", "Collapsed content")),
             element("p", br()),
-            element("div", { "class": "collapsable hidden" },
-                element("p", "HIDDEN"),
+            element("div", { "class": "collapsible hidden" },
+                element("p", { "class": "title" }, "HIDDEN"),
                 element("p", br()),
                 element("p", "Hidden content")),
             element("p", br()));
@@ -1278,11 +1273,11 @@ describe("parser and formatter", function () {
     it("Nested collapsible area", function() {
         var dom = fragment(
             element("p", "Paragraph"),
-            element("div", { "class": "collapsable" },
-                element("p", "outer"),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "outer"),
                 element("p", "Text"),
-                element("div", { "class": "collapsable" },
-                    element("p", "inner"),
+                element("div", { "class": "collapsible" },
+                    element("p", { "class": "title" }, "inner"),
                     element("p", "More text")
                 ),
                 element("p", br())),
@@ -1312,8 +1307,8 @@ describe("parser and formatter", function () {
 
     it("Collapsible area with table", function() {
         var dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "title"),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "title"),
                 element("p", "Text"),
                 element("table",
                     element('tbody',
@@ -1343,8 +1338,8 @@ describe("parser and formatter", function () {
 
     it("Collapsible area with header", function() {
         var dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "title"),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "title"),
                 element("p", br()),
                 element("h2", "Header"),
                 element("p", "More text")
@@ -1366,8 +1361,8 @@ describe("parser and formatter", function () {
 
     it("Collapsible area with list", function() {
         var dom = fragment(
-            element("div", { "class": "collapsable" },
-                element("p", "title"),
+            element("div", { "class": "collapsible" },
+                element("p", { "class": "title" }, "title"),
                 element("p", "Text"),
                 element("ul",
                     element("li", "item 1"),

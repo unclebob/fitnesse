@@ -11,6 +11,7 @@
  * Improved Where Used feature in the Tools menu.
  * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses
  * Properties ''slim.timeout'' and ''slim.debug.timeout'' can be used to configure timeouts (start up and finish) for SLIM test runs.
+ * The rich text editor is now an in-page editor (does not use an iframe anymore)
  * Issues fixed:
    * ''Add'' menu should only show templates ending on ''-Page''
    * Missing stylesheets added to JUnit test results.
