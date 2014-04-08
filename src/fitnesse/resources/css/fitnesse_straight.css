@@ -126,7 +126,8 @@ nav ul ul li.divider {
 	border-top: 1px solid #999999;
 }
 nav ul ul li a,
-nav ul ul li a:active {
+nav ul ul li a:active,
+nav ul ul li a:visited {
 	display: block;
 	border-radius: 0px;
 	padding: 0.5em;
