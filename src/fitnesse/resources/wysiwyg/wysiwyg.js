@@ -66,27 +66,37 @@ var Wysiwyg = function (textarea, options) {
     }
 };
 
-Wysiwyg.getWrapOn = function () {
-    var mode = false;
+Wysiwyg.getBooleanFromCookie = function(fieldName, defaultValue) {
+    var result = defaultValue;
+
     var cookies = (document.cookie || "").split(";");
     var length = cookies.length;
     var i;
     for (i = 0; i < length; i++) {
-        var match = /^\s*textwrapon=(\S*)/.exec(cookies[i]);
+        var regex = new RegExp("^\\s*" + fieldName + "=(\\S*)");
+        var match = regex.exec(cookies[i]);
         if (match) {
             switch (match[1]) {
             case "true":
-                mode = true;
+                result = true;
                 break;
             default:
-                mode = false;
+                result = false;
                 break;
             }
             break;
         }
     }
 
-    return mode;
+    return result;
+};
+
+Wysiwyg.getWrapOn = function () {
+    return Wysiwyg.getBooleanFromCookie('textwrapon', false)
+};
+
+Wysiwyg.getAutoformat = function () {
+    return Wysiwyg.getBooleanFromCookie('textautoformat', false)
 };
 
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
@@ -162,6 +172,10 @@ Wysiwyg.prototype.setupFormEvent = function () {
                 if (self.isModified()) {
                     self.textarea.value = self.domToWikitext(body, self.options);
                 }
+            }
+            if (Wysiwyg.getAutoformat()) {
+                var formatter = new WikiFormatter();
+                self.textarea.value = formatter.format(self.textarea.value);
             }
         } catch (e) {
             Wysiwyg.stopEvent(event);
@@ -387,7 +401,8 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
         '<input id="tt-format-wiki" type="button" accesskey="f" value="Format" title="Formats the wiki text" />',
         '<select id="tt-template-map">' + $('#templateMap').html() + '</select>',
         '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />',
-        '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>' ];
+        '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>',
+        '<label title="Automatically format wiki text on save"><input type="checkbox" id="tt-autoformat" />autoformat</label>'];
     var div = d.createElement("div");
     div.className = "textarea-toolbar";
     div.innerHTML = html.join(" ");
@@ -443,12 +458,26 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
             Wysiwyg.setCookie("textwrapon", "false");
         }
     }
-    
+
+    function setAutoformat(autoformat) {
+        if (autoformat) {
+            Wysiwyg.setCookie("textautoformat", "true");
+        } else {
+            Wysiwyg.setCookie("textautoformat", "false");
+        }
+    }
+
     $('#tt-wrap-text', container)
         .change(function () {
             setWrap($(this).is(':checked'));
         })
         .prop('checked', Wysiwyg.getWrapOn())
+        .change();
+    $('#tt-autoformat', container)
+        .change(function () {
+            setAutoformat($(this).is(':checked'));
+        })
+        .prop('checked', Wysiwyg.getAutoformat())
         .change();
 };
 
