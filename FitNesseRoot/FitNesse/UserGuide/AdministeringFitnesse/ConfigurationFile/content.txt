@@ -11,9 +11,9 @@ See also: CommandLineArguments.
 ''motivation:'' Customize the look and feel to match your liking. See WikiTheming for details.
 
 !3 Context root
-''required property:'' '''!-ContextRoot-! = <root path name>'''
+''required property:'' '''!-ContextRoot-! = <root path name>'''
 
-''motivation:'' Customize the root url of !-FitNesse-!. This is convenient if !-FitNesse-! is running behind a proxy server.
+''motivation:'' Customize the root url of !-FitNesse-!. This is convenient if !-FitNesse-! is running behind a proxy server.
 
 !3 Wiki Page Factory
 ''required property:'' '''!-WikiPageFactory-! = <class name>'''
@@ -99,7 +99,7 @@ public class PiSymbolType extends SymbolType implements Translation {
 The classes supplied must extend ''!-fitnesse.responders.editing.ContentFilter-!''.  !-ContentFilter-! is an interface that declares one method:  '''!-boolean isContentAcceptable(String content, String pageName)-!'''.  When ever user attempts to save a page, ''!-isContentAcceptable()-!'' is invoked and the content is saved only if ''true'' is returned.
 
 !3 !-Slim Tables-!
-''required property:'' '''!-SlimTables-! = <class name>'''
+''required property:'' '''!-SlimTables-! = <table name:class name>[,<table name:class name>]'''
 
 ''motivation:'' Allow for custom SLiM table types to be supported.
 
@@ -135,8 +135,8 @@ CustomComparators = json:com.acme.JSONAssertComparator
 Example !-ScriptTable-! usage:
 
 {{{
-|script|Customer|
-|check|get|cust1|json:{id:cust1,name:"John Doe"}|
+|script|Customer                                 |
+|check |get|cust1|json:{id:cust1,name:"John Doe"}|
 }}}
 
 !3 !-Test Systems-!
