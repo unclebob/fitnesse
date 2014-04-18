@@ -1,4 +1,4 @@
-!2 Next release
+!2 2014-04-18
  * Introduced new logo.
  * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
  * Add ''script:'' prefix. Script tables can be defined as ''script:Fixture name''.
@@ -9,15 +9,16 @@
  * Configurable [[Context root][.FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile]].
  * Updated the .FitNesse.UserGuide structure.
  * Improved Where Used feature in the Tools menu.
- * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses
+ * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses.
  * Properties ''slim.timeout'' and ''slim.debug.timeout'' can be used to configure timeouts (start up and finish) for SLIM test runs.
- * The rich text editor is now an in-page editor (does not use an iframe anymore)
+ * The rich text editor is now an in-page editor (does not use an iframe anymore).
+ * Can auto-format on save when editing a page in plain text mode.
  * Issues fixed:
-   * ''Add'' menu should only show templates ending on ''-Page''
+   * ''Add'' menu should only show templates ending on ''-Page.''
    * Missing stylesheets added to JUnit test results.
-   * Fix representation issue with ignored field in SLim !-TableTable-!
+   * Fix representation issue with ignored field in SLim !-TableTable.-!
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed.
 
 !2 2014-02-01
  * '''Files outside the http://files section can no longer be accessed!'''
