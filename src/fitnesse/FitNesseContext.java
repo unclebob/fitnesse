@@ -25,65 +25,6 @@ public class FitNesseContext {
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
 
-  /**
-   * Use the builder to create your FitNesse contexts.
-   */
-  public static final class Builder {
-    public WikiPage root;
-
-    public int port = -1;
-    public String rootPath;
-    public String rootDirectoryName;
-
-    public Logger logger;
-    public Authenticator authenticator = new PromiscuousAuthenticator();
-    public VersionsController versionsController;
-    public RecentChanges recentChanges;
-    public TestSystemFactory testSystemFactory = new MultipleTestSystemFactory(new SlimTableFactory(), new CustomComparatorRegistry());
-    public Properties properties = new Properties();
-
-    public Builder() {
-      super();
-    }
-
-    public Builder(FitNesseContext context) {
-      super();
-      if (context != null) {
-        root = context.root;
-        port = context.port;
-        rootPath = context.rootPath;
-        rootDirectoryName = context.rootDirectoryName;
-        logger = context.logger;
-        authenticator = context.authenticator;
-        versionsController = context.versionsController;
-        recentChanges = context.recentChanges;
-        testSystemFactory = context.testSystemFactory;
-        properties = context.properties;
-      }
-    }
-
-    public final FitNesseContext createFitNesseContext() {
-      FitNesseVersion version = new FitNesseVersion();
-      // Those variables are defined so they can be looked up for as wiki variables.
-      if (rootPath != null) {
-        properties.setProperty("FITNESSE_ROOTPATH", rootPath);
-      }
-      properties.setProperty("FITNESSE_PORT", Integer.toString(port));
-      properties.setProperty("FITNESSE_VERSION", version.toString());
-      return new FitNesseContext(version,
-          root,
-          rootPath,
-          rootDirectoryName,
-          versionsController,
-          recentChanges,
-          port,
-          authenticator,
-          logger,
-          testSystemFactory,
-          properties);
-    }
-  }
-
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
   public final WikiPage root;
@@ -94,6 +35,7 @@ public class FitNesseContext {
   public final int port;
   private final String rootPath;
   private final String rootDirectoryName;
+  public final String contextRoot;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
 
@@ -103,10 +45,8 @@ public class FitNesseContext {
   public final Authenticator authenticator;
   private final Properties properties;
 
-
-
-  private FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
-      String rootDirectoryName, VersionsController versionsController,
+  protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
+      String rootDirectoryName, String contextRoot, VersionsController versionsController,
       RecentChanges recentChanges, int port,
       Authenticator authenticator, Logger logger,
       TestSystemFactory testSystemFactory, Properties properties) {
@@ -115,6 +55,7 @@ public class FitNesseContext {
     this.root = root;
     this.rootPath = rootPath;
     this.rootDirectoryName = rootDirectoryName;
+    this.contextRoot = contextRoot;
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;
     this.port = port;
@@ -137,7 +78,7 @@ public class FitNesseContext {
   }
 
   public String getRootPagePath() {
-    return String.format("%s/%s", rootPath, rootDirectoryName);
+    return String.format("%s%s%s", rootPath, File.separator, rootDirectoryName);
   }
 
   public Properties getProperties() {

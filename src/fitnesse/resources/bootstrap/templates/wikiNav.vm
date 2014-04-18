@@ -2,6 +2,6 @@
 
 <form class="navbar-form navbar-right" role="search" action="?search">
  <input type="hidden" name="responder" value="search" />
- <input type="text" name="searchString" class="form-control" placeholder="Search page" />
+ <input type="text" id="searchString" name="searchString" class="form-control" placeholder="Search for page" />
  <input type="hidden" name="searchType" value="Search Titles" />
 </form>

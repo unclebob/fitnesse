@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
 
 import fitnesse.ContextConfigurator;
+import fitnesse.PluginException;
 import org.junit.Test;
 
 public class ArgumentsTest {
@@ -19,26 +21,26 @@ public class ArgumentsTest {
   @Test
   public void defaultConfigLocation() {
     Arguments args = new Arguments();
-    assertEquals("./plugins.properties", args.getConfigFile());
+    assertEquals("./plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void configLocationWithDifferentRootPath() {
     Arguments args = new Arguments("-d", "customDir");
-    assertEquals("customDir/plugins.properties", args.getConfigFile());
+    assertEquals("customDir/plugins.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
   public void customConfigLocation() {
     Arguments args = new Arguments("-f", "custom.properties");
-    assertEquals("custom.properties", args.getConfigFile());
+    assertEquals("custom.properties", args.getConfigFile(ContextConfigurator.systemDefaults()));
   }
 
   @Test
-  public void argumentsCanBeRepresentedByProperties() {
+  public void argumentsCanBeRepresentedByProperties() throws IOException, PluginException {
     Arguments args = new Arguments("-v", "-p", "81", "-d", "directory", "-r", "root", "-b", "someFile.txt",
               "-l", "myLogDirectory", "-o", "-e", "22", "-f", "fitnesse.properties", "-i", "-c", "SomeCommand", "-a", "user:pass");
-    Properties properties = args.asProperties();
+    Properties properties = args.update(ContextConfigurator.systemDefaults()).makeFitNesseContext().getProperties();
 
     assertEquals("verbose", properties.getProperty("LogLevel"));
     assertEquals("81", properties.getProperty("Port"));
@@ -55,13 +57,12 @@ public class ArgumentsTest {
   }
 
   @Test
-  public void defaultArgumentsAsProperties() {
+  public void defaultArgumentsAsProperties() throws IOException, PluginException {
     Arguments args = new Arguments();
-    Properties properties = args.asProperties();
+    Properties properties = args.update(ContextConfigurator.empty()).makeFitNesseContext().getProperties();
 
     assertEquals("normal", properties.getProperty("LogLevel"));
     assertNull(properties.getProperty("ConfigFile"));
-    assertNull(properties.getProperty("Port"));
     assertNull(properties.getProperty("RootPath"));
     assertNull(properties.getProperty("FitNesseRoot"));
     assertNull(properties.getProperty("RedirectOutput"));

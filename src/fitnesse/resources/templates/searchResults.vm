@@ -64,7 +64,7 @@
 #else
 <script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria.'</script>
 #end
-<script src="/files/fitnesse/javascript/clientSideSort.js"> </script>
+<script src="${contextRoot}files/fitnesse/javascript/clientSideSort.js"> </script>
 <script language="javascript">
  tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\d+) (\d+).(\d+).(\d+) (\w+) (\d+)$/,8,2,3,4,5,6));
 </script>

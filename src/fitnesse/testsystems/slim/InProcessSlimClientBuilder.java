@@ -38,7 +38,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
   private boolean tryCreateSlimService(String args) throws IOException {
     try {
       SlimService.Options options = SlimService.parseCommandLine(args.trim().split(" "));
-      SlimService.startWithFactoryAsync(new JavaSlimFactory(), options);
+      SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
       return true;
     } catch (IOException e) {
       throw e;

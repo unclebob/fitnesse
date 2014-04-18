@@ -27,7 +27,7 @@ public class AliasTest {
         ParserTestHelper.assertTranslatesTo(page, "[[you're it][PageOne]]", link("you're it", "PageOne"));
         ParserTestHelper.assertTranslatesTo(page, "[[PageOne][IgnoredPage]]", link("PageOne", "PageOne"));
         ParserTestHelper.assertTranslatesTo(page, "[[tag][PageOne?edit]]", link("tag", "PageOne?edit"));
-        ParserTestHelper.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "/files/myfile"));
+        ParserTestHelper.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "files/myfile"));
     }
 
     @Test public void translatesLinkToNonExistent() {

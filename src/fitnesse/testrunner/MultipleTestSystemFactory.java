@@ -21,12 +21,15 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistrar {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
+  private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
   public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
     registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
-    registerTestSystemFactory("slim^inprocess", new InProcessHtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
-    registerTestSystemFactory("fit^inprocess", new InProcessFitTestSystemFactory());
+
+    // This is basically the legacy: we want to be able to run slim and fit both in process and out of process.
+    registerInProcessTestSystemFactory("slim", new InProcessHtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
+    registerInProcessTestSystemFactory("fit", new InProcessFitTestSystemFactory());
   }
 
   @Override
@@ -34,10 +37,19 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     testSystemFactories.put(name, testSystemFactory);
   }
 
+  public void registerInProcessTestSystemFactory(String name, TestSystemFactory testSystemFactory) {
+    inProcessTestSystemFactories.put(name, testSystemFactory);
+  }
+
   public TestSystem create(Descriptor descriptor) throws IOException {
-    TestSystemFactory factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
-    TestSystem testSystem = factory.create(descriptor);
-    return testSystem;
+    TestSystemFactory factory = null;
+    if (descriptor.runInProcess()) {
+      factory = inProcessTestSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
+    }
+    if (factory == null) {
+      factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
+    }
+    return factory.create(descriptor);
   }
 
   static class HtmlSlimTestSystemFactory implements TestSystemFactory {
@@ -51,9 +63,10 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     public final TestSystem create(Descriptor descriptor) throws IOException {
-      SlimCommandRunningClient slimClient = new SlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
-              slimTableFactory, customComparatorRegistry);
+      SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
+      SlimCommandRunningClient slimClient = clientBuilder.build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
+              slimTableFactory.copy(), customComparatorRegistry);
 
       return testSystem;
     }
@@ -70,9 +83,10 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     public TestSystem create(Descriptor descriptor) throws IOException {
-      SlimCommandRunningClient slimClient = new InProcessSlimClientBuilder(descriptor).build();
-      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(descriptor.getTestSystemName(), slimClient,
-              slimTableFactory, customComparatorRegistry);
+      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
+      SlimCommandRunningClient slimClient = clientBuilder.build();
+      HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
+              slimTableFactory.copy(), customComparatorRegistry);
 
       return testSystem;
     }
@@ -81,18 +95,20 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class FitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      CommandRunningFitClient fitClient = new FitClientBuilder(descriptor).build();
+      FitClientBuilder clientBuilder = new FitClientBuilder(descriptor);
+      CommandRunningFitClient fitClient = clientBuilder.build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
+      return new FitTestSystem(clientBuilder.getTestSystemName(), fitClient);
     }
   }
 
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
     public FitTestSystem create(Descriptor descriptor) throws IOException {
-      CommandRunningFitClient fitClient = new InProcessFitClientBuilder(descriptor).build();
+      InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor);
+      CommandRunningFitClient fitClient = clientBuilder.build();
 
-      return new FitTestSystem(descriptor.getTestSystemName(), fitClient);
+      return new FitTestSystem(clientBuilder.getTestSystemName(), fitClient);
     }
   }
 }

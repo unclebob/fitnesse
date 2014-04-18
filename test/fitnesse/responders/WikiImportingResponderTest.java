@@ -38,6 +38,7 @@ public class WikiImportingResponderTest {
   private WikiImportingResponder responder;
   private String baseUrl;
   private WikiImporterTest testData;
+  private WikiImporter importer;
 
   @Before
   public void setUp() throws Exception {
@@ -52,12 +53,13 @@ public class WikiImportingResponderTest {
   }
 
   private void createResponder() throws Exception {
-    responder = new WikiImportingResponder();
+    importer = new WikiImporter();
+    importer.setDeleteOrphanOption(false);
+    responder = new WikiImportingResponder(importer);
     responder.path = new WikiPagePath();
     ChunkedResponse response = new ChunkedResponse("html", new MockChunkedDataProvider());
     response.sendTo(new MockResponseSender());
     responder.setResponse(response);
-    responder.getImporter().setDeleteOrphanOption(false);
   }
 
   @After
@@ -248,9 +250,6 @@ public class WikiImportingResponderTest {
 
   @Test
   public void testListOfOrphanedPages() throws Exception {
-    WikiImporter importer = new WikiImporter();
-
-    responder.setImporter(importer);
 
     MockRequest request = makeRequest(baseUrl);
     String content = simulateWebRequest(request);
@@ -273,21 +272,19 @@ public class WikiImportingResponderTest {
   public void testAutoUpdatingTurnedOn() throws Exception {
     MockRequest request = makeRequest(baseUrl);
     responder.setRequest(request);
-    responder.data = new PageData(new WikiPageDummy());
+    responder.page = new WikiPageDummy();
+    responder.data = new PageData(responder.page);
 
     responder.initializeImporter();
-    assertFalse(responder.getImporter().getAutoUpdateSetting());
+    assertFalse(importer.getAutoUpdateSetting());
 
     request.addInput("autoUpdate", "1");
     responder.initializeImporter();
-    assertTrue(responder.getImporter().getAutoUpdateSetting());
+    assertTrue(importer.getAutoUpdateSetting());
   }
 
   @Test
   public void testAutoUpdateSettingDisplayed() throws Exception {
-    WikiImporter importer = new MockWikiImporter();
-
-    responder.setImporter(importer);
 
     MockRequest request = makeRequest(baseUrl);
     request.addInput("autoUpdate", true);
@@ -342,7 +339,7 @@ public class WikiImportingResponderTest {
     page.commit(data);
     content = getContentAfterSpecialImportHandling();
 
-    assertTrue(WikiImportProperty.isImported(data));
+    assertTrue(WikiImportProperty.isImportedSubWiki(data));
     assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
     assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
   }

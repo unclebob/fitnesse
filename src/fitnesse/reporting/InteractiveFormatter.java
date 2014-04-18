@@ -148,7 +148,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   private String makeErrorNavigatorVisible() {
-    HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "error-nav-hidden");
+    HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "hidden");
     return toggler.html();
   }
 

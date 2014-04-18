@@ -261,12 +261,7 @@ span.error {
     background-image: url("../images/wrong.png");
 }
 
-/** Virtual and import pages */
-.virtual header {
-	background-image: url("../images/virtualPage.jpg");
-	background-position: center top;
-	background-repeat: no-repeat;
-}
+/** Imported pages */
 .imported header {
 	background-image: url("../images/importedPage.jpg");
 	background-position: center top;

@@ -1,5 +1,5 @@
 body {
-  padding-top: 86px;
+  padding-top: 100px;
 }
 
 header,
@@ -25,9 +25,25 @@ label {
     display: inline-block;
 }
 
-.navbar-fixed-top .navbar-inner {
-  padding-right: 40px;
-  padding-left: 40px;
+.navbar-nav {
+  font-size: @font-size-large;
+}
+
+.navbar-brand {
+  display: block;
+  background-image: url(../../images/fitnesse-logo-small.png);
+  width: 200px;
+  height: 37px;
+  margin: 5px 15px 5px 5px;
+
+  span {
+    display: none;
+  }
+}
+
+#add > ul {
+  max-height: 300px;
+  overflow-x: hidden;
 }
 
 .breadcrumb {
@@ -85,17 +101,17 @@ input[type="checkbox"] {
     margin-left: -18px;
 }
 
-/** Collapsable section */
+/** Collapsible section */
 .collapsible {
-  background: transparent;
-  margin: 5px 0px 5px 0px;
-  border: 1px solid #e5e5e5;
-  padding: 4px;
-  border-radius: 4px;
+  margin: 0;
+  .panel;
+  .panel-default;
+  padding: 0;
 }
 
 .collapsible > div {
-  margin-left: 16px;
+  margin: 0;
+  .panel-body;
 }
 
 .collapsible.closed > div {
@@ -106,30 +122,31 @@ input[type="checkbox"] {
   display: none;
 }
 
-.collapsible p.title {
-  color: #000;
-  font-style: italic;
-  margin: 0;
-  padding: 0 0 0 18px;
-}
-
-.collapsible p.title {
-  background: url(../img/minus-sign.png) no-repeat scroll 0 2px transparent;
+.collapsible p.title,
+.collapsible.closed p.title {
+  .panel-heading;
+  .panel-default > .panel-heading;
+  padding:  5px 15px 5px 30px;
+  background-image: url(../img/minus-sign.png);
+  background-repeat: no-repeat;
+  background-position: 12px 7px;
 }
 
 .collapsible.closed p.title {
-  background: url(../img/plus-sign.png) no-repeat scroll 0 2px transparent;
+  background-image: url(../img/plus-sign.png);
+  border-bottom: 0;
 }
 
 .collapsible > ul {
   float: right;
   margin: 0;
+  padding: 5px 15px;
 }
 
 .collapsible > ul li {
   display: inline;
-  padding: 0 .5em;
-  border-left: 1px solid #e5e5e5;
+  padding: 0 5px;
+  border-left: 1px solid @panel-bg;
 }
 
 tr.scenario > td:first-child {
@@ -176,6 +193,11 @@ span.ignore * {
   .error,
   .stop {
     .test-button(@brand-danger);
+  }
+
+  @media (max-width: @screen-sm-min) {
+    float: right;
+    clear: left;
   }
 }
 
@@ -236,17 +258,42 @@ span.ignore * {
 
 #error-nav {
   margin-top: 8px;
+  margin-left: 10px;
+  margin-right: 8px;
+
+  @media (max-width: @screen-md-min) {
+    float: right;
+  }
+  @media (max-width: @screen-sm-min) {
+    clear: left;
+  }
+
 }
-#error-nav button {
-  .btn-sm;
-  .btn-danger;
-  font-size: 150%;
-  padding: 6px 12px;
-  line-height: 1;
-  margin: 0 0 3px 0
-}
-.error-nav-hidden{
+#error-nav .title {
+  padding-left: 15px;
+  @media (max-width: @screen-md-min) {
     display: none;
+  }
+}
+
+.btn-text {
+  display: inline-block;
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid none;
+  border-color: @btn-default-border;
+  background-color: @btn-default-bg;
+  white-space: nowrap;
+  position: relative;
+  float: left;
+  padding: @padding-base-vertical/2 @padding-base-horizontal;
+}
+.btn-text input {
+  border-size: 2px;
+  height: 26px;
 }
 
 .propertiesPage form,
@@ -263,6 +310,9 @@ fieldset {
 
 // Specific pages:
 
+.editPage #editor {
+  margin: 0 40px;
+}
 
 .editPage .textarea-toolbar,
 .editPage .wysiwyg-toolbar {
@@ -270,13 +320,7 @@ fieldset {
 }
 
 .editPage textarea#pageContent {
-    border-left: none;
-    border-right: none;
     padding: 4px;
-}
-.editPage iframe.wysiwyg {
-    border-left: none;
-    border-right: none;
 }
 
 .editPage .textarea-toolbar input[type="button"] {
@@ -295,12 +339,8 @@ fieldset {
     color: @alert-danger-text;
 }
 
-body.editing {
-    padding: 0 40px;
-}
-
 .editPage #save_buttons {
-  margin-left: @padding-base-horizontal;
+  margin: 0 40px;
 }
 
 #tt-wrap-text {

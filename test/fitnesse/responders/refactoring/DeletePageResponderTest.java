@@ -56,7 +56,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     String page = response.getContent();
     assertNotSubString("Are you sure you want to delete", page);
     assertEquals(303, response.getStatus());
-    assertEquals("root", response.getHeader("Location"));
+    assertEquals("/root", response.getHeader("Location"));
     assertFalse(this.root.getPageCrawler().pageExists(PathParser.parse(this.level1Name)));
 
     List<?> children = this.root.getChildren();
@@ -70,7 +70,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     this.request.addInput("confirmed", "yes");
     Response response = this.responder.makeResponse(FitNesseUtil.makeTestContext(this.root), this.request);
     assertEquals(303, response.getStatus());
-    assertEquals("FrontPage", response.getHeader("Location"));
+    assertEquals("/FrontPage", response.getHeader("Location"));
   }
 
   @Override

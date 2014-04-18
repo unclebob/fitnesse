@@ -5,7 +5,7 @@ The Wiki Import feature is triggered by requesting a wiki page along with two pa
 
 e.g. !-http://localhost/ImportingPage?responder=import&remoteUrl=http://fitnesse.org/FitNesse-!
 
-The .FitNesse.SampleWiki page will be used by these tests.
+A wiki page structure is provided by the set up page.
 
 Create an importing page.
 !|Page creator.|
@@ -15,7 +15,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the !-SampleWiki-! page.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${FITNESSE_PORT}/FitNesse.SampleWiki|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:9123/SampleWiki|true|
 
 The above request will initiate a chunked response where all the imported pages are listed.
 !|Response Examiner|

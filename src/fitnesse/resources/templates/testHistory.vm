@@ -1,5 +1,4 @@
 #set($noHistory = true)
-<script src="/files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
 <div>
  <a class="button" href="?responder=overview">View as Overview</a>
  <a class="button" href="?responder=purgeHistory&days=30">Purge &gt; 30 days</a>

@@ -116,4 +116,23 @@ public class WikiTestPageTest {
     String html = testPage.getDecoratedData().getHtml();
     assertNotSubString("scenario library", html);
   }
+
+  @Test
+  public void shouldIncludeScenarioLibrariesIfIncludeVariableSetAndNotSlimTest() throws Exception {
+    WikiPage slimTestPage = addPage("SlimTest", "!define INCLUDE_SCENARIO_LIBRARIES {true}\n");
+    TestPage testPage = new WikiTestPage(slimTestPage);
+    addPage("ScenarioLibrary", "scenario library");
+    String html = testPage.getDecoratedData().getHtml();
+    assertSubString("scenario library", html);
+  }
+
+  @Test
+  public void shouldNotIncludeScenarioLibrariesIfSlimTestAndIncludeVariableSetToFalse() throws Exception {
+    WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n!define INCLUDE_SCENARIO_LIBRARIES {false}\n");
+    TestPage testPage = new WikiTestPage(slimTestPage);
+    addPage("ScenarioLibrary", "scenario library");
+    String html = testPage.getDecoratedData().getHtml();
+    assertNotSubString("scenario library", html);
+  }
+
 }

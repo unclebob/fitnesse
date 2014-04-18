@@ -103,5 +103,21 @@ public class SlimClientBuilderTest {
     }
   }
 
+  @Test
+  public void slimDefaultTimeoutIs10Seconds() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("slim.debug.timeout")).thenReturn("30");
+    assertEquals(10, new SlimClientBuilder(descriptor).determineTimeout());
+  }
+
+
+  @Test
+  public void slimDebugTimeoutIsUsedWhenExecutingWithDebugMode() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.isDebug()).thenReturn(true);
+    when(descriptor.getVariable("slim.debug.timeout")).thenReturn("30");
+    assertEquals(30, new SlimClientBuilder(descriptor).determineTimeout());
+  }
+
 
 }

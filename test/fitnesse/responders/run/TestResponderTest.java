@@ -473,20 +473,6 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testNotifyListeners() throws Exception {
-    MockTestEventListener listener1 = new MockTestEventListener();
-    MockTestEventListener listener2 = new MockTestEventListener();
-
-    TestResponder.registerListener(listener1);
-    TestResponder.registerListener(listener2);
-
-    doSimpleRun(passFixtureTable());
-
-    assertEquals(true, listener1.gotPreTestNotification);
-    assertEquals(true, listener2.gotPreTestNotification);
-  }
-
-  @Test
   public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
     WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));

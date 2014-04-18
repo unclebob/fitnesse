@@ -1,6 +1,0 @@
-!-FitNesse-! can be a good sister.  The sites that want to cross reference a !-FitNesse-! site simply invoke the following URL: {{{http://somefitnessesite.com/?names}}}This returns a list of all page names at the ''top level'' of the !-FitNesse-! site.  Note that it does not return any of the names of the subpages.
-
-!-FitNesse-! is a hierarchical wiki.  Most wikis are not hierarchical. The spec for SisterSites does not provide for hierarchy in a wiki.  It can't deal with the ''dots'' in the page names.
-
-If you think about it, a hierarchical wiki is just a tree structure of flat wikis.  That means that each level of the hierarchy can be a sister of some other wiki.  Thus, if one wiki wants to cross reference to the !-FrabDaz-! project on !-http://fitnesse.zapadoodle.com-! it might request the sister page names by invoking the following URL:{{{http://fitnesse.zpadoodle.com/Projects.FrabDaz?names}}}
-

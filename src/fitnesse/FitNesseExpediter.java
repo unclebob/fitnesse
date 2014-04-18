@@ -7,6 +7,7 @@ import fitnesse.http.HttpException;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import util.Clock;
 import util.StringUtil;
@@ -91,6 +92,7 @@ public class FitNesseExpediter implements ResponseSender {
 
   public Request makeRequest() {
     request = new Request(input);
+    request.setContextRoot(context.contextRoot);
     return request;
   }
 
@@ -104,8 +106,14 @@ public class FitNesseExpediter implements ResponseSender {
       parseThread.start();
 
       waitForRequest(request);
-      if (!hasError)
-        response = createGoodResponse(request);
+      if (!hasError) {
+        if (context.contextRoot.equals(request.getRequestUri() + "/")) {
+          response = new SimpleResponse();
+          response.redirect(context.contextRoot, "");
+        } else {
+          response = createGoodResponse(request);
+        }
+      }
     }
     catch (SocketException se) {
       throw se;

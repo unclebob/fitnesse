@@ -15,7 +15,6 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
-  public static ContentFilter contentFilter;
 
   private String user;
   private long ticketId;
@@ -40,21 +39,8 @@ public class SaveResponder implements SecureResponder {
       helpText = (String) request.getInput(EditResponder.HELP_TEXT);
       suites = (String) request.getInput(EditResponder.SUITES);
 
-      if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
-        return makeBannedContentResponse(context, resource);
-      else
-        return saveEdits(context, request, page);
+      return saveEdits(context, request, page);
     }
-  }
-
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) {
-    SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.pageFactory.newPage();
-    html.setTitle("Edit " + resource);
-    html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
-    html.setMainTemplate("bannedPage.vm");
-    response.setContent(html.html());
-    return response;
   }
 
   private Response saveEdits(FitNesseContext context, Request request, WikiPage page) {
@@ -65,9 +51,9 @@ public class SaveResponder implements SecureResponder {
     context.recentChanges.updateRecentChanges(data);
 
     if (request.hasInput("redirect"))
-      response.redirect(request.getInput("redirect").toString());                                
+      response.redirect("", request.getInput("redirect").toString());
     else
-      response.redirect(request.getResource());
+      response.redirect(context.contextRoot, request.getResource());
 
     return response;
   }

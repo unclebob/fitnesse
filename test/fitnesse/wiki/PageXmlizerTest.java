@@ -30,6 +30,7 @@ public class PageXmlizerTest {
     xmlizer = new PageXmlizer();
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
+    root.commit(root.getData());
   }
 
   @Test

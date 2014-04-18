@@ -55,7 +55,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root, new StubDescriptorFactory());
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root);
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
 
     runner.executeTestPages();
@@ -157,7 +157,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, new StubDescriptorFactory());
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
@@ -172,7 +172,7 @@ public class MultipleTestsRunnerTest {
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
     when(testingTracker.addStartedProcess(any(Stoppable.class))).thenReturn(stopId);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, new StubDescriptorFactory());
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
@@ -191,7 +191,7 @@ public class MultipleTestsRunnerTest {
 
   private MultipleTestsRunner newTestRunnerWithListener(TestSystemListener listener) {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem((List) asList(testPage), context.root, new StubDescriptorFactory());
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem((List) asList(testPage), context.root);
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
     runner.addTestSystemListener(listener);
     return runner;
@@ -211,14 +211,6 @@ public class MultipleTestsRunnerTest {
     }
     public boolean matches(Object descriptor) {
       return testSystemType.equals(((Descriptor) descriptor).getTestSystemType());
-    }
-  }
-
-  static private class StubDescriptorFactory implements PagesByTestSystem.DescriptorFactory {
-
-    @Override
-    public Descriptor create(WikiPage page) {
-      return new WikiPageDescriptor(page.getData(), false, false, "");
     }
   }
 

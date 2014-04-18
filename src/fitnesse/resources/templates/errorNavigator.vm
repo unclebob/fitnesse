@@ -1,4 +1,4 @@
-<div id="error-nav" class="error-nav-hidden">
+<div id="error-nav" class="hidden">
   <p id="error-nav-label">Failure Navigator</p>
   <div id="error-nav-controls">
   <button id="error-nav-prev"><</button>
@@ -12,7 +12,7 @@
   $(document).ready(
     function() {
       if ( $('span.fail, span.exception').length ){
-        $('#error-nav').toggleClass('error-nav-hidden');
+        $('#error-nav').toggleClass('hidden');
         initErrorMetadata();
       }
     }

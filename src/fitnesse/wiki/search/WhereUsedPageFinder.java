@@ -7,7 +7,6 @@ import fitnesse.wikitext.parser.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
@@ -35,30 +34,35 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       syntaxTree.walkPreOrder(this);
   }
 
-  public List<WikiPage> search(WikiPage page) {
+  public void search(WikiPage page) {
     hits.clear();
     page.getPageCrawler().traverse(this);
-    return hits;
   }
 
     public boolean visit(Symbol node) {
-        if (!node.isType(WikiWord.symbolType)) return true;
-        if (hits.contains(currentPage)) return true;
-        try {
-            WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
-            if (referencedPage != null && referencedPage.equals(subjectPage)) {
-              hits.add(currentPage);
-              observer.process(currentPage);
-            }
+      if (hits.contains(currentPage)) return true;
+      if (node.isType(WikiWord.symbolType)) {
+        WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
+        if (referencedPage != null && referencedPage.equals(subjectPage)) {
+          hits.add(currentPage);
+          observer.process(currentPage);
         }
-        catch (Exception e) {
-            LOG.log(Level.WARNING, "Can not complete 'WhereUsed' search", e);
-            throw new RuntimeException(e);
+      }
+      if (node.isType(Alias.symbolType)) {
+        String linkText = node.childAt(1).childAt(0).getContent();
+        if (linkText.contains("?")) {
+          linkText = linkText.substring(0, linkText.indexOf('?'));
         }
-        return true;
+        WikiPage referencedPage = new WikiWordReference(currentPage, linkText).getReferencedPage();
+        if (referencedPage != null && referencedPage.equals(subjectPage)) {
+          hits.add(currentPage);
+          observer.process(currentPage);
+        }
+      }
+      return true;
     }
 
     public boolean visitChildren(Symbol node) {
-        return true;
+      return true;
     }
 }

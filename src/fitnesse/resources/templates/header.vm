@@ -1,11 +1,11 @@
-<a href="/FrontPage" id="art_niche"><span>FitNesse</span></a>
+<a href="${contextRoot}FrontPage" id="art_niche"><span>FitNesse</span></a>
 
 <ul>
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)
- <li><a href="/$breadCrumb.Link">$breadCrumb.Name</a></li>
+ <li><a href="${contextRoot}$breadCrumb.Link">$breadCrumb.Name</a></li>
 #end
 </ul>
-<h1>#if($pageTitle.Link)<a href="/$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end</h1>
+<h1>#if($pageTitle.Link)<a href="${contextRoot}$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end</h1>
 
 #if($pageTitle.PageTags)<h5> $pageTitle.PageTags</h5>#end
 

@@ -1,13 +1,22 @@
 package fitnesse.junit;
 
 
-import fitnesse.reporting.JavaFormatter;
+import fitnesse.ContextConfigurator;
+import fitnesse.FitNesseContext;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
+import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesseMain.Arguments;
-import fitnesseMain.FitNesseMain;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
+import java.io.File;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -16,21 +25,21 @@ public class JUnitHelper {
 
   public static final String PAGE_TYPE_SUITE="suite";
   public static final String PAGE_TYPE_TEST="test";
+  private final String outputDir;
   private final String fitNesseRootPath;
-  private final String outputPath;
-  private final TestSystemListener resultListener;
-  private boolean debug = true;
+  private final TestSystemListener resultsListener;
   private int port = 0;
+  private boolean debugMode = true;
 
   public JUnitHelper(String fitNesseRootPath, String outputPath) {
     this(fitNesseRootPath, outputPath, new PrintTestListener());
   }
 
-  public JUnitHelper(String fitNesseRootPath, String outputPath,
-                     TestSystemListener listener) {
-    this.fitNesseRootPath = fitNesseRootPath;
-    this.outputPath = outputPath;
-    this.resultListener = listener;
+  public JUnitHelper(String fitNesseDir, String outputDir,
+                     TestSystemListener resultsListener) {
+    this.fitNesseRootPath = fitNesseDir;
+    this.outputDir = outputDir;
+    this.resultsListener = resultsListener;
   }
 
   public void setPort(int port) {
@@ -38,39 +47,73 @@ public class JUnitHelper {
   }
 
   public void setDebugMode(boolean enabled) {
-    debug = enabled;
+    debugMode = enabled;
   }
 
   public void assertTestPasses(String testName) throws Exception {
-    assertPasses(testName, PAGE_TYPE_TEST, null, null);
+    assertPasses(testName, PAGE_TYPE_TEST, null);
+  }
+
+  public void assertSuitePasses(String suiteName) throws Exception {
+    assertPasses(suiteName, PAGE_TYPE_SUITE, null);
+  }
+
+  public void assertSuitePasses(String suiteName, String suiteFilter) throws Exception {
+    assertPasses(suiteName, PAGE_TYPE_SUITE, suiteFilter);
   }
 
   public void assertSuitePasses(String suiteName, String suiteFilter, String excludeSuiteFilter) throws Exception {
     assertPasses(suiteName, PAGE_TYPE_SUITE, suiteFilter, excludeSuiteFilter);
   }
 
-  private void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception {
-    TestSummary summary = run(pageName, pageType, suiteFilter, excludeSuiteFilter);
+  public void assertPasses(String pageName, String pageType, String suiteFilter) throws Exception {
+    assertPasses(pageName, pageType, suiteFilter, null);
+  }
+
+  public void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception {
+    FitNesseContext context = FitNesseSuite.initContext(new File(ContextConfigurator.DEFAULT_CONFIG_FILE), fitNesseRootPath, ContextConfigurator.DEFAULT_ROOT, port);
+
+    JavaFormatter testFormatter = new JavaFormatter(pageName);
+    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
+
+    MultipleTestsRunner testRunner = createTestRunner(initChildren(pageName, suiteFilter, excludeSuiteFilter, context), context);
+    testRunner.addTestSystemListener(testFormatter);
+    testRunner.addTestSystemListener(resultsListener);
+
+    testRunner.executeTestPages();
+    TestSummary summary = testFormatter.getTotalSummary();
+
     assertEquals("wrong", 0, summary.wrong);
     assertEquals("exceptions", 0, summary.exceptions);
     assertTrue(msgAtLeastOneTest(pageName, summary), summary.right > 0);
   }
 
-  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
-    return MessageFormat.format("at least one test executed in {0}\n{1}",
-              pageName, summary.toString());
+  private List<WikiPage> initChildren(String suiteName, String suiteFilter, String excludeSuiteFilter, FitNesseContext context) {
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context);
+    if (!suiteRoot.getData().hasAttribute("Suite")) {
+      return Arrays.asList(suiteRoot);
+    }
+    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
-  private TestSummary run(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception{
-    JavaFormatter testFormatter=JavaFormatter.getInstance(pageName);
-    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath));
-    testFormatter.setListener(resultListener);
-    Arguments arguments=new Arguments("-e", "0",
-            "-o",
-            "-p", String.valueOf(port),
-            "-d", fitNesseRootPath,
-            "-c", new CommandBuilder(pageName, pageType).withSuiteFilter(suiteFilter).withExcludeSuiteFilter(excludeSuiteFilter).withDebug(debug).build());
-    new FitNesseMain().launchFitNesse(arguments);
-    return testFormatter.getTotalSummary();
+
+  private WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
+    WikiPagePath path = PathParser.parse(suiteName);
+    PageCrawler crawler = context.root.getPageCrawler();
+    return crawler.getPage(path);
+  }
+
+  private MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context) {
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
+
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    runner.setRunInProcess(debugMode);
+    return runner;
+  }
+
+  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
+    return
+      MessageFormat.format("at least one test executed in {0}\n{1}",
+        pageName, summary.toString());
   }
 }

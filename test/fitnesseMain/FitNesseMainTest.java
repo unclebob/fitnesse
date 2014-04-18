@@ -51,7 +51,7 @@ public class FitNesseMainTest {
     when(fitnesse.start()).thenReturn(true);
     int exitCode = new FitNesseMain().launch(context);
     assertThat(exitCode, is(0));
-    verify(fitnesse, times(1)).start();
+    verify(fitnesse, never()).start();
     verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
   }
@@ -116,7 +116,7 @@ public class FitNesseMainTest {
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setErr(new PrintStream(outputBytes));
     Arguments arguments = new Arguments(args);
-    int exitCode = new FitNesseMain().launchFitNesse(arguments);
+    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
     System.setErr(err);
     String response = outputBytes.toString();

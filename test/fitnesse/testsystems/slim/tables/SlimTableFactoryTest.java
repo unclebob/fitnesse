@@ -28,11 +28,14 @@ public class SlimTableFactoryTest {
     map.put("dt:", DecisionTable.class);
     map.put("dT:", DecisionTable.class);
     map.put("decision:", DecisionTable.class);
+    map.put("ddt:", DynamicDecisionTable.class);
+    map.put("dynamic decision:", DynamicDecisionTable.class);
     map.put("ordered query:", OrderedQueryTable.class);
     map.put("subset query:", SubsetQueryTable.class);
     map.put("query:", QueryTable.class);
     map.put("table:", TableTable.class);
     map.put("script", ScriptTable.class);
+    map.put("script:", ScriptTable.class);
     map.put("scenario", ScenarioTable.class);
     map.put("import", ImportTable.class);
     map.put("something", DecisionTable.class);
@@ -81,6 +84,8 @@ public class SlimTableFactoryTest {
     assertThatTableTypeImportWorks("Colon is okay too", "as:Table", "Colon is okay too", TableTable.class);
 
     assertThatTableTypeImportWorks("", "", "This should be default", DecisionTable.class);
+
+    assertThatTableTypeImportWorks("My script table", "Script", "My script Table", ScriptTable.class);
   }
 
   @Test

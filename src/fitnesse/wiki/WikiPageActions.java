@@ -1,6 +1,7 @@
 package fitnesse.wiki;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 import fitnesse.responders.editing.TemplateUtil;
@@ -33,10 +34,18 @@ public class WikiPageActions {
 
   public Map<String, String> getNewPageTemplates() {
     if (isWithEdit()) {
-      return TemplateUtil.getTemplatePageMap(page);
+      Map<String, String> templates = TemplateUtil.getTemplatePageMap(page);
+      for (Iterator<String> iter = templates.keySet().iterator(); iter.hasNext(); ) {
+        String name = iter.next();
+        if (!name.endsWith("Page")) {
+          iter.remove();
+        }
+      }
+      return templates;
     }
     return Collections.emptyMap();
   }
+  
   public boolean isWithProperties() {
     return hasAction("Properties");
   }
@@ -71,7 +80,7 @@ public class WikiPageActions {
 
   public boolean isImported() {
     PageData data = getData();
-    return data != null && WikiImportProperty.isImported(data);
+    return data != null && WikiImportProperty.isImportedSubWiki(data);
   }
 
   private boolean hasAction(String action) {

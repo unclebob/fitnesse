@@ -18,8 +18,7 @@ public abstract class Response {
     XML("text/xml"),
     HTML("text/html; charset=utf-8"),
     TEXT("text/text"),
-    JSON("text/json"),
-    JAVA("java");
+    JSON("text/json");
     
     private final String contentType;
     
@@ -57,8 +56,6 @@ public abstract class Response {
       format = Format.XML;
     } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
-    } else if ("java".equalsIgnoreCase(formatString)){
-      format = Format.JAVA;
     } else {
       format = Format.HTML;
     }
@@ -82,10 +79,6 @@ public abstract class Response {
     return Format.TEXT.contentType.equals(contentType);
   }
   
-  public boolean isJavaFormat(){
-    return Format.JAVA.contentType.equals(contentType);
-  }
-
   public boolean hasContent() {
     return contentType != null;
   }
@@ -138,9 +131,9 @@ public abstract class Response {
     contentType = format.getContentType();
   }
 
-  public void redirect(String location) {
+  public void redirect(String contextRoot, String location) {
     status = 303;
-    addHeader("Location", location);
+    addHeader("Location", contextRoot + location);
   }
 
   public void notModified(Date lastModified, Date date) {

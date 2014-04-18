@@ -15,13 +15,12 @@ public class InProcessFitClientBuilder extends FitClientBuilder {
 
   @Override
   public CommandRunningFitClient build() {
-    String testRunner = descriptor.getTestRunner();
+    String testRunner = getTestRunner();
 
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
             new CommandRunningFitClient.InProcessCommandRunner(testRunner);
 
     return buildFitClient(runningStrategy);
   }
-
 
 }

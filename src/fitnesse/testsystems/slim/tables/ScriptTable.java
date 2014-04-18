@@ -163,11 +163,13 @@ public class ScriptTable extends SlimTable {
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     if (scenario != null) {
+      scenario.setCustomComparatorRegistry(customComparatorRegistry);
       String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
       assertions.addAll(scenario.call(args, this, row));
     } else if (lastCol == 0) {
       String firstNameCell = table.getCellContents(0, row);
       for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
+        s.setCustomComparatorRegistry(customComparatorRegistry);
         String[] args = s.matchParameters(firstNameCell);
         if (args != null) {
           assertions.addAll(s.call(args, this, row));
@@ -240,7 +242,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
+  protected String getActionNameStartingAt(int startingCol, int endingCol, int row) {
     StringBuffer actionName = new StringBuffer();
     actionName.append(table.getCellContents(startingCol, row));
     int actionNameCol = startingCol + 2;
@@ -253,7 +255,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // Adds extra assertions to the "assertions" list!
-  private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row, List<SlimAssertion> assertions) {
+  protected String[] getArgumentsStartingAt(int startingCol, int endingCol, int row, List<SlimAssertion> assertions) {
     ArgumentExtractor extractor = new ArgumentExtractor(startingCol, endingCol, row);
     while (extractor.hasMoreToExtract()) {
       assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION,
@@ -263,7 +265,7 @@ public class ScriptTable extends SlimTable {
     return extractor.getArguments();
   }
 
-  private boolean invokesSequentialArgumentProcessing(String cellContents) {
+  protected boolean invokesSequentialArgumentProcessing(String cellContents) {
     return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
 

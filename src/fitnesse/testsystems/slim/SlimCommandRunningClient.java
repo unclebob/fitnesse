@@ -32,6 +32,7 @@ public class SlimCommandRunningClient implements SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
 
   private final CommandRunner slimRunner;
+  private final int connectionTimeout;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -41,10 +42,15 @@ public class SlimCommandRunningClient implements SlimClient {
   private int port;
 
 
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout) {
     this.slimRunner = slimRunner;
-    this.port = port;
     this.hostName = hostName;
+    this.port = port;
+    this.connectionTimeout = connectionTimeout;
+  }
+
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
+    this(slimRunner, hostName, port, 10);
   }
 
   @Override
@@ -78,7 +84,10 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public void connect() throws IOException {
-    client = tryConnect(200);
+    int maxTries = connectionTimeout * 20; // wait time is 50 ms
+    while (client == null) {
+      client = tryConnect(maxTries--);
+    }
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersionMessage = reader.readLine();
@@ -107,7 +116,7 @@ public class SlimCommandRunningClient implements SlimClient {
         } catch (InterruptedException i) {
           throw new SlimError("Wait for connection interrupted.");
         }
-        return tryConnect(maxTries - 1);
+        return null;
       }
     }
   }

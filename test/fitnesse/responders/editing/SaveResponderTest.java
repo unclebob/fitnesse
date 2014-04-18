@@ -26,7 +26,7 @@ public class SaveResponderTest {
   private WikiPage root;
   private Response response;
   public MockRequest request;
-  public Responder responder;
+  public SaveResponder responder;
 
   @Before
   public void setUp() throws Exception {
@@ -34,13 +34,7 @@ public class SaveResponderTest {
     FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = new SaveResponder();
-    SaveResponder.contentFilter = null;
     SaveRecorder.clear();
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    SaveResponder.contentFilter = null;
   }
 
   @Test
@@ -50,7 +44,7 @@ public class SaveResponderTest {
 
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertEquals(303, response.getStatus());
-    assertHasRegexp("Location: ChildPage", response.makeHttpHeaders());
+    assertHasRegexp("Location: /ChildPage", response.makeHttpHeaders());
 
     String newContent = root.getChildPage("ChildPage").getData().getContent();
     assertEquals("some new content", newContent);
@@ -155,23 +149,6 @@ public class SaveResponderTest {
 
     String user = root.getChildPage("EditPage").getData().getAttribute(PageData.LAST_MODIFYING_USER);
     assertEquals("Aladdin", user);
-  }
-
-  @Test
-  public void testContentFilter() throws Exception {
-    SaveResponder.contentFilter = new ContentFilter() {
-      public boolean isContentAcceptable(String content, String page) {
-        return false;
-      }
-    };
-    WikiPageUtil.addPage(root, PathParser.parse("ChildPage"));
-    prepareRequest("ChildPage");
-
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-    assertEquals(200, response.getStatus());
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    assertSubString("Your changes will not be saved!", sender.sentData());
   }
 
   private void createAndSaveANewPage(String pageName) throws Exception {

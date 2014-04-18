@@ -8,12 +8,14 @@
  });
 //--></script>
 
+## The error navigator is also hidden until page is complete.
+<div id="error-nav" class="hidden navbar-right">
+ <span class="title">Failure Navigator</span>
+ <div class="btn-group">
+  <button id="error-nav-prev" class="btn btn-default">&laquo;</button>
+  <span class="btn-text"><input id="error-nav-text" type="text" size="3"> of <span id="error-nav-max"></span></span>
+  <button id="error-nav-next" class="btn btn-default">&raquo;</button>
+ </div>
+</div>
 <span id="test-action"></span>
 
-## The error navigator is also hidden until page is complete.
-<div id="error-nav" class="error-nav-hidden navbar-right">
- Failure Navigator
- <button id="error-nav-prev">&laquo;</button>
- <input id="error-nav-text" type="text" size="3"> of <span id="error-nav-max"></span>
- <button id="error-nav-next">&raquo;</button>
-</div>

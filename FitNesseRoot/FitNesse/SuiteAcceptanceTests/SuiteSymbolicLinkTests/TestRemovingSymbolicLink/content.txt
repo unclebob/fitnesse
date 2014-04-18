@@ -22,7 +22,7 @@ Now click the '''remove''' link.
 This should remove the symbolic link and redirect back to the properties view.
 !|Response Examiner.                                          |
 |type    |pattern                          |matches?|contents?|
-|contents|Location: LinkingPage\?properties|true    |         |
+|contents|Location: /LinkingPage\?properties|true    |         |
 
 When we look at the properties page again, the symbolic link will no longer be listed.
 !|Response Requester.                    |

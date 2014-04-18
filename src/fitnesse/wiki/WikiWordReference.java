@@ -15,13 +15,13 @@ public class WikiWordReference {
         this.wikiWord = wikiWord;
     }
 
-    public WikiPage getReferencedPage() throws Exception {
+    public WikiPage getReferencedPage() {
         String theWord = expandPrefix(wikiWord);
         WikiPage parentPage = currentPage.getParent();
         return parentPage.getPageCrawler().getPage(PathParser.parse(theWord));
     }
     
-    private String expandPrefix(String theWord) throws Exception {
+    private String expandPrefix(String theWord) {
       PageCrawler crawler = currentPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = currentPage.getName();
@@ -42,7 +42,7 @@ public class WikiWordReference {
       return theWord;
     }
 
-    public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
+    public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
       WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
       String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
@@ -62,7 +62,7 @@ public class WikiWordReference {
       }
     }
 
-    private String getQualifiedWikiWord(String wikiWordText) throws Exception {
+    private String getQualifiedWikiWord(String wikiWordText) {
       String pathName = expandPrefix(wikiWordText);
       WikiPagePath expandedPath = PathParser.parse(pathName);
       if (expandedPath == null)
