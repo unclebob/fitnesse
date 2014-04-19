@@ -54,8 +54,8 @@ public class QueryTableTest extends QueryTableTestBase {
     evaluateResults(pseudoResults, "[" +
         headRow +
         "[x, n, 2n], " +
-        "[pass(1), pass(3), fail(a=5;e=6)], " +
-        "[fail(e=1;missing), 2, 4]" +
+        "[fail(e=1;missing), 2, 4], " +
+        "[pass(1), pass(3), fail(a=5;e=6)]" +
         "]");
   }
 }
