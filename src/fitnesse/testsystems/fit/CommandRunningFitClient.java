@@ -16,6 +16,7 @@ import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.CommandRunnerExecutionLog;
 import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.MockCommandRunner;
+import util.StringUtil;
 
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
@@ -109,20 +110,20 @@ public class CommandRunningFitClient extends FitClient {
   /** Runs commands by starting a new process. */
   public static class OutOfProcessCommandRunner implements CommandRunningStrategy {
 
-    private final String command;
+    private final String[] command;
     private final Map<String, String> environmentVariables;
     private Thread timeoutThread;
     private Thread earlyTerminationThread;
     private CommandRunner commandRunner;
 
-    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables) {
+    public OutOfProcessCommandRunner(String[] command, Map<String, String> environmentVariables) {
       this.command = command;
       this.environmentVariables = environmentVariables;
     }
 
     private void makeCommandRunner(int port, int ticketNumber) {
-      String fitArguments = getLocalhostName() + SPACE + port + SPACE + ticketNumber;
-      String commandLine = command + SPACE + fitArguments;
+      String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
+      String[] commandLine = StringUtil.combineArrays(command, fitArguments);
       this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
     }
 

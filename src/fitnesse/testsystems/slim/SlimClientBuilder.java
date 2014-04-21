@@ -14,6 +14,9 @@ import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
+import util.StringUtil;
+
+import static util.StringUtil.combineArrays;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -48,16 +51,18 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return "fitnesse.slim.SlimService";
   }
 
-  protected String buildCommand() {
-    String slimArguments = buildArguments();
-    String slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
-    return String.format("%s %s", slimCommandPrefix, slimArguments);
+  protected String[] buildCommand() {
+    String[] slimArguments = buildArguments();
+    String[] slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
+    return combineArrays(slimCommandPrefix, slimArguments);
   }
 
-  protected String buildArguments() {
+  protected String[] buildArguments() {
     int slimSocket = getSlimPort();
     String slimFlags = getSlimFlags();
-    return String.format("%s %d", slimFlags, slimSocket);
+    if ("".equals(slimFlags))
+      return new String[] { Integer.toString(slimSocket) };
+    return new String[] { slimFlags, Integer.toString(slimSocket) };
   }
 
   public int getSlimPort() {

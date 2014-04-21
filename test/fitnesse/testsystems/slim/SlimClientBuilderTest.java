@@ -96,7 +96,7 @@ public class SlimClientBuilderTest {
     ServerSocket slimSocket = SocketFactory.tryCreateServerSocket(slimServerPort);
     try {
       InProcessSlimClientBuilder sys = new InProcessSlimClientBuilder(descriptor);
-      String slimArguments = String.format("%s %d", "", slimServerPort);
+      String[] slimArguments = new String[] { Integer.toString(slimServerPort) };
       sys.createSlimService(slimArguments);
     } finally {
       slimSocket.close();

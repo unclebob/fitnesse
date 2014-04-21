@@ -9,11 +9,18 @@ import fitnesse.wiki.ReadOnlyPageData;
 
 public abstract class ClientBuilder<T> {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String DEFAULT_COMMAND_PATTERN = javaExecutable() +
-          " -cp " + fitnesseJar(System.getProperty("java.class.path")) +
-                  System.getProperty("path.separator") +
-                  "%p %m";
-  public static final String DEFAULT_JAVA_DEBUG_COMMAND = javaExecutable() + " -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
+  public static final String[] DEFAULT_COMMAND_PATTERN = {
+          javaExecutable(),
+          "-cp",
+          fitnesseJar(System.getProperty("java.class.path")) + System.getProperty("path.separator") + "%p",
+          "%m" };
+  public static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
+          javaExecutable(),
+          "-Xdebug",
+          "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000",
+          "-cp",
+          "%p",
+          "%m"};
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
@@ -27,9 +34,12 @@ public abstract class ClientBuilder<T> {
     this.descriptor = descriptor;
   }
 
-  protected String buildCommand(String commandPattern, String testRunner, String classPath) {
-    String command = replace(commandPattern, "%p", classPath);
-    command = replace(command, "%m", testRunner);
+  protected String[] buildCommand(String[] commandPattern, String testRunner, String classPath) {
+    String[] command = new String[commandPattern.length];
+    for (int i = 0; i < commandPattern.length; i++) {
+      command[i] = replace(commandPattern[i], "%p", classPath);
+      command[i] = replace(command[i], "%m", testRunner);
+    }
     return command;
   }
 
@@ -67,30 +77,34 @@ public abstract class ClientBuilder<T> {
       return getTestRunnerNormal();
   }
 
-  private String getRemoteDebugCommandPattern() {
+  private String[] getRemoteDebugCommandPattern() {
     String testRunner = getVariable(REMOTE_DEBUG_COMMAND);
-    if (testRunner == null) {
-      testRunner = getVariable(COMMAND_PATTERN);
-      if (testRunner == null || testRunner.toLowerCase().contains("java")) {
-        testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
-      }
+    if (testRunner != null)
+      return parseCommandLine(testRunner);
+    testRunner = getVariable(COMMAND_PATTERN);
+    if (testRunner == null || testRunner.toLowerCase().contains("java")) {
+      return DEFAULT_JAVA_DEBUG_COMMAND;
     }
-    return testRunner;
+    return parseCommandLine(testRunner);
   }
 
 
-  public String getCommandPattern() {
+  public String[] getCommandPattern() {
     if (isDebug())
       return getRemoteDebugCommandPattern();
     else
       return getNormalCommandPattern();
   }
 
-  private String getNormalCommandPattern() {
+  private String[] getNormalCommandPattern() {
     String testRunner = getVariable(COMMAND_PATTERN);
-    if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
-    return testRunner;
+    if (testRunner != null)
+      return parseCommandLine(testRunner);
+    return DEFAULT_COMMAND_PATTERN;
+  }
+
+  private String[] parseCommandLine(String commandLine) {
+    return commandLine.split(" ");
   }
 
   public Map<String, String> createClasspathEnvironment(String classPath) {
