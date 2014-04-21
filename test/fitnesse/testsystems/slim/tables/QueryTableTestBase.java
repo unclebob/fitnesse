@@ -79,8 +79,7 @@ public abstract class QueryTableTestBase {
             list("queryTable_id_1", "blah"),
             list("queryTable_id_2", queryResults)
     ));
-    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(table, qt.getTable().toString());
+    evaluateResults(pseudoResults, table);
   }
 
   @Test
@@ -349,14 +348,16 @@ public abstract class QueryTableTestBase {
                     )
             )
     );
+    evaluateResults(pseudoResults, "[" +
+      headRow +
+      "[n, 2n], " +
+      "[fail(e=3;missing), $V->[5]]" +
+      "]");
+  }
+
+  protected void evaluateResults(Map<String, Object> pseudoResults, String expectedTable) {
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(
-      "[" +
-        headRow +
-        "[n, 2n], " +
-        "[fail(e=3;missing), $V->[5]]" +
-        "]", qt.getTable().toString()
-    );
+    org.junit.Assert.assertEquals(expectedTable, qt.getTable().toString());
   }
 
   @Test
