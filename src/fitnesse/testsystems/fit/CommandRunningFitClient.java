@@ -18,6 +18,8 @@ import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.MockCommandRunner;
 import util.StringUtil;
 
+import static util.StringUtil.combineArrays;
+
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
   public static int TIMEOUT = 60000;
@@ -123,7 +125,7 @@ public class CommandRunningFitClient extends FitClient {
 
     private void makeCommandRunner(int port, int ticketNumber) {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
-      String[] commandLine = StringUtil.combineArrays(command, fitArguments);
+      String[] commandLine = combineArrays(command, fitArguments);
       this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
     }
 
