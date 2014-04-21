@@ -10,7 +10,7 @@ public class FitNesseSuiteArgumentsTest {
 
   @Test
   public void argumentsAreParsedCorrectly() throws InitializationError{
-	System.setProperty("fitnesse.root.dir.parent", ".");
+	  System.setProperty("fitnesse.root.dir.parent", ".");
     assertEquals(".", FitNesseSuite.getFitnesseDir(FitNesseSuiteExampleTest.class));
     assertEquals(new File(System.getProperty("fitnesse.root.dir.parent")).getAbsolutePath(), FitNesseSuite.getFitnesseDir(FitNesseSuiteExampleFromPropertiesTest.class));
     assertEquals("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", FitNesseSuite.getSuiteName(FitNesseSuiteExampleTest.class));
