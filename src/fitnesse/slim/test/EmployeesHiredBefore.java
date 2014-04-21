@@ -24,12 +24,14 @@ public class EmployeesHiredBefore {
     return
             ListUtility.<Object>list(
                     list(
+                            list("company number", "4808147"),
                             list("employee number", "1429"),
                             list("first name", "Bob"),
                             list("last name", "Martin"),
                             list("hire date", "10-Oct-1974")
                     ),
                     list(
+                            list("company number", "5123122"),
                             list("employee number", "8832"),
                             list("first name", "James"),
                             list("last name", "Grenning"),
