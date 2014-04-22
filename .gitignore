@@ -39,3 +39,4 @@ FitNesseRoot/files/javascript/jsunit/*
 junk/*
 fitserverSentinel*
 tmp/*
+/classes

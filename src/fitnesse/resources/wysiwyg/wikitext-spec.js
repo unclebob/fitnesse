@@ -14,10 +14,6 @@ describe("parser and formatter", function () {
 
         contentDocument = editor.contentDocument;
         contentBody = contentDocument.getElementsByTagName("body")[0];
-
-        // Ensure the wysiwyg editor is visible
-
-        $('#editor-wysiwyg-1').focus();
     });
 
     function fragment() {

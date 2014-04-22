@@ -242,7 +242,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
+  protected String getActionNameStartingAt(int startingCol, int endingCol, int row) {
     StringBuffer actionName = new StringBuffer();
     actionName.append(table.getCellContents(startingCol, row));
     int actionNameCol = startingCol + 2;
@@ -255,7 +255,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // Adds extra assertions to the "assertions" list!
-  private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row, List<SlimAssertion> assertions) {
+  protected String[] getArgumentsStartingAt(int startingCol, int endingCol, int row, List<SlimAssertion> assertions) {
     ArgumentExtractor extractor = new ArgumentExtractor(startingCol, endingCol, row);
     while (extractor.hasMoreToExtract()) {
       assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION,
@@ -265,7 +265,7 @@ public class ScriptTable extends SlimTable {
     return extractor.getArguments();
   }
 
-  private boolean invokesSequentialArgumentProcessing(String cellContents) {
+  protected boolean invokesSequentialArgumentProcessing(String cellContents) {
     return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
 

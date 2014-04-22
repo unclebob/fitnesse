@@ -176,7 +176,7 @@ public class ScenarioTable extends SlimTable {
     return assertions;
   }
 
-  protected ScriptTable createChild(ScenarioTestContext testContext, Table newTable) {
+  protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
     ScriptTable scriptTable = new ScriptTable(newTable, id, testContext);
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;

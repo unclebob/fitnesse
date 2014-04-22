@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -9,6 +10,7 @@ import fitnesse.junit.FitNesseSuite.OutputDir;
 import fitnesse.junit.FitNesseSuite.ConfigFile;
 
 
+@Ignore
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
 @FitnesseDir(systemProperty = "fitnesse.root.dir.parent")
