@@ -42,7 +42,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   private HashSet<WikiPagePath> pageCatalog;
   private boolean shouldDeleteOrphans = true;
   private WikiPagePath contextPath;
-  private boolean autoUpdateSetting;
+  private boolean autoUpdateSetting = true;
   private Exception caughtException;
 
   public WikiImporter() {
