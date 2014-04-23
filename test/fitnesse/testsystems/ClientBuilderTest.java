@@ -2,6 +2,7 @@ package fitnesse.testsystems;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.wiki.ClassPathBuilder;
@@ -13,6 +14,7 @@ import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import util.StringUtil;
 
 import static fitnesse.testsystems.ClientBuilder.replace;
 import static org.junit.Assert.assertEquals;
@@ -128,7 +130,7 @@ public class ClientBuilderTest {
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder.getCommandPattern());
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", join(clientBuilder.getCommandPattern()));
 
   }
 
@@ -138,7 +140,7 @@ public class ClientBuilderTest {
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", clientBuilder.getCommandPattern());
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", join(clientBuilder.getCommandPattern()));
   }
 
   @Test
@@ -149,7 +151,7 @@ public class ClientBuilderTest {
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
     String sep = System.getProperty("path.separator");
-    String prefix = clientBuilder.getCommandPattern();
+    String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
     assertTrue(prefix.contains(" -cp fitnesse.jar" + sep + "%p %m"));
   }
@@ -160,7 +162,7 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, true, getClassPath(page));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String prefix = clientBuilder.getCommandPattern();
+    String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
     assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m"));
   }
@@ -173,7 +175,7 @@ public class ClientBuilderTest {
 
     Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    assertEquals("java -specialParam -cp %p %m", clientBuilder.getCommandPattern());
+    assertEquals("java -specialParam -cp %p %m", join(clientBuilder.getCommandPattern()));
 
   }
 
@@ -185,7 +187,7 @@ public class ClientBuilderTest {
 
     Descriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, true, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    assertEquals("java -remoteDebug -cp %p %m", clientBuilder.getCommandPattern());
+    assertEquals("java -remoteDebug -cp %p %m", join(clientBuilder.getCommandPattern()));
   }
 
   @Test
@@ -195,7 +197,7 @@ public class ClientBuilderTest {
     WikiPage specifiedPage = makeTestPage(specifiedPageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    assertEquals("rubyslim %p %m", clientBuilder.getCommandPattern());
+    assertEquals("rubyslim %p %m", join(clientBuilder.getCommandPattern()));
   }
 
   @Test
@@ -271,6 +273,10 @@ public class ClientBuilderTest {
   private WikiPage makeTestPage(String pageText) {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     return WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageText);
+  }
+
+  private String join(String[] args) {
+    return StringUtil.join(Arrays.asList(args), " ");
   }
 
   public static class MockClientBuilder extends ClientBuilder<MockClient> {

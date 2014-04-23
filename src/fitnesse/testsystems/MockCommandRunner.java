@@ -6,10 +6,10 @@ import java.io.IOException;
 
 public class MockCommandRunner extends CommandRunner {
   public MockCommandRunner() {
-    super("", "", null, 2);
+    super(new String[] {""}, "", null, 2);
   }
 
-  public MockCommandRunner(String command, int exitCode) {
+  public MockCommandRunner(String[] command, int exitCode) {
     super(command, "", exitCode);
   }
 

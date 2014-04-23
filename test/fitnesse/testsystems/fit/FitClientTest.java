@@ -28,7 +28,7 @@ public class FitClientTest implements FitClientListener {
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(
-        "java -cp classes fit.FitServer -v", null));
+        new String[] { "java", "-cp", "classes", "fit.FitServer", "-v" }, null));
     client.addFitClientListener(this);
   }
 
@@ -72,7 +72,7 @@ public class FitClientTest implements FitClientListener {
 
   @Test
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java -Duser.country=US -Duser.language=en blah", null));
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "-Duser.country=US", "-Duser.language=en", "blah" }, null));
     client.addFitClientListener(this);
     client.start();
     Thread.sleep(100);
@@ -85,7 +85,7 @@ public class FitClientTest implements FitClientListener {
   public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner("java blah", null));
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "blah" }, null));
     client.addFitClientListener(this);
     client.start();
     Thread.sleep(50);

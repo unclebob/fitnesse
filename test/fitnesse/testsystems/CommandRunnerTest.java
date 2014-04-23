@@ -12,7 +12,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!", null);
+    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "./classes", "fitnesse.testutil.Echo" }, "echo this!", null);
     runner.run();
     assertHasRegexp("echo this!", runner.getOutput());
     assertEquals("", runner.getError());
@@ -22,7 +22,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testClassNotFound() throws Exception {
-    CommandRunner runner = new CommandRunner("java -Duser.country=US -Duser.language=en BadClass", "", null);
+    CommandRunner runner = new CommandRunner(new String[] {  "java", "-Duser.country=US", "-Duser.language=en", "BadClass" }, "", null);
     runner.run();
     assertHasRegexp("Error", runner.getError());
     assertEquals("", runner.getOutput());
