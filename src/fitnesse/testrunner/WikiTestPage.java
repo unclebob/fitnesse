@@ -129,8 +129,13 @@ public class WikiTestPage implements TestPage {
     return sourcePage.getName();
   }
 
-  public boolean isSlim() {
-    return "slim".equalsIgnoreCase(getData().getVariable("TEST_SYSTEM"));
+  public boolean shouldIncludeScenarioLibraries() {
+    boolean isSlim = "slim".equalsIgnoreCase(getData().getVariable(WikiPageIdentity.TEST_SYSTEM));
+    String includeScenarioLibraries = getData().getVariable("INCLUDE_SCENARIO_LIBRARIES");
+    boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
+    boolean notIncludeScenarios = "false".equalsIgnoreCase(includeScenarioLibraries);
+
+    return includeScenarios || (!notIncludeScenarios && isSlim);
   }
 
   public boolean isTestPage() {
@@ -168,7 +173,7 @@ public class WikiTestPage implements TestPage {
 
   private List<WikiPage> findScenarioLibraries() {
     final LinkedList<WikiPage> uncles = new LinkedList<WikiPage>();
-    if (isSlim()) {
+    if (shouldIncludeScenarioLibraries()) {
       sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
         @Override
         public void process(WikiPage page) {

@@ -40,7 +40,7 @@ public class CompositeExecutionLogTest {
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
     context = FitNesseUtil.makeTestContext(root);
-    runner = new MockCommandRunner("some command", 123);
+    runner = new MockCommandRunner(new String[] { "some", "command" }, 123);
     log = new CompositeExecutionLog(testPage);
   }
 

@@ -1,12 +1,34 @@
-!2 Edge
+!2 2014-04-18
+ * Introduced new logo.
+ * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
+ * Add ''script:'' prefix. Script tables can be defined as ''script:Fixture name''.
+ * Wiki server is no longer started when !-FitNesse-! is started with ''-c'' option.
+ * !-FitNesseRoot-! location can be changed in JUnit !-FitNesseSuite-! annotation.
+ * Comment columns for slim decision and query tables.
+ * Shortcut keys (press ''?'').
+ * Configurable [[Context root][.FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile]].
+ * Updated the .FitNesse.UserGuide structure.
+ * Improved Where Used feature in the Tools menu.
+ * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses.
+ * Properties ''slim.timeout'' and ''slim.debug.timeout'' can be used to configure timeouts (start up and finish) for SLIM test runs.
+ * The rich text editor is now an in-page editor (does not use an iframe anymore).
+ * Can auto-format on save when editing a page in plain text mode.
+ * Issues fixed:
+   * ''Add'' menu should only show templates ending on ''-Page.''
+   * Missing stylesheets added to JUnit test results.
+   * Fix representation issue with ignored field in SLim !-TableTable.-!
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed.
+
+!2 2014-02-01
  * '''Files outside the http://files section can no longer be accessed!'''
  * Updated bootstrap theme to bootstrap 3.
  * Added hooks to add custom test systems.
  * Pages can now be defined in a .TemplateLibrary. You can add your own page scaffolding.
  * java.util.logging is now used for logging, instead of System.out/err.
- * support for more content types (in particular image types).
+ * Support for more content types (in particular image types).
  * Cleanup: removed packages fitnesse.runner, fitnesse.schedule.
- * Refactoring: the code is a little more modular than before.
+ * Refactoring: the code is a more modular than before. This makes it easier to integrate !-FitNesse-! components in other applications.
  * Make Fit test runner no longer dependent on the wiki running: now the Fit test system starts it's own "socket catcher".
  * The jUnit test running is starting a test runner by itself. It's no longer using !-FitNesseMain-!.
  * Slim server can be kept running after test execution (-d option).
@@ -17,6 +39,8 @@
    * Bug in Fit that caused flow mode for !-FitLibrary's-! !-DoFixture-! to break.
    * Bug where external HTML page suites were not displayed.
    * Hash map rendering in rich text editor.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?direction=desc&milestone=4&page=1&sort=updated&state=closed.
 
 !2 2013-11-10
  * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.

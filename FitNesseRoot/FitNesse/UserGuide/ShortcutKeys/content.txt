@@ -1,6 +1,0 @@
-Some of the buttons on the wiki page have shortcut keys.  These may or may not work in your browser!
-|'''Edit'''|''ALT-e''|
-|'''Properties'''|''ALT-p''|
-|'''Test'''|''ALT-t''|
-|'''Search'''|''ALT-s''|
-|'''Versions'''|''ALT-v''|

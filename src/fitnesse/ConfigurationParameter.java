@@ -35,7 +35,8 @@ public enum ConfigurationParameter {
   CONTENT_FILTER("ContentFilter"),
   VERSIONS_CONTROLLER_CLASS("VersionsController"),
   VERSIONS_CONTROLLER_DAYS("VersionsController.days"),
-  RECENT_CHANGES_CLASS("RecentChanges");
+  RECENT_CHANGES_CLASS("RecentChanges"),
+  CONTEXT_ROOT("ContextRoot");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 
@@ -49,12 +50,12 @@ public enum ConfigurationParameter {
     return name;
   }
 
-  public static Properties makeProperties(Properties parentProperties, Object... keyValuePairs) {
+  public static Properties makeProperties(Object... keyValuePairs) {
     if (keyValuePairs.length % 2 != 0) {
       throw new IllegalArgumentException("Number of arguments should be even (name, value)");
     }
 
-    Properties properties = new Properties(parentProperties);
+    Properties properties = new Properties();
     for (int i = 0; i < keyValuePairs.length; i += 2) {
       String key = keyValuePairs[i] instanceof ConfigurationParameter ? ((ConfigurationParameter) keyValuePairs[i]).getKey() : keyValuePairs[i].toString();
       String value = keyValuePairs[i+1].toString();
@@ -63,13 +64,9 @@ public enum ConfigurationParameter {
     return properties;
   }
 
-  public static Properties makeProperties(Object... keyValuePairs) {
-    return makeProperties(null, keyValuePairs);
-  }
-
-  public static Properties makeProperties(Properties parentProperties, File propertiesFile) {
+  public static Properties loadProperties(File propertiesFile) {
     FileInputStream propertiesStream = null;
-    Properties properties = new Properties(parentProperties);
+    Properties properties = new Properties();
     try {
       propertiesStream = new FileInputStream(propertiesFile);
     } catch (FileNotFoundException e) {
@@ -92,8 +89,12 @@ public enum ConfigurationParameter {
     return properties;
   }
 
-  public static Properties makeProperties(final File propertiesFile) {
-    return makeProperties(null, propertiesFile);
+  public static ConfigurationParameter byKey(String key) {
+    for (ConfigurationParameter parameter : ConfigurationParameter.values()) {
+      if (parameter.getKey().equals(key)) {
+        return parameter;
+      }
+    }
+    return null;
   }
-
 }

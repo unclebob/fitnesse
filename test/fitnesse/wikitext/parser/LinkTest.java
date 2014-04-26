@@ -17,8 +17,8 @@ public class LinkTest {
 
     @Test public void translatesLinks() {
         ParserTestHelper.assertTranslatesTo("http://mysite.org", "<a href=\"http://mysite.org\">http://mysite.org</a>");
-        ParserTestHelper.assertTranslatesTo("http://files/myfile", "<a href=\"/files/myfile\">http://files/myfile</a>");
-        ParserTestHelper.assertTranslatesTo("''http://files/myfile''", "<i><a href=\"/files/myfile\">http://files/myfile</a></i>");
+        ParserTestHelper.assertTranslatesTo("http://files/myfile", "<a href=\"files/myfile\">http://files/myfile</a>");
+        ParserTestHelper.assertTranslatesTo("''http://files/myfile''", "<i><a href=\"files/myfile\">http://files/myfile</a></i>");
     }
 
     @Test public void translatesLinkWithVariable() {

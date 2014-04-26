@@ -62,7 +62,7 @@ $(document)
     })
     .on('change', '.testHistory #hidePassedTests', function () {
         // 3rd column shows failed tests.
-        var elems = $('tr > td:nth-child(3).ignore').parent();
+        var elems = $('tr > td:nth-child(5).pass').parent();
         if (this.checked) {
             elems.hide();
         } else {

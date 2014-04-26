@@ -3,11 +3,14 @@
 
 package fitnesse.testsystems;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,7 @@ import java.util.logging.Logger;
 import util.TimeMeasurement;
 
 public class CommandRunner {
+  private static final String DEFAULT_CHARSET_NAME = "UTF-8";
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
@@ -26,25 +30,39 @@ public class CommandRunner {
   protected StringBuffer errorBuffer = new StringBuffer();
   protected int exitCode = -1;
   private TimeMeasurement timeMeasurement = new TimeMeasurement();
-  private String command = "";
+  private String[] command;
   private Map<String, String> environmentVariables;
+  private int timeout;
 
-  public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
+  /**
+   *
+   * @param command
+   * @param input
+   * @param environmentVariables
+   * @param timeout Time-out in seconds.
+   */
+  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, int timeout) {
     this.command = command;
     this.input = input;
     this.environmentVariables = environmentVariables;
+    this.timeout = timeout;
   }
 
-  protected CommandRunner(String command, String input, int exitCode) {
+  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables) {
+    this(command, input, environmentVariables, 2);
+  }
+
+  protected CommandRunner(String[] command, String input, int exitCode) {
     this(command, input, null);
     this.exitCode = exitCode;
   }
 
   public void asynchronousStart() throws IOException {
-    Runtime rt = Runtime.getRuntime();
+    ProcessBuilder processBuilder = new ProcessBuilder(command);
+    processBuilder.environment().putAll(determineEnvironment());
     timeMeasurement.start();
-    String[] environmentVariables = determineEnvironment();
-    process = rt.exec(command, environmentVariables);
+    process = processBuilder.start();
+
     OutputStream stdin = process.getOutputStream();
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
@@ -55,17 +73,13 @@ public class CommandRunner {
     sendInput(stdin);
   }
 
-  private String[] determineEnvironment() {
+  private Map<String, String> determineEnvironment() {
     if (environmentVariables == null) {
-      return null;
+      return Collections.emptyMap();
     }
     Map<String, String> systemVariables = new HashMap<String, String>(System.getenv());
     systemVariables.putAll(environmentVariables);
-    List<String> systemVariableAssignments = new ArrayList<String>();
-    for (Map.Entry<String, String> entry : systemVariables.entrySet()) {
-      systemVariableAssignments.add(entry.getKey() + "=" + entry.getValue());
-    }
-    return systemVariableAssignments.toArray(new String[systemVariableAssignments.size()]);
+    return systemVariables;
   }
 
   public void run() throws IOException {
@@ -83,7 +97,7 @@ public class CommandRunner {
 
   private void waitForDeathOf(Process process) {
     int timeStep = 100;
-    int maxDelay = 2000;
+    int maxDelay = timeout * 1000;
     try {
       for (int delayed = 0; delayed < maxDelay; delayed += timeStep) {
         if (isDead(process)) {
@@ -113,11 +127,11 @@ public class CommandRunner {
     }
   }
 
-  protected void setCommand(String command) {
+  protected void setCommand(String[] command) {
     this.command = command;
   }
 
-  public String getCommand() {
+  public String[] getCommand() {
     return command;
   }
 
@@ -160,7 +174,7 @@ public class CommandRunner {
 
   protected void sendInput(OutputStream stdin) throws IOException {
     try {
-      stdin.write(input.getBytes("UTF-8"));
+      stdin.write(input.getBytes(DEFAULT_CHARSET_NAME));
       stdin.flush();
     } finally {
       try {
@@ -172,18 +186,22 @@ public class CommandRunner {
   }
 
   private class OutputReadingRunnable implements Runnable {
-    public InputStream input;
     public StringBuffer buffer;
+    private BufferedReader reader;
 
     public OutputReadingRunnable(InputStream input, StringBuffer buffer) {
-      this.input = new BufferedInputStream(input);
+      try {
+        reader = new BufferedReader(new InputStreamReader(input, DEFAULT_CHARSET_NAME));
+      } catch (UnsupportedEncodingException e) {
+        exceptionOccurred(e);
+      }
       this.buffer = buffer;
     }
 
     public void run() {
       try {
         int c;
-        while ((c = input.read()) != -1)
+        while ((c = reader.read()) != -1)
           buffer.append((char) c);
       } catch (Exception e) {
         exceptionOccurred(e);

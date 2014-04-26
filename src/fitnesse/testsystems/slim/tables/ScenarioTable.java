@@ -176,8 +176,10 @@ public class ScenarioTable extends SlimTable {
     return assertions;
   }
 
-  protected ScriptTable createChild(ScenarioTestContext testContext, Table newTable) {
-    return new ScriptTable(newTable, id, testContext);
+  protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
+    ScriptTable scriptTable = new ScriptTable(newTable, id, testContext);
+    scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
+    return scriptTable;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {

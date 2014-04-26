@@ -51,13 +51,13 @@
                 <li><a href="$localPath?deletePage">Delete</a></li>
             #end
             #if( $actions.withFiles )
-                <li #group(3)><a href="/files" accesskey="f">Files</a></li>
+                <li #group(3)><a href="${contextRoot}files" accesskey="f">Files</a></li>
             #end
             #if( $actions.withSearch )
                 <li#group(3)><a href="?searchForm" accesskey="s">Search</a></li>
             #end
             #if( $actions.withRecentChanges )
-                <li#group(3)><a href="/RecentChanges" accesskey="">Recent Changes</a></li>
+                <li#group(3)><a href="${contextRoot}RecentChanges" accesskey="">Recent Changes</a></li>
             #end
 
             #if( $actions.testPage || $actions.suitePage )
@@ -72,7 +72,7 @@
             #end
 
             #if( $actions.withUserGuide )
-                <li#group(5)><a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>
+                <li#group(5)><a href="${contextRoot}FitNesse.UserGuide" accesskey="">User Guide</a></li>
             #end
         </ul>
     </li>

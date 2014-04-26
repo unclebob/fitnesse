@@ -54,7 +54,7 @@ public class CreateDirectoryResponder implements SecureResponder {
         }
       });
 
-    response.redirect("/" + resource);
+    response.redirect(context.contextRoot, resource);
     return response;
   }
 

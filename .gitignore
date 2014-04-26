@@ -38,3 +38,5 @@ com_ibm_contest/*
 FitNesseRoot/files/javascript/jsunit/*
 junk/*
 fitserverSentinel*
+tmp/*
+/classes

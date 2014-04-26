@@ -3,7 +3,7 @@
 Creating a symlink will redirect back to the properties page.
 !|Response Examiner.|
 |type    |pattern  |matches? |contents?|
-|contents|Location: LinkingPage\?properties|true||
+|contents|Location: /LinkingPage\?properties|true||
 
 Let's have a look at the properties view.
 !|Response Requester.|

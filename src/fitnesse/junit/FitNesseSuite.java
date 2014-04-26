@@ -18,10 +18,7 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.WikiPageDescriptor;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -45,9 +42,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface Name {
+
     public String value();
   }
-
   /**
    * The <code>DebugMode</code> annotation specifies whether the test is run
    * with the REST debug option. Default is true
@@ -55,9 +52,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface DebugMode {
+
     public boolean value();
   }
-
   /**
    * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
    * to be run, e.g.: fasttests
@@ -65,9 +62,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface SuiteFilter {
+
     public String value();
   }
-
   /**
    * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
    * to be run, e.g.: slowtests
@@ -75,38 +72,49 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface ExcludeSuiteFilter {
+
     public String value();
   }
-
   /**
    * The <code>FitnesseDir</code> annotation specifies the absolute or relative
-   * path to the directory in which FitNesseRoot can be found
+   * path to the directory in which FitNesseRoot can be found. You can either specify
+   * <ul>
+   * <li>a relative or absolute path directly, e.g.: <code>@FitnesseDir("/parentOfFitNesseRoot")</code>,
+   * or you can specify
+   * <li>a system property the content of which will be taken as base dir and
+   * optionally give a path extension, e.g.:
+   * <code>@FitnesseDir(systemProperty = "fitnesse.root.dir.parent")</code></li>
+   * </ul>
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface FitnesseDir {
-    public String value();
-  }
 
+    public String value() default "";
+    public String systemProperty() default "";
+    public String fitNesseRoot() default "FitNesseRoot";
+  }
   /**
    * The <code>OutputDir</code> annotation specifies where the html reports of
-   * run suites and tests will be found after running them. You can either
-   * specify a relative or absolute path directly, e.g.: <code>@OutputDir("/tmp/trinidad-results")</code>, or you can
-   * specify a
-   * system property the content of which will be taken as base dir and
+   * run suites and tests will be found after running them. You can either specify
+   * <ul>
+   * <li>a relative or absolute path directly, e.g.: <code>@OutputDir("/tmp/trinidad-results")</code>,
+   * or you can specify
+   * <li>a system property the content of which will be taken as base dir and
    * optionally give a path extension, e.g.:
-   * <code>@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "trinidad-results")</code>
+   * <code>@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "trinidad-results")</code></li>
+   * </ul>
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface OutputDir {
-    public String value() default "";
 
+    public String value() default "";
     public String systemProperty() default "";
 
     public String pathExtension() default "";
-  }
 
+  }
   /**
    * The <code>Port</code> annotation specifies the port used by the FitNesse
    * server. Default is the standard FitNesse port.
@@ -115,21 +123,22 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   @Deprecated
   public @interface Port {
+
     public int value() default 0;
-
     public String systemProperty() default "";
-  }
 
+  }
   /**
    * The <code>ConfigFile</code> annotation specifies the configuration file to load.
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface ConfigFile {
+
     public String value();
   }
-
   private final Class<?> suiteClass;
+
   private final String suiteName;
   private final String outputDir;
   private final String suiteFilter;
@@ -141,6 +150,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
     super(suiteClass);
     String rootPath = getFitnesseDir(suiteClass);
+    String fitNesseRoot = getFitNesseRoot(suiteClass);
     int port = getPort(suiteClass);
     File configFile = getConfigFile(rootPath, suiteClass);
 
@@ -150,8 +160,8 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     this.suiteFilter = getSuiteFilter(suiteClass);
     this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
     this.debugMode = useDebugMode(suiteClass);
-    this.context = initContext(configFile, rootPath, port);
-    this.children = initChildren(context);
+    this.context = initContext(configFile, rootPath, fitNesseRoot, port);
+    this.children = initChildren();
   }
 
   @Override
@@ -170,7 +180,21 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     if (fitnesseDirAnnotation == null) {
       throw new InitializationError("There must be a @FitnesseDir annotation");
     }
-    return fitnesseDirAnnotation.value();
+    if (!"".equals(fitnesseDirAnnotation.value())) {
+      return fitnesseDirAnnotation.value();
+    }
+    if (!"".equals(fitnesseDirAnnotation.systemProperty())) {
+      String baseDir = System.getProperty(fitnesseDirAnnotation.systemProperty());
+      File outputDir = new File(baseDir);
+      return outputDir.getAbsolutePath();
+    }
+    throw new InitializationError(
+            "In annotation @FitnesseDir you have to specify either 'value' or 'systemProperty'");
+  }
+
+  public static String getFitNesseRoot(Class<?> klass) {
+    FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
+    return fitnesseDirAnnotation.fitNesseRoot();
   }
 
   static String getSuiteFilter(Class<?> klass)
@@ -274,38 +298,39 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     }
   }
 
-  private List<WikiPage> initChildren(FitNesseContext context) {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage suiteRoot = crawler.getPage(path);
+  private List<WikiPage> initChildren() {
+    WikiPage suiteRoot = getSuiteRootPage();
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
     }
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
-  private FitNesseContext initContext(File configFile, String rootPath, int port) throws IOException, PluginException {
-    Properties configFileProperties = ConfigurationParameter.makeProperties(System.getProperties(), configFile);
-    Properties properties = ConfigurationParameter.makeProperties(configFileProperties,
+  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
+    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
+      .updatedWith(System.getProperties())
+      .updatedWith(ConfigurationParameter.loadProperties(configFile))
+      .updatedWith(ConfigurationParameter.makeProperties(
             ConfigurationParameter.PORT, port,
             ConfigurationParameter.ROOT_PATH, rootPath,
-            ConfigurationParameter.ROOT_DIRECTORY, "FitNesseRoot");
+            ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
+            ConfigurationParameter.OMITTING_UPDATES, true));
 
-    return new ContextConfigurator(properties).makeFitNesseContext();
+    return contextConfigurator.makeFitNesseContext();
+  }
 
+  private WikiPage getSuiteRootPage() {
+    WikiPagePath path = PathParser.parse(this.suiteName);
+    PageCrawler crawler = context.root.getPageCrawler();
+    return crawler.getPage(path);
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final String classPath = new ClassPathBuilder().buildClassPath(pages);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
-      @Override
-      public Descriptor create(WikiPage page) {
-        return new WikiPageDescriptor(page.readOnlyData(), debugMode, false, classPath);
-      }
-    });
-
-    return new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    runner.setRunInProcess(debugMode);
+    return runner;
   }
 
   private void executeTests(MultipleTestsRunner testRunner) throws IOException, InterruptedException {

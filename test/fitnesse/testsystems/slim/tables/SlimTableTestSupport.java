@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -28,6 +29,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
 
   private WikiPage root;
   protected List<Instruction> instructions;
+  protected List<SlimAssertion> assertions;
   protected T tableUnderTest;
 
   @SuppressWarnings("unchecked")
@@ -45,7 +47,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
       Constructor<T> constructor = getParameterizedClass().getConstructor(Table.class, String.class, SlimTestContext.class);
       WikiPageUtil.setPageContents(root, tableText);
       String html = root.getData().getHtml();
-      TableScanner ts = new HtmlTableScanner(html);
+      TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
       Table t = ts.getTable(0);
       SlimTestContextImpl testContext = new SlimTestContextImpl();
       return constructor.newInstance(t, "id", testContext);
@@ -58,11 +60,13 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     instructions = new ArrayList<Instruction>();
+    assertions = new ArrayList<SlimAssertion>();
   }
 
   protected T makeSlimTableAndBuildInstructions(String pageContents) throws Exception {
     tableUnderTest = createSlimTable(pageContents);
-    instructions.addAll(SlimAssertion.getInstructions(tableUnderTest.getAssertions()));
+    assertions.addAll(tableUnderTest.getAssertions());
+    instructions.addAll(SlimAssertion.getInstructions(assertions));
     return tableUnderTest;
   }
 }

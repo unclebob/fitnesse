@@ -14,10 +14,11 @@ import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
+import util.StringUtil;
+
+import static util.StringUtil.combineArrays;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
-  private static final Logger LOG = Logger.getLogger(SlimClientBuilder.class.getName());
-
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
@@ -39,22 +40,29 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner();
     } else {
-      commandRunner = new CommandRunner(buildCommand(), "", descriptor.createClasspathEnvironment(descriptor.getClassPath()));
+      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), determineTimeout());
     }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout());
   }
 
-  protected String buildCommand() {
-    String slimArguments = buildArguments();
-    String slimCommandPrefix = super.buildCommand(descriptor.getCommandPattern(), descriptor.getTestRunner(), descriptor.getClassPath());
-    return String.format("%s %s", slimCommandPrefix, slimArguments);
+  @Override
+  protected String defaultTestRunner() {
+    return "fitnesse.slim.SlimService";
   }
 
-  protected String buildArguments() {
+  protected String[] buildCommand() {
+    String[] slimArguments = buildArguments();
+    String[] slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
+    return combineArrays(slimCommandPrefix, slimArguments);
+  }
+
+  protected String[] buildArguments() {
     int slimSocket = getSlimPort();
     String slimFlags = getSlimFlags();
-    return String.format("%s %d", slimFlags, slimSocket);
+    if ("".equals(slimFlags))
+      return new String[] { Integer.toString(slimSocket) };
+    return new String[] { slimFlags, Integer.toString(slimSocket) };
   }
 
   public int getSlimPort() {
@@ -95,9 +103,9 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   private int getSlimPortBase() {
     try {
-      String port = descriptor.getVariable("slim.port");
+      String port = getVariable("slim.port");
       if (port == null) {
-        port = descriptor.getVariable(SLIM_PORT);
+        port = getVariable(SLIM_PORT);
       }
 
       if (port != null) {
@@ -111,7 +119,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   private int getSlimPortPoolSize() {
     try {
-      String poolSize = descriptor.getVariable("slim.pool.size");
+      String poolSize = getVariable("slim.pool.size");
       if (poolSize != null) {
         return Integer.parseInt(poolSize);
       }
@@ -121,27 +129,49 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return 10;
   }
 
-  String determineSlimHost() {
-    String slimHost = descriptor.getVariable("slim.host");
+  protected String determineSlimHost() {
+    String slimHost = getVariable("slim.host");
     if (slimHost == null) {
-      slimHost = descriptor.getVariable(SLIM_HOST);
+      slimHost = getVariable(SLIM_HOST);
     }
     return slimHost == null ? "localhost" : slimHost;
   }
 
-  String getSlimFlags() {
-    String slimFlags = descriptor.getVariable("slim.flags");
+  protected String getSlimFlags() {
+    String slimFlags = getVariable("slim.flags");
     if (slimFlags == null) {
-      slimFlags = descriptor.getVariable(SLIM_FLAGS);
+      slimFlags = getVariable(SLIM_FLAGS);
     }
     return slimFlags == null ? "" : slimFlags;
   }
 
+  protected int determineTimeout() {
+    if (isDebug()) {
+      try {
+        String debugTimeout = getVariable("slim.debug.timeout");
+        if (debugTimeout != null) {
+          return Integer.parseInt(debugTimeout);
+        }
+      } catch (NumberFormatException e) {
+        // stick with default
+      }
+    }
+    try {
+      String timeout = getVariable("slim.timeout");
+      if (timeout != null) {
+        return Integer.parseInt(timeout);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
+    }
+    return 10;
+  }
+
   private boolean useManualStartForTestSystem() {
-    if (descriptor.isDebug()) {
-      String useManualStart = descriptor.getVariable("manually.start.test.runner.on.debug");
+    if (isDebug()) {
+      String useManualStart = getVariable("manually.start.test.runner.on.debug");
       if (useManualStart == null) {
-        useManualStart = descriptor.getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
+        useManualStart = getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
       }
       return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }

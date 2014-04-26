@@ -14,20 +14,29 @@ public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
 
   private final Map<String, Class<? extends SlimTable>> tableTypes;
-  private Map<String, String> tableTypeArrays = new HashMap<String, String>();
+  private final Map<String, String> tableTypeArrays;
 
   public  SlimTableFactory() {
     tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
+    tableTypeArrays = new HashMap<String, String>();
     addTableType("dt:", DecisionTable.class);
     addTableType("decision:", DecisionTable.class);
+    addTableType("ddt:", DynamicDecisionTable.class);
+    addTableType("dynamic decision:", DynamicDecisionTable.class);
     addTableType("ordered query:", OrderedQueryTable.class);
     addTableType("subset query:", SubsetQueryTable.class);
     addTableType("query:", QueryTable.class);
     addTableType("table:", TableTable.class);
     addTableType("script", ScriptTable.class);
+    addTableType("script:", ScriptTable.class);
     addTableType("scenario", ScenarioTable.class);
     addTableType("import", ImportTable.class);
     addTableType("library", LibraryTable.class);
+  }
+
+  protected SlimTableFactory(HashMap<String, Class<? extends SlimTable>> tableTypes, HashMap<String, String> tableTypeArrays) {
+    this.tableTypes = tableTypes;
+    this.tableTypeArrays = tableTypeArrays;
   }
 
   public void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
@@ -117,4 +126,8 @@ public class SlimTableFactory {
     return tableType.trim();
   }
 
+  public SlimTableFactory copy() {
+    return new SlimTableFactory(new HashMap<String, Class<? extends SlimTable>>(tableTypes),
+            new HashMap<String, String>(tableTypeArrays));
+  }
 }

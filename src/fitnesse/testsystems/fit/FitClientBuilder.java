@@ -13,14 +13,19 @@ public class FitClientBuilder extends ClientBuilder<CommandRunningFitClient> {
 
   @Override
   public CommandRunningFitClient build() {
-    String testRunner = descriptor.getTestRunner();
-    String classPath = descriptor.getClassPath();
-    String command = buildCommand(descriptor.getCommandPattern(), testRunner, classPath);
-    Map<String, String> environmentVariables = descriptor.createClasspathEnvironment(classPath);
+    String testRunner = getTestRunner();
+    String classPath = getClassPath();
+    String[] command = buildCommand(getCommandPattern(), testRunner, classPath);
+    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
             new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
 
     return buildFitClient(runningStrategy);
+  }
+
+  @Override
+  protected String defaultTestRunner() {
+    return "fit.FitServer";
   }
 
   protected CommandRunningFitClient buildFitClient(CommandRunningFitClient.CommandRunningStrategy runningStrategy) {

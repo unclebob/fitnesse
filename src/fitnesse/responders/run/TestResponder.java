@@ -15,28 +15,24 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.TraversalListener;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Response;
+import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.InteractiveFormatter;
-import fitnesse.junit.JavaFormatter;
+import fitnesse.reporting.PageInProgressFormatter;
+import fitnesse.reporting.TestHtmlFormatter;
+import fitnesse.reporting.TestTextFormatter;
 import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImporter;
 import fitnesse.responders.WikiImportingResponder;
-import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.PageInProgressFormatter;
-import fitnesse.reporting.TestHtmlFormatter;
-import fitnesse.reporting.TestTextFormatter;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.responders.WikiImportingTraverser;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.WikiPageDescriptor;
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -242,17 +238,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    final String classPath = new ClassPathBuilder().buildClassPath(pages);
-
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, new PagesByTestSystem.DescriptorFactory() {
-      @Override
-      public Descriptor create(WikiPage page) {
-        return new WikiPageDescriptor(page.readOnlyData(), debug, remoteDebug, classPath);
-      }
-    });
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
-
+    runner.setRunInProcess(debug);
+    runner.setEnableRemoteDebug(remoteDebug);
     addFormatters(runner);
 
     return runner;

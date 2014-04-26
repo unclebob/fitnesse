@@ -1,7 +1,0 @@
-Here are some characters that make use of the unicode character set.  They were gathered from wikipedia.
-japanese: メインページ
-icelandic: Forsíða
-ukranian: Головна стаття
-thai: หน้าหลัก
-greek: Κύρια Σελίδα
-arabic: الصفحة الرئيسية

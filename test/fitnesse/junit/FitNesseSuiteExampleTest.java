@@ -12,7 +12,7 @@ import fitnesse.junit.FitNesseSuite.ConfigFile;
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
 @FitnesseDir(".")
-@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
+@OutputDir("tmp")
 @ConfigFile("plugins.properties")
 public class FitNesseSuiteExampleTest {
 

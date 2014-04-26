@@ -51,9 +51,9 @@ public class SaveResponder implements SecureResponder {
     context.recentChanges.updateRecentChanges(data);
 
     if (request.hasInput("redirect"))
-      response.redirect(request.getInput("redirect").toString());                                
+      response.redirect("", request.getInput("redirect").toString());
     else
-      response.redirect(request.getResource());
+      response.redirect(context.contextRoot, request.getResource());
 
     return response;
   }

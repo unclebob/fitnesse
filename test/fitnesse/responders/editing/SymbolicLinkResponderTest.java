@@ -267,11 +267,11 @@ public class SymbolicLinkResponderTest {
 
   private void checkPageOneRedirectToProperties(Response response) {
     assertEquals(303, response.getStatus());
-    assertEquals(response.getHeader("Location"), "PageOne?properties");
+    assertEquals(response.getHeader("Location"), "/PageOne?properties");
   }
 
   private void checkChildTwoRedirectToProperties(Response response) {
     assertEquals(303, response.getStatus());
-    assertEquals(response.getHeader("Location"), "PageTwo.ChildTwo?properties");
+    assertEquals(response.getHeader("Location"), "/PageTwo.ChildTwo?properties");
   }
 }

@@ -8,6 +8,7 @@ import static util.RegexTestCase.assertSubString;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
@@ -80,7 +81,7 @@ public class SearchResponderTest {
 
   private String getResponseContentUsingSearchString(String searchString) throws Exception {
     request.addInput("searchString", searchString);
-
+    request.addInput(Request.NOCHUNK, "");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);

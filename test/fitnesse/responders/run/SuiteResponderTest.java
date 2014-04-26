@@ -331,8 +331,8 @@ public class SuiteResponderTest {
     String results = runSuite();
     assertHasRegexp("<td>fitnesse.testutil.PassFixture</td>", results);
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
-    assertHasRegexp("<h3>fit\\^inprocess:fit.FitServer</h3>", results);
-    assertHasRegexp("<h3>slim\\^inprocess:fitnesse.slim.SlimService", results);
+    assertHasRegexp("<h3>fit:fit.FitServer</h3>", results);
+    assertHasRegexp("<h3>slim:fitnesse.slim.SlimService", results);
   }
 
   @Test

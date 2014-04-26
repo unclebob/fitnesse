@@ -40,7 +40,7 @@ public class ImportAndViewResponderTest {
     Response response = getResponse();
 
     assertEquals(303, response.getStatus());
-    assertEquals("PageTwo", response.getHeader("Location"));
+    assertEquals("/PageTwo", response.getHeader("Location"));
   }
 
   private Response getResponse() throws Exception {
