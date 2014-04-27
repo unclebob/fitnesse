@@ -13,6 +13,7 @@
  * [[Writing Acceptance Tests][>WritingAcceptanceTests]] (jump directly to [[Fit][>WritingAcceptanceTests.FitFramework]] or [[Slim][>WritingAcceptanceTests.SliM]])
  * [[Administering FitNesse][>AdministeringFitNesse]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
+ * [[Full Reference Guide][FullReferenceGuide]] (takes some time to load)
 
 !2 Introduction
 

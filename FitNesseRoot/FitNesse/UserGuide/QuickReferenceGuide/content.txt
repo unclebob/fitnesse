@@ -65,9 +65,12 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 '''*'''${BANG}
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+!define LSQUARE {'''['''}
+!define RSQUARE {''']'''}
 !define PageLINKS (|${CODE} ${DOT}R${NUL}ootPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| from root         |
 |${CODE} S${NUL}ameLevelPage${OPT}${DOT}C${NUL}hildPage${OPTend}   ${CODEend}|sibling          |
 |${CODE} ${GT}C${NUL}hildPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}|child or symbolic|
+|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${AnyPagePATH}${RSQUARE}${RSQUARE} ${CODEend} | in an alias |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapSIBLE (|${CODE} ${CollapsibleEXPANDED}  ${CODEend}| expanded  | |
@@ -77,13 +80,10 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HASH {'''!-#-!'''} |
 
-!define LSQUARE {'''['''}
-!define RSQUARE {''']'''}
 !define JumpTO (
 | ${CODE} ${TEXT} ${HASH}${LabelNAME} ${TEXT} ${CODEend} | in-line |
 | ${CODE} ${DOT}${HASH}${LabelNAME} ${CODEend} | left-justified |
 | ${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend} | in an alias |
-
 )
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,7 +93,6 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 | ${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}/files'''${SLASH}''localPath''${NUL}${RSQUARE}${RSQUARE} ${CODEend}''' | Alias |
 | ${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${AnyPagePATH}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend} | Alias |
 | ${CODE} ${TEXT}'''@'''${TEXT}${DOT}${TEXT} ${CODEend} | mailto |
-
 )
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,6 +104,15 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 | ${CODE} ${BANG}'''include -teardown''' ${AnyPagePATH} ${CODEend} | appears like T${NUL}earDown |
 | ${CODE} ${BAR}${SPC}${BANG}'''include ''' ${AnyPagePATH}${SPC}${BAR} ${CODEend} | in a table cell |
 
+)
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+!define TocInsert (| Contents List | ${CODE} ${BANG}'''contents'''     ${CODEend} | 
+| Contents Tree | ${CODE} ${BANG}'''contents -R'''  ${CODEend} |
+| Contents Sub-tree | ${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend} |
+| Contents List - Graceful | ${CODE} ${BANG}'''contents -g'''     ${CODEend} |
+| Contents List - Properties | ${CODE} ${BANG}'''contents -p'''     ${CODEend} |
+| Contents List - Suite Filters | ${CODE} ${BANG}'''contents -f'''     ${CODEend} |
+| Contents List - Help Text | ${CODE} ${BANG}'''contents -h'''     ${CODEend} |
 )
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -245,23 +253,17 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | Timestamp | ${CODE} ${BANG}'''lastmodified'''     ${CODEend} |
 | Timestamp | ${CODE} ${BANG}'''today'''            ${CODEend} |
 | Help text | ${CODE} ${BANG}'''help'''            ${CODEend} |
-| Contents List | ${CODE} ${BANG}'''contents'''     ${CODEend} |
-| Contents Tree | ${CODE} ${BANG}'''contents -R'''  ${CODEend} |
-| Contents Sub-tree | ${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend} |
-| Contents List - Graceful | ${CODE} ${BANG}'''contents -g'''     ${CODEend} |
-| Contents List - Properties | ${CODE} ${BANG}'''contents -p'''     ${CODEend} |
-| Contents List - Suite Filters | ${CODE} ${BANG}'''contents -f'''     ${CODEend} |
-| Contents List - Help Text | ${CODE} ${BANG}'''contents -h'''     ${CODEend} |
-| Include Page | ${IncludePAGE} |
-| Picture Insert | ${PictureINSERT} |
+| [[Table of Content][FitNesseWiki.MarkupLanguageReference.MarkupContents]]| ${TocInsert} |
+| [[Include Page][WritingAcceptanceTests.AcceptanceTestPatterns.ParameterizedIncludes]] | ${IncludePAGE} |
+| [[Picture Insert][FitNesseWiki.MarkupLanguageReference.MarkupPicture]] | ${PictureINSERT} |
 
 #---------------------------------------------------------------------------------------------
 
 !anchor VARIABLES
-!2 Variables ${TopOfPAGE}
+!2 [[Variables][FitNesseWiki.MarkupLanguageReference.MarkupVariables]] ${TopOfPAGE}
 | Variable Definition | ${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')'''${NL}${BANG}'''define''' ''name'' '''['''${NUL}''value''${NUL}''']''' ${CODEend}${NL} |
 | Variable Usage | ${CODE} '''$'''${LBRACE}''name''${RBRACE} ${CODEend} |
-| Expression Evaluation | ${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend} | ''expression'' may contain variables |
+| [[Expression Evaluation][FitNesseWiki.MarkupLanguageReference.MarkupExpressions]] | ${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend} | ''expression'' may contain variables |
 
 #---------------------------------------------------------------------------------------------
 
@@ -280,7 +282,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} SLIM_HOST ${CODEend} ''(deprecated)''| !c localhost | !c string | '' The name of the host on which !-SlimServer-! is running.'' |
 | ${CODE} SLIM_VERSION ${CODEend} | !c nil | !c string | '' The minimum Slim Protocol Version required for this page.  Used to turn off slim protocol error messages.'' |
 | ${CODE} MANUALLY_START_TEST_RUNNER_ON_DEBUG ${CODEend} | !c false | !c true${BAR}false | '' When set to true, and a page is run in debug mode then fitnesse will not create it's own slim runner, and will instead connect to an existing runner on port ${CODE} SLIM_PORT ${CODEend}.'' |
-| ${CODE} CLASSPATH_PROPERTY ${CODEend} | !c nil | !c ''an environment variable'' | '' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.'' |
+| ${CODE} CLASSPATH_PROPERTY ${CODEend} | !c nil | !c ''an environment variable'' | '' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See [[Customizing Test Execution][WritingAcceptanceTests.CustomizingTestExecution]].'' |
 | ${CODE} COLLAPSE_SETUP ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-SetUps-! '' |
 | ${CODE} COLLAPSE_TEARDOWN ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-TearDowns-! '' |
 | ${CODE} FILTER_TOC ${CODEend} | !c false | !c true${BAR}false | '' Append suite fiters to TOC '' |
@@ -291,8 +293,8 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} PROPERTY_TOC ${CODEend} | !c false | !c true${BAR}false | '' Append property icons to TOC '' |
 | ${CODE} REGRACE_LINK ${CODEend} | !c false | !c true${BAR}false | '' Makes links graceful '' |
 | ${CODE} REGRACE_TOC ${CODEend} | !c false | !c true${BAR}false | '' Makes !contents list graceful '' |
-| ${CODE} RSS_PREFIX ${CODEend} | !c | !c | '' Link prefix for [[RSS Feeds][RssFeed]] '' |
-| ${CODE} INCLUDE_SCENARIO_LIBRARIES ${CODEend} | !c false* | !c true${BAR}false | ''Test pages should include [[!-ScenarioLibrary-!][SpecialPages]] pages''!-
+| ${CODE} RSS_PREFIX ${CODEend} | !c | !c | '' Link prefix for [[RSS Feeds][AdministeringFitnesse.RestfulServices.RssFeed]] '' |
+| ${CODE} INCLUDE_SCENARIO_LIBRARIES ${CODEend} | !c false* | !c true${BAR}false | ''Test pages should include [[!-ScenarioLibrary-!][WritingAcceptanceTests.SpecialPages]] pages''!-
 -! * defaults to true if the SLiM test system is defined. |
 | ${CODE} ''PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current page'' |
 | ${CODE} ''PAGE_PATH '' ${CODEend} | !c | !c Read Only | '' Fully qualified name of parent. '' |
