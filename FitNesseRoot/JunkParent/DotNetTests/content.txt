@@ -1,5 +1,0 @@
-Tests in .net.
-
-!define TEST_SYSTEM {slim}
-
-!contents

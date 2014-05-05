@@ -1,6 +1,0 @@
-|script|test slim|
-|$X=|echo|blah|
-
-|script|test slim with arguments|$X|
-|check|arg|blah|
-
