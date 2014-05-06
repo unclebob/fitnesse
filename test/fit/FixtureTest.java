@@ -142,6 +142,20 @@ public class FixtureTest {
   }
 
   @Test
+  public void testFixtureArgumentsWithEscapedSymbols() throws Exception {
+    // "<", ">" are usually escaped (unless surrounded by !- .. -!)
+    String[] args = getArgsForTableWith("<td>a &lt; 3 and b &gt; 1</td>");
+    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+  }
+
+  @Test
+  public void testFixtureArgumentsWithSpecialSymbols() throws Exception {
+    // "<", ">" are usually escaped but may come in plan text from !- .. -!
+    String[] args = getArgsForTableWith("<td>a < 3 and b > 1</td>");
+    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+  }
+
+  @Test
   public void testParseDate() throws Exception {
     Fixture f = new Fixture();
     Object o = f.parse("1/2/2004", Date.class);
