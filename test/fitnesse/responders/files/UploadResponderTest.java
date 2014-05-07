@@ -56,6 +56,21 @@ public class UploadResponderTest {
   }
 
   @Test
+  public void shouldErrorForInvalidFileName() throws Exception {
+    request.addInput("file", new UploadedFile("\0.txt", "plain/text", testFile));
+    request.setResource("files/");
+
+    Response response = responder.makeResponse(context, request);
+
+    File file = new File(context.getRootPagePath() + "/files/copy_1_of_");
+    assertTrue(file.exists());
+    assertEquals("test content", FileUtil.getFileContent(file));
+
+    assertEquals(303, response.getStatus());
+    assertEquals("/files/", response.getHeader("Location"));
+  }
+
+  @Test
   public void testMakeResponseSpaceInFileName() throws Exception {
     request.addInput("file", new UploadedFile("source filename.txt", "plain/text", testFile));
     request.setResource("files/");
@@ -101,10 +116,10 @@ public class UploadResponderTest {
 
   @Test
   public void testMakeNewFilename() throws Exception {
-    assertEquals("file_copy1.txt", UploadResponder.makeNewFilename("file.txt", 1));
-    assertEquals("file_copy2.txt", UploadResponder.makeNewFilename("file.txt", 2));
-    assertEquals("a.b.c.d_copy2.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
-    assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
+    assertEquals("copy_1_of_file.txt", UploadResponder.makeNewFilename("file.txt", 1));
+    assertEquals("copy_2_of_file.txt", UploadResponder.makeNewFilename("file.txt", 2));
+    assertEquals("copy_2_of_a.b.c.d.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
+    assertEquals("copy_1_of_somefile", UploadResponder.makeNewFilename("somefile", 1));
   }
 
   @Test
