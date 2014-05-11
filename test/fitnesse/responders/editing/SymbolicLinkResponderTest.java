@@ -261,7 +261,7 @@ public class SymbolicLinkResponderTest {
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
-    assertSubString("Cannot create link to the file system path, <b>file://testDir/ExternalRoot</b>.", content);
+    assertSubString("Cannot create link to the file system path 'file://testDir/ExternalRoot'.", content);
     assertSubString("Error Occured", content);
   }
 

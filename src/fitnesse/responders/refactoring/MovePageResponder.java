@@ -74,7 +74,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected String getErrorMessageHeader() {
-    return "Cannot move " + makeLink(oldNameOfPageToBeMoved) + " below " + newParentName;
+    return "Cannot move " + makeLink(oldNameOfPageToBeMoved) + " below " + newParentName + ".";
   }
 
 }

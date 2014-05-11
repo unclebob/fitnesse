@@ -113,9 +113,9 @@ public class SymbolicLinkResponder implements Responder {
 
   private boolean isValidLinkPathName(String linkPath) throws IOException {
     if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
-      String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
-              "<br/> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
-              "<br/>Either it doesn't exist or it's not a directory.";
+      String message = "Cannot create link to the file system path '" + linkPath + "'." +
+              " The canonical file system path used was ;" + createFileFromPath(linkPath).getCanonicalPath() + "'." +
+              " Either it doesn't exist or it's not a directory.";
       response = new ErrorResponder(message).makeResponse(context, null);
       response.setStatus(404);
       return false;
