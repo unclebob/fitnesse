@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import fitnesse.http.SimpleResponse;
 import org.junit.After;
@@ -59,8 +60,14 @@ public class UploadResponderTest {
   public void shouldErrorForInvalidFileName() throws Exception {
     request.addInput("file", new UploadedFile("\0.txt", "plain/text", testFile));
     request.setResource("files/");
-
-    Response response = responder.makeResponse(context, request);
+    Response response;
+    try {
+      response = responder.makeResponse(context, request);
+    } catch (IOException e) {
+      // Different Java versions tend to deal differently with invalid file paths...
+      // If it fails with an exception, that's okay.
+      return;
+    }
 
     File file = new File(context.getRootPagePath() + "/files/copy_1_of_");
     assertTrue(file.exists());
