@@ -134,7 +134,7 @@ public class SymbolicLinkResponder implements Responder {
       return file.isDirectory();
     else {
       File parentDir = file.getParentFile();
-      return parentDir.exists() && parentDir.isDirectory();
+      return parentDir != null && parentDir.exists() && parentDir.isDirectory();
     }
   }
 
