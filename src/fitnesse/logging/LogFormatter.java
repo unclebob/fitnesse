@@ -3,7 +3,6 @@ package fitnesse.logging;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Formatter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -44,7 +43,7 @@ public class LogFormatter extends Formatter {
   }
 
   private boolean atLeastWarningLevel(LogRecord logRecord) {
-    return logRecord.getLevel().intValue() > Level.INFO.intValue();
+    return logRecord.getLevel().intValue() >= Level.WARNING.intValue();
   }
 
 }
