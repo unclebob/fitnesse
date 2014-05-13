@@ -5,16 +5,16 @@
 The "Table" table allows you to write a fixture that accepts an arbitrary table, and returns a table of results.  The table of results has a similar geometry to the input table (without the first row). Each cell of the result table can be one of the following codes:
 
 |Comment|
-|''pass''|The original contents will be colored green.|
-|''pass:<message>''|The original contents will be replaced with <message> and colored green.|
-|''fail''|The original contents will be colored red.|
-|''fail:<message>''|The original contents will be replaced with <message> and colored red.|
-|''ignore''|The original contents will be colored grey.|
-|''ignore:<message>''|The original contents will be replaced with <message> and colored grey.|
-|''report:<message>''|The original contents will be replaced with <message>.|
+|''pass''            |The original contents will be colored green.|
+|''pass:<message>''  |The original contents will be replaced with ''<message>'' and colored green.|
+|''fail''            |The original contents will be colored red.|
+|''fail:<message>''  |The original contents will be replaced with ''<message>'' and colored red.|
+|''ignore''          |The original contents will be colored grey.|
+|''ignore:<message>''|''<message>'' will be appended to the original contents and colored grey.|
+|''report:<message>''|The original contents will be replaced with ''<message>''.|
 |''<empty string>'' or ''no change''|The corresponding cell will be unchanged|
-|''error:<message>''|The corresponding cell will be colored yellow and its contents will be ''<message>''|
-|''<anything else>''|The corresponding cell will be colored red, and its contents will be ''<anything else>''|
+|''error:<message>'' |''/!\ <message>'' will be appended to the original contents and colored yellow.|
+|''<anything else>'' |The original contents will be replaced with ''<anything else>'' and colored red.|
 
 The fixture is written with a !style_code(doTable) method.  This method takes a List argument and returns a List.  The incomming list is a list of rows.  Each row is a list of strings.  The returned list has a similar structure except that it does not have the first row.  If any row of the returned list is longer than the corresponding row of the incomming list, then the extra columns will be added to the colored table.  If there are extra rows, then they will be added too.  So the returned table can be larger, horizontally and vertically.  It cannot be smaller!
 
