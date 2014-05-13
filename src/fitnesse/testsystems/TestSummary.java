@@ -4,10 +4,10 @@ package fitnesse.testsystems;
 
 
 public class TestSummary {
-  public int right = 0;
-  public int wrong = 0;
-  public int ignores = 0;
-  public int exceptions = 0;
+  private int right = 0;
+  private int wrong = 0;
+  private int ignores = 0;
+  private int exceptions = 0;
 
   public TestSummary(int right, int wrong, int ignores, int exceptions) {
     this.right = right;
@@ -108,5 +108,21 @@ public class TestSummary {
          break;
      }
     }
+  }
+
+  public void setRight(int right) {
+    this.right = right;
+  }
+
+  public void setWrong(int wrong) {
+    this.wrong = wrong;
+  }
+
+  public void setIgnores(int ignores) {
+    this.ignores = ignores;
+  }
+
+  public void setExceptions(int exceptions) {
+    this.exceptions = exceptions;
   }
 }

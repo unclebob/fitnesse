@@ -37,22 +37,22 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   @Override
   public void incrementPassedTestsCount() {
-    testSummary.right++;
+    testSummary.setRight(testSummary.getRight() + 1);
   }
 
   @Override
   public void incrementFailedTestsCount() {
-    testSummary.wrong++;
+    testSummary.setWrong(testSummary.getWrong() + 1);
   }
 
   @Override
   public void incrementErroredTestsCount() {
-    testSummary.exceptions++;
+    testSummary.setExceptions(testSummary.getExceptions() + 1);
   }
 
   @Override
   public void incrementIgnoredTestsCount() {
-    testSummary.ignores++;
+    testSummary.setIgnores(testSummary.getIgnores() + 1);
   }
 
   @Override

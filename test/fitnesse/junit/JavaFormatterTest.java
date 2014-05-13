@@ -1,12 +1,9 @@
 package fitnesse.junit;
 
-import java.io.Closeable;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystemListener;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
@@ -80,7 +77,7 @@ public class JavaFormatterTest {
 
     TestSummary ts=new TestSummary(5,6,7,8);
     jf.testComplete(buildNestedTestPage(), ts);
-    ts.right=11; ts.wrong=12; ts.ignores=13; ts.exceptions=14;
+    ts.setRight(11); ts.setWrong(12); ts.setIgnores(13); ts.setExceptions(14);
     jf.testComplete(new WikiTestPage(secondPage), ts);
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }

@@ -11,9 +11,6 @@ import static org.mockito.Mockito.when;
 import java.io.StringWriter;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.ExecutionReport;
-import fitnesse.reporting.history.SuiteExecutionReport;
-import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -68,7 +65,7 @@ public class ExecutionReportTest {
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(41));
     long time = DateTimeUtil.getTimeFromString("12/31/1969 18:00:00");
     SuiteExecutionReport.PageHistoryReference reference = new SuiteExecutionReport.PageHistoryReference("dah", time, 3L);
-    reference.getTestSummary().wrong = 99;
+    reference.getTestSummary().setWrong(99);
     original.addPageHistoryReference(reference);
     StringWriter writer = new StringWriter();
     original.toXml(writer, context.pageFactory.getVelocityEngine());

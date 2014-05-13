@@ -1,23 +1,19 @@
 package fitnesse.junit;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.NullListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -209,17 +205,17 @@ public class JavaFormatter extends BaseFormatter {
       StringBuffer sb = new StringBuffer();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
               "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
-              "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
-              .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
+              "</td><td>").append(testSummary.getRight()).append("</td><td>").append(testSummary.getWrong())
+              .append("</td><td>").append(testSummary.getExceptions()).append("</td></tr>");
       return sb.toString();
     }
 
     private String getCssClass(TestSummary ts) {
-      if (ts.exceptions > 0)
+      if (ts.getExceptions() > 0)
         return "error";
-      if (ts.wrong > 0)
+      if (ts.getWrong() > 0)
         return "fail";
-      if (ts.right > 0)
+      if (ts.getRight() > 0)
         return "pass";
       return "plain";
     }

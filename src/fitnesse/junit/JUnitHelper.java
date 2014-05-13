@@ -83,9 +83,9 @@ public class JUnitHelper {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.wrong);
-    assertEquals("exceptions", 0, summary.exceptions);
-    assertTrue(msgAtLeastOneTest(pageName, summary), summary.right > 0);
+    assertEquals("wrong", 0, summary.getWrong());
+    assertEquals("exceptions", 0, summary.getExceptions());
+    assertTrue(msgAtLeastOneTest(pageName, summary), summary.getRight() > 0);
   }
 
   private List<WikiPage> initChildren(String suiteName, String suiteFilter, String excludeSuiteFilter, FitNesseContext context) {

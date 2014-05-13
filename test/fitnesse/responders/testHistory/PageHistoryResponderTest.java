@@ -349,8 +349,8 @@ public class PageHistoryResponderTest {
     SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time, 9);
     SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time, 11);
 
-    r1.getTestSummary().right=4;
-    r2.getTestSummary().right=4;
+    r1.getTestSummary().setRight(4);
+    r2.getTestSummary().setRight(4);
     report.addPageHistoryReference(r1);
     report.addPageHistoryReference(r2);
 

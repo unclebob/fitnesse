@@ -123,7 +123,7 @@ public class SuiteHistoryFormatter extends BaseFormatter {
 
   @Override
   public int getErrorCount() {
-    return getPageCounts().wrong + getPageCounts().exceptions;
+    return getPageCounts().getWrong() + getPageCounts().getExceptions();
   }
 
   public List<SuiteExecutionReport.PageHistoryReference> getPageHistoryReferences() {

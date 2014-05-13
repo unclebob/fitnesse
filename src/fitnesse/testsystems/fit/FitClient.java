@@ -140,10 +140,10 @@ public class FitClient implements SocketAccepter {
         } else {
           Counts counts = FitProtocol.readCounts(fitOutput);
           TestSummary summary = new TestSummary();
-          summary.right = counts.right;
-          summary.wrong = counts.wrong;
-          summary.ignores = counts.ignores;
-          summary.exceptions = counts.exceptions;
+          summary.setRight(counts.right);
+          summary.setWrong(counts.wrong);
+          summary.setIgnores(counts.ignores);
+          summary.setExceptions(counts.exceptions);
           testComplete(summary);
           received++;
         }

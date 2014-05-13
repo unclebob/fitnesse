@@ -72,10 +72,10 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
   @Override
   public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
     testCount++;
-    if (summary.wrong > 0) {
+    if (summary.getWrong() > 0) {
       failCount++;
     }
-    if (summary.exceptions > 0) {
+    if (summary.getExceptions() > 0) {
       failCount++;
     }
   }

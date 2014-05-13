@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -341,9 +340,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.wrong);
-    assertEquals("exceptions", 0, summary.exceptions);
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.right > 0);
+    assertEquals("wrong", 0, summary.getWrong());
+    assertEquals("exceptions", 0, summary.getExceptions());
+    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {

@@ -45,14 +45,14 @@ public class TestTextFormatter extends BaseFormatter {
     super.testComplete(page, summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
-      passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page.getSourcePage()), timeMeasurement.elapsedSeconds()));
+      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), getPath(page.getSourcePage()), timeMeasurement.elapsedSeconds()));
   }
 
   private String passFail(TestSummary summary) {
-    if (summary.wrong > 0){
+    if (summary.getWrong() > 0){
       return "F";
     }
-    if (summary.exceptions > 0) {
+    if (summary.getExceptions() > 0) {
       return "X";
     }
     return ".";
