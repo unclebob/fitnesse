@@ -65,7 +65,7 @@ public class ExecutionReportTest {
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(41));
     long time = DateTimeUtil.getTimeFromString("12/31/1969 18:00:00");
     SuiteExecutionReport.PageHistoryReference reference = new SuiteExecutionReport.PageHistoryReference("dah", time, 3L);
-    reference.getTestSummary().setWrong(99);
+    reference.setTestSummary(new TestSummary(0, 99, 0, 0));
     original.addPageHistoryReference(reference);
     StringWriter writer = new StringWriter();
     original.toXml(writer, context.pageFactory.getVelocityEngine());

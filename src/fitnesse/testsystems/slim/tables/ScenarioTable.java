@@ -309,26 +309,22 @@ public class ScenarioTable extends SlimTable {
 
     @Override
     public void incrementPassedTestsCount() {
-      testContext.incrementPassedTestsCount();
-      testSummary.setRight(testSummary.getRight() + 1);
+      increment(ExecutionResult.PASS);
     }
 
     @Override
     public void incrementFailedTestsCount() {
-      testContext.incrementFailedTestsCount();
-      testSummary.setWrong(testSummary.getWrong() + 1);
+      increment(ExecutionResult.FAIL);
     }
 
     @Override
     public void incrementErroredTestsCount() {
-      testContext.incrementErroredTestsCount();
-      testSummary.setExceptions(testSummary.getExceptions() + 1);
+      increment(ExecutionResult.ERROR);
     }
 
     @Override
     public void incrementIgnoredTestsCount() {
-      testContext.incrementIgnoredTestsCount();
-      testSummary.setIgnores(testSummary.getIgnores() + 1);
+      increment(ExecutionResult.IGNORE);
     }
 
     @Override

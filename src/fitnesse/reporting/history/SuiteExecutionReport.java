@@ -88,10 +88,12 @@ public class SuiteExecutionReport extends ExecutionReport {
       long runTimeInMillis = getRunTimeInMillisOrZeroIfNotPresent(refElement);
       PageHistoryReference r1 = new PageHistoryReference(name,time,runTimeInMillis);
       Element counts = XmlUtil.getElementByTagName(refElement,"counts");
-      r1.getTestSummary().setRight(Integer.valueOf(XmlUtil.getTextValue(counts, "right")));
-      r1.getTestSummary().setWrong(Integer.valueOf(XmlUtil.getTextValue(counts, "wrong")));
-      r1.getTestSummary().setIgnores(Integer.valueOf(XmlUtil.getTextValue(counts, "ignores")));
-      r1.getTestSummary().setExceptions(Integer.valueOf(XmlUtil.getTextValue(counts, "exceptions")));
+
+      r1.setTestSummary(new TestSummary(
+              Integer.valueOf(XmlUtil.getTextValue(counts, "right")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "wrong")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "ignores")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "exceptions"))));
       pageHistoryReferences.add(r1);
     }
   }

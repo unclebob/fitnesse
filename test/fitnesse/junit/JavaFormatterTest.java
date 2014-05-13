@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.ExecutionResult;
 import org.junit.Before;
 import org.junit.Test;
 import util.TimeMeasurement;
@@ -77,7 +78,10 @@ public class JavaFormatterTest {
 
     TestSummary ts=new TestSummary(5,6,7,8);
     jf.testComplete(buildNestedTestPage(), ts);
-    ts.setRight(11); ts.setWrong(12); ts.setIgnores(13); ts.setExceptions(14);
+    ts.add(ExecutionResult.PASS);
+    ts.add(ExecutionResult.FAIL);
+    ts.add(ExecutionResult.IGNORE);
+    ts.add(ExecutionResult.ERROR);
     jf.testComplete(new WikiTestPage(secondPage), ts);
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }

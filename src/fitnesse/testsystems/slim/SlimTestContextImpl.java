@@ -11,9 +11,9 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
-  private Map<String, String> symbols = new HashMap<String, String>();
-  private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  private TestSummary testSummary = new TestSummary();
+  private final Map<String, String> symbols = new HashMap<String, String>();
+  private final Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+  private final TestSummary testSummary = new TestSummary();
 
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
@@ -37,22 +37,22 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   @Override
   public void incrementPassedTestsCount() {
-    testSummary.setRight(testSummary.getRight() + 1);
+    increment(ExecutionResult.PASS);
   }
 
   @Override
   public void incrementFailedTestsCount() {
-    testSummary.setWrong(testSummary.getWrong() + 1);
+    increment(ExecutionResult.FAIL);
   }
 
   @Override
   public void incrementErroredTestsCount() {
-    testSummary.setExceptions(testSummary.getExceptions() + 1);
+    increment(ExecutionResult.ERROR);
   }
 
   @Override
   public void incrementIgnoredTestsCount() {
-    testSummary.setIgnores(testSummary.getIgnores() + 1);
+    increment(ExecutionResult.IGNORE);
   }
 
   @Override
@@ -67,9 +67,5 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   public TestSummary getTestSummary() {
     return testSummary;
-  }
-
-  public void clearTestSummary() {
-    testSummary = new TestSummary();
   }
 }

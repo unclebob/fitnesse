@@ -109,20 +109,4 @@ public class TestSummary {
      }
     }
   }
-
-  public void setRight(int right) {
-    this.right = right;
-  }
-
-  public void setWrong(int wrong) {
-    this.wrong = wrong;
-  }
-
-  public void setIgnores(int ignores) {
-    this.ignores = ignores;
-  }
-
-  public void setExceptions(int exceptions) {
-    this.exceptions = exceptions;
-  }
 }
