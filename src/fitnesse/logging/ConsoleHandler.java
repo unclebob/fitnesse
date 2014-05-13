@@ -39,10 +39,12 @@ public class ConsoleHandler extends Handler {
 	}
 
 	if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-	    System.err.println(msg);
+	    System.err.print(msg);
 	} else {
-	    System.out.println(msg);
+	    System.out.print(msg);
 	}
+	// Use PrintStream#print not PrintStream#println because formatter
+	// add the new line at the end of the message
     }
 
     /**
