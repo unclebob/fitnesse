@@ -33,7 +33,7 @@ public class SuiteFilter {
 
   public SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
-    if(andTags != null){
+    if(andTags != null) {
       matchTags = new SuiteTagMatcher(andTags, true);
       andStrategy = true;
     } else {
