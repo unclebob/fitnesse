@@ -23,7 +23,6 @@ import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
-import fitnesse.reporting.TestHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
@@ -85,7 +84,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void doSending() throws Exception {
-    checkArguments();
+    debug |= request.hasInput("debug");
+    remoteDebug |= request.hasInput("remote_debug");
+    includeHtml |= request.hasInput("includehtml");
     data = page.getData();
 
     createMainFormatter();
@@ -175,16 +176,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
   }
+
   public class TestExecutor {
     public void execute() {
         doExecuteTests();
     }
-
-  }
-  protected void checkArguments() {
-    debug |= request.hasInput("debug");
-    remoteDebug |= request.hasInput("remote_debug");
-    includeHtml |= request.hasInput("includehtml");
   }
 
   private boolean isMultipleTestsRun() {
