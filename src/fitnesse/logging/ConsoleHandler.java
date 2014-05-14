@@ -1,25 +1,30 @@
 package fitnesse.logging;
 
+import java.io.PrintStream;
 import java.util.logging.ErrorManager;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * This <tt>Handler</tt> publishes log records on <tt>System.err</tt> or
+ * This <tt>Handler</tt> publishes log records on <tt>System.err</tt> and on
  * <tt>Sytem.out</tt>
  * <p>
- * If level <tt>WARNING</tt> or <tt>SEVERE</tt>, log message is sent to
+ * If level is <tt>WARNING</tt> or <tt>SEVERE</tt>, log message is sent to
  * <tt>System.err</tt> otherwise to <tt>System.out</tt>.
  */
-
 public class ConsoleHandler extends Handler {
+  private PrintStream out, err;
+
   /**
    * Initialize the console Handler level and formatter
    */
   public ConsoleHandler() {
     setLevel(Level.INFO);
     setFormatter(new LogFormatter());
+
+    setOut(System.out);
+    setErr(System.err);
   }
 
   @Override
@@ -39,9 +44,9 @@ public class ConsoleHandler extends Handler {
     }
 
     if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-      System.err.print(msg);
+      err.print(msg);
     } else {
-      System.out.print(msg);
+      out.print(msg);
     }
     // Use PrintStream#print not PrintStream#println because formatter
     // add the new line at the end of the message
@@ -57,7 +62,15 @@ public class ConsoleHandler extends Handler {
 
   @Override
   public void flush() {
-    System.out.flush();
-    System.err.flush();
+    out.flush();
+    err.flush();
+  }
+
+  /* package */void setOut(PrintStream ps) {
+    out = ps;
+  }
+
+  /* package */void setErr(PrintStream ps) {
+    err = ps;
   }
 }

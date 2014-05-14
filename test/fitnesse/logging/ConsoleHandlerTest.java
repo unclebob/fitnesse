@@ -4,37 +4,32 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ConsoleHandlerTest {
 
-  private static PrintStream outBackup, errBackup;
-
-  private static ByteArrayOutputStream baOut = new ByteArrayOutputStream();
-  private static ByteArrayOutputStream baErr = new ByteArrayOutputStream();
-  private static PrintStream out = new PrintStream(baOut);
-  private static PrintStream err = new PrintStream(baErr);
-
-  private ConsoleHandler handler = new ConsoleHandler();
+  private static final ConsoleHandler handler = new ConsoleHandler();
+  private static final ByteArrayOutputStream baOut = new ByteArrayOutputStream();
+  private static final ByteArrayOutputStream baErr = new ByteArrayOutputStream();
 
   @BeforeClass
   public static void setUpSuite() {
-    outBackup = System.out;
-    errBackup = System.err;
-    System.setOut(out);
-    System.setErr(err);
-  }
-
-  @AfterClass
-  public static void tearDownSuite() {
-    System.setOut(outBackup);
-    System.setErr(errBackup);
+    // Override defaults stream out and err to validate logs sent
+    handler.setOut(new PrintStream(baOut));
+    handler.setErr(new PrintStream(baErr));
+    // Mock the formatter
+    handler.setFormatter(new Formatter() {
+      @Override
+      public String format(LogRecord record) {
+        return record.getMessage();
+      }
+    });
   }
 
   @Before
@@ -47,32 +42,47 @@ public class ConsoleHandlerTest {
   public void logFineLine() {
     publishLogRecord(Level.FINE);
 
-    assertEquals(0, baOut.size());
-    assertEquals(0, baErr.size());
+    assertEquals(
+        "Message with level less than INFO must NOT be logged on stdout", 0,
+        baOut.size());
+    assertEquals(
+        "Message with level less than INFO must NOT be logged on stderr", 0,
+        baErr.size());
   }
 
   @Test
   public void logInfoLine() {
     publishLogRecord(Level.INFO);
 
-    assertTrue(baOut.toString().contains(MESSAGE));
-    assertEquals(0, baErr.size());
+    assertEquals("Message with level equals to INFO must be logged on stdout",
+        MESSAGE, baOut.toString());
+    assertEquals(
+        "Message with level equals to INFO must NOT be logged on stderr", 0,
+        baErr.size());
   }
 
   @Test
   public void logWarningLine() {
     publishLogRecord(Level.WARNING);
 
-    assertEquals(0, baOut.size());
-    assertTrue(baErr.toString().contains(MESSAGE));
+    assertEquals(
+        "Message with level equals or greater than WARNING must NOT be logged on stdout",
+        0,
+        baOut.size());
+    assertEquals(
+        "Message with level equals or greater than WARNING must be logged on stderr",
+        MESSAGE, baErr.toString());
   }
 
   @Test
   public void logSevereLine() {
     publishLogRecord(Level.SEVERE);
 
-    assertEquals(0, baOut.size());
-    assertTrue(baErr.toString().contains(MESSAGE));
+    assertEquals(
+        "Message with level equals to SEVERE must NOT be logged on stdout", 0,
+        baOut.size());
+    assertEquals("Message with level equals to SEVER must be logged on stderr",
+        MESSAGE, baErr.toString());
   }
 
   @Test
@@ -81,6 +91,10 @@ public class ConsoleHandlerTest {
     publishLogRecord(Level.INFO);
     handler.close();
     publishLogRecord(Level.INFO);
+
+    assertEquals("Close method call should not close the stream",
+        MESSAGE.length() * 2,
+        baOut.toString().length());
   }
 
   private static final String MESSAGE = "message";
@@ -90,5 +104,4 @@ public class ConsoleHandlerTest {
     logRecord.setLoggerName("MyLogger");
     handler.publish(logRecord);
   }
-
 }
