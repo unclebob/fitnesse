@@ -23,14 +23,6 @@ public class SuiteContentsFinder {
     testPageList = new LinkedList<WikiPage>();
   }
 
-  public List<WikiPage> makePageListForSingleTest() {
-    testPageList = new LinkedList<WikiPage>();
-
-    testPageList.add(pageToRun);
-
-    return testPageList;
-  }
-
   public List<WikiPage> makePageList() {
     getAllPagesToRunForThisSuite();
 
