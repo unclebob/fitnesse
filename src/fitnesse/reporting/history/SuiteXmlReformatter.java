@@ -30,6 +30,7 @@ public class SuiteXmlReformatter extends BaseFormatter {
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
   private boolean includeHtml;
+  private boolean includeInstructions;
   private TestHistory testHistory;
 
   public SuiteXmlReformatter(FitNesseContext context, WikiPage page, Writer writer, SuiteHistoryFormatter historyFormatter) {
@@ -50,6 +51,7 @@ public class SuiteXmlReformatter extends BaseFormatter {
     velocityContext.put("formatter", this);
     velocityContext.put("suiteExecutionReport", historyFormatter.getSuiteExecutionReport());
     velocityContext.put("includeHtml", includeHtml);
+    velocityContext.put("includeInstructions", includeInstructions);
     VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
     Template template = velocityEngine.getTemplate("suiteXML.vm");
     template.merge(velocityContext, writer);
@@ -77,5 +79,8 @@ public class SuiteXmlReformatter extends BaseFormatter {
     this.includeHtml = true;
   }
 
+  public void includeInstructions() {
+    this.includeInstructions = true;
+  }
 
 }
