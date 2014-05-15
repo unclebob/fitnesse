@@ -73,7 +73,7 @@ public class FitNesseMain {
     new PluginsClassLoader(rootPath).addPluginsToClassLoader();
   }
 
-  Integer launch(FitNesseContext context) throws Exception {
+  private Integer launch(FitNesseContext context) throws Exception {
     if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       String command = context.getProperty(COMMAND.getKey());
       if (command != null) {
