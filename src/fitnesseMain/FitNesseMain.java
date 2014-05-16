@@ -7,6 +7,7 @@ import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.reporting.ExitCodeListener;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 
@@ -20,6 +21,8 @@ import static fitnesse.ConfigurationParameter.*;
 
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
+
+  private final ExitCodeListener exitCodeListener = new ExitCodeListener();
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = null;
@@ -52,11 +55,19 @@ public class FitNesseMain {
     configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
     loadPlugins(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
 
+    if (contextConfigurator.get(COMMAND) != null) {
+      contextConfigurator.withTestSystemListener(exitCodeListener);
+    }
+
     FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
     logStartupInfo(context);
 
     update(context);
+
+    if ("true".equalsIgnoreCase(contextConfigurator.get(INSTALL_ONLY))) {
+      return null;
+    }
 
     return launch(context);
   }
@@ -78,7 +89,9 @@ public class FitNesseMain {
       String command = context.getProperty(COMMAND.getKey());
       if (command != null) {
         String output = context.getProperty(OUTPUT.getKey());
-        return executeSingleCommand(context.fitNesse, command, output);
+        executeSingleCommand(context.fitNesse, command, output);
+
+        return exitCodeListener.getFailCount();
       } else {
         context.fitNesse.start();
       }
@@ -86,8 +99,7 @@ public class FitNesseMain {
     return null;
   }
 
-  private int executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
-    TestTextFormatter.finalErrorCount = 0;
+  private void executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
 
     LOG.info("Executing command: " + command);
 
@@ -111,8 +123,6 @@ public class FitNesseMain {
     } else {
       LOG.info("-----Command Complete-----");
     }
-
-    return TestTextFormatter.finalErrorCount;
   }
 
   private void logStartupInfo(FitNesseContext context) {

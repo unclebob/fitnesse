@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -23,7 +24,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
-public class SuiteHistoryFormatter extends BaseFormatter {
+public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   private SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
@@ -99,7 +100,6 @@ public class SuiteHistoryFormatter extends BaseFormatter {
     if (suiteTime == null) return;
     suiteTime.stop();
     totalTimeMeasurement.stop();
-    super.close();
 
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
 

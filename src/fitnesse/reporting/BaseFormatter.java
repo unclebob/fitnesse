@@ -16,20 +16,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>, Closeable {
+public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> {
   protected final Logger LOG = Logger.getLogger(getClass().getName());
 
   private final WikiPage page;
   protected final FitNesseContext context;
-  // This counter is used by the command line executor and a few tests
-  @Deprecated
-  public static int finalErrorCount = 0;
-
-  // TODO: testCount and failCount are only used in TestTextFormatter
-  @Deprecated
-  protected int testCount = 0;
-  @Deprecated
-  protected int failCount = 0;
 
   protected BaseFormatter() {
     this.page = null;
@@ -52,12 +43,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
   }
 
   @Override
-  public void close() throws IOException {
-    finalErrorCount = failCount;
-  }
-
-
-  @Override
   public void testSystemStarted(TestSystem testSystem) {
   }
 
@@ -71,13 +56,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage>,
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
-    testCount++;
-    if (summary.getWrong() > 0) {
-      failCount++;
-    }
-    if (summary.getExceptions() > 0) {
-      failCount++;
-    }
   }
 
   public int getErrorCount() {

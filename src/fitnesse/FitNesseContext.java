@@ -7,6 +7,7 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
@@ -30,6 +31,7 @@ public class FitNesseContext {
   public final WikiPage root;
 
   public final TestSystemFactory testSystemFactory;
+  public final TestSystemListener testSystemListener;
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
@@ -46,10 +48,11 @@ public class FitNesseContext {
   private final Properties properties;
 
   protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
-      String rootDirectoryName, String contextRoot, VersionsController versionsController,
-      RecentChanges recentChanges, int port,
-      Authenticator authenticator, Logger logger,
-      TestSystemFactory testSystemFactory, Properties properties) {
+                            String rootDirectoryName, String contextRoot, VersionsController versionsController,
+                            RecentChanges recentChanges, int port,
+                            Authenticator authenticator, Logger logger,
+                            TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
+                            Properties properties) {
     super();
     this.version = version;
     this.root = root;
@@ -62,6 +65,7 @@ public class FitNesseContext {
     this.authenticator = authenticator;
     this.logger = logger;
     this.testSystemFactory = testSystemFactory;
+    this.testSystemListener = testSystemListener;
     this.properties = properties;
     runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());

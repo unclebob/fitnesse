@@ -20,13 +20,14 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import util.TimeMeasurement;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class TestXmlFormatter extends BaseFormatter {
+public class TestXmlFormatter extends BaseFormatter implements Closeable {
   private WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
@@ -147,7 +148,6 @@ public class TestXmlFormatter extends BaseFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
     setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }

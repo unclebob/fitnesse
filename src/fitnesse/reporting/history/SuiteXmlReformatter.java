@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -25,7 +26,7 @@ import org.xml.sax.SAXException;
  * Format test results as Xml. This responder returns an alternate
  * format of the test history.
  */
-public class SuiteXmlReformatter extends BaseFormatter {
+public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
 
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
@@ -41,8 +42,6 @@ public class SuiteXmlReformatter extends BaseFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
-
     testHistory = new TestHistory();
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
 
