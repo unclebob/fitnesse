@@ -68,27 +68,6 @@ public class SuiteHistoryFormatterTest {
   }
 
   @Test
-  public void testCompleteShouldSetFailedCount() throws Exception {
-    FitNesseContext context = mock(FitNesseContext.class);
-
-    TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
-    when(timeMeasurement.startedAt()).thenReturn(65L);
-    when(timeMeasurement.elapsed()).thenReturn(2L);
-    formatter.testStarted(testPage);
-
-    when(timeMeasurement.elapsed()).thenReturn(99L);
-    TestSummary testSummary = new TestSummary(4, 2, 7, 3);
-    formatter.testComplete(testPage, testSummary);
-
-    assertThat(formatter.getErrorCount(), is(1));
-
-    formatter.close();
-
-    assertThat(BaseFormatter.finalErrorCount, is(2));
-
-  }
-
-  @Test
   public void shouldRememberTestSummariesInReferences() throws Exception {
     performTest(13);
     List<PageHistoryReference> references = formatter.getPageHistoryReferences();

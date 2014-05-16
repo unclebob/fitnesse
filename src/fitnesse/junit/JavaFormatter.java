@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import fitnesse.wiki.WikiPagePath;
  *
  * @see {@link fitnesse.junit.FitNesseSuite}
  */
-public class JavaFormatter extends BaseFormatter {
+public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private String mainPageName;
   private boolean isSuite = true;

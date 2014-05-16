@@ -193,6 +193,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       runner.addTestSystemListener(newTestHistoryFormatter());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
+    if (context.testSystemListener != null) {
+      runner.addTestSystemListener(context.testSystemListener);
+    }
   }
 
   private void createMainFormatter() {

@@ -13,9 +13,10 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import util.TimeMeasurement;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public abstract class TestHtmlFormatter extends InteractiveFormatter {
+public abstract class TestHtmlFormatter extends InteractiveFormatter implements Closeable{
   protected TimeMeasurement latestTestTime;
 
   public TestHtmlFormatter(FitNesseContext context, final WikiPage page) {
@@ -56,7 +57,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
     removeStopTestLink();
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();

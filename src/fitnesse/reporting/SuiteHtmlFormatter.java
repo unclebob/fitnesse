@@ -4,6 +4,7 @@ package fitnesse.reporting;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import fitnesse.testrunner.WikiTestPage;
@@ -16,7 +17,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
+public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private TestSummary pageCounts = new TestSummary();
@@ -139,8 +140,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     publishAndAddLog();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
-
-    super.close();
   }
 
   @Override
