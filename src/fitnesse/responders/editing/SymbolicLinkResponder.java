@@ -151,7 +151,7 @@ public class SymbolicLinkResponder implements Responder {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     if (path == null) {
-      return false;
+      return true;
     }
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
     return !start.getPageCrawler().pageExists(path);
