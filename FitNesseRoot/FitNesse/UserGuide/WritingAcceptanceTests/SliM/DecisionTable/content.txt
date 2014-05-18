@@ -32,7 +32,7 @@ public class ShouldIBuyMilk {
   }
 
   public String goToStore() {
-    (pints == 0 && (dollars > 2 || creditCard)) ? "yes" : "no";
+    return (pints == 0 && (dollars > 2 || creditCard)) ? "yes" : "no";
   }
 
   // The following functions are optional.  If they aren't declared they'll be ignored.
