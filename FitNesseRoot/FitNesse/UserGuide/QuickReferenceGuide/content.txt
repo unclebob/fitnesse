@@ -188,11 +188,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE}${FitNesseOptDIR}${CODEend} | ${CODE} ${DOT}          ${CODEend} | Path to the fitnesse ''wiki'' home where ${FitNESSE}Root or ''-r name'' resides |
 | ${CODE}${FitNesseOptEXPIRE}${CODEend} | ${CODE} '''14'''        ${CODEend} | Number of days to retain older versions (.zip files) |
 | ${CODE}${FitNesseOptLOG}${CODEend} | ${CODE} ''off''         ${CODEend} | Where to put and what to call the run log |
-<<<<<<< HEAD
-| ${CODE}${FitNesseOptOMIT}${CODEend} | ${CODE} ''update''      ${CODEend} | Prevents (omits) updating from fitnesse.org |
-=======
 | ${CODE}${FitNesseOptOMIT}${CODEend} | ${CODE} ''update''      ${CODEend} | Prevents (omits) updating ${FitNESSE}Root content|
->>>>>>> 2a3eda7... Fix description of -o fitnesse command line arg
 | ${CODE}${FitNesseOptPORT}${CODEend} | ${CODE} '''80'''        ${CODEend} | Port for ${FitNESSE} to listen on |
 | ${CODE}${FitNesseOptROOT}${CODEend} | ${CODE} '''${FitNESSE}Root''' ${CODEend} | Name of root folder in the fitnesse ''wiki'' home or ''-d'' path |
 | ${CODE}${FitNesseCHARACTERSET}${CODEend} | ${CODE} ''off'' ${CODEend} | Unicode characters support in Test History Page |
