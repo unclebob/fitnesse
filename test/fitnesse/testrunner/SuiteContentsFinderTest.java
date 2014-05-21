@@ -109,6 +109,30 @@ public class SuiteContentsFinderTest {
     assertEquals(2, testPages.size());
     assertEquals(testPage, testPages.get(0));
     assertEquals(testPage2, testPages.get(1));
+  }
 
+  @Test
+  public void shouldRejectNestedPrunedPages() {
+    PageData data = testPage.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    testPage.commit(data);
+
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+
+    assertEquals(0, testPages.size());
+
+  }
+
+  @Test
+  public void shouldAddPrunedPageToTest() {
+    PageData data = suite.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    suite.commit(data);
+
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+
+    assertEquals(1, testPages.size());
   }
 }
