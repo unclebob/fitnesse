@@ -14,7 +14,7 @@ public class SuiteContentsFinder {
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
-  private LinkedList<WikiPage> testPageList;
+  private List<WikiPage> testPageList;
 
   public SuiteContentsFinder(final WikiPage pageToRun, final SuiteFilter suiteFilter, WikiPage root) {
     this.pageToRun = pageToRun;
@@ -38,7 +38,7 @@ public class SuiteContentsFinder {
   }
 
 
-  public LinkedList<WikiPage> getAllPagesToRunForThisSuite() {
+  public List<WikiPage> getAllPagesToRunForThisSuite() {
     String content = pageToRun.getData().getHtml();
     //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
@@ -53,9 +53,8 @@ public class SuiteContentsFinder {
     return testPageList;
   }
 
-  private LinkedList<WikiPage> getAllTestPagesUnder() {
-    LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-    addTestPagesToSuite(testPages, pageToRun, suiteFilter);
+  private List<WikiPage> getAllTestPagesUnder() {
+    List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
@@ -76,20 +75,31 @@ public class SuiteContentsFinder {
     return testPages;
   }
 
-  private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) {
-      if (suiteFilter.isMatchingTest(page)) {
-        suite.add(page);
-      }
+  private List<WikiPage> addTestPagesToSuite(WikiPage page, SuiteFilter suiteFilter) {
+    List<WikiPage> testPages = new LinkedList<WikiPage>();
+    boolean includePage = isTopPage(page) || !isPruned(page);
+    if (suiteFilter.isMatchingTest(page) && includePage) {
+      testPages.add(page);
+    }
 
-      SuiteFilter suiteFilterForChildren = suiteFilter.getFilterForTestsInSuite(page);
+    SuiteFilter suiteFilterForChildren = includePage ? suiteFilter.getFilterForTestsInSuite(page) : SuiteFilter.NO_MATCHING;
 
-	    List<WikiPage> children = getChildren(page);
-	    for (WikiPage child : children) {
-	      addTestPagesToSuite(suite, child, suiteFilterForChildren);
-	    }
-	  }
+    for (WikiPage child : getChildren(page)) {
+      testPages.addAll(addTestPagesToSuite(child, suiteFilterForChildren));
+    }
+    return testPages;
+  }
 
-	  private static List<WikiPage> getChildren(WikiPage page) {
+  private boolean isPruned(WikiPage page) {
+    return page.getData().hasAttribute(PageData.PropertyPRUNE);
+
+  }
+
+  private boolean isTopPage(WikiPage page) {
+    return page == pageToRun;
+  }
+
+  private static List<WikiPage> getChildren(WikiPage page) {
 	    List<WikiPage> children = new ArrayList<WikiPage>();
 	    children.addAll(page.getChildren());
 	    return children;
