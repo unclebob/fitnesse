@@ -27,10 +27,6 @@ label {
 }
 
 /** Edit page **/
-.editPage {
-    overflow: hidden;
-}
-
 .editPage article {
     margin: 0;
 }
