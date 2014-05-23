@@ -126,6 +126,10 @@ public class FitNesseMain {
   }
 
   private void logStartupInfo(FitNesseContext context) {
+    // This message is on standard output for backward compatibility with Jenkins Fitnesse plugin.
+    // (ConsoleHandler of JUL uses standard error output for all messages).
+    System.out.println("Bootstrapping FitNesse, the fully integrated standalone wiki and acceptance testing framework.");
+    
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);
