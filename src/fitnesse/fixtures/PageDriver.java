@@ -272,12 +272,4 @@ public class PageDriver {
     PageData data = page.getData();
     return data.hasAttribute(attribute);
   }
-
-  public void sendAsHash(Map<String, String> hash) {
-    this.hash = hash;
-  }
-
-  public String hashIs(String key) {
-    return hash.get(key);
-  }
 }
