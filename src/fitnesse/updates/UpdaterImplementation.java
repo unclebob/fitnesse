@@ -95,15 +95,15 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public boolean update() throws IOException {
     if (shouldUpdate()) {
-      LOG.info("Unpacking new version of FitNesse resources. Please be patient...");
+      LOG.warning("Unpacking new version of FitNesse resources. Please be patient...");
       super.update();
-      LOG.info("**********************************************************");
-      LOG.info("Files have been updated to a new version.");
-      LOG.info("Please read the release notes on ");
-      LOG.info("http://localhost:" + (context != null ? context.port : "xxx") +
+      LOG.warning("**********************************************************");
+      LOG.warning("Files have been updated to a new version.");
+      LOG.warning("Please read the release notes on ");
+      LOG.warning("http://localhost:" + (context != null ? context.port : "xxx") +
           "/FitNesse.ReleaseNotes");
-      LOG.info("to find out about the new features and fixes.");
-      LOG.info("**********************************************************");
+      LOG.warning("to find out about the new features and fixes.");
+      LOG.warning("**********************************************************");
 
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
