@@ -102,42 +102,55 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
   }
 
   private TestSystem startTestSystem(final WikiPageIdentity identity, final List<WikiPage> testPages) throws IOException {
-    testSystem = testSystemFactory.create(new Descriptor() {
+    Descriptor descriptor = new Descriptor() {
       private String classPath;
 
-      @Override public String getTestSystem() {
+      @Override
+      public String getTestSystem() {
         String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
         if (testSystemName == null)
           return "fit";
         return testSystemName;
       }
 
-      @Override public String getTestSystemType() {
+      @Override
+      public String getTestSystemType() {
         return getTestSystem().split(":")[0];
       }
 
-      @Override public String getClassPath() {
+      @Override
+      public String getClassPath() {
         if (classPath == null) {
           classPath = new ClassPathBuilder().buildClassPath(testPages);
         }
         return classPath;
       }
 
-      @Override public boolean runInProcess() {
+      @Override
+      public boolean runInProcess() {
         return runInProcess;
       }
 
-      @Override public boolean isDebug() {
+      @Override
+      public boolean isDebug() {
         return enableRemoteDebug;
       }
 
-      @Override public String getVariable(String name) {
+      @Override
+      public String getVariable(String name) {
         return identity.getVariable(name);
       }
-    });
+    };
 
-    testSystem.addTestSystemListener(this);
-    testSystem.start();
+    try {
+      testSystem = testSystemFactory.create(descriptor);
+
+      testSystem.addTestSystemListener(this);
+      testSystem.start();
+    } catch (Exception e) {
+      testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
+      return null;
+    }
     return testSystem;
   }
 

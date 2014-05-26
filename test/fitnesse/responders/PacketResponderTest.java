@@ -1,6 +1,7 @@
 package fitnesse.responders;
 
 import static org.junit.Assert.assertEquals;
+import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 
 import fitnesse.wiki.WikiPageUtil;
 import org.json.JSONObject;
@@ -34,11 +35,19 @@ public class PacketResponderTest {
     return (SimpleResponse) responder.makeResponse(context, request);
   }
 
+  private void assertResponseContentEquals(String expected, SimpleResponse response) {
+    if (expected.startsWith("{")) {
+      assertJsonEquals(expected, response.getContent());
+    } else {
+      assertEquals(expected, response.getContent());
+    }
+  }
+
   private void assertPageWithTableResponseWith(String table, String expected) throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("TablePage"), table);
     request.setResource("TablePage");
     SimpleResponse response = makeResponse();
-    assertEquals(expected, response.getContent());
+    assertResponseContentEquals(expected, response);
   }
 
   @Test

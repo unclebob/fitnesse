@@ -38,7 +38,7 @@ public class UploadResponder implements SecureResponder {
 
     if (uploadedFile.isUsable()) {
 
-      final File file = makeFileToCreate(uploadedFile, resource);
+      final File file = makeFileToCreate(makeRelativeFilename(uploadedFile.getName()), resource);
 
       if (!FileResponder.isInFilesDirectory(new File(rootPath), file)) {
         return new ErrorResponder("Invalid path: " + uploadedFile.getName()).makeResponse(context, request);
@@ -79,13 +79,12 @@ public class UploadResponder implements SecureResponder {
     return response;
   }
 
-  private File makeFileToCreate(UploadedFile uploadedFile, String resource) {
-    String relativeFilename = makeRelativeFilename(uploadedFile.getName());
-    String filename = relativeFilename;
-    int prefix = 1;
+  private File makeFileToCreate(String filename, String resource) {
     File file = new File(makeFullFilename(resource, filename));
+    int prefix = 1;
+    // TODO: This is where things go wrong. Should check if file is valid beforehand.
     while (file.exists()) {
-      filename = makeNewFilename(relativeFilename, prefix++);
+      filename = makeNewFilename(filename, prefix++);
       file = new File(makeFullFilename(resource, filename));
     }
     return file;
@@ -104,20 +103,7 @@ public class UploadResponder implements SecureResponder {
   }
 
   public static String makeNewFilename(String filename, int copyId) {
-    String[] parts = filename.split("\\.");
-
-    if (parts.length == 1)
-      return filename + "_copy" + copyId;
-    else {
-      StringBuilder newName = new StringBuilder();
-      for (int i = 0; i < parts.length - 1; i++) {
-        if (i != 0)
-          newName.append(".");
-        newName.append(parts[i]);
-      }
-      newName.append("_copy").append(copyId).append(".").append(parts[parts.length - 1]);
-      return newName.toString();
-    }
+    return "copy_" + copyId + "_of_" + filename;
   }
 
   public SecureOperation getSecureOperation() {

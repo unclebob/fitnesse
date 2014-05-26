@@ -49,6 +49,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     if (factory == null) {
       factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
     }
+    if (factory == null) {
+      throw new RuntimeException(String.format("Unknown test system: '%s'", descriptor.getTestSystemType()));
+    }
     return factory.create(descriptor);
   }
 

@@ -262,9 +262,9 @@ public class Request {
     buffer.append("Request URI:  ").append(requestURI).append('\n');
     buffer.append("Resource:     ").append(resource).append('\n');
     buffer.append("Query String: ").append(queryString).append('\n');
-    buffer.append("Hearders: (" + headers.size() + ")\n");
+    buffer.append("Hearders: (").append(headers.size()).append(")\n");
     addMap(headers, buffer);
-    buffer.append("Form Inputs: (" + inputs.size() + ")\n");
+    buffer.append("Form Inputs: (").append(inputs.size()).append(")\n");
     addMap(inputs, buffer);
     buffer.append("Entity Body: \n");
     buffer.append(entityBody).append('\n');

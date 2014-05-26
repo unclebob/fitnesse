@@ -119,27 +119,40 @@ public class FixtureTest {
 
   @Test
   public void testFixtureArguments() throws Exception {
-    String prefix = "<table><tr><td>fit.Fixture</td>";
-    String suffix = "</tr></table>";
-    Fixture f = new Fixture();
-
-    Parse table = new Parse(prefix + "<td>1</td>" + suffix);
-    f.getArgsForTable(table);
-    String[] args = f.getArgs();
+    String[] args = getArgsForTableWith("<td>1</td>");
     assertEquals(1, args.length);
     assertEquals("1", args[0]);
 
-    table = new Parse(prefix + "" + suffix);
-    f.getArgsForTable(table);
-    args = f.getArgs();
+    args = getArgsForTableWith("");
     assertEquals(0, args.length);
 
-    table = new Parse(prefix + "<td>1</td><td>2</td>" + suffix);
-    f.getArgsForTable(table);
-    args = f.getArgs();
+    args = getArgsForTableWith("<td>1</td><td>2</td>");
     assertEquals(2, args.length);
     assertEquals("1", args[0]);
     assertEquals("2", args[1]);
+  }
+
+  private String[] getArgsForTableWith(String argsDefinition) throws Exception {
+    String prefix = "<table><tr><td>fit.Fixture</td>";
+    String suffix = "</tr></table>";
+    Parse table = new Parse(prefix + argsDefinition + suffix);
+    Fixture f = new Fixture();
+    f.getArgsForTable(table);
+    return f.getArgs();
+  }
+
+  @Test
+  public void testFixtureArgumentsWithEscapedSymbols() throws Exception {
+    // "<", ">" are usually escaped (unless surrounded by !- .. -!)
+    String[] args = getArgsForTableWith("<td>a &lt; 3 and b &gt; 1</td>");
+    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+  }
+
+  @Test
+  public void testFixtureArgumentsWithSpecialSymbols() throws Exception {
+    // "<", ">" are usually escaped but may come in plan text from !- .. -!
+    String[] args = getArgsForTableWith("<td>a < 3 and b > 1</td>");
+    assertEquals(new String[] {"a < 3 and b > 1"}, args);
   }
 
   @Test

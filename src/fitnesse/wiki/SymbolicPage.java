@@ -38,8 +38,10 @@ public class SymbolicPage extends BaseWikiPage {
   @Override
   protected WikiPage getNormalChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
-    if (childPage != null && !(childPage instanceof SymbolicPage))
+    if (childPage != null) {
       childPage = new SymbolicPage(name, childPage, this);
+    }
+
     return childPage;
   }
 

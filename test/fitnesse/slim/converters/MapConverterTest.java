@@ -1,10 +1,15 @@
 package fitnesse.slim.converters;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
+
+import fitnesse.html.HtmlTag;
 import org.junit.Before;
 import org.junit.Test;
+import util.StringUtil;
 
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 public class MapConverterTest {
   private MapEditor converter;
@@ -24,7 +29,8 @@ public class MapConverterTest {
 
   @SuppressWarnings("unchecked")
   private void makeMap(String inputString) {
-    result = (Map<String, String>) converter.fromString(inputString);
+    converter.setAsText(inputString);
+    result = (Map<String, String>) converter.getValue();
   }
 
   @Test
@@ -111,5 +117,30 @@ public class MapConverterTest {
         "</tr>" +
         "</table>");
     assertEquals(0, result.size());
+  }
+
+  @Test
+  public void shouldRenderTableAsHtml() {
+    MapEditor editor = new MapEditor();
+    editor.setValue(aMap());
+
+    assertEquals(StringUtil.join(Arrays.asList(
+            "<table class=\"hash_table\">",
+            "\t<tr class=\"hash_row\">",
+            "\t\t<td class=\"hash_key\">a</td>",
+            "\t\t<td class=\"hash_value\">b</td>",
+            "\t</tr>",
+            "\t<tr class=\"hash_row\">",
+            "\t\t<td class=\"hash_key\">c</td>",
+            "\t\t<td class=\"hash_value\">d</td>",
+            "\t</tr>",
+            "</table>"), HtmlTag.endl), editor.getAsText());
+  }
+
+  private Object aMap() {
+    Map map = new TreeMap();
+    map.put("a", "b");
+    map.put("c", "d");
+    return map;
   }
 }

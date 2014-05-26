@@ -1,10 +1,10 @@
 ## The menu is only shown after the page executed.
-<div class="hidden">
+<div id="menu-nav" class="hidden">
 #parse( "menu.vm" )
 </div>
 <script type="text/javascript">//<!--
  $(function() {
-   $('nav .hidden').removeClass('hidden');
+   $('#menu-nav').removeClass('hidden');
  });
 //--></script>
 

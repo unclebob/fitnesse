@@ -24,8 +24,11 @@ public class EscapeDirective extends Directive {
 
   @Override
   public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-    String text = Utils.escapeHTML(String.valueOf(node.jjtGetChild(0).value(context)));
-    writer.write(text);
+    Object value = node.jjtGetChild(0).value(context);
+    if (value != null) {
+      String text = Utils.escapeHTML(String.valueOf(value));
+      writer.write(text);
+    }
     return true;
   }
 }

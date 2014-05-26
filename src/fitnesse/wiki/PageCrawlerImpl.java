@@ -123,9 +123,7 @@ public class PageCrawlerImpl implements PageCrawler {
     if (page.getClass() == SymbolicPage.class)
       return;
     listener.process(page);
-    List<?> children = page.getChildren();
-    for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage wikiPage = (WikiPage) iterator.next();
+    for (WikiPage wikiPage : page.getChildren()) {
       traverse(wikiPage, listener);
     }
   }

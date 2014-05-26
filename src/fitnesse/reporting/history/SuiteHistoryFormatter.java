@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -13,6 +14,7 @@ import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -22,7 +24,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
-public class SuiteHistoryFormatter extends BaseFormatter {
+public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   private SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
@@ -98,27 +100,30 @@ public class SuiteHistoryFormatter extends BaseFormatter {
     if (suiteTime == null) return;
     suiteTime.stop();
     totalTimeMeasurement.stop();
-    super.close();
+
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
 
     if (testHistoryFormatter != null) {
       testHistoryFormatter.close();
     }
-    Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
-    try {
-      VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("suiteExecutionReport", getSuiteExecutionReport());
-      VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
-      Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
-      template.merge(velocityContext, writer);
-    } finally {
-      writer.close();
+
+    if (PageType.fromWikiPage(getPage()) == PageType.SUITE) {
+      Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
+      try {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("suiteExecutionReport", getSuiteExecutionReport());
+        VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
+        Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
+        template.merge(velocityContext, writer);
+      } finally {
+        writer.close();
+      }
     }
   }
 
   @Override
   public int getErrorCount() {
-    return getPageCounts().wrong + getPageCounts().exceptions;
+    return getPageCounts().getWrong() + getPageCounts().getExceptions();
   }
 
   public List<SuiteExecutionReport.PageHistoryReference> getPageHistoryReferences() {

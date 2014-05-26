@@ -9,7 +9,7 @@ import fitnesse.components.Logger;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
-import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
@@ -50,6 +50,7 @@ public class ContextConfigurator {
   private RecentChanges recentChanges;
   /** Others as name-value pairs: */
   private final Properties properties = new Properties();
+  private TestSystemListener testSystemListener;
 
   private ContextConfigurator() {
   }
@@ -71,6 +72,12 @@ public class ContextConfigurator {
     for (String key : newProperties.stringPropertyNames()) {
       withParameter(key, newProperties.getProperty(key));
     }
+    return this;
+  }
+
+
+  public ContextConfigurator withTestSystemListener(TestSystemListener testSystemListener) {
+    this.testSystemListener = testSystemListener;
     return this;
   }
 
@@ -125,6 +132,7 @@ public class ContextConfigurator {
           authenticator,
           logger,
           testSystemFactory,
+          testSystemListener,
           properties);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;

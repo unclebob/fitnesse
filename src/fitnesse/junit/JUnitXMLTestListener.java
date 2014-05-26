@@ -30,10 +30,10 @@ public class JUnitXMLTestListener implements TestSystemListener<WikiTestPage> {
     int failures = 0;
     String failureXml = "";
     
-    if (result.exceptions + result.wrong > 0) {
+    if (result.getExceptions() + result.getWrong() > 0) {
       failureXml = "<failure type=\"java.lang.AssertionError\" message=\"" + " exceptions: "
-          + result.exceptions + " wrong: " + result.wrong + "\"></failure>";
-      if (result.exceptions > 0)
+          + result.getExceptions() + " wrong: " + result.getWrong() + "\"></failure>";
+      if (result.getExceptions() > 0)
         errors = 1;
       else
         failures = 1;

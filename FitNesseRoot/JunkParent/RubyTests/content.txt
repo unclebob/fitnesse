@@ -1,7 +1,0 @@
-!contents -g 
-
-!define TEST_SYSTEM {slim}
-!define TEST_RUNNER {/Users/unclebob/projects/RubySlim/lib/run_ruby_slim.rb}
-!define COMMAND_PATTERN {ruby -I %p %m}
-!define PATH_SEPARATOR {-I}
-!path /Users/unclebob/projects/RubySlim/lib

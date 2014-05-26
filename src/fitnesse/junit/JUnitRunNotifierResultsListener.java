@@ -36,13 +36,13 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
+    if (testSummary.getWrong() == 0 && testSummary.getExceptions() == 0) {
       if (test.isTestPage()) {
         notifier.fireTestFinished(descriptionFor(test));
       }
     } else {
       notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("wrong: "
-          + testSummary.wrong + " exceptions: " + testSummary.exceptions)));
+          + testSummary.getWrong() + " exceptions: " + testSummary.getExceptions())));
     }
   }
 

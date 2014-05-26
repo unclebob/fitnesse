@@ -1,5 +1,5 @@
 #if(!$pageTitle.Link)
  #if( $!helpText )
-  <p class="lead"> $helpText </p>
+  <p class="lead"> #escape($helpText) </p>
  #end
 #end

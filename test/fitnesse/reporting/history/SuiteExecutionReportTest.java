@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.SuiteExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -56,8 +55,8 @@ public class SuiteExecutionReportTest {
   public void shouldBeEqualIfReferencesAreTheSame() throws Exception {
     PageHistoryReference r1 = new PageHistoryReference("TestPage", 1111, 8);
     PageHistoryReference r2 = new PageHistoryReference("TestPage", 1111, 8);
-    r1.getTestSummary().right = 3;
-    r2.getTestSummary().right = 3;
+    r1.setTestSummary(new TestSummary(3, 0, 0, 0));
+    r2.setTestSummary(new TestSummary(3, 0, 0, 0));
     report1.addPageHistoryReference(r1);
     report2.addPageHistoryReference(r2);
     assertEquals(report1, report2);
@@ -100,8 +99,6 @@ public class SuiteExecutionReportTest {
     PageHistoryReference r2a = new PageHistoryReference("testPage", 1234, 5);
     PageHistoryReference r1b = new PageHistoryReference("myPage", 7734, 6);
     PageHistoryReference r2b = new PageHistoryReference("myPage", 7734, 6);
-    r1a.getTestSummary().right=4;
-    r2a.getTestSummary().right=4;
     report1.addPageHistoryReference(r1a);
     report1.addPageHistoryReference(r1b);
     report2.addPageHistoryReference(r2a);

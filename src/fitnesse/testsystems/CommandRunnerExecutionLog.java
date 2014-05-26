@@ -3,8 +3,11 @@
 package fitnesse.testsystems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import util.StringUtil;
 
 public class CommandRunnerExecutionLog implements ExecutionLog {
 
@@ -34,7 +37,7 @@ public class CommandRunnerExecutionLog implements ExecutionLog {
 
   @Override
   public String getCommand() {
-    return runner.getCommand();
+    return StringUtil.join(Arrays.asList(runner.getCommand()), " ");
   }
 
   @Override

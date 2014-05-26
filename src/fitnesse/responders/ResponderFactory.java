@@ -31,7 +31,6 @@ import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
@@ -62,7 +61,7 @@ public class ResponderFactory {
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
-    addResponder("suite", SuiteResponder.class);
+    addResponder("suite", TestResponder.class);
     addResponder("proxy", SerializedPageResponder.class);
     addResponder("versions", VersionSelectionResponder.class);
     addResponder("viewVersion", VersionResponder.class);

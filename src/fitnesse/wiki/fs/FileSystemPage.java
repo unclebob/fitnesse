@@ -45,10 +45,7 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent);
-    path = null;
-    fileSystem = parent.fileSystem;
-    versionsController = parent.versionsController;
+    this(name, parent, parent.fileSystem, parent.versionsController);
     autoCommit = parent.autoCommit;
   }
 

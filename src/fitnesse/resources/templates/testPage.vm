@@ -1,4 +1,27 @@
+<script type="text/javascript">
+    window.onbeforeunload = function () {
+        var stoptestDiv = document.querySelector("li#test-action a.stop");
+
+        if (stoptestDiv){
+            return "There is a test or suite currently running.  Are you sure you want to navigate away from this page?";
+        }
+    }
+</script>
+
 <div id="test-summary">Running Tests ...</div>
+
+<div id="test-action">
+## Filled with stop/output buttons
+</div>
+
+#if ($multipleTestsRun)
+<div id="test-summaries">
+    <h2>Test Summaries</h2>
+## Filled with test results
+</div>
+
+<h2>Test output</h2>
+#end
 
 ## Test results are placed here:
 $testExecutor.execute()

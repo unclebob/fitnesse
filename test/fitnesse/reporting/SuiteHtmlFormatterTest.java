@@ -134,7 +134,6 @@ public class SuiteHtmlFormatterTest {
 
     String results = pageBuffer.toString();
 
-    assertSubString("<h2>Test Output</h2>", results);
     assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);

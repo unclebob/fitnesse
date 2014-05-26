@@ -20,17 +20,12 @@ label {
 /** Wiki pages (wiki, test, suite, report) **/
 .wikiPage td,
 .testPage td,
-.suitePage td,
 .testExecutionReport td,
 .compareHistory td {
   white-space: pre-line;
 }
 
 /** Edit page **/
-.editPage {
-    overflow: hidden;
-}
-
 .editPage article {
     margin: 0;
 }
@@ -53,7 +48,7 @@ label {
 .editPage #pagetypes label:first-child {
     margin-left: 145px;
 }
-.editPage textarea, .editPage iframe {
+.editPage textarea {
 	display: block;
 	width: 100%;
 	height: 32em;

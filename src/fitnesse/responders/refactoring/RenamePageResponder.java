@@ -45,6 +45,6 @@ public class RenamePageResponder extends PageMovementResponder {
 
   @Override
   protected String getErrorMessageHeader() {
-    return "Cannot rename " + makeLink(oldNameOfPageToBeMoved) + " to " + newName;
+    return "Cannot rename " + makeLink(oldNameOfPageToBeMoved) + " to " + newName + ".";
   }
 }
