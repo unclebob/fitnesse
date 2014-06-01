@@ -85,20 +85,19 @@ public class XmlUtil {
     return (text.length() == 0) ? null : text;
   }
 
-  public static void addTextNode(Document document, Element element, String tagName, String value) {
+  public static void addTextNode(Element element, String tagName, String value) {
     if (value != null && !(value.equals(""))) {
-      Element titleElement = document.createElement(tagName);
-      Text titleText = document.createTextNode(value);
-      titleElement.appendChild(titleText);
+      Element titleElement = element.getOwnerDocument().createElement(tagName);
+      titleElement.setTextContent(value);
       element.appendChild(titleElement);
     }
   }
 
-  public static void addCdataNode(Document document, Element element, String tagName, String value) {
+  public static void addCdataNode(Element element, String tagName, String value) {
     if (value != null && !(value.equals(""))) {
+      Document document = element.getOwnerDocument();
       Element titleElement = document.createElement(tagName);
-      CDATASection cData = document.createCDATASection(value);
-      titleElement.appendChild(cData);
+      titleElement.appendChild(document.createCDATASection(value));
       element.appendChild(titleElement);
     }
   }

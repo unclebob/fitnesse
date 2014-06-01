@@ -50,7 +50,7 @@ public class XmlUtilTest {
     Element root = doc.createElement("root");
     doc.appendChild(root);
 
-    XmlUtil.addCdataNode(doc, root, "mydata", "<>&#;");
+    XmlUtil.addCdataNode(root, "mydata", "<>&#;");
 
     Element myDataElement = XmlUtil.getElementByTagName(root, "mydata");
     assertNotNull(myDataElement);
