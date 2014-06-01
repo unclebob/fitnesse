@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import fitnesse.testsystems.TestSummary;
 
@@ -118,15 +117,10 @@ public class SuiteExecutionReportTest {
     element = mock(Element.class);
     NodeList matchingNodeList = mock(NodeList.class);
     Node elementWithText = mock(Element.class);
-    NodeList childNodeList = mock(NodeList.class);
-    Text text = mock(Text.class);
     when(element.getElementsByTagName("runTimeInMillis")).thenReturn(matchingNodeList);
     when(matchingNodeList.getLength()).thenReturn(1);
     when(matchingNodeList.item(0)).thenReturn(elementWithText);
-    when(elementWithText.getChildNodes()).thenReturn(childNodeList);
-    when(childNodeList.getLength()).thenReturn(1);
-    when(childNodeList.item(0)).thenReturn(text);
-    when(text.getNodeValue()).thenReturn("255");
+    when(elementWithText.getTextContent()).thenReturn("255");
     assertThat(report1.getRunTimeInMillisOrZeroIfNotPresent(element), is(255L));
   }
 }

@@ -78,16 +78,11 @@ public class XmlUtil {
   }
 
   public static String getElementText(Element namedElement) {
-    if (namedElement == null)
+    if (namedElement == null) {
       return null;
-    NodeList nodes = namedElement.getChildNodes();
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Node node = nodes.item(i);
-      if (node instanceof Text)
-        return node.getNodeValue();
     }
-    //throw new Exception("No child of " + namedElement.getNodeName() + " is a Text node");
-    return null;
+    String text = namedElement.getTextContent();
+    return (text.length() == 0) ? null : text;
   }
 
   public static void addTextNode(Document document, Element element, String tagName, String value) {
