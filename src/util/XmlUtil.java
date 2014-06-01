@@ -16,7 +16,7 @@ import java.io.*;
 public class XmlUtil {
   private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-  public static DocumentBuilder getDocumentBuilder() {
+  private static DocumentBuilder getDocumentBuilder() {
     try {
       return documentBuilderFactory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
@@ -29,8 +29,12 @@ public class XmlUtil {
   }
 
   public static Document newDocument(InputStream input) throws IOException, SAXException {
+    return newDocument(new InputSource(input));
+  }
+
+  private static Document newDocument(InputSource source) throws IOException, SAXException {
     try {
-      return getDocumentBuilder().parse(input);
+      return getDocumentBuilder().parse(source);
     } catch (SAXParseException e) {
       throw new SAXException(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
     }
@@ -45,8 +49,7 @@ public class XmlUtil {
   }
 
   public static Document newDocument(String input) throws IOException, SAXException {
-    ByteArrayInputStream is = new ByteArrayInputStream(input.getBytes("UTF-8"));
-    return newDocument(is);
+    return newDocument(new InputSource(new StringReader(input)));
   }
 
   public static Element getElementByTagName(Element element, String name) {
