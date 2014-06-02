@@ -246,7 +246,7 @@ public class FileSystemPage extends BaseWikiPage {
     final WikiPageProperties props = new WikiPageProperties();
     InputStream content = fileVersion.getContent();
     try {
-      props.loadFromXml(content);
+      props.loadFromXmlStream(content);
     } finally {
       content.close();
     }

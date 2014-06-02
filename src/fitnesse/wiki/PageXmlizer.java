@@ -42,7 +42,7 @@ public class PageXmlizer {
   public Document xmlize(PageData data) {
     Document document = XmlUtil.newDocument();
     Element dataElement = document.createElement("data");
-    XmlUtil.addCdataNode(document, dataElement, "content", data.getContent());
+    XmlUtil.addCdataNode(dataElement, "content", data.getContent());
 
     Element propertiesElement = data.getProperties().makeRootElement(document);
     dataElement.appendChild(propertiesElement);
@@ -66,9 +66,9 @@ public class PageXmlizer {
     return data;
   }
 
-  private void addPageXmlToElement(Document document, Element context, WikiPage page) {
+  private void addPageXmlToElement(Element context, WikiPage page) {
     if (pageMeetsConditions(page))
-      context.appendChild(createXmlFromPage(document, page));
+      context.appendChild(createXmlFromPage(context.getOwnerDocument(), page));
   }
 
   private boolean pageMeetsConditions(WikiPage page) {
@@ -82,28 +82,28 @@ public class PageXmlizer {
 
   private Element createXmlFromPage(Document document, WikiPage page) {
     Element pageElement = document.createElement("page");
-    XmlUtil.addTextNode(document, pageElement, "name", page.getName());
-    addLastModifiedTag(page, document, pageElement);
+    XmlUtil.addTextNode(pageElement, "name", page.getName());
+    addLastModifiedTag(page, pageElement);
 
-    addXmlFromChildren(page, document, pageElement);
+    addXmlFromChildren(page, pageElement);
 
     return pageElement;
   }
 
-  private void addLastModifiedTag(WikiPage page, Document document, Element pageElement) {
+  private void addLastModifiedTag(WikiPage page, Element pageElement) {
     Date lastModificationTime = page.getData().getProperties().getLastModificationTime();
     String lastModifiedTimeString = dateFormat.format(lastModificationTime);
-    XmlUtil.addTextNode(document, pageElement, "lastModified", lastModifiedTimeString);
+    XmlUtil.addTextNode(pageElement, "lastModified", lastModifiedTimeString);
   }
 
-  private void addXmlFromChildren(WikiPage page, Document document, Element pageElement) {
-    Element childrenElement = document.createElement("children");
+  private void addXmlFromChildren(WikiPage page, Element pageElement) {
+    Element childrenElement = pageElement.getOwnerDocument().createElement("children");
     List<WikiPage> children = page.getChildren();
     Collections.sort(children);
 
     for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
       WikiPage child = iterator.next();
-      addPageXmlToElement(document, childrenElement, child);
+      addPageXmlToElement(childrenElement, child);
     }
     pageElement.appendChild(childrenElement);
   }
