@@ -3,6 +3,7 @@ package fitnesse.junit;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -17,6 +18,7 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
+  private Throwable firstFailure;
 
   public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
     this.notifier = notifier;
@@ -25,24 +27,18 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testStarted(WikiTestPage test) {
+    firstFailure = null;
     if (test.isTestPage()) {
       notifier.fireTestStarted(descriptionFor(test));
     }
   }
 
-  private Description descriptionFor(WikiTestPage test) {
-    return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
-  }
-
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    if (testSummary.getWrong() == 0 && testSummary.getExceptions() == 0) {
-      if (test.isTestPage()) {
-        notifier.fireTestFinished(descriptionFor(test));
-      }
-    } else {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("wrong: "
-          + testSummary.getWrong() + " exceptions: " + testSummary.getExceptions())));
+    if (firstFailure != null) {
+      notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
+    } else if (test.isTestPage()) {
+      notifier.fireTestFinished(descriptionFor(test));
     }
   }
 
@@ -52,10 +48,17 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    if (testResult != null &&
+            testResult.doesCount() &&
+            (testResult.getExecutionResult() == ExecutionResult.FAIL ||
+                    testResult.getExecutionResult() == ExecutionResult.ERROR)) {
+      firstFailure(testResult.getExecutionResult(), createMessage(testResult));
+    }
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    firstFailure(exceptionResult.getExecutionResult(), exceptionResult.getMessage());
   }
 
   @Override
@@ -66,4 +69,31 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
   public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
   }
 
+  private Description descriptionFor(WikiTestPage test) {
+    return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
+  }
+
+  String createMessage(TestResult testResult) {
+    if (testResult.hasActual() && testResult.hasExpected()) {
+      return String.format("[%s] expected [%s]",
+              testResult.getActual(),
+              testResult.getExpected());
+    } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
+      return String.format("[%s] %s",
+              testResult.hasActual() ? testResult.getActual() : testResult.getExpected(),
+              testResult.getMessage());
+    }
+    return testResult.getMessage();
+  }
+
+  private void firstFailure(ExecutionResult executionResult, String message) {
+    if (firstFailure != null) {
+      return;
+    }
+    if (executionResult == ExecutionResult.ERROR) {
+      firstFailure = new Exception(message);
+    } else {
+      firstFailure = new AssertionError(message);
+    }
+  }
 }
