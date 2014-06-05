@@ -147,6 +147,10 @@ public abstract class SlimTable {
 
   protected String ifSymbolAssignment(int col, int row) {
     String expected = table.getCellContents(col, row);
+    return ifSymbolAssignment(expected);
+  }
+
+  protected String ifSymbolAssignment(String expected) {
     Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(expected);
     return matcher.find() ? matcher.group(1) : null;
   }
