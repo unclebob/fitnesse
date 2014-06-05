@@ -286,20 +286,47 @@ public class TableTableTest {
 
   @Test
   public void tableWithSymbols() throws Exception {
-    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|\n");
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|$X|$X|\n");
     tt.setSymbol("X", "value");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
                     list("tableTable_id_0", "OK"),
                     list("tableTable_id_1", list(
-                            list("pass", "fail")
+                        list("pass", "fail", "no change", "ignore")
                     ))
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
+    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value]), $X->[value], ignore($X->[value])]]",
+        tt.getTable().toString());
   }
-
+  
+  @Test
+  public void tableWithSetSymbols() throws Exception {
+    makeTableTableAndBuildInstructions(tableTableHeader
+        + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", list(
+                        list("pass:1", "ignore:2", "fail:3", 
+                            "sole:l", "no change", "pass")
+                    ))
+            )
+    );
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+    assertEquals("[[pass(Table:fixture), argument], "
+        + "[pass($A<-[1]), ignore($B<-[2]), fail($C<-[3]), "
+        + "fail($D<-[sole:l]), $E=, pass($F=)]]",
+            tt.getTable().toString());
+    assertEquals("1", tt.getSymbol("A"));
+    assertEquals("2", tt.getSymbol("B"));
+    assertEquals("3", tt.getSymbol("C"));
+    assertEquals("sole:l", tt.getSymbol("D"));
+    assertEquals(null, tt.getSymbol("E"));
+    assertEquals(null, tt.getSymbol("F"));
+  }
+  
   @Test
   public void tableMethodReturnsNull() throws Exception {
     assertTableResults("|2|4|\n", null,
