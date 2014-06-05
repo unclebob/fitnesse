@@ -12,6 +12,7 @@ import fitnesse.wikitext.parser.VariableSource;
 import util.EnvironmentVariableTool;
 
 import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 
 public class FileSystemPageFactory implements WikiPageFactory {
@@ -52,15 +53,15 @@ public class FileSystemPageFactory implements WikiPageFactory {
   protected class FileSystemSymbolicPageFactory implements SymbolicPageFactory {
 
     public WikiPage makePage(String linkPath, String linkName, WikiPage parent) {
-      if (linkPath.startsWith("file://"))
+      if (linkPath.startsWith("file:/"))
         return createExternalSymbolicLink(linkPath, linkName, parent);
       else
         return createInternalSymbolicPage(linkPath, linkName, parent);
     }
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
-      String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
-      File file = new File(fullPagePath);
+      String fullPagePath = EnvironmentVariableTool.replace(linkPath);
+      File file = new File(URI.create(fullPagePath));
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {
         if (file.isDirectory()) {

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.File;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -253,9 +254,10 @@ public class SymbolicLinkResponderTest {
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
+    File externalRoot = new File("testDir/ExternalRoot").getCanonicalFile();
 
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file://testDir/ExternalRoot");
+    request.addInput("linkPath", externalRoot.toURI().toASCIIString());
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     checkPageOneRedirectToProperties(response);
@@ -266,18 +268,18 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(externalRoot.getPath(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
   public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception {
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file://testDir/ExternalRoot");
+    request.addInput("linkPath", "file:///testDir/ExternalRoot");
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
-    assertSubString("Cannot create link to the file system path 'file://testDir/ExternalRoot'.", content);
+    assertSubString("Cannot create link to the file system path 'file:///testDir/ExternalRoot'.", content);
     assertSubString("Error Occured", content);
   }
 
