@@ -10,7 +10,7 @@ The "Table" table allows you to write a fixture that accepts an arbitrary table,
 |''fail''            |The original contents will be colored red.|
 |''fail:<message>''  |The original contents will be replaced with ''<message>'' and colored red.|
 |''ignore''          |The original contents will be colored grey.|
-|''ignore:<message>''|''<message>'' will be appended to the original contents and colored grey.|
+|''ignore:<message>''|The original contents will be replaced with ''<message>''and colored grey.|
 |''report:<message>''|The original contents will be replaced with ''<message>''.|
 |''<empty string>'' or ''no change''|The corresponding cell will be unchanged|
 |''error:<message>'' |''/!\ <message>'' will be appended to the original contents and colored yellow.|
