@@ -23,7 +23,6 @@ import util.Clock;
 import util.Maybe;
 import util.StringUtil;
 
-@SuppressWarnings("unchecked")
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
@@ -175,6 +174,14 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(key);
   }
 
+  public void setOrRemoveAttribute(String property, String content) {
+    if (content == null || "".equals(content)) {
+      removeAttribute(property);
+    } else {
+      setAttribute(property, content);
+    }
+  }
+
   @Override
   public boolean hasAttribute(String attribute) {
     return properties.has(attribute);
@@ -235,11 +242,13 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public List<String> getXrefPages() {
     final ArrayList<String> xrefPages = new ArrayList<String>();
     getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      @Override
       public boolean visit(Symbol node) {
         if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
         return true;
       }
 
+      @Override
       public boolean visitChildren(Symbol node) {
         return true;
       }

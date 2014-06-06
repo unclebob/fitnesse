@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SavePropertiesResponder implements SecureResponder {
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
@@ -53,18 +54,10 @@ public class SavePropertiesResponder implements SecureResponder {
     }
 
     String suites = (String) request.getInput("Suites");
-    setAttribute(data, PageData.PropertySUITES, suites);
+    data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
 
     String helpText = (String) request.getInput("HelpText");
-    setAttribute(data, PageData.PropertyHELP, helpText);
-  }
-
-  private void setAttribute(PageData data, String property, String content) {
-    if (content == null || "".equals(content)) {
-      data.removeAttribute(property);
-    } else {
-      data.setAttribute(property, content);
-    }
+    data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
   }
 
   private void setPageTypeAttribute(Request request, PageData data) {
@@ -92,6 +85,7 @@ public class SavePropertiesResponder implements SecureResponder {
     return (request.getInput(name) != null);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }
