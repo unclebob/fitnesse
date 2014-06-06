@@ -104,15 +104,15 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void initializeAttributes() {
     if (!isErrorLogsPage()) { 
-      properties.set(PropertyEDIT, Boolean.toString(true));
-      properties.set(PropertyPROPERTIES, Boolean.toString(true));
-      properties.set(PropertyREFACTOR, Boolean.toString(true));
+      properties.set(PropertyEDIT);
+      properties.set(PropertyPROPERTIES);
+      properties.set(PropertyREFACTOR);
     }
-    properties.set(PropertyWHERE_USED, Boolean.toString(true));
-    properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
-    properties.set(PropertyFILES, Boolean.toString(true));
-    properties.set(PropertyVERSIONS, Boolean.toString(true));
-    properties.set(PropertySEARCH, Boolean.toString(true));
+    properties.set(PropertyWHERE_USED);
+    properties.set(PropertyRECENT_CHANGES);
+    properties.set(PropertyFILES);
+    properties.set(PropertyVERSIONS);
+    properties.set(PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
 
     initTestOrSuiteProperty();
@@ -133,7 +133,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     if (STATIC.equals(pageType))
       return;
 
-    properties.set(pageType.toString(), Boolean.toString(true));
+    properties.set(pageType.toString());
   }
 
   private boolean isErrorLogsPage() {
