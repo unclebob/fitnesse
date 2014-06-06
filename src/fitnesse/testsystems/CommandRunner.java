@@ -67,8 +67,19 @@ public class CommandRunner {
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
 
-    new Thread(new OutputReadingRunnable(stdout, outputBuffer), "CommandRunner stdout").start();
-    new Thread(new OutputReadingRunnable(stderr, errorBuffer), "CommandRunner error").start();
+    new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        outputBuffer.append(output);
+      }
+    }), "CommandRunner stdout").start();
+
+    new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        errorBuffer.append(output);
+      }
+    }), "CommandRunner stderr").start();
 
     sendInput(stdin);
   }
@@ -186,23 +197,23 @@ public class CommandRunner {
   }
 
   private class OutputReadingRunnable implements Runnable {
-    public StringBuffer buffer;
+    public OutputWriter writer;
     private BufferedReader reader;
 
-    public OutputReadingRunnable(InputStream input, StringBuffer buffer) {
+    public OutputReadingRunnable(InputStream input, OutputWriter writer) {
       try {
         reader = new BufferedReader(new InputStreamReader(input, DEFAULT_CHARSET_NAME));
       } catch (UnsupportedEncodingException e) {
         exceptionOccurred(e);
       }
-      this.buffer = buffer;
+      this.writer = writer;
     }
 
     public void run() {
       try {
         String s;
         while ((s = reader.readLine()) != null) {
-          buffer.append(s);
+          writer.write(s);
         }
       } catch (Exception e) {
         exceptionOccurred(e);
@@ -213,5 +224,9 @@ public class CommandRunner {
 
   public int waitForCommandToFinish() throws InterruptedException {
     return process.waitFor();
+  }
+
+  private interface OutputWriter {
+    void write(String output);
   }
 }
