@@ -121,7 +121,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   private void initTestOrSuiteProperty() {
     final String pageName = wikiPage.getName();
     if (pageName == null) {
-      handleInvalidPageName(wikiPage);
+      handleInvalidPageName();
       return;
     }
 
@@ -141,7 +141,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return ErrorLogName.equals(pagePath.getFirst());
   }
 
-  private void handleInvalidPageName(WikiPage wikiPage) {
+  private void handleInvalidPageName() {
     try {
       String msg = "WikiPage " + wikiPage + " does not have a valid name!"
           + wikiPage.getName();
