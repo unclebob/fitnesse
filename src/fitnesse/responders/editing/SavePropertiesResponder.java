@@ -53,10 +53,18 @@ public class SavePropertiesResponder implements SecureResponder {
     }
 
     String suites = (String) request.getInput("Suites");
-    data.setAttribute(PageData.PropertySUITES, suites);
+    setAttribute(data, PageData.PropertySUITES, suites);
 
     String helpText = (String) request.getInput("HelpText");
-    data.setAttribute(PageData.PropertyHELP, helpText);
+    setAttribute(data, PageData.PropertyHELP, helpText);
+  }
+
+  private void setAttribute(PageData data, String property, String content) {
+    if (content == null || "".equals(content)) {
+      data.removeAttribute(property);
+    } else {
+      data.setAttribute(property, content);
+    }
   }
 
   private void setPageTypeAttribute(Request request, PageData data) {

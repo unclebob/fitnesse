@@ -22,10 +22,12 @@ public class SavePropertiesResponderTest {
   private WikiPage root;
   private MockRequest request;
   private WikiPage page;
+  private Responder responder;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    responder = new SavePropertiesResponder();
   }
 
   private void createRequest() throws Exception {
@@ -47,7 +49,6 @@ public class SavePropertiesResponderTest {
   public void testResponse() throws Exception {
     createRequest();
 
-    Responder responder = new SavePropertiesResponder();
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     PageData data = page.getData();
@@ -64,6 +65,18 @@ public class SavePropertiesResponderTest {
 
     assertEquals(303, response.getStatus());
     assertEquals("/PageOne", response.getHeader("Location"));
+  }
+  @Test
+  public void testRemovesHelpAndSuitesAttributeIfEmpty() throws Exception {
+    createRequest();
+    request.addInput("Suites", "");
+    request.addInput("HelpText", "");
+    
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    
+    PageData data = page.getData();
+    assertFalse("should not have help attribute", data.hasAttribute(PageData.PropertyHELP));
+    assertFalse("should not have suites attribute", data.hasAttribute(PageData.PropertySUITES));
   }
 
 }
