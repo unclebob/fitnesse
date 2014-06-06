@@ -200,9 +200,10 @@ public class CommandRunner {
 
     public void run() {
       try {
-        int c;
-        while ((c = reader.read()) != -1)
-          buffer.append((char) c);
+        String s;
+        while ((s = reader.readLine()) != null) {
+          buffer.append(s);
+        }
       } catch (Exception e) {
         exceptionOccurred(e);
       }
