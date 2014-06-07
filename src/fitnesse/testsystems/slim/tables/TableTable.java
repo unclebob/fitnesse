@@ -26,33 +26,35 @@ public class TableTable extends SlimTable {
   }
 
   public List<SlimAssertion> getAssertions() {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    assertions.add(constructFixture(getFixtureName()));
-
     String tableName = getTableName();
-    boolean setSymbolFound = false;
+
+    List<SlimAssertion> setSymbolsAssertions = new ArrayList<SlimAssertion>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++) {
       int cols = table.getColumnCountInRow(row);
       for (int col = 0; col < cols; col++) {
         String match;
         if ((match = ifSymbolAssignment(col, row)) != null) {
-          Instruction instruction = callAndAssign(match, tableName + "_PROXY", "getValue", String.valueOf(row - 1), String.valueOf(col));
+          Instruction instruction = callAndAssign(match, tableName + "_EXTRACT", "getValue", String.valueOf(row - 1), String.valueOf(col));
           SlimExpectation expectation = new SymbolAssignmentExpectation(match, col, row);
-          assertions.add(makeAssertion(instruction, expectation));
-          setSymbolFound = true;
+          setSymbolsAssertions.add(makeAssertion(instruction, expectation));
         }
       }
     }
 
-    if (setSymbolFound) {
-      tableName += "_PROXY";
-      assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName, TableTableProxy.class.getCanonicalName(),
-          new Object[] { getTableName() }), SlimExpectation.NOOP_EXPECTATION));
+    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    assertions.add(constructFixture(getFixtureName()));
+
+    if (setSymbolsAssertions.size() > 0) {
+      assertions.add(makeAssertion(callAndAssign(tableName + "_DATA", tableName, "doTable", tableAsList()), new TableTableExpectation()));
+
+      assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName + "_EXTRACT", 
+          TableTableExtractSymbol.class.getCanonicalName(), new Object[] { "$" + tableName + "_DATA" }), SlimExpectation.NOOP_EXPECTATION));
+      assertions.addAll(setSymbolsAssertions);
+    } else {
+      assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));
     }
     
-    assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));
-
     return assertions;
   }
 
@@ -148,11 +150,9 @@ public class TableTable extends SlimTable {
   private SlimTestResult resultFromMessage(String codeAndMessage, String content) {
     int colon = codeAndMessage.indexOf(":");
     if (colon == -1)
-      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
+      return SlimTestResult.fail(codeAndMessage);
     String code = codeAndMessage.substring(0, colon);
     String message = codeAndMessage.substring(colon + 1);
-
-    message = manageSymbolInContent(content, message);
 
     if (code.equalsIgnoreCase("error"))
       return SlimTestResult.error(message);
@@ -165,16 +165,8 @@ public class TableTable extends SlimTable {
     else if (code.equalsIgnoreCase("report"))
       return SlimTestResult.plain(message);
     else //not managed code 
-      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
+      return SlimTestResult.fail(codeAndMessage);
   }
 
-  private String manageSymbolInContent(String content, String message) {
-    //    String symbolName = ifSymbolAssignment(content); //TOAA
-    //    if (symbolName != null) {
-    //      setSymbol(symbolName, message);
-    //      message = String.format("$%s<-[%s]", symbolName, message);
-    //    }
-    return message;
-  }
 }
 
