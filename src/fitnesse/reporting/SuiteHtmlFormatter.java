@@ -31,8 +31,8 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
   private TimeMeasurement totalTimeMeasurement;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page) {
-    super(context, page);
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
+    super(context, page, log);
     totalTimeMeasurement = new TimeMeasurement().start();
     testBasePathName = PathParser.render(page.getPageCrawler().getFullPath());
   }

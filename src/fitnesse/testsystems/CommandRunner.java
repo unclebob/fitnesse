@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.TimeMeasurement;
+import util.StringUtil;
 
 public class CommandRunner {
   private static final String DEFAULT_CHARSET_NAME = "UTF-8";
@@ -25,14 +25,11 @@ public class CommandRunner {
 
   private Process process;
   private String input = "";
-  protected List<Throwable> exceptions = new ArrayList<Throwable>();
-  protected StringBuffer outputBuffer = new StringBuffer();
-  protected StringBuffer errorBuffer = new StringBuffer();
   protected int exitCode = -1;
-  private TimeMeasurement timeMeasurement = new TimeMeasurement();
   private String[] command;
   private Map<String, String> environmentVariables;
-  private int timeout;
+  private final int timeout;
+  private final ExecutionLogListener executionLogListener;
 
   /**
    *
@@ -41,47 +38,61 @@ public class CommandRunner {
    * @param environmentVariables
    * @param timeout Time-out in seconds.
    */
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, int timeout) {
+  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
+    if (executionLogListener == null) {
+      throw new IllegalArgumentException("executionLogListener may not be null");
+    }
     this.command = command;
     this.input = input;
     this.environmentVariables = environmentVariables;
+    this.executionLogListener = executionLogListener;
     this.timeout = timeout;
   }
 
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables) {
-    this(command, input, environmentVariables, 2);
-  }
-
-  protected CommandRunner(String[] command, String input, int exitCode) {
-    this(command, input, null);
-    this.exitCode = exitCode;
+  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
+    this(command, input, environmentVariables, executionLogListener, 2);
   }
 
   public void asynchronousStart() throws IOException {
     ProcessBuilder processBuilder = new ProcessBuilder(command);
     processBuilder.environment().putAll(determineEnvironment());
-    timeMeasurement.start();
     process = processBuilder.start();
 
     OutputStream stdin = process.getOutputStream();
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
 
+    sendCommandStartedEvent();
     new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
       @Override
       public void write(String output) {
-        outputBuffer.append(output);
+        executionLogListener.stdOut(output);
       }
-    }), "CommandRunner stdout").start();
+    }), "CommandRunner stdOut").start();
 
     new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
       @Override
       public void write(String output) {
-        errorBuffer.append(output);
+        executionLogListener.stdErr(output);
       }
-    }), "CommandRunner stderr").start();
+    }), "CommandRunner stdErr").start();
 
     sendInput(stdin);
+  }
+
+  protected void sendCommandStartedEvent() {
+    executionLogListener.commandStarted(new ExecutionLogListener.ExecutionContext() {
+      @Override
+      public String getCommand() {
+        return StringUtil.join(Arrays.asList(command), " ");
+      }
+
+      @Override
+      public String getTestSystemName() {
+        // What to do with this? Need an identifier?
+        return "command";
+      }
+    });
   }
 
   private Map<String, String> determineEnvironment() {
@@ -93,16 +104,14 @@ public class CommandRunner {
     return systemVariables;
   }
 
-  public void run() throws IOException {
-    asynchronousStart();
-    join();
-  }
-
   public void join() {
-    waitForDeathOf(process);
-    timeMeasurement.stop();
-    if (isDead(process)) {
-      exitCode = process.exitValue();
+    if (process != null) {
+      waitForDeathOf(process);
+      if (isDead(process)) {
+        exitCode = process.exitValue();
+        executionLogListener.exitCode(exitCode);
+
+      }
     }
   }
 
@@ -138,49 +147,30 @@ public class CommandRunner {
     }
   }
 
-  protected void setCommand(String[] command) {
-    this.command = command;
-  }
-
   public String[] getCommand() {
     return command;
   }
 
   public String getOutput() {
-    return outputBuffer.toString();
+    return "";
   }
 
   public String getError() {
-    return errorBuffer.toString();
+    return "";
   }
 
   public List<Throwable> getExceptions() {
-    return exceptions;
+    return Collections.emptyList();
   }
 
-  public boolean hasExceptions() {
-    return exceptions.size() > 0;
-  }
-
-  public boolean wroteToErrorStream() {
-    return errorBuffer.length() > 0;
-  }
-
-  public boolean wroteToOutputStream() {
-    return outputBuffer.length() > 0;
-  }
-
+  @Deprecated
   public int getExitCode() {
     return exitCode;
   }
 
   // Used to catch exceptions thrown from the read and write threads.
   public void exceptionOccurred(Exception e) {
-    exceptions.add(e);
-  }
-
-  public long getExecutionTime() {
-    return timeMeasurement.elapsed();
+    executionLogListener.exceptionOccurred(e);
   }
 
   protected void sendInput(OutputStream stdin) throws IOException {

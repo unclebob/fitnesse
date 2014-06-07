@@ -1,6 +1,8 @@
 package fitnesse.testrunner;
 
+import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.wiki.ReadOnlyPageData;
 
 /**
@@ -53,6 +55,11 @@ public class WikiPageDescriptor implements Descriptor {
   @Override
   public String getVariable(String name) {
     return data.getVariable(name);
+  }
+
+  @Override
+  public ExecutionLogListener getExecutionLogListener() {
+    return new CompositeExecutionLogListener();
   }
 
 }

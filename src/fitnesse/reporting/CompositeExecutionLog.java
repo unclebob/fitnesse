@@ -4,11 +4,13 @@ package fitnesse.reporting;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.html.template.PageFactory;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
 import util.Clock;
@@ -20,18 +22,16 @@ public class CompositeExecutionLog implements ExecutionLogListener {
   private final WikiPage testPage;
   private final String testPagePath;
   private WikiPagePath errorLogPagePath;
+  private ExecutionLog executionLog;
+  private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
+  private long startTime;
 
   public CompositeExecutionLog(WikiPage testPage) {
     this.testPage = testPage;
     PageCrawler crawler = testPage.getPageCrawler();
     testPagePath = "." + crawler.getFullPath();
     errorLogPagePath = crawler.getFullPath().addNameToFront(PageData.ErrorLogName);
-  }
 
-  private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
-
-  public void add(String testSystemName, ExecutionLog executionLog) {
-    logs.put(testSystemName, executionLog);
   }
 
   public void publish(PageFactory pageFactory) {
@@ -81,7 +81,7 @@ public class CompositeExecutionLog implements ExecutionLogListener {
 
   public boolean hasCapturedOutput() {
     for (ExecutionLog log : logs.values())
-      if (log.hasCapturedOutput())
+      if (!"".equals(log.getCapturedOutput()))
         return true;
     return false;
   }
@@ -96,7 +96,7 @@ public class CompositeExecutionLog implements ExecutionLogListener {
     executionLog = new ExecutionLog();
     executionLog.command = context.getCommand();
     startTime = Clock.currentTimeInMillis();
-    logs.put(context.getTestSystemName() + logs.size(), executionLog);
+    logs.put(context.getTestSystemName(), executionLog);
   }
 
   @Override

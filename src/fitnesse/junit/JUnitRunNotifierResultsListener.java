@@ -2,7 +2,6 @@ package fitnesse.junit;
 
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -66,7 +65,7 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
   }
 
   private Description descriptionFor(WikiTestPage test) {

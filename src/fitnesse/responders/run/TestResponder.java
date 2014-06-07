@@ -20,6 +20,7 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -68,6 +69,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private boolean remoteDebug = false;
   private boolean includeHtml = true;
   int exitCode;
+  private CompositeExecutionLog log;
 
 
   public TestResponder() {
@@ -88,6 +90,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
+    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -230,7 +233,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page) {
+    return new SuiteHtmlFormatter(context, page, log) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
@@ -260,6 +263,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
+    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;

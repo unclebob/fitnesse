@@ -7,12 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;

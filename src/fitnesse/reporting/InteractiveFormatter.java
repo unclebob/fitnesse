@@ -8,7 +8,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -26,9 +25,9 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 
   private String relativeName;
 
-  protected InteractiveFormatter(FitNesseContext context, WikiPage page) {
+  protected InteractiveFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
     super(context, page);
-    log = new CompositeExecutionLog(page);
+    this.log = log;
   }
 
   protected abstract void writeData(String output);
@@ -74,9 +73,9 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    log.add(testSystem.getName(), executionLog);
-    super.testSystemStopped(testSystem, executionLog, cause);
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+//    log.add(testSystem.getName(), executionLog);
+    super.testSystemStopped(testSystem, cause);
   }
 
   public boolean wasInterrupted() {
@@ -86,6 +85,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   @Override
   public void errorOccurred(Throwable cause) {
     wasInterrupted = true;
+    log.exceptionOccurred(cause);
     super.errorOccurred(cause);
   }
 

@@ -5,8 +5,9 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -62,7 +63,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   public void bye() throws IOException, InterruptedException {
     client.done();
     client.join();
-    testSystemStopped(client.getExecutionLog(), null);
+    testSystemStopped(null);
   }
 
   @Override
@@ -92,13 +93,11 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void exceptionOccurred(Exception e) {
-    ExecutionLog log = client.getExecutionLog();
-    log.addException(e);
+  public void exceptionOccurred(Throwable t) {
     try {
       client.kill();
     } finally {
-      testSystemStopped(log, e);
+      testSystemStopped(t);
     }
   }
 
@@ -106,8 +105,8 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     testSystemListener.testSystemStarted(testSystem);
   }
 
-  private void testSystemStopped(ExecutionLog executionLog, Throwable throwable) {
-    testSystemListener.testSystemStopped(this, executionLog, throwable);
+  private void testSystemStopped(Throwable throwable) {
+    testSystemListener.testSystemStopped(this, throwable);
   }
 
   // Remove from here and below: this has all to do with client creation.
