@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -13,7 +14,6 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
 
@@ -26,10 +26,34 @@ public class TableTable extends SlimTable {
   }
 
   public List<SlimAssertion> getAssertions() {
-    SlimAssertion make = constructFixture(getFixtureName());
-    Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
-    //String doTableId = doTable.getId();
-    return list(make, makeAssertion(doTable, new TableTableExpectation()));
+    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    assertions.add(constructFixture(getFixtureName()));
+
+    String tableName = getTableName();
+    boolean setSymbolFound = false;
+    int rows = table.getRowCount();
+    for (int row = 1; row < rows; row++) {
+      int cols = table.getColumnCountInRow(row);
+      for (int col = 0; col < cols; col++) {
+        String match;
+        if ((match = ifSymbolAssignment(col, row)) != null) {
+          Instruction instruction = callAndAssign(match, tableName + "_PROXY", "getValue", String.valueOf(row - 1), String.valueOf(col));
+          SlimExpectation expectation = new SymbolAssignmentExpectation(match, col, row);
+          assertions.add(makeAssertion(instruction, expectation));
+          setSymbolFound = true;
+        }
+      }
+    }
+
+    if (setSymbolFound) {
+      tableName += "_PROXY";
+      assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName, TableTableProxy.class.getCanonicalName(),
+          new Object[] { getTableName() }), SlimExpectation.NOOP_EXPECTATION));
+    }
+    
+    assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));
+
+    return assertions;
   }
 
   public class TableTableExpectation implements SlimExpectation {
@@ -145,11 +169,12 @@ public class TableTable extends SlimTable {
   }
 
   private String manageSymbolInContent(String content, String message) {
-    String symbolName = ifSymbolAssignment(content);
-    if (symbolName != null) {
-      setSymbol(symbolName, message);
-      message = String.format("$%s<-[%s]", symbolName, message);
-    }
+    //    String symbolName = ifSymbolAssignment(content); //TOAA
+    //    if (symbolName != null) {
+    //      setSymbol(symbolName, message);
+    //      message = String.format("$%s<-[%s]", symbolName, message);
+    //    }
     return message;
   }
 }
+

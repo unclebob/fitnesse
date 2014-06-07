@@ -25,7 +25,6 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
 
 public abstract class SlimTable {
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
@@ -141,7 +140,7 @@ public abstract class SlimTable {
     return new CallInstruction(makeInstructionTag(), instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
-  protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
+  protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, Object... args) {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
@@ -159,16 +158,16 @@ public abstract class SlimTable {
     return testContext;
   }
 
-  protected List<Object> tableAsList() {
-    List<Object> tableArgument = list();
+  protected List<List<String>> tableAsList() {
+    List<List<String>> tableArgument = new ArrayList<List<String>>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++)
       tableArgument.add(tableRowAsList(row));
     return tableArgument;
   }
 
-  private List<Object> tableRowAsList(int row) {
-    List<Object> rowList = list();
+  private List<String> tableRowAsList(int row) {
+    List<String> rowList = new ArrayList<String>();
     int cols = table.getColumnCountInRow(row);
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
