@@ -142,10 +142,11 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       }
     };
 
+    InternalTestSystemListener internalTestSystemListener = new InternalTestSystemListener();
     try {
       testSystem = testSystemFactory.create(descriptor);
 
-      testSystem.addTestSystemListener(this);
+      testSystem.addTestSystemListener(internalTestSystemListener);
       testSystem.start();
     } catch (Exception e) {
       testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
@@ -171,44 +172,46 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     formatters.announceNumberTestsToRun(pagesByTestSystem.totalTestsToRun());
   }
 
-  @Override
-  public void testSystemStarted(TestSystem testSystem) {
-    formatters.testSystemStarted(testSystem);
-  }
-
-  @Override
-  public void testOutputChunk(String output) throws IOException {
-    formatters.testOutputChunk(output);
-  }
-
-  @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
-    formatters.testStarted(testPage);
-  }
-
-  @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
-    formatters.testComplete(testPage, testSummary);
-    testsInProgressCount--;
-  }
-
-  @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    formatters.testSystemStopped(testSystem, executionLog, cause);
-
-    if (cause != null) {
-      stop();
+  private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
+    @Override
+    public void testSystemStarted(TestSystem testSystem) {
+      formatters.testSystemStarted(testSystem);
     }
-  }
 
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    formatters.testAssertionVerified(assertion, testResult);
-  }
+    @Override
+    public void testOutputChunk(String output) throws IOException {
+      formatters.testOutputChunk(output);
+    }
 
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    formatters.testExceptionOccurred(assertion, exceptionResult);
+    @Override
+    public void testStarted(WikiTestPage testPage) throws IOException {
+      formatters.testStarted(testPage);
+    }
+
+    @Override
+    public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+      formatters.testComplete(testPage, testSummary);
+      testsInProgressCount--;
+    }
+
+    @Override
+    public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+      formatters.testSystemStopped(testSystem, cause);
+
+      if (cause != null) {
+        stop();
+      }
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+      formatters.testAssertionVerified(assertion, testResult);
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+      formatters.testExceptionOccurred(assertion, exceptionResult);
+    }
   }
 
   private boolean isNotStopped() {
