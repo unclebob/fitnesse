@@ -20,7 +20,6 @@
     #if($includeHtml)
     <content>#escape($testResult.content)</content>
     #end
-      Include instructions: $includeInstructions
     #if($includeInstructions && $testResult.instructions.size() > 0)
     <instructions>
       #foreach($instructionResult in $testResult.Instructions)
