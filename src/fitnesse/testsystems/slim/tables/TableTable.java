@@ -170,7 +170,7 @@ public class TableTable extends SlimTable {
   }
 
   private String manageSymbolInContent(String content, String message) {
-    String symbolName = ifSymbolAssignment(content); //TOAA
+    String symbolName = ifSymbolAssignment(content);
     if (symbolName != null) {
       setSymbol(symbolName, message);
       message = String.format("$%s<-[%s]", symbolName, message);
