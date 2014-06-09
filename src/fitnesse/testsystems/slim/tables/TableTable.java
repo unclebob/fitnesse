@@ -36,8 +36,7 @@ public class TableTable extends SlimTable {
         String match;
         if ((match = ifSymbolAssignment(col, row)) != null) {
           Instruction instruction = callAndAssign(match, tableName + "_EXTRACT", "getValue", String.valueOf(row - 1), String.valueOf(col));
-          SlimExpectation expectation = new SymbolAssignmentExpectation(match, col, row);
-          setSymbolsAssertions.add(makeAssertion(instruction, expectation));
+          setSymbolsAssertions.add(makeAssertion(instruction, SlimExpectation.NOOP_EXPECTATION));
         }
       }
     }
@@ -150,9 +149,11 @@ public class TableTable extends SlimTable {
   private SlimTestResult resultFromMessage(String codeAndMessage, String content) {
     int colon = codeAndMessage.indexOf(":");
     if (colon == -1)
-      return SlimTestResult.fail(codeAndMessage);
+      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
     String code = codeAndMessage.substring(0, colon);
     String message = codeAndMessage.substring(colon + 1);
+
+    message = manageSymbolInContent(content, message);
 
     if (code.equalsIgnoreCase("error"))
       return SlimTestResult.error(message);
@@ -165,8 +166,16 @@ public class TableTable extends SlimTable {
     else if (code.equalsIgnoreCase("report"))
       return SlimTestResult.plain(message);
     else //not managed code 
-      return SlimTestResult.fail(codeAndMessage);
+      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
   }
 
+  private String manageSymbolInContent(String content, String message) {
+    String symbolName = ifSymbolAssignment(content); //TOAA
+    if (symbolName != null) {
+      setSymbol(symbolName, message);
+      message = String.format("$%s<-[%s]", symbolName, message);
+    }
+    return message;
+  }
 }
 
