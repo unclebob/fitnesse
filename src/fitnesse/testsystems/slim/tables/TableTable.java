@@ -45,10 +45,10 @@ public class TableTable extends SlimTable {
     assertions.add(constructFixture(getFixtureName()));
 
     if (setSymbolsAssertions.size() > 0) {
-      assertions.add(makeAssertion(callAndAssign(tableName + "_DATA", tableName, "doTable", tableAsList()), new TableTableExpectation()));
+      assertions.add(makeAssertion(callAndAssign(tableName, tableName, "doTable", tableAsList()), new TableTableExpectation()));
 
       assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName + "_EXTRACT", 
-          TableTableExtractSymbol.class.getCanonicalName(), new Object[] { "$" + tableName + "_DATA" }), SlimExpectation.NOOP_EXPECTATION));
+          TableTableExtractSymbol.class.getCanonicalName(), new Object[] { "$" + tableName }), SlimExpectation.NOOP_EXPECTATION));
       assertions.addAll(setSymbolsAssertions);
     } else {
       assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));

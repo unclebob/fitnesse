@@ -307,18 +307,21 @@ public class TableTableTest {
         + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             list(
-                    list("tableTable_id_0", "OK"),
-                    list("tableTable_id_1", list(
-                        list("pass:1", "ignore:2", "fail:3", 
-                            "sole:l", "no change", "pass")
+                    list("tableTable_id_1", "1"),
+                    list("tableTable_id_2", "2"),
+                    list("tableTable_id_3", "3"),
+                    list("tableTable_id_4", "sole:l"),
+                    list("tableTable_id_5", "OK"),
+                    list("tableTable_id_6", "OK"),
+                    list("tableTable_id_7", list(
+                        list("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")
                     ))
             )
     );
+
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture), argument], "
-        + "[pass($A<-[1]), ignore($B<-[2]), fail($C<-[3]), "
-        + "fail($D<-[sole:l]), $E=, pass($F=)]]",
-            tt.getTable().toString());
+    assertEquals("[[pass(Table:fixture), argument], [pass($A<-[1]), ignore($B<-[2]), fail($C<-[3]), fail($D<-[sole:l]), $E=, pass($F=)]]",
+        tt.getTable().toString());
     assertEquals("1", tt.getSymbol("A"));
     assertEquals("2", tt.getSymbol("B"));
     assertEquals("3", tt.getSymbol("C"));
