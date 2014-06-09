@@ -13,6 +13,7 @@ import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -212,6 +213,7 @@ public class MultipleTestsRunner implements Stoppable {
       formatters.testSystemStopped(testSystem, cause);
 
       if (cause != null) {
+        executionLogListener.exceptionOccurred(cause);
         stop();
       }
     }

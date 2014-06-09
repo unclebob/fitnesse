@@ -74,7 +74,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-//    log.add(testSystem.getName(), executionLog);
     super.testSystemStopped(testSystem, cause);
   }
 
@@ -85,7 +84,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   @Override
   public void errorOccurred(Throwable cause) {
     wasInterrupted = true;
-    log.exceptionOccurred(cause);
     super.errorOccurred(cause);
   }
 
