@@ -116,11 +116,8 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
     addStopLink(stopResponderId);
   }
 
-  protected void publishAndAddLog() throws IOException {
-    if (log != null) {
-      log.publish(context.pageFactory);
-      writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
-    }
+  protected void AddLogLink() throws IOException {
+    writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
   }
 
   protected void maybeMakeErrorNavigatorVisible(){

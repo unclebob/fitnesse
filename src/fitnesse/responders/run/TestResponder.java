@@ -260,6 +260,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
     runner.executeTestPages();
+    log.publish(context.pageFactory);
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {

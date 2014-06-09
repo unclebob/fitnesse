@@ -137,7 +137,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     // Todo: why assign it to this variable, looks inconsistent.
     latestTestTime = totalTimeMeasurement.stop();
     removeStopTestLink();
-    publishAndAddLog();
+    AddLogLink();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
   }
