@@ -46,7 +46,7 @@ public class TimeMeasurement {
     return currentClockTimeInMillis() - startedAt();
   }
 
-  private boolean isStopped() {
+  public boolean isStopped() {
     return stoppedAt != null;
   }
 

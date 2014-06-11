@@ -97,7 +97,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void close() throws IOException {
-    if (suiteTime == null) return;
+    if (suiteTime == null || suiteTime.isStopped()) return;
     suiteTime.stop();
     totalTimeMeasurement.stop();
 
