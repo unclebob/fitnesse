@@ -190,7 +190,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(newTestHistoryFormatter());
+      runner.addTestSystemListener(getSuiteHistoryFormatter());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
@@ -236,11 +236,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         addToResponse(output);
       }
     };
-  }
-
-  protected TestSystemListener newTestHistoryFormatter() {
-    suiteHistoryFormatter = getSuiteHistoryFormatter();
-    return suiteHistoryFormatter;
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
