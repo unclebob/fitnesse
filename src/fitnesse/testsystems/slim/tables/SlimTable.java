@@ -288,7 +288,7 @@ public abstract class SlimTable {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTestResult testResult;
       if (returnValue == null) {
-        testResult = SlimTestResult.ignore("Test not run");
+        testResult = SlimTestResult.testNotRun();
       } else {
         String value;
         value = returnValue.toString();
