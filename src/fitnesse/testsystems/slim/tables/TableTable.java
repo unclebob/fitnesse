@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.slim.TableTableExtractSymbol;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
