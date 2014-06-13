@@ -38,11 +38,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     CommandRunner commandRunner;
 
     if (useManualStartForTestSystem()) {
-      commandRunner = new MockCommandRunner();
+      commandRunner = new MockCommandRunner(getExecutionLogListener());
     } else {
-      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), determineTimeout());
+      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
-
     return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout());
   }
 

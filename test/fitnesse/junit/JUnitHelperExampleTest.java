@@ -10,7 +10,6 @@ import java.util.List;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -93,7 +92,7 @@ public class JUnitHelperExampleTest {
     }
 
     @Override
-    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+    public void testSystemStopped(TestSystem testSystem, Throwable cause) {
 
     }
 

@@ -3,8 +3,6 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,18 +11,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
-import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
@@ -104,6 +101,7 @@ public abstract class SlimTestSystem implements TestSystem {
     testComplete(pageToTest, testContext.getTestSummary());
   }
 
+  @Override
   public void addTestSystemListener(TestSystemListener listener) {
     testSystemListener.addTestSystemListener(listener);
   }
@@ -221,12 +219,7 @@ public abstract class SlimTestSystem implements TestSystem {
   // Ensure testSystemStopped is called only once per test system. First call counts.
   protected void testSystemStopped(Throwable e) {
     if (testSystemIsStopped) return;
-
     testSystemIsStopped = true;
-    ExecutionLog log = slimClient.getExecutionLog();
-    if (e != null) {
-      log.addException(e);
-    }
-    testSystemListener.testSystemStopped(this, log, e);
+    testSystemListener.testSystemStopped(this, e);
   }
 }

@@ -7,12 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
@@ -62,94 +57,6 @@ public class MultipleTestsRunnerTest {
 
     verify(testSystemFactory).create(forTestSystem("B"));
     verify(testSystemFactory).create(forTestSystem("A"));
-  }
-
-  @Test
-  public void shouldForwardTestSystemStartedEvent() {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    TestSystem testSystem = mock(TestSystem.class);
-
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    runner.testSystemStarted(testSystem);
-
-    verify(listener).testSystemStarted(testSystem);
-  }
-
-  @Test
-  public void shouldForwardTestSystemStoppedEvent() {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    TestSystem testSystem = mock(TestSystem.class);
-    ExecutionLog executionLog = mock(ExecutionLog.class);
-    Exception cause = new Exception();
-
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    runner.testSystemStopped(testSystem, executionLog, cause);
-
-    verify(listener).testSystemStopped(testSystem, executionLog, cause);
-  }
-
-  @Test
-  public void shouldForwardTestStartedEvent() throws IOException {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    WikiTestPage testPage = new WikiTestPage((WikiPage) null);
-
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    runner.testStarted(testPage);
-
-    verify(listener).testStarted(testPage);
-  }
-
-  @Test
-  public void shouldForwardTestCompleteEvent() throws IOException {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    WikiTestPage testPage = new WikiTestPage((WikiPage) null);
-    TestSummary testSummary = new TestSummary();
-
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    runner.testComplete(testPage, testSummary);
-
-    verify(listener).testComplete(testPage, testSummary);
-  }
-
-  @Test
-  public void shouldForwardTestSystemOutputChunkEvent() throws IOException {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    String chunk = "foobar";
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    runner.testOutputChunk(chunk);
-
-    verify(listener).testOutputChunk(chunk);
-  }
-
-  @Test
-  public void shouldForwardTestSystemAssertionVerifiedEvent() throws IOException {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    String chunk = "foobar";
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    Assertion assertion = mock(Assertion.class);
-    TestResult testResult = mock(TestResult.class);
-    runner.testAssertionVerified(assertion, testResult);
-
-    verify(listener).testAssertionVerified(assertion, testResult);
-  }
-
-  @Test
-  public void shouldForwardTestSystemExceptionOccurredEvent() throws IOException {
-    TestSystemListener listener = mock(TestSystemListener.class);
-    String chunk = "foobar";
-    MultipleTestsRunner runner = newTestRunnerWithListener(listener);
-
-    Assertion assertion = mock(Assertion.class);
-    ExceptionResult exceptionResult = mock(ExceptionResult.class);
-    runner.testExceptionOccurred(assertion, exceptionResult);
-
-    verify(listener).testExceptionOccurred(assertion, exceptionResult);
   }
 
   @Test

@@ -138,7 +138,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+  public void testSystemStopped(TestSystem testSystem, Throwable throwable) {
     slimException = throwable;
   }
 

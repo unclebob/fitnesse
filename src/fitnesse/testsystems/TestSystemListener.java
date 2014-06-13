@@ -13,7 +13,7 @@ public interface TestSystemListener<PageType extends TestPage> {
 
   void testComplete(PageType testPage, TestSummary testSummary) throws IOException;
 
-  void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause /* may be null */);
+  void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
 
   void testAssertionVerified(Assertion assertion, TestResult testResult);
 

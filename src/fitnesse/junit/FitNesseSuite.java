@@ -17,6 +17,7 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -288,6 +289,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(pages);
     testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
     try {
       executeTests(testRunner);
     } catch (AssertionError e) {

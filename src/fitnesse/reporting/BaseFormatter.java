@@ -3,7 +3,6 @@ package fitnesse.reporting;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
@@ -11,7 +10,6 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +69,7 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
     if (cause != null) {
       errorOccurred(cause);
     }
