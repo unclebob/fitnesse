@@ -16,12 +16,19 @@ import java.io.*;
 public class XmlUtil {
   private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
+  private static ThreadLocal<DocumentBuilder> documentBuilder = new ThreadLocal<DocumentBuilder>();
+
   private static DocumentBuilder getDocumentBuilder() {
-    try {
-      return documentBuilderFactory.newDocumentBuilder();
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
+    DocumentBuilder builder = documentBuilder.get();
+    if (builder == null) {
+      try {
+        builder = documentBuilderFactory.newDocumentBuilder();
+      } catch (ParserConfigurationException e) {
+        throw new RuntimeException(e);
+      }
+      documentBuilder.set(builder);
     }
+    return builder;
   }
 
   public static Document newDocument() {
