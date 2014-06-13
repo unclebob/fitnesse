@@ -1,0 +1,31 @@
+!3 Define initial values for numerator, denominator and quotient
+!define numerator {10}
+!define denominator {1}
+!define quotient {${= %3.0f : ${numerator} / ${denominator} =}.0}
+!define quotient2 quotient
+
+!include >VariablesRedefinedMultipleTimesOnSamePageAndUsedInSubpage
+
+!3 Check values from variables and symbols 
+|eg.Division|
+|# Test Description | numerator | denominator | quotient? |
+|Value as defined on this page| ${numerator}   | 1 | 10.0  |
+|Value as defined on sub page| ${denominator} | 1 |  2.5  |
+|Value from sub sub page expression| ${quotient4}    | 1 |  4.0|
+|Value as defined on sub sub page| ${result}    | 1 |  77.0|
+|Symbol from sub sub page | $result    | 1 |  4.0|
+
+!3 Redefine numerator
+!define numerator {20}
+
+!include >VariablesRedefinedMultipleTimesOnSamePageAndUsedInSubpage
+
+!3 Check values from variables and symbols again
+|eg.Division|
+|# Test Description | numerator | denominator | quotient? |
+|Value as defined on this page| ${numerator}   | 1 | 20.0  |
+|Value as defined on sub page| ${denominator} | 1 |  2.5  |
+|Value from sub sub page expression| ${quotient4}    | 1 |  8.0|
+|Value as defined on sub sub page| ${result}    | 1 |  77.0|
+|Symbol from sub sub page | $result    | 1 |  8.0|
+
