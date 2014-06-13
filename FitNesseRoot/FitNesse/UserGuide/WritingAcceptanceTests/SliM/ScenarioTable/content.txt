@@ -69,7 +69,7 @@ By the way, what fixture was being used here?  If you look inside the ''No Peeki
 !| Script |
 | widget !3 hello renders <h3>hello</h3> |
 
-As you can see you can also drop the table cells and simply write the scenario name and arguments on a single line without any separators.  The secenario with the ''most'' arguments that matches the statement will be selected.  So given two scenarios: !style_code(widget _ renders _) and !style_code(widget _), both match the statement !style_code(widget foo renders bar), but the first will be invoked because it has more arguments than the second.
+As you can see you can also drop the table cells and simply write the scenario name and arguments on a single line without any separators.  The scenario with the ''most'' arguments that matches the statement will be selected.  So given two scenarios: !style_code(widget _ renders _) and !style_code(widget _), both match the statement !style_code(widget foo renders bar), but the first will be invoked because it has more arguments than the second.
 
 !4 Nested Scenarios
 Scenarios can also be nested! If you hit the test button, you'll see scenarios executing within other scenarios.
@@ -85,6 +85,19 @@ Scenarios can also be nested! If you hit the test button, you'll see scenarios e
 
 !| Script |
 | page | !3 hello | renders | <h3>hello</h3> |
+
+!4 A note on parameter matching
+Note that the replacement of parameters is based on straightforward text matching. In the following example the outcome may look a bit weird, but the algorithm has been kept as simple as possible:
+
+!| scenario | make misleading page _ with content _ | page, pageContent |
+| create page | @page | with content | @pageContent |
+| check | request page | @page | 200 |
+
+!| Script |
+| make misleading page | PageName | with content | some content |
+| reject | content matches | some content |
+
+In this example, the ''@page'' tokens are replaced with the page name, hence ''@pageContent'' becomes ''!-<i>PageNameContent</i>-!'' (''@page'' is replaced, ''-Content'' remains).
 
 !4 Philosophy
 There are no ''if'' or ''while'' statements within scenarios.  They are macros, not programs.  They are constructed via text substitution.  Their purpose is to help you eliminate redundancy in your tests.
