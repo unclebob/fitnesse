@@ -108,6 +108,26 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void nestedSymbolicLinksShouldKeepTheRightPath() {
+    String pageThreePath = "PageThree";
+    String pageThreeContent = "page three";
+    WikiPage pageThree = WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
+
+    PageData data = pageOne.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
+    pageOne.commit(data);
+
+    data = pageTwo.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageThreePath);
+    pageTwo.commit(data);
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPagePath fullPath = PathParser.parse(pageOnePath + ".SymOne.SymTwo");
+    WikiPage deepPage = pageCrawler.getPage(fullPath);
+
+    assertEquals(deepPage.getPageCrawler().getFullPath(), fullPath);
+  }
+
+  @Test
   public void testSymbolicPageUsingExternalDirectory() throws Exception {
     CreateExternalRoot();
 

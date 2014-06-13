@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -18,6 +17,7 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -289,6 +289,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(pages);
     testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
     try {
       executeTests(testRunner);
     } catch (AssertionError e) {
@@ -341,9 +342,9 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.wrong);
-    assertEquals("exceptions", 0, summary.exceptions);
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.right > 0);
+    assertEquals("wrong", 0, summary.getWrong());
+    assertEquals("exceptions", 0, summary.getExceptions());
+    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {

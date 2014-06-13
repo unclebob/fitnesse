@@ -241,11 +241,11 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testResultsHaveHeaderAndFooter() throws Exception {
+  public void testResultsDoNotHaveHeaderAndFooter() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "HEADER");
     WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
     doSimpleRun(passFixtureTable());
-    assertSubString("HEADER", results);
+    assertNotSubString("HEADER", results);
     assertSubString("FOOTER", results);
   }
 

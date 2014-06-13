@@ -128,6 +128,10 @@ public abstract class ClientBuilder<T> {
     return descriptor.getVariable(name);
   }
 
+  public ExecutionLogListener getExecutionLogListener() {
+    return new DecoratingExecutionLogListener(getTestSystemName(), descriptor.getExecutionLogListener());
+  }
+
   private String getTestRunnerNormal() {
     String program = getVariable(TEST_RUNNER);
     if (program == null)
@@ -165,5 +169,51 @@ public abstract class ClientBuilder<T> {
       };
     }
     return result;
+  }
+
+  private static class DecoratingExecutionLogListener implements ExecutionLogListener {
+    private final String testSystemName;
+    private final ExecutionLogListener executionLogListener;
+
+    private DecoratingExecutionLogListener(String testSystemName, ExecutionLogListener executionLogListener) {
+      this.testSystemName = testSystemName;
+      this.executionLogListener = executionLogListener;
+    }
+
+    @Override
+    public void commandStarted(final ExecutionContext context) {
+      executionLogListener.commandStarted(new ExecutionContext() {
+
+        @Override
+        public String getCommand() {
+          return context.getCommand();
+        }
+
+        @Override
+        public String getTestSystemName() {
+          return testSystemName;
+        }
+      });
+    }
+
+    @Override
+    public void stdOut(String output) {
+      executionLogListener.stdOut(output);
+    }
+
+    @Override
+    public void stdErr(String output) {
+      executionLogListener.stdErr(output);
+    }
+
+    @Override
+    public void exitCode(int exitCode) {
+      executionLogListener.exitCode(exitCode);
+    }
+
+    @Override
+    public void exceptionOccurred(Throwable e) {
+      executionLogListener.exceptionOccurred(e);
+    }
   }
 }

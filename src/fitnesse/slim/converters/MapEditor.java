@@ -1,5 +1,6 @@
 package fitnesse.slim.converters;
 
+import fitnesse.html.HtmlTag;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -9,13 +10,16 @@ import org.htmlparser.util.ParserException;
 
 import java.beans.PropertyEditorSupport;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MapEditor extends PropertyEditorSupport {
-  private NodeList nodes;
-  private NodeList tables;
 
-  public MapEditor() {
-  }
+  private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
+  private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
+
+  private NodeList nodes;
+
+  private NodeList tables;
 
   public String toString(Object o) {
     return "TILT";
@@ -24,6 +28,29 @@ public class MapEditor extends PropertyEditorSupport {
   @Override
   public void setAsText(String s) throws IllegalArgumentException {
     setValue(fromString(s));
+  }
+
+  @Override
+  public String getAsText() {
+    // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
+    Map<Object, Object> hash = (Map) getValue();
+    HtmlTag table = new HtmlTag("table");
+    table.addAttribute("class", "hash_table");
+    for (Map.Entry<Object, Object> entry : hash.entrySet()) {
+      HtmlTag row = new HtmlTag("tr");
+      row.addAttribute("class", "hash_row");
+      table.add(row);
+      String key = entry.getKey().toString();
+      HtmlTag keyCell = new HtmlTag("td", key.trim());
+      keyCell.addAttribute("class", "hash_key");
+      row.add(keyCell);
+
+      String value = entry.getValue().toString();
+      HtmlTag valueCell = new HtmlTag("td", value.trim());
+      valueCell.addAttribute("class", "hash_value");
+      row.add(valueCell);
+    }
+    return table.html().trim();
   }
 
   public Object fromString(String possibleTable) {
@@ -106,4 +133,18 @@ public class MapEditor extends PropertyEditorSupport {
       return null;
     }
   }
+
+  public String escapeHTML(String value) {
+    return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
+  }
+
+  private String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
+    String result = value;
+    for (int i = 0; i < originalStrings.length; i++)
+      if (result.contains(originalStrings[i]))
+        result = result.replace(originalStrings[i], replacementStrings[i]);
+    return result;
+  }
+
+
 }

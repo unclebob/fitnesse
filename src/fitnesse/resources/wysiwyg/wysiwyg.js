@@ -32,7 +32,6 @@ var Wysiwyg = function (textarea, options) {
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
-    this.setupSyncTextAreaHeight();
 
     // Hide both editors, so the current one gets properly shown:
     textarea.style.display = this.frame.style.display = "none";
@@ -840,28 +839,6 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
             $(button).click(this.listenerToggleEditor(button.value));
             break;
         }
-    }
-};
-
-Wysiwyg.prototype.setupSyncTextAreaHeight = function () {
-    var self = this;
-    var timer = null;
-
-    var editrows = document.getElementById("editrows");
-    if (editrows) {
-        $(editrows).change(changeHeight);
-    }
-
-    function changeHeight() {
-        if (timer !== null) {
-            clearTimeout(timer);
-        }
-        setTimeout(sync, 10);
-    }
-
-    function sync() {
-        timer = null;
-        self.syncTextAreaHeight();
     }
 };
 

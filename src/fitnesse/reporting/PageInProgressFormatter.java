@@ -4,12 +4,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.WikiPage;
 import fitnesse.testsystems.TestSummary;
 import util.FileUtil;
 
@@ -47,7 +45,7 @@ public class PageInProgressFormatter implements TestSystemListener<WikiTestPage>
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
   }
 
   @Override

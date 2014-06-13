@@ -49,6 +49,9 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     if (factory == null) {
       factory = testSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
     }
+    if (factory == null) {
+      throw new RuntimeException(String.format("Unknown test system: '%s'", descriptor.getTestSystemType()));
+    }
     return factory.create(descriptor);
   }
 
@@ -62,6 +65,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       this.customComparatorRegistry = customComparatorRegistry;
     }
 
+    @Override
     public final TestSystem create(Descriptor descriptor) throws IOException {
       SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
@@ -82,6 +86,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       this.customComparatorRegistry = customComparatorRegistry;
     }
 
+    @Override
     public TestSystem create(Descriptor descriptor) throws IOException {
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
@@ -94,6 +99,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
   static class FitTestSystemFactory implements TestSystemFactory {
 
+    @Override
     public FitTestSystem create(Descriptor descriptor) throws IOException {
       FitClientBuilder clientBuilder = new FitClientBuilder(descriptor);
       CommandRunningFitClient fitClient = clientBuilder.build();
@@ -104,6 +110,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
+    @Override
     public FitTestSystem create(Descriptor descriptor) throws IOException {
       InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor);
       CommandRunningFitClient fitClient = clientBuilder.build();

@@ -381,7 +381,7 @@ public abstract class QueryTableTestBase {
     TestResult result = expectation.evaluateExpectation("String result");
 
     assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().exceptions);
+    assertEquals(1, testContext.getTestSummary().getExceptions());
   }
 
   @Test
@@ -391,7 +391,7 @@ public abstract class QueryTableTestBase {
     TestResult result = expectation.evaluateExpectation(null);
 
     assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().exceptions);
+    assertEquals(1, testContext.getTestSummary().getExceptions());
   }
 
 }

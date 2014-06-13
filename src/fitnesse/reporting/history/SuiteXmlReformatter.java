@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -25,11 +26,12 @@ import org.xml.sax.SAXException;
  * Format test results as Xml. This responder returns an alternate
  * format of the test history.
  */
-public class SuiteXmlReformatter extends BaseFormatter {
+public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
 
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
   private boolean includeHtml;
+  private boolean includeInstructions;
   private TestHistory testHistory;
 
   public SuiteXmlReformatter(FitNesseContext context, WikiPage page, Writer writer, SuiteHistoryFormatter historyFormatter) {
@@ -40,8 +42,7 @@ public class SuiteXmlReformatter extends BaseFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
-
+    historyFormatter.close();
     testHistory = new TestHistory();
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
 
@@ -50,6 +51,7 @@ public class SuiteXmlReformatter extends BaseFormatter {
     velocityContext.put("formatter", this);
     velocityContext.put("suiteExecutionReport", historyFormatter.getSuiteExecutionReport());
     velocityContext.put("includeHtml", includeHtml);
+    velocityContext.put("includeInstructions", includeInstructions);
     VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
     Template template = velocityEngine.getTemplate("suiteXML.vm");
     template.merge(velocityContext, writer);
@@ -77,5 +79,8 @@ public class SuiteXmlReformatter extends BaseFormatter {
     this.includeHtml = true;
   }
 
+  public void includeInstructions() {
+    this.includeInstructions = true;
+  }
 
 }

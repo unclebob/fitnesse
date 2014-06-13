@@ -36,7 +36,8 @@ public class SuiteHtmlFormatterTest {
     clock = new DateAlteringClock(new Date()).freeze();
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    formatter = new SuiteHtmlFormatter(context, root) {
+    CompositeExecutionLog log = new CompositeExecutionLog(root);
+    formatter = new SuiteHtmlFormatter(context, root, log) {
       @Override
       protected void writeData(String output) {
         pageBuffer.append(output);
@@ -134,7 +135,6 @@ public class SuiteHtmlFormatterTest {
 
     String results = pageBuffer.toString();
 
-    assertSubString("<h2>Test Output</h2>", results);
     assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);

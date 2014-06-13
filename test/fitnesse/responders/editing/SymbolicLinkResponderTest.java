@@ -208,6 +208,21 @@ public class SymbolicLinkResponderTest {
   }
 
   @Test
+  public void testAddFailWhenLinkPathIsInvalid() throws Exception {
+    WikiPage symlink = pageOne.addChildPage("SymLink");
+    symlink.commit(symlink.getData());
+
+    request.addInput("linkName", "SymLink");
+    request.addInput("linkPath", "PageOne PageTwo");
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    assertEquals(404, response.getStatus());
+    String content = ((SimpleResponse) response).getContent();
+    assertSubString("doesn't exist", content);
+    assertSubString("Error Occured", content);
+  }
+
+  @Test
   public void linkNameShouldBeAValidWikiWord() throws Exception {
     request.addInput("linkName", "Symlink");
     request.addInput("linkPath", "PageTwo");
@@ -232,6 +247,7 @@ public class SymbolicLinkResponderTest {
     assertSubString("already has a child named SymLink", content);
     assertSubString("Error Occured", content);
   }
+
 
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
@@ -261,7 +277,7 @@ public class SymbolicLinkResponderTest {
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
-    assertSubString("Cannot create link to the file system path, <b>file://testDir/ExternalRoot</b>.", content);
+    assertSubString("Cannot create link to the file system path 'file://testDir/ExternalRoot'.", content);
     assertSubString("Error Occured", content);
   }
 

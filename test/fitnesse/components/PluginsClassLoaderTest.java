@@ -16,24 +16,17 @@ import java.net.URLClassLoader;
 public class PluginsClassLoaderTest {
 
   @Test
-  public void whenPluginsDirectoryDoesNotExist() {
-    try {
-      PluginsClassLoader pluginsClassLoader = new PluginsClassLoader();
-      pluginsClassLoader.pluginsDirectory = "nonExistingPluginsDirectory";
-      assertFalse(new File(pluginsClassLoader.pluginsDirectory).exists());
-      pluginsClassLoader.addPluginsToClassLoader();
-      assertTrue("didn't cause exception", true);
-    } catch (Exception e) {
-      fail("if exception occurs when plugins directory does not exist");
-    }
+  public void whenPluginsDirectoryDoesNotExist() throws Exception {
+    PluginsClassLoader pluginsClassLoader = new PluginsClassLoader("nonExistingRootDirectory");
+    pluginsClassLoader.addPluginsToClassLoader();
+    assertTrue("didn't cause exception", true);
   }
 
   @Test
   public void addPluginsToClassLoader() throws Exception {
     String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
-//todo This fails because some other test probably loads plugin path    assertLoadingClassCausesException(dynamicClasses);
-    PluginsClassLoader pluginsClassLoader = new PluginsClassLoader();
-    assertTrue(new File(pluginsClassLoader.pluginsDirectory).exists());
+    //todo This fails because some other test probably loads plugin path    assertLoadingClassCausesException(dynamicClasses);
+    PluginsClassLoader pluginsClassLoader = new PluginsClassLoader(".");
     pluginsClassLoader.addPluginsToClassLoader();
     assertLoadingClassWorksNow(dynamicClasses);
   }

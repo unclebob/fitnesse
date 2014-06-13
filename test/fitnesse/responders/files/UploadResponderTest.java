@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import fitnesse.http.SimpleResponse;
 import org.junit.After;
@@ -48,6 +49,27 @@ public class UploadResponderTest {
     Response response = responder.makeResponse(context, request);
 
     File file = new File(context.getRootPagePath() + "/files/sourceFilename.txt");
+    assertTrue(file.exists());
+    assertEquals("test content", FileUtil.getFileContent(file));
+
+    assertEquals(303, response.getStatus());
+    assertEquals("/files/", response.getHeader("Location"));
+  }
+
+  @Test
+  public void shouldErrorForInvalidFileName() throws Exception {
+    request.addInput("file", new UploadedFile("\0.txt", "plain/text", testFile));
+    request.setResource("files/");
+    Response response;
+    try {
+      response = responder.makeResponse(context, request);
+    } catch (IOException e) {
+      // Different Java versions tend to deal differently with invalid file paths...
+      // If it fails with an exception, that's okay.
+      return;
+    }
+
+    File file = new File(context.getRootPagePath() + "/files/copy_1_of_");
     assertTrue(file.exists());
     assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -101,10 +123,10 @@ public class UploadResponderTest {
 
   @Test
   public void testMakeNewFilename() throws Exception {
-    assertEquals("file_copy1.txt", UploadResponder.makeNewFilename("file.txt", 1));
-    assertEquals("file_copy2.txt", UploadResponder.makeNewFilename("file.txt", 2));
-    assertEquals("a.b.c.d_copy2.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
-    assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
+    assertEquals("copy_1_of_file.txt", UploadResponder.makeNewFilename("file.txt", 1));
+    assertEquals("copy_2_of_file.txt", UploadResponder.makeNewFilename("file.txt", 2));
+    assertEquals("copy_2_of_a.b.c.d.txt", UploadResponder.makeNewFilename("a.b.c.d.txt", 2));
+    assertEquals("copy_1_of_somefile", UploadResponder.makeNewFilename("somefile", 1));
   }
 
   @Test

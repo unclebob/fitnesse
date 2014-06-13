@@ -39,13 +39,8 @@ public class PageListSetUpTearDownSurrounderTest {
     List<WikiPage> testPages = surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(makeTestPageList());
 
     assertEquals(6, testPages.size());
-
-    assertEquals(setUp2, testPages.get(0));
-    assertEquals(slimPage, testPages.get(1));
-    assertEquals(tearDown2, testPages.get(2));
-    assertEquals(setUp, testPages.get(3));
-    assertEquals(testPage, testPages.get(4));
-    assertEquals(tearDown, testPages.get(5));
+    assertPageIsBetween(slimPage, setUp2, tearDown2, testPages);
+    assertPageIsBetween(testPage, setUp, tearDown, testPages);
   }
 
     private ArrayList<WikiPage> makeTestPageList() throws Exception {
@@ -65,5 +60,12 @@ public class PageListSetUpTearDownSurrounderTest {
     assertEquals(setUp, testPages.get(0));
     assertEquals(testPage, testPages.get(1));
     assertEquals(tearDown, testPages.get(2));
+  }
+
+  private void assertPageIsBetween(WikiPage curr, WikiPage prev, WikiPage next,
+          List<WikiPage> pages) {
+    int currIndex = pages.indexOf(curr);
+    assertEquals(prev, pages.get(currIndex - 1));
+    assertEquals(next, pages.get(currIndex + 1));
   }
 }

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertSubString;
 
-import fitnesse.testsystems.CommandRunnerExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
 public class CompositeExecutionLogTest {
-  private MockCommandRunner runner;
   private CompositeExecutionLog log;
   private WikiPage root;
   private FitNesseContext context;
@@ -40,14 +39,13 @@ public class CompositeExecutionLogTest {
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
     context = FitNesseUtil.makeTestContext(root);
-    runner = new MockCommandRunner(new String[] { "some", "command" }, 123);
     log = new CompositeExecutionLog(testPage);
   }
 
   @Test
   public void publish() throws Exception {
-    log.add("testSystem1", new CommandRunnerExecutionLog(runner));
-    log.add("testSystem2", new CommandRunnerExecutionLog(runner));
+    addTestSystemRun("testSystem1");
+    addTestSystemRun("testSystem2");
     log.publish(context.pageFactory);
     WikiPage errorLogPage = root.getChildPage(ErrorLogName);
     assertNotNull(errorLogPage);
@@ -64,6 +62,21 @@ public class CompositeExecutionLogTest {
     assertSubString("'''Date: '''", content);
     assertSubString("'''Time elapsed: '''", content);
     assertSubString("Test Page tags", testErrorLog.getData().getAttribute(PageData.PropertySUITES));
+  }
+
+  private void addTestSystemRun(final String testSystemName) {
+    log.commandStarted(new ExecutionLogListener.ExecutionContext() {
+                         @Override
+                         public String getCommand() {
+                           return "some command";
+                         }
+
+                         @Override
+                         public String getTestSystemName() {
+                           return testSystemName;
+                         }
+                       });
+    log.exitCode(123);
   }
 
 }

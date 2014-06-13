@@ -144,8 +144,9 @@ public class Fixture {
   public void getArgsForTable(Parse table) {
     List<String> argumentList = new ArrayList<String>();
     Parse parameters = table.parts.parts.more;
-    for (; parameters != null; parameters = parameters.more)
-      argumentList.add(parameters.text());
+    for (; parameters != null; parameters = parameters.more) {
+      argumentList.add(Parse.unescape(parameters.body));
+    }
 
     args = argumentList.toArray(new String[argumentList.size()]);
   }

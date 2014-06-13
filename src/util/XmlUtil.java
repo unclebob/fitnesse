@@ -16,7 +16,7 @@ import java.io.*;
 public class XmlUtil {
   private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-  public static DocumentBuilder getDocumentBuilder() {
+  private static DocumentBuilder getDocumentBuilder() {
     try {
       return documentBuilderFactory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
@@ -29,8 +29,12 @@ public class XmlUtil {
   }
 
   public static Document newDocument(InputStream input) throws IOException, SAXException {
+    return newDocument(new InputSource(input));
+  }
+
+  private static Document newDocument(InputSource source) throws IOException, SAXException {
     try {
-      return getDocumentBuilder().parse(input);
+      return getDocumentBuilder().parse(source);
     } catch (SAXParseException e) {
       throw new SAXException(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
     }
@@ -45,8 +49,7 @@ public class XmlUtil {
   }
 
   public static Document newDocument(String input) throws IOException, SAXException {
-    ByteArrayInputStream is = new ByteArrayInputStream(input.getBytes("UTF-8"));
-    return newDocument(is);
+    return newDocument(new InputSource(new StringReader(input)));
   }
 
   public static Element getElementByTagName(Element element, String name) {
@@ -78,32 +81,26 @@ public class XmlUtil {
   }
 
   public static String getElementText(Element namedElement) {
-    if (namedElement == null)
+    if (namedElement == null) {
       return null;
-    NodeList nodes = namedElement.getChildNodes();
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Node node = nodes.item(i);
-      if (node instanceof Text)
-        return node.getNodeValue();
     }
-    //throw new Exception("No child of " + namedElement.getNodeName() + " is a Text node");
-    return null;
+    String text = namedElement.getTextContent();
+    return (text.length() == 0) ? null : text;
   }
 
-  public static void addTextNode(Document document, Element element, String tagName, String value) {
+  public static void addTextNode(Element element, String tagName, String value) {
     if (value != null && !(value.equals(""))) {
-      Element titleElement = document.createElement(tagName);
-      Text titleText = document.createTextNode(value);
-      titleElement.appendChild(titleText);
+      Element titleElement = element.getOwnerDocument().createElement(tagName);
+      titleElement.setTextContent(value);
       element.appendChild(titleElement);
     }
   }
 
-  public static void addCdataNode(Document document, Element element, String tagName, String value) {
+  public static void addCdataNode(Element element, String tagName, String value) {
     if (value != null && !(value.equals(""))) {
+      Document document = element.getOwnerDocument();
       Element titleElement = document.createElement(tagName);
-      CDATASection cData = document.createCDATASection(value);
-      titleElement.appendChild(cData);
+      titleElement.appendChild(document.createCDATASection(value));
       element.appendChild(titleElement);
     }
   }
