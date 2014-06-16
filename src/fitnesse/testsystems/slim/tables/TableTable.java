@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.slim.RegexpExtractSymbolValue;
 import fitnesse.slim.TableTableExtractSymbol;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
@@ -49,7 +50,7 @@ public class TableTable extends SlimTable {
       assertions.add(makeAssertion(callAndAssign(tableName, tableName, "doTable", tableAsList()), new TableTableExpectation()));
 
       assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName + "_EXTRACT", 
-          TableTableExtractSymbol.class.getCanonicalName(), new Object[] { "$" + tableName }), SlimExpectation.NOOP_EXPECTATION));
+          RegexpExtractSymbolValue.class.getCanonicalName(), new Object[] { "$" + tableName , "\\w+:(.*)"}), SlimExpectation.NOOP_EXPECTATION));
       assertions.addAll(setSymbolsAssertions);
     } else {
       assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));
