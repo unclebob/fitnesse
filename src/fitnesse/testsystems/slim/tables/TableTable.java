@@ -18,6 +18,7 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
 public class TableTable extends SlimTable {
+  public static String EXTRACT_REGEXP = "\\w+:(.*)";
 
   public TableTable(Table table, String tableId, SlimTestContext slimTestContext) {
     super(table, tableId, slimTestContext);
@@ -50,7 +51,7 @@ public class TableTable extends SlimTable {
       assertions.add(makeAssertion(callAndAssign(tableName, tableName, "doTable", tableAsList()), new TableTableExpectation()));
 
       assertions.add(makeAssertion(new MakeInstruction(makeInstructionTag(), tableName + "_EXTRACT", 
-          RegexpExtractSymbolValue.class.getCanonicalName(), new Object[] { "$" + tableName , "\\w+:(.*)"}), SlimExpectation.NOOP_EXPECTATION));
+          RegexpExtractSymbolValue.class.getCanonicalName(), new Object[] { "$" + tableName , EXTRACT_REGEXP}), SlimExpectation.NOOP_EXPECTATION));
       assertions.addAll(setSymbolsAssertions);
     } else {
       assertions.add(makeAssertion(callFunction(tableName, "doTable", tableAsList()), new TableTableExpectation()));
