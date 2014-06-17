@@ -22,7 +22,8 @@ public class RegexpExtractSymbolValueTest {
         add("fail:5str");
         add("ignore:6");
         add("without 7");
-        add("with space:6");
+        add("with space:8");
+        add(null);
       }
     });
   }
@@ -38,9 +39,10 @@ public class RegexpExtractSymbolValueTest {
     assertEquals("5str", e.getValue(0, 4));
     assertEquals("6", e.getValue(0, 5));
     assertEquals("without 7", e.getValue(0, 6));
-    assertEquals("with space:6", e.getValue(0, 7));
+    assertEquals("with space:8", e.getValue(0, 7));
     assertEquals("", e.getValue(0, 8));
     assertEquals("", e.getValue(0, 9));
+    assertEquals("", e.getValue(0, 10));
     assertEquals("", e.getValue(1, 0));
     assertEquals("", e.getValue(2, 0));
   }

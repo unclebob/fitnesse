@@ -21,8 +21,11 @@ public class RegexpExtractSymbolValue {
       if (col < dataRow.size()) {
         Object value = dataRow.get(col);
         if (value != null) {
-          Matcher m = Pattern.compile(regexp).matcher(value.toString());
-          return m.matches() ? m.group(1) : value;
+          String valueStr = value.toString();
+          if (valueStr.length() > 0) {
+            Matcher m = Pattern.compile(regexp).matcher(valueStr);
+            return m.matches() ? m.group(1) : value;
+          }
         }
       }
     }
