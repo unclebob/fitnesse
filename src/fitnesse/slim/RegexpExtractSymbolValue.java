@@ -15,11 +15,18 @@ public class RegexpExtractSymbolValue {
     this.regexp = regexp;
   }
 
-  public String getValue(int row, int col) {
-    Object value = data.get(row).get(col);
-    if(value==null) value="";
-    Matcher m = Pattern.compile(regexp).matcher(value.toString());
-    return m.matches() ? m.group(1) : "";
+  public Object getValue(int row, int col) {
+    if (row < data.size()) {
+      List<Object> dataRow = data.get(row);
+      if (col < dataRow.size()) {
+        Object value = dataRow.get(col);
+        if (value != null) {
+          Matcher m = Pattern.compile(regexp).matcher(value.toString());
+          return m.matches() ? m.group(1) : value;
+        }
+      }
+    }
+    return "";
   }
 }
 
