@@ -9,7 +9,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.VariableSource;
-import util.VariableTool;
+import fitnesse.wiki.VariableTool;
 
 import java.io.File;
 import java.util.Properties;
@@ -59,7 +59,8 @@ public class FileSystemPageFactory implements WikiPageFactory {
     }
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
-      String fullPagePath = VariableTool.replace(linkPath.substring(7));
+      // And this:
+      String fullPagePath = new VariableTool(variableSource).replace(linkPath.substring(7));
       File file = new File(fullPagePath);
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {

@@ -5,9 +5,10 @@ package fitnesse.responders.editing;
 import java.io.File;
 import java.io.IOException;
 
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.VariableTool;
+import fitnesse.wiki.VariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -139,7 +140,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private File createFileFromPath(String linkPath) {
-    String pathToFile = VariableTool.replace(linkPath.substring(7));
+    // -AJM- And this
+    String pathToFile = new VariableTool(new SystemVariableSource(context.getProperties())).replace(linkPath.substring(7));
     return new File(pathToFile);
   }
 
