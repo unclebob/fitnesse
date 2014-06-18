@@ -26,11 +26,14 @@
 
 package util;
 
+import java.util.Properties;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class EnvironmentVariableToolTest {
+public class VariableToolTest {
 
   @Test
   public void testReplace() {
@@ -38,11 +41,17 @@ public class EnvironmentVariableToolTest {
     String stringWithEnvVarInIt = "Test-${PATH}-Test";
     String expectedResult = "Test-" + path + "-Test";
     
-    assertTrue("Environment Variable is Replaced.", 
-        expectedResult.equals(EnvironmentVariableTool.replace(stringWithEnvVarInIt)));
+    assertTrue("Environment Variable is Replaced.",
+            expectedResult.equals(VariableTool.replace(stringWithEnvVarInIt)));
   
   }
   
-  
+  @Test
+  public void replacesVariablesFromPropertiesFile() {
+    Properties properties = new Properties();
+    properties.setProperty("replaceMe", "replacedValue");
+
+    assertThat(VariableTool.replace("a ${replaceMe}", properties), is("a replacedValue"));
+  }
 
 }

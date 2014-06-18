@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.EnvironmentVariableTool;
+import util.VariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -139,7 +139,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private File createFileFromPath(String linkPath) {
-    String pathToFile = EnvironmentVariableTool.replace(linkPath.substring(7));
+    String pathToFile = VariableTool.replace(linkPath.substring(7));
     return new File(pathToFile);
   }
 
