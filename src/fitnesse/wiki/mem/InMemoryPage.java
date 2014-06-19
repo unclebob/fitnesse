@@ -22,7 +22,6 @@ public class InMemoryPage {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem), new SystemVariableSource(properties));
     FileSystemPage page = (FileSystemPage) factory.makeRootPage(null, name);
-    page.autoCommit(true);
     return page;
   }
 

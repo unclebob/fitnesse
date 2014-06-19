@@ -15,7 +15,7 @@ public class TestRoot {
     }
 
     public WikiPage makePage(WikiPage parent, String pageName) {
-        return WikiPageUtil.addPage(parent, PathParser.parse(pageName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(pageName), "");
     }
 
     public WikiPage makePage(String pageName, String content) {

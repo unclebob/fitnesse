@@ -32,7 +32,6 @@ public class FileSystemPage extends BaseWikiPage {
   private final transient FileSystem fileSystem;
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
-  private boolean autoCommit;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
@@ -46,7 +45,6 @@ public class FileSystemPage extends BaseWikiPage {
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
     this(name, parent, parent.fileSystem, parent.versionsController);
-    autoCommit = parent.autoCommit;
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent,
@@ -102,7 +100,6 @@ public class FileSystemPage extends BaseWikiPage {
     WikiPage page = getChildPage(pageName);
     if (page == null) {
       page = new FileSystemPage(pageName, this);
-      if (autoCommit) page.commit(page.getData());
       return page;
     }
     return page;
@@ -169,10 +166,6 @@ public class FileSystemPage extends BaseWikiPage {
     }
 
     return new PageData(data, getVariableSource());
-  }
-
-  public void autoCommit(boolean autoCommit) {
-    this.autoCommit = autoCommit;
   }
 
   @Override

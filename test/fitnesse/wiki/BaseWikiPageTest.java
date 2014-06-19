@@ -23,9 +23,9 @@ public class BaseWikiPageTest {
   @Before
   public void setUp() throws Exception {
     root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
-    root.addChildPage("LinkedPage");
-    linkingPage = root.addChildPage("LinkingPage");
-    linkingPage.addChildPage("ChildPage");
+    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "");
+    linkingPage = WikiPageUtil.addPage(root, PathParser.parse("LinkingPage"), "");
+    WikiPageUtil.addPage(linkingPage, PathParser.parse("ChildPage"), "");
   }
 
   @After

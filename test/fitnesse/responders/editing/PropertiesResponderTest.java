@@ -49,7 +49,7 @@ public class PropertiesResponderTest {
 
   @Test
   public void testResponse() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -138,7 +138,7 @@ public class PropertiesResponderTest {
   }
 
   private WikiPage getContentFromSimplePropertiesPage() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
 
     return getPropertiesContentFromPage(page);
   }
@@ -193,7 +193,7 @@ public class PropertiesResponderTest {
   }
 
   private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
     PageData data = page.getData();
     property.addTo(data.getProperties());
     page.commit(data);
@@ -219,10 +219,10 @@ public class PropertiesResponderTest {
 
   @Test
   public void testSymbolicLinkListing() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
-    page.addChildPage("SomeChild");
-    WikiPage pageOne = root.addChildPage("PageOne"); //...page must exist!
-    pageOne.addChildPage("ChildOne");                //...page must exist!
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "");
+    WikiPageUtil.addPage(page, PathParser.parse("SomeChild"), "");
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), ""); //...page must exist!
+    WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");                //...page must exist!
 
     PageData data = page.getData();
     WikiPageProperties props = data.getProperties();
@@ -250,9 +250,9 @@ public class PropertiesResponderTest {
 
   @Test
   public void testSymbolicLinkListingForBackwardPath() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
-    WikiPage child = page.addChildPage("SomeChild");
-    page.addChildPage("OtherChild");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "");
+    WikiPage child = WikiPageUtil.addPage(page, PathParser.parse("SomeChild"), "");
+    WikiPageUtil.addPage(page, PathParser.parse("OtherChild"), "");
 
     PageData data = child.getData();
     WikiPageProperties props = data.getProperties();
@@ -268,7 +268,7 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
     PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
@@ -281,7 +281,7 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesSuiteHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
@@ -298,7 +298,7 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesTestHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
     PageData data = page.getData();
     data.setAttribute("Test");
     page.commit(data);
@@ -314,7 +314,7 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesSkippedHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
     PageData data = page.getData();
     data.setAttribute("Prune");
     page.commit(data);
@@ -339,8 +339,6 @@ public class PropertiesResponderTest {
 
   @Test
   public void testMakeNavigationPropertiesHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
-    PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Navigation:", html);
@@ -351,8 +349,6 @@ public class PropertiesResponderTest {
 
   @Test
   public void testMakeSecurityPropertiesHtml() throws Exception {
-    WikiPage page = root.addChildPage("SomePage");
-    PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Security:", html);

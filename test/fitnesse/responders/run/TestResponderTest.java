@@ -137,7 +137,7 @@ public class TestResponderTest {
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    testPage = WikiPageUtil.addPage(root, PathParser.parse("EmptyTestPage"));
+    testPage = WikiPageUtil.addPage(root, PathParser.parse("EmptyTestPage"), "");
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);

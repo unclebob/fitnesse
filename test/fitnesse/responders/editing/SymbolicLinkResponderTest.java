@@ -13,9 +13,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
@@ -33,11 +35,11 @@ public class SymbolicLinkResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");          //#  root
-    pageOne = root.addChildPage("PageOne");       //#    |--PageOne
-    pageOne.addChildPage("ChildOne");   //#    |    `--ChildOne
-    WikiPage pageTwo = root.addChildPage("PageTwo");
-    childTwo = pageTwo.addChildPage("ChildTwo");   //#         |--ChildTwo
-    pageTwo.addChildPage("ChildThree"); //#         `--ChildThree
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");       //#    |--PageOne
+    WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");   //#    |    `--ChildOne
+    WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
+    childTwo = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "");   //#         |--ChildTwo
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildThree"), ""); //#         `--ChildThree
 
     request = new MockRequest();
     request.setResource("PageOne");
@@ -209,8 +211,7 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testAddFailWhenLinkPathIsInvalid() throws Exception {
-    WikiPage symlink = pageOne.addChildPage("SymLink");
-    symlink.commit(symlink.getData());
+    WikiPage symlink = WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"));
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageOne PageTwo");
@@ -235,8 +236,7 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testAddFailWhenPageAlreadyHasChild() throws Exception {
-    WikiPage symlink = pageOne.addChildPage("SymLink");
-    symlink.commit(symlink.getData());
+    WikiPage symlink = WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"), "");
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageTwo");

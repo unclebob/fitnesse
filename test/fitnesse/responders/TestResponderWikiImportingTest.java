@@ -7,8 +7,10 @@ import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
@@ -30,9 +32,9 @@ public class TestResponderWikiImportingTest {
     standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
 
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    pageOne = root.addChildPage("PageOne");
-    childOne = pageOne.addChildPage("ChildOne");
-    childTwo = pageOne.addChildPage("ChildTwo");
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    childOne = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");
+    childTwo = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildTwo"), "");
 
     mockWikiImporter = new MockWikiImporter();
 
