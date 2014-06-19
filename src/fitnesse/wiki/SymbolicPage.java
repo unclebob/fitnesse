@@ -36,7 +36,7 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String name) {
+  public WikiPage getChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
     if (childPage != null) {
       childPage = new SymbolicPage(name, childPage, this);
@@ -51,7 +51,7 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  public List<WikiPage> getNormalChildren() {
+  public List<WikiPage> getChildren() {
     List<?> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<WikiPage>();
     //...Intentionally exclude symbolic links on symbolic pages

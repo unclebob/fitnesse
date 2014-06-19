@@ -15,9 +15,11 @@ import java.util.List;
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
 import util.FileUtil;
@@ -125,9 +127,22 @@ public class FileSystemPage extends BaseWikiPage {
     return false;
   }
 
+  public List<WikiPage> getChildren() {
+    // TODO: -AJM- Should move to factory
+    List<WikiPage> children = getNormalChildren();
+    WikiPageProperties props = getData().getProperties();
+    WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
+    if (symLinksProperty != null) {
+      for (String linkName : symLinksProperty.keySet()) {
+        WikiPage page = createSymbolicPage(symLinksProperty, linkName);
+        if (page != null && !children.contains(page))
+          children.add(page);
+      }
+    }
+    return children;
+  }
 
-  @Override
-  public List<WikiPage> getNormalChildren() {
+  private List<WikiPage> getNormalChildren() {
     final File thisDir = new File(getFileSystemPath());
     final List<WikiPage> children = new ArrayList<WikiPage>();
     if (fileSystem.exists(thisDir)) {
@@ -142,7 +157,26 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String pageName) {
+  public WikiPage getChildPage(String name) {
+    // TODO: -AJM- Should move to Factory
+    WikiPage page = getNormalChildPage(name);
+    if (page == null) {
+      page = createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
+    }
+    return page;
+  }
+
+
+  private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
+    if (symLinkProperty == null)
+      return null;
+    String linkPath = symLinkProperty.get(linkName);
+    if (linkPath == null)
+      return null;
+    return symbolicPageFactory.makePage(linkPath, linkName, this);
+  }
+
+  private WikiPage getNormalChildPage(String pageName) {
     final File file = new File(getFileSystemPath(), pageName);
     if (fileSystem.exists(file)) {
       return addChildPage(pageName);

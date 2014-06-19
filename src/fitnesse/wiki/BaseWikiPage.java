@@ -47,43 +47,8 @@ public abstract class BaseWikiPage implements WikiPage {
     return parent == null || parent == this;
   }
 
-  protected abstract List<WikiPage> getNormalChildren();
-
-  public List<WikiPage> getChildren() {
-    List<WikiPage> children = getNormalChildren();
-    WikiPageProperties props = getData().getProperties();
-    WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
-    if (symLinksProperty != null) {
-      for (String linkName : symLinksProperty.keySet()) {
-        WikiPage page = createSymbolicPage(symLinksProperty, linkName);
-        if (page != null && !children.contains(page))
-          children.add(page);
-      }
-    }
-    return children;
-  }
-
   protected VariableSource getVariableSource() {
     return variableSource;
-  }
-
-  private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
-    if (symLinkProperty == null)
-      return null;
-    String linkPath = symLinkProperty.get(linkName);
-    if (linkPath == null)
-      return null;
-    return symbolicPageFactory.makePage(linkPath, linkName, this);
-  }
-
-  protected abstract WikiPage getNormalChildPage(String name);
-
-  public WikiPage getChildPage(String name) {
-    WikiPage page = getNormalChildPage(name);
-    if (page == null) {
-      page = createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
-    }
-    return page;
   }
 
   public WikiPage getHeaderPage() {
