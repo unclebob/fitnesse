@@ -6,6 +6,7 @@
  * Improved matching for query tables.
  * Plugins are now loaded relative to the FitNesse root path.
  * SLIM can handle checks on Map's.
+ * Refactoring on wiki subsystem.
  * Issues fixed:
    * Support more than one level of symlinks.
    * !-ErrorLog-! is written for tests ran with ''format=text'' or ''format=xml''.
