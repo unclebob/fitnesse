@@ -29,41 +29,32 @@ public class FileSystemPage extends BaseWikiPage {
   // Only used for root page:
   private final String path;
 
-  private final transient FileSystem fileSystem;
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
+  public FileSystemPage(final String path, final String name,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
     super(name, variableSource);
     this.path = path;
-    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    this(name, parent, parent.fileSystem, parent.versionsController);
+    this(name, parent, parent.versionsController);
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent,
-                        final FileSystem fileSystem, final VersionsController versionsController) {
+  public FileSystemPage(final String name, final FileSystemPage parent, final VersionsController versionsController) {
     super(name, parent);
     path = null;
-    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
     this.subWikiPageFactory = parent.subWikiPageFactory;
   }
 
   @Override
   public boolean hasChildPage(final String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      addChildPage(pageName);
-      return true;
-    }
-    return false;
+    return subWikiPageFactory.getChildPage(this, pageName) != null;
   }
 
   @Override
@@ -100,7 +91,6 @@ public class FileSystemPage extends BaseWikiPage {
     WikiPage page = getChildPage(pageName);
     if (page == null) {
       page = new FileSystemPage(pageName, this);
-      return page;
     }
     return page;
   }

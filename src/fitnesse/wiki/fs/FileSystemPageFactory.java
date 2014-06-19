@@ -47,7 +47,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
   @Override
   // TODO: RootPath should be a File()?
   public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController, new FileSystemSubWikiPageFactory(), variableSource);
+    return new FileSystemPage(rootPath, rootPageName, versionsController, new FileSystemSubWikiPageFactory(), variableSource);
   }
 
   VersionsController getVersionsController() {

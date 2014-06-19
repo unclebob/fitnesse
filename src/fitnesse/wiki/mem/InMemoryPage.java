@@ -27,6 +27,6 @@ public class InMemoryPage {
 
   public static WikiPage createChildPage(String name, FileSystemPage parent) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new FileSystemPage(name, parent, fileSystem, new MemoryVersionsController(fileSystem));
+    return new FileSystemPage(name, parent, new MemoryVersionsController(fileSystem));
   }
 }
