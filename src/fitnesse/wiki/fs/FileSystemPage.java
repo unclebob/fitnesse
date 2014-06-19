@@ -35,15 +35,17 @@ public class FileSystemPage extends BaseWikiPage {
 
   private final transient FileSystem fileSystem;
   private final transient VersionsController versionsController;
+  private final transient SymbolicPageFactory symbolicPageFactory;
   private boolean autoCommit;
 
   public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
                         final VersionsController versionsController, final SymbolicPageFactory symbolicPageFactory,
                         final VariableSource variableSource) {
-    super(name, symbolicPageFactory, variableSource);
+    super(name, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.symbolicPageFactory = symbolicPageFactory;
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
@@ -57,6 +59,7 @@ public class FileSystemPage extends BaseWikiPage {
     path = null;
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.symbolicPageFactory = parent.symbolicPageFactory;
   }
 
   @Override
