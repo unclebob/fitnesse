@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
@@ -63,6 +64,16 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
+  public boolean hasChildPage(final String pageName) {
+    final File file = new File(getFileSystemPath(), pageName);
+    if (fileSystem.exists(file)) {
+      addChildPage(pageName);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
   public void removeChildPage(final String name) {
     final WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
@@ -92,27 +103,14 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      addChildPage(pageName);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public WikiPage addChildPage(String name) {
-    File path = new File(getFileSystemPath(), name);
-    if (hasContentChild(path)) {
-      return new FileSystemPage(name, this);
-    } else if (hasHtmlChild(path)) {
-      return new ExternalSuitePage(path, name, this, fileSystem);
-    } else {
-      FileSystemPage page = new FileSystemPage(name, this);
+  public WikiPage addChildPage(String pageName) {
+    WikiPage page = getChildPage(pageName);
+    if (page == null) {
+      page = new FileSystemPage(pageName, this);
       if (autoCommit) page.commit(page.getData());
       return page;
     }
+    return page;
   }
 
   private boolean hasContentChild(File path) {
@@ -130,9 +128,30 @@ public class FileSystemPage extends BaseWikiPage {
     return false;
   }
 
+  /// --- move this to a PageFactory?
+
   public List<WikiPage> getChildren() {
-    // TODO: -AJM- Should move to factory
     List<WikiPage> children = getNormalChildren();
+    children.addAll(getSymlinkChildren());
+    return children;
+  }
+
+  private List<WikiPage> getNormalChildren() {
+    final File thisDir = new File(getFileSystemPath());
+    final List<WikiPage> children = new LinkedList<WikiPage>();
+    if (fileSystem.exists(thisDir)) {
+      final String[] subFiles = fileSystem.list(thisDir);
+      for (final String subFile : subFiles) {
+        if (fileIsValid(subFile, thisDir)) {
+          children.add(getChildPage(subFile));
+        }
+      }
+    }
+    return children;
+  }
+
+  protected List<WikiPage> getSymlinkChildren() {
+    List<WikiPage> children = new LinkedList<WikiPage>();
     WikiPageProperties props = getData().getProperties();
     WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty != null) {
@@ -145,30 +164,22 @@ public class FileSystemPage extends BaseWikiPage {
     return children;
   }
 
-  private List<WikiPage> getNormalChildren() {
-    final File thisDir = new File(getFileSystemPath());
-    final List<WikiPage> children = new ArrayList<WikiPage>();
-    if (fileSystem.exists(thisDir)) {
-      final String[] subFiles = fileSystem.list(thisDir);
-      for (final String subFile : subFiles) {
-        if (fileIsValid(subFile, thisDir)) {
-          children.add(getChildPage(subFile));
-        }
-      }
-    }
-    return children;
-  }
-
   @Override
-  public WikiPage getChildPage(String name) {
-    // TODO: -AJM- Should move to Factory
-    WikiPage page = getNormalChildPage(name);
-    if (page == null) {
-      page = createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
+  public WikiPage getChildPage(String childName) {
+    final File file = new File(getFileSystemPath(), childName);
+    if (hasContentChild(file)) {
+      return new FileSystemPage(childName, this);
+    } else if (hasHtmlChild(file)) {
+      return new ExternalSuitePage(file, childName, this, fileSystem);
+    } else if (fileIsValid(childName, new File(getFileSystemPath()))) {
+      // Empty directories that have Wiki format are considered pages as well.
+      FileSystemPage page = new FileSystemPage(childName, this);
+      if (autoCommit) page.commit(page.getData());
+      return page;
+    } else {
+      return createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), childName);
     }
-    return page;
   }
-
 
   private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
     if (symLinkProperty == null)
@@ -179,13 +190,7 @@ public class FileSystemPage extends BaseWikiPage {
     return symbolicPageFactory.makePage(linkPath, linkName, this);
   }
 
-  private WikiPage getNormalChildPage(String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      return addChildPage(pageName);
-    }
-    return null;
-  }
+  /// till here --- move this to a PageFactory?
 
   @Override
   public PageData getData() {
@@ -198,12 +203,7 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   private boolean fileIsValid(final String filename, final File dir) {
-    if (WikiWordPath.isWikiWord(filename)) {
-      if (fileSystem.exists(new File(dir, filename))) {
-        return true;
-      }
-    }
-    return false;
+    return WikiWordPath.isWikiWord(filename) && fileSystem.exists(new File(dir, filename));
   }
 
   private String getParentFileSystemPath() {
