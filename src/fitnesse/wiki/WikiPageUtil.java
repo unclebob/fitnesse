@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.File;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,5 +56,21 @@ public class WikiPageUtil {
     buffer.append(getHeaderPageHtml(pageData.getWikiPage()));
     buffer.append(pageData.getHtml());
     return buffer.toString();
+  }
+
+  public static File resolveFileUri(String fullPageURI, File rootPath) {
+    URI uri = URI.create(fullPageURI);
+    try {
+      return new File(uri);
+    } catch (IllegalArgumentException e) {
+      if (!"file".equals(uri.getScheme()) || rootPath == null) {
+        throw e;
+      }
+      // "URI has an authority component" (file://something) or "URI is not hierarchical" (file:something)
+      // As a fallback, resolve as a relative URI
+      URI rootUri = rootPath.toURI();
+      uri = rootUri.resolve(uri.getSchemeSpecificPart().replaceFirst("^/+", ""));
+      return new File(uri);
+    }
   }
 }
