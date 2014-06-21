@@ -17,6 +17,7 @@ import fitnesse.wikitext.parser.WikiWordPath;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.net.URI;
 import java.util.Properties;
 
 public class FileSystemPageFactory implements WikiPageFactory {
@@ -134,7 +135,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
     }
 
     public WikiPage makePage(String linkPath, String linkName, WikiPage parent) {
-      if (linkPath.startsWith("file://"))
+      if (linkPath.startsWith("file:/"))
         return createExternalSymbolicLink(linkPath, linkName, parent);
       else
         return createInternalSymbolicPage(linkPath, linkName, parent);
@@ -142,8 +143,8 @@ public class FileSystemPageFactory implements WikiPageFactory {
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
       // And this:
-      String fullPagePath = new VariableTool(variableSource).replace(linkPath.substring(7));
-      File file = new File(fullPagePath);
+      String fullPagePath = new VariableTool(variableSource).replace(linkPath);
+      File file = new File(URI.create(fullPagePath));
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {
         if (file.isDirectory()) {

@@ -120,7 +120,7 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   public String getFileSystemPath() {
-    return getParentFileSystemPath() + "/" + getName();
+    return new File(getParentFileSystemPath(), getName()).getPath();
   }
 
   @Override

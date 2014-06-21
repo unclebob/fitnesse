@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
@@ -54,13 +55,14 @@ public class BaseWikiPageTest {
   public void testCanCreateSymLinksToExternalDirectories() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
+    File externalRoot = new File("testDir/ExternalRoot").getCanonicalFile();
 
-    createLink("file://testDir/ExternalRoot");
+    createLink(externalRoot.toURI().toASCIIString());
 
-    checkExternalLink();
+    checkExternalLink(externalRoot);
   }
 
-  private void checkExternalLink() throws Exception {
+  private void checkExternalLink(File externalRoot) throws Exception {
     WikiPage symPage = linkingPage.getChildPage("SymLink");
     assertNotNull(symPage);
     assertEquals(SymbolicPage.class, symPage.getClass());
@@ -68,7 +70,7 @@ public class BaseWikiPageTest {
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
 
-    assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(externalRoot.getPath(), ((FileSystemPage) realPage).getFileSystemPath());
     assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
   }
 

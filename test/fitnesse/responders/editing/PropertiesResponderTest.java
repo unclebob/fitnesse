@@ -230,7 +230,7 @@ public class PropertiesResponderTest {
     symProp.set("InternalAbsPage", ".PageOne.ChildOne");
     symProp.set("InternalRelPage", "PageOne.ChildOne");
     symProp.set("InternalSubPage", ">SomeChild");
-    symProp.set("ExternalPage", "file://some/page");
+    symProp.set("ExternalPage", "file:///some/page");
     page.commit(data);
 
     getPropertiesContentFromPage(page);
@@ -245,7 +245,7 @@ public class PropertiesResponderTest {
     assertSubString("<input type=\"text\" name=\"InternalSubPage\"", content);
     assertSubString("<a href=\".SomePage.SomeChild\">&gt;SomeChild</a>", content);
 
-    assertHasRegexp("<td>\\W*file://some/page\\W*</td>", content);
+    assertHasRegexp("<td>\\W*file:///some/page\\W*</td>", content);
   }
 
   @Test
