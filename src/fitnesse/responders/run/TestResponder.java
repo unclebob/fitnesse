@@ -20,6 +20,7 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -35,7 +36,12 @@ import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -68,6 +74,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private boolean remoteDebug = false;
   private boolean includeHtml = true;
   int exitCode;
+  private CompositeExecutionLog log;
 
 
   public TestResponder() {
@@ -88,6 +95,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
+    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -190,7 +198,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(newTestHistoryFormatter());
+      runner.addTestSystemListener(getSuiteHistoryFormatter());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
@@ -230,17 +238,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page) {
+    return new SuiteHtmlFormatter(context, page, log) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-  }
-
-  protected TestSystemListener newTestHistoryFormatter() {
-    suiteHistoryFormatter = getSuiteHistoryFormatter();
-    return suiteHistoryFormatter;
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -252,6 +255,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
     runner.executeTestPages();
+    log.publish(context.pageFactory);
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
@@ -260,6 +264,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
+    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;
@@ -350,7 +355,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
+      if (!resultDirectory.exists()) {
+        resultDirectory.mkdirs();
+      }
       File resultFile = new File(resultDirectory, resultPath.getName());
       return new PrintWriter(resultFile, "UTF-8");
     }

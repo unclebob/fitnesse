@@ -36,7 +36,7 @@ public class ExternalSuitePage extends BaseWikiPage {
 
   @Override
   public boolean hasChildPage(String pageName) {
-    return getNormalChildPage(pageName) != null;
+    return getChildPage(pageName) != null;
   }
 
   @Override
@@ -69,12 +69,12 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   @Override
-  protected List<WikiPage> getNormalChildren() {
+  public List<WikiPage> getChildren() {
     return findChildren();
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String name) {
+  public WikiPage getChildPage(String name) {
     for (WikiPage child : findChildren()) {
       if (child.getName().equals(name)) {
         return child;

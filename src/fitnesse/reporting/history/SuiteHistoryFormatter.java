@@ -9,7 +9,6 @@ import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -46,8 +45,8 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    super.testSystemStopped(testSystem, executionLog, cause);
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
   }
 
   @Override
@@ -97,7 +96,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void close() throws IOException {
-    if (suiteTime == null) return;
+    if (suiteTime == null || suiteTime.isStopped()) return;
     suiteTime.stop();
     totalTimeMeasurement.stop();
 

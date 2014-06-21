@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
@@ -79,6 +80,7 @@ public class JUnitHelper {
     MultipleTestsRunner testRunner = createTestRunner(initChildren(pageName, suiteFilter, excludeSuiteFilter, context), context);
     testRunner.addTestSystemListener(testFormatter);
     testRunner.addTestSystemListener(resultsListener);
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
 
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
@@ -95,7 +97,6 @@ public class JUnitHelper {
     }
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
-
 
   private WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(suiteName);

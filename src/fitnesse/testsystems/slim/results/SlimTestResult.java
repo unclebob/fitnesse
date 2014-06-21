@@ -167,4 +167,8 @@ public class SlimTestResult implements TestResult {
   public static SlimTestResult ok(String message) {
     return new SlimTestResult(null, null, message, ExecutionResult.PASS, false);
   }
+
+  public static SlimTestResult testNotRun() {
+    return new SlimTestResult(null, null, "Test not run", ExecutionResult.IGNORE, false);
+  }
 }

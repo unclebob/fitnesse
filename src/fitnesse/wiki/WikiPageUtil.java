@@ -40,9 +40,9 @@ public class WikiPageUtil {
     String first = (String) namePieces.get(0);
     List<?> rest = namePieces.subList(1, namePieces.size());
     WikiPage current;
-    if (context.getChildPage(first) == null)
+    if (context.getChildPage(first) == null) {
       current = context.addChildPage(first);
-    else
+    } else
       current = context.getChildPage(first);
     if (rest.size() == 0)
       return current;

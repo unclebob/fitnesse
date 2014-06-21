@@ -8,8 +8,8 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.CommandRunnerExecutionLog;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -142,11 +142,6 @@ public class SlimCommandRunningClient implements SlimClient {
     return resultToMap(resultList);
   }
 
-  @Override
-  public ExecutionLog getExecutionLog() {
-    return new CommandRunnerExecutionLog(slimRunner);
-  }
-
   private interface ToListExecutor extends InstructionExecutor {
 
   }
@@ -203,7 +198,7 @@ public class SlimCommandRunningClient implements SlimClient {
     	length = Integer.parseInt(resultLength);
     }
     catch (NumberFormatException e){
-    	throw new IOException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    	throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
     }
 	return length;
   }

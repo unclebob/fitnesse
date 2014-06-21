@@ -55,9 +55,9 @@ public class WikiImporterTest implements WikiImporterClient {
 
   public void createLocalRoot() throws Exception {
     localRoot = InMemoryPage.makeRoot("RooT2");
-    pageOne = localRoot.addChildPage("PageOne");
-    childPageOne = pageOne.addChildPage("ChildOne");
-    pageTwo = localRoot.addChildPage("PageTwo");
+    pageOne = WikiPageUtil.addPage(localRoot, PathParser.parse("PageOne"), "");
+    childPageOne = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");
+    pageTwo = WikiPageUtil.addPage(localRoot, PathParser.parse("PageTwo"), "");
   }
 
   public WikiPage createRemoteRoot() throws Exception {

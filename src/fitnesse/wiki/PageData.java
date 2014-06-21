@@ -23,7 +23,6 @@ import util.Clock;
 import util.Maybe;
 import util.StringUtil;
 
-@SuppressWarnings("unchecked")
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
@@ -105,15 +104,15 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void initializeAttributes() {
     if (!isErrorLogsPage()) { 
-      properties.set(PropertyEDIT, Boolean.toString(true));
-      properties.set(PropertyPROPERTIES, Boolean.toString(true));
-      properties.set(PropertyREFACTOR, Boolean.toString(true));
+      properties.set(PropertyEDIT);
+      properties.set(PropertyPROPERTIES);
+      properties.set(PropertyREFACTOR);
     }
-    properties.set(PropertyWHERE_USED, Boolean.toString(true));
-    properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
-    properties.set(PropertyFILES, Boolean.toString(true));
-    properties.set(PropertyVERSIONS, Boolean.toString(true));
-    properties.set(PropertySEARCH, Boolean.toString(true));
+    properties.set(PropertyWHERE_USED);
+    properties.set(PropertyRECENT_CHANGES);
+    properties.set(PropertyFILES);
+    properties.set(PropertyVERSIONS);
+    properties.set(PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
 
     initTestOrSuiteProperty();
@@ -122,7 +121,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   private void initTestOrSuiteProperty() {
     final String pageName = wikiPage.getName();
     if (pageName == null) {
-      handleInvalidPageName(wikiPage);
+      handleInvalidPageName();
       return;
     }
 
@@ -134,7 +133,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     if (STATIC.equals(pageType))
       return;
 
-    properties.set(pageType.toString(), Boolean.toString(true));
+    properties.set(pageType.toString());
   }
 
   private boolean isErrorLogsPage() {
@@ -142,7 +141,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return ErrorLogName.equals(pagePath.getFirst());
   }
 
-  private void handleInvalidPageName(WikiPage wikiPage) {
+  private void handleInvalidPageName() {
     try {
       String msg = "WikiPage " + wikiPage + " does not have a valid name!"
           + wikiPage.getName();
@@ -173,6 +172,14 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void setAttribute(String key) {
     properties.set(key);
+  }
+
+  public void setOrRemoveAttribute(String property, String content) {
+    if (content == null || "".equals(content)) {
+      removeAttribute(property);
+    } else {
+      setAttribute(property, content);
+    }
   }
 
   @Override
@@ -235,11 +242,13 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public List<String> getXrefPages() {
     final ArrayList<String> xrefPages = new ArrayList<String>();
     getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      @Override
       public boolean visit(Symbol node) {
         if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
         return true;
       }
 
+      @Override
       public boolean visitChildren(Symbol node) {
         return true;
       }

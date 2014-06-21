@@ -6,9 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.EnvironmentVariableTool;
+import fitnesse.wiki.VariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -141,7 +142,7 @@ public class SymbolicLinkResponder implements Responder {
 
   private File createFileFromPath(String linkPath) {
     // See FileSystemSymbolicPageFactory.createExternalSymbolicLink(), also.
-    String fullPageURI = EnvironmentVariableTool.replace(linkPath);
+    String fullPageURI = new VariableTool(new SystemVariableSource(context.getProperties())).replace(linkPath);
     return new File(URI.create(fullPageURI));
   }
 

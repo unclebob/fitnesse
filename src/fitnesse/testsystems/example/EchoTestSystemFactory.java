@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

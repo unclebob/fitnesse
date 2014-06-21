@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -19,7 +22,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.WikiPage;
 
-public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, Stoppable {
+public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
 
   private final CompositeFormatter formatters;
@@ -27,6 +30,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
 
   private final TestSystemFactory testSystemFactory;
   private final TestingTracker testingTracker;
+  private final CompositeExecutionLogListener executionLogListener;
 
   private volatile boolean isStopped = false;
   private String stopId = null;
@@ -44,6 +48,7 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
     this.formatters = new CompositeFormatter();
+    this.executionLogListener = new CompositeExecutionLogListener();
   }
 
   public void setRunInProcess(boolean runInProcess) {
@@ -140,15 +145,21 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
       public String getVariable(String name) {
         return identity.getVariable(name);
       }
+
+      @Override
+      public ExecutionLogListener getExecutionLogListener() {
+        return executionLogListener;
+      }
     };
 
+    InternalTestSystemListener internalTestSystemListener = new InternalTestSystemListener();
     try {
       testSystem = testSystemFactory.create(descriptor);
 
-      testSystem.addTestSystemListener(this);
+      testSystem.addTestSystemListener(internalTestSystemListener);
       testSystem.start();
     } catch (Exception e) {
-      testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
+      internalTestSystemListener.testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
       return null;
     }
     return testSystem;
@@ -171,44 +182,51 @@ public class MultipleTestsRunner implements TestSystemListener<WikiTestPage>, St
     formatters.announceNumberTestsToRun(pagesByTestSystem.totalTestsToRun());
   }
 
-  @Override
-  public void testSystemStarted(TestSystem testSystem) {
-    formatters.testSystemStarted(testSystem);
+  public void addExecutionLogListener(ExecutionLogListener listener) {
+    executionLogListener.addExecutionLogListener(listener);
   }
 
-  @Override
-  public void testOutputChunk(String output) throws IOException {
-    formatters.testOutputChunk(output);
-  }
-
-  @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
-    formatters.testStarted(testPage);
-  }
-
-  @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
-    formatters.testComplete(testPage, testSummary);
-    testsInProgressCount--;
-  }
-
-  @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
-    formatters.testSystemStopped(testSystem, executionLog, cause);
-
-    if (cause != null) {
-      stop();
+  private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
+    @Override
+    public void testSystemStarted(TestSystem testSystem) {
+      formatters.testSystemStarted(testSystem);
     }
-  }
 
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    formatters.testAssertionVerified(assertion, testResult);
-  }
+    @Override
+    public void testOutputChunk(String output) throws IOException {
+      formatters.testOutputChunk(output);
+    }
 
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    formatters.testExceptionOccurred(assertion, exceptionResult);
+    @Override
+    public void testStarted(WikiTestPage testPage) throws IOException {
+      formatters.testStarted(testPage);
+    }
+
+    @Override
+    public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+      formatters.testComplete(testPage, testSummary);
+      testsInProgressCount--;
+    }
+
+    @Override
+    public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+      formatters.testSystemStopped(testSystem, cause);
+
+      if (cause != null) {
+        executionLogListener.exceptionOccurred(cause);
+        stop();
+      }
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+      formatters.testAssertionVerified(assertion, testResult);
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+      formatters.testExceptionOccurred(assertion, exceptionResult);
+    }
   }
 
   private boolean isNotStopped() {

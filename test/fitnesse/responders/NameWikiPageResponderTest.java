@@ -71,8 +71,8 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void testPageNamesFromRoot() throws Exception {
-    WikiPageUtil.addPage(root, pageOnePath);
-    WikiPageUtil.addPage(root, pageTwoPath);
+    WikiPageUtil.addPage(root, pageOnePath, "");
+    WikiPageUtil.addPage(root, pageTwoPath, "");
     request.setResource("");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertHasRegexp(pageOneName, response.getContent());
@@ -81,9 +81,9 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void testPageNamesFromASubPage() throws Exception {
-    WikiPage frontPage = WikiPageUtil.addPage(root, frontPagePath);
-    WikiPageUtil.addPage(frontPage, pageOnePath);
-    WikiPageUtil.addPage(frontPage, pageTwoPath);
+    WikiPage frontPage = WikiPageUtil.addPage(root, frontPagePath, "");
+    WikiPageUtil.addPage(frontPage, pageOnePath, "");
+    WikiPageUtil.addPage(frontPage, pageTwoPath, "");
     request.setResource("");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     assertHasRegexp(frontPageName, response.getContent());
@@ -99,8 +99,8 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void jsonFormat() throws Exception {
-    WikiPageUtil.addPage(root, pageOnePath);
-    WikiPageUtil.addPage(root, pageTwoPath);
+    WikiPageUtil.addPage(root, pageOnePath, "");
+    WikiPageUtil.addPage(root, pageTwoPath, "");
     request.setResource("");
     request.addInput("format", "json");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
@@ -117,9 +117,9 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void canShowChildCount() throws Exception {
-    WikiPage frontPage = WikiPageUtil.addPage(root, frontPagePath);
-    WikiPageUtil.addPage(frontPage, pageOnePath);
-    WikiPageUtil.addPage(frontPage, pageTwoPath);
+    WikiPage frontPage = WikiPageUtil.addPage(root, frontPagePath, "");
+    WikiPageUtil.addPage(frontPage, pageOnePath, "");
+    WikiPageUtil.addPage(frontPage, pageTwoPath, "");
     request.setResource("");
     request.addInput("ShowChildCount","");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
@@ -139,12 +139,12 @@ public class NameWikiPageResponderTest {
 	//   + PageFour
 	//     + PageFive (fitnesse)
 	
-    WikiPage frontPage = WikiPageUtil.addPage(root,      frontPagePath);
-    WikiPage pageOne   = WikiPageUtil.addPage(frontPage, pageOnePath);
-    WikiPage pageTwo   = WikiPageUtil.addPage(pageOne,   pageTwoPath);
-    WikiPage pageThree = WikiPageUtil.addPage(frontPage, pageThreePath);
-    WikiPage pageFour  = WikiPageUtil.addPage(pageThree, pageFourPath);
-    WikiPage pageFive  = WikiPageUtil.addPage(pageFour,  pageFivePath);
+    WikiPage frontPage = WikiPageUtil.addPage(root,      frontPagePath, "");
+    WikiPage pageOne   = WikiPageUtil.addPage(frontPage, pageOnePath, "");
+    WikiPage pageTwo   = WikiPageUtil.addPage(pageOne,   pageTwoPath, "");
+    WikiPage pageThree = WikiPageUtil.addPage(frontPage, pageThreePath, "");
+    WikiPage pageFour  = WikiPageUtil.addPage(pageThree, pageFourPath, "");
+    WikiPage pageFive  = WikiPageUtil.addPage(pageFour,  pageFivePath, "");
 
     setTag(pageTwo, helloTag);
     setTag(pageThree, worldTag);

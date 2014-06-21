@@ -24,25 +24,28 @@
  *  $Copyright-End$
  */
 
-package util;
+package fitnesse.wiki;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.util.Properties;
 
+import fitnesse.ContextConfigurator;
+import fitnesse.FitNesseContext;
+import fitnesse.PluginException;
 import org.junit.Test;
 
-public class EnvironmentVariableToolTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class VariableToolTest {
 
   @Test
-  public void testReplace() {
-    String path = System.getenv("PATH");
-    String stringWithEnvVarInIt = "Test-${PATH}-Test";
-    String expectedResult = "Test-" + path + "-Test";
-    
-    assertTrue("Environment Variable is Replaced.", 
-        expectedResult.equals(EnvironmentVariableTool.replace(stringWithEnvVarInIt)));
-  
+  public void replacesVariablesFromPropertiesFile() throws IOException, PluginException {
+    Properties properties = new Properties();
+    properties.setProperty("replaceMe", "replacedValue");
+    SystemVariableSource variableSource = new SystemVariableSource(properties);
+
+    assertThat(new VariableTool(variableSource).replace("a ${replaceMe}"), is("a replacedValue"));
   }
-  
-  
 
 }
