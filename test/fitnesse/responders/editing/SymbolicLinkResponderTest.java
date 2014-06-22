@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -266,18 +268,18 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
   public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception {
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file://testDir/ExternalRoot");
+    request.addInput("linkPath", "file:/testDir/ExternalRoot");
     Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
-    assertSubString("Cannot create link to the file system path 'file://testDir/ExternalRoot'.", content);
+    assertSubString("Cannot create link to the file system path 'file:/testDir/ExternalRoot'.", content);
     assertSubString("Error Occured", content);
   }
 

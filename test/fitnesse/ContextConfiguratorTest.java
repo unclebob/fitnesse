@@ -13,6 +13,7 @@ public class ContextConfiguratorTest {
   public void canSetContextRoot() throws IOException, PluginException {
     ContextConfigurator configurator = ContextConfigurator.empty();
 
+    configurator.withParameter(ConfigurationParameter.ROOT_PATH, ".");
     configurator.withParameter(ConfigurationParameter.CONTEXT_ROOT, "fitnesse/");
 
     String contextRoot = configurator.makeFitNesseContext().contextRoot;
@@ -24,6 +25,7 @@ public class ContextConfiguratorTest {
   public void shouldSetTrailingSlashOnContextRoot() throws IOException, PluginException {
     ContextConfigurator configurator = ContextConfigurator.empty();
 
+    configurator.withParameter(ConfigurationParameter.ROOT_PATH, ".");
     configurator.withParameter(ConfigurationParameter.CONTEXT_ROOT, "fitnesse");
 
     String contextRoot = configurator.makeFitNesseContext().contextRoot;

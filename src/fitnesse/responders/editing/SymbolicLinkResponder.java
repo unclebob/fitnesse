@@ -4,8 +4,10 @@ package fitnesse.responders.editing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
@@ -140,13 +142,13 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private File createFileFromPath(String linkPath) {
-    // -AJM- And this
-    String pathToFile = new VariableTool(new SystemVariableSource(context.getProperties())).replace(linkPath.substring(7));
-    return new File(pathToFile);
+    // See FileSystemSubWikiPageFactory.createExternalSymbolicLink(), also.
+    String fullPageURI = new VariableTool(new SystemVariableSource(context.getProperties())).replace(linkPath);
+    return WikiPageUtil.resolveFileUri(fullPageURI, new File(context.rootPath));
   }
 
   private boolean isFilePath(String linkPath) {
-    return linkPath.startsWith("file://");
+    return linkPath.startsWith("file:");
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) {

@@ -10,6 +10,7 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wiki.VariableTool;
 import fitnesse.wikitext.parser.WikiWordPath;
@@ -45,9 +46,9 @@ public class FileSystemPageFactory implements WikiPageFactory {
   }
 
   @Override
-  // TODO: RootPath should be a File()?
+  // TODO: RootPath should be a File?
   public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, versionsController, new FileSystemSubWikiPageFactory(), variableSource);
+    return new FileSystemPage(rootPath, rootPageName, versionsController, new FileSystemSubWikiPageFactory(rootPath != null ? new File(rootPath) : null), variableSource);
   }
 
   VersionsController getVersionsController() {
@@ -55,6 +56,12 @@ public class FileSystemPageFactory implements WikiPageFactory {
   }
 
   protected class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
+
+    private final File rootPath;
+
+    public FileSystemSubWikiPageFactory(File rootPath) {
+      this.rootPath = rootPath;
+    }
 
     public List<WikiPage> getChildren(FileSystemPage page) {
       List<WikiPage> children = getNormalChildren(page);
@@ -134,7 +141,7 @@ public class FileSystemPageFactory implements WikiPageFactory {
     }
 
     public WikiPage makePage(String linkPath, String linkName, WikiPage parent) {
-      if (linkPath.startsWith("file://"))
+      if (linkPath.startsWith("file:"))
         return createExternalSymbolicLink(linkPath, linkName, parent);
       else
         return createInternalSymbolicPage(linkPath, linkName, parent);
@@ -142,8 +149,8 @@ public class FileSystemPageFactory implements WikiPageFactory {
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
       // And this:
-      String fullPagePath = new VariableTool(variableSource).replace(linkPath.substring(7));
-      File file = new File(fullPagePath);
+      String fullPagePath = new VariableTool(variableSource).replace(linkPath);
+      File file = WikiPageUtil.resolveFileUri(fullPagePath, rootPath);
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {
         if (file.isDirectory()) {
