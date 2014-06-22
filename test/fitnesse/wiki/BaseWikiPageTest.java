@@ -55,14 +55,9 @@ public class BaseWikiPageTest {
   public void testCanCreateSymLinksToExternalDirectories() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
-    File externalRoot = new File("testDir/ExternalRoot").getCanonicalFile();
 
-    createLink(externalRoot.toURI().toASCIIString());
+    createLink("file://testDir/ExternalRoot");
 
-    checkExternalLink(externalRoot);
-  }
-
-  private void checkExternalLink(File externalRoot) throws Exception {
     WikiPage symPage = linkingPage.getChildPage("SymLink");
     assertNotNull(symPage);
     assertEquals(SymbolicPage.class, symPage.getClass());
@@ -70,8 +65,8 @@ public class BaseWikiPageTest {
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
 
-    assertEquals(externalRoot.getPath(), ((FileSystemPage) realPage).getFileSystemPath());
-    assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals("ExternalRoot", realPage.getName());
   }
 
   private void createLink(String linkedPagePath) throws Exception {

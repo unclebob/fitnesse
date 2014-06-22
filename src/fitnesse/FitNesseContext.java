@@ -35,7 +35,7 @@ public class FitNesseContext {
   public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
-  private final String rootPath;
+  public final String rootPath;
   private final String rootDirectoryName;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
