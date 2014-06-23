@@ -1,4 +1,4 @@
-!2 Next Release
+!2 2014-06-23
  * Author information for !-GitVersionController-!.
  * ''?suite'' and ''?test'' are now the same responder.
  * More useful failure message for jUnit runner.
