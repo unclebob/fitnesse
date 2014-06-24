@@ -49,16 +49,17 @@ label {
 .breadcrumb {
   padding: 8px 40px;
   margin: 0;
-  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
+  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
   border-radius: 0;
-}
-
-.breadcrumb li+li:before {
+  li + li:before {
     content: "/ ";
     color: #ccc;
+  }
+  small {
+    padding-left: 8px;
+  }
 }
-
 button,
 a.button,
 input[type="button"] {
