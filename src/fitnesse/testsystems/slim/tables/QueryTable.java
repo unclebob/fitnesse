@@ -97,20 +97,19 @@ public class QueryTable extends SlimTable {
 
     Collection<MatchedResult> potentialMatches = queryResults.scorePotentialMatches();
 
-    PriorityQueue<MatchedResult> potentialMatchesByScore =
-      new PriorityQueue<MatchedResult>(potentialMatches.size() + 1, MatchedResult.compareByScore());
-    potentialMatchesByScore.addAll(potentialMatches);
+    List<MatchedResult> potentialMatchesByScore = new ArrayList<MatchedResult>(potentialMatches);
+    Collections.sort(potentialMatchesByScore, MatchedResult.compareByScore());
 
     return markRows(queryResults, potentialMatchesByScore);
   }
 
-  protected ExecutionResult markRows(QueryResults queryResults, PriorityQueue<MatchedResult> potentialMatchesByScore) {
+  protected ExecutionResult markRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore) {
     List<Integer> unmatchedTableRows = unmatchedRows(table.getRowCount());
     unmatchedTableRows.remove(Integer.valueOf(0));
     unmatchedTableRows.remove(Integer.valueOf(1));
     List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
 
-    while (!potentialMatchesByScore.isEmpty()) {
+    while (!isEmpty(potentialMatchesByScore)) {
       MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
       markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
       unmatchedTableRows.remove(bestMatch.tableRow);
@@ -121,18 +120,26 @@ public class QueryTable extends SlimTable {
     return markSurplusRows(queryResults, unmatchedResultRows);
   }
 
-  protected MatchedResult takeBestMatch(PriorityQueue<MatchedResult> potentialMatchesByScore) {
-    MatchedResult bestResult = potentialMatchesByScore.poll();
+  protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
+    MatchedResult bestResult = potentialMatchesByScore.iterator().next();
 
     removeOtherwiseMatchedResults(potentialMatchesByScore, bestResult);
 
     return bestResult;
   }
 
-  protected void removeOtherwiseMatchedResults(Collection<MatchedResult> potentialMatchesByScore, MatchedResult bestResult) {
-    for (MatchedResult otherResult : new HashSet<MatchedResult>(potentialMatchesByScore))
+  protected boolean isEmpty(Iterable<MatchedResult> iterable) {
+    return !iterable.iterator().hasNext();
+  }
+
+  protected void removeOtherwiseMatchedResults(Iterable<MatchedResult> potentialMatchesByScore, MatchedResult bestResult) {
+    Iterator<MatchedResult> iterator = potentialMatchesByScore.iterator();
+
+    while (iterator.hasNext()) {
+      MatchedResult otherResult = iterator.next();
       if (otherResult.tableRow.equals(bestResult.tableRow) || otherResult.resultRow.equals(bestResult.resultRow))
-        potentialMatchesByScore.remove(otherResult);
+        iterator.remove();
+    }
   }
 
   protected List<Integer> unmatchedRows(int rowCount) {
