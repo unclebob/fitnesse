@@ -160,6 +160,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
+    htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
@@ -175,6 +176,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public void setDebug(boolean debug) {
     this.debug = debug;
+  }
+
+  public class WikiPageHeaderRenderer {
+
+    public String render() {
+      return WikiPageUtil.getHeaderPageHtml(page);
+    }
+
   }
 
   public class WikiPageFooterRenderer {

@@ -8,6 +8,8 @@
     }
 </script>
 
+$!headerContent.render()
+
 <div id="test-summary">Running Tests ...</div>
 
 <div id="test-action">
