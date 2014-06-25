@@ -10,6 +10,6 @@
 #if($pageTitle.Link)
  <li><a href="/$pageTitle.Link">$pageTitle.Title</a></li>
 #else
- <li>$pageTitle.Title #if($pageTitle.pageTags) <small>[ $pageTitle.pageTags ]</small>#end</li>
+ <li>$pageTitle.Title #if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">$tag</span>#end#end</li>
 #end
 </ol>
