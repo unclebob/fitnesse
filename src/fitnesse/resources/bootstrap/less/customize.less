@@ -41,24 +41,42 @@ label {
   }
 }
 
+.navbar-form.search {
+  float: right;
+  margin-right: 25px;
+}
+
 #add > ul {
   max-height: 300px;
   overflow-x: hidden;
 }
 
+.page-actions {
+  display: none;
+  float: right;
+  padding: 8px 40px;
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
 .breadcrumb {
   padding: 8px 40px;
   margin: 0;
-  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
+  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
   border-radius: 0;
-}
-
-.breadcrumb li+li:before {
+  li + li:before {
     content: "/ ";
     color: #ccc;
+  }
+  small {
+    padding-left: 8px;
+  }
 }
-
 button,
 a.button,
 input[type="button"] {
@@ -140,13 +158,26 @@ input[type="checkbox"] {
 .collapsible > ul {
   float: right;
   margin: 0;
-  padding: 5px 15px;
-}
-
-.collapsible > ul li {
-  display: inline;
-  padding: 0 5px;
-  border-left: 1px solid @panel-bg;
+  padding: 4px 4px;
+  li {
+    border: none;
+    padding: 0;
+    a {
+      color: inherit;
+      .btn;
+      .btn-default;
+      .btn-xs;
+    }
+    a.expandall {
+      .border-right-radius(0);
+    }
+    a.collapseall {
+      .border-left-radius(0);
+    }
+    a:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 tr.scenario > td:first-child {

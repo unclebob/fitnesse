@@ -1,3 +1,8 @@
+<ol class="page-actions btn-group">
+ <li class="expandall btn btn-xs">Expand All</li>
+ <li class="collapseall btn btn-xs">Collapse All</li>
+</ol>
+
 <ol class="breadcrumb">
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)
  <li><a href="${contextRoot}$breadCrumb.Link">$breadCrumb.Name</a></li>
@@ -5,6 +10,6 @@
 #if($pageTitle.Link)
  <li><a href="/$pageTitle.Link">$pageTitle.Title</a></li>
 #else
- <li>$pageTitle.Title</li>
+ <li>$pageTitle.Title #if($pageTitle.pageTags) <small>[ $pageTitle.pageTags ]</small>#end</li>
 #end
 </ol>
