@@ -33,6 +33,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   private final CommandRunner slimRunner;
   private final int connectionTimeout;
+  private final double requiredSlimVersion;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -41,16 +42,12 @@ public class SlimCommandRunningClient implements SlimClient {
   private String hostName;
   private int port;
 
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion) {
     this.slimRunner = slimRunner;
     this.hostName = hostName;
     this.port = port;
     this.connectionTimeout = connectionTimeout;
-  }
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
-    this(slimRunner, hostName, port, 10);
+    this.requiredSlimVersion = requiredSlimVersion;
   }
 
   @Override
@@ -65,8 +62,8 @@ public class SlimCommandRunningClient implements SlimClient {
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
       throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
     }
-    else if (serverVersionNumber < MINIMUM_REQUIRED_SLIM_VERSION) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", MINIMUM_REQUIRED_SLIM_VERSION, serverVersionNumber));
+    else if (serverVersionNumber < requiredSlimVersion) {
+      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
