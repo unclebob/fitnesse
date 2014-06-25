@@ -56,6 +56,11 @@ $(document)
         $(document.body).find('.collapsible, .scenario').andSelf().addClass('closed');
         $(document.body).find('.scenario').addClass('closed').next().hide();
         return false;
+    })
+    .ready(function () {
+        if ($(document.body).find('.collapsible, .scenario').length > 0) {
+            $('.page-actions').show();
+        }
     });
 
 /**
