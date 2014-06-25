@@ -1,3 +1,8 @@
+<ol class="page-actions btn-group">
+ <li class="expandall btn btn-xs">Expand All</li>
+ <li class="collapseall btn btn-xs">Collapse All</li>
+</ol>
+
 <ol class="breadcrumb">
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)
  <li><a href="${contextRoot}$breadCrumb.Link">$breadCrumb.Name</a></li>

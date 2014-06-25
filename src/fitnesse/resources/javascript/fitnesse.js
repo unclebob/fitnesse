@@ -46,7 +46,17 @@ $(document)
 		section.find('.collapsible, .scenario').andSelf().addClass('closed');
 		section.find('.scenario').addClass('closed').next().hide();
 		return false;
-	});
+    })
+    .on('click', '.actions .expandall', function () {
+        $(document.body).find('.collapsible').andSelf().removeClass('closed');
+        $(document.body).find('.scenario').removeClass('closed').next().show();
+        return false;
+	})
+    .on('click', '.actions .collapseall', function () {
+        $(document.body).find('.collapsible, .scenario').andSelf().addClass('closed');
+        $(document.body).find('.scenario').addClass('closed').next().hide();
+        return false;
+    });
 
 /**
  * Hide/show passed tests
