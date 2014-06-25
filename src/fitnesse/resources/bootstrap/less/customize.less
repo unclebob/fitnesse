@@ -164,12 +164,19 @@ input[type="checkbox"] {
       .btn;
       .btn-default;
       .btn-xs;
+      float: left;
+      position: relative;
     }
     a.expandall {
       .border-right-radius(0);
     }
+    a.expandall:hover {
+      z-index: 2;
+
+    }
     a.collapseall {
       .border-left-radius(0);
+      margin-left: -1px;
     }
     a:hover {
       text-decoration: none;
