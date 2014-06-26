@@ -152,6 +152,9 @@ public abstract class ClientBuilder<T> {
       if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
         return pathEntry;
       }
+      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d-standalone.jar")) {
+        return pathEntry;
+      }
     }
 
     return "fitnesse.jar";
