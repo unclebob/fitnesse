@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fitnesse.ConfigurationParameter;
@@ -301,10 +302,16 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
 
   private List<WikiPage> initChildren() {
     WikiPage suiteRoot = getSuiteRootPage();
-    if (!suiteRoot.getData().hasAttribute("Suite")) {
-      throw new IllegalArgumentException("page " + this.suiteName + " is not a suite");
+    if (suiteRoot == null) {
+      throw new IllegalArgumentException("No page " + this.suiteName  );
     }
-    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+    List<WikiPage> children;
+    if (suiteRoot.getData().hasAttribute("Suite")) {
+      children = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+    } else {
+      children = Collections.singletonList(suiteRoot);
+    }
+    return children;
   }
 
   static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
