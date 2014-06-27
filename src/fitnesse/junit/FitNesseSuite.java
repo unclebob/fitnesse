@@ -31,8 +31,7 @@ import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FitNesseSuite extends ParentRunner<WikiPage> {
 
@@ -216,7 +215,15 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return excludeSuiteFilterAnnotation.value();
   }
 
-  static String getSuiteName(Class<?> klass) throws InitializationError {
+  /**
+   * Determines which suite will be run.
+   * Be careful: this method is called from the constructor,
+   * therefore subclasses can not expect anything about the state during this method!
+   * @param klass class with the FitNesseSuite annotation
+   * @return name of suite to run.
+   * @throws InitializationError if suite could not be determined.
+   */
+  protected String getSuiteName(Class<?> klass) throws InitializationError {
     Name nameAnnotation = klass.getAnnotation(Name.class);
     if (nameAnnotation == null) {
       throw new InitializationError("There must be a @Name annotation");
@@ -303,7 +310,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   private List<WikiPage> initChildren() {
     WikiPage suiteRoot = getSuiteRootPage();
     if (suiteRoot == null) {
-      throw new IllegalArgumentException("No page " + this.suiteName  );
+      throw new IllegalArgumentException("No page " + this.suiteName);
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
