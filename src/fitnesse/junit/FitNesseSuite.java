@@ -160,8 +160,15 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     this.suiteFilter = getSuiteFilter(suiteClass);
     this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
     this.debugMode = useDebugMode(suiteClass);
+    beforeContextCreated(configFile, rootPath, fitNesseRoot, port);
     this.context = initContext(configFile, rootPath, fitNesseRoot, port);
     this.children = initChildren();
+  }
+
+  /**
+   * Method to allow subclasses to perform some processing before the context (and children are created).
+   */
+  protected void beforeContextCreated(File configFile, String rootPath, String fitNesseRoot, int port) throws InitializationError {
   }
 
   @Override
