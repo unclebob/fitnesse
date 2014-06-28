@@ -99,19 +99,33 @@ public abstract class FitNesseRunner extends ParentRunner<WikiPage> {
 
   protected abstract String getOutputDir(Class<?> suiteClass) throws Exception;
 
-  protected abstract String getSuiteFilter(Class<?> suiteClass) throws Exception;
+  protected String getSuiteFilter(Class<?> suiteClass) throws Exception {
+    return null;
+  }
 
-  protected abstract String getExcludeSuiteFilter(Class<?> suiteClass) throws Exception;
+  protected String getExcludeSuiteFilter(Class<?> suiteClass) throws Exception {
+    return null;
+  }
 
-  protected abstract boolean useDebugMode(Class<?> suiteClass) throws Exception;
+  protected boolean useDebugMode(Class<?> suiteClass) throws Exception {
+    return true;
+  }
 
-  protected abstract String getFitnesseDir(Class<?> suiteClass) throws Exception;
+  protected String getFitNesseDir(Class<?> suiteClass) throws Exception {
+    return ".";
+  }
 
-  protected abstract String getFitNesseRoot(Class<?> suiteClass) throws Exception;
+  protected String getFitNesseRoot(Class<?> suiteClass) throws Exception {
+    return "FitNesseRoot";
+  }
 
-  protected abstract int getPort(Class<?> suiteClass) throws Exception;
+  protected int getPort(Class<?> suiteClass) throws Exception {
+    return 0;
+  }
 
-  protected abstract File getConfigFile(String rootPath, Class<?> suiteClass) throws Exception;
+  protected File getConfigFile(String rootPath, Class<?> suiteClass) throws Exception {
+    return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
+  }
 
   @Override
   protected Description describeChild(WikiPage child) {

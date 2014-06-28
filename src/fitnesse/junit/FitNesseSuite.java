@@ -145,20 +145,20 @@ public class FitNesseSuite extends FitNesseRunner {
 
   @Override
   protected String getSuiteFilter(Class<?> klass)
-          throws InitializationError {
+          throws Exception {
     SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
     if (suiteFilterAnnotation == null) {
-      return null;
+      return super.getSuiteFilter(klass);
     }
     return suiteFilterAnnotation.value();
   }
 
   @Override
   protected String getExcludeSuiteFilter(Class<?> klass)
-          throws InitializationError {
+          throws Exception {
     ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
     if (excludeSuiteFilterAnnotation == null) {
-      return null;
+      return super.getExcludeSuiteFilter(klass);
     }
     return excludeSuiteFilterAnnotation.value();
   }
@@ -191,19 +191,19 @@ public class FitNesseSuite extends FitNesseRunner {
   }
 
   @Override
-  protected boolean useDebugMode(Class<?> klass) {
+  protected boolean useDebugMode(Class<?> klass) throws Exception {
     DebugMode debugModeAnnotation = klass.getAnnotation(DebugMode.class);
     if (null == debugModeAnnotation) {
-      return true;
+      return super.useDebugMode(klass);
     }
     return debugModeAnnotation.value();
   }
 
   @Override
-  public int getPort(Class<?> klass) {
+  public int getPort(Class<?> klass) throws Exception {
     Port portAnnotation = klass.getAnnotation(Port.class);
     if (null == portAnnotation) {
-      return 0;
+      return super.getPort(klass);
     }
     int lport = portAnnotation.value();
     if (!"".equals(portAnnotation.systemProperty())) {
@@ -213,10 +213,10 @@ public class FitNesseSuite extends FitNesseRunner {
   }
 
   @Override
-  protected File getConfigFile(String rootPath, Class<?> klass) {
+  protected File getConfigFile(String rootPath, Class<?> klass) throws Exception {
     ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
     if (null == configFileAnnotation) {
-      return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
+      return super.getConfigFile(rootPath, klass);
     }
     return new File(configFileAnnotation.value());
   }
