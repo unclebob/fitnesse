@@ -119,7 +119,7 @@ public class FitNesseSuite extends FitNesseRunner {
   }
 
   @Override
-  protected String getFitnesseDir(Class<?> klass)
+  protected String getFitNesseDir(Class<?> klass)
           throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     if (fitnesseDirAnnotation == null) {

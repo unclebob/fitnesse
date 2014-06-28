@@ -87,7 +87,7 @@ public abstract class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
-    String rootPath = getFitnesseDir(suiteClass);
+    String rootPath = getFitNesseDir(suiteClass);
     String fitNesseRoot = getFitNesseRoot(suiteClass);
     int port = getPort(suiteClass);
     File configFile = getConfigFile(rootPath, suiteClass);
