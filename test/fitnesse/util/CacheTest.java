@@ -14,8 +14,8 @@ public class CacheTest {
 
   @Test
   public void shouldBuildCache() throws Exception {
-    Cache<String, Integer> cache = new Cache.Builder<String, Integer>()
-            .withLoader(new Cache.Loader<String, Integer>() {
+    Cache<String, Integer, Exception> cache = new Cache.Builder<String, Integer, Exception>()
+            .withLoader(new Cache.Loader<String, Integer, Exception>() {
 
               @Override
               public Integer fetch(String key) {
@@ -28,8 +28,8 @@ public class CacheTest {
 
   @Test
   public void shouldHoldCachedData() throws Exception {
-    Cache<String, Dummy> cache = new Cache.Builder<String, Dummy>()
-            .withLoader(new Cache.Loader<String, Dummy>() {
+    Cache<String, Dummy, Exception> cache = new Cache.Builder<String, Dummy, Exception>()
+            .withLoader(new Cache.Loader<String, Dummy, Exception>() {
 
               @Override
               public Dummy fetch(String key) {
@@ -48,8 +48,8 @@ public class CacheTest {
 
   @Test
   public void shouldEvictCachedData() throws Exception {
-    Cache<String, Dummy> cache = new Cache.Builder<String, Dummy>()
-            .withLoader(new Cache.Loader<String, Dummy>() {
+    Cache<String, Dummy, Exception> cache = new Cache.Builder<String, Dummy, Exception>()
+            .withLoader(new Cache.Loader<String, Dummy, Exception>() {
               @Override public Dummy fetch(String key) {
                 return new Dummy(key);
               }
@@ -72,8 +72,8 @@ public class CacheTest {
   public void shouldNotCacheIfLoadedValueIsNull() throws Exception {
     final List<Integer> calls = new ArrayList<Integer>();
 
-    Cache<String, Dummy> cache = new Cache.Builder<String, Dummy>()
-            .withLoader(new Cache.Loader<String, Dummy>() {
+    Cache<String, Dummy, Exception> cache = new Cache.Builder<String, Dummy, Exception>()
+            .withLoader(new Cache.Loader<String, Dummy, Exception>() {
               @Override public Dummy fetch(String key) {
                 calls.add(1);
                 return null;
