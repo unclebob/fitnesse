@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
@@ -20,10 +21,10 @@ public class JUnitTest {
     }
 
     @Override
-    protected void createContext(Class<?> suiteClass) throws Exception {
+    protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
       new PluginsClassLoader(getFitNesseRoot(suiteClass)).addPluginsToClassLoader();
 
-      super.createContext(suiteClass);
+      return super.createContext(suiteClass);
     }
   }
 }

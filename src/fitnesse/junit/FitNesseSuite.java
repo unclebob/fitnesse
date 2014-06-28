@@ -1,38 +1,15 @@
 package fitnesse.junit;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
-import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
-import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.PagesByTestSystem;
-import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testsystems.ConsoleExecutionLogListener;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import static org.junit.Assert.*;
-
-public class FitNesseSuite extends ParentRunner<WikiPage> {
+public class FitNesseSuite extends FitNesseRunner {
 
   /**
    * The <code>Name</code> annotation specifies the name of the Fitnesse suite
@@ -137,85 +114,11 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     public String value();
   }
 
-  private Class<?> suiteClass;
-  private String suiteName;
-  private String outputDir;
-  private String suiteFilter;
-  private String excludeSuiteFilter;
-  private boolean debugMode;
-  private FitNesseContext context;
-  private List<WikiPage> children;
-
   public FitNesseSuite(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
   }
 
   @Override
-  protected void collectInitializationErrors(List<Throwable> errors) {
-    // called by superclass' constructor
-    super.collectInitializationErrors(errors);
-
-    this.suiteClass = getTestClass().getJavaClass();
-
-    try {
-      this.suiteName = getSuiteName(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-
-    try {
-      this.outputDir = getOutputDir(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-
-    try {
-      this.suiteFilter = getSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-
-    try {
-      this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-
-    try {
-      this.debugMode = useDebugMode(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-
-    try {
-      createContext(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
-    }
-  }
-
-  protected void createContext(Class<?> suiteClass) throws Exception {
-    String rootPath = getFitnesseDir(suiteClass);
-    String fitNesseRoot = getFitNesseRoot(suiteClass);
-    int port = getPort(suiteClass);
-    File configFile = getConfigFile(rootPath, suiteClass);
-
-    this.context = initContext(configFile, rootPath, fitNesseRoot, port);
-  }
-
-  @Override
-  protected Description describeChild(WikiPage child) {
-    return Description.createTestDescription(suiteClass, child.getPageCrawler().getFullPath().toString());
-  }
-
-  @Override
-  protected List<WikiPage> getChildren() {
-    if (this.children == null) {
-      this.children = initChildren();
-    }
-    return this.children;
-  }
-
   protected String getFitnesseDir(Class<?> klass)
           throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
@@ -234,11 +137,13 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
             "In annotation @FitnesseDir you have to specify either 'value' or 'systemProperty'");
   }
 
+  @Override
   protected String getFitNesseRoot(Class<?> klass) {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     return fitnesseDirAnnotation.fitNesseRoot();
   }
 
+  @Override
   protected String getSuiteFilter(Class<?> klass)
           throws InitializationError {
     SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
@@ -248,6 +153,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return suiteFilterAnnotation.value();
   }
 
+  @Override
   protected String getExcludeSuiteFilter(Class<?> klass)
           throws InitializationError {
     ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
@@ -257,6 +163,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return excludeSuiteFilterAnnotation.value();
   }
 
+  @Override
   protected String getSuiteName(Class<?> klass) throws InitializationError {
     Name nameAnnotation = klass.getAnnotation(Name.class);
     if (nameAnnotation == null) {
@@ -265,6 +172,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return nameAnnotation.value();
   }
 
+  @Override
   protected String getOutputDir(Class<?> klass) throws InitializationError {
     OutputDir outputDirAnnotation = klass.getAnnotation(OutputDir.class);
     if (outputDirAnnotation == null) {
@@ -282,6 +190,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
             "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
   }
 
+  @Override
   protected boolean useDebugMode(Class<?> klass) {
     DebugMode debugModeAnnotation = klass.getAnnotation(DebugMode.class);
     if (null == debugModeAnnotation) {
@@ -290,7 +199,8 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return debugModeAnnotation.value();
   }
 
-  public static int getPort(Class<?> klass) {
+  @Override
+  public int getPort(Class<?> klass) {
     Port portAnnotation = klass.getAnnotation(Port.class);
     if (null == portAnnotation) {
       return 0;
@@ -302,107 +212,12 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return lport;
   }
 
-  private File getConfigFile(String rootPath, Class<?> klass) {
+  @Override
+  protected File getConfigFile(String rootPath, Class<?> klass) {
     ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
     if (null == configFileAnnotation) {
       return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
     }
     return new File(configFileAnnotation.value());
-  }
-
-  @Override
-  public void run(final RunNotifier notifier) {
-    if (isFilteredForChildTest()) {
-      super.run(notifier);
-    } else {
-      runPages(children, notifier);
-    }
-  }
-
-  private boolean isFilteredForChildTest() {
-    return getDescription().getChildren().size() < getChildren().size();
-  }
-
-  @Override
-  protected void runChild(WikiPage page, RunNotifier notifier) {
-    runPages(listOf(page), notifier);
-  }
-
-  protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
-    MultipleTestsRunner testRunner = createTestRunner(pages);
-    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
-    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
-    try {
-      executeTests(testRunner);
-    } catch (AssertionError e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
-    } catch (Exception e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
-    }
-  }
-
-  protected List<WikiPage> initChildren() {
-    WikiPage suiteRoot = getSuiteRootPage();
-    if (suiteRoot == null) {
-      throw new IllegalArgumentException("No page " + this.suiteName);
-    }
-    List<WikiPage> children;
-    if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
-    } else {
-      children = Collections.singletonList(suiteRoot);
-    }
-    return children;
-  }
-
-  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
-    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
-      .updatedWith(System.getProperties())
-      .updatedWith(ConfigurationParameter.loadProperties(configFile))
-      .updatedWith(ConfigurationParameter.makeProperties(
-            ConfigurationParameter.PORT, port,
-            ConfigurationParameter.ROOT_PATH, rootPath,
-            ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
-            ConfigurationParameter.OMITTING_UPDATES, true));
-
-    return contextConfigurator.makeFitNesseContext();
-  }
-
-  private WikiPage getSuiteRootPage() {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
-    return crawler.getPage(path);
-  }
-
-  private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
-
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
-    runner.setRunInProcess(debugMode);
-    return runner;
-  }
-
-  private void executeTests(MultipleTestsRunner testRunner) throws IOException, InterruptedException {
-    JavaFormatter testFormatter = new JavaFormatter(suiteName);
-    testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
-    testRunner.addTestSystemListener(testFormatter);
-
-    testRunner.executeTestPages();
-    TestSummary summary = testFormatter.getTotalSummary();
-
-    assertEquals("wrong", 0, summary.getWrong());
-    assertEquals("exceptions", 0, summary.getExceptions());
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
-  }
-
-  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
-    return MessageFormat.format("at least one test executed in {0}\n{1}",
-            pageName, summary.toString());
-  }
-
-  private List<WikiPage> listOf(WikiPage page) {
-    List<WikiPage> list = new ArrayList<WikiPage>(1);
-    list.add(page);
-    return list;
   }
 }
