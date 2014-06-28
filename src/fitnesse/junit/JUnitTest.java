@@ -7,7 +7,6 @@ import fitnesse.PluginException;
 import fitnesse.components.PluginsClassLoader;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.RunnerBuilder;
 
 @RunWith(JUnitTest.SuiteExtension.class)
 @FitNesseSuite.FitnesseDir(".")
@@ -15,8 +14,8 @@ import org.junit.runners.model.RunnerBuilder;
 public class JUnitTest {
 
   public static class SuiteExtension extends FitNesseSuite {
-    public SuiteExtension(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
-      super(suiteClass, builder);
+    public SuiteExtension(Class<?> suiteClass) throws InitializationError, IOException, PluginException {
+      super(suiteClass);
     }
 
     @Override

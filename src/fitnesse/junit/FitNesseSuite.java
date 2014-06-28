@@ -29,7 +29,6 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.RunnerBuilder;
 
 import static org.junit.Assert.*;
 
@@ -147,7 +146,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
   private final FitNesseContext context;
   private final List<WikiPage> children;
 
-  public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError, IOException, PluginException {
+  public FitNesseSuite(Class<?> suiteClass) throws InitializationError, IOException, PluginException {
     super(suiteClass);
     String rootPath = getFitnesseDir(suiteClass);
     String fitNesseRoot = getFitNesseRoot(suiteClass);
