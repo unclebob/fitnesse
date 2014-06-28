@@ -5,10 +5,10 @@ import fitnesse.components.PluginsClassLoader;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-@RunWith(JUnitTest.SuiteExtension.class)
+@RunWith(FitNesseSuiteExtensionTest.SuiteExtension.class)
 @FitNesseSuite.FitnesseDir(".")
 @FitNesseSuite.OutputDir("../target/fitnesse-results")
-public class JUnitTest {
+public class FitNesseSuiteExtensionTest {
 
   public static class SuiteExtension extends FitNesseSuite {
     public SuiteExtension(Class<?> suiteClass) throws InitializationError {
