@@ -1,9 +1,5 @@
 package fitnesse.junit;
 
-import java.io.File;
-import java.io.IOException;
-
-import fitnesse.PluginException;
 import fitnesse.components.PluginsClassLoader;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
@@ -14,7 +10,7 @@ import org.junit.runners.model.InitializationError;
 public class JUnitTest {
 
   public static class SuiteExtension extends FitNesseSuite {
-    public SuiteExtension(Class<?> suiteClass) throws InitializationError, IOException, PluginException {
+    public SuiteExtension(Class<?> suiteClass) throws InitializationError {
       super(suiteClass);
     }
 
@@ -24,13 +20,10 @@ public class JUnitTest {
     }
 
     @Override
-    protected void beforeContextCreated(File configFile, String rootPath, String fitNesseRoot, int port) throws InitializationError {
-      try {
-        new PluginsClassLoader(rootPath).addPluginsToClassLoader();
-      } catch (Exception e) {
-        throw new InitializationError(e);
-      }
-      super.beforeContextCreated(configFile, rootPath, fitNesseRoot, port);
+    protected void createContext(Class<?> suiteClass) throws Exception {
+      new PluginsClassLoader(getFitNesseRoot(suiteClass)).addPluginsToClassLoader();
+
+      super.createContext(suiteClass);
     }
   }
 }

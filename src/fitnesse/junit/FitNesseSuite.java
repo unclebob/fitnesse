@@ -136,38 +136,71 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
 
     public String value();
   }
-  private final Class<?> suiteClass;
 
-  private final String suiteName;
-  private final String outputDir;
-  private final String suiteFilter;
-  private final String excludeSuiteFilter;
-  private final boolean debugMode;
-  private final FitNesseContext context;
-  private final List<WikiPage> children;
+  private Class<?> suiteClass;
+  private String suiteName;
+  private String outputDir;
+  private String suiteFilter;
+  private String excludeSuiteFilter;
+  private boolean debugMode;
+  private FitNesseContext context;
+  private List<WikiPage> children;
 
-  public FitNesseSuite(Class<?> suiteClass) throws InitializationError, IOException, PluginException {
+  public FitNesseSuite(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
+  }
+
+  @Override
+  protected void collectInitializationErrors(List<Throwable> errors) {
+    // called by superclass' constructor
+    super.collectInitializationErrors(errors);
+
+    this.suiteClass = getTestClass().getJavaClass();
+
+    try {
+      this.suiteName = getSuiteName(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      this.outputDir = getOutputDir(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      this.suiteFilter = getSuiteFilter(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      this.debugMode = useDebugMode(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      createContext(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+  }
+
+  protected void createContext(Class<?> suiteClass) throws Exception {
     String rootPath = getFitnesseDir(suiteClass);
     String fitNesseRoot = getFitNesseRoot(suiteClass);
     int port = getPort(suiteClass);
     File configFile = getConfigFile(rootPath, suiteClass);
 
-    this.suiteClass = suiteClass;
-    this.suiteName = getSuiteName(suiteClass);
-    this.outputDir = getOutputDir(suiteClass);
-    this.suiteFilter = getSuiteFilter(suiteClass);
-    this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
-    this.debugMode = useDebugMode(suiteClass);
-    beforeContextCreated(configFile, rootPath, fitNesseRoot, port);
     this.context = initContext(configFile, rootPath, fitNesseRoot, port);
-    this.children = initChildren();
-  }
-
-  /**
-   * Method to allow subclasses to perform some processing before the context (and children are created).
-   */
-  protected void beforeContextCreated(File configFile, String rootPath, String fitNesseRoot, int port) throws InitializationError {
   }
 
   @Override
@@ -177,10 +210,13 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
 
   @Override
   protected List<WikiPage> getChildren() {
+    if (this.children == null) {
+      this.children = initChildren();
+    }
     return this.children;
   }
 
-  static String getFitnesseDir(Class<?> klass)
+  protected String getFitnesseDir(Class<?> klass)
           throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     if (fitnesseDirAnnotation == null) {
@@ -198,12 +234,12 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
             "In annotation @FitnesseDir you have to specify either 'value' or 'systemProperty'");
   }
 
-  public static String getFitNesseRoot(Class<?> klass) {
+  protected String getFitNesseRoot(Class<?> klass) {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     return fitnesseDirAnnotation.fitNesseRoot();
   }
 
-  static String getSuiteFilter(Class<?> klass)
+  protected String getSuiteFilter(Class<?> klass)
           throws InitializationError {
     SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
     if (suiteFilterAnnotation == null) {
@@ -212,7 +248,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return suiteFilterAnnotation.value();
   }
 
-  static String getExcludeSuiteFilter(Class<?> klass)
+  protected String getExcludeSuiteFilter(Class<?> klass)
           throws InitializationError {
     ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
     if (excludeSuiteFilterAnnotation == null) {
@@ -221,14 +257,6 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return excludeSuiteFilterAnnotation.value();
   }
 
-  /**
-   * Determines which suite will be run.
-   * Be careful: this method is called from the constructor,
-   * therefore subclasses can not expect anything about the state during this method!
-   * @param klass class with the FitNesseSuite annotation
-   * @return name of suite to run.
-   * @throws InitializationError if suite could not be determined.
-   */
   protected String getSuiteName(Class<?> klass) throws InitializationError {
     Name nameAnnotation = klass.getAnnotation(Name.class);
     if (nameAnnotation == null) {
@@ -237,7 +265,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     return nameAnnotation.value();
   }
 
-  static String getOutputDir(Class<?> klass) throws InitializationError {
+  protected String getOutputDir(Class<?> klass) throws InitializationError {
     OutputDir outputDirAnnotation = klass.getAnnotation(OutputDir.class);
     if (outputDirAnnotation == null) {
       throw new InitializationError("There must be a @OutputDir annotation");
@@ -254,7 +282,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
             "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
   }
 
-  public static boolean useDebugMode(Class<?> klass) {
+  protected boolean useDebugMode(Class<?> klass) {
     DebugMode debugModeAnnotation = klass.getAnnotation(DebugMode.class);
     if (null == debugModeAnnotation) {
       return true;
@@ -313,7 +341,7 @@ public class FitNesseSuite extends ParentRunner<WikiPage> {
     }
   }
 
-  private List<WikiPage> initChildren() {
+  protected List<WikiPage> initChildren() {
     WikiPage suiteRoot = getSuiteRootPage();
     if (suiteRoot == null) {
       throw new IllegalArgumentException("No page " + this.suiteName);
