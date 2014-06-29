@@ -31,6 +31,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
+  private transient PageData pageData;
 
   public FileSystemPage(final String path, final String name,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
@@ -107,7 +108,10 @@ public class FileSystemPage extends BaseWikiPage {
 
   @Override
   public PageData getData() {
-    return getDataVersion(null);
+    if (pageData == null) {
+      pageData = getDataVersion(null);
+    }
+    return new PageData(pageData);
   }
 
   @Override
@@ -126,6 +130,7 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
+    pageData = null;
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {

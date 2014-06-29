@@ -48,6 +48,19 @@ public class SymbolicLinkResponderTest {
     responder = new SymbolicLinkResponder();
   }
 
+  private void reloadPages() {
+    pageOne = root.getChildPage("PageOne");
+    WikiPage pageTwo = root.addChildPage("PageTwo");
+    childTwo = pageTwo.addChildPage("ChildTwo");
+  }
+
+
+  private Response invokeResponder() throws Exception {
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    reloadPages();
+    return response;
+  }
+
   @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testDir");
@@ -71,7 +84,7 @@ public class SymbolicLinkResponderTest {
   private void executeSymbolicLinkTestWith(String linkName, String linkPath) throws Exception {
     request.addInput("linkName", linkName);
     request.addInput("linkPath", linkPath);
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
 
@@ -90,7 +103,7 @@ public class SymbolicLinkResponderTest {
     request.setResource("PageTwo.ChildTwo");
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "ChildThree");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkChildTwoRedirectToProperties(response);
 
@@ -103,7 +116,7 @@ public class SymbolicLinkResponderTest {
   public void testSubmitGoodFormToAbsolutePath() throws Exception {
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", ".PageTwo");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
 
@@ -116,7 +129,7 @@ public class SymbolicLinkResponderTest {
   public void testSubmitGoodFormToSubChild() throws Exception {
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", ">ChildOne");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
 
@@ -129,7 +142,7 @@ public class SymbolicLinkResponderTest {
   public void testSubmitGoodFormToSibling() throws Exception {
     request.addInput("linkName", "SymTwo");
     request.addInput("linkPath", "PageTwo");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
 
@@ -143,7 +156,7 @@ public class SymbolicLinkResponderTest {
     request.setResource("PageTwo.ChildTwo");
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "<PageTwo.ChildThree");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkChildTwoRedirectToProperties(response);
 
@@ -161,7 +174,7 @@ public class SymbolicLinkResponderTest {
     assertNotNull(pageOne.getChildPage("SymLink"));
 
     request.addInput("removal", "SymLink");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
     checkPageOneRedirectToProperties(response);
 
     assertNull(pageOne.getChildPage("SymLink"));
@@ -171,7 +184,7 @@ public class SymbolicLinkResponderTest {
   public void testRename() throws Exception {
     prepareSymlinkOnPageOne();
     request.addInput("newname", "NewLink");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
     checkPageOneRedirectToProperties(response);
 
     assertNotNull(pageOne.getChildPage("NewLink"));
@@ -181,7 +194,7 @@ public class SymbolicLinkResponderTest {
   public void linkNameShouldBeAValidWikiWordWhenRenaming() throws Exception {
     prepareSymlinkOnPageOne();
     request.addInput("newname", "Newlink");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(412, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
@@ -203,7 +216,7 @@ public class SymbolicLinkResponderTest {
   public void testNoPageAtPath() throws Exception {
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "NonExistingPage");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
@@ -217,7 +230,7 @@ public class SymbolicLinkResponderTest {
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageOne PageTwo");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
@@ -229,7 +242,7 @@ public class SymbolicLinkResponderTest {
   public void linkNameShouldBeAValidWikiWord() throws Exception {
     request.addInput("linkName", "Symlink");
     request.addInput("linkPath", "PageTwo");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(412, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
@@ -242,7 +255,7 @@ public class SymbolicLinkResponderTest {
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageTwo");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(412, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
@@ -258,7 +271,7 @@ public class SymbolicLinkResponderTest {
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "file://testDir/ExternalRoot");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
 
@@ -275,7 +288,7 @@ public class SymbolicLinkResponderTest {
   public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception {
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "file:/testDir/ExternalRoot");
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = invokeResponder();
 
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
