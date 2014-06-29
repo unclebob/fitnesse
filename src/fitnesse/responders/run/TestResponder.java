@@ -9,6 +9,8 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -57,6 +59,8 @@ import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
+  private final Logger LOG = Logger.getLogger(TestResponder.class.getName());
+
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
@@ -118,6 +122,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     } catch (Exception e) {
       // Is this necessary? Or is the exception already handled by stopTestSystem?
       mainFormatter.errorOccurred(e);
+      LOG.log(Level.WARNING, "error registered in test system", e);
     }
 
     exitCode = mainFormatter.getErrorCount();
