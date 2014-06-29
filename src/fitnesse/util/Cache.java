@@ -3,22 +3,24 @@ package fitnesse.util;
 import util.Clock;
 
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A simple Cache interface.
  */
-public interface Cache<K, V, E extends Throwable> {
+public interface Cache<K, V> {
 
-  V get(K key) throws E;
+  V get(K key) throws Exception;
 
   void put(K key, V value);
 
-  void expire(K key);
+  void evict(K key);
 
-  public interface Loader<K, V, E extends Throwable> {
-    V fetch(K key) throws E;
+  public interface Loader<K, V> {
+    V fetch(K key) throws Exception;
   }
 
   public interface ExpirationPolicy<K, V> {
@@ -30,26 +32,26 @@ public interface Cache<K, V, E extends Throwable> {
    * @param <K> Key object type. Keys should be hashable.
    * @param <V> Value object type.
    */
-  public class Builder<K, V, E extends Throwable> {
-    private Loader<K, V, E> loader;
+  public class Builder<K, V> {
+    private Loader<K, V> loader;
     private ExpirationPolicy<K, V> expirationPolicy = new NoExpirationPolicy<K, V>();
 
-    public Builder<K, V, E> withLoader(Loader<K, V, E> loader) {
+    public Builder<K, V> withLoader(Loader<K, V> loader) {
       this.loader = loader;
       return this;
     }
 
-    public Builder<K, V, E> withExpirationPolicy(ExpirationPolicy<K, V> expirationPolicy) {
+    public Builder<K, V> withExpirationPolicy(ExpirationPolicy<K, V> expirationPolicy) {
       this.expirationPolicy = expirationPolicy;
       return this;
     }
 
-    public Cache<K, V, E> build() {
-      return new Cache<K, V, E>() {
+    public Cache<K, V> build() {
+      return new Cache<K, V>() {
         private Map<K, SoftReference<CachedValue<V>>> cacheMap = new ConcurrentHashMap<K, SoftReference<CachedValue<V>>>();
 
         @Override
-        public V get(K key) throws E {
+        public V get(K key) throws Exception {
           final SoftReference<CachedValue<V>> ref = cacheMap.get(key);
           final CachedValue<V> cachedValue = ref != null ? ref.get() : null;
           V value;
@@ -72,7 +74,7 @@ public interface Cache<K, V, E extends Throwable> {
         }
 
         @Override
-        public void expire(K key) {
+        public void evict(K key) {
           cacheMap.remove(key);
         }
 

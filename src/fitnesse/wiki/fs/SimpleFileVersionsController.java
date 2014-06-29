@@ -1,35 +1,21 @@
 package fitnesse.wiki.fs;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.util.Cache;
 import fitnesse.wiki.VersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
   private static final Logger LOG = Logger.getLogger(SimpleFileVersionsController.class.getName());
 
   private final FileSystem fileSystem;
-  private final Cache<File, String, IOException> fileCache = new Cache.Builder<File, String, IOException>()
-          .withLoader(new Cache.Loader<File, String, IOException>() {
-            @Override
-            public String fetch(File fileName) throws IOException {
-              return fileSystem.exists(fileName) ? fileSystem.getContent(fileName) : null;
-            }
-          })
-          .withExpirationPolicy(new Cache.ExpirationPolicy<File, String>() {
-            @Override
-            public boolean isExpired(File key, String value, long lastModified) {
-              return !fileSystem.exists(key) || fileSystem.lastModified(key) > lastModified;
-            }
-          })
-          .build();
 
   public SimpleFileVersionsController(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
@@ -68,7 +54,7 @@ public class SimpleFileVersionsController implements VersionsController {
 
     @Override
     public InputStream getContent() throws IOException {
-      return new ByteArrayInputStream(fileCache.get(file).getBytes("UTF-8"));
+      return new BufferedInputStream(fileSystem.getInputStream(file));
     }
 
     @Override
@@ -92,7 +78,6 @@ public class SimpleFileVersionsController implements VersionsController {
     for (FileVersion fileVersion : fileVersions) {
       addDirectory(fileVersion.getFile().getParentFile());
       InputStream content = fileVersion.getContent();
-      fileCache.expire(fileVersion.getFile());
       try {
         fileSystem.makeFile(fileVersion.getFile(), content);
       } finally {
@@ -105,7 +90,6 @@ public class SimpleFileVersionsController implements VersionsController {
   @Override
   public void delete(FileVersion... files) {
     for (FileVersion fileVersion : files) {
-      fileCache.expire(fileVersion.getFile());
       fileSystem.delete(fileVersion.getFile());
     }
   }
@@ -125,7 +109,6 @@ public class SimpleFileVersionsController implements VersionsController {
   }
   @Override
   public void rename(FileVersion fileVersion, File oldFile) throws IOException {
-    fileCache.expire(oldFile);
     fileSystem.rename(fileVersion.getFile(), oldFile);
   }
 }
