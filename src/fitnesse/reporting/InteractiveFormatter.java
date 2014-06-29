@@ -93,11 +93,11 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   public String testSummary() {
-    String summaryContent = (wasInterrupted()) ? TESTING_INTERRUPTED : "";
+    String summaryContent = wasInterrupted ? TESTING_INTERRUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
-      + ExecutionResult.getExecutionResult(relativeName, getAssertionCounts()) + "\";");
+      + (wasInterrupted ? ExecutionResult.ERROR : ExecutionResult.getExecutionResult(relativeName, getAssertionCounts())) + "\";");
     return script.html();
   }
 
