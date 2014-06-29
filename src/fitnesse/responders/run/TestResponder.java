@@ -116,6 +116,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     try {
       performExecution();
     } catch (Exception e) {
+      // Is this necessary? Or is the exception already handled by stopTestSystem?
       mainFormatter.errorOccurred(e);
     }
 
@@ -263,8 +264,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
-    runner.executeTestPages();
-    log.publish(context.pageFactory);
+    try {
+      runner.executeTestPages();
+    } finally {
+      log.publish(context.pageFactory);
+    }
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {

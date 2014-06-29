@@ -81,11 +81,13 @@ public class MultipleTestsRunner implements Stoppable {
     formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
-      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
+    try {
+      for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
+        startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
+      }
+    } finally {
+      testingTracker.removeEndedProcess(stopId);
     }
-
-    testingTracker.removeEndedProcess(stopId);
   }
 
   private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
