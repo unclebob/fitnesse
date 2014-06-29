@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotSame;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class PageXmlizerTest {
   private PageXmlizer xmlizer;
   private WikiPage root;
   private PageCrawler crawler;
-  private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+  private DateFormat format = WikiPageProperty.getTimeFormat();
 
   @Before
   public void setUp() throws Exception {
