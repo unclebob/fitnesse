@@ -50,13 +50,11 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public List<WikiPage> getChildren() {
-    List<?> children = realPage.getChildren();
+    List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<WikiPage>();
-    //...Intentionally exclude symbolic links on symbolic pages
-    //   to prevent infinite cyclic symbolic references.
     //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-    for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = (WikiPage) iterator.next();
+    for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
+      WikiPage child = iterator.next();
       symChildren.add(new SymbolicPage(child.getName(), child, this));
     }
     return symChildren;
