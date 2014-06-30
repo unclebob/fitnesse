@@ -169,6 +169,11 @@ tr.exception-detail {
 #test-summary.fail,
 #test-summary.error {
     padding: 0.5em;
+    white-space: nowrap;
+}
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error {
     padding-left: 1.5em;
 }
 

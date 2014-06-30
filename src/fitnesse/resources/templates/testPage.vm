@@ -10,7 +10,7 @@
 
 $!headerContent.render()
 
-<div id="test-summary">Running Tests ...</div>
+<div id="test-summary"><div id="progressBar">Preparing Tests ...</div></div>
 
 <div id="test-action">
 ## Filled with stop/output buttons
