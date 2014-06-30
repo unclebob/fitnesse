@@ -97,7 +97,7 @@ public class TestResponderTest {
   @Test
   public void testHead() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", results);
+    assertSubString("<div id=\"test-summary\"><div id=\"progressBar\">Preparing Tests ...</div></div>", results);
   }
 
   @Test
