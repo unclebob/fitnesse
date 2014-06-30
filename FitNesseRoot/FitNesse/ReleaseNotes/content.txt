@@ -1,4 +1,4 @@
-!2 Next release
+!2 20140630
  * Add page wide Expand/Collapse All buttons (bootstrap theme).
  * Performance improvements: cache big factory classes and page data.
  * Issues fixed:
