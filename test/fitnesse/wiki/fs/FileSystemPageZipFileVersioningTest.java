@@ -58,8 +58,7 @@ public class FileSystemPageZipFileVersioningTest {
 
   @Test
   public void aZipFileIsCreatedAfterUpdatingPageContent() throws Exception {
-    String dirPath = page.getFileSystemPath();
-    File dir = new File(dirPath);
+    File dir = page.getFileSystemPath();
     String[] filenames = dir.list();
 
     List<String> list = Arrays.asList(filenames);

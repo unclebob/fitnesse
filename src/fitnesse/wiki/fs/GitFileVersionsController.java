@@ -228,7 +228,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
     PageData pageData = recentChangesPage.getData();
     try {
-      pageData.setContent(convertToWikiText(history(new File(fsPage.getFileSystemPath()), new LogCommandSpec() {
+      pageData.setContent(convertToWikiText(history(fsPage.getFileSystemPath(), new LogCommandSpec() {
         @Override
         public LogCommand specify(LogCommand log, Repository repository) {
           return log.setMaxCount(RECENT_CHANGES_DEPTH);

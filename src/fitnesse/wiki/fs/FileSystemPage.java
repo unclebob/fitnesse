@@ -27,13 +27,13 @@ public class FileSystemPage extends BaseWikiPage {
   static final String propertiesFilename = "properties.xml";
 
   // Only used for root page:
-  private final String path;
+  private final File path;
 
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
   private transient PageData pageData;
 
-  public FileSystemPage(final String path, final String name,
+  public FileSystemPage(final File path, final String name,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
     super(name, variableSource);
@@ -65,7 +65,7 @@ public class FileSystemPage extends BaseWikiPage {
       versionsController.delete(new FileVersion() {
         @Override
         public File getFile() {
-          return new File(((FileSystemPage) childPage).getFileSystemPath());
+          return ((FileSystemPage) childPage).getFileSystemPath();
         }
 
         @Override
@@ -119,12 +119,12 @@ public class FileSystemPage extends BaseWikiPage {
     return getData();
   }
 
-  private String getParentFileSystemPath() {
+  private File getParentFileSystemPath() {
     return isRoot() ?  this.path : ((FileSystemPage) this.getParent()).getFileSystemPath();
   }
 
-  public String getFileSystemPath() {
-    return new File(getParentFileSystemPath(), getName()).getPath();
+  public File getFileSystemPath() {
+    return new File(getParentFileSystemPath(), getName());
   }
 
   @Override

@@ -65,7 +65,7 @@ public class BaseWikiPageTest {
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
 
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
     assertEquals("ExternalRoot", realPage.getName());
   }
 

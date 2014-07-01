@@ -72,7 +72,8 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   @Override
   // TODO: RootPath should be a File?
   public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, versionsController, new FileSystemSubWikiPageFactory(rootPath != null ? new File(rootPath) : null), variableSource);
+    File rootFile = rootPath != null ? new File(rootPath) : null;
+    return new FileSystemPage(rootFile, rootPageName, versionsController, new FileSystemSubWikiPageFactory(rootFile), variableSource);
   }
 
   @Override
@@ -99,7 +100,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
     }
 
     private List<WikiPage> getNormalChildren(FileSystemPage page) {
-      final File thisDir = new File(page.getFileSystemPath());
+      final File thisDir = page.getFileSystemPath();
       final List<WikiPage> children = new LinkedList<WikiPage>();
       if (fileSystem.exists(thisDir)) {
         final String[] subFiles = fileSystem.list(thisDir);
@@ -136,7 +137,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
         }
       }
       // Fall back:
-      if (fileIsValid(childName, new File(page.getFileSystemPath()))) {
+      if (fileIsValid(childName, page.getFileSystemPath())) {
         // Empty directories that have Wiki format are considered pages as well.
         return new FileSystemPage(childName, page);
       } else {

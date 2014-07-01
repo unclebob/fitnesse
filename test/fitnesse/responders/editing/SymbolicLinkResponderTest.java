@@ -281,7 +281,7 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
