@@ -7,8 +7,8 @@ import fitnesse.wikitext.parser.VariableSource;
 public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;
 
-  protected final String name;
-  protected final BaseWikiPage parent;
+  private final String name;
+  private final BaseWikiPage parent;
   private final VariableSource variableSource;
 
   protected BaseWikiPage(String name, VariableSource variableSource) {

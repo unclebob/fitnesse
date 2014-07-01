@@ -120,7 +120,7 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   private String getParentFileSystemPath() {
-    return this.parent != null ? ((FileSystemPage) this.parent).getFileSystemPath() : this.path;
+    return isRoot() ?  this.path : ((FileSystemPage) this.getParent()).getFileSystemPath();
   }
 
   public String getFileSystemPath() {
