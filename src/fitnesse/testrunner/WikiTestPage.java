@@ -61,6 +61,11 @@ public class WikiTestPage implements TestPage {
     return new PageData(getSourcePage().getData(), decoratedContent.toString());
   }
 
+  @Override
+  public String getHtml() {
+      return getDecoratedData().getHtml();
+  }
+
   protected void addPageContent(StringBuilder decoratedContent) {
     String content = getData().getContent();
     decoratedContent
