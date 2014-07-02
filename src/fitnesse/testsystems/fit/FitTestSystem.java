@@ -44,7 +44,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
     processingQueue.addLast(pageToTest);
-    String html = pageToTest.getDecoratedData().getHtml();
+    String html = pageToTest.getHtml();
     try {
       if (html.length() == 0)
         client.send(EMPTY_PAGE_CONTENT);

@@ -209,7 +209,7 @@ public class HtmlSlimResponderTest {
   public void tableWithBadConstructorHasException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|badArgument|\n"
         + "|returnConstructorArgument?|\n" + "|3|\n");
-    TableScanner ts = new HtmlTableScanner(testPage.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(testPage.getHtml());
     ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }
