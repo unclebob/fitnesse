@@ -17,7 +17,10 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import util.FileUtil;
 
 public class FileSystemPage extends BaseWikiPage {
@@ -32,6 +35,7 @@ public class FileSystemPage extends BaseWikiPage {
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
   private transient PageData pageData;
+  private transient ParsedPage parsedPage;
 
   public FileSystemPage(final File path, final String name,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
@@ -111,7 +115,7 @@ public class FileSystemPage extends BaseWikiPage {
     if (pageData == null) {
       pageData = getDataVersion(null);
     }
-    return new PageData(pageData);
+    return new PageData(pageData, getVariableSource());
   }
 
   @Override
@@ -131,6 +135,7 @@ public class FileSystemPage extends BaseWikiPage {
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
     pageData = null;
+    parsedPage = null;
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
@@ -160,7 +165,21 @@ public class FileSystemPage extends BaseWikiPage {
       throw new RuntimeException(e);
     }
 
+    // Set data here, so we can render older versions of the data
+//    pageData = data;
     return new PageData(data, getVariableSource());
+  }
+
+  @Override
+  public String getHtml() {
+    return getParsedPage().toHtml();
+  }
+
+  public ParsedPage getParsedPage() {
+    if (parsedPage == null) {
+      parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
+    }
+    return parsedPage;
   }
 
   @Override

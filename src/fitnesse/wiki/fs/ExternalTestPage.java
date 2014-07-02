@@ -75,6 +75,11 @@ public class ExternalTestPage extends BaseWikiPage {
     return null;
   }
 
+  @Override
+  public String getHtml() {
+    return getData().getHtml();
+  }
+
   private PageData makePageData() {
     PageData pageData = new PageData(this);
     String content;

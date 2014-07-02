@@ -32,6 +32,8 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   PageData getDataVersion(String versionName);
 
+  String getHtml();
+
   VersionInfo commit(PageData data);
 
   PageCrawler getPageCrawler();

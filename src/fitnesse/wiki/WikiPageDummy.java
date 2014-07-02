@@ -28,6 +28,12 @@ public class WikiPageDummy implements WikiPage {
     pageData = new PageData(this);
   }
 
+  public WikiPageDummy(ReadOnlyPageData pageData) {
+    name = "Default";
+    this.pageData = (PageData) pageData;
+    this.pageData.setWikiPage(this);
+  }
+
   public String getName() {
     return name;
   }
@@ -72,6 +78,11 @@ public class WikiPageDummy implements WikiPage {
     return null;
   }
 
+  @Override
+  public String getHtml() {
+    return getData().getHtml();
+  }
+
   public void removeChildPage(String name) {
   }
 
@@ -98,4 +109,5 @@ public class WikiPageDummy implements WikiPage {
   public WikiPage getChildPage(String name) {
     return null;
   }
+
 }

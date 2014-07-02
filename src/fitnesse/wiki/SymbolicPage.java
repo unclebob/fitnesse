@@ -81,6 +81,11 @@ public class SymbolicPage extends BaseWikiPage {
     return data;
   }
 
+  @Override
+  public String getHtml() {
+    return realPage.getHtml();
+  }
+
   public VersionInfo commit(PageData data) {
     return realPage.commit(data);
   }
