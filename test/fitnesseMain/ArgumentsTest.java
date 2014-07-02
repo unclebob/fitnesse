@@ -63,7 +63,7 @@ public class ArgumentsTest {
 
     assertEquals("normal", properties.getProperty("LogLevel"));
     assertNull(properties.getProperty("ConfigFile"));
-    assertNull(properties.getProperty("RootPath"));
+    assertEquals(".", properties.getProperty("RootPath"));
     assertNull(properties.getProperty("FitNesseRoot"));
     assertNull(properties.getProperty("RedirectOutput"));
     assertNull(properties.getProperty("LogDirectory"));

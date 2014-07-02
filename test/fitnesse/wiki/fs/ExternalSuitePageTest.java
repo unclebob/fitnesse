@@ -23,7 +23,7 @@ public class ExternalSuitePageTest {
   @Before
   public void prepare() {
     fileSystem = new MemoryFileSystem();
-    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), new SystemVariableSource()).makeRootPage("", "RooT");
+    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), new SystemVariableSource()).makePage(null, "RooT", null);
   }
 
   @Test

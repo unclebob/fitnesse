@@ -19,11 +19,6 @@ public class ExternalSuitePageFactory implements WikiPageFactory<BaseWikiPage> {
   }
 
   @Override
-  public WikiPage makeRootPage(String path, String pageName) {
-    throw new RuntimeException("Can not make ExternalSuitePage root pages");
-  }
-
-  @Override
   public WikiPage makePage(File path, String pageName, BaseWikiPage parent) {
     return new ExternalSuitePage(path, pageName, parent, fileSystem);
   }

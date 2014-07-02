@@ -32,7 +32,7 @@ public class FileSystemPageTest {
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makeRootPage(defaultPath, "RooT");
+    root = new FileSystemPageFactory().makePage(new File(defaultPath), "RooT", null);
   }
 
   @After
@@ -154,7 +154,7 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = new FileSystemPageFactory().makeRootPage(defaultPath, "RooT");
+    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(defaultPath), "RooT", null);
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 

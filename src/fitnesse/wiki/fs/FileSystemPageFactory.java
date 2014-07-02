@@ -70,15 +70,12 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   }
 
   @Override
-  // TODO: RootPath should be a File?
-  public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    File rootFile = rootPath != null ? new File(rootPath) : null;
-    return new FileSystemPage(rootFile, rootPageName, versionsController, new FileSystemSubWikiPageFactory(rootFile), variableSource);
-  }
-
-  @Override
-  public WikiPage makePage(File path, String pageName, FileSystemPage parent) {
-    return new FileSystemPage(pageName, parent);
+  public FileSystemPage makePage(File path, String pageName, FileSystemPage parent) {
+    if (parent != null) {
+      return new FileSystemPage(pageName, parent);
+    } else {
+      return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(path), variableSource);
+    }
   }
 
   VersionsController getVersionsController() {
@@ -171,7 +168,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {
         if (file.isDirectory()) {
-          WikiPage externalRoot = FileSystemPageFactory.this.makeRootPage(parentDirectory.getPath(), file.getName());
+          WikiPage externalRoot = FileSystemPageFactory.this.makePage(parentDirectory, file.getName(), null);
           return new SymbolicPage(linkName, externalRoot, parent);
         }
       }

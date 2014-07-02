@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.mem;
 
+import java.io.File;
 import java.util.Properties;
 
 import fitnesse.wiki.SystemVariableSource;
@@ -21,7 +22,7 @@ public class InMemoryPage {
   public static WikiPage makeRoot(String name, Properties properties) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem), new SystemVariableSource(properties));
-    FileSystemPage page = (FileSystemPage) factory.makeRootPage(".", name);
+    FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null);
     return page;
   }
 

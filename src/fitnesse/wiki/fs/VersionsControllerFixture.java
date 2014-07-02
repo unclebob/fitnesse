@@ -30,7 +30,7 @@ public class VersionsControllerFixture {
   }
 
   public void createWikiRoot() {
-    rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
+    rootPage = pageFactory.makePage(new File(TEST_DIR), "RooT", null);
   }
 
   public WikiPage getRootPage() {

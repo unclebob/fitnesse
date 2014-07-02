@@ -1,5 +1,6 @@
 package fitnesse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -41,7 +42,7 @@ public class ContextConfigurator {
   /** Some properties are stored in typed fields: */
   private WikiPage root;
   private Integer port;
-  private String rootPath;
+  private String rootPath = DEFAULT_PATH;
   private String rootDirectoryName;
   private String contextRoot;
   private Logger logger;
@@ -102,7 +103,7 @@ public class ContextConfigurator {
     }
 
     if (root == null) {
-      root = wikiPageFactory.makeRootPage(rootPath, rootDirectoryName);
+      root = wikiPageFactory.makePage(new File(rootPath), rootDirectoryName, null);
     }
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);

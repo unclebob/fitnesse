@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import java.io.File;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
@@ -149,7 +150,7 @@ public class SymbolicPageTest {
   private void CreateExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
-    externalRoot = new FileSystemPageFactory().makeRootPage("testDir/ExternalRoot", "ExternalRoot");
+    externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null);
     WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
     WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
