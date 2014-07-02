@@ -142,14 +142,10 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   private void handleInvalidPageName() {
-    try {
-      String msg = "WikiPage " + wikiPage + " does not have a valid name!"
-          + wikiPage.getName();
-      LOG.warning(msg);
-      throw new RuntimeException(msg);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    String msg = "WikiPage " + wikiPage + " does not have a valid name!"
+        + wikiPage.getName();
+    LOG.warning(msg);
+    throw new RuntimeException(msg);
   }
 
   @Override
