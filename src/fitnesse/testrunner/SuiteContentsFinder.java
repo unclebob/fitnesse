@@ -39,7 +39,7 @@ public class SuiteContentsFinder {
 
 
   public List<WikiPage> getAllPagesToRunForThisSuite() {
-    String content = pageToRun.getData().getHtml();
+    String content = pageToRun.getHtml();
     //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);

@@ -45,7 +45,7 @@ public class PageDataTest {
     String text = "!define x {''italics''}\n${x}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), text);
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
     assertHasRegexp("''italics''", html);
     assertHasRegexp("<i>italics</i>", html);
   }
@@ -55,7 +55,7 @@ public class PageDataTest {
     String text = "!define x {b}\n!define y (a${x}c)\n${y}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), text);
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
     assertHasRegexp("abc", html);
     assertHasRegexp("variable defined: y=a\\$\\{x\\}c", html);
     String variableContents = page.getData().getVariable("y");
@@ -73,7 +73,7 @@ public class PageDataTest {
   public void testLiteral() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
-    String renderedContent = page.getData().getHtml();
+    String renderedContent = page.getHtml();
     assertHasRegexp("literal", renderedContent);
     assertDoesntHaveRegexp("!-literal-!", renderedContent);
   }
@@ -83,7 +83,7 @@ public class PageDataTest {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
     WikiPage child = WikiPageUtil.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
-    String renderedContent = child.getData().getHtml();
+    String renderedContent = child.getHtml();
     assertHasRegexp("undefined variable", renderedContent);
   }
 
@@ -198,6 +198,6 @@ public class PageDataTest {
     String contentWithCarriageReturns = content.replaceAll("\n", "\r\n");
     WikiPage pageWithDosLineEndings = WikiPageUtil.addPage(root, PathParser.parse("PageName2"), contentWithCarriageReturns);
     
-    assertEquals(pageWithUnixLineEndings.getData().getHtml(), pageWithDosLineEndings.getData().getHtml());
+    assertEquals(pageWithUnixLineEndings.getHtml(), pageWithDosLineEndings.getHtml());
   }
 }

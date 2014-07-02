@@ -50,7 +50,7 @@ public class ScenarioAndDecisionTableExtensionTest {
             + "\n"
             + "!|DT:" + scriptText + "|\n";
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", testContext);
     t = ts.getTable(1);

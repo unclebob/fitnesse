@@ -34,7 +34,7 @@ public class ScenarioTableTest {
         throws Exception {
         WikiPageUtil.setPageContents(root, pageContents);
 
-        TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+        TableScanner ts = new HtmlTableScanner(root.getHtml());
         Table t = ts.getTable(0);
       SlimTestContextImpl testContext = new SlimTestContextImpl();
         st = new ScenarioTable(t, "id", testContext);
