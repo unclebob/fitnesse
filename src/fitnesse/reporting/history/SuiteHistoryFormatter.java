@@ -59,7 +59,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testOutputChunk(String output) {
-    testHistoryFormatter.testOutputChunk(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.testOutputChunk(output);
+    }
   }
 
   @Override
