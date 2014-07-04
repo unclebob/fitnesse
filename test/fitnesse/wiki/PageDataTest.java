@@ -58,14 +58,14 @@ public class PageDataTest {
     String html = page.getHtml();
     assertHasRegexp("abc", html);
     assertHasRegexp("variable defined: y=a\\$\\{x\\}c", html);
-    String variableContents = page.getData().getVariable("y");
+    String variableContents = page.getVariable("y");
     assertEquals("abc", variableContents);
   }
 
   @Test
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    PageData d = new PageData(new WikiPageDummy().getData(), "<b>");
-    String html = d.getHtml();
+    WikiPage page = new WikiPageDummy("Name", "<b>");
+    String html = page.getHtml();
     assertEquals("&lt;b&gt;", html);
   }
 
@@ -91,7 +91,7 @@ public class PageDataTest {
   public void testGetCrossReferences() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
-    List<?> xrefs = page.getData().getXrefPages();
+    List<?> xrefs = page.getXrefPages();
     assertEquals("XrefPage", xrefs.get(0));
   }
 

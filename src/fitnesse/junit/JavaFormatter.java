@@ -139,11 +139,11 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testStarted(WikiTestPage test) throws IOException {
-    resultsRepository.open(getFullPath(test.getSourcePage()));
+    resultsRepository.open(getFullPath(test));
   }
 
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
-    String fullPath = getFullPath(test.getSourcePage());
+    String fullPath = getFullPath(test);
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));

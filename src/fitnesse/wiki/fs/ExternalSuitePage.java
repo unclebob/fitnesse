@@ -74,6 +74,11 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   @Override
+  public List<String> getXrefPages() {
+    return Collections.emptyList();
+  }
+
+  @Override
   public List<WikiPage> getChildren() {
     return findChildren();
   }
@@ -120,6 +125,5 @@ public class ExternalSuitePage extends BaseWikiPage {
     pageData.removeAttribute(PageData.PropertyREFACTOR);
     pageData.setAttribute(PageType.SUITE.toString(), Boolean.toString(true));
     return pageData;
-
   }
 }

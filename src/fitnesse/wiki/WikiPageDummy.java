@@ -74,10 +74,6 @@ public class WikiPageDummy implements WikiPage {
     return 0;
   }
 
-  public PageData getDataVersion(String versionName) {
-    return null;
-  }
-
   @Override
   public WikiPage getVersion(String versionName) {
     return this;
@@ -101,6 +97,16 @@ public class WikiPageDummy implements WikiPage {
 
   public WikiPage getFooterPage() {
     return null;
+  }
+
+  @Override
+  public String getVariable(String name) {
+    return null;
+  }
+
+  @Override
+  public List<String> getXrefPages() {
+    return Collections.emptyList();
   }
 
   public WikiPage addChildPage(String name) {

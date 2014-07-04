@@ -1,13 +1,16 @@
 package fitnesse.testrunner;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -16,18 +19,12 @@ public class WikiTestPage implements TestPage {
   public static final String SET_UP = "SetUp";
 
   private WikiPage sourcePage;
-  private PageData data;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
   public WikiTestPage(WikiPage sourcePage) {
     this.sourcePage = sourcePage;
-  }
-
-  public WikiTestPage(PageData data) {
-    this.data = data;
-    this.sourcePage = data.getWikiPage();
   }
 
   public static boolean isTestPage(WikiPage page) {
@@ -37,12 +34,23 @@ public class WikiTestPage implements TestPage {
     return pageData.hasAttribute("Test");
   }
 
-  public WikiPage getSourcePage() {
-    return sourcePage;
+  public PageData getData() {
+    return sourcePage.getData();
   }
 
-  public PageData getData() {
-    return data == null ? sourcePage.getData() : data;
+  @Override
+  public ReadOnlyPageData readOnlyData() {
+    return sourcePage.readOnlyData();
+  }
+
+  @Override
+  public Collection<VersionInfo> getVersions() {
+    return sourcePage.getVersions();
+  }
+
+  @Override
+  public WikiTestPage getVersion(String versionName) {
+    return new WikiTestPage(sourcePage.getVersion(versionName));
   }
 
   /**
@@ -61,12 +69,42 @@ public class WikiTestPage implements TestPage {
 
     decorate(getTearDown(), decoratedContent);
 
-    return new PageData(getSourcePage().getData(), decoratedContent.toString());
+    return new PageData(getData(), decoratedContent.toString());
   }
 
   @Override
   public String getHtml() {
       return getDecoratedData().getHtml();
+  }
+
+  @Override
+  public VersionInfo commit(PageData data) {
+    return sourcePage.commit(data);
+  }
+
+  @Override
+  public PageCrawler getPageCrawler() {
+    return sourcePage.getPageCrawler();
+  }
+
+  @Override
+  public WikiPage getHeaderPage() {
+    return sourcePage.getHeaderPage();
+  }
+
+  @Override
+  public WikiPage getFooterPage() {
+    return sourcePage.getFooterPage();
+  }
+
+  @Override
+  public String getVariable(String variable) {
+    return sourcePage.getVariable(variable);
+  }
+
+  @Override
+  public List<String> getXrefPages() {
+    return sourcePage.getXrefPages();
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {
@@ -133,13 +171,48 @@ public class WikiTestPage implements TestPage {
     return getPathNameForPage(sourcePage);
   }
 
+  @Override
+  public WikiPage getParent() {
+    return sourcePage.getParent();
+  }
+
+  @Override
+  public boolean isRoot() {
+    return sourcePage.isRoot();
+  }
+
+  @Override
+  public WikiPage addChildPage(String name) {
+    return sourcePage.addChildPage(name);
+  }
+
+  @Override
+  public boolean hasChildPage(String name) {
+    return sourcePage.hasChildPage(name);
+  }
+
+  @Override
+  public WikiPage getChildPage(String name) {
+    return sourcePage.getChildPage(name);
+  }
+
+  @Override
+  public void removeChildPage(String name) {
+    sourcePage.removeChildPage(name);
+  }
+
+  @Override
+  public List<WikiPage> getChildren() {
+    return sourcePage.getChildren();
+  }
+
   public String getName() {
     return sourcePage.getName();
   }
 
   public boolean shouldIncludeScenarioLibraries() {
-    boolean isSlim = "slim".equalsIgnoreCase(getData().getVariable(WikiPageIdentity.TEST_SYSTEM));
-    String includeScenarioLibraries = getData().getVariable("INCLUDE_SCENARIO_LIBRARIES");
+    boolean isSlim = "slim".equalsIgnoreCase(sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM));
+    String includeScenarioLibraries = sourcePage.getVariable("INCLUDE_SCENARIO_LIBRARIES");
     boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
     boolean notIncludeScenarios = "false".equalsIgnoreCase(includeScenarioLibraries);
 
@@ -192,4 +265,8 @@ public class WikiTestPage implements TestPage {
     return uncles;
   }
 
+  @Override
+  public int compareTo(Object o) {
+    return sourcePage.compareTo(o);
+  }
 }

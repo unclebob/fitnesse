@@ -48,7 +48,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
     updateCounters(summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
-      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), getPath(page.getSourcePage()), timeMeasurement.elapsedSeconds()));
+      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), getPath(page), timeMeasurement.elapsedSeconds()));
   }
 
   private void updateCounters(TestSummary summary) {

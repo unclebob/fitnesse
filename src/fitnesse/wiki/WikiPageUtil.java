@@ -7,6 +7,8 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.wikitext.parser.VariableSource;
+
 public class WikiPageUtil {
 
   public static void setPageContents(WikiPage page, String pageContents) {
@@ -17,12 +19,12 @@ public class WikiPageUtil {
 
   public static String getHeaderPageHtml(WikiPage wikiPage) {
     WikiPage header = wikiPage.getHeaderPage();
-    return header == null ? "" : header.readOnlyData().getHtml();
+    return header == null ? "" : header.getHtml();
   }
 
   public static String getFooterPageHtml(WikiPage wikiPage) {
     WikiPage footer = wikiPage.getFooterPage();
-    return footer == null ? "" : footer.readOnlyData().getHtml();
+    return footer == null ? "" : footer.getHtml();
   }
 
   public static WikiPage addPage(WikiPage context, WikiPagePath path, String content) {
@@ -51,12 +53,19 @@ public class WikiPageUtil {
     return getOrMakePage(current, rest);
   }
 
-  public static String makePageHtml(ReadOnlyPageData pageData) {
+  // TODO: make WikiPage the input parameter
+  public static String makePageHtml(WikiPage page) {
     StringBuffer buffer = new StringBuffer();
-    buffer.append(getHeaderPageHtml(pageData.getWikiPage()));
-    buffer.append(pageData.getHtml());
+    buffer.append(getHeaderPageHtml(page));
+    buffer.append(page.getHtml());
     return buffer.toString();
   }
+
+  // TODO: provide generic method for parsing wiki content (code now in pageData)
+  public static String makeHtml(ReadOnlyPageData pageData, VariableSource variableSource) {
+    return null;
+  }
+
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {
     URI uri = URI.create(fullPageURI);

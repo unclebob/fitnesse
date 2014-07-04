@@ -41,6 +41,10 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getHeaderPage();
 
   WikiPage getFooterPage();
+
+  String getVariable(String name);
+
+  List<String> getXrefPages();
 }
 
 

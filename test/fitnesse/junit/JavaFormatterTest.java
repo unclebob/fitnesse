@@ -28,7 +28,7 @@ public class JavaFormatterTest {
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
     WikiTestPage wp = buildNestedTestPage();
-    assertEquals(nestedPageName, jf.getFullPath(wp.getSourcePage()));
+    assertEquals(nestedPageName, jf.getFullPath(wp));
   }
 
   private WikiTestPage buildNestedTestPage() throws Exception {

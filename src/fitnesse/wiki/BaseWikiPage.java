@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.VariableSource;
+import util.Maybe;
 
 public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;
@@ -53,13 +54,19 @@ public abstract class BaseWikiPage implements WikiPage {
     return getPageCrawler().getClosestInheritedPage("PageFooter");
   }
 
+  @Override
+  public String getVariable(String name) {
+    Maybe<String> value = variableSource.findVariable(name);
+    return value.isNothing() ? null : value.getValue();
+  }
+
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }
 
   public int compareTo(Object o) {
     try {
-      return getName().compareTo(((WikiPage) o).getName());
+      return getPageCrawler().getFullPath().compareTo(((WikiPage) o).getPageCrawler().getFullPath());
     }
     catch (Exception e) {
       return 0;

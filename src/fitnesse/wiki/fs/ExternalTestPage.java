@@ -66,6 +66,11 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   @Override
+  public List<String> getXrefPages() {
+    return Collections.emptyList();
+  }
+
+  @Override
   public Collection<VersionInfo> getVersions() {
     return Collections.emptySet();
   }

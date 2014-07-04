@@ -1,9 +1,8 @@
 package fitnesse.testsystems;
 
 import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
-public interface TestPage {
+public interface TestPage extends WikiPage {
   ReadOnlyPageData getDecoratedData();
-
-  String getHtml();
 }

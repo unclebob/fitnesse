@@ -70,12 +70,13 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
-  private transient WikiPage wikiPage;
   private String content = "";
   private WikiPageProperties properties = new WikiPageProperties();
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
+  // TODO: Get rid of those:
+  private transient WikiPage wikiPage;
   private transient ParsedPage parsedPage;
   private VariableSource variableSource;
 
@@ -202,27 +203,9 @@ public class PageData implements ReadOnlyPageData, Serializable {
       return getParsedPage().toHtml();
   }
 
-  @Override
-  public String getVariable(String name) {
-    ParsingPage parsingPage = getParsingPage();
-    Maybe<String> variable = parsingPage.findVariable(name);
-    if (variable.isNothing()) return null;
-
-    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
-    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
-  }
-
   public ParsedPage getParsedPage() {
     if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
     return parsedPage;
-  }
-
-  private Symbol getSyntaxTree() {
-    return getParsedPage().getSyntaxTree();
-  }
-
-  private ParsingPage getParsingPage() {
-    return getParsedPage().getParsingPage();
   }
 
   public void setWikiPage(WikiPage page) {
@@ -232,24 +215,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   @Override
   public WikiPage getWikiPage() {
     return wikiPage;
-  }
-
-  @Override
-  public List<String> getXrefPages() {
-    final ArrayList<String> xrefPages = new ArrayList<String>();
-    getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return true;
-      }
-    });
-    return xrefPages;
   }
 
   public boolean isEmpty() {

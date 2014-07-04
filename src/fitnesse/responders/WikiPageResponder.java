@@ -14,6 +14,7 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
@@ -76,11 +77,11 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (WikiTestPage.isTestPage(pageData)) {
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
-      html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
+    if (WikiTestPage.isTestPage(page)) {
+      TestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
+      html.put("content", new WikiPageRenderer(testPage));
     } else {
-      html.put("content", new WikiPageRenderer(pageData));
+      html.put("content", new WikiPageRenderer(page));
     }
 
     html.setMainTemplate("wikiPage");
@@ -99,14 +100,14 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public class WikiPageRenderer {
-    private ReadOnlyPageData data;
+    private WikiPage page;
 
-    WikiPageRenderer(ReadOnlyPageData data) {
-      this.data = data;
+    WikiPageRenderer(WikiPage page) {
+      this.page = page;
     }
 
     public String render() {
-        return WikiPageUtil.makePageHtml(data);
+        return WikiPageUtil.makePageHtml(page);
     }
   }
 

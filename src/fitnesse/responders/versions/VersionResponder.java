@@ -111,12 +111,10 @@ public class VersionResponder implements SecureResponder {
       ReadOnlyPageData data;
       if (WikiTestPage.isTestPage(page)) {
         WikiTestPage testPage = new WikiTestPage(page);
-        data = testPage.getDecoratedData();
+        return WikiPageUtil.makePageHtml(testPage);
       } else {
-        data = page.getData();
+        return WikiPageUtil.makePageHtml(page);
       }
-      return WikiPageUtil.makePageHtml(data);
-
     }
   }
 }
