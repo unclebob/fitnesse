@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import fitnesse.wikitext.parser.ParsedPage;
+
 public interface WikiPage extends Serializable, Comparable<Object> {
   WikiPage getParent();
 

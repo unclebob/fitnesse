@@ -14,6 +14,7 @@ import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ParsablePage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
@@ -31,7 +32,7 @@ import fitnesse.wikitext.parser.WikiSourcePage;
 import util.FileUtil;
 import util.Maybe;
 
-public class FileSystemPage extends BaseWikiPage {
+public class FileSystemPage extends BaseWikiPage implements ParsablePage {
   private static final long serialVersionUID = 1L;
 
   static final String contentFilename = "content.txt";
