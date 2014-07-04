@@ -9,6 +9,8 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -20,6 +22,7 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -35,7 +38,12 @@ import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -51,6 +59,8 @@ import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
+  private final Logger LOG = Logger.getLogger(TestResponder.class.getName());
+
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
@@ -68,6 +78,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private boolean remoteDebug = false;
   private boolean includeHtml = true;
   int exitCode;
+  private CompositeExecutionLog log;
 
 
   public TestResponder() {
@@ -88,6 +99,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
+    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -108,7 +120,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     try {
       performExecution();
     } catch (Exception e) {
+      // Is this necessary? Or is the exception already handled by stopTestSystem?
       mainFormatter.errorOccurred(e);
+      LOG.log(Level.WARNING, "error registered in test system", e);
     }
 
     exitCode = mainFormatter.getErrorCount();
@@ -152,6 +166,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
+    htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
@@ -167,6 +182,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public void setDebug(boolean debug) {
     this.debug = debug;
+  }
+
+  public class WikiPageHeaderRenderer {
+
+    public String render() {
+      return WikiPageUtil.getHeaderPageHtml(page);
+    }
+
   }
 
   public class WikiPageFooterRenderer {
@@ -190,7 +213,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(newTestHistoryFormatter());
+      runner.addTestSystemListener(getSuiteHistoryFormatter());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
@@ -230,17 +253,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page) {
+    return new SuiteHtmlFormatter(context, page, log) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-  }
-
-  protected TestSystemListener newTestHistoryFormatter() {
-    suiteHistoryFormatter = getSuiteHistoryFormatter();
-    return suiteHistoryFormatter;
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -251,7 +269,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
-    runner.executeTestPages();
+    try {
+      runner.executeTestPages();
+    } finally {
+      log.publish(context.pageFactory);
+    }
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
@@ -260,6 +282,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
+    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;
@@ -350,7 +373,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
+      if (!resultDirectory.exists()) {
+        resultDirectory.mkdirs();
+      }
       File resultFile = new File(resultDirectory, resultPath.getName());
       return new PrintWriter(resultFile, "UTF-8");
     }

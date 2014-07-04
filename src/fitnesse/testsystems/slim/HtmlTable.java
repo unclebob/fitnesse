@@ -347,9 +347,12 @@ public class HtmlTable implements Table {
           }
           return String.format("<span class=\"fail\">%s</span>", message);
         case IGNORE:
-          return testResult.hasMessage()
-                  ? String.format("%s <span class=\"ignore\">%s</span>", originalContent, message)
-                  : String.format("<span class=\"ignore\">%s</span>", originalContent);
+          // IGNORE + does not count === Test Not Run
+          if (testResult.doesCount()) {
+            return String.format("<span class=\"ignore\">%s</span>", message);
+          } else {
+            return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
+          }
         case ERROR:
           return String.format("%s <span class=\"error\">%s</span>", originalContent, message);
       }

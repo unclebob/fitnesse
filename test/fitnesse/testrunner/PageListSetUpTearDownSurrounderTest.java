@@ -30,11 +30,11 @@ public class PageListSetUpTearDownSurrounderTest {
 
   @Test
   public void testPagesForTestSystemAreSurroundedByRespectiveSuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = WikiPageUtil.addPage(testPage, PathParser.parse("SlimPageTest"));
-    WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"));
-    WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"));
-    WikiPage setUp2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteSetUp"));
-    WikiPage tearDown2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteTearDown"));
+    WikiPage slimPage = WikiPageUtil.addPage(testPage, PathParser.parse("SlimPageTest"), "");
+    WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "");
+    WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "");
+    WikiPage setUp2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteSetUp"), "");
+    WikiPage tearDown2 = WikiPageUtil.addPage(slimPage, PathParser.parse("SuiteTearDown"), "");
 
     List<WikiPage> testPages = surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(makeTestPageList());
 

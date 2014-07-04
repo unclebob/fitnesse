@@ -109,7 +109,7 @@ public class FitClient implements SocketAccepter {
     }
   }
 
-  public void exceptionOccurred(Exception e) {
+  public void exceptionOccurred(Throwable e) {
     for (FitClientListener listener : listeners)
       listener.exceptionOccurred(e);
   }

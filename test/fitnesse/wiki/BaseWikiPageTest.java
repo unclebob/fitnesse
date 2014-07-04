@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
@@ -23,9 +24,9 @@ public class BaseWikiPageTest {
   @Before
   public void setUp() throws Exception {
     root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
-    root.addChildPage("LinkedPage");
-    linkingPage = root.addChildPage("LinkingPage");
-    linkingPage.addChildPage("ChildPage");
+    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "");
+    linkingPage = WikiPageUtil.addPage(root, PathParser.parse("LinkingPage"), "");
+    WikiPageUtil.addPage(linkingPage, PathParser.parse("ChildPage"), "");
   }
 
   @After
@@ -57,10 +58,6 @@ public class BaseWikiPageTest {
 
     createLink("file://testDir/ExternalRoot");
 
-    checkExternalLink();
-  }
-
-  private void checkExternalLink() throws Exception {
     WikiPage symPage = linkingPage.getChildPage("SymLink");
     assertNotNull(symPage);
     assertEquals(SymbolicPage.class, symPage.getClass());
@@ -68,8 +65,8 @@ public class BaseWikiPageTest {
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
 
-    assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
-    assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals("ExternalRoot", realPage.getName());
   }
 
   private void createLink(String linkedPagePath) throws Exception {

@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wiki.fs.SymbolicPageFactory;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,7 +34,7 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String name) {
+  public WikiPage getChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
     if (childPage != null) {
       childPage = new SymbolicPage(name, childPage, this);
@@ -51,14 +49,12 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  public List<WikiPage> getNormalChildren() {
-    List<?> children = realPage.getChildren();
+  public List<WikiPage> getChildren() {
+    List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<WikiPage>();
-    //...Intentionally exclude symbolic links on symbolic pages
-    //   to prevent infinite cyclic symbolic references.
     //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-    for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = (WikiPage) iterator.next();
+    for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
+      WikiPage child = iterator.next();
       symChildren.add(new SymbolicPage(child.getName(), child, this));
     }
     return symChildren;

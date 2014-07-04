@@ -41,9 +41,9 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
     for (TestSystemListener listener : listeners)
-      listener.testSystemStopped(testSystem, executionLog, cause);
+      listener.testSystemStopped(testSystem, cause);
   }
 
   @Override

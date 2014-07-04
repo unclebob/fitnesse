@@ -1,3 +1,32 @@
+!2 20140630
+ * Add page wide Expand/Collapse All buttons (bootstrap theme).
+ * Performance improvements: cache big factory classes and page data.
+ * Issues fixed:
+   * Fix issue introduced in Order Query Table comparison in 20140623.
+   * ''!-ErrorLog-!'' was not written if test execution was interrupted.
+   * Include page header when executing test or suite.
+   * Slow page tags again (bootstrap theme).
+   * ''SLIM_VERSION'' variable is back: allow older SLiM implementations to connect.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=7&state=closed.
+
+!2 2014-06-23
+ * Author information for !-GitVersionController-!.
+ * ''?suite'' and ''?test'' are now the same responder.
+ * More useful failure message for jUnit runner.
+ * Use String arrays for commands. This should avoid errors with spaces in path names.
+ * Improved matching for query tables.
+ * Plugins are now loaded relative to the FitNesse root path.
+ * SLIM can handle checks on Map's.
+ * Refactoring on wiki subsystem.
+ * Issues fixed:
+   * Support more than one level of symlinks.
+   * !-ErrorLog-! is written for tests ran with ''format=text'' or ''format=xml''.
+   * Rich Text Format horizontal scrollbar is missing.
+   * Failure navigator should only show in case of failures.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
+
 !2 2014-04-18
  * Introduced new logo.
  * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
@@ -18,7 +47,7 @@
    * Missing stylesheets added to JUnit test results.
    * Fix representation issue with ignored field in SLim !-TableTable.-!
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed.
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
 
 !2 2014-02-01
  * '''Files outside the http://files section can no longer be accessed!'''

@@ -8,10 +8,16 @@ import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
-import util.EnvironmentVariableTool;
+import fitnesse.wiki.VariableTool;
+import fitnesse.wikitext.parser.WikiWordPath;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class FileSystemPageFactory implements WikiPageFactory {
@@ -40,27 +46,111 @@ public class FileSystemPageFactory implements WikiPageFactory {
   }
 
   @Override
-  // TODO: RootPath should be a File()?
+  // TODO: RootPath should be a File?
   public FileSystemPage makeRootPage(String rootPath, String rootPageName) {
-    return new FileSystemPage(rootPath, rootPageName, fileSystem, versionsController, new FileSystemSymbolicPageFactory(), variableSource);
+    return new FileSystemPage(rootPath, rootPageName, versionsController, new FileSystemSubWikiPageFactory(rootPath != null ? new File(rootPath) : null), variableSource);
   }
 
   VersionsController getVersionsController() {
     return versionsController;
   }
 
-  protected class FileSystemSymbolicPageFactory implements SymbolicPageFactory {
+  protected class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
+
+    private final File rootPath;
+
+    public FileSystemSubWikiPageFactory(File rootPath) {
+      this.rootPath = rootPath;
+    }
+
+    public List<WikiPage> getChildren(FileSystemPage page) {
+      List<WikiPage> children = getNormalChildren(page);
+      children.addAll(getSymlinkChildren(page));
+      return children;
+    }
+
+    private List<WikiPage> getNormalChildren(FileSystemPage page) {
+      final File thisDir = new File(page.getFileSystemPath());
+      final List<WikiPage> children = new LinkedList<WikiPage>();
+      if (fileSystem.exists(thisDir)) {
+        final String[] subFiles = fileSystem.list(thisDir);
+        for (final String subFile : subFiles) {
+          if (fileIsValid(subFile, thisDir)) {
+            children.add(getChildPage(page, subFile));
+          }
+        }
+      }
+      return children;
+    }
+
+    protected List<WikiPage> getSymlinkChildren(WikiPage page) {
+      List<WikiPage> children = new LinkedList<WikiPage>();
+      WikiPageProperties props = page.getData().getProperties();
+      WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
+      if (symLinksProperty != null) {
+        for (String linkName : symLinksProperty.keySet()) {
+          WikiPage linkedPage = createSymbolicPage(page, symLinksProperty, linkName);
+          if (linkedPage != null && !children.contains(linkedPage))
+            children.add(linkedPage);
+        }
+      }
+      return children;
+    }
+
+    @Override
+    public WikiPage getChildPage(FileSystemPage page, String childName) {
+      final File file = new File(page.getFileSystemPath(), childName);
+      if (hasContentChild(file)) {
+        return new FileSystemPage(childName, page);
+      } else if (hasHtmlChild(file)) {
+        return new ExternalSuitePage(file, childName, page, fileSystem);
+      } else if (fileIsValid(childName, new File(page.getFileSystemPath()))) {
+        // Empty directories that have Wiki format are considered pages as well.
+        return new FileSystemPage(childName, page);
+      } else {
+        return createSymbolicPage(page, page.readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), childName);
+      }
+    }
+
+    private boolean hasContentChild(File path) {
+      for (String child : fileSystem.list(path)) {
+        if (child.equals("content.txt")) return true;
+      }
+      return false;
+    }
+
+    private boolean hasHtmlChild(File path) {
+      if (path.getName().endsWith(".html")) return true;
+      for (String child : fileSystem.list(path)) {
+        if (hasHtmlChild(new File(path, child))) return true;
+      }
+      return false;
+    }
+
+    private boolean fileIsValid(final String filename, final File dir) {
+      return WikiWordPath.isWikiWord(filename) && fileSystem.exists(new File(dir, filename));
+    }
+
+    private WikiPage createSymbolicPage(WikiPage page, WikiPageProperty symLinkProperty, String linkName) {
+      if (symLinkProperty == null)
+        return null;
+      String linkPath = symLinkProperty.get(linkName);
+      if (linkPath == null)
+        return null;
+      return makePage(linkPath, linkName, page);
+    }
 
     public WikiPage makePage(String linkPath, String linkName, WikiPage parent) {
-      if (linkPath.startsWith("file://"))
+      if (linkPath.startsWith("file:"))
         return createExternalSymbolicLink(linkPath, linkName, parent);
       else
         return createInternalSymbolicPage(linkPath, linkName, parent);
     }
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
-      String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
-      File file = new File(fullPagePath);
+      // And this:
+      String fullPagePath = new VariableTool(variableSource).replace(linkPath);
+      File file = WikiPageUtil.resolveFileUri(fullPagePath, rootPath);
       File parentDirectory = file.getParentFile();
       if (parentDirectory.exists()) {
         if (file.isDirectory()) {

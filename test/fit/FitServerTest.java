@@ -76,7 +76,7 @@ public class FitServerTest {
 
     assertTrue(exitValue != 0);
     // TODO This started to fail with Java 5.0... why does -1 turn into 255?
-    // assertEquals("stdout: " + stdoutString, -1, exitValue);
+    // assertEquals("stdOut: " + stdoutString, -1, exitValue);
     assertTrue(stdoutString.contains(errorMessage));
   }
 

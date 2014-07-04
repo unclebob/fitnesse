@@ -48,7 +48,7 @@ public class InMemoryPageTest {
     data = page1.getData();
     Collection<VersionInfo> versions = page1.getVersions();
 
-    assertEquals(4, versions.size());
+    assertEquals(3, versions.size());
   }
 
   @Test

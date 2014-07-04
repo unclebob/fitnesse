@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 import util.XmlUtil;
 
 public class PageXmlizer {
-  private final SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+  private final DateFormat dateFormat = WikiPageProperty.getTimeFormat();
   private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
   public Document xmlize(WikiPage page) {

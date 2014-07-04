@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -54,7 +53,7 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
   }
 
 }

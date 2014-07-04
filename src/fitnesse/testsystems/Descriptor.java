@@ -18,4 +18,6 @@ public interface Descriptor {
 
   // Generic entry point for everything the test system needs to know.
   String getVariable(String name);
+
+  ExecutionLogListener getExecutionLogListener();
 }

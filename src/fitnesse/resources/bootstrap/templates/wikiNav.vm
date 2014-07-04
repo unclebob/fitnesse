@@ -1,6 +1,6 @@
 #parse( "menu.vm" )
 
-<form class="navbar-form navbar-right" role="search" action="?search">
+<form class="navbar-form search" role="search" action="?search">
  <input type="hidden" name="responder" value="search" />
  <input type="text" id="searchString" name="searchString" class="form-control" placeholder="Search for page" />
  <input type="hidden" name="searchType" value="Search Titles" />

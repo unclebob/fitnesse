@@ -21,13 +21,12 @@ public class InMemoryPage {
   public static WikiPage makeRoot(String name, Properties properties) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem), new SystemVariableSource(properties));
-    FileSystemPage page = (FileSystemPage) factory.makeRootPage(null, name);
-    page.autoCommit(true);
+    FileSystemPage page = (FileSystemPage) factory.makeRootPage(".", name);
     return page;
   }
 
   public static WikiPage createChildPage(String name, FileSystemPage parent) {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new FileSystemPage(name, parent, fileSystem, new MemoryVersionsController(fileSystem));
+    return new FileSystemPage(name, parent, new MemoryVersionsController(fileSystem));
   }
 }

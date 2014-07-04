@@ -48,7 +48,7 @@ public class ExternalTestPageTest {
 
   @Test
   public void shouldNotHaveChildPages() throws IOException {
-    assertThat(makePage("somewhere", "myfile.html", "stuff and <table>").getNormalChildren(), is(Collections.<WikiPage>emptyList()));
+    assertThat(makePage("somewhere", "myfile.html", "stuff and <table>").getChildren(), is(Collections.<WikiPage>emptyList()));
   }
 
   @Test

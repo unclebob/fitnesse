@@ -41,12 +41,12 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   @Override
-  protected List<WikiPage> getNormalChildren() {
+  public List<WikiPage> getChildren() {
     return Collections.emptyList();
   }
 
   @Override
-  public WikiPage getNormalChildPage(String name) {
+  public WikiPage getChildPage(String name) {
     return null;
   }
 

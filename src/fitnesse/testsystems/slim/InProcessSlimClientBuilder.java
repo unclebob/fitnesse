@@ -19,11 +19,11 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
 
   @Override
   public SlimCommandRunningClient build() throws IOException {
-    CommandRunner commandRunner = new MockCommandRunner();
+    CommandRunner commandRunner = new MockCommandRunner(getExecutionLogListener());
     final String[] slimArguments = buildArguments();
     createSlimService(slimArguments);
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
   }
 
   void createSlimService(String[] args) throws IOException {

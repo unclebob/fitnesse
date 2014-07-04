@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,6 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiWordPath;
 import util.FileUtil;
 
 public class FileSystemPage extends BaseWikiPage {
@@ -31,30 +29,33 @@ public class FileSystemPage extends BaseWikiPage {
   // Only used for root page:
   private final String path;
 
-  private final transient FileSystem fileSystem;
   private final transient VersionsController versionsController;
-  private boolean autoCommit;
+  private final transient SubWikiPageFactory subWikiPageFactory;
+  private transient PageData pageData;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
-                        final VersionsController versionsController, final SymbolicPageFactory symbolicPageFactory,
+  public FileSystemPage(final String path, final String name,
+                        final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
-    super(name, symbolicPageFactory, variableSource);
+    super(name, variableSource);
     this.path = path;
-    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.subWikiPageFactory = subWikiPageFactory;
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
-    this(name, parent, parent.fileSystem, parent.versionsController);
-    autoCommit = parent.autoCommit;
+    this(name, parent, parent.versionsController);
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent,
-                        final FileSystem fileSystem, final VersionsController versionsController) {
+  public FileSystemPage(final String name, final FileSystemPage parent, final VersionsController versionsController) {
     super(name, parent);
     path = null;
-    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.subWikiPageFactory = parent.subWikiPageFactory;
+  }
+
+  @Override
+  public boolean hasChildPage(final String pageName) {
+    return subWikiPageFactory.getChildPage(this, pageName) != null;
   }
 
   @Override
@@ -87,72 +88,30 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      addChildPage(pageName);
-      return true;
+  public WikiPage addChildPage(String pageName) {
+    WikiPage page = getChildPage(pageName);
+    if (page == null) {
+      page = new FileSystemPage(pageName, this);
     }
-    return false;
+    return page;
   }
 
   @Override
-  public WikiPage addChildPage(String name) {
-    File path = new File(getFileSystemPath(), name);
-    if (hasContentChild(path)) {
-      return new FileSystemPage(name, this);
-    } else if (hasHtmlChild(path)) {
-      return new ExternalSuitePage(path, name, this, fileSystem);
-    } else {
-      FileSystemPage page = new FileSystemPage(name, this);
-      if (autoCommit) page.commit(page.getData());
-      return page;
-    }
-  }
-
-  private boolean hasContentChild(File path) {
-    for (String child : fileSystem.list(path)) {
-      if (child.equals("content.txt")) return true;
-    }
-    return false;
-  }
-
-  private boolean hasHtmlChild(File path) {
-    if (path.getName().endsWith(".html")) return true;
-    for (String child : fileSystem.list(path)) {
-      if (hasHtmlChild(new File(path, child))) return true;
-    }
-    return false;
-  }
-
-
-  @Override
-  public List<WikiPage> getNormalChildren() {
-    final File thisDir = new File(getFileSystemPath());
-    final List<WikiPage> children = new ArrayList<WikiPage>();
-    if (fileSystem.exists(thisDir)) {
-      final String[] subFiles = fileSystem.list(thisDir);
-      for (final String subFile : subFiles) {
-        if (fileIsValid(subFile, thisDir)) {
-          children.add(getChildPage(subFile));
-        }
-      }
-    }
-    return children;
+  public List<WikiPage> getChildren() {
+    return subWikiPageFactory.getChildren(this);
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      return addChildPage(pageName);
-    }
-    return null;
+  public WikiPage getChildPage(String childName) {
+    return subWikiPageFactory.getChildPage(this, childName);
   }
 
   @Override
   public PageData getData() {
-    return getDataVersion(null);
+    if (pageData == null) {
+      pageData = getDataVersion(null);
+    }
+    return new PageData(pageData);
   }
 
   @Override
@@ -160,26 +119,18 @@ public class FileSystemPage extends BaseWikiPage {
     return getData();
   }
 
-  private boolean fileIsValid(final String filename, final File dir) {
-    if (WikiWordPath.isWikiWord(filename)) {
-      if (fileSystem.exists(new File(dir, filename))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   private String getParentFileSystemPath() {
     return this.parent != null ? ((FileSystemPage) this.parent).getFileSystemPath() : this.path;
   }
 
   public String getFileSystemPath() {
-    return getParentFileSystemPath() + "/" + getName();
+    return new File(getParentFileSystemPath(), getName()).getPath();
   }
 
   @Override
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
+    pageData = null;
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
@@ -210,10 +161,6 @@ public class FileSystemPage extends BaseWikiPage {
     }
 
     return new PageData(data, getVariableSource());
-  }
-
-  public void autoCommit(boolean autoCommit) {
-    this.autoCommit = autoCommit;
   }
 
   @Override

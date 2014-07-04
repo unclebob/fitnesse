@@ -39,15 +39,15 @@ public class MovePageResponderTest extends ResponderTestCase {
     moveResponder = (MovePageResponder) responder;
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "^PageA");
     pageA = WikiPageUtil.addPage(pageOne, PathParser.parse("PageA"), "content");
-    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
+    pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
     crawler = root.getPageCrawler();
   }
 
   @Test
   public void testIsChildOf() throws Exception {
-    WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("TheParent"));
-    WikiPage child = WikiPageUtil.addPage(parent, PathParser.parse("TheChild"));
-    WikiPage grandChild = WikiPageUtil.addPage(child, PathParser.parse("TheGrandChild"));
+    WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("TheParent"), "");
+    WikiPage child = WikiPageUtil.addPage(parent, PathParser.parse("TheChild"), "");
+    WikiPage grandChild = WikiPageUtil.addPage(child, PathParser.parse("TheGrandChild"), "");
 
     assertIsAncestor(parent, child);
     assertIsAncestor(parent, grandChild);
@@ -176,7 +176,7 @@ public class MovePageResponderTest extends ResponderTestCase {
 
     WikiPageUtil.addPage(root, sourceChildOnePath, "child1Content");
     WikiPageUtil.addPage(root, sourceChildTwoPath, "child2Content");
-    WikiPageUtil.addPage(root, sourceGrandChildPath);
+    WikiPageUtil.addPage(root, sourceGrandChildPath, "");
 
     movePage(parentToMove, destinationParent, true);
     WikiPage movedPage = crawler.getPage(destinationPagePath);
@@ -238,7 +238,7 @@ public class MovePageResponderTest extends ResponderTestCase {
 
   @Test
   public void testMovePageIntoItselfIsNotAllowed() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     SimpleResponse response = movePage("TestPage", "TestPage", true);
 
     assertFalse(crawler.pageExists(PathParser.parse("TestPage.TestPage")));

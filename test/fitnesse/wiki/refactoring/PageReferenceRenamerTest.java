@@ -153,6 +153,8 @@ public class PageReferenceRenamerTest {
     WikiPage target = WikiPageUtil.addPage(source, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(root, target, "RenamedPage");
     renamer.renameReferences();
+
+    source = root.getChildPage("SourcePage");
     String updatedSourceContent = source.getData().getContent();
     assertEquals("gunk >RenamedPage gunk", updatedSourceContent);
   }

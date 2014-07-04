@@ -8,8 +8,8 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.CommandRunnerExecutionLog;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -33,6 +33,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   private final CommandRunner slimRunner;
   private final int connectionTimeout;
+  private final double requiredSlimVersion;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -41,16 +42,12 @@ public class SlimCommandRunningClient implements SlimClient {
   private String hostName;
   private int port;
 
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion) {
     this.slimRunner = slimRunner;
     this.hostName = hostName;
     this.port = port;
     this.connectionTimeout = connectionTimeout;
-  }
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
-    this(slimRunner, hostName, port, 10);
+    this.requiredSlimVersion = requiredSlimVersion;
   }
 
   @Override
@@ -65,8 +62,8 @@ public class SlimCommandRunningClient implements SlimClient {
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
       throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
     }
-    else if (serverVersionNumber < MINIMUM_REQUIRED_SLIM_VERSION) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", MINIMUM_REQUIRED_SLIM_VERSION, serverVersionNumber));
+    else if (serverVersionNumber < requiredSlimVersion) {
+      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
@@ -142,11 +139,6 @@ public class SlimCommandRunningClient implements SlimClient {
     return resultToMap(resultList);
   }
 
-  @Override
-  public ExecutionLog getExecutionLog() {
-    return new CommandRunnerExecutionLog(slimRunner);
-  }
-
   private interface ToListExecutor extends InstructionExecutor {
 
   }
@@ -203,7 +195,7 @@ public class SlimCommandRunningClient implements SlimClient {
     	length = Integer.parseInt(resultLength);
     }
     catch (NumberFormatException e){
-    	throw new IOException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+    	throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
     }
 	return length;
   }
