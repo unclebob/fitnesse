@@ -82,6 +82,11 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
+  public WikiPage getVersion(String versionName) {
+    return new SymbolicPage(this.getName(), realPage.getVersion(versionName), this.getParent());
+  }
+
+  @Override
   public String getHtml() {
     return realPage.getHtml();
   }

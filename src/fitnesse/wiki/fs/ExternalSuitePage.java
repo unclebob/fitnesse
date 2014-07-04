@@ -64,6 +64,11 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   @Override
+  public WikiPage getVersion(String versionName) {
+    return this;
+  }
+
+  @Override
   public String getHtml() {
     return getData().getHtml();
   }

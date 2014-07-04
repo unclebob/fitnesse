@@ -30,7 +30,10 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   Collection<VersionInfo> getVersions();
 
+  @Deprecated
   PageData getDataVersion(String versionName);
+
+  WikiPage getVersion(String versionName);
 
   String getHtml();
 

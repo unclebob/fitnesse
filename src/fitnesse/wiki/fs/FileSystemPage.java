@@ -1,5 +1,5 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
+// Released under the terms of the CPL Common Public License versionName 1.0.
 package fitnesse.wiki.fs;
 
 import java.io.ByteArrayInputStream;
@@ -34,6 +34,7 @@ public class FileSystemPage extends BaseWikiPage {
 
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
+  private final String versionName;
   private transient PageData pageData;
   private transient ParsedPage parsedPage;
 
@@ -44,6 +45,7 @@ public class FileSystemPage extends BaseWikiPage {
     this.path = path;
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
+    this.versionName = null;
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent) {
@@ -51,10 +53,19 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent, final VersionsController versionsController) {
+    this(name, parent, null, versionsController);
+  }
+
+  private FileSystemPage(FileSystemPage page, String versionName) {
+    this(page.getName(), (FileSystemPage) page.getParent(), versionName, page.versionsController);
+  }
+
+  private FileSystemPage(final String name, final FileSystemPage parent, final String versionName, final VersionsController versionsController) {
     super(name, parent);
     path = null;
     this.versionsController = versionsController;
     this.subWikiPageFactory = parent.subWikiPageFactory;
+    this.versionName = versionName;
   }
 
   @Override
@@ -113,7 +124,7 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public PageData getData() {
     if (pageData == null) {
-      pageData = getDataVersion(null);
+      pageData = getDataVersion(versionName);
     }
     return new PageData(pageData, getVariableSource());
   }
@@ -168,6 +179,11 @@ public class FileSystemPage extends BaseWikiPage {
     // Set data here, so we can render older versions of the data
 //    pageData = data;
     return new PageData(data, getVariableSource());
+  }
+
+  @Override
+  public WikiPage getVersion(String versionName) {
+    return new FileSystemPage(this, versionName);
   }
 
   @Override
