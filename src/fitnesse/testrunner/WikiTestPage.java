@@ -30,6 +30,9 @@ public class WikiTestPage implements TestPage {
     this.sourcePage = data.getWikiPage();
   }
 
+  public static boolean isTestPage(WikiPage page) {
+    return isTestPage(page.getData());
+  }
   public static boolean isTestPage(ReadOnlyPageData pageData) {
     return pageData.hasAttribute("Test");
   }

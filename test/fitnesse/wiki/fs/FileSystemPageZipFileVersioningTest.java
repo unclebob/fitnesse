@@ -71,7 +71,7 @@ public class FileSystemPageZipFileVersioningTest {
     data.setContent("new content");
     VersionInfo version = page.commit(data);
 
-    PageData loadedData = page.getDataVersion(version.getName());
+    PageData loadedData = page.getVersion(version.getName()).getData();
     assertEquals("original content", loadedData.getContent());
   }
 
@@ -179,9 +179,8 @@ public class FileSystemPageZipFileVersioningTest {
     assertEquals(1, versions.size());
     assertEquals(true, versions.contains(previousVersion));
 
-    PageData loadedData = page.getDataVersion(previousVersion.getName());
-    assertSame(page, loadedData.getWikiPage());
-    assertEquals("old content", loadedData.getContent());
+    WikiPage loadedPage = page.getVersion(previousVersion.getName());
+    assertEquals("old content", loadedPage.getData().getContent());
   }
 
   @Test
@@ -201,7 +200,7 @@ public class FileSystemPageZipFileVersioningTest {
     WikiPagePath pageOnePath = PathParser.parse("PageOne");
     WikiPage page = WikiPageUtil.addPage(root, pageOnePath, "old content");
     try {
-      page.getDataVersion("abc");
+      page.getVersion("abc");
       fail("a NoSuchVersionException should have been thrown");
     } catch (NoSuchVersionException e) {
       assertEquals("There is no version 'abc'", e.getMessage());
@@ -215,7 +214,7 @@ public class FileSystemPageZipFileVersioningTest {
     data.setContent("blah");
     VersionInfo info = page.commit(data);
 
-    data = page.getDataVersion(info.getName());
+    data = page.getVersion(info.getName()).getData();
     String expected = "\uba80\uba81\uba82\uba83";
     String actual = data.getContent();
 
@@ -235,7 +234,7 @@ public class FileSystemPageZipFileVersioningTest {
     data.setProperties(oldProps);
     VersionInfo version = page.commit(data);
 
-    PageData versionedData = page.getDataVersion(version.getName());
+    PageData versionedData = page.getVersion(version.getName()).getData();
     WikiPageProperties versionedProps = versionedData.getProperties();
 
     assertTrue(versionedProps.has("MyProp"));

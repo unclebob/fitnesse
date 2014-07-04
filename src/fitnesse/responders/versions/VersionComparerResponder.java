@@ -53,13 +53,13 @@ public class VersionComparerResponder implements Responder {
       String message = String.format("Compare Failed because no Input Files were given. Select one or two please.");
       return makeErrorResponse(context, request, message);
     }
-    PageData firstVersionData = page.getDataVersion(firstVersion);
-    PageData secondVersionData;
+    WikiPage firstVersionPage = page.getVersion(firstVersion);
+    WikiPage secondVersionPage;
     if (secondVersion.equals(""))
-      secondVersionData = page.getData();
+      secondVersionPage = page;
     else
-      secondVersionData = page.getDataVersion(secondVersion);
-    comparer.compare(firstVersion, firstVersionData.getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionData.getContent());
+      secondVersionPage = page.getVersion(secondVersion);
+    comparer.compare(firstVersion, firstVersionPage.getData().getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionPage.getData().getContent());
     return makeValidResponse(request);
   }
 

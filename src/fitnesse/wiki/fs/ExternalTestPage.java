@@ -71,13 +71,8 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   @Override
-  public PageData getDataVersion(String versionName) {
-    return null;
-  }
-
-  @Override
   public WikiPage getVersion(String versionName) {
-    return this;
+    return null;
   }
 
   @Override

@@ -53,18 +53,21 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   public FileSystemPage(final String name, final FileSystemPage parent, final VersionsController versionsController) {
-    this(name, parent, null, versionsController);
+    this(name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
   private FileSystemPage(FileSystemPage page, String versionName) {
-    this(page.getName(), (FileSystemPage) page.getParent(), versionName, page.versionsController);
+    this(page.getName(), (FileSystemPage) (page.isRoot() ? null : page.getParent()), versionName,
+            page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
-  private FileSystemPage(final String name, final FileSystemPage parent, final String versionName, final VersionsController versionsController) {
-    super(name, parent);
+  private FileSystemPage(final String name, final FileSystemPage parent, final String versionName,
+                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
+                         final VariableSource variableSource) {
+    super(name, parent, variableSource);
     path = null;
     this.versionsController = versionsController;
-    this.subWikiPageFactory = parent.subWikiPageFactory;
+    this.subWikiPageFactory = subWikiPageFactory;
     this.versionName = versionName;
   }
 
@@ -124,7 +127,7 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public PageData getData() {
     if (pageData == null) {
-      pageData = getDataVersion(versionName);
+      pageData = getDataVersion();
     }
     return new PageData(pageData, getVariableSource());
   }
@@ -159,8 +162,7 @@ public class FileSystemPage extends BaseWikiPage {
     return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
   }
 
-  @Override
-  public PageData getDataVersion(final String versionName) {
+  private PageData getDataVersion() {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     PageData data = new PageData(this);
     try {
@@ -176,13 +178,13 @@ public class FileSystemPage extends BaseWikiPage {
       throw new RuntimeException(e);
     }
 
-    // Set data here, so we can render older versions of the data
-//    pageData = data;
     return new PageData(data, getVariableSource());
   }
 
   @Override
   public WikiPage getVersion(String versionName) {
+    // Just assert the version is valid
+    versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     return new FileSystemPage(this, versionName);
   }
 
@@ -201,7 +203,7 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public String toString() {
     try {
-      return getClass().getName() + " at " + this.getFileSystemPath();
+      return getClass().getName() + " at " + this.getFileSystemPath() + "#" + (versionName != null ? versionName : "latest");
     } catch (final Exception e) {
       return super.toString();
     }
@@ -234,6 +236,24 @@ public class FileSystemPage extends BaseWikiPage {
     }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof FileSystemPage)) return false;
+
+    FileSystemPage that = (FileSystemPage) o;
+
+    if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
+    return super.equals(that);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (versionName != null ? versionName.hashCode() : 0);
+    return result;
   }
 
   class ContentFileVersion implements FileVersion {

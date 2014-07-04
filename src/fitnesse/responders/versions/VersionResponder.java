@@ -53,10 +53,10 @@ public class VersionResponder implements SecureResponder {
   }
 
   private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
-    PageData pageData = page.getDataVersion(version);
+    WikiPage pageVersion = page.getVersion(version);
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
-    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
+    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageVersion.getData().getAttribute(PageData.PropertySUITES)));
     // TODO: subclass actions for specific rollback behaviour.
     html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);
@@ -71,7 +71,7 @@ public class VersionResponder implements SecureResponder {
     html.put("previousVersion", previousVersion);
 
     html.setMainTemplate("wikiPage");
-    html.put("content", new VersionRenderer(pageData));
+    html.put("content", new VersionRenderer(pageVersion));
     return html;
   }
 
@@ -100,27 +100,23 @@ public class VersionResponder implements SecureResponder {
   }
 
   public class VersionRenderer {
-    private PageData pageData;
+    private WikiPage page;
 
-    public VersionRenderer(PageData pageData) {
+    public VersionRenderer(WikiPage page) {
       super();
-      this.pageData = pageData;
+      this.page = page;
     }
 
     public String render() {
       ReadOnlyPageData data;
-      if (isTestPage(pageData)) {
-        WikiTestPage testPage = new WikiTestPage(pageData);
+      if (WikiTestPage.isTestPage(page)) {
+        WikiTestPage testPage = new WikiTestPage(page);
         data = testPage.getDecoratedData();
       } else {
-        data = pageData;
+        data = page.getData();
       }
       return WikiPageUtil.makePageHtml(data);
 
-    }
-
-    private boolean isTestPage(PageData pageData) {
-      return pageData.hasAttribute("Test");
     }
   }
 }

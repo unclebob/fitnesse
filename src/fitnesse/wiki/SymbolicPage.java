@@ -75,12 +75,6 @@ public class SymbolicPage extends BaseWikiPage {
     return realPage.getVersions();
   }
 
-  public PageData getDataVersion(String versionName) {
-    PageData data = realPage.getDataVersion(versionName);
-    data.setWikiPage(this);
-    return data;
-  }
-
   @Override
   public WikiPage getVersion(String versionName) {
     return new SymbolicPage(this.getName(), realPage.getVersion(versionName), this.getParent());

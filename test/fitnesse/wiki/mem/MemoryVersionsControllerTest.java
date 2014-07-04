@@ -65,7 +65,7 @@ public class MemoryVersionsControllerTest {
     WikiPage root = wikiPageFactory.makePage(null, "RooT", null);
     VersionInfo version = root.commit(root.getData());
 
-    PageData newData = root.getDataVersion(version.getName());
+    PageData newData = root.getVersion(version.getName()).getData();
 
     assertEquals("0", version.getName());
     assertNotNull(newData);

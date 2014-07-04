@@ -12,17 +12,18 @@ public abstract class BaseWikiPage implements WikiPage {
   private final VariableSource variableSource;
 
   protected BaseWikiPage(String name, VariableSource variableSource) {
-    this.name = name;
-    this.parent = null;
-    this.variableSource = variableSource;
+    this(name, null, variableSource);
   }
 
   protected BaseWikiPage(String name, BaseWikiPage parent) {
-    this.name = name;
-    this.parent = parent;
-    this.variableSource = parent.variableSource;
+    this(name, parent, parent.variableSource);
   }
 
+  protected BaseWikiPage(String name, BaseWikiPage parent, VariableSource variableSource) {
+    this.name = name;
+    this.parent = parent;
+    this.variableSource = variableSource;
+  }
   public String getName() {
     return name;
   }
@@ -37,7 +38,6 @@ public abstract class BaseWikiPage implements WikiPage {
 
 
   public boolean isRoot() {
-    WikiPage parent = getParent();
     return parent == null || parent == this;
   }
 
