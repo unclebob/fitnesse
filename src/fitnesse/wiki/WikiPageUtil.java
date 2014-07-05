@@ -22,13 +22,22 @@ public class WikiPageUtil {
     page.commit(pageData);
   }
 
+  public static WikiPage getHeaderPage(WikiPage wikiPage) {
+    return wikiPage.getPageCrawler().getClosestInheritedPage("PageHeader");
+  }
+
+  public static WikiPage getFooterPage(WikiPage wikiPage) {
+    return wikiPage.getPageCrawler().getClosestInheritedPage("PageFooter");
+  }
+
+
   public static String getHeaderPageHtml(WikiPage wikiPage) {
-    WikiPage header = wikiPage.getHeaderPage();
+    WikiPage header = getHeaderPage(wikiPage);
     return header == null ? "" : header.getHtml();
   }
 
   public static String getFooterPageHtml(WikiPage wikiPage) {
-    WikiPage footer = wikiPage.getFooterPage();
+    WikiPage footer = getFooterPage(wikiPage);
     return footer == null ? "" : footer.getHtml();
   }
 

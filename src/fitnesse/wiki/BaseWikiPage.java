@@ -46,14 +46,6 @@ public abstract class BaseWikiPage implements WikiPage {
     return variableSource;
   }
 
-  public WikiPage getHeaderPage() {
-    return getPageCrawler().getClosestInheritedPage("PageHeader");
-  }
-
-  public WikiPage getFooterPage() {
-    return getPageCrawler().getClosestInheritedPage("PageFooter");
-  }
-
   @Override
   public String getVariable(String name) {
     Maybe<String> value = variableSource.findVariable(name);

@@ -88,16 +88,6 @@ public class WikiTestPage implements TestPage {
   }
 
   @Override
-  public WikiPage getHeaderPage() {
-    return sourcePage.getHeaderPage();
-  }
-
-  @Override
-  public WikiPage getFooterPage() {
-    return sourcePage.getFooterPage();
-  }
-
-  @Override
   public String getVariable(String variable) {
     return sourcePage.getVariable(variable);
   }

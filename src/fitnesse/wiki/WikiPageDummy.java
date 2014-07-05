@@ -85,14 +85,6 @@ public class WikiPageDummy implements WikiPage {
     return new PageCrawlerImpl(this);
   }
 
-  public WikiPage getHeaderPage() {
-    return null;
-  }
-
-  public WikiPage getFooterPage() {
-    return null;
-  }
-
   @Override
   public String getVariable(String name) {
     return null;
