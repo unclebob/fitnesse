@@ -64,7 +64,7 @@ public class PageDataTest {
 
   @Test
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    WikiPage page = new WikiPageDummy("Name", "<b>");
+    WikiPage page = new WikiPageDummy("Name", "<b>", null);
     String html = page.getHtml();
     assertEquals("&lt;b&gt;", html);
   }

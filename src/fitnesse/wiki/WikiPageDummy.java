@@ -18,17 +18,19 @@ public class WikiPageDummy implements WikiPage {
 
   public String name;
   private PageData pageData;
-  private WikiPage parent;
+  private final WikiPage parent;
 
-  public WikiPageDummy(String name, String content) {
+  public WikiPageDummy(String name, String content, WikiPage parent) {
     this.name = name;
     pageData = new PageData(this);
     pageData.setContent(content);
+    this.parent = parent;
   }
 
   public WikiPageDummy() {
     name = "Default";
     pageData = new PageData(this);
+    this.parent = null;
   }
 
   @Override
@@ -39,10 +41,6 @@ public class WikiPageDummy implements WikiPage {
   @Override
   public WikiPage getParent() {
     return parent;
-  }
-
-  public void setParent(WikiPage parent) {
-    this.parent = parent;
   }
 
   @Override
