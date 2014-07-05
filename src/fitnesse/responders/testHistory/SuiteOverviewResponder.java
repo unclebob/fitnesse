@@ -28,7 +28,7 @@ public class SuiteOverviewResponder implements Responder {
     SuiteFilter filter = TestResponder.createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
 
-    List<WikiPage> pagelist = suiteTestFinder.makePageList();
+    List<WikiPage> pagelist = suiteTestFinder.getAllPagesToRunForThisSuite();
 
     SuiteOverviewTree treeview = new SuiteOverviewTree(pagelist);
     treeview.findLatestResults(context.getTestHistoryDirectory());

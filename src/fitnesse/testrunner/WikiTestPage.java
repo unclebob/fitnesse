@@ -13,6 +13,9 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.WikiSourcePage;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
@@ -69,7 +72,7 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getHtml() {
-      return getDecoratedData().getHtml();
+    return getDecoratedData().getHtml();
   }
 
   @Override

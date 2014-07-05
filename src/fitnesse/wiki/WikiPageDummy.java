@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
 
 public class WikiPageDummy implements WikiPage {

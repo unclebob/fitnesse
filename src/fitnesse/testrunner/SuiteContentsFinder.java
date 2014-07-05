@@ -23,21 +23,6 @@ public class SuiteContentsFinder {
     testPageList = new LinkedList<WikiPage>();
   }
 
-  public List<WikiPage> makePageList() {
-    getAllPagesToRunForThisSuite();
-
-    if (testPageList.isEmpty()) {
-      String name = new WikiPagePath(pageToRun).toString();
-      WikiPageDummy dummy = new WikiPageDummy("",
-        "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n"
-      );
-      dummy.setParent(wikiRootPage);
-      testPageList.add(dummy);
-    }
-    return testPageList;
-  }
-
-
   public List<WikiPage> getAllPagesToRunForThisSuite() {
     String content = pageToRun.getHtml();
     //todo perf: all pages html parsed here?

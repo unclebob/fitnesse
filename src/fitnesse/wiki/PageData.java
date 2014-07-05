@@ -103,6 +103,11 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.parsedPage = data.parsedPage;
   }
 
+  public PageData(String content, WikiPageProperties properties) {
+    this.content = content;
+    this.properties = properties;
+  }
+
   public void initializeAttributes() {
     if (!isErrorLogsPage()) { 
       properties.set(PropertyEDIT);
