@@ -39,11 +39,6 @@ public class WikiTestPage implements TestPage {
   }
 
   @Override
-  public ReadOnlyPageData readOnlyData() {
-    return sourcePage.readOnlyData();
-  }
-
-  @Override
   public Collection<VersionInfo> getVersions() {
     return sourcePage.getVersions();
   }
@@ -108,7 +103,7 @@ public class WikiTestPage implements TestPage {
     } else if (getScenarioLibraries().contains(wikiPage)) {
       includeScenarioLibrary(wikiPage, decoratedContent);
     } else {
-      decoratedContent.append(wikiPage.readOnlyData().getContent());
+      decoratedContent.append(wikiPage.getData().getContent());
     }
   }
 

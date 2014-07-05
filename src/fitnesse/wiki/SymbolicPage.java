@@ -72,9 +72,6 @@ public class SymbolicPage extends BaseWikiPage implements WikitextPage {
   }
 
   @Override
-  public ReadOnlyPageData readOnlyData() { return getData(); }
-
-  @Override
   public Collection<VersionInfo> getVersions() {
     return realPage.getVersions();
   }

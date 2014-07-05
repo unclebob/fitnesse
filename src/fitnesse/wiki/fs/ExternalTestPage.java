@@ -1,7 +1,5 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -33,11 +31,6 @@ public class ExternalTestPage extends BaseWikiPage {
   @Override
   public PageData getData() {
     return makePageData();
-  }
-
-  @Override
-  public ReadOnlyPageData readOnlyData() {
-    return getData();
   }
 
   @Override

@@ -28,8 +28,6 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   PageData getData();
 
-  ReadOnlyPageData readOnlyData();
-
   Collection<VersionInfo> getVersions();
 
   WikiPage getVersion(String versionName);

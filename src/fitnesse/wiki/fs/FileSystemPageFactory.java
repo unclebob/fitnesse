@@ -138,7 +138,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
         // Empty directories that have Wiki format are considered pages as well.
         return new FileSystemPage(childName, page);
       } else {
-        return createSymbolicPage(page, page.readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), childName);
+        return createSymbolicPage(page, page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), childName);
       }
     }
 

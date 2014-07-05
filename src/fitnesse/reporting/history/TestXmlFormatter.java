@@ -136,7 +136,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
     instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 

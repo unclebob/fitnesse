@@ -14,7 +14,6 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ExternalSuitePage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -46,11 +45,6 @@ public class ExternalSuitePage extends BaseWikiPage {
   @Override
   public PageData getData() {
     return makePageData();
-  }
-
-  @Override
-  public ReadOnlyPageData readOnlyData() {
-    return getData();
   }
 
   @Override

@@ -28,10 +28,12 @@ public class WikiPageDummy implements WikiPage {
     pageData = new PageData(this);
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public WikiPage getParent() {
     return parent;
   }
@@ -40,30 +42,33 @@ public class WikiPageDummy implements WikiPage {
     this.parent = parent;
   }
 
+  @Override
   public boolean isRoot() {
     return parent == null;
   }
 
+  @Override
   public PageData getData() {
     return pageData;
   }
-
-  public ReadOnlyPageData readOnlyData() { return getData(); }
 
   @Override
   public Collection<VersionInfo> getVersions() {
     return Collections.emptySet();
   }
 
+  @Override
   public VersionInfo commit(PageData data) {
     pageData = data;
     return new VersionInfo("mockVersionName", "mockAuthor", Clock.currentDate());
   }
 
+  @Override
   public List<WikiPage> getChildren() {
     return new ArrayList<WikiPage>();
   }
 
+  @Override
   public int compareTo(Object o) {
     return 0;
   }
@@ -78,9 +83,11 @@ public class WikiPageDummy implements WikiPage {
     return getData().getHtml();
   }
 
+  @Override
   public void removeChildPage(String name) {
   }
 
+  @Override
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl(this);
   }
@@ -90,14 +97,17 @@ public class WikiPageDummy implements WikiPage {
     return null;
   }
 
+  @Override
   public WikiPage addChildPage(String name) {
     return null;
   }
 
+  @Override
   public boolean hasChildPage(String name) {
     return false;
   }
 
+  @Override
   public WikiPage getChildPage(String name) {
     return null;
   }
