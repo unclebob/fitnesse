@@ -13,6 +13,7 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.WikiSourcePage;
@@ -72,7 +73,7 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getHtml() {
-    return getDecoratedData().getHtml();
+    return WikiPageUtil.makeHtml(sourcePage, getDecoratedData());
   }
 
   @Override

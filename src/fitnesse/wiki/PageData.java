@@ -77,7 +77,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   // TODO: Get rid of those:
   private transient WikiPage wikiPage;
-  private transient ParsedPage parsedPage;
   private VariableSource variableSource;
 
   public PageData(WikiPage page) {
@@ -100,7 +99,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.variableSource = data.variableSource;
     this.properties = new WikiPageProperties(data.properties);
     this.content = data.content;
-    this.parsedPage = data.parsedPage;
   }
 
   public PageData(String content, WikiPageProperties properties) {
@@ -200,17 +198,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void setContent(String content) {
     this.content = StringUtil.stripCarriageReturns(content);
-  }
-
-  /* this is the public entry to page parse and translate */
-  @Override
-  public String getHtml() {
-      return getParsedPage().toHtml();
-  }
-
-  public ParsedPage getParsedPage() {
-    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
-    return parsedPage;
   }
 
   public void setWikiPage(WikiPage page) {

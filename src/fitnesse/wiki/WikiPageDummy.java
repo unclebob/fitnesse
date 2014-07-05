@@ -81,7 +81,7 @@ public class WikiPageDummy implements WikiPage {
 
   @Override
   public String getHtml() {
-    return getData().getHtml();
+    return WikiPageUtil.makeHtml(this, getData());
   }
 
   @Override

@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 import java.io.File;
@@ -59,7 +60,7 @@ public class ExternalSuitePage extends BaseWikiPage {
 
   @Override
   public String getHtml() {
-    return getData().getHtml();
+    return WikiPageUtil.makeHtml(this, getVariableSource());
   }
 
   @Override

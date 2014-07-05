@@ -9,10 +9,13 @@ import java.util.Collections;
 import java.util.List;
 
 import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
 public class WikiPageUtil {
 
@@ -67,7 +70,6 @@ public class WikiPageUtil {
     return getOrMakePage(current, rest);
   }
 
-  // TODO: make WikiPage the input parameter
   public static String makePageHtml(WikiPage page) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(getHeaderPageHtml(page));
@@ -75,11 +77,24 @@ public class WikiPageUtil {
     return buffer.toString();
   }
 
-  // TODO: provide generic method for parsing wiki content (code now in pageData)
-  public static String makeHtml(ReadOnlyPageData pageData, VariableSource variableSource) {
-    return null;
+  public static String makeHtml(WikiPage wikiPage, VariableSource variableSource) {
+    String content = wikiPage.getData().getContent();
+    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
+    return parsedPage.toHtml();
   }
 
+
+  public static String makeHtml(final WikiPage context, ReadOnlyPageData decoratedData) {
+    String content = decoratedData.getContent();
+    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(context), new VariableSource() {
+      @Override
+      public Maybe<String> findVariable(String name) {
+        String value = context.getVariable(name);
+        return value != null ? new Maybe<String>(value) : Maybe.noString;
+      }
+    }), content);
+    return parsedPage.toHtml();
+  }
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {
     URI uri = URI.create(fullPageURI);
