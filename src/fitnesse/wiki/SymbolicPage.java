@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.WikiSourcePage;
 
 public class SymbolicPage extends BaseWikiPage implements WikitextPage {
   private static final long serialVersionUID = 1L;
@@ -97,6 +99,7 @@ public class SymbolicPage extends BaseWikiPage implements WikitextPage {
     if (realPage instanceof WikitextPage) {
       return ((WikitextPage) realPage).getParsedPage();
     }
-    return null;
+    // Default to an empty page for non-wikitext pages.
+    return new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), "");
   }
 }
