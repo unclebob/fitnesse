@@ -48,7 +48,7 @@ public class FileSystemPageTest {
   @Test
   public void testCreateBase() throws Exception {
     FileSystemPage levelA = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
-    assertEquals("./teststorage/RooT/PageA", levelA.getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT/PageA").getPath(), levelA.getFileSystemPath());
     assertTrue(new File(defaultPath + "/RooT/PageA").exists());
   }
 
@@ -160,7 +160,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testGetPath() throws Exception {
-    assertEquals(defaultPath + "/RooT", root.getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT").getPath(), root.getFileSystemPath());
   }
 
   @Test
