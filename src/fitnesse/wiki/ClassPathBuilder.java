@@ -160,9 +160,8 @@ public class ClassPathBuilder {
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {
-    PageData data = page.getData();
-    if (page instanceof ParsablePage) {
-      ParsedPage parsedPage = ((ParsablePage) page).getParsedPage();
+    if (page instanceof WikitextPage) {
+      ParsedPage parsedPage = ((WikitextPage) page).getParsedPage();
       Symbol tree = parsedPage.getSyntaxTree();
       ParsingPage parsingPage = parsedPage.getParsingPage();
       return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);

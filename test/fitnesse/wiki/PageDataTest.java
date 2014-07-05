@@ -88,14 +88,6 @@ public class PageDataTest {
   }
 
   @Test
-  public void testGetCrossReferences() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
-    List<?> xrefs = page.getXrefPages();
-    assertEquals("XrefPage", xrefs.get(0));
-  }
-
-  @Test
   public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageExamples"));
     PageData data = new PageData(page);

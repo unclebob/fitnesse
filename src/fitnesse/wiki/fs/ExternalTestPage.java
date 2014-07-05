@@ -66,11 +66,6 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   @Override
-  public List<String> getXrefPages() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public Collection<VersionInfo> getVersions() {
     return Collections.emptySet();
   }
@@ -82,7 +77,11 @@ public class ExternalTestPage extends BaseWikiPage {
 
   @Override
   public String getHtml() {
-    return getData().getHtml();
+    try {
+      return fileSystem.getContent(path);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to fetch page content", e);
+    }
   }
 
   private PageData makePageData() {

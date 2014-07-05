@@ -74,11 +74,6 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   @Override
-  public List<String> getXrefPages() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public List<WikiPage> getChildren() {
     return findChildren();
   }

@@ -102,11 +102,6 @@ public class WikiTestPage implements TestPage {
     return sourcePage.getVariable(variable);
   }
 
-  @Override
-  public List<String> getXrefPages() {
-    return sourcePage.getXrefPages();
-  }
-
   protected void addPageContent(StringBuilder decoratedContent) {
     String content = getData().getContent();
     decoratedContent

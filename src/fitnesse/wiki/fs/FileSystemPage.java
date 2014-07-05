@@ -7,14 +7,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.ParsablePage;
+import fitnesse.wiki.WikitextPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
@@ -23,16 +22,14 @@ import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import util.FileUtil;
 import util.Maybe;
 
-public class FileSystemPage extends BaseWikiPage implements ParsablePage {
+public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   private static final long serialVersionUID = 1L;
 
   static final String contentFilename = "content.txt";
@@ -212,6 +209,7 @@ public class FileSystemPage extends BaseWikiPage implements ParsablePage {
     return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
+  @Override
   public ParsedPage getParsedPage() {
     if (parsedPage == null) {
       parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
@@ -219,30 +217,8 @@ public class FileSystemPage extends BaseWikiPage implements ParsablePage {
     return parsedPage;
   }
 
-  private Symbol getSyntaxTree() {
-    return getParsedPage().getSyntaxTree();
-  }
-
   private ParsingPage getParsingPage() {
     return getParsedPage().getParsingPage();
-  }
-
-  @Override
-  public List<String> getXrefPages() {
-    final ArrayList<String> xrefPages = new ArrayList<String>();
-    getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return true;
-      }
-    });
-    return xrefPages;
   }
 
   @Override

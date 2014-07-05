@@ -4,9 +4,14 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.net.URI;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.See;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.VariableSource;
 
 public class WikiPageUtil {
@@ -81,5 +86,26 @@ public class WikiPageUtil {
       uri = rootUri.resolve(uri.getSchemeSpecificPart().replaceFirst("^/+", ""));
       return new File(uri);
     }
+  }
+
+  public static List<String> getXrefPages(WikiPage page) {
+    if (page instanceof WikitextPage) {
+      final ArrayList<String> xrefPages = new ArrayList<String>();
+      ParsedPage parsedPage = ((WikitextPage) page).getParsedPage();
+      parsedPage.getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+        @Override
+        public boolean visit(Symbol node) {
+          if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
+          return true;
+        }
+
+        @Override
+        public boolean visitChildren(Symbol node) {
+          return true;
+        }
+      });
+      return xrefPages;
+    }
+    return Collections.emptyList();
   }
 }

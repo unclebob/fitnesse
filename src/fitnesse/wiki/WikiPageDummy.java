@@ -28,12 +28,6 @@ public class WikiPageDummy implements WikiPage {
     pageData = new PageData(this);
   }
 
-  public WikiPageDummy(ReadOnlyPageData pageData) {
-    name = "Default";
-    this.pageData = (PageData) pageData;
-    this.pageData.setWikiPage(this);
-  }
-
   public String getName() {
     return name;
   }
@@ -102,11 +96,6 @@ public class WikiPageDummy implements WikiPage {
   @Override
   public String getVariable(String name) {
     return null;
-  }
-
-  @Override
-  public List<String> getXrefPages() {
-    return Collections.emptyList();
   }
 
   public WikiPage addChildPage(String name) {

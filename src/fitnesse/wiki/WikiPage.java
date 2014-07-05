@@ -40,13 +40,13 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   PageCrawler getPageCrawler();
 
+  @Deprecated // move to WikiPageUtil
   WikiPage getHeaderPage();
 
+  @Deprecated // move to WikiPageUtil
   WikiPage getFooterPage();
 
   String getVariable(String name);
-
-  List<String> getXrefPages();
 }
 
 

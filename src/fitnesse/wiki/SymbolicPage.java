@@ -7,7 +7,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SymbolicPage extends BaseWikiPage {
+import fitnesse.wikitext.parser.ParsedPage;
+
+public class SymbolicPage extends BaseWikiPage implements WikitextPage {
   private static final long serialVersionUID = 1L;
 
   public static final String PROPERTY_NAME = "SymbolicLinks";
@@ -91,7 +93,10 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  public List<String> getXrefPages() {
-    return realPage.getXrefPages();
+  public ParsedPage getParsedPage() {
+    if (realPage instanceof WikitextPage) {
+      return ((WikitextPage) realPage).getParsedPage();
+    }
+    return null;
   }
 }
