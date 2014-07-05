@@ -171,7 +171,7 @@ public class SaveResponderTest {
     WikiPage simplePage = WikiPageUtil.addPage(root, PathParser.parse(pageName));
 
     PageData data = simplePage.getData();
-    SaveRecorder.pageSaved(data, 0);
+    SaveRecorder.pageSaved(simplePage, 0);
     simplePage.commit(data);
   }
 

@@ -26,25 +26,25 @@ public class SaveRecorderTest {
     PageData data = somePage.getData();
     long savedTicket = 0;
     long editTicket = 1;
-    long time = SaveRecorder.pageSaved(data, savedTicket);
+    long time = SaveRecorder.pageSaved(somePage, savedTicket);
     somePage.commit(data);
-    assertTrue(SaveRecorder.changesShouldBeMerged(time - 1, editTicket, somePage.getData()));
-    assertFalse(SaveRecorder.changesShouldBeMerged(time + 1, editTicket, somePage.getData()));
+    assertTrue(SaveRecorder.changesShouldBeMerged(time - 1, editTicket, somePage));
+    assertFalse(SaveRecorder.changesShouldBeMerged(time + 1, editTicket, somePage));
   }
 
   @Test
   public void testDefaultValues() throws Exception {
     WikiPage neverSaved = WikiPageUtil.addPage(root, PathParser.parse("NeverSaved"), "never saved");
-    assertFalse(SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved.getData()));
+    assertFalse(SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved));
   }
 
   @Test
   public void testCanSaveOutOfOrderIfFromSameEditSession() throws Exception {
     PageData data = somePage.getData();
     long ticket = 99;
-    long time = SaveRecorder.pageSaved(data, ticket);
+    long time = SaveRecorder.pageSaved(somePage, ticket);
     somePage.commit(data);
-    assertFalse(SaveRecorder.changesShouldBeMerged(time-1, ticket, data));
+    assertFalse(SaveRecorder.changesShouldBeMerged(time-1, ticket, somePage));
   }
 
 }

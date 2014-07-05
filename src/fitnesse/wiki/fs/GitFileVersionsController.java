@@ -218,7 +218,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void updateRecentChanges(PageData pageData) {
+  public void updateRecentChanges(WikiPage page) {
     // Nothing to do, read history from Git repository
   }
 
