@@ -8,5 +8,4 @@ public interface ReadOnlyPageData {
     String getAttribute(String attribute);
     boolean hasAttribute(String attribute);
     WikiPageProperties getProperties();
-    WikiPage getWikiPage();
 }

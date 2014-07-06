@@ -5,22 +5,10 @@ package fitnesse.wiki;
 import static fitnesse.wiki.PageType.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.See;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
-import util.Maybe;
 import util.StringUtil;
 
 public class PageData implements ReadOnlyPageData, Serializable {
@@ -75,13 +63,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-  // TODO: Get rid of those:
-  private transient WikiPage wikiPage;
-  private VariableSource variableSource;
-
-  public PageData(WikiPage page) {
-    wikiPage = page;
-    initializeAttributes();
+  public PageData(WikiPage wikiPage) {
+    initializeAttributes(wikiPage);
   }
 
   public PageData(PageData data, String content) {
@@ -89,14 +72,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     setContent(content);
   }
 
-  public PageData(PageData data, VariableSource variableSource) {
-    this(data);
-    this.variableSource = variableSource;
-  }
-
   public PageData(PageData data) {
-    this.wikiPage = data.getWikiPage();
-    this.variableSource = data.variableSource;
     this.properties = new WikiPageProperties(data.properties);
     this.content = data.content;
   }
@@ -106,8 +82,9 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.properties = properties;
   }
 
-  public void initializeAttributes() {
-    if (!isErrorLogsPage()) { 
+  public void initializeAttributes(WikiPage wikiPage) {
+    properties = new WikiPageProperties();
+    if (!isErrorLogsPage(wikiPage)) {
       properties.set(PropertyEDIT);
       properties.set(PropertyPROPERTIES);
       properties.set(PropertyREFACTOR);
@@ -119,17 +96,17 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
 
-    initTestOrSuiteProperty();
+    initTestOrSuiteProperty(wikiPage);
   }
 
-  private void initTestOrSuiteProperty() {
+  private void initTestOrSuiteProperty(WikiPage wikiPage) {
     final String pageName = wikiPage.getName();
     if (pageName == null) {
-      handleInvalidPageName();
+      handleInvalidPageName(wikiPage);
       return;
     }
 
-    if (isErrorLogsPage())
+    if (isErrorLogsPage(wikiPage))
       return;
 
     PageType pageType = PageType.getPageTypeForPageName(pageName);
@@ -140,12 +117,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(pageType.toString());
   }
 
-  private boolean isErrorLogsPage() {
+  private boolean isErrorLogsPage(WikiPage wikiPage) {
     WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
     return ErrorLogName.equals(pagePath.getFirst());
   }
 
-  private void handleInvalidPageName() {
+  private void handleInvalidPageName(WikiPage wikiPage) {
     String msg = "WikiPage " + wikiPage + " does not have a valid name!"
         + wikiPage.getName();
     LOG.warning(msg);
@@ -198,15 +175,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public void setContent(String content) {
     this.content = StringUtil.stripCarriageReturns(content);
-  }
-
-  public void setWikiPage(WikiPage page) {
-    wikiPage = page;
-  }
-
-  @Override
-  public WikiPage getWikiPage() {
-    return wikiPage;
   }
 
   public boolean isEmpty() {

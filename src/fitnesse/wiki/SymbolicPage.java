@@ -66,9 +66,7 @@ public class SymbolicPage extends BaseWikiPage implements WikitextPage {
 
   @Override
   public PageData getData() {
-    PageData data = realPage.getData();
-    data.setWikiPage(this);
-    return data;
+    return realPage.getData();
   }
 
   @Override

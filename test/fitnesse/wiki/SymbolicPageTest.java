@@ -55,7 +55,6 @@ public class SymbolicPageTest {
   public void testInternalData() throws Exception {
     PageData data = symPage.getData();
     assertEquals(pageTwoContent, data.getContent());
-    assertSame(symPage, data.getWikiPage());
   }
 
   @Test

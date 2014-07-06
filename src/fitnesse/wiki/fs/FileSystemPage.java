@@ -134,7 +134,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
     if (pageData == null) {
       pageData = getDataVersion();
     }
-    return new PageData(pageData, getVariableSource());
+    return new PageData(pageData);
   }
 
   private File getParentFileSystemPath() {
@@ -178,7 +178,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
       throw new RuntimeException(e);
     }
 
-    return new PageData(data, getVariableSource());
+    return data;
   }
 
   @Override
