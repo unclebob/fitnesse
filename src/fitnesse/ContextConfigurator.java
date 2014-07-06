@@ -140,6 +140,7 @@ public class ContextConfigurator {
 
     pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
     pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadWikiPageFactories(wikiPageFactory);
     pluginsLoader.loadTestSystems(testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
