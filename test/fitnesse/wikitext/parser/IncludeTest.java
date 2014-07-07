@@ -15,15 +15,15 @@ public class IncludeTest {
 
   @Test
   public void parsesIncludes() throws Exception {
-    assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("|!include PageTwo|\n", "SymbolList[Table[SymbolList[SymbolList[Include[Text, WikiWord, Meta[Text]]]]]]");
-    assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Meta[Text]], Text]");
-    assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-    assertParses("!include -h PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+    assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("|!include PageTwo|\n", "SymbolList[Table[SymbolList[SymbolList[Include[Text, WikiWord, Style[Text]]]]]]");
+    assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Style[Text]], Text]");
+    assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
+    assertParses("!include -h PageTwo", "SymbolList[Include[Text, WikiWord, Style[Text]]]");
   }
 
   @Test
@@ -144,8 +144,7 @@ public class IncludeTest {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
-    ParserTestHelper.assertTranslatesTo(currentPage,
-      "<span class=\"meta\">Error! Cannot include parent page (&lt;ParentPage).\n</span>");
+    ParserTestHelper.assertTranslatesTo(currentPage, "<span class=\"red\">Error! Cannot include parent page (&lt;ParentPage).\n</span>");
   }
 
   @Test
@@ -153,8 +152,7 @@ public class IncludeTest {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include not.a.wiki.page");
-    ParserTestHelper.assertTranslatesTo(currentPage,
-      "<span class=\"meta\">Page include failed because the page not.a.wiki.page does not have a valid WikiPage name.\n</span>");
+    ParserTestHelper.assertTranslatesTo(currentPage, "<span class=\"red\">Page include failed because the page not.a.wiki.page does not have a valid WikiPage name.\n</span>");
   }
 
   private void assertContains(String result, String substring) {
