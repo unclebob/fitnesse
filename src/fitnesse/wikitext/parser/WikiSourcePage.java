@@ -64,15 +64,15 @@ public class WikiSourcePage implements SourcePage {
         PageCrawler crawler = page.getPageCrawler();
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
-          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
+          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.");
         }
 
         WikiPage includedPage = crawler.getSiblingPage(pagePath);
         if (includedPage == null) {
-            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
+            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.");
         }
         else if (isParentOf(includedPage))
-           return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
+           return Maybe.nothingBecause( "Error! Cannot include parent page AA(" + pageName + ").");
         else {
             return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
         }
