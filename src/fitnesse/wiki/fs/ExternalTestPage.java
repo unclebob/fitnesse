@@ -12,14 +12,15 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
   private FileSystem fileSystem;
   private File path;
 
-  public ExternalTestPage(File path, String name, BaseWikiPage parent, FileSystem fileSystem) {
-    super(name, parent);
+  public ExternalTestPage(File path, String name, BaseWikiPage parent, FileSystem fileSystem, VariableSource variableSource) {
+    super(name, parent, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
   }

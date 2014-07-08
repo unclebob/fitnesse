@@ -81,7 +81,7 @@ public class SymbolicPage extends BaseWikiPage implements WikitextPage {
 
   @Override
   public String getHtml() {
-    return realPage.getHtml();
+    return WikiPageUtil.makeHtml(this, realPage.getData());
   }
 
   @Override

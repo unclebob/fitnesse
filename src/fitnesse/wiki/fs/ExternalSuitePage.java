@@ -1,6 +1,7 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 import java.io.File;
@@ -12,7 +13,6 @@ import java.util.List;
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 
@@ -23,8 +23,8 @@ public class ExternalSuitePage extends BaseWikiPage {
   private File path;
   private FileSystem fileSystem;
 
-  public ExternalSuitePage(File path, String name, BaseWikiPage parent, FileSystem fileSystem) {
-    super(name, parent);
+  public ExternalSuitePage(File path, String name, BaseWikiPage parent, FileSystem fileSystem, VariableSource variableSource) {
+    super(name, parent, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
   }
@@ -89,10 +89,10 @@ public class ExternalSuitePage extends BaseWikiPage {
       File childPath = new File(path, child);
       if (child.endsWith(HTML)) {
         children.add(new ExternalTestPage(childPath,
-                WikiWordPath.makeWikiWord(child.replace(HTML, "")), this, fileSystem));
+                WikiWordPath.makeWikiWord(child.replace(HTML, "")), this, fileSystem, getVariableSource()));
       } else if (hasHtmlChild(childPath)) {
         children.add(new ExternalSuitePage(childPath,
-                WikiWordPath.makeWikiWord(child), this, fileSystem));
+                WikiWordPath.makeWikiWord(child), this, fileSystem, getVariableSource()));
       }
     }
     return children;

@@ -25,20 +25,18 @@ public class FileSystemPageTest {
   @BeforeClass
   public static void initialize() {
     FileUtil.deleteFileSystemDirectory(base);
-    FileUtil.deleteFileSystemDirectory("RooT");
   }
 
   @Before
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makePage(new File(defaultPath), "RooT", null);
+    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
   }
 
   @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
-    FileUtil.deleteFileSystemDirectory("RooT");
   }
 
   public static void createFileSystemDirectory(File current) {
@@ -154,7 +152,7 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(defaultPath), "RooT", null);
+    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 

@@ -84,8 +84,8 @@ public class WikiPageUtil {
   }
 
 
-  public static String makeHtml(final WikiPage context, ReadOnlyPageData decoratedData) {
-    String content = decoratedData.getContent();
+  public static String makeHtml(final WikiPage context, ReadOnlyPageData data) {
+    String content = data.getContent();
     ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(context), new VariableSource() {
       @Override
       public Maybe<String> findVariable(String name) {

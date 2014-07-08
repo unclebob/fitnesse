@@ -43,7 +43,7 @@ public class ContextConfigurator {
   private WikiPage root;
   private Integer port;
   private String rootPath = DEFAULT_PATH;
-  private String rootDirectoryName;
+  private String rootDirectoryName = DEFAULT_ROOT;
   private String contextRoot;
   private Logger logger;
   private Authenticator authenticator;
@@ -103,7 +103,7 @@ public class ContextConfigurator {
     }
 
     if (root == null) {
-      root = wikiPageFactory.makePage(new File(rootPath), rootDirectoryName, null);
+      root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null);
     }
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);

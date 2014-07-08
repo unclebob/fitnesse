@@ -16,11 +16,18 @@ import fitnesse.wiki.fs.SimpleFileVersionsController;
 public class InMemoryPage {
 
   public static WikiPage makeRoot(String name) {
-    return makeRoot(name, null);
+    return makeRoot(name, null, new MemoryFileSystem());
+  }
+
+  public static WikiPage makeRoot(String name, MemoryFileSystem fileSystem) {
+    return makeRoot(name, null, fileSystem);
   }
 
   public static WikiPage makeRoot(String name, Properties properties) {
-    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return makeRoot(name, properties, new MemoryFileSystem());
+  }
+
+  public static WikiPage makeRoot(String name, Properties properties, MemoryFileSystem fileSystem) {
     WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem), new SystemVariableSource(properties));
     FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null);
     return page;

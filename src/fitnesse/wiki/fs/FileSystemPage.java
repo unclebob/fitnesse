@@ -47,7 +47,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
     super(name, variableSource);
-    this.path = path;
+    this.path = path != null ? path.getParentFile() : null;
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
     this.versionName = null;

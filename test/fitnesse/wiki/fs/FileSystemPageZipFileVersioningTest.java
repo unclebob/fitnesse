@@ -43,7 +43,7 @@ public class FileSystemPageZipFileVersioningTest {
   public void setUp() throws Exception {
     versionsController = new ZipFileVersionsController();
     FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController, new SystemVariableSource());
-    root = fileSystemPageFactory.makePage(new File("TestDir"), "RooT", null);
+    root = fileSystemPageFactory.makePage(new File("TestDir/RooT"), "RooT", null);
     page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
