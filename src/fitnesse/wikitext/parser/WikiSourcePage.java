@@ -72,7 +72,7 @@ public class WikiSourcePage implements SourcePage {
             return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.");
         }
         else if (isParentOf(includedPage))
-           return Maybe.nothingBecause( "Error! Cannot include parent page AA(" + pageName + ").");
+           return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").");
         else {
             return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
         }

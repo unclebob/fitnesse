@@ -152,7 +152,7 @@ public class IncludeTest {
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
     ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR, // 
         "<a href=\"ParentPage\">&lt;ParentPage</a>", //
-        "Error! Cannot include parent page AA(&lt;ParentPage)."));
+        "Error! Cannot include parent page (&lt;ParentPage)."));
   }
 
   @Test
