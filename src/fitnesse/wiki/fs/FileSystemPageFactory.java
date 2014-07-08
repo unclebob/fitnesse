@@ -152,14 +152,11 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       String linkPath = symLinkProperty.get(linkName);
       if (linkPath == null)
         return null;
-      return makePage(linkPath, linkName, page);
-    }
 
-    public WikiPage makePage(String linkPath, String linkName, WikiPage parent) {
       if (linkPath.startsWith("file:"))
-        return createExternalSymbolicLink(linkPath, linkName, parent);
+        return createExternalSymbolicLink(linkPath, linkName, page);
       else
-        return createInternalSymbolicPage(linkPath, linkName, parent);
+        return createInternalSymbolicPage(linkPath, linkName, page);
     }
 
     private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
