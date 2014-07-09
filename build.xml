@@ -250,41 +250,43 @@
 	<target name="install" depends="set-version-if-not-manualy-set,jar,sources-jar">
 		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="integration" />
 		<ivy:publish resolver="local"
-			revision="${version}"
+			pubrevision="${version}"
 			overwrite="true" conf="default">
 			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="snapshot" depends="resolve">
-		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="integration" />
-		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
-			   <ivy:mapping conf="standalone" scope="compile" />
-			   <ivy:mapping conf="test" scope="test" />
-		</ivy:makepom>
-		<ivy:publish resolver="sonatype-nexus-snapshots"
-			revision="${version}"
-			publishivy="false" conf="maven">
-			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
-		</ivy:publish>
-	</target>
-
-
-	<target name="publish" depends="set-version-if-not-manualy-set,jar,standalone-jar,sources-jar,javadoc-jar">
-		<fail unless="upload.user" message="supply upload.user on the command line"/>
-		<fail unless="upload.password" message="supply upload.password on the command line"/>
-		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
+	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
 		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
 		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
 			   <ivy:mapping conf="standalone" scope="compile" />
 			   <ivy:mapping conf="test" scope="test" />
 		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+		<ivy:settings id="ivy.publish.instance"
+			file="ivysettings-sonatype.xml" />
+		<ivy:publish resolver="sonatype-nexus-snapshots"
+			settingsref="ivy.publish.instance"
+			pubrevision="${version}-SNAPSHOT"
+			publishivy="false"
+			overwrite="true" conf="maven">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+
+	<target name="publish" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+		<fail unless="upload.user" message="supply upload.user on the command line"/>
+		<fail unless="upload.password" message="supply upload.password on the command line"/>
+		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
 		<ivy:settings id="ivy.publish.instance"
 			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-staging"
-			revision="${version}"
-			publishivy="false"
 			settingsref="ivy.publish.instance"
+			pubrevision="${version}"
+			publishivy="false"
 			overwrite="true" conf="maven">
 			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
