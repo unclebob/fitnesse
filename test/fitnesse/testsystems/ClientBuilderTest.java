@@ -265,6 +265,16 @@ public class ClientBuilderTest {
     assertEquals(fitnesseRootpath + "/rubyslim.rb", clientBuilder.getTestRunner());
   }
 
+  @Test
+  public void testCommandPatternCSharpWithSuiteConfig() throws Exception {
+    String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll -c \"c:\\program files\\suite.config\" %p}\n";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(specifiedPage.readOnlyData(), false, false, getClassPath(specifiedPage));
+    MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
+    assertTrue(Arrays.asList(clientBuilder.getCommandPattern()).contains("\"c:\\program files\\suite.config\""));
+
+  }
+
   private String getClassPath(WikiPage page) {
     return new ClassPathBuilder().getClasspath(page);
   }
