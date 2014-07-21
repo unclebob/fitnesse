@@ -12,11 +12,8 @@ import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import static util.ListUtility.list;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
@@ -86,17 +83,16 @@ public class ScriptTable extends SlimTable {
   }
 
   public List<SlimAssertion> getAssertions() throws SyntaxError {
-    int rows = table.getRowCount();
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    if (isScript() && table.getColumnCountInRow(0) > 1)
-      assertions.addAll(startActor(0));
-    for (int row = 1; row < rows; row++)
+    if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
+      List<SlimAssertion> createAssertions = startActor();
+      if (createAssertions != null) {
+        assertions.addAll(createAssertions);
+      }
+    }
+    for (int row = 1; row < table.getRowCount(); row++)
       assertions.addAll(instructionsForRow(row));
     return assertions;
-  }
-
-  private boolean isScript() {
-    return getTableKeyword().equalsIgnoreCase(table.getCellContents(0, 0));
   }
 
   // returns a list of statements
@@ -269,11 +265,30 @@ public class ScriptTable extends SlimTable {
     return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
 
+  protected List<SlimAssertion> startActor() {
+    String firstCellContents = table.getCellContents(0, 0);
+    String keyworkd = getTableKeyword() + ":";
+    int pos = firstCellContents.toLowerCase().indexOf(keyworkd);
+    if (pos == 0) {
+      return startActor(0, firstCellContents.substring(keyworkd.length() ), 0);
+    } else if (table.getColumnCountInRow(0) > 1) {
+      return startActor(0);
+    }
+    return null;
+  }
+
   protected List<SlimAssertion> startActor(int row) {
     int classNameColumn = 1;
     String cellContents = table.getCellContents(classNameColumn, row);
+    return startActor(row, cellContents, classNameColumn);
+  }
+
+  protected List<SlimAssertion> startActor(int row, String cellContents, int classNameColumn) {
+    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     String className = Disgracer.disgraceClassName(cellContents);
-    return list(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
+    assertions.add(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
+    getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
+    return assertions;
   }
 
   class ArgumentExtractor {

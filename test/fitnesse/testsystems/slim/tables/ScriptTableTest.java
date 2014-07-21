@@ -188,6 +188,13 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void scriptStatementInOneColumnWithArguments() throws Exception {
+    buildInstructionsForWholeTable("|script:Bob martin|x|y|\n", false);
+    List<MakeInstruction> expectedInstructions = list(new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[] { "x", "y" }));
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
   public void localizedScriptStatementWithArguments() throws Exception {
     buildInstructionsForWholeTable("|localized script|Bob martin|x|y|\n", true);
     List<MakeInstruction> expectedInstructions =
@@ -750,7 +757,20 @@ String newLine = System.getProperty("line.separator");
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]", false
     );
   }
-
+  
+  @Test
+  public void symbolReplacementAAAAAAAA() throws Exception {
+    assertScriptResults(
+      "|$V=|function|\n" +
+       "|start|Class|$V|\n",
+            ListUtility.<List<?>>list(
+                list("scriptTable_id_0", "3"),
+                list("scriptTable_id_1", "OK")
+            ),
+      "[[Script], [$V<-[3], function], [start, pass(Class), $V->[3]]]", false
+    );
+  }
+  
   @Test
   public void sameSymbolTwiceReplacement() throws Exception {
     assertScriptResults(
