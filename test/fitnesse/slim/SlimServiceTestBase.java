@@ -145,6 +145,14 @@ public abstract class SlimServiceTestBase {
     assertContainsException("message:<<NO_METHOD_IN_CLASS", "id", results);
   }
 
+  @Test
+  public void callFunctionThatReturnsHugeResult() throws Exception {
+    addImportAndMake();
+    statements.add(new CallInstruction("id", "testSlim", "returnHugeString"));
+    slimClient.invokeAndGetResponse(statements);
+    // should not crash
+  }
+
   private void assertContainsException(String message, String id, Map<String, Object> results) {
     String result = (String) results.get(id);
     assertTrue(result, result.contains(SlimServer.EXCEPTION_TAG)
