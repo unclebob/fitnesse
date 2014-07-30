@@ -80,20 +80,12 @@ public class ClassPathBuilder {
   }
 
   private void addPathToClassPathString(String separator, String path) {
-    path = surroundPathWithQuotesIfItHasSpaces(path);
-
     if (!addedPaths.contains(path)) {
       addedPaths.add(path);
       if (pathsString.length() > 0)
         pathsString.append(separator);
       pathsString.append(path);
     }
-  }
-
-  private String surroundPathWithQuotesIfItHasSpaces(String path) {
-    if (path.matches(".*\\s.*") && !path.contains("\""))
-      path = "\"" + path + "\"";
-    return path;
   }
 
   private List<String> expandWildcards(List<String> paths) {
