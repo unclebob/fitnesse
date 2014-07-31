@@ -141,7 +141,7 @@ public class IncludeTest {
 
   private static final String NEW_LINE = System.getProperty("line.separator");
   private static final String HTML_ERR = ""
-      + "<div class=\"collapsible\"><ul><li><a href='#' class='expandall'>Expand All</a></li><li><a href='#' class='collapseall'>Collapse All</a></li></ul>" + NEW_LINE //
+      + "<div class=\"collapsible\"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>" + NEW_LINE //
       + "\t<p class=\"title\">Included page: %s</p>" + NEW_LINE//
       + "\t<div><span class=\"error\">%s</span></div>" + NEW_LINE// 
       + "</div>" + NEW_LINE;
