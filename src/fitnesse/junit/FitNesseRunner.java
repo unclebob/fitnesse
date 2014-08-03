@@ -116,7 +116,7 @@ public abstract class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected String getFitNesseRoot(Class<?> suiteClass) throws Exception {
-    return "FitNesseRoot";
+    return ContextConfigurator.DEFAULT_ROOT;
   }
 
   protected int getPort(Class<?> suiteClass) throws Exception {
