@@ -5,12 +5,12 @@ import fitnesse.components.PluginsClassLoader;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-@RunWith(FitNesseSuiteExtensionTest.SuiteExtension.class)
-@FitNesseSuite.FitnesseDir(".")
-@FitNesseSuite.OutputDir("../target/fitnesse-results")
-public class FitNesseSuiteExtensionTest {
+@RunWith(FitNesseRunnerExtensionTest.SuiteExtension.class)
+@FitNesseRunner.FitnesseDir(".")
+@FitNesseRunner.OutputDir("../target/fitnesse-results")
+public class FitNesseRunnerExtensionTest {
 
-  public static class SuiteExtension extends FitNesseSuite {
+  public static class SuiteExtension extends FitNesseRunner {
     public SuiteExtension(Class<?> suiteClass) throws InitializationError {
       super(suiteClass);
     }
