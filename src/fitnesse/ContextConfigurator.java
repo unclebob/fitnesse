@@ -85,11 +85,15 @@ public class ContextConfigurator {
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
     ComponentFactory componentFactory = new ComponentFactory(properties);
 
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
-
     if (port == null) {
       port = getPort();
     }
+
+    FitNesseVersion version = new FitNesseVersion();
+
+    updateFitNesseProperties(version);
+
+    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     if (versionsController == null) {
       versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
@@ -119,8 +123,6 @@ public class ContextConfigurator {
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
-    FitNesseVersion version = new FitNesseVersion();
-    addBackwardsCompatibleProperties(version);
 
     FitNesseContext context = new FitNesseContext(version,
           root,
@@ -155,7 +157,7 @@ public class ContextConfigurator {
     return context;
   }
 
-  private void addBackwardsCompatibleProperties(FitNesseVersion version) {
+  private void updateFitNesseProperties(FitNesseVersion version) {
     // Those variables are defined so they can be looked up for as wiki variables.
     if (rootPath != null) {
       properties.setProperty("FITNESSE_ROOTPATH", rootPath);

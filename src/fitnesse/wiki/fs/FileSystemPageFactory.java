@@ -15,6 +15,7 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wiki.VariableTool;
 import fitnesse.wikitext.parser.WikiWordPath;
+import util.Maybe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,7 +75,8 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
     if (parent != null) {
       return new FileSystemPage(pageName, parent);
     } else {
-      return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(path), variableSource);
+      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(new File(rootPath.getValue())), variableSource);
     }
   }
 
