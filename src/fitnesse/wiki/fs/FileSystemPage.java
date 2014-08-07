@@ -34,9 +34,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
 
-  // Only used for root page:
   private final File path;
-
   private final transient VersionsController versionsController;
   private final transient SubWikiPageFactory subWikiPageFactory;
   private final String versionName;
@@ -47,30 +45,30 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
     super(name, variableSource);
-    this.path = path != null ? path.getParentFile() : null;
+    this.path = path;
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
     this.versionName = null;
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent) {
-    this(name, parent, parent.versionsController);
+  public FileSystemPage(final File path, final String name, final FileSystemPage parent) {
+    this(path, name, parent, null, parent.versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent, final VersionsController versionsController) {
-    this(name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
+  public FileSystemPage(final File path, final String name, final FileSystemPage parent, final VersionsController versionsController) {
+    this(path, name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
   private FileSystemPage(FileSystemPage page, String versionName) {
-    this(page.getName(), (FileSystemPage) (page.isRoot() ? null : page.getParent()), versionName,
+    this(page.getFileSystemPath(), page.getName(), (FileSystemPage) (page.isRoot() ? null : page.getParent()), versionName,
             page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
-  private FileSystemPage(final String name, final FileSystemPage parent, final String versionName,
+  private FileSystemPage(final File path, final String name, final FileSystemPage parent, final String versionName,
                          final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                          final VariableSource variableSource) {
     super(name, parent, variableSource);
-    path = null;
+    this.path = path;
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
     this.versionName = versionName;
@@ -114,7 +112,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   public WikiPage addChildPage(String pageName) {
     WikiPage page = getChildPage(pageName);
     if (page == null) {
-      page = new FileSystemPage(pageName, this);
+      page = new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
     }
     return page;
   }
@@ -137,12 +135,8 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
     return new PageData(pageData);
   }
 
-  private File getParentFileSystemPath() {
-    return isRoot() ?  this.path : ((FileSystemPage) this.getParent()).getFileSystemPath();
-  }
-
   public File getFileSystemPath() {
-    return new File(getParentFileSystemPath(), getName());
+    return this.path;
   }
 
   @Override

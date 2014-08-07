@@ -3,6 +3,7 @@ package fitnesse.wiki.mem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.util.Iterator;
 
 import fitnesse.wiki.PageData;
@@ -28,7 +29,7 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldStoreFirstVersionAsZero() {
-    WikiPage root = wikiPageFactory.makePage(null, "RooT", null);
+    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
     root.commit(root.getData());
     assertEquals(1, root.getVersions().size());
     assertEquals("0", root.getVersions().iterator().next().getName());
@@ -36,7 +37,7 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldStoreSecondVersionAsOne() {
-    WikiPage root = wikiPageFactory.makePage(null, "RooT", null);
+    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
     root.commit(root.getData());
     root.commit(root.getData());
 
@@ -48,7 +49,7 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldStoreFirstVersionAsZeroForSecondPage() {
-    WikiPage root = wikiPageFactory.makePage(null, "RooT", null);
+    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
     root.commit(root.getData());
     WikiPage page = root.addChildPage("PageOne");
     page.commit(root.getData());
@@ -62,10 +63,11 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldLoadMostRecentVersion() {
-    WikiPage root = wikiPageFactory.makePage(null, "RooT", null);
+    WikiPage root = wikiPageFactory.makePage(new File("."), "RooT", null);
     VersionInfo version = root.commit(root.getData());
 
-    PageData newData = root.getVersion(version.getName()).getData();
+    WikiPage versionData = root.getVersion(version.getName());
+    PageData newData = versionData.getData();
 
     assertEquals("0", version.getName());
     assertNotNull(newData);

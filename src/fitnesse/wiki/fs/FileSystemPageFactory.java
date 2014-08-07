@@ -73,7 +73,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   @Override
   public FileSystemPage makePage(File path, String pageName, FileSystemPage parent) {
     if (parent != null) {
-      return new FileSystemPage(pageName, parent);
+      return new FileSystemPage(path, pageName, parent);
     } else {
       Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
       return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(new File(rootPath.getValue())), variableSource);
