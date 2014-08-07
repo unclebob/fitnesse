@@ -22,18 +22,31 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   void removeChildPage(String name);
 
+  /**
+   * Get child pages for this wiki page
+   * @return children, an empty list if there are none.
+   */
   List<WikiPage> getChildren();
 
   String getName();
 
   PageData getData();
 
+  /**
+   * Get a list/set of version info
+   * @return a collection, never null.
+   */
   Collection<VersionInfo> getVersions();
 
   WikiPage getVersion(String versionName);
 
   String getHtml();
 
+  /**
+   * Commit new content
+   * @param data
+   * @return version information about this new data version, may be null.
+   */
   VersionInfo commit(PageData data);
 
   PageCrawler getPageCrawler();
