@@ -47,7 +47,9 @@ public class SaveResponder implements SecureResponder {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Current-Version", commitRecord.getName());
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
     context.recentChanges.updateRecentChanges(page);
 
     if (request.hasInput("redirect"))
