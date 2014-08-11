@@ -2,15 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Maybe;
 
-public abstract class BaseWikiPage implements WikiPage {
+public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private static final long serialVersionUID = 1L;
 
   private final String name;
   private final BaseWikiPage parent;
   private final VariableSource variableSource;
+  private ParsedPage parsedPage;
 
   protected BaseWikiPage(String name, VariableSource variableSource) {
     this(name, null, variableSource);
@@ -33,7 +40,7 @@ public abstract class BaseWikiPage implements WikiPage {
     return new PageCrawlerImpl(this);
   }
 
-  public WikiPage getParent() {
+  public BaseWikiPage getParent() {
     return parent == null ? this : parent;
   }
 
@@ -46,11 +53,33 @@ public abstract class BaseWikiPage implements WikiPage {
     return variableSource;
   }
 
+
   @Override
   public String getVariable(String name) {
-    Maybe<String> value = variableSource.findVariable(name);
-    return value.isNothing() ? null : value.getValue();
+    ParsingPage parsingPage = getParsingPage();
+    Maybe<String> variable = parsingPage.findVariable(name);
+    if (variable.isNothing()) return null;
+
+    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
+    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
+
+  @Override
+  public ParsedPage getParsedPage() {
+    if (parsedPage == null) {
+      parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
+    }
+    return parsedPage;
+  }
+
+  protected void resetParsedPage() {
+    parsedPage = null;
+  }
+
+  protected ParsingPage getParsingPage() {
+    return getParsedPage().getParsingPage();
+  }
+
 
   public String toString() {
     return this.getClass().getName() + ": " + name;

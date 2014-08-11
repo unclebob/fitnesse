@@ -2,6 +2,7 @@ package fitnesse.wiki.fs;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.components.ComponentFactory;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.SystemVariableSource;
@@ -130,7 +131,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       return children;
     }
 
-    protected List<WikiPage> getSymlinkChildren(WikiPage page) {
+    protected List<WikiPage> getSymlinkChildren(BaseWikiPage page) {
       List<WikiPage> children = new LinkedList<WikiPage>();
       WikiPageProperties props = page.getData().getProperties();
       WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
@@ -155,7 +156,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       return childPage;
     }
 
-    private WikiPage createSymbolicPage(WikiPage page, String linkName) {
+    private WikiPage createSymbolicPage(BaseWikiPage page, String linkName) {
       WikiPageProperty symLinkProperty = page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
       if (symLinkProperty == null)
         return null;
@@ -169,7 +170,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
         return createInternalSymbolicPage(linkPath, linkName, page);
     }
 
-    private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
+    private WikiPage createExternalSymbolicLink(String linkPath, String linkName, BaseWikiPage parent) {
       String fullPagePath = new VariableTool(variableSource).replace(linkPath);
       File file = WikiPageUtil.resolveFileUri(fullPagePath, rootPath);
       File parentDirectory = file.getParentFile();
@@ -182,7 +183,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       return null;
     }
 
-    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, WikiPage parent) {
+    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, BaseWikiPage parent) {
       WikiPagePath path = PathParser.parse(linkPath);
       if (path == null) {
         return null;

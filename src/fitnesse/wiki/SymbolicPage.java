@@ -7,20 +7,25 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
-public class SymbolicPage extends BaseWikiPage implements WikitextPage {
+public class SymbolicPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   public static final String PROPERTY_NAME = "SymbolicLinks";
 
-  private WikiPage realPage;
+  private final WikiPage realPage;
 
-  public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
-    super(name, (BaseWikiPage) parent);
+  public SymbolicPage(String name, WikiPage realPage, BaseWikiPage parent) {
+    super(name, parent);
     this.realPage = realPage;
+    // Perform a cyclic dependency check
   }
 
   public WikiPage getRealPage() {
@@ -92,9 +97,10 @@ public class SymbolicPage extends BaseWikiPage implements WikitextPage {
   @Override
   public ParsedPage getParsedPage() {
     if (realPage instanceof WikitextPage) {
-      return ((WikitextPage) realPage).getParsedPage();
+      return super.getParsedPage();
+    } else {
+      // Default to an empty page for non-wikitext pages.
+      return new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), "");
     }
-    // Default to an empty page for non-wikitext pages.
-    return new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), "");
   }
 }

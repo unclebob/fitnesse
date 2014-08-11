@@ -28,7 +28,7 @@ import fitnesse.wikitext.parser.WikiSourcePage;
 import util.FileUtil;
 import util.Maybe;
 
-public class FileSystemPage extends BaseWikiPage implements WikitextPage {
+public class FileSystemPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
 
   static final String contentFilename = "content.txt";
@@ -39,7 +39,6 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   private final transient SubWikiPageFactory subWikiPageFactory;
   private final String versionName;
   private transient PageData pageData;
-  private transient ParsedPage parsedPage;
 
   public FileSystemPage(final File path, final String name,
                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
@@ -143,7 +142,7 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
     pageData = null;
-    parsedPage = null;
+    resetParsedPage();
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
@@ -185,28 +184,6 @@ public class FileSystemPage extends BaseWikiPage implements WikitextPage {
   @Override
   public String getHtml() {
     return getParsedPage().toHtml();
-  }
-
-  @Override
-  public String getVariable(String name) {
-    ParsingPage parsingPage = getParsingPage();
-    Maybe<String> variable = parsingPage.findVariable(name);
-    if (variable.isNothing()) return null;
-
-    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
-    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
-  }
-
-  @Override
-  public ParsedPage getParsedPage() {
-    if (parsedPage == null) {
-      parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
-    }
-    return parsedPage;
-  }
-
-  private ParsingPage getParsingPage() {
-    return getParsedPage().getParsingPage();
   }
 
   @Override
