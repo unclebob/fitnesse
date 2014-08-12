@@ -54,7 +54,7 @@ public class TestXmlFormatterTest {
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();
-    TestXmlFormatter formatter = new TestXmlFormatter(context , page, writerFactory) {
+    TestXmlFormatter formatter = new TestXmlFormatter(context , page.getSourcePage(), writerFactory) {
       @Override
       protected TestResult newTestResult() {
         return testResult;

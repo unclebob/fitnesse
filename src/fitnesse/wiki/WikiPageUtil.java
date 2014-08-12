@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.See;
@@ -73,6 +75,13 @@ public class WikiPageUtil {
   public static String makePageHtml(WikiPage page) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(getHeaderPageHtml(page));
+    buffer.append(page.getHtml());
+    return buffer.toString();
+  }
+
+  public static String makePageHtml(WikiTestPage page) {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append(getHeaderPageHtml(page.getSourcePage()));
     buffer.append(page.getHtml());
     return buffer.toString();
   }

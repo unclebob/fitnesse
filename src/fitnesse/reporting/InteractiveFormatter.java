@@ -42,7 +42,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 
   protected String getRelativeName(WikiTestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(testPage);
+    String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
     if ("".equals(relativeName)) {
       relativeName = String.format("(%s)", testPage.getName());
     }

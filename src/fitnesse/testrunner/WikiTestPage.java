@@ -1,22 +1,16 @@
 package fitnesse.testrunner;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.WikiSourcePage;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
@@ -40,16 +34,6 @@ public class WikiTestPage implements TestPage {
 
   public PageData getData() {
     return sourcePage.getData();
-  }
-
-  @Override
-  public Collection<VersionInfo> getVersions() {
-    return sourcePage.getVersions();
-  }
-
-  @Override
-  public WikiTestPage getVersion(String versionName) {
-    return new WikiTestPage(sourcePage.getVersion(versionName));
   }
 
   /**
@@ -77,18 +61,17 @@ public class WikiTestPage implements TestPage {
   }
 
   @Override
-  public VersionInfo commit(PageData data) {
-    return sourcePage.commit(data);
-  }
-
-  @Override
-  public PageCrawler getPageCrawler() {
-    return sourcePage.getPageCrawler();
-  }
-
-  @Override
   public String getVariable(String variable) {
     return sourcePage.getVariable(variable);
+  }
+
+  @Override
+  public String getFullPath() {
+    return PathParser.render(sourcePage.getPageCrawler().getFullPath());
+  }
+
+  public WikiPage getSourcePage() {
+    return sourcePage;
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {
@@ -155,40 +138,40 @@ public class WikiTestPage implements TestPage {
     return getPathNameForPage(sourcePage);
   }
 
-  @Override
-  public WikiPage getParent() {
-    return sourcePage.getParent();
-  }
-
-  @Override
-  public boolean isRoot() {
-    return sourcePage.isRoot();
-  }
-
-  @Override
-  public WikiPage addChildPage(String name) {
-    return sourcePage.addChildPage(name);
-  }
-
-  @Override
-  public boolean hasChildPage(String name) {
-    return sourcePage.hasChildPage(name);
-  }
-
-  @Override
-  public WikiPage getChildPage(String name) {
-    return sourcePage.getChildPage(name);
-  }
-
-  @Override
-  public void removeChildPage(String name) {
-    sourcePage.removeChildPage(name);
-  }
-
-  @Override
-  public List<WikiPage> getChildren() {
-    return sourcePage.getChildren();
-  }
+//  @Override
+//  public WikiPage getParent() {
+//    return sourcePage.getParent();
+//  }
+//
+//  @Override
+//  public boolean isRoot() {
+//    return sourcePage.isRoot();
+//  }
+//
+//  @Override
+//  public WikiPage addChildPage(String name) {
+//    return sourcePage.addChildPage(name);
+//  }
+//
+//  @Override
+//  public boolean hasChildPage(String name) {
+//    return sourcePage.hasChildPage(name);
+//  }
+//
+//  @Override
+//  public WikiPage getChildPage(String name) {
+//    return sourcePage.getChildPage(name);
+//  }
+//
+//  @Override
+//  public void removeChildPage(String name) {
+//    sourcePage.removeChildPage(name);
+//  }
+//
+//  @Override
+//  public List<WikiPage> getChildren() {
+//    return sourcePage.getChildren();
+//  }
 
   public String getName() {
     return sourcePage.getName();
@@ -247,10 +230,5 @@ public class WikiTestPage implements TestPage {
       });
     }
     return uncles;
-  }
-
-  @Override
-  public int compareTo(Object o) {
-    return sourcePage.compareTo(o);
   }
 }

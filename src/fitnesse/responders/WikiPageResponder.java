@@ -78,8 +78,8 @@ public class WikiPageResponder implements SecureResponder {
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
     if (WikiTestPage.isTestPage(page)) {
-      TestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
-      html.put("content", new WikiPageRenderer(testPage));
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
+      html.put("content", new WikiTestPageRenderer(testPage));
     } else {
       html.put("content", new WikiPageRenderer(page));
     }
@@ -108,6 +108,18 @@ public class WikiPageResponder implements SecureResponder {
 
     public String render() {
         return WikiPageUtil.makePageHtml(page);
+    }
+  }
+
+  public class WikiTestPageRenderer {
+    private WikiTestPage page;
+
+    WikiTestPageRenderer(WikiTestPage page) {
+      this.page = page;
+    }
+
+    public String render() {
+      return WikiPageUtil.makePageHtml(page);
     }
   }
 

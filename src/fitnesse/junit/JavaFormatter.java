@@ -130,20 +130,16 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private TestSummary totalSummary = new TestSummary();
 
-  public String getFullPath(final WikiPage wikiPage) {
-    return new WikiPagePath(wikiPage).toString();
-  }
-
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
   public void testStarted(WikiTestPage test) throws IOException {
-    resultsRepository.open(getFullPath(test));
+    resultsRepository.open(test.getFullPath());
   }
 
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
-    String fullPath = getFullPath(test);
+    String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));

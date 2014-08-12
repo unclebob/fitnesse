@@ -31,7 +31,7 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    LOG.info(new WikiPagePath(test).toString() + " r " + testSummary.getRight() + " w "
+    LOG.info(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.getRight() + " w "
         + testSummary.getWrong() + " " + testSummary.getExceptions()
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }
