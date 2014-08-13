@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
@@ -15,6 +16,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import util.Clock;
 
 public class ExternalSuitePage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -107,13 +109,14 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   private PageData makePageData() {
-    PageData pageData = new PageData(this);
-    pageData.setContent("!contents");
-    pageData.removeAttribute(PageData.PropertyEDIT);
-    pageData.removeAttribute(PageData.PropertyPROPERTIES);
-    pageData.removeAttribute(PageData.PropertyVERSIONS);
-    pageData.removeAttribute(PageData.PropertyREFACTOR);
-    pageData.setAttribute(PageType.SUITE.toString(), Boolean.toString(true));
-    return pageData;
+    WikiPageProperties properties = new WikiPageProperties();
+    properties.set(PageType.SUITE.toString());
+    properties.set(PageData.PropertyWHERE_USED);
+    properties.set(PageData.PropertyRECENT_CHANGES);
+    properties.set(PageData.PropertyFILES);
+    properties.set(PageData.PropertyVERSIONS);
+    properties.set(PageData.PropertySEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+    return new PageData("!contents", properties);
   }
 }

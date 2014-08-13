@@ -13,6 +13,8 @@ import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikitextPage;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
@@ -25,8 +27,11 @@ import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Clock;
 import util.FileUtil;
 import util.Maybe;
+
+import static fitnesse.wiki.PageType.STATIC;
 
 public class FileSystemPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -157,21 +162,56 @@ public class FileSystemPage extends BaseWikiPage {
 
   private PageData getDataVersion() {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
-    PageData data = new PageData(this);
+    String content = "";
+    WikiPageProperties properties = null;
     try {
       for (FileVersion version : versions) {
         if (version == null) continue;
         if (contentFilename.equals(version.getFile().getName())) {
-          data.setContent(loadContent(version));
+          content = loadContent(version);
         } else if (propertiesFilename.equals(version.getFile().getName())) {
-          data.setProperties(loadAttributes(version));
+          properties = loadAttributes(version);
         }
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
-    return data;
+    if (properties == null) {
+      properties = defaultPageProperties();
+    }
+    return new PageData(content, properties);
+  }
+
+  public WikiPageProperties defaultPageProperties() {
+    WikiPageProperties properties = new WikiPageProperties();
+    if (!isErrorLogsPage()) {
+      properties.set(PageData.PropertyEDIT);
+      properties.set(PageData.PropertyPROPERTIES);
+      properties.set(PageData.PropertyREFACTOR);
+    }
+    properties.set(PageData.PropertyWHERE_USED);
+    properties.set(PageData.PropertyRECENT_CHANGES);
+    properties.set(PageData.PropertyFILES);
+    properties.set(PageData.PropertyVERSIONS);
+    properties.set(PageData.PropertySEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+
+    if (isErrorLogsPage())
+      return properties;
+
+    PageType pageType = PageType.getPageTypeForPageName(getName());
+
+    if (STATIC.equals(pageType))
+      return properties;
+
+    properties.set(pageType.toString());
+    return properties;
+  }
+
+  private boolean isErrorLogsPage() {
+    WikiPagePath pagePath = getPageCrawler().getFullPath();
+    return ErrorLogName.equals(pagePath.getFirst());
   }
 
   @Override

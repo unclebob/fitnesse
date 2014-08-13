@@ -14,9 +14,7 @@ import util.StringUtil;
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
-  public static final String ErrorLogName = "ErrorLogs";
   private static final long serialVersionUID = 1L;
-
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -63,10 +61,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-  public PageData(WikiPage wikiPage) {
-    initializeAttributes(wikiPage);
-  }
-
   public PageData(PageData data, String content) {
     this(data);
     setContent(content);
@@ -78,55 +72,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public PageData(String content, WikiPageProperties properties) {
-    this.content = content;
-    this.properties = properties;
-  }
-
-  public void initializeAttributes(WikiPage wikiPage) {
-    properties = new WikiPageProperties();
-    if (!isErrorLogsPage(wikiPage)) {
-      properties.set(PropertyEDIT);
-      properties.set(PropertyPROPERTIES);
-      properties.set(PropertyREFACTOR);
-    }
-    properties.set(PropertyWHERE_USED);
-    properties.set(PropertyRECENT_CHANGES);
-    properties.set(PropertyFILES);
-    properties.set(PropertyVERSIONS);
-    properties.set(PropertySEARCH);
-    properties.setLastModificationTime(Clock.currentDate());
-
-    initTestOrSuiteProperty(wikiPage);
-  }
-
-  private void initTestOrSuiteProperty(WikiPage wikiPage) {
-    final String pageName = wikiPage.getName();
-    if (pageName == null) {
-      handleInvalidPageName(wikiPage);
-      return;
-    }
-
-    if (isErrorLogsPage(wikiPage))
-      return;
-
-    PageType pageType = PageType.getPageTypeForPageName(pageName);
-
-    if (STATIC.equals(pageType))
-      return;
-
-    properties.set(pageType.toString());
-  }
-
-  private boolean isErrorLogsPage(WikiPage wikiPage) {
-    WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
-    return ErrorLogName.equals(pagePath.getFirst());
-  }
-
-  private void handleInvalidPageName(WikiPage wikiPage) {
-    String msg = "WikiPage " + wikiPage + " does not have a valid name!"
-        + wikiPage.getName();
-    LOG.warning(msg);
-    throw new RuntimeException(msg);
+    setContent(content);
+    setProperties(properties);
   }
 
   @Override

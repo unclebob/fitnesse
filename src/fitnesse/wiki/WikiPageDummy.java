@@ -22,14 +22,13 @@ public class WikiPageDummy implements WikiPage {
 
   public WikiPageDummy(String name, String content, WikiPage parent) {
     this.name = name;
-    pageData = new PageData(this);
-    pageData.setContent(content);
+    pageData = new PageData(content, new WikiPageProperties());
     this.parent = parent;
   }
 
   public WikiPageDummy() {
     name = "Default";
-    pageData = new PageData(this);
+    pageData = new PageData("", new WikiPageProperties());
     this.parent = null;
   }
 

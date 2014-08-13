@@ -212,7 +212,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testXmlizingData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 
@@ -232,7 +232,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testDeXmlizingPageData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 

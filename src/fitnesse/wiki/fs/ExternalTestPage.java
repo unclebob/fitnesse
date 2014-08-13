@@ -12,7 +12,9 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
+import util.Clock;
 
 public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -79,22 +81,25 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   private PageData makePageData() {
-    PageData pageData = new PageData(this);
     String content;
     try {
       content = fileSystem.getContent(path);
     } catch (IOException e) {
       throw new RuntimeException("Unable to fetch page content", e);
     }
-    pageData.setContent("!-" + content + "-!");
-    pageData.removeAttribute(PageData.PropertyEDIT);
-    pageData.removeAttribute(PageData.PropertyPROPERTIES);
-    pageData.removeAttribute(PageData.PropertyVERSIONS);
-    pageData.removeAttribute(PageData.PropertyREFACTOR);
+
+    WikiPageProperties properties = new WikiPageProperties();
     if (content.contains("<table")) {
-      pageData.setAttribute(PageType.TEST.toString(), Boolean.toString(true));
+      properties.set(PageType.TEST.toString());
     }
-    return pageData;
+    properties.set(PageData.PropertyWHERE_USED);
+    properties.set(PageData.PropertyRECENT_CHANGES);
+    properties.set(PageData.PropertyFILES);
+    properties.set(PageData.PropertyVERSIONS);
+    properties.set(PageData.PropertySEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+    return new PageData("!-" + content + "-!", properties);
+
   }
 
 }

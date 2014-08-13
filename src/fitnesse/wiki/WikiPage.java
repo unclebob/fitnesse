@@ -10,6 +10,9 @@ import java.util.List;
 import fitnesse.wikitext.parser.ParsedPage;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
+
+  public static final String ErrorLogName = "ErrorLogs";
+
   WikiPage getParent();
 
   boolean isRoot();
