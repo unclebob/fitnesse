@@ -50,10 +50,12 @@ Most instructions involve some kind of function call.  By default, the name of t
 
 ''Interposing Function Call (Default)''
 
+-| comment |
 | login with username | Bob | and password | xyzzy |
 
 ''Sequential Argument Processing Function Call''
 
+-| comment |
 | login with username and password; | Bob | xyzzy |
 
  * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
