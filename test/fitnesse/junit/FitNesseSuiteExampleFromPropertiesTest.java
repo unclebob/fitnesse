@@ -4,18 +4,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import fitnesse.junit.FitNesseSuite.FitnesseDir;
-import fitnesse.junit.FitNesseSuite.Name;
-import fitnesse.junit.FitNesseSuite.OutputDir;
-import fitnesse.junit.FitNesseSuite.ConfigFile;
+import fitnesse.junit.FitNesseSuite.*;
 
 
 @Ignore
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
-@FitnesseDir(systemProperty = "fitnesse.root.dir.parent")
-@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
-@ConfigFile("plugins.properties")
+@FitNesseSuite.FitnesseDir(systemProperty = "fitnesse.root.dir.parent")
+@FitNesseSuite.OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
+@FitNesseSuite.ConfigFile("plugins.properties")
 public class FitNesseSuiteExampleFromPropertiesTest {
 
   @Test
