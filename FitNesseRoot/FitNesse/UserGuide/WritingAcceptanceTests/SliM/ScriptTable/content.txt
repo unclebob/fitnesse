@@ -43,6 +43,9 @@ This should be pretty clear.  Each row is a single instruction in the script.
 
 The first row is simply the word "Script" followed by the name and constructor arguments of the fixture (known as the "actor") that will be used by the rest of the table.  If there is no actor specified then the previous script table's actor on this test page will be used.
 
+The first cell could also have been 
+|Script:login dialog driver | Bob | xyzzy |
+
 Most instructions involve some kind of function call.  By default, the name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells. Appending ";" to the end of a function name in a cell invokes sequential argument processing, which means that the arguments to the function are all subsequent cells.
 
 ''Interposing Function Call (Default)''
