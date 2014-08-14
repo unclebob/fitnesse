@@ -1,12 +1,8 @@
 package fitnesse.junit;
 
 import java.io.File;
-import java.lang.Exception;
 
-import fitnesse.junit.FitNesseRunner;
 import org.junit.Test;
-import org.junit.runners.model.InitializationError;
-import fitnesse.junit.FitNesseSuite;
 
 import static org.junit.Assert.*;
 public class FitNesseSuiteArgumentsTest {
@@ -14,7 +10,7 @@ public class FitNesseSuiteArgumentsTest {
   @Test
   public void argumentsAreParsedCorrectly() throws Exception {
 	System.setProperty("fitnesse.root.dir.parent", ".");
-    FitNesseRunner suite = new FitNesseRunner(FitNesseSuiteExampleTest.class);
+    FitNesseSuite suite = new FitNesseSuite(FitNesseSuiteTest.class);
     assertEquals(".", suite.getFitNesseDir(FitNesseSuiteExampleTest.class));
     assertEquals(new File(System.getProperty("fitnesse.root.dir.parent")).getAbsolutePath(), suite.getFitNesseDir(FitNesseSuiteExampleFromPropertiesTest.class));
     assertEquals("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", suite.getSuiteName(FitNesseSuiteExampleTest.class));
