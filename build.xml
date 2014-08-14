@@ -237,6 +237,10 @@
 		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone,default,test" />
 	</target>
 
+	<target name="dependencies" depends="resolve" description="Generate a dependencies graph">
+		<ivy:report conf="default,standalone,test,maven" todir="dependencies" />
+	</target>
+
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />
