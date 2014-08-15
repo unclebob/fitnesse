@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,9 +55,8 @@ public class CommandRunner {
   }
 
   public void asynchronousStart() throws IOException {
-    ProcessBuilder processBuilder = new ProcessBuilder(command);
-    processBuilder.environment().putAll(determineEnvironment());
-    process = processBuilder.start();
+    Runtime rt = Runtime.getRuntime();
+    process = rt.exec(StringUtil.join(Arrays.asList(command), " "), determineEnvironment());
 
     OutputStream stdin = process.getOutputStream();
     InputStream stdout = process.getInputStream();
@@ -95,13 +95,17 @@ public class CommandRunner {
     });
   }
 
-  private Map<String, String> determineEnvironment() {
+  private String[] determineEnvironment() {
     if (environmentVariables == null) {
-      return Collections.emptyMap();
+      return null;
     }
     Map<String, String> systemVariables = new HashMap<String, String>(System.getenv());
     systemVariables.putAll(environmentVariables);
-    return systemVariables;
+    List<String> systemVariableAssignments = new ArrayList<String>();
+    for (Map.Entry<String, String> entry : systemVariables.entrySet()) {
+      systemVariableAssignments.add(entry.getKey() + "=" + entry.getValue());
+    }
+    return systemVariableAssignments.toArray(new String[systemVariableAssignments.size()]);    
   }
 
   public void join() {

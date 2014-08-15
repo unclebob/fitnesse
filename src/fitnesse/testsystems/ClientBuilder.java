@@ -1,9 +1,11 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fitnesse.wiki.ReadOnlyPageData;
 
@@ -104,7 +106,15 @@ public abstract class ClientBuilder<T> {
   }
 
   private String[] parseCommandLine(String commandLine) {
-    return commandLine.split(" ");
+		ArrayList<String> result = new ArrayList<String>();
+		Pattern p = Pattern.compile("\"[^\"]*\"["+System.getProperty("path.separator")+"]?|\\S+");
+		Matcher m = p.matcher(commandLine);
+		while(m.find())
+		{
+		  String token = m.group( 0 );   
+		  result.add(token);
+		}
+		return result.toArray(new String[result.size()]); 
   }
 
   public Map<String, String> createClasspathEnvironment(String classPath) {
