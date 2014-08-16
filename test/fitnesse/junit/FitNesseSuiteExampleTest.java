@@ -3,12 +3,17 @@ package fitnesse.junit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import fitnesse.junit.FitNesseRunner.FitnesseDir;
+import fitnesse.junit.FitNesseSuite.Name;
+import fitnesse.junit.FitNesseRunner.OutputDir;
+import fitnesse.junit.FitNesseRunner.ConfigFile;
+
 
 @RunWith(FitNesseSuite.class)
-@FitNesseSuite.Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
-@FitNesseSuite.FitnesseDir(".")
-@FitNesseSuite.OutputDir("tmp")
-@FitNesseSuite.ConfigFile("plugins.properties")
+@Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
+@FitnesseDir(".")
+@OutputDir("tmp")
+@ConfigFile("plugins.properties")
 public class FitNesseSuiteExampleTest {
 
   @Test
