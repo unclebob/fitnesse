@@ -75,7 +75,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
 
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(true, testPages.contains(testPage));
@@ -88,7 +88,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
     
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(testPage, testPages.get(0));

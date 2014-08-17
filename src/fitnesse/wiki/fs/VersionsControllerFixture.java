@@ -30,7 +30,7 @@ public class VersionsControllerFixture {
   }
 
   public void createWikiRoot() {
-    rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
+    rootPage = pageFactory.makePage(new File(TEST_DIR, "RooT"), "RooT", null);
   }
 
   public WikiPage getRootPage() {
@@ -61,8 +61,8 @@ public class VersionsControllerFixture {
 
   public String contentForRevision(int n) {
     List<VersionInfo> versions = new ArrayList<VersionInfo>(lastUsedPage.getVersions());
-    PageData data = lastUsedPage.getDataVersion(versions.get(versions.size() - 1 - n).getName());
-    return data.getContent();
+    WikiPage page = lastUsedPage.getVersion(versions.get(versions.size() - 1 - n).getName());
+    return page.getData().getContent();
   }
 
   public boolean initialiseGitRepository() throws GitAPIException {

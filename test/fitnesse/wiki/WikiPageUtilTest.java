@@ -2,10 +2,13 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class WikiPageUtilTest {
@@ -26,6 +29,15 @@ public class WikiPageUtilTest {
   @Test( expected = IllegalArgumentException.class )
   public void shouldOnlyHandleFileUris() throws IOException {
     assertThat(WikiPageUtil.resolveFileUri("jiberish:/tmp/someFile", new File(".")), equalTo(new File (new File(".").getCanonicalFile(), "/tmp/someFile")));
+  }
+
+
+  @Test
+  public void testGetCrossReferences() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
+    List<?> xrefs = WikiPageUtil.getXrefPages(page);
+    assertEquals("XrefPage", xrefs.get(0));
   }
 
 }

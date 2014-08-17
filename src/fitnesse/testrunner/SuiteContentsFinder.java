@@ -23,23 +23,8 @@ public class SuiteContentsFinder {
     testPageList = new LinkedList<WikiPage>();
   }
 
-  public List<WikiPage> makePageList() {
-    getAllPagesToRunForThisSuite();
-
-    if (testPageList.isEmpty()) {
-      String name = new WikiPagePath(pageToRun).toString();
-      WikiPageDummy dummy = new WikiPageDummy("",
-        "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n"
-      );
-      dummy.setParent(wikiRootPage);
-      testPageList.add(dummy);
-    }
-    return testPageList;
-  }
-
-
   public List<WikiPage> getAllPagesToRunForThisSuite() {
-    String content = pageToRun.getData().getHtml();
+    String content = pageToRun.getHtml();
     //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
@@ -119,8 +104,7 @@ public class SuiteContentsFinder {
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
-    ReadOnlyPageData data = thePage.readOnlyData();
-    List<String> pageReferences = data.getXrefPages();
+    List<String> pageReferences = WikiPageUtil.getXrefPages(thePage);
     WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath();
     WikiPage parent = wikiRootPage.getPageCrawler().getPage(testPagePath.parentPath());
     for (String pageReference : pageReferences) {

@@ -30,7 +30,7 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!define TEST_SYSTEM {system}\n" +
                     "!define TEST_RUNNER {runner}\n");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("system", testSystemType);
   }
@@ -40,7 +40,7 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!define TEST_SYSTEM {system:A}\n" +
                     "!define TEST_RUNNER {runner}\n");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("system", testSystemType);
   }
@@ -49,7 +49,7 @@ public class WikiPageDescriptorTest {
   @Test
   public void buildTestSystemTypeIsFit() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, false, false, new ClassPathBuilder().getClasspath(testPage));
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("fit", testSystemType);
   }
@@ -69,7 +69,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("test.property", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page, false, false, getClassPath(page));
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
     assertEquals("bar", descriptor.getVariable("test.property"));
   }
@@ -80,7 +80,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("TEST_PROPERTY", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page, false, false, getClassPath(page));
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
   }
 

@@ -41,7 +41,7 @@ public class ScenarioAndDecisionTableTest {
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);

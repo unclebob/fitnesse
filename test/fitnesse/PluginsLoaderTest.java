@@ -30,6 +30,8 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wikitext.parser.ParseSpecification;
 import fitnesse.wikitext.parser.ScanString;
@@ -165,6 +167,15 @@ public class PluginsLoaderTest {
   }
 
   @Test
+  public void testWikiPageFactoryCreation() throws Exception {
+    testProperties.setProperty(ConfigurationParameter.WIKI_PAGE_FACTORIES.getKey(), FooWikiPageFactory.class.getName());
+
+    FileSystemPageFactory wikiPageFactory = mock(FileSystemPageFactory.class);
+    loader.loadWikiPageFactories(wikiPageFactory);
+    verify(wikiPageFactory).registerWikiPageFactory(any(FooWikiPageFactory.class));
+  }
+
+  @Test
   public void testSlimTablesCreation() throws PluginException {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
@@ -267,6 +278,19 @@ public class PluginsLoaderTest {
     @Override
     public TestSystem create(Descriptor descriptor) throws IOException {
       return null;
+    }
+  }
+
+  public static class FooWikiPageFactory implements WikiPageFactory {
+
+    @Override
+    public WikiPage makePage(File path, String pageName, WikiPage parent) {
+      return null;
+    }
+
+    @Override
+    public boolean supports(File path) {
+      return false;
     }
   }
 }

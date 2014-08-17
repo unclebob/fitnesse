@@ -69,7 +69,7 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
   }
 
   private Description descriptionFor(WikiTestPage test) {
-    return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
+    return Description.createTestDescription(mainClass, test.getFullPath());
   }
 
   String createMessage(TestResult testResult) {

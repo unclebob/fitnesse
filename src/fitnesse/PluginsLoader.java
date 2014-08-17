@@ -21,6 +21,8 @@ import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiPageFactoryRegistrar;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
@@ -123,6 +125,22 @@ public class PluginsLoader {
         Class<SymbolType> symbolTypeClass = forName(symbolTypeName.trim());
         symbolProvider.add(componentFactory.createComponent(symbolTypeClass));
         LOG.info("Loaded SymbolType " + symbolTypeClass.getName());
+      }
+    }
+  }
+
+  public void loadWikiPageFactories(WikiPageFactory wikiPageFactory) throws PluginException {
+    String[] factoryNames = getListFromProperties(ConfigurationParameter.WIKI_PAGE_FACTORIES);
+    if (factoryNames != null) {
+      if (!(wikiPageFactory instanceof WikiPageFactoryRegistrar)) {
+        LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
+        return;
+      }
+      WikiPageFactoryRegistrar registrar = (WikiPageFactoryRegistrar) wikiPageFactory;
+      for (String factoryName : factoryNames) {
+        Class<WikiPageFactory> factory = forName(factoryName.trim());
+        registrar.registerWikiPageFactory(componentFactory.createComponent(factory));
+        LOG.info("Loaded WikiPageFactory " + factory.getName());
       }
     }
   }

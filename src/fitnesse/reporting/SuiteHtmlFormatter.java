@@ -83,8 +83,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
-    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
-    String fullPathName = PathParser.render(fullPath);
+    String fullPathName = testPage.getFullPath();
 
     announceStartNewTest(getRelativeName(), fullPathName);
   }

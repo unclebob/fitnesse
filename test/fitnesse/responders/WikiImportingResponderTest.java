@@ -273,7 +273,7 @@ public class WikiImportingResponderTest {
     MockRequest request = makeRequest(baseUrl);
     responder.setRequest(request);
     responder.page = new WikiPageDummy();
-    responder.data = new PageData(responder.page);
+    responder.data = responder.page.getData();
 
     responder.initializeImporter();
     assertFalse(importer.getAutoUpdateSetting());

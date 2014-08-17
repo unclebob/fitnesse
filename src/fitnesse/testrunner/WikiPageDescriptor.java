@@ -4,19 +4,20 @@ import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
 /**
  * Define a (hashable) extract of the test page, to be used as input for building the test system.
  */
 public class WikiPageDescriptor implements Descriptor {
 
-  private final ReadOnlyPageData data;
+  private final WikiPage page;
   private final boolean inProcess;
   private final boolean remoteDebug;
   private final String classPath;
 
-  public WikiPageDescriptor(ReadOnlyPageData data, boolean inProcess, boolean remoteDebug, String classPath) {
-    this.data = data;
+  public WikiPageDescriptor(WikiPage data, boolean inProcess, boolean remoteDebug, String classPath) {
+    this.page = data;
     this.inProcess = inProcess;
     // Debug property should move to ClientBuilder
     this.remoteDebug = remoteDebug;
@@ -54,7 +55,7 @@ public class WikiPageDescriptor implements Descriptor {
   // Generic entry point for everything the test system needs to know.
   @Override
   public String getVariable(String name) {
-    return data.getVariable(name);
+    return page.getVariable(name);
   }
 
   @Override

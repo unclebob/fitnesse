@@ -77,7 +77,7 @@ public class WikiWordTest {
       PageData data = referer.getData();
       data.setContent("<TargetPage.SubTarget");
       referer.commit(data);
-      String renderedLink = referer.getData().getHtml();
+      String renderedLink = referer.getHtml();
       assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
     }
 

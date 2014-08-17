@@ -22,6 +22,7 @@ import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,10 +34,12 @@ public class SymbolicLinkResponderTest {
   private WikiPage childTwo;
   private MockRequest request;
   private Responder responder;
+  private MemoryFileSystem fileSystem;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");          //#  root
+    fileSystem = new MemoryFileSystem();
+    root = InMemoryPage.makeRoot("RooT", fileSystem);          //#  root
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");       //#    |--PageOne
     WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");   //#    |    `--ChildOne
     WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
@@ -266,8 +269,11 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
+    // Check both file system (used by responder) and in memory FS (used by page factory).
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
+    fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
+    fileSystem.makeDirectory(new File("testDir/ExternalRoot").getCanonicalFile());
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "file://testDir/ExternalRoot");
@@ -281,7 +287,7 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalPath(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
