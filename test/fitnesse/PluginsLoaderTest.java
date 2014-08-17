@@ -16,7 +16,8 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testrunner.MultipleTestSystemFactory;
+import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
@@ -211,7 +212,7 @@ public class PluginsLoaderTest {
   @Test
   public void testTestSystemCreation() throws PluginException {
     testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS.getKey(), "foo:" + FooTestSystemFactory.class.getName());
-    TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
+    TestSystemFactoryRegistry registrar = mock(TestSystemFactoryRegistry.class);
     loader.loadTestSystems(registrar);
 
     verify(registrar).registerTestSystemFactory(eq("foo"), any(TestSystemFactory.class));

@@ -8,7 +8,6 @@ import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.fit.CommandRunningFitClient;
-import fitnesse.testsystems.fit.FitClient;
 import fitnesse.testsystems.fit.FitClientBuilder;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
@@ -19,7 +18,7 @@ import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
-public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistrar {
+public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
   private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<String, TestSystemFactory>(4);
 

@@ -15,14 +15,14 @@ import fitnesse.components.ComponentInstantiationException;
 import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.WikiPageFactoryRegistrar;
+import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
@@ -132,11 +132,11 @@ public class PluginsLoader {
   public void loadWikiPageFactories(WikiPageFactory wikiPageFactory) throws PluginException {
     String[] factoryNames = getListFromProperties(ConfigurationParameter.WIKI_PAGE_FACTORIES);
     if (factoryNames != null) {
-      if (!(wikiPageFactory instanceof WikiPageFactoryRegistrar)) {
+      if (!(wikiPageFactory instanceof WikiPageFactoryRegistry)) {
         LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
         return;
       }
-      WikiPageFactoryRegistrar registrar = (WikiPageFactoryRegistrar) wikiPageFactory;
+      WikiPageFactoryRegistry registrar = (WikiPageFactoryRegistry) wikiPageFactory;
       for (String factoryName : factoryNames) {
         Class<WikiPageFactory> factory = forName(factoryName.trim());
         registrar.registerWikiPageFactory(componentFactory.createComponent(factory));
@@ -171,7 +171,7 @@ public class PluginsLoader {
     });
   }
 
-  public void loadTestSystems(final TestSystemFactoryRegistrar registrar) throws PluginException {
+  public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
     forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar<TestSystemFactory>() {
       @Override public void register(String key, Class<TestSystemFactory> clazz) {
         registrar.registerTestSystemFactory(key, componentFactory.createComponent(clazz));

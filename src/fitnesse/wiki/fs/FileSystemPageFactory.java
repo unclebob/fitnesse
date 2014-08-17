@@ -8,7 +8,7 @@ import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.WikiPageFactoryRegistrar;
+import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, WikiPageFactoryRegistrar {
+public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, WikiPageFactoryRegistry {
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
   private final VariableSource variableSource;

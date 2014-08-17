@@ -1,5 +1,5 @@
 package fitnesse.wiki;
 
-public interface WikiPageFactoryRegistrar {
+public interface WikiPageFactoryRegistry {
   void registerWikiPageFactory(WikiPageFactory wikiPageFactory);
 }
