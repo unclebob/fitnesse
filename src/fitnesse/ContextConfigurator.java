@@ -17,6 +17,7 @@ import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
@@ -110,7 +111,7 @@ public class ContextConfigurator {
       root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null);
     }
 
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
 
     if (logger == null) {
       logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
@@ -140,7 +141,8 @@ public class ContextConfigurator {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    WikiPageFactoryRegistry wikiPageFactoryRegistry = (WikiPageFactoryRegistry) wikiPageFactory;
+    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider, wikiPageFactoryRegistry, testSystemFactory, slimTableFactory, customComparatorRegistry);
     pluginsLoader.loadResponders(context.responderFactory);
     pluginsLoader.loadWikiPageFactories(wikiPageFactory);
     pluginsLoader.loadTestSystems(testSystemFactory);

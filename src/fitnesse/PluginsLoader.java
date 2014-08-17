@@ -30,51 +30,48 @@ public class PluginsLoader {
   private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
-  private final Properties properties;
 
-  public PluginsLoader(ComponentFactory componentFactory, Properties properties) {
+  public PluginsLoader(ComponentFactory componentFactory) {
     this.componentFactory = componentFactory;
-    this.properties = properties;
   }
 
-  public void loadPlugins(ResponderFactory responderFactory, SymbolProvider symbolProvider) throws PluginException {
-    String[] responderPlugins = getListFromProperties(ConfigurationParameter.PLUGINS);
-    if (responderPlugins != null) {
-      for (String responderPlugin : responderPlugins) {
-        Class<?> pluginClass = forName(responderPlugin);
-        loadRespondersFromPlugin(pluginClass, responderFactory);
-        loadSymbolTypesFromPlugin(pluginClass, symbolProvider);
+  public void loadPlugins(ResponderFactory responderFactory,
+                          SymbolProvider symbolProvider,
+                          WikiPageFactoryRegistry wikiPageFactoryRegistry,
+                          TestSystemFactoryRegistry testSystemFactoryRegistry,
+                          SlimTableFactory slimTableFactory,
+                          CustomComparatorRegistry customComparatorRegistry) throws PluginException {
+    String[] plugins = getListFromProperties(ConfigurationParameter.PLUGINS);
+    if (plugins != null) {
+      for (String pluginName : plugins) {
+        Class<?> pluginClass = forName(pluginName);
+        Object plugin = componentFactory.createComponent(pluginClass);
+        register(plugin, "registerResponders", ResponderFactory.class, responderFactory);
+        register(plugin, "registerSymbolTypes", SymbolProvider.class, symbolProvider);
+        register(plugin, "registerWikiPageFactories", WikiPageFactoryRegistry.class, wikiPageFactoryRegistry);
+        register(plugin, "registerTestSystemFactories", TestSystemFactoryRegistry.class, testSystemFactoryRegistry);
+        register(plugin, "registerSlimTableFactories", SlimTableFactory.class, slimTableFactory);
+        register(plugin, "registerCustomComparatorRegistries", CustomComparatorRegistry.class, customComparatorRegistry);
       }
     }
   }
 
-  private void loadRespondersFromPlugin(Class<?> pluginClass, ResponderFactory responderFactory)
-    throws PluginException {
-    try {
-      Method method = pluginClass.getMethod("registerResponders", ResponderFactory.class);
-      method.invoke(pluginClass, responderFactory);
-      LOG.info("Loaded responder: " + pluginClass.getName());
-    } catch (NoSuchMethodException e) {
-      // ok, no responders to register in this plugin
-    } catch (InvocationTargetException e) {
-      throw new PluginException("Unable to execute method registerResponders", e);
-    } catch (IllegalAccessException e) {
-      throw new PluginException("Unable to execute method registerResponders", e);
-    }
-  }
-
-  private void loadSymbolTypesFromPlugin(Class<?> pluginClass, SymbolProvider symbolProvider)
+  private <T> void register(Object plugin, String methodName, Class<T> registrarType, T registrar)
           throws PluginException {
+    Method method;
     try {
-      Method method = pluginClass.getMethod("registerSymbolTypes", SymbolProvider.class);
-      method.invoke(pluginClass, symbolProvider);
-      LOG.info("Loaded SymbolType: " + pluginClass.getName());
+      method = plugin.getClass().getMethod(methodName, registrarType);
     } catch (NoSuchMethodException e) {
       // ok, no widgets to register in this plugin
+      return;
+    }
+
+    try {
+      method.invoke(plugin, registrar);
     } catch (InvocationTargetException e) {
-      throw new PluginException("Unable to execute method registerSymbolTypes", e);
+      throw new PluginException("Unable to execute method " + methodName, e);
     } catch (IllegalAccessException e) {
-      throw new PluginException("Unable to execute method registerSymbolTypes", e);
+      throw new PluginException("Unable to execute method " + methodName, e);
     }
   }
 
@@ -88,7 +85,7 @@ public class PluginsLoader {
   }
 
   private String[] getListFromProperties(ConfigurationParameter propertyName) {
-    String value = properties.getProperty(propertyName.getKey());
+    String value = componentFactory.getProperty(propertyName.getKey());
     if (value == null)
       return null;
     else
