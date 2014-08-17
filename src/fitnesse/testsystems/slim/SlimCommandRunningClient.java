@@ -10,6 +10,7 @@ import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.ExecutionLogListener;
+import org.apache.commons.lang.StringUtils;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -188,16 +189,19 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   private int getLengthToRead() throws IOException  {
-	String resultLength = reader.read(6);
-    reader.read(1);
-    int length = 0;
+    String length = reader.read(6);
     try {
-    	length = Integer.parseInt(resultLength);
+      Integer resultLength = Integer.parseInt(length);
+
+      String next;
+      while (StringUtils.isNumeric(next = reader.read(1)))
+        resultLength = resultLength * 10 + Integer.valueOf(next);
+
+      return resultLength;
     }
     catch (NumberFormatException e){
-    	throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+      throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + length);
     }
-	return length;
   }
 
   protected void writeString(String string) throws IOException {

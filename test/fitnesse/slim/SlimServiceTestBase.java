@@ -9,6 +9,7 @@ import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,6 +144,23 @@ public abstract class SlimServiceTestBase {
     statements.add(new CallInstruction("id", "testSlim", "noSuchFunction"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("message:<<NO_METHOD_IN_CLASS", "id", results);
+  }
+
+  @Test
+  public void callFunctionThatReturnsHugeResult() throws Exception {
+    addImportAndMake();
+    statements.add(new CallInstruction("id", "testSlim", "returnHugeString"));
+    slimClient.invokeAndGetResponse(statements);
+    // should not crash
+  }
+
+  @Test
+  public void callFunctionWithHugeParameter() throws Exception {
+    addImportAndMake();
+    String hugeString = StringUtils.repeat("x", 999999 + 10);
+    statements.add(new CallInstruction("id", "testSlim", "echoString", new Object[] {hugeString}));
+    Map<String, Object> result = slimClient.invokeAndGetResponse(statements);
+    assertEquals(hugeString, result.get("id"));
   }
 
   private void assertContainsException(String message, String id, Map<String, Object> results) {
