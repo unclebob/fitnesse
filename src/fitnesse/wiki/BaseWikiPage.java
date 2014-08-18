@@ -6,6 +6,7 @@ import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
@@ -64,22 +65,32 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
-  @Override
-  public ParsedPage getParsedPage() {
+  protected final ParsedPage getParsedPage() {
     if (parsedPage == null) {
       parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
     }
     return parsedPage;
   }
 
+
+  @Override
+  public String getHtml() {
+    return getParsedPage().toHtml();
+  }
+
   protected void resetParsedPage() {
     parsedPage = null;
   }
 
-  protected ParsingPage getParsingPage() {
+  @Override
+  public ParsingPage getParsingPage() {
     return getParsedPage().getParsingPage();
   }
 
+  @Override
+  public Symbol getSyntaxTree() {
+    return getParsedPage().getSyntaxTree();
+  }
 
   public String toString() {
     return this.getClass().getName() + ": " + name;

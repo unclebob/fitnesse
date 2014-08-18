@@ -11,6 +11,7 @@ import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Maybe;
@@ -85,22 +86,23 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  public String getHtml() {
-    return WikiPageUtil.makeHtml(this, realPage.getData());
-  }
-
-  @Override
   public VersionInfo commit(PageData data) {
     return realPage.commit(data);
   }
 
   @Override
-  public ParsedPage getParsedPage() {
+  public ParsingPage getParsingPage() {
     if (realPage instanceof WikitextPage) {
-      return super.getParsedPage();
-    } else {
-      // Default to an empty page for non-wikitext pages.
-      return new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), "");
+      return super.getParsingPage();
     }
+    return null;
+  }
+
+  @Override
+  public Symbol getSyntaxTree() {
+    if (realPage instanceof WikitextPage) {
+      return super.getSyntaxTree();
+    }
+    return Symbol.emptySymbol;
   }
 }

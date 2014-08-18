@@ -222,11 +222,6 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public String getHtml() {
-    return getParsedPage().toHtml();
-  }
-
-  @Override
   public String toString() {
     try {
       return getClass().getName() + " at " + this.getFileSystemPath() + "#" + (versionName != null ? versionName : "latest");

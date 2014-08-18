@@ -124,8 +124,7 @@ public class WikiPageUtil {
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
       final ArrayList<String> xrefPages = new ArrayList<String>();
-      ParsedPage parsedPage = ((WikitextPage) page).getParsedPage();
-      parsedPage.getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
         @Override
         public boolean visit(Symbol node) {
           if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());

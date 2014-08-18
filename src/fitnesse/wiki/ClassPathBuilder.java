@@ -11,7 +11,6 @@ import java.util.Set;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.Symbol;
@@ -153,9 +152,8 @@ public class ClassPathBuilder {
 
   protected List<String> getItemsFromPage(WikiPage page) {
     if (page instanceof WikitextPage) {
-      ParsedPage parsedPage = ((WikitextPage) page).getParsedPage();
-      Symbol tree = parsedPage.getSyntaxTree();
-      ParsingPage parsingPage = parsedPage.getParsingPage();
+      Symbol tree = ((WikitextPage) page).getSyntaxTree();
+      ParsingPage parsingPage = ((WikitextPage) page).getParsingPage();
       return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);
     }
     return Collections.emptyList();

@@ -6,33 +6,20 @@ public class ParsedPage {
     this.content = content;
   }
 
-  public ParsedPage(ParsedPage sourceParsedPage, String content) {
-    parsingPage = sourceParsedPage.getParsingPage().copy();
-    this.content = content;
-  }
-
   public Symbol getSyntaxTree() {
-    parseContent();
+    if (syntaxTree == null) {
+      syntaxTree = Parser.make(parsingPage, content).parse();
+    }
     return syntaxTree;
   }
 
   public ParsingPage getParsingPage() {
-      parseContent();
-      return parsingPage;
-  }
-
-  public void addToFront(ParsedPage addFromPage) {
-    getSyntaxTree().addToFront(addFromPage.getSyntaxTree().childAt(0));
+    getSyntaxTree();
+    return parsingPage;
   }
 
   public String toHtml() {
     return new HtmlTranslator(getParsingPage().getPage(), getParsingPage()).translateTree(getSyntaxTree());
-  }
-
-  private void parseContent() {
-    if (syntaxTree == null) {
-        syntaxTree = Parser.make(parsingPage, content).parse();
-    }
   }
 
   private final String content;
