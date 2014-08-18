@@ -33,19 +33,23 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     this.parent = parent;
     this.variableSource = variableSource;
   }
+
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl(this);
   }
 
+  @Override
   public BaseWikiPage getParent() {
     return parent == null ? this : parent;
   }
 
-
+  @Override
   public boolean isRoot() {
     return parent == null || parent == this;
   }
@@ -65,7 +69,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
-  protected final ParsedPage getParsedPage() {
+  private ParsedPage getParsedPage() {
     if (parsedPage == null) {
       parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
     }
@@ -78,7 +82,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return getParsedPage().toHtml();
   }
 
-  protected void resetParsedPage() {
+  protected void resetCache() {
     parsedPage = null;
   }
 
@@ -92,10 +96,12 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return getParsedPage().getSyntaxTree();
   }
 
+  @Override
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }
 
+  @Override
   public int compareTo(Object o) {
     try {
       return getPageCrawler().getFullPath().compareTo(((WikiPage) o).getPageCrawler().getFullPath());
@@ -105,6 +111,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o)
       return true;
@@ -118,6 +125,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
   }
 
+  @Override
   public int hashCode() {
     try {
       return getPageCrawler().getFullPath().hashCode();

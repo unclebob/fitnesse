@@ -91,6 +91,22 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
+  public String getVariable(String name) {
+    if (realPage instanceof WikitextPage) {
+      return super.getVariable(name);
+    }
+    return realPage.getVariable(name);
+  }
+
+  @Override
+  public String getHtml() {
+    if (realPage instanceof WikitextPage) {
+      return super.getHtml();
+    }
+    return realPage.getHtml();
+  }
+
+  @Override
   public ParsingPage getParsingPage() {
     if (realPage instanceof WikitextPage) {
       return super.getParsingPage();

@@ -86,13 +86,6 @@ public class WikiPageUtil {
     return buffer.toString();
   }
 
-  public static String makeHtml(WikiPage wikiPage, VariableSource variableSource) {
-    String content = wikiPage.getData().getContent();
-    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
-    return parsedPage.toHtml();
-  }
-
-
   public static String makeHtml(final WikiPage context, ReadOnlyPageData data) {
     String content = data.getContent();
     ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(context), new VariableSource() {

@@ -54,6 +54,14 @@ public class BaseWikiPageTest {
     checkSymbolicPage(linkingPage.getChildPage("SymLink"));
   }
 
+
+  @Test
+  public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SpecialChars"), "<b>");
+    String html = page.getHtml();
+    assertEquals("&lt;b&gt;", html);
+  }
+
   @Test
   public void testCanCreateSymLinksToExternalDirectories() throws Exception {
     fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
