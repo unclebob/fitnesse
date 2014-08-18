@@ -7,14 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Maybe;
 
 public class SymbolicPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;

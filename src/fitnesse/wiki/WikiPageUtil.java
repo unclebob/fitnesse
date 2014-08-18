@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestPage;
-import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
@@ -86,16 +86,19 @@ public class WikiPageUtil {
     return buffer.toString();
   }
 
+  @Deprecated
   public static String makeHtml(final WikiPage context, ReadOnlyPageData data) {
     String content = data.getContent();
-    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(context), new VariableSource() {
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(context), new VariableSource() {
       @Override
       public Maybe<String> findVariable(String name) {
         String value = context.getVariable(name);
         return value != null ? new Maybe<String>(value) : Maybe.noString;
       }
-    }), content);
-    return parsedPage.toHtml();
+    });
+    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
+    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
+
   }
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {

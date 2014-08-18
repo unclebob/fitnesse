@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
@@ -18,7 +17,8 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private final String name;
   private final BaseWikiPage parent;
   private final VariableSource variableSource;
-  private ParsedPage parsedPage;
+  private ParsingPage parsingPage;
+  private Symbol syntaxTree;
 
   protected BaseWikiPage(String name, VariableSource variableSource) {
     this(name, null, variableSource);
@@ -69,31 +69,33 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
   }
 
-  private ParsedPage getParsedPage() {
-    if (parsedPage == null) {
-      parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), getData().getContent());
-    }
-    return parsedPage;
-  }
-
-
   @Override
   public String getHtml() {
-    return getParsedPage().toHtml();
-  }
-
-  protected void resetCache() {
-    parsedPage = null;
+    return new HtmlTranslator(getParsingPage().getPage(), getParsingPage()).translateTree(getSyntaxTree());
   }
 
   @Override
   public ParsingPage getParsingPage() {
-    return getParsedPage().getParsingPage();
+    parse();
+    return parsingPage;
   }
 
   @Override
   public Symbol getSyntaxTree() {
-    return getParsedPage().getSyntaxTree();
+    parse();
+    return syntaxTree;
+  }
+
+  private void parse() {
+    if (syntaxTree == null) {
+      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
+      syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
+    }
+  }
+
+  protected void resetCache() {
+    parsingPage = null;
+    syntaxTree = null;
   }
 
   @Override
