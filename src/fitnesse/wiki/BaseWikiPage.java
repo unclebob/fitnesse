@@ -15,7 +15,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private static final long serialVersionUID = 1L;
 
   private final String name;
-  private final BaseWikiPage parent;
+  private final WikiPage parent;
   private final VariableSource variableSource;
   private ParsingPage parsingPage;
   private Symbol syntaxTree;
@@ -24,11 +24,11 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     this(name, null, variableSource);
   }
 
-  protected BaseWikiPage(String name, BaseWikiPage parent) {
-    this(name, parent, parent.variableSource);
+  protected BaseWikiPage(String name, WikiPage parent) {
+    this(name, parent, parent instanceof BaseWikiPage ? ((BaseWikiPage) parent).variableSource : null);
   }
 
-  protected BaseWikiPage(String name, BaseWikiPage parent, VariableSource variableSource) {
+  protected BaseWikiPage(String name, WikiPage parent, VariableSource variableSource) {
     this.name = name;
     this.parent = parent;
     this.variableSource = variableSource;
@@ -45,7 +45,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   }
 
   @Override
-  public BaseWikiPage getParent() {
+  public WikiPage getParent() {
     return parent == null ? this : parent;
   }
 

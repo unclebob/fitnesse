@@ -17,7 +17,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   private final WikiPage realPage;
 
-  public SymbolicPage(String name, WikiPage realPage, BaseWikiPage parent) {
+  public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
     super(name, parent);
     this.realPage = realPage;
     // Perform a cyclic dependency check
