@@ -37,7 +37,7 @@ public class ScriptTableTest {
   private List<SlimAssertion> assertions;
   public ScriptTable st;
 
-  private class LocalizedScriptTable extends ScriptTable {
+  static class LocalizedScriptTable extends ScriptTable {
 
     public LocalizedScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);

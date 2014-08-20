@@ -40,7 +40,11 @@ public class ScenarioAndScriptTableTest {
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);
-    script = new ScriptTable(t, "id", testContext);
+    if (t.getCellContents(0,0).equals("script")) {
+      script = new ScriptTable(t, "id", testContext);
+    } else {
+      script = new ScriptTableTest.LocalizedScriptTable(t, "id", testContext);
+    }
     assertions.addAll(st.getAssertions());
     assertions.addAll(script.getAssertions());
     return testContext;
@@ -63,6 +67,22 @@ public class ScenarioAndScriptTableTest {
       list(
               new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
       );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
+  public void oneInputDifferentScriptClass() throws Exception {
+    makeTables(
+            "!|scenario|myScenario|input|\n" +
+                    "|function|@input|\n" +
+                    "\n" +
+                    "!|localisedScript|\n" +
+                    "|myScenario|7|\n"
+    );
+    List<CallInstruction> expectedInstructions =
+            list(
+                    new CallInstruction("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "localizedScriptTableActor", "function", new Object[]{"7"})
+            );
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -121,6 +141,33 @@ public class ScenarioAndScriptTableTest {
     String scriptTable = script.getChildren().get(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
+    assertEquals(expectedScript, scriptTable);
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
+  }
+
+  @Test
+  public void differentScriptSimpleInputAndOutputPassing() throws Exception {
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|input|giving|output|\n" +
+                    "|localized check|echo|@input|@output|\n" +
+                    "\n" +
+                    "!|localisedScript|\n" +
+                    "|echo|7|giving|7|\n"
+    );
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            list(
+                    list("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "7")
+            )
+    );
+
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+
+    String scriptTable = script.getChildren().get(0).getTable().toString();
+    String expectedScript =
+            "[[scenario, echo, input, giving, output], [localized check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     assertEquals(1, testContext.getTestSummary().getRight());
     assertEquals(0, testContext.getTestSummary().getWrong());
