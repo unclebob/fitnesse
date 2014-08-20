@@ -7,5 +7,5 @@
 An example test does not have to be in table format
 -! |
 | check | request page | TestPage?test | 200 |
-| ensure | content contains | TEST_SYSTEM {echo} |
+| ensure | content contains | TEST_SYSTEM=echo |
 | show | content |

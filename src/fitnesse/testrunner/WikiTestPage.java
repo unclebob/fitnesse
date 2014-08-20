@@ -36,25 +36,6 @@ public class WikiTestPage implements TestPage {
     return sourcePage.getData();
   }
 
-  /**
-   * Obtain one big page containing all (suite-) setUp and -tearDown content needed to run a test.
-   *
-   * @return
-   */
-  @Override
-  public ReadOnlyPageData getDecoratedData() {
-    StringBuilder decoratedContent = new StringBuilder(1024);
-    includeScenarioLibraries(decoratedContent);
-
-    decorate(getSetUp(), decoratedContent);
-
-    addPageContent(decoratedContent);
-
-    decorate(getTearDown(), decoratedContent);
-
-    return new PageData(getData(), decoratedContent.toString());
-  }
-
   @Override
   public String getHtml() {
     return WikiPageUtil.makeHtml(sourcePage, getDecoratedData());
@@ -72,6 +53,18 @@ public class WikiTestPage implements TestPage {
 
   public WikiPage getSourcePage() {
     return sourcePage;
+  }
+
+  protected String getDecoratedContent() {
+    StringBuilder decoratedContent = new StringBuilder(1024);
+    includeScenarioLibraries(decoratedContent);
+
+    decorate(getSetUp(), decoratedContent);
+
+    addPageContent(decoratedContent);
+
+    decorate(getTearDown(), decoratedContent);
+    return decoratedContent.toString();
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {

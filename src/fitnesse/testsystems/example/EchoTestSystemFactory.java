@@ -57,7 +57,7 @@ public class EchoTestSystemFactory implements TestSystemFactory {
     public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
 
       testSystemListener.testStarted(pageToTest);
-      testSystemListener.testOutputChunk("<pre>" + pageToTest.getDecoratedData().getContent() + "</pre>");
+      testSystemListener.testOutputChunk("<pre>" + pageToTest.getHtml() + "</pre>");
       testSystemListener.testComplete(pageToTest, new TestSummary(1, 0, 0, 0));
     }
 
