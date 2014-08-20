@@ -143,46 +143,12 @@ public class WikiTestPage implements TestPage {
     return getPathNameForPage(sourcePage);
   }
 
-//  @Override
-//  public WikiPage getParent() {
-//    return sourcePage.getParent();
-//  }
-//
-//  @Override
-//  public boolean isRoot() {
-//    return sourcePage.isRoot();
-//  }
-//
-//  @Override
-//  public WikiPage addChildPage(String name) {
-//    return sourcePage.addChildPage(name);
-//  }
-//
-//  @Override
-//  public boolean hasChildPage(String name) {
-//    return sourcePage.hasChildPage(name);
-//  }
-//
-//  @Override
-//  public WikiPage getChildPage(String name) {
-//    return sourcePage.getChildPage(name);
-//  }
-//
-//  @Override
-//  public void removeChildPage(String name) {
-//    sourcePage.removeChildPage(name);
-//  }
-//
-//  @Override
-//  public List<WikiPage> getChildren() {
-//    return sourcePage.getChildren();
-//  }
-
   public String getName() {
     return sourcePage.getName();
   }
 
   public boolean shouldIncludeScenarioLibraries() {
+    // Should consider all of the decorated content to resolve those variables.
     boolean isSlim = "slim".equalsIgnoreCase(sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM));
     String includeScenarioLibraries = sourcePage.getVariable("INCLUDE_SCENARIO_LIBRARIES");
     boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
