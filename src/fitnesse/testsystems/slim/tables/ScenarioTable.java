@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -191,8 +190,7 @@ public class ScenarioTable extends SlimTable {
   protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
     Class<? extends ScriptTable> parentTableClass = parentScriptTable.getClass();
     try {
-      Constructor<? extends ScriptTable> constructor = parentTableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-      return constructor.newInstance(newTable, id, testContext);
+      return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
     } catch (Exception e) {
       throw new RuntimeException("Unable to create child table of type: " + parentTableClass.getName(), e);
     }
