@@ -88,6 +88,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
 
   private void parse() {
     if (syntaxTree == null) {
+      // This is the only page where we need a VariableSource
       parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
       syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }

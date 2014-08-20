@@ -23,13 +23,15 @@ public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
 
-  private WikiPage sourcePage;
+  private final WikiPage sourcePage;
+  private final VariableSource variableSource;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
-  public WikiTestPage(WikiPage sourcePage) {
+  public WikiTestPage(WikiPage sourcePage, VariableSource variableSource) {
     this.sourcePage = sourcePage;
+    this.variableSource = variableSource;
   }
 
   public static boolean isTestPage(WikiPage page) {
@@ -46,13 +48,7 @@ public class WikiTestPage implements TestPage {
   @Override
   public String getHtml() {
     String content = getDecoratedContent();
-    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), new VariableSource() {
-      @Override
-      public Maybe<String> findVariable(String name) {
-        String value = sourcePage.getVariable(name);
-        return value != null ? new Maybe<String>(value) : Maybe.noString;
-      }
-    });
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
     Symbol syntaxTree = Parser.make(parsingPage, content).parse();
     return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
   }

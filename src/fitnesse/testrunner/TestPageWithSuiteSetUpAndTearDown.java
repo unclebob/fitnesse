@@ -3,14 +3,15 @@ package fitnesse.testrunner;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
 
   private WikiPage suiteSetUp;
   private WikiPage suiteTearDown;
 
-  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage) {
-    super(sourcePage);
+  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage, VariableSource variableSource) {
+    super(sourcePage, variableSource);
   }
 
   @Override
