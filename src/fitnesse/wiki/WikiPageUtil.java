@@ -86,21 +86,6 @@ public class WikiPageUtil {
     return buffer.toString();
   }
 
-  @Deprecated
-  public static String makeHtml(final WikiPage context, ReadOnlyPageData data) {
-    String content = data.getContent();
-    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(context), new VariableSource() {
-      @Override
-      public Maybe<String> findVariable(String name) {
-        String value = context.getVariable(name);
-        return value != null ? new Maybe<String>(value) : Maybe.noString;
-      }
-    });
-    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
-
-  }
-
   public static File resolveFileUri(String fullPageURI, File rootPath) {
     URI uri = URI.create(fullPageURI);
     try {

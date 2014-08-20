@@ -11,6 +11,13 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
@@ -38,7 +45,16 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getHtml() {
-    return WikiPageUtil.makeHtml(sourcePage, getDecoratedData());
+    String content = getDecoratedContent();
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), new VariableSource() {
+      @Override
+      public Maybe<String> findVariable(String name) {
+        String value = sourcePage.getVariable(name);
+        return value != null ? new Maybe<String>(value) : Maybe.noString;
+      }
+    });
+    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
+    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
   }
 
   @Override
