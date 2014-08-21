@@ -149,7 +149,7 @@ In case there are situations where you can not get your tests working with the d
 !3 !-Plug-ins-!
 ''required property:'' '''!-Plugins-! = <class name>[,<class name>]'''
 
-''motivation:'' Register multiple Responders, symbol types, !-WikiPage-! factories, test systems, Sim tables or comparators from a single Java class, instead of multiple entries in plugins.properties.
+''motivation:'' Register multiple Responders, symbol types, !-WikiPage-! factories, test systems, Slim tables or comparators from a single Java class, instead of multiple entries in plugins.properties.
 
 Plugins classes can provide one or more of the following methods to register components:
 
