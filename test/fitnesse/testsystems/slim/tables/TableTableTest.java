@@ -46,7 +46,7 @@ public class TableTableTest {
 
   private TableTable makeTableTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     return new TableTable(t, "id", testContext);

@@ -28,14 +28,13 @@ public class JavaFormatterTest {
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
     WikiTestPage wp = buildNestedTestPage();
-    assertEquals(nestedPageName, jf.getFullPath(wp.getSourcePage()));
+    assertEquals(nestedPageName, wp.getFullPath());
   }
 
   private WikiTestPage buildNestedTestPage() throws Exception {
-    WikiPageDummy wp=new WikiPageDummy("ChildTest",null);
-    WikiPageDummy parent=new WikiPageDummy("ParentTest",null);
-    wp.setParent(parent);
-    parent.setParent(new WikiPageDummy("root", null));
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy parent=new WikiPageDummy("ParentTest",null, root);
+    WikiPageDummy wp=new WikiPageDummy("ChildTest",null, parent);
     return new WikiTestPage(wp);
   }
 
@@ -57,8 +56,8 @@ public class JavaFormatterTest {
   @Test
   public void writeSummary_WritesSummaryOfTestExecutions() throws Exception{
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
-    secondPage.setParent(new WikiPageDummy("root", null));
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null, root);
     jf.testComplete(new WikiTestPage(secondPage), new TestSummary(11,12,13,14));
     jf.writeSummary("SummaryPageName");
     String expectedOutput = new StringBuffer()
@@ -73,8 +72,8 @@ public class JavaFormatterTest {
 
   @Test
   public void testComplete_clones_TestSummary_Objects() throws Exception{
-    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
-    secondPage.setParent(new WikiPageDummy("root", null));
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null, root);
 
     TestSummary ts=new TestSummary(5,6,7,8);
     jf.testComplete(buildNestedTestPage(), ts);

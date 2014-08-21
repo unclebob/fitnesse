@@ -25,6 +25,7 @@ public enum ConfigurationParameter {
   INSTALL_ONLY("InstallOnly"),
   COMMAND("Command"),
   WIKI_PAGE_FACTORY_CLASS("WikiPageFactory"),
+  WIKI_PAGE_FACTORIES("WikiPageFactories"),
   PLUGINS("Plugins"),
   RESPONDERS("Responders"),
   TEST_SYSTEMS("TestSystems"),

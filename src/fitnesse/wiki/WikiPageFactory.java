@@ -1,5 +1,10 @@
 package fitnesse.wiki;
 
-public interface WikiPageFactory {
-  WikiPage makeRootPage(String path, String pageName);
+import java.io.File;
+
+public interface WikiPageFactory<T extends WikiPage> {
+
+  WikiPage makePage(File path, String pageName, T parent);
+
+  boolean supports(File path);
 }

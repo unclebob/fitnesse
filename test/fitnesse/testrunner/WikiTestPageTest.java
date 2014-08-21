@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.*;
 
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
@@ -42,7 +43,7 @@ public class WikiTestPageTest {
   public void testIncludeSetupTearDownOutsideOfSuite()
     throws Exception {
     TestPage testPage = new WikiTestPage(wikiPage);
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -58,7 +59,7 @@ public class WikiTestPageTest {
   @Test
   public void testIncludeSetupTearDownInsideOfSuite() throws Exception {
     TestPage test = new TestPageWithSuiteSetUpAndTearDown(wikiPage);
-    String html = test.getDecoratedData().getHtml();
+    String html = test.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -78,7 +79,7 @@ public class WikiTestPageTest {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
     TestPage testPage = new WikiTestPage(slimTestPage);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString("scenario library", html);
   }
 
@@ -90,7 +91,7 @@ public class WikiTestPageTest {
     addPage("TestPage.TestPageChild.ScenarioLibrary", "grand child library");
 
     TestPage testPage = new WikiTestPage(nephew);
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString("child library", html);
     assertSubString("grand child library", html);
     assertSubString("TestPage.ScenarioLibrary", html);
@@ -103,7 +104,7 @@ public class WikiTestPageTest {
   public void shouldNotContainScenarioLibrarySectionIfThereAreNone() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
     TestPage testPage = new WikiTestPage(slimTestPage);
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertNotSubString("Scenario Libraries", html);
   }
 
@@ -113,7 +114,7 @@ public class WikiTestPageTest {
     addPage("ScenarioLibrary", "scenario library");
     WikiPage someTest = addPage("SomeTest", "some test");
     TestPage testPage = new WikiTestPage(someTest);
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertNotSubString("scenario library", html);
   }
 
@@ -122,7 +123,7 @@ public class WikiTestPageTest {
     WikiPage slimTestPage = addPage("SlimTest", "!define INCLUDE_SCENARIO_LIBRARIES {true}\n");
     TestPage testPage = new WikiTestPage(slimTestPage);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString("scenario library", html);
   }
 
@@ -131,7 +132,7 @@ public class WikiTestPageTest {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n!define INCLUDE_SCENARIO_LIBRARIES {false}\n");
     TestPage testPage = new WikiTestPage(slimTestPage);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertNotSubString("scenario library", html);
   }
 

@@ -36,7 +36,7 @@ public class ScenarioAndScriptTableTest {
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);
@@ -274,7 +274,7 @@ public class ScenarioAndScriptTableTest {
         "\n" +
         "!|script|\n" +
         "|Login user Bob with password xyzzy|\n");
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
     script = new ScriptTable(ts.getTable(2), "id", testContext);
@@ -300,7 +300,7 @@ public class ScenarioAndScriptTableTest {
         "\n" +
         "!|script|\n" +
         "|connect to  |Bob| with password| xyzzy|\n");
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
     script = new ScriptTable(ts.getTable(2), "id", testContext);
@@ -327,7 +327,7 @@ public class ScenarioAndScriptTableTest {
         "\n" +
         "!|script|\n" +
         "|connect to  |Bob| with password| xyzzy|\n");
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", testContext);
     ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", testContext);
     script = new ScriptTable(ts.getTable(2), "id", testContext);

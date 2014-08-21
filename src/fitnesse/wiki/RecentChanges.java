@@ -10,7 +10,7 @@ package fitnesse.wiki;
 public interface RecentChanges {
   String RECENT_CHANGES = "RecentChanges";
 
-  void updateRecentChanges(PageData pageData);
+  void updateRecentChanges(WikiPage page);
 
   WikiPage toWikiPage(WikiPage root);
 }

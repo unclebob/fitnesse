@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import java.io.File;
+
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
@@ -25,7 +27,7 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = new FileSystemPageFactory().makeRootPage(FitNesseUtil.base, rootName);
+    root = new FileSystemPageFactory().makePage(new File(FitNesseUtil.base), rootName, null);
     context = FitNesseUtil.makeTestContext(root);
 
     FileUtil.makeDir(FitNesseUtil.base);

@@ -32,7 +32,7 @@ public class Include extends SymbolType implements Rule, Translation {
 
         Maybe<SourcePage> includedPage = parser.getPage().getNamedPage().findIncludedPage(next.getContent());
         if (includedPage.isNothing()) {
-            current.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
+          current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
         else if (includeHelpOption.equals(option)) {
         	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);	

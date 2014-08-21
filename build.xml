@@ -209,7 +209,7 @@
 		<taskdef classpathref="classpath" resource="tasks.properties" />
 	</target>
 
-	<target name="release" depends="unit_tests, acceptance_tests, pom" />
+	<target name="release" depends="unit_tests, acceptance_tests" />
 
 	<target name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
@@ -237,6 +237,10 @@
 		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone,default,test" />
 	</target>
 
+	<target name="dependencies" depends="resolve" description="Generate a dependencies graph">
+		<ivy:report conf="default,standalone,test,maven" todir="dependencies" />
+	</target>
+
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />
@@ -247,34 +251,48 @@
 		</path>
 	</target>
 
-	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
-		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
-		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
-			   <mapping conf="standalone" scope="compile" />
-			   <mapping conf="test" scope="test" />
-		</ivy:makepom>
-	</target>
-
-	<target name="snapshot" depends="resolve,pom">
-		<ivy:publish resolver="sonatype-nexus-snapshots"
+	<target name="install" depends="set-version-if-not-manualy-set,jar,sources-jar">
+		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="integration" />
+		<ivy:publish resolver="local"
 			pubrevision="${version}"
-			publishivy="false">
-			<artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+			overwrite="true" conf="default">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom,standalone-jar,sources-jar,javadoc-jar">
+	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
+		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
+			   <ivy:mapping conf="standalone" scope="compile" />
+			   <ivy:mapping conf="test" scope="test" />
+		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+		<ivy:settings id="ivy.publish.instance"
+			file="ivysettings-sonatype.xml" />
+		<ivy:publish resolver="sonatype-nexus-snapshots"
+			settingsref="ivy.publish.instance"
+			pubrevision="${version}-SNAPSHOT"
+			publishivy="false"
+			overwrite="true" conf="maven">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+
+	<target name="publish" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
 		<ivy:settings id="ivy.publish.instance"
 			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-staging"
+			settingsref="ivy.publish.instance"
 			pubrevision="${version}"
 			publishivy="false"
-			settingsref="ivy.publish.instance"
-			overwrite="true">
-			<artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+			overwrite="true" conf="maven">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 

@@ -1,4 +1,6 @@
-<ivy-module version="2.0">
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
 	<info organisation="org.fitnesse" module="fitnesse">
 		<license name="Common Public License version 1.0"
 			url="http://www.opensource.org/licenses/cpl1.0" />
@@ -7,30 +9,32 @@
 			acceptance testing framework.
 		</description>
 	</info>
+
 	<configurations>
 		<conf name="default" visibility="public" />
-		<conf name="standalone" visibility="public" description="include in fitnesse-standalone build" />
+		<conf name="standalone" visibility="public" extends="default" description="include in fitnesse-standalone build" />
 		<conf name="test" visibility="public" extends="default" />
-		<conf name="lesscss" visibility="private" />
+		<conf name="maven" visibility="private" extends="default" />
+		<conf name="lesscss" visibility="private"  />
 	</configurations>
-        <!-- for publication to maven repos -->
+
 	<publications xmlns:e="urn:ant.apache.org:ivy-extras">
-		<artifact name="fitnesse" type="jar" ext="jar" />
-		<artifact name="fitnesse" type="pom" ext="pom" />
+		<artifact name="fitnesse" ext="jar" />
 		<artifact name="fitnesse" type="source" ext="jar" e:classifier="sources" />
-		<artifact name="fitnesse" type="javadoc" ext="jar" e:classifier="javadoc" />
-		<artifact name="fitnesse" type="jar" ext="jar" e:classifier="standalone" />
+		<artifact name="fitnesse" conf="maven" type="pom" ext="pom" />
+		<artifact name="fitnesse" conf="maven" type="javadoc" ext="jar" e:classifier="javadoc" />
+		<artifact name="fitnesse" conf="maven" type="standalone" ext="jar" e:classifier="standalone" />
 	</publications>
  
 	<dependencies>
-		<dependency org="org.htmlparser" name="htmlparser" rev="2.1" conf="standalone->default,default">
+		<dependency org="org.htmlparser" name="htmlparser" rev="2.1" conf="default">
 			<exclude org="com.sun" module="tools" />
 		</dependency>
-		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="standalone->default,default" />
-		<dependency org="org.json" name="json" rev="20140107" conf="standalone->default,default" />
+		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="default" />
+		<dependency org="org.json" name="json" rev="20140107" conf="default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
-		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="standalone->default,default"/>
-		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="2.3.1.201302201838-r" conf="standalone->default,default" transitive="false"/>
+		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="default"/>
+		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="2.3.1.201302201838-r" conf="default" transitive="false"/>
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.5" conf="test->default" />
 		<dependency org="junit" name="junit-dep" rev="4.11" conf="test->default" />

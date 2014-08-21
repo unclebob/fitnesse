@@ -179,7 +179,7 @@ public class SuiteHtmlFormatterTest {
   @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
     formatter.announceNumberTestsToRun(1);
-    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
     formatter.testStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
@@ -191,8 +191,8 @@ public class SuiteHtmlFormatterTest {
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     formatter.announceNumberTestsToRun(2);
-    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content"));
-    WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content"));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
+    WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null));
     formatter.testStarted(firstPage);
     clock.elapse(670);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));

@@ -89,7 +89,7 @@ public class SavePropertiesResponderTest {
     // The SavePropertiesResponder saves them by setting the attribute without a value.
     // This test ensures that the behavior is the same (i.e. without value)
     page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME), "");
-    PageData defaultData = new PageData(page);
+    PageData defaultData = page.getData();
 
     request = new MockRequest();
     request.setResource(PAGE_NAME);

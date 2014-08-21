@@ -59,7 +59,7 @@ public abstract class QueryTableTestBase {
 
   private QueryTable makeQueryTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     testContext = new SlimTestContextImpl();
     return constructQueryTable(t);

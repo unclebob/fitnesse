@@ -1,7 +1,5 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -14,14 +12,17 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wikitext.parser.VariableSource;
+import util.Clock;
 
 public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
   private FileSystem fileSystem;
   private File path;
 
-  public ExternalTestPage(File path, String name, BaseWikiPage parent, FileSystem fileSystem) {
-    super(name, parent);
+  public ExternalTestPage(File path, String name, BaseWikiPage parent, FileSystem fileSystem, VariableSource variableSource) {
+    super(name, parent, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
   }
@@ -33,11 +34,6 @@ public class ExternalTestPage extends BaseWikiPage {
   @Override
   public PageData getData() {
     return makePageData();
-  }
-
-  @Override
-  public ReadOnlyPageData readOnlyData() {
-    return getData();
   }
 
   @Override
@@ -71,27 +67,39 @@ public class ExternalTestPage extends BaseWikiPage {
   }
 
   @Override
-  public PageData getDataVersion(String versionName) {
+  public WikiPage getVersion(String versionName) {
     return null;
   }
 
+  @Override
+  public String getHtml() {
+    try {
+      return fileSystem.getContent(path);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to fetch page content", e);
+    }
+  }
+
   private PageData makePageData() {
-    PageData pageData = new PageData(this);
     String content;
     try {
       content = fileSystem.getContent(path);
     } catch (IOException e) {
       throw new RuntimeException("Unable to fetch page content", e);
     }
-    pageData.setContent("!-" + content + "-!");
-    pageData.removeAttribute(PageData.PropertyEDIT);
-    pageData.removeAttribute(PageData.PropertyPROPERTIES);
-    pageData.removeAttribute(PageData.PropertyVERSIONS);
-    pageData.removeAttribute(PageData.PropertyREFACTOR);
+
+    WikiPageProperties properties = new WikiPageProperties();
     if (content.contains("<table")) {
-      pageData.setAttribute(PageType.TEST.toString(), Boolean.toString(true));
+      properties.set(PageType.TEST.toString());
     }
-    return pageData;
+    properties.set(PageData.PropertyWHERE_USED);
+    properties.set(PageData.PropertyRECENT_CHANGES);
+    properties.set(PageData.PropertyFILES);
+    properties.set(PageData.PropertyVERSIONS);
+    properties.set(PageData.PropertySEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+    return new PageData("!-" + content + "-!", properties);
+
   }
 
 }

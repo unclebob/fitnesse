@@ -53,17 +53,14 @@ public class PageXmlizer {
   }
 
   public PageData deXmlizeData(Document document) {
-    PageData data = new PageData(new WikiPageDummy());
     Element dataElement = document.getDocumentElement();
 
     String content = XmlUtil.getLocalTextValue(dataElement, "content");
-    data.setContent(content);
 
     Element propertiesElement = XmlUtil.getLocalElementByTagName(dataElement, "properties");
     WikiPageProperties properties = new WikiPageProperties(propertiesElement);
-    data.setProperties(properties);
 
-    return data;
+    return new PageData(content, properties);
   }
 
   private void addPageXmlToElement(Element context, WikiPage page) {

@@ -61,13 +61,13 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private List<SlimTable> createSlimTables(TestPage pageToTest) {
-    NodeList nodeList = makeNodeList(pageToTest.getDecoratedData());
+    NodeList nodeList = makeNodeList(pageToTest);
     tableScanner = new HtmlTableScanner(nodeList);
     return createSlimTables(tableScanner);
   }
 
-  private NodeList makeNodeList(ReadOnlyPageData pageData) {
-    String html = pageData.getHtml();
+  private NodeList makeNodeList(TestPage pageToTest) {
+    String html = pageToTest.getHtml();
     Parser parser = new Parser(new Lexer(new Page(html)));
     try {
       return parser.parse(null);
