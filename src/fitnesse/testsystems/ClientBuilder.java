@@ -107,11 +107,11 @@ public abstract class ClientBuilder<T> {
 
   private String[] parseCommandLine(String commandLine) {
 		ArrayList<String> result = new ArrayList<String>();
-		Pattern p = Pattern.compile("\"[^\"]*\"["+System.getProperty("path.separator")+"]?|\\S+");
+		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);
 		while(m.find())
 		{
-		  String token = m.group( 0 );   
+		  String token = (m.group(1)==null) ? m.group(0) : m.group(1);   
 		  result.add(token);
 		}
 		return result.toArray(new String[result.size()]); 
