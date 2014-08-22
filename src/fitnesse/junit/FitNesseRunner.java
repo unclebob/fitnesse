@@ -378,7 +378,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker,
-            context.testSystemFactory, new SystemVariableSource(context.getProperties()));
+            context.testSystemFactory, context.variableSource);
     runner.setRunInProcess(debugMode);
     return runner;
   }
