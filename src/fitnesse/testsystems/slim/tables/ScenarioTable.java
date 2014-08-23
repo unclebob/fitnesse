@@ -25,7 +25,7 @@ import util.StringUtil;
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
-  private static final String underscorePattern = "\\W_(?:\\W|$)";
+  private static final String underscorePattern = "\\W_(?=\\W|$)";
   private String name;
   private List<String> inputs = new ArrayList<String>();
   private Set<String> outputs = new HashSet<String>();
