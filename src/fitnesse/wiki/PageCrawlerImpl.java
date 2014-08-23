@@ -11,7 +11,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   private final WikiPage context;
 
-  protected PageCrawlerImpl(WikiPage context) {
+  public PageCrawlerImpl(WikiPage context) {
     this.context = context;
   }
 

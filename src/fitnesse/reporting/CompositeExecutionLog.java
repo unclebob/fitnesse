@@ -30,7 +30,7 @@ public class CompositeExecutionLog implements ExecutionLogListener {
     this.testPage = testPage;
     PageCrawler crawler = testPage.getPageCrawler();
     testPagePath = "." + crawler.getFullPath();
-    errorLogPagePath = crawler.getFullPath().addNameToFront(PageData.ErrorLogName);
+    errorLogPagePath = crawler.getFullPath().addNameToFront(WikiPage.ErrorLogName);
 
   }
 

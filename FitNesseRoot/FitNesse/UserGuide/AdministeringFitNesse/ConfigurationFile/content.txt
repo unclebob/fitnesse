@@ -149,9 +149,19 @@ In case there are situations where you can not get your tests working with the d
 !3 !-Plug-ins-!
 ''required property:'' '''!-Plugins-! = <class name>[,<class name>]'''
 
-''motivation:'' Register multiple Responders, !-WikiWidgets-!, and !-WikiPage-! components in a single Java class, instead of multiple entries in plugins.properties.
+''motivation:'' Register multiple Responders, symbol types, !-WikiPage-! factories, test systems, Slim tables or comparators from a single Java class, instead of multiple entries in plugins.properties.
 
 Plugins classes can provide one or more of the following methods to register components:
 
  * '''registerResponders(!-ResponderFactory-! responderFactory)''' - register responders using ''!-ResponderFactory.addResponder(String key, Class responderClass)-!''
  * '''registerSymbolTypes(!-SymbolProvider-! symbolProvider)''' - register wiki symbol types using ''!-symbolProvider.add(SymbolType symbolType)-!''
+ * '''registerWikiPageFactories(!-WikiPageFactoryRegistry-! wikiPageFactoryRegistry)''' - register page factories used for specific sub pages using ''!-wikiPageFactoryRegistry.registerWikiPageFactory(WikiPageFactory wikiPageFactory)-!''
+ * '''registerTestSystemFactories(!-TestSystemFactoryRegistry-! testSystemFactoryRegistry)''' - register test system factories using ''!-testSystemFactoryRegistry.registerTestSystemFactory(String name, TestSystemFactory testSystemFactory)-!''
+ * '''registerSlimTableFactories(!-SlimTableFactory-! slimTableFactory)''' - register Slim table factories using ''!-slimTableFactory.addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass)-!''
+ * '''registerCustomComparatorRegistries(!-CustomComparatorRegistry-! customComparatorRegistry)''' - register custom comparators for checks done by the Slim test system using ''!-customComparatorRegistry.addCustomComparator(String prefix, CustomComparator customComparator)-!''
+
+Plugins are instantiated by FitNesse's !-ComponentFactory-!. By doing so they can support either one of those constructors:
+
+ * Plugin(!-ComponentFactory-! componentFactory)
+ * Plugin(Properties properties)
+ * Plugin()

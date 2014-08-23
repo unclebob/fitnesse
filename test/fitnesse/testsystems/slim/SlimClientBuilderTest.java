@@ -2,7 +2,6 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 
 import fitnesse.socketservice.SocketFactory;
 
@@ -79,6 +78,13 @@ public class SlimClientBuilderTest {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("SLIM_HOST")).thenReturn("somehost");
     assertEquals("somehost", new SlimClientBuilder(descriptor).determineSlimHost());
+  }
+
+  @Test
+  public void slimVersionVariableSetsRequiredVersion() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("SLIM_VERSION")).thenReturn("0.0");
+    assertEquals(0.0, new SlimClientBuilder(descriptor).getSlimVersion(), 0.000001);
   }
 
   @Test

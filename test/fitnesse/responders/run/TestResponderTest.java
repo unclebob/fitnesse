@@ -97,7 +97,7 @@ public class TestResponderTest {
   @Test
   public void testHead() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", results);
+    assertSubString("<div id=\"test-summary\"><div id=\"progressBar\">Preparing Tests ...</div></div>", results);
   }
 
   @Test
@@ -137,7 +137,7 @@ public class TestResponderTest {
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
-    testPage = WikiPageUtil.addPage(root, PathParser.parse("EmptyTestPage"));
+    testPage = WikiPageUtil.addPage(root, PathParser.parse("EmptyTestPage"), "");
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
@@ -241,11 +241,11 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testResultsDoNotHaveHeaderAndFooter() throws Exception {
+  public void testResultsDoHaveHeaderAndFooter() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "HEADER");
     WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "FOOTER");
     doSimpleRun(passFixtureTable());
-    assertNotSubString("HEADER", results);
+    assertSubString("HEADER", results);
     assertSubString("FOOTER", results);
   }
 

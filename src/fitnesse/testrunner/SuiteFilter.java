@@ -119,7 +119,7 @@ public class SuiteFilter {
     public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags) {
       tagString = suiteTags;
       if (suiteTags != null) {
-        tags = new LinkedList<String>(Arrays.asList(suiteTags.split(LIST_SEPARATOR)));
+        tags = Arrays.asList(suiteTags.split(LIST_SEPARATOR));
       }
       else {
         tags = null;

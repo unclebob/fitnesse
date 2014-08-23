@@ -40,7 +40,7 @@ public class ScenarioTableExtensionTest {
     String pageContents = "|" + EXTENSION_NAME + "|" + contents + "|\n";
     WikiPageUtil.setPageContents(root, pageContents);
 
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     st = new AutoArgScenarioTable(t, "id", testContext);

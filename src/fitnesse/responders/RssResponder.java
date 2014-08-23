@@ -63,8 +63,7 @@ public class RssResponder implements SecureResponder {
     if (contextPage == null) {
       return null;
     }
-    PageData data = contextPage.getData();
-    return data.getVariable("RSS_PREFIX");
+    return contextPage.getVariable("RSS_PREFIX");
   }
 
   protected static boolean isNeitherNullNorBlank(String string) {

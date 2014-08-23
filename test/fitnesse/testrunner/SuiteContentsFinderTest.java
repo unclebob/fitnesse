@@ -40,8 +40,8 @@ public class SuiteContentsFinderTest {
   @Test
   public void testGatherXRefTestPages() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
-    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"));
+    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"), "");
     SuiteContentsFinder finder = new SuiteContentsFinder(testPage, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -52,8 +52,8 @@ public class SuiteContentsFinderTest {
   @Test
   public void shouldTestXRefsInSubSuites() throws Exception {
     WikiPageUtil.addPage(suite, PathParser.parse("SubSuite"), "!see .PageA\n!see .PageB");
-    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"));
+    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"), "");
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -75,7 +75,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
 
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(true, testPages.contains(testPage));
@@ -88,7 +88,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
     
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(testPage, testPages.get(0));

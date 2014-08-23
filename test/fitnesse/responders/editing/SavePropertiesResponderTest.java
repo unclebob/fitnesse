@@ -34,7 +34,7 @@ public class SavePropertiesResponderTest {
   }
 
   private void createRequest() throws Exception {
-    page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME));
+    page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME), "");
 
     request = new MockRequest();
     request.addInput("PageType", "Test");
@@ -88,8 +88,8 @@ public class SavePropertiesResponderTest {
     // was to set them with a value of "true"
     // The SavePropertiesResponder saves them by setting the attribute without a value.
     // This test ensures that the behavior is the same (i.e. without value)
-    page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME));
-    PageData defaultData = new PageData(page);
+    page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME), "");
+    PageData defaultData = page.getData();
 
     request = new MockRequest();
     request.setResource(PAGE_NAME);

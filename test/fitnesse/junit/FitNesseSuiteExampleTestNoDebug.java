@@ -3,10 +3,10 @@ package fitnesse.junit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import fitnesse.junit.FitNesseSuite.DebugMode;
-import fitnesse.junit.FitNesseSuite.FitnesseDir;
+import fitnesse.junit.FitNesseRunner.DebugMode;
+import fitnesse.junit.FitNesseRunner.FitnesseDir;
 import fitnesse.junit.FitNesseSuite.Name;
-import fitnesse.junit.FitNesseSuite.OutputDir;
+import fitnesse.junit.FitNesseRunner.OutputDir;
 
 
 @RunWith(FitNesseSuite.class)

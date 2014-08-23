@@ -68,7 +68,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected Descriptor getDescriptor() {
-    return new WikiPageDescriptor(page.readOnlyData(), true, false, new ClassPathBuilder().getClasspath(page));
+    return new WikiPageDescriptor(page, true, false, new ClassPathBuilder().getClasspath(page));
   }
 
   public class SlimRenderer {
@@ -79,7 +79,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.start();
-        testSystem.runTests(new WikiTestPage(pageData));
+        testSystem.runTests(new WikiTestPage(page));
       } catch (IOException e) {
         slimException = e;
       } finally {

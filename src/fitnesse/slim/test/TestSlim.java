@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +72,10 @@ public class TestSlim implements TestSlimInterface {
 
   public int returnInt() {
     return 7;
+  }
+
+  public String returnHugeString() {
+    return StringUtils.repeat("x", 999999 + 10);
   }
 
   public void setString(String arg) {

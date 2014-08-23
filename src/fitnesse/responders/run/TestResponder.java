@@ -9,6 +9,8 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -57,6 +59,8 @@ import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
+  private final Logger LOG = Logger.getLogger(TestResponder.class.getName());
+
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
@@ -116,7 +120,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     try {
       performExecution();
     } catch (Exception e) {
+      // Is this necessary? Or is the exception already handled by stopTestSystem?
       mainFormatter.errorOccurred(e);
+      LOG.log(Level.WARNING, "error registered in test system", e);
     }
 
     exitCode = mainFormatter.getErrorCount();
@@ -160,6 +166,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
+    htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
@@ -175,6 +182,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public void setDebug(boolean debug) {
     this.debug = debug;
+  }
+
+  public class WikiPageHeaderRenderer {
+
+    public String render() {
+      return WikiPageUtil.getHeaderPageHtml(page);
+    }
+
   }
 
   public class WikiPageFooterRenderer {
@@ -254,8 +269,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
-    runner.executeTestPages();
-    log.publish(context.pageFactory);
+    try {
+      runner.executeTestPages();
+    } finally {
+      log.publish(context.pageFactory);
+    }
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
@@ -355,7 +373,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
+      if (!resultDirectory.exists()) {
+        resultDirectory.mkdirs();
+      }
       File resultFile = new File(resultDirectory, resultPath.getName());
       return new PrintWriter(resultFile, "UTF-8");
     }

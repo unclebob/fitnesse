@@ -29,15 +29,6 @@ public class InMemoryPageTest {
   }
 
   @Test
-  public void testCommitUsesProperPageWhenCommitingFromOtherPage() throws Exception {
-    PageData data = page1.getData();
-    page2.commit(data);
-    data = page2.getData();
-
-    assertSame(page2, data.getWikiPage());
-  }
-
-  @Test
   public void testVersions() throws Exception {
     PageData data = page1.getData();
     data.setContent("version 1");
@@ -48,7 +39,7 @@ public class InMemoryPageTest {
     data = page1.getData();
     Collection<VersionInfo> versions = page1.getVersions();
 
-    assertEquals(4, versions.size());
+    assertEquals(3, versions.size());
   }
 
   @Test

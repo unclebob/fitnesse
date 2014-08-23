@@ -96,9 +96,9 @@ public class SerializedPageResponderTest {
 
   @Test
   public void testGetPageHieratchyAsXml() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     request.setResource("root");
     request.addInput("type", "pages");
@@ -114,9 +114,9 @@ public class SerializedPageResponderTest {
 
   @Test
   public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
-    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     PageData data = pageOne.getData();
     WikiPageProperties properties = data.getProperties();

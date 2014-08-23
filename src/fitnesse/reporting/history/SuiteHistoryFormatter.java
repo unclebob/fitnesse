@@ -51,7 +51,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testStarted(WikiTestPage test) {
-    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
+    String pageName = test.getFullPath();
     testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
     testHistoryFormatter.testStarted(test);
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
@@ -59,7 +59,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testOutputChunk(String output) {
-    testHistoryFormatter.testOutputChunk(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.testOutputChunk(output);
+    }
   }
 
   @Override

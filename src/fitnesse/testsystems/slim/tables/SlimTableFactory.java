@@ -12,6 +12,7 @@ import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
+  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<Class<? extends SlimTable>, Constructor<? extends SlimTable>>();
 
   private final Map<String, Class<? extends SlimTable>> tableTypes;
   private final Map<String, String> tableTypeArrays;
@@ -82,12 +83,20 @@ public class SlimTableFactory {
   private SlimTable newTableForType(Class<? extends SlimTable> tableClass,
                                     Table table, String tableId, SlimTestContext slimTestContext) {
     try {
-      Constructor<? extends SlimTable> constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-      return constructor.newInstance(table, tableId, slimTestContext);
+      return createTable(tableClass, table, tableId, slimTestContext);
     } catch (Exception e) {
       LOG.log(Level.WARNING, "Can not create new table instance for class " + tableClass, e);
       return new SlimErrorTable(table, tableId, slimTestContext);
     }
+  }
+
+  public static <T extends SlimTable> T createTable(Class<T> tableClass, Table table, String tableId, SlimTestContext slimTestContext) throws Exception {
+    Constructor<? extends SlimTable> constructor = CONSTRUCTOR_MAP.get(tableClass);
+    if (constructor == null) {
+      constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
+      CONSTRUCTOR_MAP.put(tableClass, constructor);
+    }
+    return (T) constructor.newInstance(table, tableId, slimTestContext);
   }
 
   private String getFullTableName(String tableName) {

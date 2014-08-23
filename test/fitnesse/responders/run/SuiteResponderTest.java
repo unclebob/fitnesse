@@ -271,13 +271,24 @@ public class SuiteResponderTest {
 
 
   @Test
-  public void exculdeSuiteQuery() throws Exception {
+  public void excludeSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("excludeSuiteFilter=foo");
     String results = runSuite();
     assertHasRegexp("#TestOne", results);
     assertDoesntHaveRegexp("#TestTwo", results);
     assertHasRegexp("#TestThree", results);
+  }
+
+
+  @Test
+  public void excludeSuiteWithSuiteFilterQuery() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("excludeSuiteFilter=bar&suiteFilter=smoke,foo");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertDoesntHaveRegexp("#TestThree", results);
   }
 
 

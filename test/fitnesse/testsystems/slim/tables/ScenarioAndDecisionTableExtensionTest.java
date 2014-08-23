@@ -50,7 +50,7 @@ public class ScenarioAndDecisionTableExtensionTest {
             + "\n"
             + "!|DT:" + scriptText + "|\n";
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", testContext);
     t = ts.getTable(1);
@@ -216,9 +216,9 @@ public class ScenarioAndDecisionTableExtensionTest {
     public ScenarioTableWithDifferentScript(Table table, String tableId, SlimTestContext testContext) {
       super(table, tableId, testContext);
     }
-    
+
     @Override
-    protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
+    protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
       return new DiffScriptTable(newTable, id, testContext);
     }
   }

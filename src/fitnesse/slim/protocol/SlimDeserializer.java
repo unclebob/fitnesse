@@ -126,7 +126,20 @@ public class SlimDeserializer {
     int length = Integer.parseInt(lengthString);
     index += lengthSize;
 
+    Integer next;
+    while ((next = maybeReadDigit()) != null)
+      length = length * 10 + next;
+
     checkForColon("Length");
     return length;
+  }
+
+  private Integer maybeReadDigit() {
+    char next = serialized.charAt(index);
+    if (Character.isDigit(next)) {
+      index++;
+      return Character.digit(next, 10);
+    } else
+      return null;
   }
 }

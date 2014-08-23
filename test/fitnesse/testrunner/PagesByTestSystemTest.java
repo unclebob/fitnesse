@@ -47,8 +47,8 @@ public class PagesByTestSystemTest{
 
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root);
     Collection<WikiPageIdentity> descriptors = pagesByTestSystem.identities();
-    WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage.readOnlyData());
-    WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage.readOnlyData());
+    WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage);
+    WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage);
 
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
