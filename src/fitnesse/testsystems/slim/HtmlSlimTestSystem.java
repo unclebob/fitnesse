@@ -51,7 +51,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
           processTable(theTable);
         } catch (SyntaxError e) {
           String tableName = theTable.getTable().getCellContents(0, 0);
-          theTable.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+          theTable.getTable().updateContent(0, 0, SlimTestResult.error(String.format("<strong> %s: Bad table! %s</strong>", tableName, e.getMessage())));
+          getTestContext().incrementErroredTestsCount();
         }
 
         String html = createHtmlResults(startWithTable, nextTable);
