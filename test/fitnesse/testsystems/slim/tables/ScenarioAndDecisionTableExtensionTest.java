@@ -216,9 +216,9 @@ public class ScenarioAndDecisionTableExtensionTest {
     public ScenarioTableWithDifferentScript(Table table, String tableId, SlimTestContext testContext) {
       super(table, tableId, testContext);
     }
-    
+
     @Override
-    protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
+    protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
       return new DiffScriptTable(newTable, id, testContext);
     }
   }

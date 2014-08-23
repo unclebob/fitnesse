@@ -145,15 +145,12 @@ public class ScriptTable extends SlimTable {
     if (assertions.isEmpty()) {
       // Invoke fixture:
       int lastCol = table.getColumnCountInRow(row) - 1;
-      String actionName = getActionNameStartingAt(0, lastCol, row);
-      String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
-      assertions.add(makeAssertion(callFunction(getTableType() + "Actor", actionName, (Object[]) args),
-              new ScriptActionExpectation(0, row)));
+      return invokeAction(0, lastCol, row, new ScriptActionExpectation(0, row));
     }
     return assertions;
   }
 
-  private List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
+  protected List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));

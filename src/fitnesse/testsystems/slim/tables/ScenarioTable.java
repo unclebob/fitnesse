@@ -169,17 +169,31 @@ public class ScenarioTable extends SlimTable {
       }
     });
     ScenarioTestContext testContext = new ScenarioTestContext(parentTable.getTestContext());
-    ScriptTable t = createChild(testContext, newTable);
+    ScriptTable t = createChild(testContext, parentTable, newTable);
     parentTable.addChildTable(t, row);
     List<SlimAssertion> assertions = t.getAssertions();
     assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
     return assertions;
   }
 
-  protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
-    ScriptTable scriptTable = new ScriptTable(newTable, id, testContext);
+  protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
+    ScriptTable scriptTable;
+    if (parentTable instanceof ScriptTable && !parentTable.getClass().equals(ScriptTable.class)) {
+      scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
+    } else {
+      scriptTable = new ScriptTable(newTable, id, testContext);
+    }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
+  }
+
+  protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
+    Class<? extends ScriptTable> parentTableClass = parentScriptTable.getClass();
+    try {
+      return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to create child table of type: " + parentTableClass.getName(), e);
+    }
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
