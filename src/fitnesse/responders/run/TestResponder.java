@@ -49,6 +49,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
@@ -279,7 +280,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker,
+            context.testSystemFactory, context.variableSource);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
     runner.addExecutionLogListener(log);

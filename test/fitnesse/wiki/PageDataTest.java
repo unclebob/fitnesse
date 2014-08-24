@@ -63,13 +63,6 @@ public class PageDataTest {
   }
 
   @Test
-  public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    WikiPage page = new WikiPageDummy("Name", "<b>", null);
-    String html = page.getHtml();
-    assertEquals("&lt;b&gt;", html);
-  }
-
-  @Test
   public void testLiteral() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");

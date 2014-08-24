@@ -78,7 +78,7 @@ public class WikiPageResponder implements SecureResponder {
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
     if (WikiTestPage.isTestPage(page)) {
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
       html.put("content", new WikiTestPageRenderer(testPage));
     } else {
       html.put("content", new WikiPageRenderer(page));

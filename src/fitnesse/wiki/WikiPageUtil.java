@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestPage;
-import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
@@ -86,25 +86,6 @@ public class WikiPageUtil {
     return buffer.toString();
   }
 
-  public static String makeHtml(WikiPage wikiPage, VariableSource variableSource) {
-    String content = wikiPage.getData().getContent();
-    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
-    return parsedPage.toHtml();
-  }
-
-
-  public static String makeHtml(final WikiPage context, ReadOnlyPageData data) {
-    String content = data.getContent();
-    ParsedPage parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(context), new VariableSource() {
-      @Override
-      public Maybe<String> findVariable(String name) {
-        String value = context.getVariable(name);
-        return value != null ? new Maybe<String>(value) : Maybe.noString;
-      }
-    }), content);
-    return parsedPage.toHtml();
-  }
-
   public static File resolveFileUri(String fullPageURI, File rootPath) {
     URI uri = URI.create(fullPageURI);
     try {
@@ -124,8 +105,7 @@ public class WikiPageUtil {
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
       final ArrayList<String> xrefPages = new ArrayList<String>();
-      ParsedPage parsedPage = ((WikitextPage) page).getParsedPage();
-      parsedPage.getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+      ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
         @Override
         public boolean visit(Symbol node) {
           if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());

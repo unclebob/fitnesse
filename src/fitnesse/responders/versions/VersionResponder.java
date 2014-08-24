@@ -21,7 +21,7 @@ import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -30,10 +30,12 @@ import fitnesse.wiki.WikiPageUtil;
 public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
+  private FitNesseContext context;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     version = (String) request.getInput("version");
+    this.context = context;
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
@@ -108,9 +110,8 @@ public class VersionResponder implements SecureResponder {
     }
 
     public String render() {
-      ReadOnlyPageData data;
       if (WikiTestPage.isTestPage(page)) {
-        WikiTestPage testPage = new WikiTestPage(page);
+        WikiTestPage testPage = new WikiTestPage(page, context.variableSource);
         return WikiPageUtil.makePageHtml(testPage);
       } else {
         return WikiPageUtil.makePageHtml(page);

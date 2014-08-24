@@ -79,7 +79,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.start();
-        testSystem.runTests(new WikiTestPage(page));
+        testSystem.runTests(new WikiTestPage(page, null));
       } catch (IOException e) {
         slimException = e;
       } finally {

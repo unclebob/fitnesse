@@ -143,7 +143,7 @@ public class SymbolicLinkResponder implements Responder {
 
   private File createFileFromPath(String linkPath) {
     // See FileSystemSubWikiPageFactory.createExternalSymbolicLink(), also.
-    String fullPageURI = new VariableTool(new SystemVariableSource(context.getProperties())).replace(linkPath);
+    String fullPageURI = new VariableTool(context.variableSource).replace(linkPath);
     return WikiPageUtil.resolveFileUri(fullPageURI, new File(context.rootPath));
   }
 

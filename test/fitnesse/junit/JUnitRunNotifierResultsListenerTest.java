@@ -59,6 +59,6 @@ public class JUnitRunNotifierResultsListenerTest {
     when(mock.isRoot()).thenReturn(true);
     when(mock.getName()).thenReturn("WikiPage");
     when(mock.getPageCrawler()).thenReturn(new PageCrawlerImpl(mock));
-    return new WikiTestPage(mock);
+    return new WikiTestPage(mock, null);
   }
 }

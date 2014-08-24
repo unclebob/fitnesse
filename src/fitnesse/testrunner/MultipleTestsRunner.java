@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -21,6 +19,7 @@ import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
@@ -31,6 +30,7 @@ public class MultipleTestsRunner implements Stoppable {
   private final TestSystemFactory testSystemFactory;
   private final TestingTracker testingTracker;
   private final CompositeExecutionLogListener executionLogListener;
+  private final VariableSource variableSource;
 
   private volatile boolean isStopped = false;
   private String stopId = null;
@@ -43,10 +43,12 @@ public class MultipleTestsRunner implements Stoppable {
 
   public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
                              final TestingTracker testingTracker,
-                             final TestSystemFactory testSystemFactory) {
+                             final TestSystemFactory testSystemFactory,
+                             final VariableSource variableSource) {
     this.pagesByTestSystem = pagesByTestSystem;
     this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
+    this.variableSource = variableSource;
     this.formatters = new CompositeFormatter();
     this.executionLogListener = new CompositeExecutionLogListener();
   }
@@ -170,7 +172,7 @@ public class MultipleTestsRunner implements Stoppable {
   private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (WikiPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
-      testSystem.runTests(new WikiTestPage(testPage));
+      testSystem.runTests(new WikiTestPage(testPage, variableSource));
     }
   }
 

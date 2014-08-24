@@ -7,13 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Maybe;
+import fitnesse.wikitext.parser.Symbol;
 
 public class SymbolicPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -22,7 +17,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   private final WikiPage realPage;
 
-  public SymbolicPage(String name, WikiPage realPage, BaseWikiPage parent) {
+  public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
     super(name, parent);
     this.realPage = realPage;
     // Perform a cyclic dependency check
@@ -85,22 +80,39 @@ public class SymbolicPage extends BaseWikiPage {
   }
 
   @Override
-  public String getHtml() {
-    return WikiPageUtil.makeHtml(this, realPage.getData());
-  }
-
-  @Override
   public VersionInfo commit(PageData data) {
     return realPage.commit(data);
   }
 
   @Override
-  public ParsedPage getParsedPage() {
+  public String getVariable(String name) {
     if (realPage instanceof WikitextPage) {
-      return super.getParsedPage();
-    } else {
-      // Default to an empty page for non-wikitext pages.
-      return new ParsedPage(new ParsingPage(new WikiSourcePage(this), getVariableSource()), "");
+      return super.getVariable(name);
     }
+    return realPage.getVariable(name);
+  }
+
+  @Override
+  public String getHtml() {
+    if (realPage instanceof WikitextPage) {
+      return super.getHtml();
+    }
+    return realPage.getHtml();
+  }
+
+  @Override
+  public ParsingPage getParsingPage() {
+    if (realPage instanceof WikitextPage) {
+      return super.getParsingPage();
+    }
+    return null;
+  }
+
+  @Override
+  public Symbol getSyntaxTree() {
+    if (realPage instanceof WikitextPage) {
+      return super.getSyntaxTree();
+    }
+    return Symbol.emptySymbol;
   }
 }

@@ -8,9 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Clock;
 
 public class WikiPageDummy implements WikiPage {
@@ -80,7 +77,7 @@ public class WikiPageDummy implements WikiPage {
 
   @Override
   public String getHtml() {
-    return WikiPageUtil.makeHtml(this, getData());
+    return "";
   }
 
   @Override

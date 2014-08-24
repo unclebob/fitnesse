@@ -19,6 +19,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wikitext.parser.VariableSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
   private DateAlteringClock clock;
+  private VariableSource variableSource = null;
 
   @Before
   public void setUp() throws Exception {
@@ -179,7 +181,7 @@ public class SuiteHtmlFormatterTest {
   @Test
   public void testTotalTimingShouldAppearInSummary() throws Exception {
     formatter.announceNumberTestsToRun(1);
-    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null), variableSource);
     formatter.testStarted(firstPage);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
@@ -191,8 +193,8 @@ public class SuiteHtmlFormatterTest {
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     formatter.announceNumberTestsToRun(2);
-    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
-    WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null));
+    WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null), variableSource);
+    WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null), variableSource);
     formatter.testStarted(firstPage);
     clock.elapse(670);
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));

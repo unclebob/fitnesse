@@ -11,18 +11,27 @@ import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
 
-  private WikiPage sourcePage;
+  private final WikiPage sourcePage;
+  private final VariableSource variableSource;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
-  public WikiTestPage(WikiPage sourcePage) {
+  public WikiTestPage(WikiPage sourcePage, VariableSource variableSource) {
     this.sourcePage = sourcePage;
+    this.variableSource = variableSource;
   }
 
   public static boolean isTestPage(WikiPage page) {
@@ -36,28 +45,12 @@ public class WikiTestPage implements TestPage {
     return sourcePage.getData();
   }
 
-  /**
-   * Obtain one big page containing all (suite-) setUp and -tearDown content needed to run a test.
-   *
-   * @return
-   */
-  @Override
-  public ReadOnlyPageData getDecoratedData() {
-    StringBuilder decoratedContent = new StringBuilder(1024);
-    includeScenarioLibraries(decoratedContent);
-
-    decorate(getSetUp(), decoratedContent);
-
-    addPageContent(decoratedContent);
-
-    decorate(getTearDown(), decoratedContent);
-
-    return new PageData(getData(), decoratedContent.toString());
-  }
-
   @Override
   public String getHtml() {
-    return WikiPageUtil.makeHtml(sourcePage, getDecoratedData());
+    String content = getDecoratedContent();
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
+    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
+    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
   }
 
   @Override
@@ -72,6 +65,18 @@ public class WikiTestPage implements TestPage {
 
   public WikiPage getSourcePage() {
     return sourcePage;
+  }
+
+  protected String getDecoratedContent() {
+    StringBuilder decoratedContent = new StringBuilder(1024);
+    includeScenarioLibraries(decoratedContent);
+
+    decorate(getSetUp(), decoratedContent);
+
+    addPageContent(decoratedContent);
+
+    decorate(getTearDown(), decoratedContent);
+    return decoratedContent.toString();
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {
@@ -138,46 +143,12 @@ public class WikiTestPage implements TestPage {
     return getPathNameForPage(sourcePage);
   }
 
-//  @Override
-//  public WikiPage getParent() {
-//    return sourcePage.getParent();
-//  }
-//
-//  @Override
-//  public boolean isRoot() {
-//    return sourcePage.isRoot();
-//  }
-//
-//  @Override
-//  public WikiPage addChildPage(String name) {
-//    return sourcePage.addChildPage(name);
-//  }
-//
-//  @Override
-//  public boolean hasChildPage(String name) {
-//    return sourcePage.hasChildPage(name);
-//  }
-//
-//  @Override
-//  public WikiPage getChildPage(String name) {
-//    return sourcePage.getChildPage(name);
-//  }
-//
-//  @Override
-//  public void removeChildPage(String name) {
-//    sourcePage.removeChildPage(name);
-//  }
-//
-//  @Override
-//  public List<WikiPage> getChildren() {
-//    return sourcePage.getChildren();
-//  }
-
   public String getName() {
     return sourcePage.getName();
   }
 
   public boolean shouldIncludeScenarioLibraries() {
+    // Should consider all of the decorated content to resolve those variables.
     boolean isSlim = "slim".equalsIgnoreCase(sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM));
     String includeScenarioLibraries = sourcePage.getVariable("INCLUDE_SCENARIO_LIBRARIES");
     boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
