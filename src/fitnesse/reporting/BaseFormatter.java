@@ -11,7 +11,6 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> {
