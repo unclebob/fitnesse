@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
@@ -27,6 +29,8 @@ import org.xml.sax.SAXException;
  * format of the test history.
  */
 public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
+
+  private static final Logger LOG = Logger.getLogger(SuiteXmlReformatter.class.getName());
 
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
@@ -66,6 +70,10 @@ public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
   // called from velocity template.
   public TestExecutionReport.TestResult getTestResult(SuiteExecutionReport.PageHistoryReference reference) throws IOException, SAXException {
     PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
+    if(pageHistory == null) {
+      LOG.log(Level.WARNING, "Unable to get page history");
+      return null;
+    }
     Date date = new Date(reference.getTime());
     TestResultRecord record = pageHistory.get(date);
     return makeTestExecutionReport(record.getFile()).getResults().get(0);
