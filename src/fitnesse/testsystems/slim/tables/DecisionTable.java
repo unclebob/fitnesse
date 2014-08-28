@@ -4,7 +4,6 @@ package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class DecisionTable extends SlimTable {
     return instancePrefix;
   }
 
-  public List<Assertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String scenarioName = getScenarioName();
@@ -52,84 +51,20 @@ public class DecisionTable extends SlimTable {
     return callAndAssign(symbolName, getTableName(), functionName);
   }
 
-  private class DecisionTableCaller {
-    private class ColumnHeaderStore {
-      private Map<String, List<Integer>> columnNumbers = new HashMap<String, List<Integer>>();
-      private Map<String, Iterator<Integer>> columnNumberIterator;
-      private List<String> leftToRight = new ArrayList<String>();
-
-      public void add(String header, int columnNumber) {
-        leftToRight.add(header);
-        getColumnNumbers(header).add(columnNumber);
-      }
-
-      private List<Integer> getColumnNumbers(String header) {
-        if (!columnNumbers.containsKey(header)) {
-          columnNumbers.put(header, new ArrayList<Integer>());
-        }
-        return columnNumbers.get(header);
-      }
-
-      public int getColumnNumber(String functionName) {
-        return columnNumberIterator.get(functionName).next();
-      }
-
-      public List<String> getLeftToRightAndResetColumnNumberIterator() {
-        resetColumnNumberIterator();
-        return leftToRight;
-      }
-
-      private void resetColumnNumberIterator() {
-        columnNumberIterator = new HashMap<String, Iterator<Integer>>();
-        for (String header : columnNumbers.keySet()) {
-          columnNumberIterator.put(header, columnNumbers.get(header).iterator());
-        }
-      }
-    }
-
-    protected ColumnHeaderStore varStore = new ColumnHeaderStore();
-    protected ColumnHeaderStore funcStore = new ColumnHeaderStore();
-    protected int columnHeaders;
-
-    protected void gatherFunctionsAndVariablesFromColumnHeader() {
-      columnHeaders = table.getColumnCountInRow(1);
-      for (int col = 0; col < columnHeaders; col++)
-        putColumnHeaderInFunctionOrVariableList(col);
-    }
-
-    private void putColumnHeaderInFunctionOrVariableList(int col) {
-      String cell = table.getCellContents(col, 1);
-      if (cell.endsWith("?") || cell.endsWith("!")) {
-        String funcName = cell.substring(0, cell.length() - 1);
-        funcStore.add(funcName, col);
-      } else {
-        varStore.add(cell, col);
-      }
-    }
-
-    protected void checkRow(int row) throws SyntaxError {
-      int columns = table.getColumnCountInRow(row);
-      if (columns < columnHeaders)
-        throw new SyntaxError(
-          String.format("Table has %d header column%s, but row %d only has %d column%s.",
-            columnHeaders, plural(columnHeaders), row, columns, plural(columns)));
-    }
-
-    private String plural(int n) {
-      return n == 1 ? "" : "s";
-    }
-  }
-
   private class ScenarioCaller extends DecisionTableCaller {
-    public ArrayList<Assertion> call(ScenarioTable scenario) throws SyntaxError {
+    public ScenarioCaller() {
+      super(table);
+    }
+
+    public ArrayList<SlimAssertion> call(ScenarioTable scenario) throws SyntaxError {
       gatherFunctionsAndVariablesFromColumnHeader();
-      ArrayList<Assertion> assertions = new ArrayList<Assertion>();
+      ArrayList<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       for (int row = 2; row < table.getRowCount(); row++)
         assertions.addAll(callScenarioForRow(scenario, row));
       return assertions;
     }
 
-    private List<Assertion> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
+    private List<SlimAssertion> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
       checkRow(row);
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
@@ -142,13 +77,23 @@ public class DecisionTable extends SlimTable {
         String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
+      for (String var : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
+          String disgracedVar = Disgracer.disgraceMethodName(var);
+          int col = funcStore.getColumnNumber(var);
+          String valueToSet = table.getCellContents(col, row);
+          scenarioArguments.put(disgracedVar, valueToSet);
+        }
       return scenarioArguments;
     }
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-    public List<Assertion> call(String fixtureName) throws SyntaxError {
-      final List<Assertion> assertions = new ArrayList<Assertion>();
+    public FixtureCaller() {
+      super(table);
+    }
+
+    public List<SlimAssertion> call(String fixtureName) throws SyntaxError {
+      final List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       assertions.add(constructFixture(fixtureName));
       assertions.add(makeAssertion(
               callFunction(getTableName(), "table", tableAsList()),
@@ -158,8 +103,8 @@ public class DecisionTable extends SlimTable {
       return assertions;
     }
 
-    private List<Assertion> invokeRows() throws SyntaxError {
-      List<Assertion> assertions = new ArrayList<Assertion>();
+    private List<SlimAssertion> invokeRows() throws SyntaxError {
+      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       assertions.add(callUnreportedFunction("beginTable", 0));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
@@ -168,8 +113,8 @@ public class DecisionTable extends SlimTable {
       return assertions;
     }
 
-    private List<Assertion> invokeRow(int row) throws SyntaxError {
-      List<Assertion> assertions = new ArrayList<Assertion>();
+    private List<SlimAssertion> invokeRow(int row) throws SyntaxError {
+      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       checkRow(row);
       assertions.add(callUnreportedFunction("reset", row));
       assertions.addAll(setVariables(row));
@@ -178,23 +123,23 @@ public class DecisionTable extends SlimTable {
       return assertions;
     }
 
-    private Assertion callUnreportedFunction(String functionName, int row) {
+    private SlimAssertion callUnreportedFunction(String functionName, int row) {
       return makeAssertion(callFunction(getTableName(), functionName),
               new SilentReturnExpectation(0, row));
     }
 
-    private List<Assertion> callFunctions(int row) {
-      List<Assertion> instructions = new ArrayList<Assertion>();
+    private List<SlimAssertion> callFunctions(int row) {
+      List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
       for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
         instructions.add(callFunctionInRow(functionName, row));
       }
       return instructions;
     }
 
-    private Assertion callFunctionInRow(String functionName, int row) {
+    private SlimAssertion callFunctionInRow(String functionName, int row) {
       int col = funcStore.getColumnNumber(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
-      Assertion assertion;
+      SlimAssertion assertion;
       if (assignedSymbol != null) {
         assertion = makeAssertion(callAndAssign(assignedSymbol, functionName),
                 new SymbolAssignmentExpectation(assignedSymbol, col, row));
@@ -205,8 +150,8 @@ public class DecisionTable extends SlimTable {
       return assertion;
     }
 
-    private List<Assertion> setVariables(int row) {
-      List<Assertion> assertions = new ArrayList<Assertion>();
+    private List<SlimAssertion> setVariables(int row) {
+      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);

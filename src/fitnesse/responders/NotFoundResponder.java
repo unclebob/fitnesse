@@ -8,7 +8,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some
@@ -26,7 +26,7 @@ public class NotFoundResponder implements Responder {
 
   private String makeHtml(FitNesseContext context) {
     HtmlPage page = context.pageFactory.newPage();
-    HtmlUtil.addTitles(page, "Not Found:" + resource);
+    page.addTitles("Not Found:" + resource);
     page.put("name", resource);
     page.put("shouldCreate", WikiWordPath.isWikiWord(resource));
     page.setMainTemplate("notFoundPage.vm");

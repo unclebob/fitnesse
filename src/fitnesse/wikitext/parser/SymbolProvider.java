@@ -40,9 +40,19 @@ public class SymbolProvider {
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.EndCell, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
-    private static final char defaultMatch = '\0';
+    // This scheme is used for parsing system properties (accessed by PageData.getVariable()).
+    public static final SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
+          Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
+          SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
+          SymbolType.ClosePreformat, SymbolType.Text
+    });
 
-    private HashMap<Character, ArrayList<Matchable>> currentDispatch;
+    static final SymbolProvider preformatProvider = new SymbolProvider(
+          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
+
+  private static final char defaultMatch = '\0';
+
+  private HashMap<Character, ArrayList<Matchable>> currentDispatch;
     private ArrayList<SymbolType> symbolTypes;
     private SymbolProvider parent = null;
 

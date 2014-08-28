@@ -7,36 +7,28 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.components.RecentChanges;
-import fitnesse.components.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
-  public static ContentFilter contentFilter;
 
   private String user;
   private long ticketId;
   private String savedContent;
   private String helpText;
   private String suites;
+  private WikiPage page;
   private PageData data;
   private long editTimeStamp;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
-    WikiPage page = getPage(resource, context);
+    page = getPage(resource, context);
     data = page.getData();
     user = request.getAuthorizationUsername();
 
@@ -47,40 +39,29 @@ public class SaveResponder implements SecureResponder {
       helpText = (String) request.getInput(EditResponder.HELP_TEXT);
       suites = (String) request.getInput(EditResponder.SUITES);
 
-      if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
-        return makeBannedContentResponse(context, resource);
-      else
-        return saveEdits(context, request, page);
+      return saveEdits(context, request, page);
     }
-  }
-
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) {
-    SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.pageFactory.newPage();
-    html.setTitle("Edit " + resource);
-    html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
-    html.setMainTemplate("bannedPage.vm");
-    response.setContent(html.html());
-    return response;
   }
 
   private Response saveEdits(FitNesseContext context, Request request, WikiPage page) {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Previous-Version", commitRecord.getName());
-    RecentChanges.updateRecentChanges(data);
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
+    context.recentChanges.updateRecentChanges(page);
 
     if (request.hasInput("redirect"))
-      response.redirect(request.getInput("redirect").toString());                                
+      response.redirect("", request.getInput("redirect").toString());
     else
-      response.redirect(request.getResource());
+      response.redirect(context.contextRoot, request.getResource());
 
     return response;
   }
 
   private boolean editsNeedMerge() {
-    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
+    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, page);
   }
 
   private long getTicketId(Request request) {
@@ -94,36 +75,28 @@ public class SaveResponder implements SecureResponder {
     if (!request.hasInput(EditResponder.TIME_STAMP))
       return 0;
     String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
-    long editTimeStamp = Long.parseLong(editTimeStampString);
-    return editTimeStamp;
+    return Long.parseLong(editTimeStampString);
   }
 
   private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler pageCrawler = context.root.getPageCrawler();
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
-      page = pageCrawler.addPage(context.root, PathParser.parse(resource));
+      page = WikiPageUtil.addPage(context.root, PathParser.parse(resource));
     return page;
   }
 
   private void setData() {
     data.setContent(savedContent);
-    setAttribute(PageData.PropertyHELP, helpText);
-    setAttribute(PageData.PropertySUITES, suites);
-    SaveRecorder.pageSaved(data, ticketId);
+    data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
+    data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
+    SaveRecorder.pageSaved(page, ticketId);
     
-    setAttribute(PageData.LAST_MODIFYING_USER, user);
+    data.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
   }
 
-  private void setAttribute(String property, String content) {
-    if (content == null || "".equals(content)) {
-      data.removeAttribute(property);
-    } else {
-      data.setAttribute(property, content);
-    }
-  }
-
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }

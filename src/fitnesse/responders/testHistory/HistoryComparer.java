@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.xml.sax.SAXException;
 
-import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 
 public class HistoryComparer {
@@ -19,7 +19,6 @@ public class HistoryComparer {
 
   private HtmlTableScanner firstScanner;
   private HtmlTableScanner secondScanner;
-  private TableListComparer comparer;
 
   String firstFileContent = "";
   String secondFileContent = "";
@@ -41,7 +40,7 @@ public class HistoryComparer {
   }
 
   private TestExecutionReport readTestExecutionReport(String filePath) throws IOException, SAXException {
-    return new TestExecutionReport().read(new File(filePath));
+    return new TestExecutionReport(new File(filePath));
   }
 
   private boolean exactlyOneReport(TestExecutionReport report) {
@@ -95,7 +94,7 @@ public class HistoryComparer {
     initializeComparerHelpers();
     if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
       return false;
-    comparer = new TableListComparer(firstScanner, secondScanner);
+    TableListComparer comparer = new TableListComparer(firstScanner, secondScanner);
     comparer.compareAllTables();
     matchedTables = comparer.tableMatches;
     getTableTextFromScanners();

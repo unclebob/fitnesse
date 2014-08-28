@@ -6,9 +6,11 @@
 
 	<property environment="env"/>
 	<property name="env.FITNESSE_TEST_PORT" value="8080"/>
-	<property name="src.dir" location="src"/>
+    <property name="src.dir" location="src"/>
+    <property name="test.src.dir" location="test"/>
 	<property name="classes.dir" location="classes"/>
-	<property name="fitnesseRoot" value="FitNesseRoot"/>
+    <property name="test.classes.dir" location="test-classes"/>
+    <property name="fitnesseRoot" value="FitNesseRoot"/>
 	<property name="results.dir" location="test-results"/>
 	<property name="dist.dir" location="dist"/>
 	<property name="javadoc.dir" location="javadoc"/>
@@ -16,7 +18,7 @@
 	<property name="antlib.dir" location="antlib"/>
 	<property name="port" value="8001"/>
   
-	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
+	<target name="all" depends="unit_tests, acceptance_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
   
 	<target name="build" depends="clean, compile" description="clean, then compile the source"/>
   	
@@ -27,12 +29,14 @@
 		<include name="FrontPage/**"/>
 		<include name="PageHeader/**"/>
 		<include name="PageFooter/**"/>
+		<include name="TemplateLibrary/**"/>
 		<exclude name="**/*.zip"/>
 	</zipfileset>
 
 	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
 		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
+			<arg value="-v" />
 			<arg value="-p" />
 			<arg value="${port}" />
 		</java>
@@ -46,16 +50,7 @@
 		<delete file="${dist.dir}/fitnesse.jar" />
 
 		<jar jarfile="${dist.dir}/fitnesse.jar" basedir="${classes.dir}">
-			<include name="**/*.class" />
-			<exclude name="**/*Test.class" />
-			<exclude name="**/*TestSuite.class" />
-			<include name="fitnesse/resources/**" />
-			<include name="Resources/**" />
-			<include name="tasks.properties" />
-			<include name="META-INF/FitNesseVersion.txt" />
-
-			<fileset dir="${classes.dir}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
-
+			<include name="**" />
 			<zipfileset refid="wikipages.fileset" />
 
 			<manifest>
@@ -102,31 +97,48 @@
 			<arg value="-doNotReplace:FitNesseRoot/PageHeader/properties.xml" />
 			<arg value="-doNotReplace:FitNesseRoot/PageFooter/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/PageFooter/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
+			<arg value="FitNesseRoot/TemplateLibrary" />
 		</java>
 	</target>
 
-	<target name="compile" depends="stamp-version, resolve" description="compile the source (make)">
-		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
-		<copy file="extra/ant/tasks.properties" todir="${classes.dir}" />
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.dir}">
-				<include name="fitnesse/resources/**" />
-			</fileset>
-		</copy>
+    <target name="compile" depends="stamp-version, resolve" description="compile the source (make)">
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}">
+                <include name="fitnesse/resources/**" />
+                <include name="**/*.properties" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="test-compile" depends="compile" description="compile the source (make)">
+        <mkdir dir="${test.classes.dir}" />
+        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
+    </target>
+
+    <target name="post-compile" depends="stamp-version, retrieve" description="post-compile steps, use those in your IDE" />
+
+	<target name="bootstrap-needs-update">
+		<uptodate property="bootstrap-css-up-to-date" targetfile="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
+			<srcfiles dir="${src.dir}/fitnesse/resources/bootstrap/less" includes="*.less" />
+		</uptodate>
 	</target>
 
-        <target name="post-compile" depends="stamp-version, retrieve" description="post-compile steps, use those in your IDE" />
-
-	<uptodate property="bootstrap-css-up-to-date" targetfile="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css" >
-		<srcfiles dir="${basedir}" includes="${src.dir}/fitnesse/resources/bootstrap/less/*.less" />
-	</uptodate>
-
-	<target name="compile-bootstrap-less" depends="ivy-init" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
+	<target name="compile-bootstrap-less" depends="ivy-init, bootstrap-needs-update" description="compile bootstrap less.js scripts" unless="bootstrap-css-up-to-date">
 		<mkdir dir="${classes.dir}/fitnesse/resources/bootstrap/css" />
 		<ivy:cachepath pathid="lesscss.classpath" conf="lesscss" />
 		<java classname="org.mozilla.javascript.tools.shell.Main"
@@ -134,9 +146,27 @@
 			failonerror="true"
 			fork="true"
 			output="${classes.dir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css">
-			<arg value="extra/lesscss/less-rhino-1.3.3.js" />
+			<arg value="extra/lesscss/less-rhino-1.7.0.js" />
 			<arg value="${src.dir}/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less" />
 		</java>
+	</target>
+
+    <condition property="phantomjs-present">
+        <or>
+            <available file="/usr/local/bin/phantomjs" />
+            <available file="/usr/bin/phantomjs" />
+        </or>
+    </condition>
+
+	<target name="jasmine" description="Runs Javascript Unit Tests" if="phantomjs-present">
+		<exec executable="phantomjs" failonerror="true">
+			<arg line="extra/phantomjs/run-jasmine.js" />
+			<arg line="src/fitnesse/resources/javascript/javascript-test.html" />
+		</exec>
+		<exec executable="phantomjs" failonerror="true">
+			<arg line="extra/phantomjs/run-jasmine.js" />
+			<arg line="src/fitnesse/resources/wysiwyg/wysiwyg-test.html" />
+		</exec>
 	</target>
 
 	<target name="set-version-if-not-manualy-set" unless="version">
@@ -152,6 +182,7 @@
 
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes.dir}" />
+		<delete dir="${test.classes.dir}" />
 		<delete dir="${results.dir}" />
 		<delete dir="${lib.dir}" />
 		<delete dir="${dist.dir}" />
@@ -160,20 +191,15 @@
 		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
-	<target name="unit_test" depends="compile" description="run the unit tests">
+	<target name="unit_test" depends="test-compile" description="run the unit tests">
 		<mkdir dir="${results.dir}" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
 			<classpath refid="classpath" />
 			<formatter type="xml" usefile="true" />
 			<formatter type="plain" usefile="false" />
 			<batchtest todir="${results.dir}">
-				<fileset dir="${src.dir}">
+				<fileset dir="${test.src.dir}">
 					<include name="**/*Test.java" />
-					<exclude name="**/ShutdownResponderTest.java" />
-					<exclude name="**/QueryTableBaseTest.java" />
-					<exclude name="**/Test.java" />
-					<exclude name="**/SystemUnderTest.java" />
-					<exclude name="**/MySystemUnderTest.java" />
 				</fileset>
 			</batchtest>
 		</junit>
@@ -183,14 +209,14 @@
 		<taskdef classpathref="classpath" resource="tasks.properties" />
 	</target>
 
-	<target name="release" depends="unit_tests, acceptance_tests, pom" />
+	<target name="release" depends="unit_tests, acceptance_tests" />
 
 	<target name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
 	<target name="release_jar" depends="unit_tests, jar, standalone-jar, sources-jar, javadoc-jar"/>
 
 	<target name="acceptance_tests_xml" depends="standalone-jar">
-		<java jar="${dist,dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+		<java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />
@@ -211,43 +237,62 @@
 		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone,default,test" />
 	</target>
 
+	<target name="dependencies" depends="resolve" description="Generate a dependencies graph">
+		<ivy:report conf="default,standalone,test,maven" todir="dependencies" />
+	</target>
+
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
 		<ivy:cachepath pathid="lib.classpath" />
 		<path id="classpath">
 			<pathelement path="${classes.dir}" />
+			<pathelement path="${test.classes.dir}" />
 			<path refid="lib.classpath" />
 		</path>
 	</target>
 
-	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
-		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
-		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="templates/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
-			   <mapping conf="standalone" scope="compile" />
-			   <mapping conf="test" scope="test" />
-		</ivy:makepom>
-	</target>
-
-	<target name="snapshot" depends="resolve,pom">
-		<ivy:publish resolver="sonatype-nexus-snapshots"
+	<target name="install" depends="set-version-if-not-manualy-set,jar,sources-jar">
+		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="integration" />
+		<ivy:publish resolver="local"
 			pubrevision="${version}"
-			publishivy="false">
-			<artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+			overwrite="true" conf="default">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="publish" depends="set-version-if-not-manualy-set,jar,pom,standalone-jar,sources-jar,javadoc-jar">
+	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
+		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
+			   <ivy:mapping conf="standalone" scope="compile" />
+			   <ivy:mapping conf="test" scope="test" />
+		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+		<ivy:settings id="ivy.publish.instance"
+			file="ivysettings-sonatype.xml" />
+		<ivy:publish resolver="sonatype-nexus-snapshots"
+			settingsref="ivy.publish.instance"
+			pubrevision="${version}-SNAPSHOT"
+			publishivy="false"
+			overwrite="true" conf="maven">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+
+	<target name="publish" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
 		<ivy:settings id="ivy.publish.instance"
 			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-staging"
+			settingsref="ivy.publish.instance"
 			pubrevision="${version}"
 			publishivy="false"
-			settingsref="ivy.publish.instance"
-			overwrite="true">
-			<artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
+			overwrite="true" conf="maven">
+			<ivy:artifacts pattern="${dist.dir}/[artifact](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 

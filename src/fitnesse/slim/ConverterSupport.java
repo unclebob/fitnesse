@@ -15,9 +15,9 @@ class ConverterSupport {
 	@SuppressWarnings("unchecked")
 	private static <T> T convertArg(Object arg, Class<T> argumentType)
 			throws SlimError {
-		if (arg == null || argumentType.isInstance(arg)) {
-			// arg may be a List or an instance that comes from the variable
-			// store
+		if (arg == null || (argumentType.isInstance(arg) && !(String.class.equals(argumentType)))) {
+			// arg may be a List or an instance that comes from the variable store
+			// But String arguments should always pass through the registered String Converter
 			return (T) arg;
 		}
 		Converter<T> converter = ConverterRegistry.getConverterForClass(argumentType);

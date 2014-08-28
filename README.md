@@ -1,4 +1,4 @@
-# [FitNesse](http://fitnesse.org/)
+# [FitNesse](http://fitnesse.org/)  [![Build Status](https://travis-ci.org/unclebob/fitnesse.png)](https://travis-ci.org/unclebob/fitnesse)
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
@@ -9,7 +9,7 @@ To get started, check out [http://fitnesse.org](http://fitnesse.org)!
 ## Quick start
 
 * [A One-Minute Description of FitNesse](http://fitnesse.org/FitNesse.UserGuide.OneMinuteDescription)
-* [Download FitNesse and Plugins](http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad)
+* [Download FitNesse](http://fitnesse.org/FitNesseDownLoad) and [Plugins](http://fitnesse.org/PlugIns)
 * [The FitNesse User Guide](http://fitnesse.org/.FitNesse.UserGuide)
 
 
@@ -46,6 +46,13 @@ $ ant
 
 which builds the `all` target. 
 
+### Running
+
+To start the FitNesse wiki locally, for example to browse the local version of the User Guide
+
+```
+$ ant run
+```
 
 ### Testing
 
@@ -86,7 +93,7 @@ There are a few things to keep in mind when working from an IDE:
    you set the "post-compile" target from the build file, you won't have any trouble with
    cleaning, building and executing tests from your IDE.
 
-2. Apache Ivy is used for dependency management. You're IDE can be set up to support Ivy.
+2. Apache Ivy is used for dependency management. Your IDE can be set up to support Ivy.
     * In IntelliJ set IvyIDEA in "Project Structure" -> "Modules" -> "Dependencies".
     * In Eclipse, install IvyDE and set it up.
 
@@ -97,11 +104,3 @@ There are a few things to keep in mind when working from an IDE:
    will download the dependencies and copy them to lib/, from where your
    IDE can pick them up.
 
-
-### .NET Support (8/6/2008)
-
-We re-installed the dotnet/*.dll and dotnet/*.exe files, taking them from the
-`fitnessedotnet` release on Sourceforge. This will allow the .NET Acceptance
-Tests to run right out of this distribution. However, you should consider using
-[FitSharp](http://www.syterra.com/FitSharp.html). See the page `FitNesseRoot/FitNesse/DotNet/context.txt` for
-more information.

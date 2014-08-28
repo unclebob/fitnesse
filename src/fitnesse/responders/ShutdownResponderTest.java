@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -10,29 +12,34 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ShutdownResponderTest extends TestCase {
+public class ShutdownResponderTest {
   private FitNesseContext context;
-  private FitNesse fitnesse;
   private boolean doneShuttingDown;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(FitNesseUtil.PORT);
-    fitnesse = new FitNesse(context);
-    fitnesse.start();
+    context.fitNesse.start();
   }
 
-  protected void tearDown() throws Exception {
-    fitnesse.stop();
+  @After
+  public void tearDown() throws Exception {
+    context.fitNesse.stop();
   }
 
+  @Test
   public void testFitNesseGetsShutdown() throws Exception {
     ShutdownResponder responder = new ShutdownResponder();
     responder.makeResponse(context, new MockRequest());
     Thread.sleep(200);
-    assertFalse(fitnesse.isRunning());
+    assertFalse(context.fitNesse.isRunning());
   }
 
+  @Test
   public void testShutdownCalledFromServer() throws Exception {
     Thread thread = new Thread() {
       public void run() {
@@ -51,10 +58,11 @@ public class ShutdownResponderTest extends TestCase {
     Thread.sleep(500);
 
     assertTrue(doneShuttingDown);
-    assertFalse(fitnesse.isRunning());
+    assertFalse(context.fitNesse.isRunning());
   }
 
+  @Test
   public void testIsSecure() throws Exception {
-    assertTrue((new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation) == true);
+    assertTrue((new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation));
   }
 }

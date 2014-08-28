@@ -32,21 +32,15 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
       addNameToEnd(names[i]);
   }
 
-  @SuppressWarnings("unchecked")
-  public WikiPagePath clone() {
+  public WikiPagePath copy() {
     WikiPagePath clone = new WikiPagePath();
     clone.names = (LinkedList<String>) names.clone();
     clone.mode = mode;
     return clone;
   }
 
-  public WikiPagePath copy() {
-    return (WikiPagePath) clone();
-  }
-
   public WikiPagePath(WikiPage page) {
-    PageCrawler crawler = page.getPageCrawler();
-    while (!crawler.isRoot(page)) {
+    while (!page.isRoot()) {
       names.addFirst(page.getName());
       page = page.getParent();
     }

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -27,10 +29,6 @@ public class TestSlim implements TestSlimInterface {
 
   public TestSlim() {
 
-  }
-
-  public void runForever() {
-    while (true) {}
   }
 
   public TestSlim(int constructorArg) {
@@ -74,6 +72,10 @@ public class TestSlim implements TestSlimInterface {
 
   public int returnInt() {
     return 7;
+  }
+
+  public String returnHugeString() {
+    return StringUtils.repeat("x", 999999 + 10);
   }
 
   public void setString(String arg) {
@@ -259,12 +261,10 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public void setMap(Map<String, String> map) {
-    System.out.println("set map = " + map);
     this.map = map;
   }
 
   public Map<String, String> getMap() {
-    System.out.println("got map = " + map);
     return  map;
   }
   

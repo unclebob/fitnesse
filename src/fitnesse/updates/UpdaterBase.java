@@ -7,10 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 
 public class UpdaterBase implements Updater {
+  protected static final Logger LOG = Logger.getLogger(UpdaterBase.class.getName());
+
   public FitNesseContext context;
   public Properties rootProperties;
   public Update[] updates;
@@ -54,7 +59,7 @@ public class UpdaterBase implements Updater {
       rootProperties.store(os, "#FitNesse properties");
     } catch (IOException e) {
       String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
-      System.err.println("Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
+      LOG.log(Level.SEVERE, "Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
       throw e;
     } finally {
       if (os != null)
@@ -62,7 +67,7 @@ public class UpdaterBase implements Updater {
     }
   }
 
-  public void update() throws IOException {
+  public boolean update() throws IOException {
     Update[] updates = getUpdates();
     for (int i = 0; i < updates.length; i++) {
       Update update = updates[i];
@@ -70,15 +75,16 @@ public class UpdaterBase implements Updater {
         performUpdate(update);
     }
     saveProperties();
+    return true;
   }
 
   private void performUpdate(Update update) {
     try {
-      print(update.getMessage());
+      //LOG.info(update.getMessage());
       update.doUpdate();
     }
     catch (Exception e) {
-      print("\n\t" + e + "\n");
+      LOG.log(Level.SEVERE, "Update failed", e);
     }
   }
 
@@ -86,8 +92,4 @@ public class UpdaterBase implements Updater {
     return updates;
   }
 
-  private void print(String message) {
-    if (!UpdaterImplementation.testing)
-      System.out.print(message);
-  }
 }

@@ -7,8 +7,8 @@ import static java.util.regex.Pattern.LITERAL;
 
 import java.util.regex.Pattern;
 
-import fitnesse.components.RegularExpressionWikiPageFinder;
-import fitnesse.components.TitleWikiPageFinder;
+import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
+import fitnesse.wiki.search.TitleWikiPageFinder;
 import fitnesse.components.TraversalListener;
 
 public class SearchResponder extends ResultResponder {

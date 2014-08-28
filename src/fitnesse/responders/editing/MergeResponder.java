@@ -7,12 +7,11 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -33,7 +32,7 @@ public class MergeResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     existingContent = page.getData().getContent();
     newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 

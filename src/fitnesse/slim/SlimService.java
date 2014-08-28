@@ -9,52 +9,81 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import fitnesse.socketservice.SocketFactory;
+
+import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
-	static boolean verbose;
-	static int port;
-	static String interactionClassName = null;
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] port";
+  static Class<? extends DefaultInteraction> interactionClass = DefaultInteraction.class;
 
-	private final ServerSocket serverSocket;
-	private final SlimServer slimServer;
+  public static class Options {
+    final boolean verbose;
+    final int port;
+    final Class<? extends DefaultInteraction> interactionClass;
+    /**
+     * daemon mode: keep accepting new connections indefinitely.
+     */
+    final boolean daemon;
+    final Integer statementTimeout;
+
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, Integer statementTimeout) {
+      this.verbose = verbose;
+      this.port = port;
+      this.interactionClass = interactionClass;
+      this.daemon = daemon;
+      this.statementTimeout = statementTimeout;
+    }
+  }
+
+  private final ServerSocket serverSocket;
+  private final SlimServer slimServer;
+  private final boolean daemon;
+  private final Executor executor = Executors.newFixedThreadPool(5);
   static Thread service;
 
   public static void main(String[] args) throws IOException {
-		if (parseCommandLine(args)) {
-			startWithFactory(new JavaSlimFactory());
-		} else {
-			parseCommandLineFailed(args);
-		}
-	}
+    Options options = parseCommandLine(args);
+    if (options != null) {
+      startWithFactory(createJavaSlimFactory(options), options);
+    } else {
+      parseCommandLineFailed(args);
+    }
+  }
 
-	protected static void parseCommandLineFailed(String[] args) {
-		System.err.println("Invalid command line arguments:"
-				+ Arrays.asList(args));
-	}
+  protected static void parseCommandLineFailed(String[] args) {
+    System.err.println("Invalid command line arguments: " + Arrays.asList(args));
+    System.err.println("Usage:");
+    System.err.println("    " + SlimService.class.getName() + " " + OPTION_DESCRIPTOR);
+  }
 
-	public static void startWithFactory(SlimFactory slimFactory) throws IOException {
-		SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
-		slimservice.accept();
-	}
+  public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
+    slimservice.accept();
+  }
 
-	public static void startWithFactoryAsync(SlimFactory slimFactory) throws IOException {
-      if (service != null && service.isAlive()) {
-        System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
-        service.interrupt();
-        throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+  // For testing only -- for now
+  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
+    if (service != null && service.isAlive()) {
+      System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      service.interrupt();
+      throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+    }
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
+    service = new Thread() {
+      public void run() {
+        try {
+          slimservice.accept();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
-      final SlimService slimservice = new SlimService(slimFactory.getSlimServer(verbose));
-      service = new Thread() {
-          public void run() {
-              try {
-                  slimservice.accept();
-              } catch (IOException e) {
-                  throw new RuntimeException(e);
-              }
-          }
-      };
-      service.start();
-	}
+    };
+    service.start();
+  }
 
   // For testing, mainly.
   public static void waitForServiceToStopAsync() throws InterruptedException {
@@ -66,72 +95,96 @@ public class SlimService {
     }
   }
 
-	public static boolean parseCommandLine(String[] args) {
-		CommandLine commandLine = new CommandLine(
-				"[-v] [-i interactionClass] port ");
-		if (commandLine.parse(args)) {
-			verbose = commandLine.hasOption("v");
-			interactionClassName = commandLine.getOptionArgument("i",
-					"interactionClass");
-			String portString = commandLine.getArgument("port");
-			port = (portString == null) ? 8099 : Integer.parseInt(portString);
-			return true;
-		}
-		return false;
-	}
+  public static Options parseCommandLine(String[] args) {
+    CommandLine commandLine = new CommandLine(OPTION_DESCRIPTOR);
+    if (commandLine.parse(args)) {
+      boolean verbose = commandLine.hasOption("v");
+      String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
+      String portString = commandLine.getArgument("port");
+      int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      String statementTimeoutString = commandLine.getOptionArgument("s", "statementTimeout");
+      Integer statementTimeout = (statementTimeoutString == null) ? null : Integer.parseInt(statementTimeoutString);
+      boolean daemon = commandLine.hasOption("d");
+      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon, statementTimeout);
+    }
+    return null;
+  }
 
-	public SlimService(SlimServer slimServer) throws IOException {
-		this.slimServer = slimServer;
+  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon) throws IOException {
+    SlimService.interactionClass = interactionClass;
+    this.daemon = daemon;
+    this.slimServer = slimServer;
 
-		try {
-			serverSocket = tryCreateServerSocket(port);
-		} catch (java.lang.OutOfMemoryError e) {
-			System.err.println("Out of Memory. Aborting");
-			e.printStackTrace();
-			System.exit(99);
+    try {
+      serverSocket = SocketFactory.tryCreateServerSocket(port);
+    } catch (java.lang.OutOfMemoryError e) {
+      System.err.println("Out of Memory. Aborting");
+      e.printStackTrace();
+      System.exit(99);
 
-			throw e;
-		}
-	}
+      throw e;
+    }
+  }
 
-	private ServerSocket tryCreateServerSocket(int port) throws IOException {
-		try
-		{
-			return new ServerSocket(port);
-		} catch (IOException e) {
-			System.out.println("IO exception on port = " + port);
-			e.printStackTrace();
-			throw e;
-		}
-	}
+  public void accept() throws IOException {
+    try {
+      if (daemon) {
+        acceptMany();
+      } else {
+        acceptOne();
+      }
+    } catch (java.lang.OutOfMemoryError e) {
+      System.err.println("Out of Memory. Aborting");
+      e.printStackTrace();
+      System.exit(99);
+    } finally {
+      serverSocket.close();
+    }
+  }
 
-	public void accept() throws IOException {
-		Socket socket = null;
-		try{
-			socket = serverSocket.accept();
-			slimServer.serve(socket);
-		} catch (java.lang.OutOfMemoryError e) {
-			System.err.println("Out of Memory. Aborting");
-			e.printStackTrace();
-			System.exit(99);
-		} finally {
-			if (socket != null) {
-				socket.close();
-			}
-			serverSocket.close();
-		}
-	}
+  private void acceptMany() throws IOException {
+    while (true) {
+      final Socket socket = serverSocket.accept();
+      executor.execute(new Runnable() {
 
-	@SuppressWarnings("unchecked")
-	public static Class<DefaultInteraction> getInteractionClass() {
-		if (interactionClassName == null) {
-			return DefaultInteraction.class;
-		}
-		try {
-			return (Class<DefaultInteraction>) Class
-					.forName(interactionClassName);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        @Override
+        public void run() {
+          try {
+            handle(socket);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      });
+    }
+  }
+
+  private void handle(Socket socket) throws IOException {
+    try {
+      slimServer.serve(socket);
+    } finally {
+      socket.close();
+    }
+  }
+
+  private void acceptOne() throws IOException {
+    Socket socket = serverSocket.accept();
+    handle(socket);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Class<DefaultInteraction> getInteractionClass(String interactionClassName) {
+    if (interactionClassName == null) {
+      return DefaultInteraction.class;
+    }
+    try {
+      return (Class<DefaultInteraction>) Class.forName(interactionClassName);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Class<? extends DefaultInteraction> getInteractionClass() {
+    return interactionClass;
+  }
 }

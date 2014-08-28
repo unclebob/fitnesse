@@ -36,6 +36,11 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         Symbol bodyText = parser.parseTo(SymbolType.CloseCollapsible);
         if (parser.atEnd()) return Symbol.nothing;
 
+        // Remove trailing newline so we do not introduce excessive whitespace in the page.
+        if (parser.peek().isType(SymbolType.Newline)) {
+            parser.moveNext(1);
+        }
+
         return new Maybe<Symbol>(current
                 .putProperty(STATE, state)
                 .add(titleText)
@@ -60,8 +65,8 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         outerBlock.addAttribute("class", "collapsible" + state);
         
         outerBlock.add(new RawHtml("<ul>" +
-        		"<li><a href='#' class='expandall'>Expand All</a></li>" +
-        		"<li><a href='#' class='collapseall'>Collapse All</a></li>" +
+        		"<li><a href='#' class='expandall'>Expand</a></li>" +
+        		"<li><a href='#' class='collapseall'>Collapse</a></li>" +
         		"</ul>"));
 
       	HtmlTag title = new HtmlTag("p", titleText);

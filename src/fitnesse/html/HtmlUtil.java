@@ -2,31 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPageUtil;
 
 public class HtmlUtil {
-  public static final String BRtag = "<br/>";
-  public static final String HRtag = "<hr/>";
-  public static final HtmlElement BR = new RawHtml(BRtag);
-  public static final HtmlElement HR = new RawHtml(HRtag);
+  public static final HtmlElement BR = new RawHtml("<br/>");
+  public static final HtmlElement HR = new RawHtml("<hr/>");
   public static final HtmlElement NBSP = new RawHtml("&nbsp;");
-  public static final HtmlElement P = new RawHtml("<p>");
-  public static final boolean NO_NEW_WINDOW = false;
-  public static final String ENDL = System.getProperty("line.separator");
 
   public static HtmlTag makeDivTag(String divClass) {
     HtmlTag div = new HtmlTag("div");
     div.addAttribute("class", divClass);
     div.add("");
     return div;
-  }
-
-  public static void addTitles(HtmlPage page, String title) {
-    page.setTitle(title);
-    page.setPageTitle(new PageTitle(title));
   }
 
   public static HtmlTag makeBold(String content) {
@@ -51,17 +40,6 @@ public class HtmlUtil {
     link.addAttribute("href", href);
     link.add(content);
     return link;
-  }
-
-  public static String makePageHtml(PageData pageData) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(WikiPageUtil.getHeaderPageHtml(pageData.getWikiPage()));
-    buffer.append(pageData.getHtml());
-    return buffer.toString();
-  }
-
-  public static String makePageFooterHtml(PageData pageData) {
-    return WikiPageUtil.getFooterPageHtml(pageData.getWikiPage());
   }
 
   public static String metaText(String text) {

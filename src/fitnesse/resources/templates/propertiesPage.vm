@@ -1,5 +1,5 @@
 #macro( checked $attr )#if( $pageData.hasAttribute($attr) ) checked="checked"#end#end
-#macro( value $prop ) value="$!{pageData.getAttribute( $prop )}"#end
+#macro( value $prop ) value="#escape($!{pageData.getAttribute( $prop )})"#end
  <p>$lastModified</p>
  <form method="post">
   <input type="hidden" name="responder" value="saveProperties"/>
@@ -128,7 +128,7 @@
  </form>
 
 
-<script src="/files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
   /* Tags */

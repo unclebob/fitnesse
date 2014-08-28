@@ -25,3 +25,27 @@ beat Bill with a noodle
 
 !|script|
 |login user with password;|Bob|xyzzy|
+
+!3 Scenarios can be defined without a filler name between the underscores 
+|scenario | myDivision _ _ _|numerator, denominator, quotient|
+|setNumerator| @numerator|
+|setDenominator| @denominator|
+|check | quotient| @quotient|
+
+Use the Division class from the eg library to implement the scenario
+|Library|
+|eg.Division|
+
+Test the scenario with a decision table
+| myDivision |
+| # | numerator | denominator | quotient? |
+| any comment| 10 | 2 | 5.0 |
+
+
+Test the scenario with a script
+|script|
+|myDivision 20 5 4.0|
+|myDivision |6|| 3|| 2.0|
+|#| open Bug: The next syntax fails|
+|#|myDivision; |10 2 5.0|
+

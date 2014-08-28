@@ -1,36 +1,66 @@
 <?xml version="1.0"?>
 <testResults>
-  <FitNesseVersion>$formatter.fitNesseVersion</FitNesseVersion>
-  <rootPath>#escape($formatter.rootPageName)</rootPath>
-  #foreach ($reference in $formatter.pageHistoryReferences)
-  #set($executionReport = $formatter.getTestExecutionReport($reference))
-  #set($result = $executionReport.getResults().get(0))
+  <FitNesseVersion>$suiteExecutionReport.version</FitNesseVersion>
+  <rootPath>#escape($suiteExecutionReport.rootPath)</rootPath>
+  #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <result>
     <counts>
-      <right>$result.Right</right>
-      <wrong>$result.Wrong</wrong>
-      <ignores>$result.Ignores</ignores>
-      <exceptions>$result.Exceptions</exceptions>
+      <right>$reference.testSummary.right</right>
+      <wrong>$reference.testSummary.wrong</wrong>
+      <ignores>$reference.testSummary.ignores</ignores>
+      <exceptions>$reference.testSummary.exceptions</exceptions>
     </counts>
-    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
-    <relativePageName>#escape($result.RelativePageName)</relativePageName>
-    <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()&amp;format=xml</pageHistoryLink>
-    #if($result.Tags)
-    <tags>#escape($result.Tags)</tags>
+    <runTimeInMillis>$reference.RunTimeInMillis</runTimeInMillis>
+    <relativePageName>#escape($reference.relativePageName)</relativePageName>
+    <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
+    #set($testResult = $formatter.getTestResult($reference))
+    #if($testResult.tags)
+    <tags>#escape($testResult.tags)</tags>
     #end
-    #if($formatter.shouldIncludeHtml())
-    <content>#escape($result.content)</content>
-    #end 
+    #if($includeHtml)
+    <content>#escape($testResult.content)</content>
+    #end
+    #if($includeInstructions && $testResult.instructions.size() > 0)
+    <instructions>
+      #foreach($instructionResult in $testResult.Instructions)
+      <instructionResult>
+        <instruction>#escape($instructionResult.Instruction)</instruction>
+        <slimResult>#escape($instructionResult.SlimResult)</slimResult>
+        #foreach($expectation in $instructionResult.Expectations)
+        <expectation>
+          #if($expectation.Status)
+          <status>$expectation.Status</status>
+          #end
+          <instructionId>$expectation.InstructionId</instructionId>
+          #if($expectation.Col)
+          <col>$expectation.Col</col>
+          #end
+          #if($expectation.Row)
+          <row>$expectation.Row</row>
+          #end
+          <type>#escape($expectation.Type)</type>
+          #if($expectation.Actual)
+          <actual>#escape($expectation.Actual)</actual>
+          #end
+          #if($expectation.Expected)
+          <expected>#escape($expectation.Expected)</expected>
+          #end
+          #if($expectation.EvaluationMessage)
+          <evaluationMessage>#escape($expectation.EvaluationMessage)</evaluationMessage>
+          #end
+        </expectation>
+        #end
+      </instructionResult>
+      #end
+    </instructions>
+    #end
   </result>
   #end
-
   <finalCounts>
-    <right>$formatter.getPageCounts().right</right>
-    <wrong>$formatter.getPageCounts().wrong</wrong>
-    <ignores>$formatter.getPageCounts().ignores</ignores>
-    <exceptions>$formatter.getPageCounts().exceptions</exceptions>
+    <right>$suiteExecutionReport.finalCounts.right</right>
+    <wrong>$suiteExecutionReport.finalCounts.wrong</wrong>
+    <ignores>$suiteExecutionReport.finalCounts.ignores</ignores>
+    <exceptions>$suiteExecutionReport.finalCounts.exceptions</exceptions>
   </finalCounts>
-  <totalRunTimeInMillis>$formatter.TotalRunTimeInMillis</totalRunTimeInMillis>
-
+  <totalRunTimeInMillis>$suiteExecutionReport.totalRunTimeInMillis</totalRunTimeInMillis>
 </testResults>
-

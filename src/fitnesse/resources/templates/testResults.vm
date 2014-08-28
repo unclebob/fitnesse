@@ -16,29 +16,7 @@
     #if($result.Tags)
     <tags>#escape($result.Tags)</tags>
     #end
-
-    #if($result.Tables.size() > 0)
-    <tables>
-      #foreach($table in $result.Tables)
-      <table>
-        <name>$table.Name</name>
-        #foreach($row in $table)
-        <row>
-          #foreach($col in $row)
-          <col>#escape($col)</col>
-          #end
-
-        </row>
-        #end
-
-      </table>
-      #end
-
-    </tables>
-    #end
-
     #if($result.Instructions.size() > 0)
-
     <instructions>
       #foreach($instructionResult in $result.Instructions)
       <instructionResult>
@@ -68,16 +46,12 @@
           #end
         </expectation>
         #end
-
       </instructionResult>
       #end
-
     </instructions>
     #end
-
   </result>
   #end
-
   #if($response.FinalCounts)
   <finalCounts>
     <right>$response.FinalCounts.Right</right>

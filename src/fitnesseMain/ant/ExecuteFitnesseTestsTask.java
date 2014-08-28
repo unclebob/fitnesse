@@ -82,7 +82,7 @@ public class ExecuteFitnesseTestsTask extends Task {
 
     Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
     String[] commandLine = cmd.getCommandline();
-    System.out.printf("Executing: %s\n", StringUtil.join(Arrays.asList(commandLine), " "));
+    log("Executing: " + StringUtil.join(Arrays.asList(commandLine), " "));
     execute.setCommandline(commandLine);
     execute.setNewenvironment(false);
     execute.setAntRun(getProject());

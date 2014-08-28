@@ -33,9 +33,8 @@ public class FileResponder implements Responder {
   final public String resource;
   final public File requestedFile;
   public Date lastModifiedDate;
-  public String lastModifiedDateString;
 
-  public static Responder makeResponder(Request request, String rootPath) {
+  public static Responder makeResponder(Request request, String rootPath) throws IOException {
     String resource = request.getResource();
 
     try {
@@ -44,9 +43,11 @@ public class FileResponder implements Responder {
       return new ErrorResponder(e);
     }
 
-    File requestedFile = new File(rootPath + "/" + resource);
-    
-    if (requestedFile.isDirectory())
+    File requestedFile = new File(rootPath, resource);
+
+    if (!isInFilesDirectory(new File(rootPath), requestedFile)) {
+      return new ErrorResponder("Invalid path: " + resource);
+    } else if (requestedFile.isDirectory())
       return new DirectoryResponder(resource, requestedFile);
     else
       return new FileResponder(resource, requestedFile);
@@ -59,8 +60,8 @@ public class FileResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     if (requestedFile.exists()) {
-      return makeFileResponse(context, request);
-    } else if (canLoadFromClasspath(resource)) {
+      return makeFileResponse(request);
+    } else if (canLoadFromClasspath()) {
       return makeClasspathResponse(context, request);
     } else {
       return new NotFoundResponder().makeResponse(context, request);
@@ -68,7 +69,7 @@ public class FileResponder implements Responder {
   }
   
 
-  private boolean canLoadFromClasspath(String resource2) {
+  private boolean canLoadFromClasspath() {
     return resource.startsWith("files/fitnesse/");
   }
 
@@ -91,13 +92,13 @@ public class FileResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     response.setContent(content);
     setContentType(classpathResource, response);
-    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(LAST_MODIFIED_FOR_RESOURCES);
-    response.setLastModifiedHeader(lastModifiedDateString);
+    lastModifiedDate = LAST_MODIFIED_FOR_RESOURCES;
+    response.setLastModifiedHeader(lastModifiedDate);
 
     return response;
   }
 
-  private Response makeFileResponse(FitNesseContext context, Request request) throws FileNotFoundException {
+  private Response makeFileResponse(Request request) throws FileNotFoundException {
     InputStreamResponse response = new InputStreamResponse();
     determineLastModifiedInfo(new Date(requestedFile.lastModified()));
 
@@ -106,7 +107,7 @@ public class FileResponder implements Responder {
     else {
       response.setBody(requestedFile);
       setContentType(requestedFile.getName(), response);
-      response.setLastModifiedHeader(lastModifiedDateString);
+      response.setLastModifiedHeader(lastModifiedDate);
     }
     return response;
   }
@@ -115,7 +116,7 @@ public class FileResponder implements Responder {
     if (request.hasHeader("If-Modified-Since")) {
       String queryDateString = (String) request.getHeader("If-Modified-Since");
       try {
-        Date queryDate = SimpleResponse.makeStandardHttpDateFormat().parse(queryDateString);
+        Date queryDate = Response.makeStandardHttpDateFormat().parse(queryDateString);
         if (!queryDate.before(lastModifiedDate))
           return true;
       }
@@ -129,24 +130,13 @@ public class FileResponder implements Responder {
 
   private Response createNotModifiedResponse() {
     Response response = new SimpleResponse();
-    response.setStatus(304);
-    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(Clock.currentDate()));
-    response.addHeader("Cache-Control", "private");
-    response.setLastModifiedHeader(lastModifiedDateString);
+    response.notModified(lastModifiedDate, Clock.currentDate());
     return response;
   }
 
   private void determineLastModifiedInfo(Date lastModified) {
-    lastModifiedDate = lastModified;
-    lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
-
-    try  // remove milliseconds
-    {
-      lastModifiedDate = SimpleResponse.makeStandardHttpDateFormat().parse(lastModifiedDateString);
-    }
-    catch (java.text.ParseException jtpe) {
-      jtpe.printStackTrace();
-    }
+    // remove milliseconds
+    lastModifiedDate = new Date((lastModified.getTime() / 1000) * 1000);
   }
 
   private void setContentType(String filename, Response response) {
@@ -163,10 +153,25 @@ public class FileResponder implements Responder {
         contentType = "text/javascript";
       } else if (filename.endsWith(".jar")) {
         contentType = "application/x-java-archive";
+      } else if ((filename.endsWith(".jpg")) || (filename.endsWith(".jpeg"))) {
+          contentType = "image/jpeg";
+      } else if (filename.endsWith(".png")) {
+          contentType = "image/png";
+      } else if (filename.endsWith(".gif")) {
+          contentType = "image/gif";
       } else {
         contentType = "text/plain";
       }
     }
     return contentType;
+  }
+
+  public static boolean isInFilesDirectory(File rootPath, File file) throws IOException {
+    return isInSubDirectory(new File(rootPath, "files").getCanonicalFile(),
+            file.getCanonicalFile());
+  }
+
+  private static boolean isInSubDirectory(File dir, File file) {
+    return file != null && (file.equals(dir) || isInSubDirectory(dir, file.getParentFile()));
   }
 }

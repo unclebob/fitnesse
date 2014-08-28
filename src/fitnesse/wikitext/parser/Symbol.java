@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,27 +15,17 @@ public class Symbol {
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
     private SymbolType type;
-    private String content = "";
+    private String content;
     private List<Symbol> children;
     private Map<String,String> variables;
     private Map<String,String> properties;
 
-    public Symbol(SymbolType type) { this(type, 0); }
+    public Symbol(SymbolType type) { this(type, ""); }
 
     public Symbol(SymbolType type, String content) {
-        this(type, 0);
-        this.content = content;
-    }
-
-    public Symbol(SymbolType type, int childrenCapacity) {
         this.type = type;
-        if (childrenCapacity > 0) {
-            this.children = new ArrayList<Symbol>(childrenCapacity);
-        } else {
-            this.children = type.matchesFor(SymbolType.SymbolList)
-                            ? new ArrayList<Symbol>()
-                            : NO_CHILDREN;
-        }
+        this.content = content;
+        this.children = NO_CHILDREN;
     }
 
     public SymbolType getType() { return type; }
@@ -56,7 +46,7 @@ public class Symbol {
 
     private List<Symbol> children() {
         if (children == NO_CHILDREN) {
-            children = new ArrayList<Symbol>(1);
+            children = new LinkedList<Symbol>();
         }
         return children;
     }

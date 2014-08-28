@@ -16,8 +16,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 
 public class DirectoryResponder implements SecureResponder {
   private String resource;
@@ -42,9 +42,7 @@ public class DirectoryResponder implements SecureResponder {
   }
 
   private void setRedirectForDirectory(Response response) {
-    if (!resource.startsWith("/"))
-      resource = "/" + resource;
-    response.redirect(resource + "/");
+    response.redirect(context.contextRoot, resource + "/");
   }
 
   private String makeDirectoryListingPage() {

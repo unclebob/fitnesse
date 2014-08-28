@@ -15,13 +15,13 @@ public class WikiWordReference {
         this.wikiWord = wikiWord;
     }
 
-    public WikiPage getReferencedPage() throws Exception {
+    public WikiPage getReferencedPage() {
         String theWord = expandPrefix(wikiWord);
         WikiPage parentPage = currentPage.getParent();
-        return parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(theWord));
+        return parentPage.getPageCrawler().getPage(PathParser.parse(theWord));
     }
     
-    private String expandPrefix(String theWord) throws Exception {
+    private String expandPrefix(String theWord) {
       PageCrawler crawler = currentPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = currentPage.getName();
@@ -31,9 +31,9 @@ public class WikiWordReference {
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
         //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = currentPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+        for (WikiPage current = currentPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
             return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }
@@ -42,8 +42,8 @@ public class WikiWordReference {
       return theWord;
     }
 
-    public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
-      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath(pageToBeMoved);
+    public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
+      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
       String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
@@ -62,12 +62,12 @@ public class WikiWordReference {
       }
     }
 
-    private String getQualifiedWikiWord(String wikiWordText) throws Exception {
+    private String getQualifiedWikiWord(String wikiWordText) {
       String pathName = expandPrefix(wikiWordText);
       WikiPagePath expandedPath = PathParser.parse(pathName);
       if (expandedPath == null)
         return wikiWordText;
-      WikiPagePath fullPath = currentPage.getParent().getPageCrawler().getFullPathOfChild(currentPage.getParent(), expandedPath);
+      WikiPagePath fullPath = currentPage.getParent().getPageCrawler().getFullPathOfChild(expandedPath);
       return "." + PathParser.render(fullPath); //todo rcm 2/6/05 put that '.' into pathParser.  Perhaps WikiPagePath.setAbsolute()
     }
 
@@ -77,7 +77,7 @@ public class WikiWordReference {
 
     public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) throws Exception {
       String fullPathToReferent = getQualifiedWikiWord(wikiWord.getContent());
-      WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath(pageToRename);
+      WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath();
       pathToPageBeingRenamed.makeAbsolute();
       String absolutePathToPageBeingRenamed = PathParser.render(pathToPageBeingRenamed);
 
@@ -103,7 +103,8 @@ public class WikiWordReference {
     }
 
     private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) throws Exception {
-        WikiPagePath parentPath = currentPage.getPageCrawler().getFullPath(currentPage.getParent());
+      WikiPage parent = currentPage.getParent();
+      WikiPagePath parentPath = parent.getPageCrawler().getFullPath();
       parentPath.makeAbsolute();
 
       if (wikiWordText.startsWith("."))

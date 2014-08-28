@@ -1,23 +1,23 @@
 package fitnesse.junit;
 
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.testsystems.CompositeExecutionLog;
-import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
-import fitnesse.testsystems.slim.tables.Assertion;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import util.TimeMeasurement;
 
-public class JUnitRunNotifierResultsListener implements ResultsListener {
+public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiTestPage> {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
+  private Throwable firstFailure;
 
   public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
     this.notifier = notifier;
@@ -25,41 +25,19 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
-  }
-
-  @Override
-  public void announceNumberTestsToRun(int testsToRun) {
-  }
-
-  @Override
-  public void errorOccured() {
-  }
-
-  @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
+  public void testStarted(WikiTestPage test) {
+    firstFailure = null;
     if (test.isTestPage()) {
       notifier.fireTestStarted(descriptionFor(test));
     }
   }
 
-  private Description descriptionFor(TestPage test) {
-    return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
-  }
-
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-  }
-
-  @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
-    if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
-      if (test.isTestPage()) {
-        notifier.fireTestFinished(descriptionFor(test));
-      }
-    } else {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("wrong: "
-          + testSummary.wrong + " exceptions: " + testSummary.exceptions)));
+  public void testComplete(WikiTestPage test, TestSummary testSummary) {
+    if (firstFailure != null) {
+      notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
+    } else if (test.isTestPage()) {
+      notifier.fireTestFinished(descriptionFor(test));
     }
   }
 
@@ -69,13 +47,52 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    if (testResult != null &&
+            testResult.doesCount() &&
+            (testResult.getExecutionResult() == ExecutionResult.FAIL ||
+                    testResult.getExecutionResult() == ExecutionResult.ERROR)) {
+      firstFailure(testResult.getExecutionResult(), createMessage(testResult));
+    }
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    firstFailure(exceptionResult.getExecutionResult(), exceptionResult.getMessage());
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
+  public void testSystemStarted(TestSystem testSystem) {
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  }
+
+  private Description descriptionFor(WikiTestPage test) {
+    return Description.createTestDescription(mainClass, test.getFullPath());
+  }
+
+  String createMessage(TestResult testResult) {
+    if (testResult.hasActual() && testResult.hasExpected()) {
+      return String.format("[%s] expected [%s]",
+              testResult.getActual(),
+              testResult.getExpected());
+    } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
+      return String.format("[%s] %s",
+              testResult.hasActual() ? testResult.getActual() : testResult.getExpected(),
+              testResult.getMessage());
+    }
+    return testResult.getMessage();
+  }
+
+  private void firstFailure(ExecutionResult executionResult, String message) {
+    if (firstFailure != null) {
+      return;
+    }
+    if (executionResult == ExecutionResult.ERROR) {
+      firstFailure = new Exception(message);
+    } else {
+      firstFailure = new AssertionError(message);
+    }
   }
 }

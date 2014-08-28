@@ -8,8 +8,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 
@@ -35,7 +35,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.setMainTemplate("searchResults");
 
     if (page == null)
-      page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
+      page = context.root.getPageCrawler().getPage(PathParser.parse("FrontPage"));
     if (request.getQueryString() == null || request.getQueryString().equals(""))
       htmlPage.put("request", request.getBody());
     else

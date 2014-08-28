@@ -8,18 +8,26 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketService {
-  private ServerSocket serverSocket = null;
-  private Thread serviceThread = null;
+  private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
+
+  private final ServerSocket serverSocket;
+  private final Thread serviceThread;
   private volatile boolean running = false;
-  private SocketServer server = null;
-  private LinkedList<Thread> threads = new LinkedList<Thread>();
+  private final SocketServer server;
+  private final LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan = false;
 
   public SocketService(int port, SocketServer server) throws IOException {
+    this(port, server, false);
+  }
+
+  public SocketService(int port, SocketServer server, boolean daemon) throws IOException {
     this.server = server;
-    serverSocket = tryCreateServerSocket(port);
+    serverSocket = SocketFactory.tryCreateServerSocket(port);
     serviceThread = new Thread(
       new Runnable() {
         public void run() {
@@ -27,18 +35,12 @@ public class SocketService {
         }
       }
     );
+    serviceThread.setDaemon(daemon);
     serviceThread.start();
   }
 
-  private ServerSocket tryCreateServerSocket(int port) throws IOException {
-    ServerSocket socket;
-    try {
-      socket = new ServerSocket(port);
-    } catch (BindException e) {
-      System.out.println("Bind exception on port = " + port);
-      throw e;
-    }
-    return socket;
+  public int getPort() {
+    return serverSocket.getLocalPort();
   }
 
   public void close() throws IOException {
@@ -49,13 +51,13 @@ public class SocketService {
       serviceThread.join();
       waitForServerThreads();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Thread joining interrupted", e);
     }
   }
 
   private void waitForServiceThreadToStart() {
     if (everRan) return;
-    while (running == false) Thread.yield();
+    while (!running) Thread.yield();
   }
 
   private void serviceThread() {
@@ -66,8 +68,7 @@ public class SocketService {
         Socket s = serverSocket.accept();
         startServerThread(s);
       } catch (java.lang.OutOfMemoryError e) {
-        System.err.println("Can't create new thread.  Out of Memory.  Aborting");
-        e.printStackTrace();
+        LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
         running = false;// do nothing

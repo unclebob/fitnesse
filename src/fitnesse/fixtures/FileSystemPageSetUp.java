@@ -2,11 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import java.io.File;
+
 import fit.Fixture;
-import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.fs.FileSystemPageFactory;
 
 public class FileSystemPageSetUp extends Fixture {
+
   public FileSystemPageSetUp() throws Exception {
-    FitnesseFixtureContext.root = new FileSystemPage(FitnesseFixtureContext.baseDir, "RooT");
+    FitnesseFixtureContext.root = new FileSystemPageFactory().makePage(new File(FitnesseFixtureContext.baseDir), "RooT", null);
   }
 }

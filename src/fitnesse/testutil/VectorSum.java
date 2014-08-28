@@ -4,6 +4,7 @@ package fitnesse.testutil;
 
 import fit.ColumnFixture;
 
+// Used in acceptance suite
 public class VectorSum extends ColumnFixture {
   public CartesianVector v1;
   public CartesianVector v2;

@@ -26,7 +26,7 @@ public class EnumConverter<T extends Enum<T>> implements Converter<T> {
 				return Enum.valueOf(enumClass, name);
 			} catch (IllegalArgumentException e) {
 				for (T value : enumClass.getEnumConstants()) {
-					if (value.toString().equals(name)) {
+					if (value.toString().equalsIgnoreCase(name)) {
 						return value;
 					}
 				}

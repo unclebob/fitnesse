@@ -19,6 +19,7 @@ public class ResponseExaminer extends ColumnFixture {
   private int currentLine = 0;
     private int currentPosition = 0;
 
+  // Content is escaped, since it's used by both FIT and SLiM.
   public String contents() throws Exception {
     String sentData = FitnesseFixtureContext.sender.sentData();
     return Utils.escapeHTML(sentData);
@@ -92,7 +93,7 @@ public class ResponseExaminer extends ColumnFixture {
 
   public String string() throws Exception {
     if (type.equals("contents")) {
-      return FitnesseFixtureContext.page.getData().getHtml();
+      return FitnesseFixtureContext.page.getHtml();
     } else if (type.equals("line")) {
       return getLine(number);
     } else {
@@ -102,7 +103,7 @@ public class ResponseExaminer extends ColumnFixture {
 
   private String getLine(int number) throws Exception {
     String value = null;
-    String pageContent = FitnesseFixtureContext.page.getData().getHtml();
+    String pageContent = FitnesseFixtureContext.page.getHtml();
     String lineizedContent = convertBreaksToLineSeparators(pageContent);
     StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
     for (int i = number; i != 0; i--)

@@ -53,8 +53,8 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  protected void addStandardHeaders() {
-    super.addStandardHeaders();
+  protected void addContentHeaders() {
+    super.addContentHeaders();
     addHeader("Content-Length", String.valueOf(getContentSize()));
   }
 }

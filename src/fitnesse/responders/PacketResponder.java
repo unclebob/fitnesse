@@ -34,7 +34,7 @@ public class PacketResponder implements SecureResponder {
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
-    page = pageCrawler.getPage(context.root, resourcePath);
+    page = pageCrawler.getPage(resourcePath);
 
     if (page == null)
       response.setStatus(404);
@@ -47,7 +47,7 @@ public class PacketResponder implements SecureResponder {
 
   private void buildPacket() {
     packet = new JSONObject();
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
 
     TableScanner scanner = new HtmlTableScanner(html);
 
@@ -94,7 +94,7 @@ public class PacketResponder implements SecureResponder {
 
   private int getIndent(List<String> rowList) {
     for (int indent = 0; indent < rowList.size(); indent++) {
-      if ("".equals(rowList.get(indent)) == false)
+      if (!"".equals(rowList.get(indent)))
         return indent;
     }
     return -1;

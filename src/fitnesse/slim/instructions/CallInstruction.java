@@ -58,9 +58,8 @@ public class CallInstruction extends Instruction {
 
     if (!Arrays.equals(args, that.args)) return false;
     if (!instanceName.equals(that.instanceName)) return false;
-    if (!methodName.equals(that.methodName)) return false;
+    return methodName.equals(that.methodName);
 
-    return true;
   }
 
   @Override

@@ -1,21 +1,21 @@
 ## The menu is only shown after the page executed.
-<div class="hidden">
-#parse( "wikiNav.vm" )
+<div id="menu-nav" class="hidden">
+#parse( "menu.vm" )
 </div>
 <script type="text/javascript">//<!--
  $(function() {
-   $('nav .hidden').removeClass('hidden');
+   $('#menu-nav').removeClass('hidden');
  });
 //--></script>
 
-<span id="test-action"></span>
 ## The error navigator is also hidden until page is complete.
-<div id="error-nav" class="error-nav-hidden">
-	<p id="error-nav-label">Failure Navigator</p>
-	<div id="error-nav-controls">
-	<button id="error-nav-prev"><</button>
-	<input id="error-nav-text" type="text">
-	 of <span id="error-nav-max"></span>
-	<button id="error-nav-next">></button>
-	</div>
+<div id="error-nav" class="hidden navbar-right">
+ <span class="title">Failure Navigator</span>
+ <div class="btn-group">
+  <button id="error-nav-prev" class="btn btn-default">&laquo;</button>
+  <span class="btn-text"><input id="error-nav-text" type="text" size="3"> of <span id="error-nav-max"></span></span>
+  <button id="error-nav-next" class="btn btn-default">&raquo;</button>
+ </div>
 </div>
+<span id="test-action"></span>
+

@@ -6,6 +6,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.history.TestResultRecord;
+import fitnesse.responders.run.TestResponder;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -18,11 +22,11 @@ import fitnesse.http.Response;
 import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.run.ExecutionReport;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.reporting.history.ExecutionReport;
+import fitnesse.reporting.history.SuiteExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -32,10 +36,8 @@ import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
-  private TestHistory history;
-  private String pageName;
   private PageHistory pageHistory;
   private HtmlPage page;
   private FitNesseContext context;
@@ -158,8 +160,8 @@ public class PageHistoryResponder implements SecureResponder {
     response = new SimpleResponse();
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
-    history = new TestHistory();
-    pageName = request.getResource();
+    TestHistory history = new TestHistory();
+    String pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
@@ -168,7 +170,7 @@ public class PageHistoryResponder implements SecureResponder {
     if (context.root != null){
       WikiPagePath path = PathParser.parse(pageName);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

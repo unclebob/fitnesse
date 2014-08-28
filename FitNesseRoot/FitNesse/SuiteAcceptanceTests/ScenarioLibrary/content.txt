@@ -15,7 +15,7 @@
 
 |scenario|page|source|should have link to|target|
 |check|request page|@source|200|
-|ensure|content contains|<a href="@target">|
+|ensure|content contains|<a href="@target"|
 |$IT=|echo|@source|
 
 !|scenario|it should have link to|target|

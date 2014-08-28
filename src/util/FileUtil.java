@@ -7,11 +7,15 @@ import java.util.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 public class FileUtil {
-  public static final String ENDL = System.getProperty("line.separator");
 
   public static File createFile(String path, String content) {
+    return createFile(path, new ByteArrayInputStream(content.getBytes()));
+  }
+
+  public static File createFile(String path, InputStream content) {
     String names[] = path.split("/");
     if (names.length == 1)
       return createFile(new File(path), content);
@@ -28,10 +32,23 @@ public class FileUtil {
   }
 
   public static File createFile(File file, String content) {
+    try {
+      return createFile(file, content.getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public static File createFile(File file, byte[] bytes) {
+    return createFile(file, new ByteArrayInputStream(bytes));
+  }
+
+  public static File createFile(File file, InputStream content) {
     FileOutputStream fileOutput = null;
     try {
       fileOutput = new FileOutputStream(file);
-      fileOutput.write(content.getBytes());
+      FileUtil.copyBytes(content, fileOutput);
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -89,7 +106,6 @@ public class FileUtil {
     int i = 10;
     while (file.exists()) {
       if (--i <= 0) {
-        System.out.println("Breaking out of delete wait");
         break;
       }
       waitFor(500);
@@ -110,7 +126,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input));
+    return new String(getFileBytes(input), "UTF-8");
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
@@ -141,10 +157,6 @@ public class FileUtil {
     return lines;
   }
 
-  public static void writeLinesToFile(String filename, List<?> lines) throws FileNotFoundException {
-    writeLinesToFile(new File(filename), lines);
-  }
-
   public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
     for (Iterator<?> iterator = lines.iterator(); iterator.hasNext();) {
@@ -159,6 +171,15 @@ public class FileUtil {
     while (!reader.isEof())
       output.write(reader.readBytes(1000));
   }
+
+  public static String toString(InputStream input) throws IOException {
+    String result = "";
+    Scanner s = new Scanner(input, "UTF-8");
+    s.useDelimiter("\\A");
+    result = s.hasNext() ? s.next() : "";
+    s.close();
+    return result;
+   }
 
   public static File createDir(String path) {
     makeDir(path);
@@ -196,28 +217,6 @@ public class FileUtil {
     List<String> parts = breakFilenameIntoParts(fileName);
     parts.remove(parts.size()-1);
     return buildPath(parts.toArray(new String[parts.size()]));
-  }
-
-  public static void addItemsToClasspath(String classpathItems) throws Exception {
-    final String separator = System.getProperty("path.separator");
-    String currentClassPath = System.getProperty("java.class.path");
-    System.setProperty("java.class.path", currentClassPath + separator + classpathItems);
-    String[] items = classpathItems.split(separator);
-    for (String item : items) {
-      addFileToClassPath(item);
-    }
-  }
-
-  private static void addFileToClassPath(String fileName) throws Exception {
-    addUrlToClasspath(new File(fileName).toURI().toURL());
-  }
-
-  public static void addUrlToClasspath(URL u) throws Exception {
-    URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-    Class<URLClassLoader> sysclass = URLClassLoader.class;
-    Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
-    method.setAccessible(true);
-    method.invoke(sysloader, new Object[]{u});
   }
 
   public static void close(Writer writer) {

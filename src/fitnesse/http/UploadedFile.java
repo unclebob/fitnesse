@@ -3,6 +3,8 @@
 package fitnesse.http;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.FileUtil;
 
@@ -34,7 +36,6 @@ public class UploadedFile {
       return "name : " + getName() + "; type : " + getType() + "; content : " + FileUtil.getFileContent(file);
     }
     catch (Exception e) {
-      e.printStackTrace();
       return e.toString();
     }
   }

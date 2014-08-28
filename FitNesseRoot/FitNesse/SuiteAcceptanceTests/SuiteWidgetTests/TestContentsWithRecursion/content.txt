@@ -23,12 +23,12 @@
 #
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild</a|true|
-|contents|a href="ParentPage.FirstChild.GrandChild">GrandChild</a|true|
-|contents|a href="ParentPage.SecondChild">SecondChild</a|true|
+|contents|a href="ParentPage.FirstChild" class="suite">FirstChild</a|true|
+|contents|a href="ParentPage.FirstChild.GrandChild" class="static">GrandChild</a|true|
+|contents|a href="ParentPage.SecondChild" class="static linked pruned">SecondChild</a|true|
 
 '''Also note that the html assigns css classes named toc1, toc2, etc depending on how far down you go. This allows you to define different characteristics for each level in the hierarchy by editing /files/css/fitnesse.css.'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|div class="toc1"|true|
-|contents|div class="toc2"|true|
+|contents|ul class="toc1"|true|
+|contents|ul class="toc2"|true|

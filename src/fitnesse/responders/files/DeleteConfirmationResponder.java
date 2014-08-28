@@ -11,8 +11,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
@@ -22,7 +22,6 @@ public class DeleteConfirmationResponder implements SecureResponder {
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
     response.setContent(makeDirectoryListingPage(resource, filename, context));
-    response.setLastModifiedHeader("Delete");
     return response;
   }
 
@@ -30,7 +29,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
-    page.put("pageName", "/" + pageName);
+    page.put("resource", resource);
     makeConfirmationHTML(page, filename, context);
     page.setMainTemplate("deleteConfirmation");
 

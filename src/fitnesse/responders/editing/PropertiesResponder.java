@@ -10,8 +10,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.json.JSONException;
@@ -38,9 +38,7 @@ public class PropertiesResponder implements SecureResponder {
     resource = request.getResource();
     path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path))
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-    page = crawler.getPage(context.root, path);
+    page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -130,9 +128,9 @@ public class PropertiesResponder implements SecureResponder {
 
   private void makePropertiesForm() {
     makePageTypeRadiosHtml(pageData);
-    makeTestActionCheckboxesHtml(pageData);
-    makeNavigationCheckboxesHtml(pageData);
-    makeSecurityCheckboxesHtml(pageData);
+    makeTestActionCheckboxesHtml();
+    makeNavigationCheckboxesHtml();
+    makeSecurityCheckboxesHtml();
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -185,16 +183,12 @@ public class PropertiesResponder implements SecureResponder {
     WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
     if (wikiPagePath != null) {
-      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page; // TODO
-                                                                                 // -AcD-
-                                                                                 // a
-                                                                                 // better
-                                                                                 // way?
+      WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page;
       PageCrawler crawler = parent.getPageCrawler();
-      WikiPage target = crawler.getPage(parent, wikiPagePath);
+      WikiPage target = crawler.getPage(wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = crawler.getFullPath(target);
+        fullPath = target.getPageCrawler().getFullPath();
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();
@@ -207,15 +201,15 @@ public class PropertiesResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public void makeTestActionCheckboxesHtml(PageData pageData) {
+  public void makeTestActionCheckboxesHtml() {
     html.put("actionTypes", ACTION_ATTRIBUTES);
   }
 
-  public void makeNavigationCheckboxesHtml(PageData pageData) {
+  public void makeNavigationCheckboxesHtml() {
     html.put("navigationTypes", NAVIGATION_ATTRIBUTES);
   }
 
-  public void makeSecurityCheckboxesHtml(PageData pageData) {
+  public void makeSecurityCheckboxesHtml() {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
   }
 

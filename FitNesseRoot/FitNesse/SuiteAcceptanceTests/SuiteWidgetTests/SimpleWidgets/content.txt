@@ -10,12 +10,12 @@
 | !4 header | <h4>header</h4> |
 | !5 header | <h5>header</h5> |
 | !6 header | <h6>header</h6> |
-| http://files/x | <a href="/files/x">http://files/x</a> | file link |
+| http://files/x | <a href="files/x">http://files/x</a> | file link |
 | http://fitnesse.org | <a href="http://fitnesse.org">http://fitnesse.org</a> | http link |
 | SomePage | SomePage<a title="create page" href="SomePage\?edit&nonExistent=true">\[\?\]</a> | missing wiki word |
 | [[tag][WidgetPage]] | <a href="WidgetPage">tag</a> | link alias |
 | [[tag][http://fitnesse.org]] | <a href="http://fitnesse\.org">tag</a> | http link alias |
-| [[tag][http://files/x]] | <a href="/files/x">tag</a> | files alias |
+| [[tag][http://files/x]] | <a href="files/x">tag</a> | files alias |
 | !- !-This is literal text-!-! | This is literal text | simple literal |
 | !- !-This is ''literal'' text-! -! | !-This is ''literal'' text-! | literal text with markup |
 | !-This is normal, ''italic'', and '''bold''' text-! | This is normal, <i>italic</i>, and <b>bold</b> text | Mixed Italic and Bold |

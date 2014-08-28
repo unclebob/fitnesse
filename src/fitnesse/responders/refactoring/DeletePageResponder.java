@@ -9,8 +9,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -30,7 +30,7 @@ public class DeletePageResponder implements SecureResponder {
     intializeResponse(request);
 
     if (shouldNotDelete())
-      response.redirect("FrontPage");
+      response.redirect(context.contextRoot, "FrontPage");
     else
       tryToDeletePage(request);
 
@@ -44,7 +44,7 @@ public class DeletePageResponder implements SecureResponder {
     } else {
       String nameOfPageToBeDeleted = path.last();
       path.removeNameFromEnd();
-      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
+      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(path);
       if (parentOfPageToBeDeleted != null) {
         parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
       }
@@ -65,9 +65,9 @@ public class DeletePageResponder implements SecureResponder {
   private void redirect(final WikiPagePath path, final SimpleResponse response) {
     String location = PathParser.render(path);
     if (location == null || location.length() == 0) {
-      response.redirect("root");
+      response.redirect(context.contextRoot, "root");
     } else {
-      response.redirect(location);
+      response.redirect(context.contextRoot, location);
     }
   }
 
@@ -78,7 +78,7 @@ public class DeletePageResponder implements SecureResponder {
     if(context.root!=null){
       WikiPagePath path = PathParser.parse(qualifiedPageName);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);
@@ -86,7 +86,8 @@ public class DeletePageResponder implements SecureResponder {
     }
       
     html.setTitle("Delete Confirmation");
-    html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/", tags));
+    html.setPageTitle(new PageTitle("Confirm Deletion", PathParser.parse(qualifiedPageName), tags));
+
     makeMainContent(html, root, qualifiedPageName);
     html.setMainTemplate("deletePage");
     return html.html();
@@ -94,7 +95,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
-    WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
+    WikiPage pageToDelete = root.getPageCrawler().getPage(path);
     List<WikiPage> children = pageToDelete.getChildren();
 
     html.put("deleteSubPages", children != null && !children.isEmpty());

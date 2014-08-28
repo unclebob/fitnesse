@@ -1,1 +1,0 @@
-!|fitnesse.acceptanceTests.ResetNamespacesFixture|

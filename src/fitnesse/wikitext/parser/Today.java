@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Clock;
 import util.Maybe;
-import util.SystemTimeKeeper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,10 +11,16 @@ import java.util.List;
 public class Today extends SymbolType implements Rule, Translation {
     private static final String Format = "Format";
     private static final String Increment = "Increment";
+    private final int incrementUnit;
 
     public Today() {
-        super("Today");
-        wikiMatcher(new Matcher().string("!today"));
+        this("Today", "!today", Calendar.DAY_OF_MONTH);
+    }
+
+    protected Today(String symbolName, String symbolText, int unitForIncrement) {
+        super(symbolName);
+        incrementUnit = unitForIncrement;
+        wikiMatcher(new Matcher().string(symbolText));
         wikiRule(this);
         htmlTranslation(this);
     }
@@ -52,16 +58,20 @@ public class Today extends SymbolType implements Rule, Translation {
     }
     public String toTarget(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(Today.Increment);
-        int incrementDays =
+        int incrementInt =
                 increment.startsWith("+") ? Integer.parseInt(increment.substring(1)) :
                 increment.startsWith("-") ? - Integer.parseInt(increment.substring(1)) :
                 0;
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(SystemTimeKeeper.now());
-        calendar.add(Calendar.DAY_OF_MONTH, incrementDays);
+        calendar.setTime(Clock.currentDate());
+        addIncrement(calendar, incrementInt);
         return new SimpleDateFormat(
                 makeFormat(symbol.getProperty(Today.Format)))
                         .format(calendar.getTime());
+    }
+
+    protected void addIncrement(GregorianCalendar calendar, int increment) {
+        calendar.add(incrementUnit, increment);
     }
 
     private String makeFormat(String format) {

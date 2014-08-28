@@ -3,18 +3,22 @@
 package fitnesse.responders;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.PageData;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import org.json.JSONArray;
 import util.StringUtil;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
   protected String contentFrom(WikiPage requestedPage) {
-    List<String> lines = addLines(requestedPage);
+    List<String> lines = addLines(requestedPage, "");
 
     String format = (String) request.getInput("format");
     if ("json".equalsIgnoreCase(format)) {
@@ -24,23 +28,61 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
     return StringUtil.join(lines, System.getProperty("line.separator"));
   }
 
-  private List<String> addLines(WikiPage requestedPage) {
+  private List<String> addLines(WikiPage requestedPage, String prefix) {
     List<String> lines = new ArrayList<String>();
-    for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
-      WikiPage child = (WikiPage) iterator.next();
-      lines.add(makeLine(child));
+	
+    for (WikiPage child : requestedPage.getChildren()) {
+	  if(!request.hasInput("LeafOnly") || child.getChildren().isEmpty()) {
+        lines.add(makeLine(child, prefix));
+      }
+	  
+	  if (request.hasInput("Recursive")) {
+	    lines.addAll(addLines(child, prefix + child.getName() + "."));
+	  }
     }
+	
     return lines;
   }
 
-  private String makeLine(WikiPage child) {
-    String line;
+  private String makeLine(WikiPage child, String prefix) {
+    int numberOfChildren = child.getChildren().size();
+	
+    StringBuilder line = new StringBuilder(64)
+            .append(prefix)
+            .append(child.getName());
+	
     if (request.hasInput("ShowChildCount")) {
-      int numberOfChildren = child.getChildren().size();
-      line = child.getName() + " " + numberOfChildren;
-    } else
-      line = child.getName();
-    return line;
+      line.append(" ").append(numberOfChildren);
+    }
+	
+    if (request.hasInput("ShowTags")) {
+	  Set<String> tags = getTags(child);
+	  if(!tags.isEmpty()) {
+	    line.append(" ");
+		for(String tag : tags) {
+          line.append("[").append(tag).append("]");
+		}
+      }
+	}
+	
+    return line.toString();
+  }
+  
+  private Set<String> getTags(WikiPage page) {
+    Set<String> result = new TreeSet<String>();
+	
+	// get the tags of the given page
+    String tags = page.getData().getAttribute(PageData.PropertySUITES);
+    if((tags != null) && !tags.isEmpty()) {
+	  result.addAll(Arrays.asList(tags.split(", ")));
+    }
+	
+	// recusrively collect all tags up to the root
+	if(!page.isRoot()) {
+	  result.addAll(getTags(page.getParent()));
+	}
+	
+	return result;
   }
 
   protected String getContentType() {

@@ -1,0 +1,7 @@
+| import |
+| fitnesse.wiki.fs |
+
+First, make sure we start with a clean slate.
+
+| script | versions controller fixture |
+| clean up |

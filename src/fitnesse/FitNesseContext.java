@@ -2,122 +2,73 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.components.Logger;
-import fitnesse.components.SocketDealer;
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.run.RunningTestingTracker;
-import fitnesse.wiki.WikiPage;
-
 import java.io.File;
+import java.util.Properties;
+
+import fitnesse.authentication.Authenticator;
+import fitnesse.components.Logger;
+import fitnesse.html.template.PageFactory;
+import fitnesse.responders.ResponderFactory;
+import fitnesse.testrunner.RunningTestingTracker;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.wiki.RecentChanges;
+import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.fs.VersionsController;
 
 public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
 
-
-
-  /**
-   * Use the builder to create your FitNesse contexts.
-   */
-  public static final class Builder {
-    public WikiPage root;
-
-    public int port = -1;
-    public String rootPath;
-    public String rootDirectoryName;
-    public SocketDealer socketDealer;
-
-    public Logger logger;
-    public Authenticator authenticator = new PromiscuousAuthenticator();
-    public String defaultNewPageContent;
-    public String pageTheme;
-
-    public Builder() {
-      super();
-    }
-
-    public Builder(WikiPage root) {
-      super();
-      this.root = root;
-    }
-
-    public Builder(FitNesseContext context) {
-      super();
-      if (context != null) {
-        root = context.root;
-        port = context.port;
-        rootPath = context.rootPath;
-        rootDirectoryName = context.rootDirectoryName;
-        socketDealer = context.socketDealer;
-        logger = context.logger;
-        authenticator = context.authenticator;
-        defaultNewPageContent = context.defaultNewPageContent;
-        pageTheme = context.pageTheme;
-      }
-    }
-
-    public final FitNesseContext createFitNesseContext() {
-      return new FitNesseContext(root,
-          rootPath,
-          rootDirectoryName,
-          pageTheme,
-          defaultNewPageContent,
-          port,
-          socketDealer,
-          authenticator,
-          logger);
-    }
-  }
-
-
+  public final FitNesseVersion version;
+  public final FitNesse fitNesse;
   public final WikiPage root;
-  public final SocketDealer socketDealer;
-  public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
+
+  public final TestSystemFactory testSystemFactory;
+  public final TestSystemListener testSystemListener;
+  public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
   public final String rootPath;
-  public final String rootDirectoryName;
+  private final String rootDirectoryName;
+  public final String contextRoot;
   public final ResponderFactory responderFactory;
-  public final PageFactory pageFactory = new PageFactory(this);
+  public final PageFactory pageFactory;
+  public final SystemVariableSource variableSource;
 
-  public final String defaultNewPageContent;
+  public final VersionsController versionsController;
+  public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
-  public final String pageTheme;
+  private final Properties properties;
 
-
-  private FitNesseContext(WikiPage root, String rootPath,
-      String rootDirectoryName, String pageTheme, String defaultNewPageContent,
-      int port, SocketDealer socketDealer, Authenticator authenticator,
-      Logger logger) {
+  protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
+                            String rootDirectoryName, String contextRoot, VersionsController versionsController,
+                            RecentChanges recentChanges, int port,
+                            Authenticator authenticator, Logger logger,
+                            TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
+                            Properties properties) {
     super();
+    this.version = version;
     this.root = root;
-    this.rootPath = rootPath != null ? rootPath : ".";
-    this.rootDirectoryName = rootDirectoryName != null ? rootDirectoryName : "FitNesseRoot";
-    this.pageTheme = pageTheme != null ? pageTheme : "fitnesse_straight";
-    this.defaultNewPageContent = defaultNewPageContent != null ? defaultNewPageContent : "!contents -R2 -g -p -f -h";
-    this.port = port >= 0 ? port : 80;
-    this.socketDealer = socketDealer != null ? socketDealer : new SocketDealer();
-    this.authenticator = authenticator != null ? authenticator : new PromiscuousAuthenticator();
+    this.rootPath = rootPath;
+    this.rootDirectoryName = rootDirectoryName;
+    this.contextRoot = contextRoot;
+    this.versionsController = versionsController;
+    this.recentChanges = recentChanges;
+    this.port = port;
+    this.authenticator = authenticator;
     this.logger = logger;
+    this.testSystemFactory = testSystemFactory;
+    this.testSystemListener = testSystemListener;
+    this.properties = properties;
+    runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
-  }
-
-  public String toString() {
-    String endl = System.getProperty("line.separator");
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("\t").append("port:              ").append(port).append(endl);
-    buffer.append("\t").append("root page:         ").append(root).append(endl);
-    buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
-    buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
-    buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
-    buffer.append("\t").append("page theme:        ").append(pageTheme).append(endl);
-
-    return buffer.toString();
+    variableSource = new SystemVariableSource(properties);
+    fitNesse = new FitNesse(this);
+    pageFactory = new PageFactory(this);
   }
 
   public File getTestHistoryDirectory() {
@@ -129,6 +80,14 @@ public class FitNesseContext {
   }
 
   public String getRootPagePath() {
-    return String.format("%s/%s", rootPath, rootDirectoryName);
+    return String.format("%s%s%s", rootPath, File.separator, rootDirectoryName);
+  }
+
+  public Properties getProperties() {
+    return properties;
+  }
+
+  public String getProperty(String name) {
+    return variableSource.getProperty(name);
   }
 }

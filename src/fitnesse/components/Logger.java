@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+// TODO: Convert to java.util.logging.Formatter
 public class Logger {
   private File directory;
 
@@ -28,7 +29,7 @@ public class Logger {
   }
 
   private PrintWriter writer;
-  private GregorianCalendar currentFileCreationDate;
+  private Calendar currentFileCreationDate;
 
   public Logger(String dirPath) {
     directory = new File(dirPath);
@@ -63,7 +64,7 @@ public class Logger {
     writer.flush();
   }
 
-  private boolean needNewFile(GregorianCalendar time) {
+  private boolean needNewFile(Calendar time) {
     if (writer == null)
       return true;
     else {

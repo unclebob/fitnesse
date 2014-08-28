@@ -1,4 +1,5 @@
 #if($suiteExecutionReport)
+<script src="${contextRoot}files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
 <h1>$suiteExecutionReport.getRootPath()</h1>
 <table>
   <tr>
@@ -7,10 +8,9 @@
   </tr>
 </table>
 <hr/>
-#set($finalCounts = $suiteExecutionReport.FinalCounts)
+#set($finalCounts = $suiteExecutionReport.finalCounts)
 #if($finalCounts)
-<div id="test-summary">
-  <div id="progressBar" class="$ExecutionStatus.getExecutionStatus($suiteExecutionReport.getRootPath(), $finalCounts)">
+<div id="test-summary" class="$ExecutionResult.getExecutionResult($suiteExecutionReport.getRootPath(), $finalCounts)">
     <strong>Test Pages:</strong>
     $finalCounts.Right right,
     $finalCounts.Wrong wrong,
@@ -19,7 +19,7 @@
     #if($suiteExecutionReport.hasRunTimes())
     ($suiteExecutionReport.totalRunTimeInMillis ms)
     #end
-  </div>
+    <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
 </div>
 #end
 <p/>
@@ -31,7 +31,7 @@
     <th class="numeric">Exceptions</th>
     <th>Page</th>
     #if($suiteExecutionReport.hasRunTimes())
-    <th class="numeric">Run time (ms)</th>
+    <th class="numeric">Run&nbsp;time&nbsp;(ms)</th>
     #end
   </tr>
   #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())

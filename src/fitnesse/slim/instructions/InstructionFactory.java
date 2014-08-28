@@ -18,28 +18,28 @@ public class InstructionFactory {
     Instruction instruction;
 
     if (MakeInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createMakeInstruction(id, operation, words);
+      instruction = createMakeInstruction(id, words);
     } else if (CallAndAssignInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createCallAndAssignInstruction(id, operation, words, methodNameTranslator);
+      instruction = createCallAndAssignInstruction(id, words, methodNameTranslator);
     } else if (CallInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createCallInstruction(id, operation, words, methodNameTranslator);
+      instruction = createCallInstruction(id, words, methodNameTranslator);
     } else if (ImportInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createImportInstruction(id, operation, words);
+      instruction = createImportInstruction(id, words);
     } else {
-      instruction = createInvalidInstruction(id, operation, words);
+      instruction = createInvalidInstruction(id, operation);
     }
 
     return instruction;
   }
 
-  private static MakeInstruction createMakeInstruction(String id, String operation, List<Object> words) {
+  private static MakeInstruction createMakeInstruction(String id, List<Object> words) {
     String instanceName = getWord(words, 2);
     String className = getWord(words, 3);
     Object[] args = makeArgsArray(words, 4);
     return new MakeInstruction(id, instanceName, className, args);
   }
 
-  private static CallAndAssignInstruction createCallAndAssignInstruction(String id, String operation,
+  private static CallAndAssignInstruction createCallAndAssignInstruction(String id,
                                                                          List<Object> words,
                                                                          NameTranslator methodNameTranslator) {
     String symbolName = getWord(words, 2);
@@ -49,7 +49,7 @@ public class InstructionFactory {
     return new CallAndAssignInstruction(id, symbolName, instanceName, methodName, args, methodNameTranslator);
   }
 
-  private static CallInstruction createCallInstruction(String id, String operation, List<Object> words,
+  private static CallInstruction createCallInstruction(String id, List<Object> words,
                                                        NameTranslator methodNameTranslator) {
     String instanceName = getWord(words, 2);
     String methodName = getWord(words, 3);
@@ -57,12 +57,12 @@ public class InstructionFactory {
     return new CallInstruction(id, instanceName, methodName, args, methodNameTranslator);
   }
 
-  private static ImportInstruction createImportInstruction(String id, String operation, List<Object> words) {
+  private static ImportInstruction createImportInstruction(String id, List<Object> words) {
     String path = getWord(words, 2);
     return new ImportInstruction(id, path);
   }
 
-  private static InvalidInstruction createInvalidInstruction(String id, String operation, List<Object> words) {
+  private static InvalidInstruction createInvalidInstruction(String id, String operation) {
     return new InvalidInstruction(id, operation);
   }
 

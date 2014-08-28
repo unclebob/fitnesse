@@ -1,8 +1,4 @@
 /* Styles in editor that differ from the "live" layout **/
-body {
- margin: 0;
-}
-
 p, table {
  margin: 0.5em 0;
 }
@@ -23,24 +19,32 @@ pre.wiki {
  white-space: pre-wrap !important;
 }
 
-div.collapsable {
- border: 1pt dotted #BF8660;
- margin: 0.5em;
- padding-left: 15px;
- background: url(../images/collapsibleOpen.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible {
  min-height: 1em;
 }
 
-div.collapsable.collapsed {
- background: url(../images/collapsibleClosed.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible > * {
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
-div.collapsable.hidden {
- display: block;
- background: url(../images/collapsibleHidden.png) left top no-repeat #F9F9F9;
- background-position: 2px 2px;
+div.collapsible > p.title {
+ margin-left: 0;
+ margin-right: 0;
+}
+
+div.collapsible.collapsed {
+ display: block !important;
+ visibility: visible !important;
+}
+
+div.collapsible.hidden {
+ display: block !important;
+ visibility: visible !important;
+}
+
+div.collapsible.hidden > p.title{
+ background-image: url(../images/collapsibleHidden.png);
 }
 
 div.collapsable>p:first-child {

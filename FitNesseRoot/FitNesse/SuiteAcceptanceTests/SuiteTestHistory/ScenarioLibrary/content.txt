@@ -12,7 +12,7 @@
 
 !|scenario|the page history bar for|date|should have|number|elements of class|class|
 |$date=|page history date signature of|@date|
-|check|count of tag|TD|with id|element|and with class|@class|below tag|TR|with id prefix|pageHistoryRow_$date|@number|
+|check|count of tag|TD|with class|element @class|below tag|TR|with id prefix|pageHistoryRow_$date|@number|
 
 !|scenario|the page title should be|title|
 |ensure|content contains|<h1>@title</h1>|
@@ -26,12 +26,12 @@
 
 !|scenario|The page history bar for|date|should have a|id|with class|class|and value|value|
 |$date=|page history date signature of|@date|
-|ensure|content of tag with id|pageHistoryRow_$date|contains|<td id="@id" class="@class">@value</td>|
+|ensure|content of tag with id|pageHistoryRow_$date|contains|<td class="@id @class">@value</td>|
 |show|content of tag with id|pageHistoryRow_$date|
 
 !|scenario|The page history bar for|date|should have a date field with class|class|
 |$date=|page history date signature of|@date|
-|ensure|content of tag with id|pageHistoryRow_$date|contains|<td id="date_field" class="@class">|
+|ensure|content of tag with id|pageHistoryRow_$date|contains|<td class="date_field @class">|
 
 !|scenario|the top level history line for|page|is a link to the page history|
 |ensure|content contains|<a href="/@page?pageHistory">@page</a>|

@@ -19,8 +19,8 @@
 '''...and examine the requested page to insure rollover help text exists'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild" title="First Child's help">FirstChild</a|true|
-|contents|a href="ParentPage.SecondChild" title="Second Child's help">SecondChild</a|true|
+|contents|a href="ParentPage.FirstChild"[\s\w="]+ title="First Child's help">FirstChild</a|true|
+|contents|a href="ParentPage.SecondChild"[\s\w="]+ title="Second Child's help">SecondChild</a|true|
 #-------------------------------------------------
 !3 Explicitly Request Help Text Suffix
 '''First create the parent page.'''
@@ -40,9 +40,9 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild</a|true|
+|contents|a href="ParentPage.FirstChild"[\s\w="]+>FirstChild</a|true|
 |contents|span class="pageHelp">: First Child's help</span|true|
-|contents|a href="ParentPage.SecondChild">SecondChild</a|true|
+|contents|a href="ParentPage.SecondChild"[\s\w="]+>SecondChild</a|true|
 |contents|span class="pageHelp">: Second Child's help</span|true|
 #-------------------------------------------------
 !3 Implicitly Request Help Text Suffix via Variable
@@ -65,7 +65,7 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild</a|true|
+|contents|a href="ParentPage.FirstChild"[\s\w="]+>FirstChild</a|true|
 |contents|span class="pageHelp">: First Child's help</span|true|
-|contents|a href="ParentPage.SecondChild">SecondChild</a|true|
+|contents|a href="ParentPage.SecondChild"[\s\w="]+>SecondChild</a|true|
 |contents|span class="pageHelp">: Second Child's help</span|true|

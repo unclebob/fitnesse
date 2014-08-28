@@ -2,21 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.testsystems.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
-import fitnesse.wikitext.parser.*;
-import util.Clock;
-import util.Maybe;
-import util.StringUtil;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.logging.Logger;
 
-@SuppressWarnings("unchecked")
+import fitnesse.wikitext.parser.VariableSource;
+import util.Clock;
+import util.StringUtil;
+
 public class PageData implements ReadOnlyPageData, Serializable {
+  private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
   private static final long serialVersionUID = 1L;
-
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -58,94 +56,32 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
-  private transient WikiPage wikiPage;
-  private String content;
+  private String content = "";
   private WikiPageProperties properties = new WikiPageProperties();
-  private Set<VersionInfo> versions;
 
-  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-  private transient ParsedPage parsedPage;
-
-  public PageData(WikiPage page) {
-    wikiPage = page;
-    initializeAttributes();
-    versions = new HashSet<VersionInfo>();
-  }
-
-  public PageData(WikiPage page, String content) {
-    this(page);
+  public PageData(PageData data, String content) {
+    this(data);
     setContent(content);
   }
 
   public PageData(PageData data) {
-    this(data.getWikiPage(), data.content);
-    properties = new WikiPageProperties(data.properties);
-    versions.addAll(data.versions);
-    parsedPage = data.parsedPage;
+    this.properties = new WikiPageProperties(data.properties);
+    this.content = data.content;
   }
 
-  public void initializeAttributes() {
-    if (!isErrorLogsPage()) { 
-      properties.set(PropertyEDIT, Boolean.toString(true));
-      properties.set(PropertyPROPERTIES, Boolean.toString(true));
-      properties.set(PropertyREFACTOR, Boolean.toString(true));
-    }
-    properties.set(PropertyWHERE_USED, Boolean.toString(true));
-    properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
-    properties.set(PropertyFILES, Boolean.toString(true));
-    properties.set(PropertyVERSIONS, Boolean.toString(true));
-    properties.set(PropertySEARCH, Boolean.toString(true));
-    properties.setLastModificationTime(Clock.currentDate());
-
-    initTestOrSuiteProperty();
+  public PageData(String content, WikiPageProperties properties) {
+    setContent(content);
+    setProperties(properties);
   }
 
-  private void initTestOrSuiteProperty() {
-    final String pageName = wikiPage.getName();
-    if (pageName == null) {
-      handleInvalidPageName(wikiPage);
-      return;
-    }
-
-    if (isErrorLogsPage())
-      return;
-
-    PageType pageType = PageType.getPageTypeForPageName(pageName);
-
-    if (STATIC.equals(pageType))
-      return;
-
-    properties.set(pageType.toString(), Boolean.toString(true));
-  }
-
-  private boolean isErrorLogsPage() {
-    PageCrawler crawler = wikiPage.getPageCrawler();
-    String relativePagePath = crawler.getRelativeName(
-        crawler.getRoot(wikiPage), wikiPage);
-    return relativePagePath.startsWith(ExecutionLog.ErrorLogName);
-  }
-
-  // TODO: Should be written to a real logger, but it doesn't like FitNesse's
-  // logger is
-  // really intended for general logging.
-  private void handleInvalidPageName(WikiPage wikiPage) {
-    try {
-      String msg = "WikiPage " + wikiPage + " does not have a valid name!"
-          + wikiPage.getName();
-      System.err.println(msg);
-      throw new RuntimeException(msg);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
+  @Override
   public WikiPageProperties getProperties() {
     return properties;
   }
 
+  @Override
   public String getAttribute(String key) {
     return properties.get(key);
   }
@@ -162,6 +98,15 @@ public class PageData implements ReadOnlyPageData, Serializable {
     properties.set(key);
   }
 
+  public void setOrRemoveAttribute(String property, String content) {
+    if (content == null || "".equals(content)) {
+      removeAttribute(property);
+    } else {
+      setAttribute(property, content);
+    }
+  }
+
+  @Override
   public boolean hasAttribute(String attribute) {
     return properties.has(attribute);
   }
@@ -170,70 +115,13 @@ public class PageData implements ReadOnlyPageData, Serializable {
     this.properties = properties;
   }
 
+  @Override
   public String getContent() {
     return content;
   }
 
   public void setContent(String content) {
     this.content = StringUtil.stripCarriageReturns(content);
-  }
-
-  /* this is the public entry to page parse and translate */
-  public String getHtml() {
-      return getParsedPage().toHtml();
-  }
-
-  public String getVariable(String name) {
-      Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
-      if (variable.isNothing()) return null;
-      return getParsingPage().renderVariableValue(variable.getValue());
-  }
-
-  public ParsedPage getParsedPage() {
-    if (parsedPage == null) parsedPage = new ParsedPage(new WikiSourcePage(wikiPage), content);
-    return parsedPage;
-  }
-
-    private Symbol getSyntaxTree() {
-        return getParsedPage().getSyntaxTree();
-    }
-
-    private ParsingPage getParsingPage() {
-        return getParsedPage().getParsingPage();
-    }
-
-  public void setWikiPage(WikiPage page) {
-    wikiPage = page;
-  }
-
-  public WikiPage getWikiPage() {
-    return wikiPage;
-  }
-
-  public List<String> getClasspaths() {
-    Symbol tree = getSyntaxTree();
-    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), getParsingPage())).getPaths(tree);
-  }
-
-    public List<String> getXrefPages() {
-        final ArrayList<String> xrefPages = new ArrayList<String>();
-        getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-            public boolean visit(Symbol node) {
-                if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-                return true;
-            }
-
-            public boolean visitChildren(Symbol node) { return true; }
-        });
-        return xrefPages;
-    }
-
-  public Set<VersionInfo> getVersions() {
-    return versions;
-  }
-
-  public void addVersions(Collection<VersionInfo> newVersions) {
-    versions.addAll(newVersions);
   }
 
   public boolean isEmpty() {

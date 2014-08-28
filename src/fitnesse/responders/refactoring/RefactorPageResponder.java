@@ -9,8 +9,8 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -26,7 +26,7 @@ public class RefactorPageResponder implements SecureResponder {
     if(context.root != null){
       WikiPagePath path = PathParser.parse(resource);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

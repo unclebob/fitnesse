@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.http.MockResponseSender;
@@ -18,5 +17,4 @@ public class FitnesseFixtureContext {
   public static String baseDir = FitNesseUtil.base;
   public static Authenticator authenticator;
   public static FitNesseContext context;
-  public static FitNesse fitnesse;
 }

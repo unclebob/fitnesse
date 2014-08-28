@@ -2,14 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.slim.instructions.ImportInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.TestResult;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 
 public class ImportTable extends SlimTable {
   public ImportTable(Table table, String id, SlimTestContext testContext) {
@@ -20,9 +21,9 @@ public class ImportTable extends SlimTable {
     return "import";
   }
 
-  public List<Assertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
-    List<Assertion> instructions = new ArrayList<Assertion>(rows);
+    List<SlimAssertion> instructions = new ArrayList<SlimAssertion>(rows);
     if (rows < 2)
       throw new SyntaxError("Import tables must have at least two rows.");
 
@@ -43,11 +44,11 @@ public class ImportTable extends SlimTable {
     }
 
     @Override
-    protected TestResult createEvaluationMessage(String actual, String expected) {
+    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return TestResult.ok(expected);
+        return SlimTestResult.ok(expected);
       else
-        return TestResult.error(String.format("Unknown import message: %s", actual));
+        return SlimTestResult.error(String.format("Unknown import message: %s", actual));
     }
   }
 }

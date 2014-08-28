@@ -2,12 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.net.BindException;
-
 import fitnesse.http.MockRequestBuilder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
@@ -15,27 +9,32 @@ import fitnesse.http.Response;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.net.BindException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class FitNesse {
-  public static final FitNesseVersion VERSION = new FitNesseVersion();
-
-  public static FitNesse FITNESSE_INSTANCE;
-
-  private SocketService theService;
-  private final Updater updater;
-
+  private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
   private final FitNesseContext context;
+  private boolean makeDirs = true;
+  private volatile SocketService theService;
 
-  public static void main(String[] args) throws Exception {
-    System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
-    Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
-    Method mainMethod = mainClass.getMethod("main", String[].class);
-    mainMethod.invoke(null, new Object[]{args});
+  public FitNesse(FitNesseContext context) {
+    this.context = context;
   }
 
-  private static void printBadPortMessage(int port) {
-    System.err.println("FitNesse cannot be started...");
-    System.err.println("Port " + port + " is already in use.");
-    System.err.println("Use the -p <port#> command line argument to use a different port.");
+  public FitNesse dontMakeDirs() {
+    makeDirs = false;
+    return this;
+  }
+
+  private void establishRequiredDirectories() {
+    establishDirectory(context.getRootPagePath());
+    establishDirectory(context.getRootPagePath() + "/files");
   }
 
   private static void establishDirectory(String path) {
@@ -44,38 +43,28 @@ public class FitNesse {
       filesDir.mkdir();
   }
 
-  public FitNesse(FitNesseContext context) {
-    this(context, null, true);
-  }
-
-  public FitNesse(FitNesseContext context, Updater updater) {
-    this(context, updater, true);
-  }
-
-  public FitNesse(FitNesseContext context, boolean makeDirs) {
-    this(context, null, makeDirs);
-  }
-
-
-  // TODO MdM. This boolean agument is annoying... please fix.
-  public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
-    this.updater = updater;
-    FITNESSE_INSTANCE = this;
-    this.context = context;
-    if (makeDirs)
-      establishRequiredDirectories();
+  public static void main(String[] args) throws Exception {
+    System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
+    Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
+    Method mainMethod = mainClass.getMethod("main", String[].class);
+    mainMethod.invoke(null, new Object[]{args});
   }
 
   public boolean start() {
+    if (makeDirs) {
+      establishRequiredDirectories();
+    }
     try {
       if (context.port > 0) {
         theService = new SocketService(context.port, new FitNesseServer(context));
       }
       return true;
     } catch (BindException e) {
-      printBadPortMessage(context.port);
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Port " + context.port + " is already in use.");
+      LOG.severe("Use the -p <port#> command line argument to use a different port.");
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.SEVERE, "Error while starting the FitNesse socket service", e);
     }
     return false;
   }
@@ -87,23 +76,8 @@ public class FitNesse {
     }
   }
 
-  private void establishRequiredDirectories() {
-    establishDirectory(context.getRootPagePath());
-    establishDirectory(context.getRootPagePath() + "/files");
-  }
-
-  public void applyUpdates() throws IOException{
-    if (updater != null)
-      updater.update();
-  }
-
-
   public boolean isRunning() {
     return theService != null;
-  }
-
-  public FitNesseContext getContext() {
-    return context;
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {

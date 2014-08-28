@@ -3,29 +3,11 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import util.Clock;
 
 public class VersionInfo implements Comparable<VersionInfo>, Serializable {
   private static final long serialVersionUID = 1L;
-
-  public static final Pattern COMPEX_NAME_PATTERN = Pattern.compile("(?:([a-zA-Z][^\\-]*)-)?(?:\\d+-)?(\\d{14})");
-  private static int counter = 0;
-
-  public static SimpleDateFormat makeVersionTimeFormat() {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("yyyyMMddHHmmss");
-  }
-
-  public static int nextId() {
-    return counter++;
-  }
 
   private String name;
   private String author;
@@ -37,19 +19,17 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     this.creationTime = new Date(creationTime.getTime());
   }
 
-  public VersionInfo(String complexName) {
-    this(complexName, "", Clock.currentDate());
-    Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
-    if (match.find()) {
-      author = match.group(1);
-      if (author == null)
-        author = "";
-      try {
-        creationTime = makeVersionTimeFormat().parse(match.group(2));
-      } catch (ParseException e) {
-        throw new RuntimeException(e);
-      }
+  public static VersionInfo makeVersionInfo(String author, Date creationTime) {
+    String versionName = WikiImportProperty.getTimeFormat().format(creationTime);
+    if (author != null && !"".equals(author)) {
+      versionName = author + "-" + versionName;
     }
+    return new VersionInfo(versionName, author, creationTime);
+  }
+
+  public static VersionInfo makeVersionInfo(final PageData data) {
+    return makeVersionInfo(data.getAttribute(PageData.LAST_MODIFYING_USER),
+            data.getProperties().getLastModificationTime());
   }
 
   public String getAuthor() {
@@ -69,12 +49,6 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     return howLongAgoString(now, getCreationTime());
   }
   
-  public static String getVersionNumber(String complexName) {
-    Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
-    match.find();
-    return match.group(2);
-  }
-
   public static String howLongAgoString(Date now, Date then) {
     long time = Math.abs(now.getTime() - then.getTime()) / 1000;
 
@@ -98,13 +72,8 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     return age;
   }
 
-  public int compareTo(VersionInfo o) {
-    VersionInfo otherVersion;
-    if (o instanceof VersionInfo) {
-      otherVersion = ((VersionInfo) o);
+  public int compareTo(VersionInfo otherVersion) {
       return getCreationTime().compareTo(otherVersion.getCreationTime());
-    } else
-      return 0;
   }
 
   public String toString() {

@@ -18,8 +18,8 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
-|contents|a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|
+|contents|a href="ParentPage.FirstChild"[\s\w="]+>FirstChild \(FC1\)</a>|true|
+|contents|a href="ParentPage.SecondChild"[\s\w="]+>SecondChild \(FC2\)</a>|true|
 
 !3 Indirect via PROPERTY_TOC Variable
 '''First create the parent page.'''
@@ -41,5 +41,5 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild \(FC1\)</a|true|
-|contents|a href="ParentPage.SecondChild">SecondChild \(FC2\)</a|true|
+|contents|a href="ParentPage.FirstChild"[\s\w="]+>FirstChild \(FC1\)</a|true|
+|contents|a href="ParentPage.SecondChild"[\s\w="]+>SecondChild \(FC2\)</a|true|

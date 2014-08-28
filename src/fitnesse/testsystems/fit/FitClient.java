@@ -5,28 +5,36 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
+import util.StreamReader;
 
-public class FitClient {
+public class FitClient implements SocketAccepter {
+  private static final Logger LOG = Logger.getLogger(FitClient.class.getName());
 
-  protected TestSystemListener listener;
-  protected Socket fitSocket;
+  private List<FitClientListener> listeners;
+  private Socket fitSocket;
   private OutputStream fitInput;
   private StreamReader fitOutput;
 
   private volatile int sent = 0;
   private volatile int received = 0;
   private volatile boolean isDoneSending = false;
-  protected volatile boolean killed = false;
-  protected Thread fitListeningThread;
+  private volatile boolean killed = false;
+  private Thread fitListeningThread;
 
-  public FitClient(TestSystemListener listener) {
-    this.listener = listener;
+  public FitClient() {
+    this.listeners = new LinkedList<FitClientListener>();
+  }
+
+  public void addFitClientListener(FitClientListener listener) {
+    listeners.add(listener);
   }
 
   public synchronized void acceptSocket(Socket socket) throws IOException, InterruptedException {
@@ -57,7 +65,7 @@ public class FitClient {
       try {
         fitListeningThread.join();
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        LOG.log(Level.FINE, "Wait for join of listening thread interrupted", e);
       }
   }
 
@@ -71,43 +79,9 @@ public class FitClient {
     return fitSocket != null;
   }
 
-  public void exceptionOccurred(Exception e) {
-    listener.exceptionOccurred(e);
-  }
-
   protected void checkForPulse() throws InterruptedException {
     if (killed)
       throw new InterruptedException("FitClient was killed");
-  }
-
-  private void listenToFit() {
-    try {
-      attemptToListenToFit();
-    } catch (Exception e) {
-      exceptionOccurred(e);
-    }
-  }
-
-  private void attemptToListenToFit() throws Exception {
-    while (!finishedReading()) {
-      int size;
-      size = FitProtocol.readSize(fitOutput);
-      if (size != 0) {
-        String readValue = fitOutput.read(size);
-        if (fitOutput.byteCount() < size)
-          throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-        listener.testOutputChunk(readValue);
-      } else {
-        Counts counts = FitProtocol.readCounts(fitOutput);
-        TestSummary summary = new TestSummary();
-        summary.right = counts.right;
-        summary.wrong = counts.wrong;
-        summary.ignores = counts.ignores;
-        summary.exceptions = counts.exceptions;
-        listener.testComplete(summary);
-        received++;
-      }
-    }
   }
 
   private boolean finishedReading() {
@@ -131,13 +105,54 @@ public class FitClient {
     try {
       Thread.sleep(10);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.log(Level.FINE, "sleep interrupted", e);
     }
+  }
+
+  public void exceptionOccurred(Throwable e) {
+    for (FitClientListener listener : listeners)
+      listener.exceptionOccurred(e);
   }
 
   private class FitListeningRunnable implements Runnable {
     public void run() {
       listenToFit();
+    }
+
+
+    private void listenToFit() {
+      try {
+        attemptToListenToFit();
+      } catch (Exception e) {
+        exceptionOccurred(e);
+      }
+    }
+
+    private void attemptToListenToFit() throws IOException {
+      while (!finishedReading()) {
+        int size;
+        size = FitProtocol.readSize(fitOutput);
+        if (size != 0) {
+          String readValue = fitOutput.read(size);
+          if (fitOutput.byteCount() < size)
+            throw new IOException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+          testOutputChunk(readValue);
+        } else {
+          Counts counts = FitProtocol.readCounts(fitOutput);
+          testComplete(new TestSummary(counts.right, counts.wrong, counts.ignores, counts.exceptions));
+          received++;
+        }
+      }
+    }
+
+    private void testComplete(TestSummary summary) throws IOException {
+      for (FitClientListener listener : listeners)
+        listener.testComplete(summary);
+    }
+
+    private void testOutputChunk(String value) throws IOException {
+      for (FitClientListener listener : listeners)
+        listener.testOutputChunk(value);
     }
   }
 

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import fitnesse.responders.run.TestResponder;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -16,8 +17,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -27,14 +28,13 @@ import fitnesse.wiki.WikiPagePath;
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(
-      TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;
   private String secondFilePath;
   public boolean testing = false;
 
-  private int count;
   private FitNesseContext context;
 
   public HistoryComparerResponder(HistoryComparer historyComparer) {
@@ -47,7 +47,7 @@ public class HistoryComparerResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
-    initializeReponseComponents(request);
+    initializeReponseComponents();
     if (!getFileNameFromRequest(request))
       return makeErrorResponse(context, request,
           "Compare Failed because the wrong number of Input Files were given. "
@@ -78,7 +78,7 @@ public class HistoryComparerResponder implements Responder {
         || ((new File(secondFilePath)).exists());
   }
 
-  private void initializeReponseComponents(Request request) {
+  private void initializeReponseComponents() {
     if (comparer == null)
       comparer = new HistoryComparer();
   }
@@ -102,9 +102,7 @@ public class HistoryComparerResponder implements Responder {
         if (setFileNames(key))
           return false;
     }
-    if (firstFileName.equals("") || secondFileName.equals(""))
-      return false;
-    return true;
+    return !(firstFileName.equals("") || secondFileName.equals(""));
   }
 
   private boolean setFileNames(String key) {
@@ -118,7 +116,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeValidResponse(Request request) {
-    count = 0;
+    int count = 0;
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
@@ -153,7 +151,7 @@ public class HistoryComparerResponder implements Responder {
     if(context.root != null){
       WikiPagePath path = PathParser.parse(resource);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

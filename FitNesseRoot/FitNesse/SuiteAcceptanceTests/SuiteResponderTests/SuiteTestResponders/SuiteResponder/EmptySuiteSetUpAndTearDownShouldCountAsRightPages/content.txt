@@ -6,7 +6,7 @@ If a !-SuiteSetUp-! or !-SuiteTearDown-! page is eecuted without errors, it shou
 
 !define PATHS {
 ${SUT_PATH}
-!-!define TEST_SYSTEM (slim:A)-!
+!-!define TEST_SYSTEM (slim)-!
 !-!define SLIM_PORT (9000)-!
 }
 

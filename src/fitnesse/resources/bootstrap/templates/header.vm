@@ -1,6 +1,5 @@
 #if(!$pageTitle.Link)
- <h1>$pageTitle.Title #if($pageTitle.pageTags)<small>$pageTitle.pageTags</small>#end</h1>
  #if( $!helpText )
-  <p class="lead"> $helpText </p>
+  <p class="lead"> #escape($helpText) </p>
  #end
 #end

@@ -3,13 +3,12 @@
 package fitnesse.responders.files;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import util.FileUtil;
+import fitnesse.responders.ErrorResponder;
+import fitnesse.wiki.fs.FileVersion;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -31,41 +31,60 @@ public class UploadResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
-    String resource = request.getResource().replace("%20", " ");
-    UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+
+    String resource = URLDecoder.decode(request.getResource(), "UTF-8");
+    final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+    final String user = request.getAuthorizationUsername();
+
     if (uploadedFile.isUsable()) {
-      File file = makeFileToCreate(uploadedFile, resource);
-      writeFile(file, uploadedFile);
+
+      final File file = makeFileToCreate(makeRelativeFilename(uploadedFile.getName()), resource);
+
+      if (!FileResponder.isInFilesDirectory(new File(rootPath), file)) {
+        return new ErrorResponder("Invalid path: " + uploadedFile.getName()).makeResponse(context, request);
+      }
+
+      context.versionsController.makeVersion(new FileVersion() {
+
+        @Override
+        public File getFile() {
+          return file;
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+          return new BufferedInputStream(new FileInputStream(uploadedFile.getFile()) {
+            @Override
+            public void close() throws IOException {
+              super.close();
+              uploadedFile.getFile().delete();
+            }
+          });
+        }
+
+        @Override
+        public String getAuthor() {
+          return user != null ? user : "";
+        }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+
+      });
     }
 
-    response.redirect("/" + resource.replace(" ", "%20"));
+    response.redirect(context.contextRoot, request.getResource());
     return response;
   }
 
-  public void writeFile(File file, UploadedFile uploadedFile) throws IOException {
-    boolean renamed = uploadedFile.getFile().renameTo(file);
-    if (!renamed) {
-      InputStream input = null;
-      OutputStream output = null;
-      try {
-        input = new BufferedInputStream(new FileInputStream(uploadedFile.getFile()));
-        output = new BufferedOutputStream(new FileOutputStream(file));
-        FileUtil.copyBytes(input, output);
-      } finally {
-        input.close();
-        output.close();
-        uploadedFile.delete();
-      }
-    }
-  }
-
-  private File makeFileToCreate(UploadedFile uploadedFile, String resource) {
-    String relativeFilename = makeRelativeFilename(uploadedFile.getName());
-    String filename = relativeFilename;
-    int prefix = 1;
+  private File makeFileToCreate(String filename, String resource) {
     File file = new File(makeFullFilename(resource, filename));
+    int prefix = 1;
+    // TODO: This is where things go wrong. Should check if file is valid beforehand.
     while (file.exists()) {
-      filename = makeNewFilename(relativeFilename, prefix++);
+      filename = makeNewFilename(filename, prefix++);
       file = new File(makeFullFilename(resource, filename));
     }
     return file;
@@ -84,20 +103,7 @@ public class UploadResponder implements SecureResponder {
   }
 
   public static String makeNewFilename(String filename, int copyId) {
-    String[] parts = filename.split("\\.");
-
-    if (parts.length == 1)
-      return filename + "_copy" + copyId;
-    else {
-      StringBuilder newName = new StringBuilder();
-      for (int i = 0; i < parts.length - 1; i++) {
-        if (i != 0)
-          newName.append(".");
-        newName.append(parts[i]);
-      }
-      newName.append("_copy").append(copyId).append(".").append(parts[parts.length - 1]);
-      return newName.toString();
-    }
+    return "copy_" + copyId + "_of_" + filename;
   }
 
   public SecureOperation getSecureOperation() {

@@ -2,15 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContext.Builder;
+import fitnesse.PluginException;
 import fitnesse.authentication.Authenticator;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.fs.ZipFileVersionsController;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class FitNesseUtil {
   public static final String base = "TestDir";
@@ -26,7 +31,7 @@ public class FitNesseUtil {
   }
 
   public static void startFitnesseWithContext(FitNesseContext context) {
-    instance = new FitNesse(context);
+    instance = context.fitNesse;
     instance.start();
   }
 
@@ -36,7 +41,9 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext() {
-    return makeTestContext(InMemoryPage.makeRoot("root"));
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(PORT));
+    return makeTestContext(InMemoryPage.makeRoot("RooT", properties));
   }
 
   public static FitNesseContext makeTestContext(WikiPage root) {
@@ -48,17 +55,17 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
-    return makeTestContext(root, null, FitNesseUtil.base, port, null);
+    return makeTestContext(root, ".", FitNesseUtil.base, port, new PromiscuousAuthenticator());
   }
 
   public static FitNesseContext makeTestContext(WikiPage root,
       Authenticator authenticator) {
-    return makeTestContext(root, null, FitNesseUtil.base, PORT, authenticator);
+    return makeTestContext(root, ".", FitNesseUtil.base, PORT, authenticator);
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port,
       Authenticator authenticator) {
-    return makeTestContext(root, null, FitNesseUtil.base, port, authenticator);
+    return makeTestContext(root, ".", FitNesseUtil.base, port, authenticator);
   }
 
 
@@ -70,33 +77,29 @@ public class FitNesseUtil {
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port, Authenticator authenticator) {
-    Builder builder = new Builder();
-    builder.root = root;
-    builder.rootPath = rootPath;
-    builder.rootDirectoryName = rootDirectoryName;
-    builder.port = port;
-    builder.authenticator = authenticator;
-    FitNesseContext context = builder.createFitNesseContext();
+
+    FitNesseContext context;
+
+    try {
+      context = ContextConfigurator.systemDefaults()
+        .withRoot(root)
+        .withRootPath(rootPath)
+        .withRootDirectoryName(rootDirectoryName)
+        .withPort(port)
+        .withAuthenticator(authenticator)
+        .withVersionsController(new ZipFileVersionsController())
+        .withRecentChanges(new RecentChangesWikiPage())
+        .makeFitNesseContext();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    } catch (PluginException e) {
+      throw new IllegalStateException(e);
+    }
 
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
     context.pageFactory.getVelocityEngine();
     return context;
   }
-
-  public static FitNesseContext makeTestContext(FitNesseContext context,
-      int port) {
-    Builder builder = new Builder(context);
-    builder.port = port;
-    return builder.createFitNesseContext();
-  }
-
-  public static FitNesseContext makeTestContext(FitNesseContext context,
-      Authenticator authenticator) {
-    Builder builder = new Builder(context);
-    builder.authenticator = authenticator;
-    return builder.createFitNesseContext();
-  }
-
 
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");

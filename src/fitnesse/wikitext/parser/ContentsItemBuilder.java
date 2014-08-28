@@ -20,33 +20,23 @@ public class ContentsItemBuilder {
         this.level = level;
     }
 
-    public HtmlTag buildLevel(SourcePage page, HtmlTag contentsDiv) {
-        HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
+    public HtmlTag buildLevel(SourcePage page) {
         HtmlTag list = new HtmlTag("ul");
-        try {
-            for (SourcePage child: getSortedChildren(page)) {
-                list.add(buildListItem(child));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
+        list.addAttribute("class", "toc" + level);
+        for (SourcePage child: getSortedChildren(page)) {
+            list.add(buildListItem(child));
         }
-        contentsDiv.add(list);
-        div.add(contentsDiv);
-        return div;
+        return list;
     }
 
     private HtmlTag buildListItem(SourcePage child) {
-        HtmlTag listItem = new HtmlTag("li");
-        HtmlTag childItem = buildItem(child);
-        listItem.add(childItem);
+        HtmlTag listItem = buildItem(child);
         if (child.getChildren().size() > 0) {
             if (level < getRecursionLimit()) {
-                HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
-                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
+                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
-                childItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
+                listItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
             }
         }
         return listItem;
@@ -59,18 +49,21 @@ public class ContentsItemBuilder {
     }
 
     public HtmlTag buildItem(SourcePage page) {
-        HtmlTag result = new HtmlTag("a", buildBody(page));
-        result.addAttribute("href", buildReference(page));
+        HtmlTag listItem = new HtmlTag("li");
+        HtmlTag link = new HtmlTag("a", buildBody(page));
+        link.addAttribute("href", buildReference(page));
+        link.addAttribute("class", getBooleanPropertiesClasses(page));
+        listItem.add(link);
         String help = page.getProperty(PageData.PropertyHELP);
         if (help.length() > 0) {
             if (hasOption("-h", Contents.HELP_TOC)) {
-                result.tail = HtmlUtil.makeSpanTag("pageHelp", ": " + help).htmlInline();
+                listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
             }
             else {
-                result.addAttribute("title", help);
+                link.addAttribute("title", help);
             }
         }
-        return result;
+        return listItem;
     }
 
     private String buildBody(SourcePage page) {
@@ -127,6 +120,21 @@ public class ContentsItemBuilder {
         if (sourcePage.hasProperty(PageType.TEST.toString())) result += "+";
         if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += "@";
         if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += "-";
+        return result;
+    }
+    private String getBooleanPropertiesClasses(SourcePage sourcePage) {
+        String result = "";
+        if (sourcePage.hasProperty(PageType.SUITE.toString())) {
+        		result += "suite";
+        	}
+        else if (sourcePage.hasProperty(PageType.TEST.toString())) {
+        	result += "test";
+        	}
+        else {
+        	result += "static";
+        }
+        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += " linked";
+        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += " pruned";
         return result;
     }
 }

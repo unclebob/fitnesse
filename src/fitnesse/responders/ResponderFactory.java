@@ -2,10 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.StringUtil;
 import fitnesse.Responder;
@@ -25,12 +30,8 @@ import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.*;
-import fitnesse.responders.run.FitClientResponder;
-import fitnesse.responders.run.SocketCatchingResponder;
 import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
-import fitnesse.responders.run.TestResultFormattingResponder;
 import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
@@ -41,16 +42,18 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionComparerResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
+  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
+
   private final String rootPath;
-  private final Map<String, Class<?>> responderMap;
+  private final Map<String, Class<? extends Responder>> responderMap;
+  private final Map<String, List<Responder>> filterMap;
 
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
-    responderMap = new HashMap<String, Class<?>>();
+    responderMap = new HashMap<String, Class<? extends Responder>>();
     addResponder("new", NewPageResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
@@ -58,7 +61,7 @@ public class ResponderFactory {
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
-    addResponder("suite", SuiteResponder.class);
+    addResponder("suite", TestResponder.class);
     addResponder("proxy", SerializedPageResponder.class);
     addResponder("versions", VersionSelectionResponder.class);
     addResponder("viewVersion", VersionResponder.class);
@@ -75,8 +78,6 @@ public class ResponderFactory {
     addResponder("pageData", PageDataWikiPageResponder.class);
     addResponder("createDir", CreateDirectoryResponder.class);
     addResponder("upload", UploadResponder.class);
-    addResponder("socketCatcher", SocketCatchingResponder.class);
-    addResponder("fitClient", FitClientResponder.class);
     addResponder("deleteFile", DeleteFileResponder.class);
     addResponder("renameFile", RenameFileResponder.class);
     addResponder("deleteConfirmation", DeleteConfirmationResponder.class);
@@ -86,7 +87,6 @@ public class ResponderFactory {
     addResponder("import", WikiImportingResponder.class);
     addResponder("files", FileResponder.class);
     addResponder("shutdown", ShutdownResponder.class);
-    addResponder("format", TestResultFormattingResponder.class);
     addResponder("symlink", SymbolicLinkResponder.class);
     addResponder("importAndView", ImportAndViewResponder.class);
     addResponder("getPage", WikiPageResponder.class);
@@ -99,14 +99,22 @@ public class ResponderFactory {
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
+    filterMap = new HashMap<String, List<Responder>>();
+//    addFilter("test", WikiImportTestEventListener.class);
+//    addFilter("suite", WikiImportTestEventListener.class);
   }
 
-  public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
-    responderMap.put(key, Class.forName(responderClassName));
-  }
-
-  public void addResponder(String key, Class<?> responderClass) {
+  public final void addResponder(String key, Class<? extends Responder> responderClass) {
     responderMap.put(key, responderClass);
+  }
+
+  public void addFilter(String key, Responder filterClass) {
+    List<Responder> filters = filterMap.get(key);
+    if (filters == null) {
+      filters = new LinkedList<Responder>();
+      filterMap.put(key, filters);
+    }
+    filters.add(filterClass);
   }
 
   public String getResponderKey(Request request) {
@@ -123,23 +131,21 @@ public class ResponderFactory {
     return (argStart <= 0) ? fullQuery : fullQuery.substring(0, argStart);
   }
 
-  public Responder makeResponder(Request request, WikiPage root) throws InstantiationException {
-    Responder responder = new DefaultResponder();
+  public Responder makeResponder(Request request) throws InstantiationException, IOException {
     String resource = request.getResource();
     String responderKey = getResponderKey(request);
-    if (usingResponderKey(responderKey))
-      responder = lookupResponder(responderKey);
-    else {
-      if (StringUtil.isBlank(resource))
-        responder = new WikiPageResponder();
-      else if (resource.startsWith("files/") || resource.equals("files"))
-        responder = FileResponder.makeResponder(request, rootPath);
-      else if (WikiWordPath.isWikiWord(resource) || "root".equals(resource))
-        responder = new WikiPageResponder();
-      else
-        responder = new NotFoundResponder();
-    }
 
+    final Responder responder;
+
+    if (usingResponderKey(responderKey)) {
+      responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
+    } else if (StringUtil.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
+      responder = wrapWithFilters("wiki", new WikiPageResponder());
+    } else if (resource.startsWith("files/") || resource.equals("files")) {
+      responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));
+    } else {
+      responder = new NotFoundResponder();
+    }
     return responder;
   }
 
@@ -150,7 +156,7 @@ public class ResponderFactory {
       try {
         return newResponderInstance(responderClass);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Unable to instantiate responder " + responderKey, e);
         throw new InstantiationException("Unable to instantiate responder " + responderKey);
       }
     }
@@ -167,6 +173,15 @@ public class ResponderFactory {
       Constructor<?> constructor = responderClass.getConstructor();
       return (Responder) constructor.newInstance();
     }
+  }
+
+  private Responder wrapWithFilters(String key, Responder responder) throws InstantiationException {
+    List<Responder> filters = filterMap.get(key);
+    if (filters == null || filters.isEmpty()) {
+      return responder;
+    }
+
+    return new FilteringResponder(filters, responder);
   }
 
   public Class<?> getResponderClass(String responderKey) {

@@ -1,7 +1,0 @@
-!2 Administering FitNesse
-|[[Starting and Stopping][StartingAndStoppingFitNesse]]|''The details of starting and stopping the FitNesse wiki/web server.''|
-|[[Administration over REST][RestfulServices]]|''Controlling FitNesse through URLs.''|
-|[[Customizing Look and Feel][CustomizingLookAndFeel]]|''Changing the colors and layout of the various pages.''|
-|[[Server Access Logging][LogFiles]]|''Logging access to the FitNesse server.''|
-|[[Using Static and Image Files][FilesSection]]|''How to upload, and manage and link to static files and images.''|
-|[[Security][SecurityDescription]] |''Managing the security of wiki pages''|

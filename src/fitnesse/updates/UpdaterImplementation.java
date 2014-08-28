@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import util.FileUtil;
 
@@ -12,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdaterImplementation extends UpdaterBase {
-  public static boolean testing = false;
 
   private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
   private ArrayList<String> updateList = new ArrayList<String>();
-  private String fitNesseVersion = FitNesse.VERSION.toString();
+  private String fitNesseVersion;
 
   public UpdaterImplementation(FitNesseContext context) throws IOException {
     super(context);
     createUpdateAndDoNotCopyOverLists();
     updates = makeAllUpdates();
+    fitNesseVersion = context.version.toString();
   }
 
   private Update[] makeAllUpdates() {
@@ -36,7 +35,7 @@ public class UpdaterImplementation extends UpdaterBase {
     for (String nonCopyableFile : updateDoNotCopyOver) {
       String path = getCorrectPathForTheDestination(nonCopyableFile);
       String source = getCorrectPathFromJar(nonCopyableFile);
-      updates.add(new FileUpdate(context.rootPath, source, path));
+      updates.add(new FileUpdate(source, path));
     }
   }
 
@@ -44,7 +43,7 @@ public class UpdaterImplementation extends UpdaterBase {
     for (String updateableFile : updateList) {
       String path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);
-      updates.add(new ReplacingFileUpdate(context.rootPath, source, path));
+      updates.add(new ReplacingFileUpdate(source, path));
     }
   }
 
@@ -55,35 +54,27 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public String getCorrectPathForTheDestination(String updateableFile) {
     if (updateableFile.startsWith("FitNesseRoot"))
-      updateableFile = updateableFile.replace("FitNesseRoot", context.rootDirectoryName);
+      updateableFile = updateableFile.replace("FitNesseRoot", context.getRootPagePath());
     return FileUtil.getPathOfFile(updateableFile);
   }
 
-  private void createUpdateAndDoNotCopyOverLists() {
-    tryToGetUpdateFilesFromJarFile();
+  private void createUpdateAndDoNotCopyOverLists() throws IOException {
+    getUpdateFilesFromJarFile();
     File updateFileList = new File(context.getRootPagePath(), "updateList");
     File updateDoNotCopyOverFileList = new File(context.getRootPagePath(), "updateDoNotCopyOverList");
     tryToParseTheFileIntoTheList(updateFileList, updateList);
     tryToParseTheFileIntoTheList(updateDoNotCopyOverFileList, updateDoNotCopyOver);
   }
 
-  private void tryToGetUpdateFilesFromJarFile() {
-    try {
-      getUpdateFilesFromJarFile();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   public void getUpdateFilesFromJarFile() throws IOException {
-    Update update = new FileUpdate(context.getRootPagePath(), "Resources/updateList", ".");
+    Update update = new FileUpdate("Resources/updateList", context.getRootPagePath());
     update.doUpdate();
-    update = new FileUpdate(this.context.getRootPagePath(), "Resources/updateDoNotCopyOverList", ".");
+    update = new FileUpdate("Resources/updateDoNotCopyOverList", context.getRootPagePath());
     update.doUpdate();
   }
 
   public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
-    if (updateFileList.exists() == false)
+    if (!updateFileList.exists())
       throw new RuntimeException("Could Not Find UpdateList");
 
     try {
@@ -102,27 +93,23 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  public void update() throws IOException {
+  public boolean update() throws IOException {
     if (shouldUpdate()) {
-      System.err.println("Unpacking new version of FitNesse resources. Please be patient.");
+      LOG.info("Unpacking new version of FitNesse resources. Please be patient...");
       super.update();
-      System.err.println("\n\n" +
-          "********************************************************************************\n" +
-          "    Files have been updated to a new version. Please read the release notes\n" +
-          "    on http://localhost:" +
-          (FitNesse.FITNESSE_INSTANCE != null ? FitNesse.FITNESSE_INSTANCE.getContext().port : "xxx") +
-          "/FitNesse.ReleaseNotes to find out about the new\n" +
-          "    features and fixes.\n" +
-          "********************************************************************************\n\n");
+      LOG.info("**********************************************************");
+      LOG.info("Files have been updated to a new version.");
+      LOG.info("Please read the release notes on ");
+      LOG.info("http://localhost:" + (context != null ? context.port : "xxx") +
+          "/FitNesse.ReleaseNotes");
+      LOG.info("to find out about the new features and fixes.");
+      LOG.info("**********************************************************");
 
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
+      return true;
     }
-  }
-
-  private void exit() {
-    if (!testing)
-      System.exit(0);
+    return false;
   }
 
   private boolean shouldUpdate() {

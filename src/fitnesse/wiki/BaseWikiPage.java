@@ -2,146 +2,139 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
-import java.util.List;
-import util.EnvironmentVariableTool;
-import util.FileUtil;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
-public abstract class BaseWikiPage implements WikiPage {
+public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private static final long serialVersionUID = 1L;
 
-  protected String name;
-  protected WikiPage parent;
+  private final String name;
+  private final WikiPage parent;
+  private final VariableSource variableSource;
+  private ParsingPage parsingPage;
+  private Symbol syntaxTree;
 
-  protected BaseWikiPage(String name, WikiPage parent) {
-    this.name = name;
-    this.parent = parent;
+  protected BaseWikiPage(String name, VariableSource variableSource) {
+    this(name, null, variableSource);
   }
 
+  protected BaseWikiPage(String name, WikiPage parent) {
+    this(name, parent, parent instanceof BaseWikiPage ? ((BaseWikiPage) parent).variableSource : null);
+  }
+
+  protected BaseWikiPage(String name, WikiPage parent, VariableSource variableSource) {
+    this.name = name;
+    this.parent = parent;
+    this.variableSource = variableSource;
+  }
+
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl();
+    return new PageCrawlerImpl(this);
   }
 
+  @Override
   public WikiPage getParent() {
     return parent == null ? this : parent;
   }
 
-  protected abstract List<WikiPage> getNormalChildren();
+  @Override
+  public boolean isRoot() {
+    return parent == null || parent == this;
+  }
 
-  public List<WikiPage> getChildren() {
-    List<WikiPage> children = getNormalChildren();
-    WikiPageProperties props = getData().getProperties();
-    WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
-    if (symLinksProperty != null) {
-      for (String linkName : symLinksProperty.keySet()) {
-        WikiPage page = createSymbolicPage(symLinksProperty, linkName);
-        if (page != null && !children.contains(page))
-          children.add(page);
-      }
+  protected VariableSource getVariableSource() {
+    return variableSource;
+  }
+
+
+  @Override
+  public String getVariable(String name) {
+    ParsingPage parsingPage = getParsingPage();
+    Maybe<String> variable = parsingPage.findVariable(name);
+    if (variable.isNothing()) return null;
+
+    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
+    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
+  }
+
+  @Override
+  public String getHtml() {
+    return new HtmlTranslator(getParsingPage().getPage(), getParsingPage()).translateTree(getSyntaxTree());
+  }
+
+  @Override
+  public ParsingPage getParsingPage() {
+    parse();
+    return parsingPage;
+  }
+
+  @Override
+  public Symbol getSyntaxTree() {
+    parse();
+    return syntaxTree;
+  }
+
+  private void parse() {
+    if (syntaxTree == null) {
+      // This is the only page where we need a VariableSource
+      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
+      syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }
-    return children;
   }
 
-  private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
-    if (symLinkProperty == null)
-      return null;
-    String linkPath = symLinkProperty.get(linkName);
-    if (linkPath == null)
-      return null;
-    if (linkPath.startsWith("file://"))
-      return createExternalSymbolicLink(linkPath, linkName);
-    else
-      return createInternalSymbolicPage(linkPath, linkName);
+  protected void resetCache() {
+    parsingPage = null;
+    syntaxTree = null;
   }
 
-  private WikiPage createExternalSymbolicLink(String linkPath, String linkName) {
-    String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
-    File file = new File(fullPagePath);
-    File parentDirectory = file.getParentFile();
-    if (parentDirectory.exists()) {
-      if (!file.exists())
-        FileUtil.makeDir(file.getPath());
-      if (file.isDirectory()) {
-        WikiPage externalRoot = new FileSystemPage(parentDirectory.getPath(), file.getName());
-        return new SymbolicPage(linkName, externalRoot, this);
-      }
-    }
-    return null;
-  }
-
-  protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) {
-    WikiPagePath path = PathParser.parse(linkPath);
-    WikiPage start = (path.isRelativePath()) ? getParent() : this;  //TODO -AcD- a better way?
-    WikiPage page = getPageCrawler().getPage(start, path);
-    if (page != null)
-      page = new SymbolicPage(linkName, page, this);
-    return page;
-  }
-
-  protected abstract WikiPage getNormalChildPage(String name);
-
-  public WikiPage getChildPage(String name) {
-    WikiPage page = getNormalChildPage(name);
-    if (page == null) {
-      page = createSymbolicPage(readOnlyData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
-    }
-    return page;
-  }
-
-  public WikiPage getHeaderPage() {
-    return PageCrawlerImpl.getClosestInheritedPage("PageHeader", this);
-  }
-
-  public WikiPage getFooterPage() {
-    return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
-  }
-
-  public boolean isOpenInNewWindow() {
-    return false;
-  }
-  
+  @Override
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }
 
+  @Override
   public int compareTo(Object o) {
     try {
-      return getName().compareTo(((WikiPage) o).getName());
+      return getPageCrawler().getFullPath().compareTo(((WikiPage) o).getPageCrawler().getFullPath());
     }
     catch (Exception e) {
       return 0;
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o)
       return true;
     if (!(o instanceof WikiPage))
       return false;
     try {
-      PageCrawler crawler = getPageCrawler();
-      return crawler.getFullPath(this).equals(crawler.getFullPath(((WikiPage) o)));
+      return getPageCrawler().getFullPath().equals(((WikiPage) o).getPageCrawler().getFullPath());
     }
     catch (Exception e) {
       return false;
     }
   }
 
+  @Override
   public int hashCode() {
     try {
-      return getPageCrawler().getFullPath(this).hashCode();
+      return getPageCrawler().getFullPath().hashCode();
     }
     catch (Exception e) {
       return 0;
     }
-  }
-
-  public String getHelpText() {
-    String helpText = getData().getAttribute(PageData.PropertyHELP);
-    return ((helpText == null) || (helpText.length() == 0)) ? null : helpText;
   }
 }

@@ -3,27 +3,25 @@
 package fitnesse.fixtures;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
-import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.File;
+import java.util.Properties;
 
 import util.FileUtil;
 import fit.Fixture;
-import fitnesse.FitNesse;
 import fitnesse.authentication.Authenticator;
-import fitnesse.components.SaveRecorder;
-import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
-    //TODO - MdM - There's got to be a better way.
-    WikiImportTestEventListener.register();
-
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root, 9123, new Authenticator() {
+    final int port = 9123;
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(port));
+    root = InMemoryPage.makeRoot("RooT", properties);
+    context = FitNesseUtil.makeTestContext(root, port, new Authenticator() {
       @Override public boolean isAuthenticated(String username, String password) {
         if (FitnesseFixtureContext.authenticator != null) {
           return FitnesseFixtureContext.authenticator.isAuthenticated(username, password);
@@ -31,12 +29,12 @@ public class SetUp extends Fixture {
         return true;
       }
     });
-    fitnesse = new FitNesse(context, false);
+    context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);
     historyDirectory.mkdirs();
     SaveRecorder.clear();
-    fitnesse.start();
+    context.fitNesse.start();
   }
 }

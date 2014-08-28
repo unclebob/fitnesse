@@ -6,8 +6,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class UpdateFileList {
+  private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
+
   private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
@@ -24,13 +27,9 @@ public class UpdateFileList {
       updater.createUpdateList();
       updater.createDoNotUpdateList();
     } else {
-      updater.printMessage("Some directories are invalid.");
+      LOG.severe("Some directories are invalid. Aborting.");
       updater.exit();
     }
-  }
-
-  void printMessage(String message) {
-    System.err.println(message);
   }
 
   void exit() {

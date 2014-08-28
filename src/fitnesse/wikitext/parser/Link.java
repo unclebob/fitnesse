@@ -61,7 +61,7 @@ public class Link extends SymbolType implements Rule, Translation {
         }
 
         public String makeUrl(String prefix) {
-            return reference.startsWith("files/") ? "/" + reference : prefix + reference;
+            return reference.startsWith("files/") ? reference : prefix + reference;
         }
     }
 }

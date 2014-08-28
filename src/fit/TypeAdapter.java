@@ -118,9 +118,10 @@ public class TypeAdapter {
   public boolean equals(Object a, Object b) {
     boolean isEqual = false;
 
-    if (isRegex)
-      isEqual = Pattern.matches(a.toString(), b.toString());
-    else {
+    if (isRegex) {
+      if (b != null)
+        isEqual = Pattern.matches(a.toString(), b.toString());
+    } else {
       if (a == null)
         isEqual = (b == null);
       else

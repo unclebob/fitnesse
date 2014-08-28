@@ -4,31 +4,32 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
-//TODO after extracting the WikiPageModel... rethink this class.  Lots of these methods might be able to go back into WikiPAge.
+import java.util.List;
+
 public interface PageCrawler {
-  WikiPage getPage(WikiPage context, WikiPagePath path);
+  WikiPage getPage(WikiPagePath path);
 
-  void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
+  WikiPage getPage(WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy);
 
-  boolean pageExists(WikiPage context, WikiPagePath path);
+  boolean pageExists(WikiPagePath path);
 
-  WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath);
+  WikiPagePath getFullPathOfChild(WikiPagePath childPath);
 
-  WikiPagePath getFullPath(WikiPage page);
+  WikiPagePath getFullPath();
 
-  WikiPage addPage(WikiPage context, WikiPagePath path, String content);
+  String getRelativeName(WikiPage page);
 
-  WikiPage addPage(WikiPage context, WikiPagePath path);
+  WikiPage getRoot();
 
-  String getRelativeName(WikiPage base, WikiPage page);
+  void traverse(TraversalListener<? super WikiPage> callback);
 
-  boolean isRoot(WikiPage page);
+  void traversePageAndAncestors(TraversalListener<? super WikiPage> callback);
 
-  WikiPage getRoot(WikiPage page);
+  void traverseUncles(String uncleName, TraversalListener<? super WikiPage> callback);
 
-  void traverse(WikiPage root, TraversalListener<? super WikiPage> pageCrawlerTest);
+  WikiPage getSiblingPage(WikiPagePath pathRelativeToSibling);
 
-  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
+  WikiPage findAncestorWithName(String name);
 
-  WikiPage findAncestorWithName(WikiPage page, String name);
+  WikiPage getClosestInheritedPage(String pageName);
 }

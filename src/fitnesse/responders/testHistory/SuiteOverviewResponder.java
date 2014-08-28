@@ -7,10 +7,11 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.SuiteContentsFinder;
-import fitnesse.responders.run.SuiteFilter;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.responders.run.TestResponder;
+import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -22,12 +23,12 @@ public class SuiteOverviewResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     WikiPage root = context.root;
-    WikiPage page = root.getPageCrawler().getPage(root, PathParser.parse(request.getResource()));
+    WikiPage page = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
 
-    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
+    SuiteFilter filter = TestResponder.createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
 
-    List<WikiPage> pagelist = suiteTestFinder.makePageList();
+    List<WikiPage> pagelist = suiteTestFinder.getAllPagesToRunForThisSuite();
 
     SuiteOverviewTree treeview = new SuiteOverviewTree(pagelist);
     treeview.findLatestResults(context.getTestHistoryDirectory());

@@ -6,60 +6,105 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.components.TraversalListener;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
+import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.CompositeExecutionLog;
+import fitnesse.reporting.InteractiveFormatter;
+import fitnesse.reporting.PageInProgressFormatter;
+import fitnesse.reporting.SuiteHtmlFormatter;
+import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.SuiteHistoryFormatter;
+import fitnesse.reporting.history.SuiteXmlReformatter;
+import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.responders.run.formatters.CompositeFormatter;
-import fitnesse.responders.run.formatters.PageHistoryFormatter;
-import fitnesse.responders.run.formatters.PageInProgressFormatter;
-import fitnesse.responders.run.formatters.TestHtmlFormatter;
-import fitnesse.responders.run.formatters.TestTextFormatter;
-import fitnesse.responders.run.formatters.XmlFormatter;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.responders.WikiImporter;
+import fitnesse.responders.WikiImportingResponder;
+import fitnesse.responders.WikiImportingTraverser;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
+import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 
+import static fitnesse.responders.WikiImportingTraverser.ImportError;
+import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
+
 public class TestResponder extends ChunkingResponder implements SecureResponder {
-  private static final LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
-  protected PageData data;
-  protected CompositeFormatter formatters;
-  protected boolean isInteractive = false;
+  private final Logger LOG = Logger.getLogger(TestResponder.class.getName());
+
+  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+  private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
+  private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
+  private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
+  private static final String OR_FILTER_ARG_2 = "suiteFilter";
+
+  private final WikiImporter wikiImporter;
+  private SuiteHistoryFormatter suiteHistoryFormatter;
+
+  private PageData data;
+  private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
-  private boolean fastTest = false;
+  private boolean debug = false;
   private boolean remoteDebug = false;
-  protected TestSystem testSystem;
+  private boolean includeHtml = true;
   int exitCode;
+  private CompositeExecutionLog log;
+
 
   public TestResponder() {
+    this(new WikiImporter());
+  }
+
+  public TestResponder(WikiImporter wikiImporter) {
     super();
-    formatters = new CompositeFormatter();
+    this.wikiImporter = wikiImporter;
+  }
+
+  private boolean isInteractive() {
+    return mainFormatter instanceof InteractiveFormatter;
   }
 
   protected void doSending() throws Exception {
-    checkArguments();
+    debug |= request.hasInput("debug");
+    remoteDebug |= request.hasInput("remote_debug");
+    includeHtml |= request.hasInput("includehtml");
     data = page.getData();
+    log = new CompositeExecutionLog(page);
 
-    createFormatters();
+    createMainFormatter();
 
-    if (isInteractive) {
+    if (isInteractive()) {
       makeHtml().render(response.getWriter());
     } else {
       doExecuteTests();
@@ -69,16 +114,50 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public void doExecuteTests() {
-    sendPreTestNotification();
+    if (WikiImportProperty.isImported(data)) {
+      importWikiPages();
+    }
 
-    performExecution();
+    try {
+      performExecution();
+    } catch (Exception e) {
+      // Is this necessary? Or is the exception already handled by stopTestSystem?
+      mainFormatter.errorOccurred(e);
+      LOG.log(Level.WARNING, "error registered in test system", e);
+    }
 
-    exitCode = formatters.getErrorCount();
+    exitCode = mainFormatter.getErrorCount();
+  }
+
+  public void importWikiPages() {
+    if (response.isXmlFormat() || !isAutoUpdated(data != null ? data : page.getData())) {
+      return;
+    }
+
+    try {
+      addToResponse("<span class=\"meta\">Updating imported content...</span><span class=\"meta\">");
+      new WikiImportingTraverser(wikiImporter, page).traverse(new TraversalListener<Object>() {
+        @Override
+        public void process(Object pageOrError) {
+          if (pageOrError instanceof ImportError) {
+            ImportError error = (ImportError) pageOrError;
+            addToResponse(" " + error.toString() + ".");
+          }
+        }
+      });
+      addToResponse(" Done.");
+      // Refresh data, since it might have changed.
+      data = page.getData();
+    } catch (IOException e) {
+      addToResponse(" Import failed: " + e.toString() + ".");
+    } finally {
+      addToResponse("</span>");
+    }
   }
 
   private HtmlPage makeHtml() {
     PageCrawler pageCrawler = page.getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(page);
+    WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
@@ -88,19 +167,38 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());
     htmlPage.setFooterTemplate("wikiFooter.vm");
+    htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("errorNavOnDocumentReady", false);
-
-    WikiImportProperty.handleImportProperties(htmlPage, page);
+    htmlPage.put("multipleTestsRun", isMultipleTestsRun());
+    WikiImportingResponder.handleImportProperties(htmlPage, page);
 
     return htmlPage;
   }
 
+  public boolean isDebug() {
+    return debug;
+  }
+
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
+
+  public class WikiPageHeaderRenderer {
+
+    public String render() {
+      return WikiPageUtil.getHeaderPageHtml(page);
+    }
+
+  }
+
   public class WikiPageFooterRenderer {
+
     public String render() {
         return WikiPageUtil.getFooterPageHtml(page);
     }
+
   }
 
   public class TestExecutor {
@@ -109,26 +207,29 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
   }
 
-  protected void checkArguments() {
-    fastTest |= request.hasInput("debug");
-    remoteDebug |= request.hasInput("remote_debug");
+  private boolean isMultipleTestsRun() {
+    return PageType.fromWikiPage(page) == PageType.SUITE;
   }
 
-  protected void createFormatters() {
-    if (response.isXmlFormat()) {
-      addXmlFormatter();
-    } else if (response.isTextFormat()) {
-      addTextFormatter();
-    } else if (response.isJavaFormat()) {
-      addJavaFormatter();
-    } else {
-      addHtmlFormatter();
-      isInteractive = true;
-    }
+  protected void addFormatters(MultipleTestsRunner runner) {
+    runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      addTestHistoryFormatter();
+      runner.addTestSystemListener(getSuiteHistoryFormatter());
     }
-    addTestInProgressFormatter();
+    runner.addTestSystemListener(newTestInProgressFormatter());
+    if (context.testSystemListener != null) {
+      runner.addTestSystemListener(context.testSystemListener);
+    }
+  }
+
+  private void createMainFormatter() {
+    if (response.isXmlFormat()) {
+      mainFormatter = newXmlFormatter();
+    } else if (response.isTextFormat()) {
+      mainFormatter = newTextFormatter();
+    } else {
+      mainFormatter = newHtmlFormatter();
+    }
   }
 
   protected String getTitle() {
@@ -139,78 +240,58 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return "testPage";
   }
 
-  void addXmlFormatter() {
-    XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
-        return response.getWriter();
-      }
-    };
-    formatters.add(new XmlFormatter(context, page, writerSource));
+  BaseFormatter newXmlFormatter() {
+    SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
+    if (includeHtml)
+      xmlFormatter.includeHtml();
+    if (!isMultipleTestsRun())
+      xmlFormatter.includeInstructions();
+    return xmlFormatter;
   }
 
-  void addTextFormatter() {
-    formatters.add(new TestTextFormatter(response));
-  }
-  void addJavaFormatter() {
-    formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
+  BaseFormatter newTextFormatter() {
+    return new TestTextFormatter(response);
   }
 
-  void addHtmlFormatter() {
-    BaseFormatter formatter = new TestHtmlFormatter(context, page) {
+  BaseFormatter newHtmlFormatter() {
+    return new SuiteHtmlFormatter(context, page, log) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
       }
     };
-    formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() {
-    HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-    formatters.add(new PageHistoryFormatter(context, page, writerFactory));
+  protected TestSystemListener newTestInProgressFormatter() {
+    return new PageInProgressFormatter(context);
   }
 
-  protected void addTestInProgressFormatter() {
-    formatters.add(new PageInProgressFormatter(context, page));
-  }
-
-  protected void sendPreTestNotification() {
-    for (TestEventListener eventListener : eventListeners) {
-      eventListener.notifyPreTest(this, data);
+  protected void performExecution() throws IOException, InterruptedException {
+    SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
+    MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
+    try {
+      runner.executeTestPages();
+    } finally {
+      log.publish(context.pageFactory);
     }
   }
 
-  protected void performExecution() {
-    List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
+  protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
-    runner.setFastTest(fastTest);
-    runner.setDebug(isRemoteDebug());
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker,
+            context.testSystemFactory, context.variableSource);
+    runner.setRunInProcess(debug);
+    runner.setEnableRemoteDebug(remoteDebug);
+    runner.addExecutionLogListener(log);
+    addFormatters(runner);
 
-    if (isEmpty(page))
-      formatters.addMessageForBlankHtml();
-    runner.executeTestPages();
-  }
-
-  private boolean isEmpty(WikiPage page) {
-    return page.getData().getContent().length() == 0;
+    return runner;
   }
 
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
-  }
-
-
-  public static void registerListener(TestEventListener listener) {
-    eventListeners.add(listener);
-  }
-
-  public void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
-  }
-
-  public boolean isFastTest() {
-    return fastTest;
   }
 
   public void addToResponse(String output) {
@@ -237,29 +318,90 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
   }
 
-  void closeHtmlResponse() {
-    if (!isClosed()) {
-      setClosed();
-      response.closeChunks();
-      response.close();
-    }
-  }
-
-  boolean isRemoteDebug() {
-    return remoteDebug;
-  }
-
   public Response getResponse() {
     return response;
   }
 
-  public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
+
+  public static SuiteFilter createSuiteFilter(Request request, String suitePath) {
+    return new SuiteFilter(getOrTagFilter(request),
+            getNotSuiteFilter(request),
+            getAndTagFilters(request),
+            getSuiteFirstTest(request, suitePath));
+  }
+
+  private static String getOrTagFilter(Request request) {
+    return request != null ? getOrFilterString(request) : null;
+  }
+
+  private static String getOrFilterString(Request request) {
+    //request already confirmed not-null
+    String orFilterString = null;
+    if(request.getInput(OR_FILTER_ARG_1) != null){
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+    } else {
+      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+    }
+    return orFilterString;
+  }
+
+  private static String getNotSuiteFilter(Request request) {
+    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+  }
+
+  private static String getAndTagFilters(Request request) {
+    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
+  }
+
+
+  private static String getSuiteFirstTest(Request request, String suiteName) {
+    String startTest = null;
+    if (request != null) {
+      startTest = (String) request.getInput("firstTest");
+    }
+
+    if (startTest != null) {
+      if (startTest.indexOf(suiteName) != 0) {
+        startTest = suiteName + "." + startTest;
+      }
+    }
+
+    return startTest;
+  }
+
+
+  public static class HistoryWriterFactory implements TestXmlFormatter.WriterFactory {
+
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-      File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
+      File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
+      if (!resultDirectory.exists()) {
+        resultDirectory.mkdirs();
+      }
       File resultFile = new File(resultDirectory, resultPath.getName());
       return new PrintWriter(resultFile, "UTF-8");
     }
+  }
+
+  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
+    return String.format("%s/%s/%s",
+            context.getTestHistoryDirectory(),
+            page.getPageCrawler().getFullPath().toString(),
+            makeResultFileName(counts, time));
+  }
+
+  public static String makeResultFileName(TestSummary summary, long time) {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    String datePart = format.format(new Date(time));
+    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
+  }
+
+
+  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+    if (suiteHistoryFormatter == null) {
+      HistoryWriterFactory source = new HistoryWriterFactory();
+      suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);
+    }
+    return suiteHistoryFormatter;
   }
 }

@@ -10,6 +10,8 @@
 | >SuiteFitDecoratorTests | ''Demonstrate usage and behavior of Fit Decorators'' |
 | >SuiteSlimTests | ''Slim Specific Tests'' |
 | >SuiteTestHistory | ''Test History tests'' |
+| >SuiteVersionsControllerTests | Versions controller tests |
+| >SuiteTestSystems | Test interaction with custom test systems |
 
 !2 ''Classpaths''
 !define SUT_PATH (!-

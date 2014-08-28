@@ -1,5 +1,5 @@
 
-describe("Paste", function () {
+describe("Copying and pasting", function () {
 
     var editor, contentDocument, contentBody;
 
@@ -42,7 +42,6 @@ describe("Paste", function () {
     function select(startQuery, startOffset, endQuery, endOffset) {
         var startContainer = contentDocument.querySelector(startQuery);
         var endContainer = contentDocument.querySelector(endQuery);
-        console.log(startContainer, endContainer);
         editor.selectRange(startContainer.firstChild, startOffset, endContainer.firstChild, endOffset);
     }
 

@@ -1,6 +1,6 @@
 <h2>Select a version</h2>
 <form action= "" method="get" name="compareVersions">
- <fieldset class="buttons">
+ <fieldset>
   <input type="hidden" value="compareVersions" name="responder"/>
   <input type="submit" value="Compare" />
   <a class="button" href="$viewLocation">Cancel</a>

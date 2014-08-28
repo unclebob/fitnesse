@@ -4,9 +4,13 @@ package fitnesse.responders.editing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
+import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.WikiWordBuilder;
-import util.EnvironmentVariableTool;
+import fitnesse.wikitext.parser.WikiWordPath;
+import fitnesse.wiki.VariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -28,15 +32,14 @@ import fitnesse.wikitext.Utils;
 public class SymbolicLinkResponder implements Responder {
   private Response response;
   private String resource;
-  private PageCrawler crawler;
   private FitNesseContext context;
   private WikiPage page;
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
     this.context = context;
-    crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, PathParser.parse(resource));
+    PageCrawler crawler = context.root.getPageCrawler();
+    page = crawler.getPage(PathParser.parse(resource));
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -52,7 +55,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void setRedirect(String resource) {
-    response.redirect(resource + "?properties");
+    response.redirect(context.contextRoot, resource + "?properties");
   }
 
   private void removeSymbolicLink(Request request, WikiPage page) {
@@ -70,12 +73,9 @@ public class SymbolicLinkResponder implements Responder {
 
   private void  renameSymbolicLink(Request request, WikiPage page) {
     String linkToRename = (String) request.getInput("rename"),
-      newName = (String) request.getInput("newname");
+    newName = (String) request.getInput("newname");
 
-    if (page.hasChildPage(newName)) {
-      response = new ErrorResponder(resource + " already has a child named " + newName + ".").makeResponse(context, null);
-      response.setStatus(412);
-    } else {
+    if (isValidWikiPageName(newName)) {
       PageData data = page.getData();
       WikiPageProperties properties = data.getProperties();
       WikiPageProperty symLinks = getSymLinkProperty(properties);
@@ -90,19 +90,8 @@ public class SymbolicLinkResponder implements Responder {
   private void addSymbolicLink(Request request, WikiPage page) throws IOException {
     String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
     String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
-    if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
-      String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
-        "<br/> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
-        "<br/>Either it doesn't exist or it's not a directory.";
-      response = new ErrorResponder(message).makeResponse(context, null);
-      response.setStatus(404);
-    } else if (!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath)) {
-      response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.").makeResponse(context, null);
-      response.setStatus(404);
-    } else if (page.hasChildPage(linkName)) {
-      response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
-      response.setStatus(412);
-    } else {
+
+    if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName)) {
       PageData data = page.getData();
       WikiPageProperties properties = data.getProperties();
       WikiPageProperty symLinks = getSymLinkProperty(properties);
@@ -112,6 +101,35 @@ public class SymbolicLinkResponder implements Responder {
     }
   }
 
+  private boolean isValidWikiPageName(String linkName) {
+    if (page.hasChildPage(linkName)) {
+      response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
+      response.setStatus(412);
+      return false;
+    } else if (!WikiWordPath.isSingleWikiWord(linkName)) {
+      response = new ErrorResponder(linkName + " is not a valid WikiWord.").makeResponse(context, null);
+      response.setStatus(412);
+      return false;
+    }
+    return true;
+  }
+
+  private boolean isValidLinkPathName(String linkPath) throws IOException {
+    if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
+      String message = "Cannot create link to the file system path '" + linkPath + "'." +
+              " The canonical file system path used was ;" + createFileFromPath(linkPath).getCanonicalPath() + "'." +
+              " Either it doesn't exist or it's not a directory.";
+      response = new ErrorResponder(message).makeResponse(context, null);
+      response.setStatus(404);
+      return false;
+    } else if (!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath)) {
+      response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.").makeResponse(context, null);
+      response.setStatus(404);
+      return false;
+    }
+    return true;
+  }
+
   private boolean isValidDirectoryPath(String linkPath) {
     File file = createFileFromPath(linkPath);
 
@@ -119,24 +137,28 @@ public class SymbolicLinkResponder implements Responder {
       return file.isDirectory();
     else {
       File parentDir = file.getParentFile();
-      return parentDir.exists() && parentDir.isDirectory();
+      return parentDir != null && parentDir.exists() && parentDir.isDirectory();
     }
   }
 
   private File createFileFromPath(String linkPath) {
-    String pathToFile = EnvironmentVariableTool.replace(linkPath.substring(7));
-    return new File(pathToFile);
+    // See FileSystemSubWikiPageFactory.createExternalSymbolicLink(), also.
+    String fullPageURI = new VariableTool(context.variableSource).replace(linkPath);
+    return WikiPageUtil.resolveFileUri(fullPageURI, new File(context.rootPath));
   }
 
   private boolean isFilePath(String linkPath) {
-    return linkPath.startsWith("file://");
+    return linkPath.startsWith("file:");
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
+    if (path == null) {
+      return true;
+    }
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
-    return !crawler.pageExists(start, path);
+    return !start.getPageCrawler().pageExists(path);
   }
 
   private WikiPageProperty getSymLinkProperty(WikiPageProperties properties) {

@@ -9,39 +9,29 @@ import java.util.List;
 public class Parser {
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
-    public static Parser make(WikiPage page, String input) {
-        return make(new ParsingPage(new WikiSourcePage(page)), input);
-    }
-    
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
 
     public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
-        return make(currentPage, input, new VariableFinder(currentPage), provider);
-    }
-
-    public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource, SymbolProvider provider) {
         ParseSpecification specification = new ParseSpecification().provider(provider);
-        return new Parser(null, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), variableSource, specification);
+        return new Parser(null, currentPage, new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), specification);
     }
 
     private ParsingPage currentPage;
-    private VariableSource variableSource;
     private Scanner scanner;
     private Parser parent;
     private ParseSpecification specification;
 
-    public Parser(Parser parent, ParsingPage currentPage, Scanner scanner, VariableSource variableSource, ParseSpecification specification) {
+    public Parser(Parser parent, ParsingPage currentPage, Scanner scanner, ParseSpecification specification) {
         this.parent = parent;
         this.currentPage = currentPage;
         this.scanner = scanner;
-        this.variableSource = variableSource;
         this.specification = specification;
     }
 
     public ParsingPage getPage() { return currentPage; }
-    public VariableSource getVariableSource() { return variableSource; }
+    public VariableSource getVariableSource() { return currentPage; }
     public Symbol getCurrent() { return scanner.getCurrent(); }
     public int getOffset() { return scanner.getOffset(); }
     public boolean atEnd() { return scanner.isEnd(); }
@@ -97,7 +87,7 @@ public class Parser {
     }
 
     public Symbol parseWithParent(String input, Parser parent) {
-        return new Parser(parent, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), variableSource, new ParseSpecification().provider(specification)).parse();
+        return new Parser(parent, currentPage, new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), new ParseSpecification().provider(specification)).parse();
     }
 
     public Symbol parseToIgnoreFirst(SymbolType type) {
@@ -147,7 +137,7 @@ public class Parser {
     }
 
     private Symbol parse(ParseSpecification newSpecification) {
-        return new Parser(this, currentPage, scanner, variableSource, newSpecification).parse();
+        return new Parser(this, currentPage, scanner, newSpecification).parse();
     }
 
     public Symbol parse() {

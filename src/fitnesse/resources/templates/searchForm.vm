@@ -1,8 +1,8 @@
-<form method="post">
+<form>
  <input type="hidden" name="responder" value="search"/>
  <fieldset>
   <label for="searchString">Search:</label>
-  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end"/>
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="searchType" value="Search Titles"/>
@@ -13,11 +13,11 @@
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>
 
-<form method="post">
+<h2>Search Properties</h2>
+<form>
 #macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
- <h2>Search Properties</h2>
  <input type="hidden" name="responder" value="executeSearchProperties"/>
 
  <fieldset>
@@ -31,6 +31,8 @@
    #foreach( $pageType in $pageTypeAttributes )
    <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
    #end
+
+   <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip</label>
   </fieldset>
      
   <fieldset>

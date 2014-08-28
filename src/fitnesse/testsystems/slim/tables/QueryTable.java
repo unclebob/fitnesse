@@ -2,25 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import static util.ListUtility.list;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import fitnesse.slim.SlimServer;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+
+import static util.ListUtility.list;
 
 public class QueryTable extends SlimTable {
+  private static final String COMMENT_COLUMN_MARKER = "#";
   protected List<String> fieldNames = new ArrayList<String>();
   private String queryId;
-  private String tableInstruction;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
@@ -39,34 +35,28 @@ public class QueryTable extends SlimTable {
     return c.matches();
   }
 
-  public TestResult matchMessage(String actual, String expected) {
+  public SlimTestResult matchMessage(String actual, String expected) {
     if (actual == null)
-      return TestResult.fail("NULL");
+      return SlimTestResult.fail("NULL");
     if (actual.equals(replaceSymbols(expected)))
-      return TestResult.pass(replaceSymbolsWithFullExpansion(expected));
+      return SlimTestResult.pass(replaceSymbolsWithFullExpansion(expected));
     Comparator c = new Comparator(actual, expected);
     return c.evaluate();
   }
 
   @Override
-  public List<Assertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() < 2)
       throw new SyntaxError("Query tables must have at least two rows.");
     assignColumns();
-    Assertion make = constructFixture(getFixtureName());
-    Assertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
+    SlimAssertion make = constructFixture(getFixtureName());
+    SlimAssertion ti = makeAssertion(callFunction(getTableName(), "table", tableAsList()),
             new SilentReturnExpectation(0, 0));
-    Assertion qi = makeAssertion(callFunction(getTableName(), "query"),
+    SlimAssertion qi = makeAssertion(callFunction(getTableName(), "query"),
             new QueryTableExpectation());
-    tableInstruction = ti.getInstruction().getId();
+    String tableInstruction = ti.getInstruction().getId();
     queryId = qi.getInstruction().getId();
     return list(make, ti, qi);
-  }
-
-  public boolean shouldIgnoreException(String resultKey, String resultString) {
-    boolean isTableInstruction = resultKey.equals(tableInstruction);
-    boolean isNoMethodException = resultString.contains(SlimServer.NO_METHOD_IN_CLASS);
-    return isTableInstruction && isNoMethodException;
   }
 
   private void assignColumns() {
@@ -75,47 +65,112 @@ public class QueryTable extends SlimTable {
       fieldNames.add(table.getCellContents(col, 1));
   }
 
-  public class QueryTableExpectation implements Expectation {
+  public class QueryTableExpectation implements SlimExpectation {
 
     @Override
     public TestResult evaluateExpectation(Object queryReturn) {
-      TestResult testResult;
+      SlimTestResult testResult;
       if (queryId == null || queryReturn == null) {
-        testResult = TestResult.error("query method did not return a list");
+        testResult = SlimTestResult.error("query method did not return a list");
         table.updateContent(0, 0, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       } else if (queryReturn instanceof List) {
-        testResult = new TestResult(scanRowsForMatches((List<Object>) queryReturn));
+        testResult = new SlimTestResult(scanRowsForMatches((List<List<List<Object>>>) queryReturn));
       } else {
-        testResult = TestResult.error(String.format("The query method returned: %s", queryReturn));
+        testResult = SlimTestResult.error(String.format("The query method returned: %s", queryReturn));
         table.updateContent(0, 0, testResult);
+        getTestContext().increment(testResult.getExecutionResult());
       }
       return testResult;
     }
 
     @Override
-    public ExceptionResult evaluateException(ExceptionResult exceptionResult) {
+    public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       table.updateContent(0, 0, exceptionResult);
       getTestContext().incrementErroredTestsCount();
       return exceptionResult;
     }
   }
 
-
-  protected ExecutionResult scanRowsForMatches(List<Object> queryResultList) {
+  private ExecutionResult scanRowsForMatches(List<List<List<Object>>> queryResultList) {
     final QueryResults queryResults = new QueryResults(queryResultList);
-    int rows = table.getRowCount();
-    for (int tableRow = 2; tableRow < rows; tableRow++)
-      scanRowForMatch(tableRow, queryResults);
-    return markSurplusRows(queryResults);
+
+    Collection<MatchedResult> potentialMatches = queryResults.scorePotentialMatches();
+
+    List<MatchedResult> potentialMatchesByScore = new ArrayList<MatchedResult>(potentialMatches);
+    Collections.sort(potentialMatchesByScore, MatchedResult.compareByScore());
+
+    return markRows(queryResults, potentialMatchesByScore);
   }
 
-  private ExecutionResult markSurplusRows(final QueryResults queryResults) {
-    List<Integer> unmatchedRows = queryResults.getUnmatchedRows();
+  protected ExecutionResult markRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore) {
+    List<Integer> unmatchedTableRows = unmatchedRows(table.getRowCount());
+    unmatchedTableRows.remove(Integer.valueOf(0));
+    unmatchedTableRows.remove(Integer.valueOf(1));
+    List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
+
+    while (!isEmpty(potentialMatchesByScore)) {
+      MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
+      markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
+      unmatchedTableRows.remove(bestMatch.tableRow);
+      unmatchedResultRows.remove(bestMatch.resultRow);
+    }
+
+    markMissingRows(unmatchedTableRows);
+    return markSurplusRows(queryResults, unmatchedResultRows);
+  }
+
+  protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
+    MatchedResult bestResult = potentialMatchesByScore.iterator().next();
+
+    removeOtherwiseMatchedResults(potentialMatchesByScore, bestResult);
+
+    return bestResult;
+  }
+
+  protected boolean isEmpty(Iterable<MatchedResult> iterable) {
+    return !iterable.iterator().hasNext();
+  }
+
+  protected void removeOtherwiseMatchedResults(Iterable<MatchedResult> potentialMatchesByScore, MatchedResult bestResult) {
+    Iterator<MatchedResult> iterator = potentialMatchesByScore.iterator();
+
+    while (iterator.hasNext()) {
+      MatchedResult otherResult = iterator.next();
+      if (otherResult.tableRow.equals(bestResult.tableRow) || otherResult.resultRow.equals(bestResult.resultRow))
+        iterator.remove();
+    }
+  }
+
+  protected List<Integer> unmatchedRows(int rowCount) {
+    List<Integer> result = new ArrayList<Integer>(rowCount);
+
+    for (int i = 0; i < rowCount; i++) {
+      result.add(i);
+    }
+
+    return result;
+  }
+
+  protected void markMissingRows(List<Integer> missingRows) {
+    for (int missingRow : missingRows) {
+      markMissingRow(missingRow);
+    }
+  }
+
+  protected void markMissingRow(int missingRow) {
+    replaceAllvariablesInRow(missingRow);
+    SlimTestResult testResult = SlimTestResult.fail(null, table.getCellContents(0, missingRow), "missing");
+    table.updateContent(0, missingRow, testResult);
+    getTestContext().increment(testResult.getExecutionResult());
+  }
+
+  protected ExecutionResult markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
     ExecutionResult result = ExecutionResult.PASS;
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
-      TestResult testResult = TestResult.fail(surplusRow.get(0), null, "surplus");
+      SlimTestResult testResult = SlimTestResult.fail(surplusRow.get(0), null, "surplus");
       table.updateContent(0, newTableRow, testResult);
       getTestContext().increment(ExecutionResult.FAIL);
       markMissingFields(surplusRow, newTableRow);
@@ -129,22 +184,10 @@ public class QueryTable extends SlimTable {
       String surplusField = surplusRow.get(col);
       if (surplusField == null) {
         String fieldName = fieldNames.get(col);
-        TestResult testResult = TestResult.fail(String.format("field %s not present", fieldName));
+        SlimTestResult testResult = SlimTestResult.fail(String.format("field %s not present", fieldName));
         table.updateContent(col, newTableRow, testResult);
         getTestContext().increment(testResult.getExecutionResult());
       }
-    }
-  }
-
-  protected void scanRowForMatch(int tableRow, QueryResults queryResults) {
-    int matchedRow = queryResults.findBestMatch(tableRow);
-    if (matchedRow == -1) {
-      replaceAllvariablesInRow(tableRow);
-      TestResult testResult = TestResult.fail(null, table.getCellContents(0, tableRow), "missing");
-      table.updateContent(0, tableRow, testResult);
-      getTestContext().increment(testResult.getExecutionResult());
-    } else {
-      markFieldsInMatchedRow(tableRow, matchedRow, queryResults);
     }
   }
 
@@ -169,15 +212,18 @@ public class QueryTable extends SlimTable {
     String fieldName = fieldNames.get(col);
     String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
-    TestResult testResult;
-    if (actualValue == null)
-      testResult = TestResult.fail(String.format("field %s not present", fieldName), expectedValue);
+    SlimTestResult testResult;
+    if (fieldName.startsWith(COMMENT_COLUMN_MARKER)) {
+      testResult = SlimTestResult.plain();
+    }
+    else if (actualValue == null)
+      testResult = SlimTestResult.fail(String.format("field %s not present", fieldName), expectedValue);
     else if (expectedValue == null || expectedValue.length() == 0)
-      testResult = TestResult.ignore(actualValue);
+      testResult = SlimTestResult.ignore(actualValue);
     else {
       testResult = matchMessage(actualValue, expectedValue);
       if (testResult == null)
-        testResult = TestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
+        testResult = SlimTestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
       else if (testResult.getExecutionResult() == ExecutionResult.PASS)
         testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
     }
@@ -186,35 +232,29 @@ public class QueryTable extends SlimTable {
     return testResult;
   }
 
-  protected TestResult markMatch(int tableRow, int matchedRow, int col, String message) {
-    return TestResult.pass(message);
+  protected SlimTestResult markMatch(int tableRow, int matchedRow, int col, String message) {
+    return SlimTestResult.pass(message);
   }
 
-  class QueryResults {
-    private List<Map<String, String>> rows = new ArrayList<Map<String, String>>();
-    private List<Integer> unmatchedRows = new ArrayList<Integer>();
+  protected class QueryResults {
+    private List<QueryResultRow> rows = new ArrayList<QueryResultRow>();
 
-    public QueryResults(List<Object> queryResultTable) {
-      int rowNumber = 0;
-      for (Object row : queryResultTable) {
-        rows.add(makeRowMap(row));
-        unmatchedRows.add(rowNumber++);
+    public QueryResults(List<List<List<Object>>> queryResultTable) {
+      for (int i = 0; i < queryResultTable.size(); i++) {
+        rows.add(new QueryResultRow(i, queryResultTable.get(i)));
       }
+
+      rows = Collections.unmodifiableList(rows);
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, String> makeRowMap(Object row) {
-      Map<String, String> rowMap = new HashMap<String, String>();
-      for (List<Object> columnPair : (List<List<Object>>) row) {
-        String fieldName = (String) columnPair.get(0);
-        String fieldValue = (String) columnPair.get(1);
-        rowMap.put(fieldName, fieldValue);
-      }
-      return rowMap;
-    }
+    public Collection<MatchedResult> scorePotentialMatches() {
+      Collection<MatchedResult> result = new ArrayList<MatchedResult>();
 
-    public int findBestMatch(int tableRow) {
-      return new QueryMatcher().findBestMatch(tableRow);
+      int rows = table.getRowCount();
+      for (int tableRow = 2; tableRow < rows; tableRow++)
+        result.addAll(new QueryMatcher(fieldNames).scoreMatches(tableRow));
+
+      return result;
     }
 
     public List<String> getList(List<String> fieldNames, int row) {
@@ -229,64 +269,87 @@ public class QueryTable extends SlimTable {
       return rows.get(row).get(name);
     }
 
-    public List<Integer> getUnmatchedRows() {
-      return unmatchedRows;
+    public List<QueryResultRow> getRows() {
+      return rows;
     }
 
     private class QueryMatcher {
-      private int matchDepth;
-      private int deepestRow;
-      private List<Integer> matchCandidates;
+      private final List<String> fields;
 
-      private QueryMatcher() {
-        matchDepth = -1;
-        deepestRow = -1;
-        matchCandidates = new ArrayList<Integer>(unmatchedRows);
+      private QueryMatcher(List<String> fields) {
+        this.fields = fields;
       }
 
-      public int findBestMatch(int tableRow) {
-        for (int fieldIndex = 0; fieldIndex < fieldNames.size(); fieldIndex++)
-          new FieldMatcher(fieldIndex, tableRow).eliminateRowsThatDontMatchField();
+      public Collection<MatchedResult> scoreMatches(int tableRow) {
+        Collection<MatchedResult> result = new ArrayList<MatchedResult>();
 
-        if (deepestRow >= 0)
-          unmatchedRows.remove(unmatchedRows.indexOf(deepestRow));
-        return deepestRow;
+        for (QueryResultRow row : rows) {
+          MatchedResult match = scoreMatch(table, tableRow, row);
+          if (match.score > 0)
+            result.add(match);
+        }
+
+        return result;
       }
 
-      class FieldMatcher {
-        private int fieldIndex;
-        private int tableRow;
+      private MatchedResult scoreMatch(Table table, int tableRow, QueryResultRow row) {
+        int score = 0;
 
-        FieldMatcher(int fieldIndex, int tableRow) {
-          this.fieldIndex = fieldIndex;
-          this.tableRow = tableRow;
-        }
+        for (int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++) {
+          String fieldName = fields.get(fieldIndex);
 
-        private void eliminateRowsThatDontMatchField() {
-          String fieldName = fieldNames.get(fieldIndex);
-          Iterator<Integer> rowIterator = matchCandidates.iterator();
-          while (rowIterator.hasNext())
-            eliminateUnmatchingRow(rowIterator, fieldName);
-        }
-
-        private void eliminateUnmatchingRow(Iterator<Integer> rowIterator, String fieldName) {
-          int row = rowIterator.next();
-          String actualValue = rows.get(row).get(fieldName);
-          String expectedValue = table.getCellContents(fieldIndex, tableRow);
-          if (matches(actualValue, expectedValue)) {
-            recordMatch(row);
-          } else {
-            rowIterator.remove();
+          if (!fieldName.startsWith(COMMENT_COLUMN_MARKER)) {
+            String actualValue = row.get(fieldName);
+            String expectedValue = table.getCellContents(fieldIndex, tableRow);
+            if (matches(actualValue, expectedValue)) {
+              score++;
+            }
           }
         }
 
-        private void recordMatch(int row) {
-          if (matchDepth < fieldIndex) {
-            matchDepth = fieldIndex;
-            deepestRow = row;
-          }
-        }
+        return new MatchedResult(tableRow, row.index, score);
       }
+    }
+
+    private class QueryResultRow {
+      private final int index;
+      private final Map<String, String> values;
+
+      public QueryResultRow(int index, List<List<Object>> values) {
+        this.index = index;
+        Map<String, String> rowMap = new HashMap<String, String>();
+        for (List<Object> columnPair : values) {
+          String fieldName = (String) columnPair.get(0);
+          String fieldValue = (String) columnPair.get(1);
+          rowMap.put(fieldName, fieldValue);
+        }
+        this.values = rowMap;
+      }
+
+      public String get(String fieldName) {
+        return values.get(fieldName);
+      }
+    }
+  }
+
+  protected static class MatchedResult {
+    final Integer tableRow;
+    final Integer resultRow;
+    final int score;
+
+    public MatchedResult(int tableRow, int resultRow, int score) {
+      this.tableRow = tableRow;
+      this.resultRow = resultRow;
+      this.score = score;
+    }
+
+    public static java.util.Comparator<MatchedResult> compareByScore() {
+      return new java.util.Comparator<MatchedResult>() {
+        @Override
+        public int compare(MatchedResult o1, MatchedResult o2) {
+          return o2.score - o1.score;
+        }
+      };
     }
   }
 }

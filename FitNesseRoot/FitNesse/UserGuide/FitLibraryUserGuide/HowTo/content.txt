@@ -1,5 +1,0 @@
-!2 How to, in storytests
- * Ignore some tables in a page/file: ^IgnoreTables
- * Avoid lots of similar workflow storytests, which are boring, difficult to change, and rather verbose: ^ExtractCalculations
----- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
- * ''Released under the terms of the GNU General Public License version 2 or later.''

@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim.tables;
 
+import java.util.List;
+
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-
-import java.util.List;
 
 public class SubsetQueryTable extends QueryTable {
 
@@ -13,13 +13,20 @@ public class SubsetQueryTable extends QueryTable {
   }
 
   @Override
-  protected ExecutionResult scanRowsForMatches(List<Object> queryResultList) {
-    QueryResults queryResults = new QueryResults(queryResultList);
-    int rows = table.getRowCount();
-    for (int tableRow = 2; tableRow < rows; tableRow++) {
-      scanRowForMatch(tableRow, queryResults);
+  protected ExecutionResult markRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore) {
+    List<Integer> unmatchedTableRows = unmatchedRows(table.getRowCount());
+    unmatchedTableRows.remove(Integer.valueOf(0));
+    unmatchedTableRows.remove(Integer.valueOf(1));
+    List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
+
+    while (!isEmpty(potentialMatchesByScore)) {
+      MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
+      markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
+      unmatchedTableRows.remove(bestMatch.tableRow);
+      unmatchedResultRows.remove(bestMatch.resultRow);
     }
+
+    markMissingRows(unmatchedTableRows);
     return null;
   }
-
 }

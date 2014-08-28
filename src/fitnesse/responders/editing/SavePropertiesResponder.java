@@ -7,7 +7,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -20,19 +19,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SavePropertiesResponder implements SecureResponder {
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    WikiPage page = context.root.getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
     PageData data = page.getData();
     saveAttributes(request, data);
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Previous-Version", commitRecord.getName());
-    RecentChanges.updateRecentChanges(data);
-    response.redirect(resource);
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
+    context.recentChanges.updateRecentChanges(page);
+    response.redirect(context.contextRoot, resource);
 
     return response;
   }
@@ -54,10 +56,10 @@ public class SavePropertiesResponder implements SecureResponder {
     }
 
     String suites = (String) request.getInput("Suites");
-    data.setAttribute(PageData.PropertySUITES, suites);
+    data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
 
     String helpText = (String) request.getInput("HelpText");
-    data.setAttribute(PageData.PropertyHELP, helpText);
+    data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
   }
 
   private void setPageTypeAttribute(Request request, PageData data) {
@@ -85,6 +87,7 @@ public class SavePropertiesResponder implements SecureResponder {
     return (request.getInput(name) != null);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

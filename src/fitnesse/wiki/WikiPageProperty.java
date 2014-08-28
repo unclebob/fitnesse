@@ -3,11 +3,14 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import util.StringUtil;
 
@@ -15,7 +18,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected HashMap<String, WikiPageProperty> children;
+  protected SortedMap<String, WikiPageProperty> children = new TreeMap<String, WikiPageProperty>();
 
   public WikiPageProperty() {
   }
@@ -33,8 +36,6 @@ public class WikiPageProperty implements Serializable {
   }
 
   public void set(String name, WikiPageProperty child) {
-    if (children == null)
-      children = new HashMap<String, WikiPageProperty>();
     children.put(name, child);
   }
 
@@ -69,7 +70,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   public Set<String> keySet() {
-    return children == null ? new HashSet<String>() : children.keySet();
+    return children == null ? Collections.<String>emptySet() : children.keySet();
   }
 
   public String toString() {
@@ -99,8 +100,14 @@ public class WikiPageProperty implements Serializable {
     return children != null && children.size() > 0;
   }
 
-  public static SimpleDateFormat getTimeFormat() {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("yyyyMMddHHmmss");
+  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<DateFormat>();
+
+  public static DateFormat getTimeFormat() {
+    DateFormat format = timeFormat.get();
+    if (format == null) {
+      format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ROOT);
+      timeFormat.set(format);
+    }
+    return format;
   }
 }

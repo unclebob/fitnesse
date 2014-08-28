@@ -1,6 +1,6 @@
 #if( $!message )
- <center>$message</center>
+ <center>#escape($message)</center>
 #end
 #if( $!exception )
-<pre>$exception</pre>
+<pre>#escape($exception)</pre>
 #end

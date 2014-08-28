@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HtmlTag extends HtmlElement {
-  public LinkedList<HtmlElement> childTags = new LinkedList<HtmlElement>();
-  protected List<Attribute> attributes = new LinkedList<Attribute>();
-  protected String tagName = "youreIt";
-  public String tail;
-  public String head;
-  public boolean isInline;
+public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
+  private final LinkedList<HtmlElement> childTags = new LinkedList<HtmlElement>();
+  private final List<Attribute> attributes = new LinkedList<Attribute>();
+  private final String tagName;
+  private boolean isInline;
 
   public HtmlTag(String tagName) {
     this.tagName = tagName;
@@ -84,6 +83,11 @@ public class HtmlTag extends HtmlElement {
     return indent.toString();
   }
 
+  @Override
+  public Iterator<HtmlElement> iterator() {
+    return childTags.iterator();
+  }
+
   public static class Attribute {
     public String name;
     public String value;
@@ -105,11 +109,11 @@ public class HtmlTag extends HtmlElement {
     }
 
     public String format() {
-      return makeTabs() + makeHead()
+      return makeTabs()
         + makeTag() + makeAttributes() + makeTagEnd()
         + makeChildren()
         + makeEndTag()
-        + makeTail() + makeLineEnd();
+        + makeLineEnd();
     }
 
     private String makeEndTag() {
@@ -118,10 +122,6 @@ public class HtmlTag extends HtmlElement {
 
     private String makeLineEnd() {
       return isInline ? "" : endl;
-    }
-
-    private String makeTail() {
-      return tail == null ? "" : tail;
     }
 
     private String makeChildren() {
@@ -134,15 +134,15 @@ public class HtmlTag extends HtmlElement {
     }
 
     private String makeChildrenWithoutTrailingIndent() {
-      String children = "";
+      StringBuilder children = new StringBuilder(64);
       childTagWasMade = false;
       lastMadeChildWasNotTag = false;
       firstElement = true;
       for (HtmlElement element : childTags) {
-        children += makeChildFromElement(element);
+        children.append(makeChildFromElement(element));
         firstElement = false;
       }
-      return children;
+      return children.toString();
     }
 
     private String makeChildFromElement(HtmlElement element) {
@@ -182,10 +182,6 @@ public class HtmlTag extends HtmlElement {
 
     private String makeTag() {
       return "<" + tagName();
-    }
-
-    private String makeHead() {
-      return head == null ? "" : head;
     }
 
     private String makeTabs() {

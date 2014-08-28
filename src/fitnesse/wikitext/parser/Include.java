@@ -1,9 +1,11 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.PageData;
 import util.Maybe;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
+    private static final String includeHelpOption = "-h";
 
     public Include() {
         super("Include");
@@ -30,9 +32,13 @@ public class Include extends SymbolType implements Rule, Translation {
 
         Maybe<SourcePage> includedPage = parser.getPage().getNamedPage().findIncludedPage(next.getContent());
         if (includedPage.isNothing()) {
-            current.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
+          current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
-        else {
+        else if (includeHelpOption.equals(option)) {
+        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);	
+        	current.add("").add(Parser.make(
+        			parser.getPage(),helpText).parse());
+        } else {
             current.childAt(1).putProperty(WikiWord.WITH_EDIT, "true");
             ParsingPage included = option.equals("-setup") || option.equals("-teardown")
                     ? parser.getPage()
@@ -43,8 +49,13 @@ public class Include extends SymbolType implements Rule, Translation {
                             .parse());
             if (option.equals("-setup")) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
-        
-        return new Maybe<Symbol>(current);
+
+      // Remove trailing newline so we do not introduce excessive whitespace in the page.
+      if (parser.peek().isType(SymbolType.Newline)) {
+        parser.moveNext(1);
+      }
+
+      return new Maybe<Symbol>(current);
     }
 
     public String toTarget(Translator translator, Symbol symbol) {
@@ -54,8 +65,9 @@ public class Include extends SymbolType implements Rule, Translation {
         String option = symbol.childAt(0).getContent();
         if (option.equals("-seamless")) {
             return translator.translate(symbol.childAt(3));
-        }
-        else {
+        } else if (includeHelpOption.equals(option)) {
+        	return translator.translate(symbol.childAt(3));
+        } else {
             String collapseState = stateForOption(option, symbol);
             String title = "Included page: "
                     + translator.translate(symbol.childAt(1));

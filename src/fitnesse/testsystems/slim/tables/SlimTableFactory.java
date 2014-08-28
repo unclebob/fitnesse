@@ -3,32 +3,44 @@ package fitnesse.testsystems.slim.tables;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 public class SlimTableFactory {
+  private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
+  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<Class<? extends SlimTable>, Constructor<? extends SlimTable>>();
 
-  private static final Map<String, Class<? extends SlimTable>> tableTypes;
+  private final Map<String, Class<? extends SlimTable>> tableTypes;
+  private final Map<String, String> tableTypeArrays;
 
-  static {
+  public  SlimTableFactory() {
     tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
+    tableTypeArrays = new HashMap<String, String>();
     addTableType("dt:", DecisionTable.class);
     addTableType("decision:", DecisionTable.class);
+    addTableType("ddt:", DynamicDecisionTable.class);
+    addTableType("dynamic decision:", DynamicDecisionTable.class);
     addTableType("ordered query:", OrderedQueryTable.class);
     addTableType("subset query:", SubsetQueryTable.class);
     addTableType("query:", QueryTable.class);
     addTableType("table:", TableTable.class);
     addTableType("script", ScriptTable.class);
+    addTableType("script:", ScriptTable.class);
     addTableType("scenario", ScenarioTable.class);
     addTableType("import", ImportTable.class);
     addTableType("library", LibraryTable.class);
   }
 
-  private Map<String, String> tableTypeArrays = new HashMap<String, String>();
+  protected SlimTableFactory(HashMap<String, Class<? extends SlimTable>> tableTypes, HashMap<String, String> tableTypeArrays) {
+    this.tableTypes = tableTypes;
+    this.tableTypeArrays = tableTypeArrays;
+  }
 
-  public static void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
+  public void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
     if (tableTypes.get(nameOrPrefix) != null) {
       throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
     }
@@ -42,7 +54,7 @@ public class SlimTableFactory {
     if (tableType.equalsIgnoreCase("define table type")) {
       parseDefineTableTypeTable(table);
       return null;
-    } else if (tableType.equalsIgnoreCase("comment")) {
+    } else if (tableType.equalsIgnoreCase("comment") || tableType.startsWith("comment:")) {
       return null;
     }
 
@@ -71,12 +83,20 @@ public class SlimTableFactory {
   private SlimTable newTableForType(Class<? extends SlimTable> tableClass,
                                     Table table, String tableId, SlimTestContext slimTestContext) {
     try {
-      Constructor<? extends SlimTable> constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-      return constructor.newInstance(table, tableId, slimTestContext);
+      return createTable(tableClass, table, tableId, slimTestContext);
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Can not create new table instance for class " + tableClass, e);
       return new SlimErrorTable(table, tableId, slimTestContext);
     }
+  }
+
+  public static <T extends SlimTable> T createTable(Class<T> tableClass, Table table, String tableId, SlimTestContext slimTestContext) throws Exception {
+    Constructor<? extends SlimTable> constructor = CONSTRUCTOR_MAP.get(tableClass);
+    if (constructor == null) {
+      constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
+      CONSTRUCTOR_MAP.put(tableClass, constructor);
+    }
+    return (T) constructor.newInstance(table, tableId, slimTestContext);
   }
 
   private String getFullTableName(String tableName) {
@@ -115,4 +135,8 @@ public class SlimTableFactory {
     return tableType.trim();
   }
 
+  public SlimTableFactory copy() {
+    return new SlimTableFactory(new HashMap<String, Class<? extends SlimTable>>(tableTypes),
+            new HashMap<String, String>(tableTypeArrays));
+  }
 }

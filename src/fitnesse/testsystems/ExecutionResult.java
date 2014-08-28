@@ -15,15 +15,15 @@ public enum ExecutionResult {
 	  return getExecutionResult(relativeName, testSummary, false);
   }
   
-  public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterupted) {
-    if (testSummary.getWrong() > 0 || wasInterupted) {
+  public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterrupted) {
+    if (testSummary.getWrong() > 0 || wasInterrupted) {
       return FAIL;
     } else if (testSummary.getExceptions() > 0) {
-	  return ERROR;
+      return ERROR;
     } else if (((isSuiteMetaPage(relativeName) && testSummary.getIgnores() > 0)
     		|| (!isSuiteMetaPage(relativeName) && testSummary.getIgnores() >= 0)) && testSummary.getRight() == 0) {
       return IGNORE;
-	}
+	  }
     return PASS;
   }
   

@@ -1,4 +1,115 @@
-!2 Spring 2013
+!2 Next release
+ * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
+ * Improved error message when included page does not exist (([[496][https://github.com/unclebob/fitnesse/pull/496]]).
+ * Slim script tables can now really be addressed with ''script:MyClass'' ([[500][https://github.com/unclebob/fitnesse/pull/500]]).
+ * Slim can deal with arbitrary length messages ([[504][https://github.com/unclebob/fitnesse/pull/504]])
+ * Plugin classes can support more elements (sub)types ([[506][https://github.com/unclebob/fitnesse/pull/506]])
+ * Make Scenario tables play nice with custom script table (sub)types ([[507][https://github.com/unclebob/fitnesse/pull/507]])
+ * Output parameters in a decision table have been made available in scenarios ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+ * Command pattern can contain quoted parameters (this helps at places where spaces are involved) ([[508][https://github.com/unclebob/fitnesse/pull/508]]).
+ * Via the property ''!-WikiPageFactories-!'' (plural) extra wiki page types can be supported ([[505][https://github.com/unclebob/fitnesse/pull/505]]).
+ * Code cleanup in the Wiki module ([[511][https://github.com/unclebob/fitnesse/pull/511]]).
+ * Issues fixed:
+   * Fixed issue when rendering stack traces on Windows with spaces in paths ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+   * Allow Scenarios with parameterised style but with empty parameter names ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+   * Fix handling and recording of errors in table definitions ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/milestones/Next%20release.
+
+!2 20140630
+ * Add page wide Expand/Collapse All buttons (bootstrap theme).
+ * Performance improvements: cache big factory classes and page data.
+ * Issues fixed:
+   * Fix issue introduced in Order Query Table comparison in 20140623.
+   * ''!-ErrorLog-!'' was not written if test execution was interrupted.
+   * Include page header when executing test or suite.
+   * Slow page tags again (bootstrap theme).
+   * ''SLIM_VERSION'' variable is back: allow older SLiM implementations to connect.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=7&state=closed.
+
+!2 2014-06-23
+ * Author information for !-GitVersionController-!.
+ * ''?suite'' and ''?test'' are now the same responder.
+ * More useful failure message for jUnit runner.
+ * Use String arrays for commands. This should avoid errors with spaces in path names.
+ * Improved matching for query tables.
+ * Plugins are now loaded relative to the FitNesse root path.
+ * SLIM can handle checks on Map's.
+ * Refactoring on wiki subsystem.
+ * Issues fixed:
+   * Support more than one level of symlinks.
+   * !-ErrorLog-! is written for tests ran with ''format=text'' or ''format=xml''.
+   * Rich Text Format horizontal scrollbar is missing.
+   * Failure navigator should only show in case of failures.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
+
+!2 2014-04-18
+ * Introduced new logo.
+ * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
+ * Add ''script:'' prefix. Script tables can be defined as ''script:Fixture name''.
+ * Wiki server is no longer started when !-FitNesse-! is started with ''-c'' option.
+ * !-FitNesseRoot-! location can be changed in JUnit !-FitNesseSuite-! annotation.
+ * Comment columns for slim decision and query tables.
+ * Shortcut keys (press ''?'').
+ * Configurable [[Context root][.FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile]].
+ * Updated the .FitNesse.UserGuide structure.
+ * Improved Where Used feature in the Tools menu.
+ * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses.
+ * Properties ''slim.timeout'' and ''slim.debug.timeout'' can be used to configure timeouts (start up and finish) for SLIM test runs.
+ * The rich text editor is now an in-page editor (does not use an iframe anymore).
+ * Can auto-format on save when editing a page in plain text mode.
+ * Issues fixed:
+   * ''Add'' menu should only show templates ending on ''-Page.''
+   * Missing stylesheets added to JUnit test results.
+   * Fix representation issue with ignored field in SLim !-TableTable.-!
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
+
+!2 2014-02-01
+ * '''Files outside the http://files section can no longer be accessed!'''
+ * Updated bootstrap theme to bootstrap 3.
+ * Added hooks to add custom test systems.
+ * Pages can now be defined in a .TemplateLibrary. You can add your own page scaffolding.
+ * java.util.logging is now used for logging, instead of System.out/err.
+ * Support for more content types (in particular image types).
+ * Cleanup: removed packages fitnesse.runner, fitnesse.schedule.
+ * Refactoring: the code is a more modular than before. This makes it easier to integrate !-FitNesse-! components in other applications.
+ * Make Fit test runner no longer dependent on the wiki running: now the Fit test system starts it's own "socket catcher".
+ * The jUnit test running is starting a test runner by itself. It's no longer using !-FitNesseMain-!.
+ * Slim server can be kept running after test execution (-d option).
+ * Issues fixed:
+   * Unicode issues fixed.
+   * Stability fixes for Slim.
+   * Slim tables starting with "comment:" are considered comment tables.
+   * Bug in Fit that caused flow mode for !-FitLibrary's-! !-DoFixture-! to break.
+   * Bug where external HTML page suites were not displayed.
+   * Hash map rendering in rich text editor.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?direction=desc&milestone=4&page=1&sort=updated&state=closed.
+
+!2 2013-11-10
+ * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.
+ * Git version control and recent-changes support
+ * Page caching is removed. Changes on the file system are now directly reflected in the wiki
+ * Test and Page history can show/hide passed tests. This makes it easier to search for failed test runs.
+ * The "names" responder has new options: "Recursive", "!-LeafOnly-!", and "!-ShowTags-!" (needs documentation update!)
+ * Reduce space used by included pages on test page.
+ * Test system, Fit server and wiki code has been cleaned up.
+ * New command line option ''-f <config file>''. Loads a custom configuration properties file.
+ * Code cleanup: test system, wiki and reporting (formatters)
+ * Settings can be configured both on the command line and in the plugins.properties file
+ * Updated REST API parameter for "names" request
+ * Issues fixed:
+   * HTML content is table cells is passed to the SUT as-is
+   * Sockets are not properly closed after Slim test execution
+   * !-StopTest-! behaviour changed in version 20130530. The old behaviour is in place again.
+   * Fixed issue where stylesheets were not properly loaded in Chrome.
+   * String arguments are not converted, even if a Converter is registered.
+   * Rich text editor improvements
+
+!2 2013-05-30
  * Many improvements in the JUnit test runner
  * New: version comparator
  * Wiki: can set image width with -w option, border with -b and margin with -m: !-!img -b 2 -m 10 -w 600 http://files/someImage.png-!
@@ -6,12 +117,15 @@
  * Virtual Wiki functionality has finally been removed
  * Big refactoring of SLiM test system. Output is now XML compliant,  introduction of domain classes and caching of set up/tear down pages
  * Many fixes in the rich text editor: full-screen editing, more lenient parsing of wiki text, improved cut-and-paste
+ * Optimized wiki page parser performance
+ * Fixed issue with setting/reading the same field multiple times in a SLiM decision table
+ * Stack traces from SLiM server are enriched with class information
 
 !2 2012-11-16
  * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables.
 
 !2 2012-09-18
- * Added the concept of a !-TemplateLibrary-! and the ability to insert existing templates into the plain text editor.
+ * Added the concept of a !-TemplateLibrary-! and the ability to insert existing templates into the plain text editor.
 
 !2 2012-03-20
  * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!

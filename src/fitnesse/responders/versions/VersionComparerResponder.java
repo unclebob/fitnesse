@@ -13,8 +13,8 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -28,7 +28,6 @@ public class VersionComparerResponder implements Responder {
   private String secondVersion;
   private FitNesseContext context;
   public boolean testing;
-  private String resource;
 
   public VersionComparerResponder(VersionComparer comparer) {
     this.comparer = comparer;
@@ -41,10 +40,10 @@ public class VersionComparerResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
-    resource = request.getResource();
+    String resource = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
@@ -54,13 +53,13 @@ public class VersionComparerResponder implements Responder {
       String message = String.format("Compare Failed because no Input Files were given. Select one or two please.");
       return makeErrorResponse(context, request, message);
     }
-    PageData firstVersionData = page.getDataVersion(firstVersion);
-    PageData secondVersionData;
+    WikiPage firstVersionPage = page.getVersion(firstVersion);
+    WikiPage secondVersionPage;
     if (secondVersion.equals(""))
-      secondVersionData = page.getData();
+      secondVersionPage = page;
     else
-      secondVersionData = page.getDataVersion(secondVersion);
-    comparer.compare(firstVersion, firstVersionData.getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionData.getContent());
+      secondVersionPage = page.getVersion(secondVersion);
+    comparer.compare(firstVersion, firstVersionPage.getData().getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionPage.getData().getContent());
     return makeValidResponse(request);
   }
 
@@ -80,9 +79,7 @@ public class VersionComparerResponder implements Responder {
         if (setFileNames(key))
           return false;
     }
-    if (firstVersion.equals("") || secondVersion.equals(""))
-      return false;
-    return true;
+    return !(firstVersion.equals("") || secondVersion.equals(""));
   }
 
   private boolean setFileNames(String key) {
@@ -123,7 +120,7 @@ public class VersionComparerResponder implements Responder {
     if(context.root != null){
       WikiPagePath path = PathParser.parse(resource);
       PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(context.root, path);
+      WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

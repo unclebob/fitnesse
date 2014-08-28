@@ -7,6 +7,7 @@ import fitnesse.http.HttpException;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import util.Clock;
 import util.StringUtil;
@@ -18,16 +19,18 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
-
-//import fitnesseMain.FitNesseMain;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FitNesseExpediter implements ResponseSender {
-  private Socket socket;
-  private InputStream input;
-  private OutputStream output;
+  private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
+
+  private final Socket socket;
+  private final InputStream input;
+  private final OutputStream output;
   private Request request;
   private Response response;
-  private FitNesseContext context;
+  private final FitNesseContext context;
   protected long requestParsingTimeLimit;
   private long requestProgress;
   private long requestParsingDeadline;
@@ -51,7 +54,7 @@ public class FitNesseExpediter implements ResponseSender {
       // can be thrown by makeResponse or sendResponse.
     }
     catch (Throwable e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Unexpected exception", e);
     }
   }
 
@@ -68,8 +71,8 @@ public class FitNesseExpediter implements ResponseSender {
       output.write(bytes);
       output.flush();
     }
-    catch (IOException stopButtonPressed_probably) {
-      // TODO: Log this
+    catch (IOException e) {
+      LOG.log(Level.INFO, "Output stream closed unexpectedly (Stop button pressed?)", e);
     }
   }
 
@@ -79,7 +82,7 @@ public class FitNesseExpediter implements ResponseSender {
       socket.close();
     }
     catch (IOException e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Error while closing socket", e);
     }
   }
 
@@ -89,6 +92,7 @@ public class FitNesseExpediter implements ResponseSender {
 
   public Request makeRequest() {
     request = new Request(input);
+    request.setContextRoot(context.contextRoot);
     return request;
   }
 
@@ -102,28 +106,34 @@ public class FitNesseExpediter implements ResponseSender {
       parseThread.start();
 
       waitForRequest(request);
-      if (!hasError)
-        response = createGoodResponse(request);
+      if (!hasError) {
+        if (context.contextRoot.equals(request.getRequestUri() + "/")) {
+          response = new SimpleResponse();
+          response.redirect(context.contextRoot, "");
+        } else {
+          response = createGoodResponse(request);
+        }
+      }
     }
     catch (SocketException se) {
       throw se;
     }
     catch (Exception e) {
+      LOG.log(Level.WARNING, "Unable to handle request", e);
       response = new ErrorResponder(e).makeResponse(context, request);
     }
+    // Add those as default headers?
+    response.addHeader("Server", "FitNesse-" + context.version);
+    response.addHeader("Connection", "close");
     return response;
   }
 
   public Response createGoodResponse(Request request) throws Exception {
-    Response response;
     if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
-    Responder responder = context.responderFactory.makeResponder(request, context.root);
+    Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);
-    response = responder.makeResponse(context, request);
-    response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
-    response.addHeader("Connection", "close");
-    return response;
+    return responder.makeResponse(context, request);
   }
 
   private void waitForRequest(Request request) throws InterruptedException {
@@ -132,8 +142,8 @@ public class FitNesseExpediter implements ResponseSender {
     requestProgress = 0;
     while (!hasError && !request.hasBeenParsed()) {
       Thread.sleep(10);
-      if (timeIsUp(now) && parsingIsUnproductive(request))
-        reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+      if (timeIsUp() && parsingIsUnproductive(request))
+        reportError(408, "The client request has been unproductive for too long. It has timed out and will now longer be processed.");
     }
   }
 
@@ -146,8 +156,8 @@ public class FitNesseExpediter implements ResponseSender {
       return true;
   }
 
-  private boolean timeIsUp(long now) {
-    now = Clock.currentTimeInMillis();
+  private boolean timeIsUp() {
+    long now = Clock.currentTimeInMillis();
     if (now > requestParsingDeadline) {
       requestParsingDeadline = now + requestParsingTimeLimit;
       return true;
@@ -179,7 +189,7 @@ public class FitNesseExpediter implements ResponseSender {
       hasError = true;
     }
     catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Can not report error (status = " + status + ", message = " + message + ")", e);
     }
   }
 
@@ -189,13 +199,13 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   public static LogData makeLogData(Socket socket, Request request, Response response) {
-    LogData data = new LogData();
-    data.host = ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress();
-    data.time = new GregorianCalendar();
-    data.requestLine = request.getRequestLine();
-    data.status = response.getStatus();
-    data.size = response.getContentSize();
-    data.username = request.getAuthorizationUsername();
+    LogData data = new LogData(
+        ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress(),
+        new GregorianCalendar(),
+        request.getRequestLine(),
+        response.getStatus(),
+        response.getContentSize(),
+        request.getAuthorizationUsername());
 
     return data;
   }

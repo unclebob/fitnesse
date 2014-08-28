@@ -4,8 +4,9 @@ package fitnesse.testsystems.slim;
 
 import java.util.List;
 
-import fitnesse.testsystems.slim.results.ExceptionResult;
-import fitnesse.testsystems.slim.results.TestResult;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
 public interface Table {
@@ -25,9 +26,9 @@ public interface Table {
 
   void updateContent(int row, TestResult testResult);
 
-  void updateContent(int col, int row, TestResult testResult);
+  void updateContent(int col, int row, SlimTestResult testResult);
 
-  void updateContent(int col, int row, ExceptionResult exceptionResult);
+  void updateContent(int col, int row, SlimExceptionResult exceptionResult);
 
   Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
 
@@ -35,6 +36,6 @@ public interface Table {
   String toString();
 
   interface CellContentSubstitution {
-    String substitute(int col, int row, String content) throws SyntaxError;
+    String substitute(String content) throws SyntaxError;
   }
 }
