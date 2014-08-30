@@ -25,18 +25,18 @@ public class DirectoryResponderTest {
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
-    SampleFileUtility.makeSampleFiles();
+    SampleFileUtility.makeSampleFiles(context.getRootPagePath());
   }
 
   @After
   public void tearDown() throws Exception {
-    SampleFileUtility.deleteSampleFiles();
+    SampleFileUtility.deleteSampleFiles(context.getRootPagePath());
   }
 
   @Test
   public void testDirectotyListing() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("testDir", response.getContent());
     assertHasRegexp("testFile2", response.getContent());
@@ -47,7 +47,7 @@ public class DirectoryResponderTest {
   @Test
   public void testButtons() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertHasRegexp("Upload", response.getContent());
@@ -57,7 +57,7 @@ public class DirectoryResponderTest {
   @Test
   public void testHtml() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("/files/", response.getContent());
   }
@@ -65,7 +65,7 @@ public class DirectoryResponderTest {
   @Test
   public void testRedirectForDirectory() throws Exception {
     request.setResource("files/testDir");
-    Responder responder = FileResponder.makeResponder(request, FitNesseUtil.base);
+    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));

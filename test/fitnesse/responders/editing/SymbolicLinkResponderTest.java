@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static util.RegexTestCase.assertSubString;
 
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -33,8 +34,9 @@ public class SymbolicLinkResponderTest {
   private WikiPage pageOne;
   private WikiPage childTwo;
   private MockRequest request;
-  private Responder responder;
+  private SymbolicLinkResponder responder;
   private MemoryFileSystem fileSystem;
+  private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
@@ -49,6 +51,7 @@ public class SymbolicLinkResponderTest {
     request = new MockRequest();
     request.setResource("PageOne");
     responder = new SymbolicLinkResponder();
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   private void reloadPages() {
@@ -59,14 +62,14 @@ public class SymbolicLinkResponderTest {
 
 
   private Response invokeResponder() throws Exception {
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
     reloadPages();
     return response;
   }
 
   @After
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("testDir");
+    FitNesseUtil.destroyTestContext(context);
   }
 
   @Test
@@ -270,13 +273,14 @@ public class SymbolicLinkResponderTest {
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
     // Check both file system (used by responder) and in memory FS (used by page factory).
-    FileUtil.createDir("testDir");
-    FileUtil.createDir("testDir/ExternalRoot");
-    fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
-    fileSystem.makeDirectory(new File("testDir/ExternalRoot").getCanonicalFile());
+    FileUtil.createDir(context.rootPath + "/somedir");
+    FileUtil.createDir(context.rootPath + "/somedir/ExternalRoot");
+
+    fileSystem.makeDirectory(new File("somedir").getCanonicalFile());
+    fileSystem.makeDirectory(new File("somedir/ExternalRoot").getCanonicalFile());
 
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file://testDir/ExternalRoot");
+    request.addInput("linkPath", "file://somedir/ExternalRoot");
     Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
@@ -287,7 +291,7 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("somedir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test

@@ -63,7 +63,7 @@ public class BaseWikiPageTest {
   }
 
   @Test
-  public void testCanCreateSymLinksToExternalDirectories() throws Exception {
+  public void testCanCreateSymLinksToRelativeExternalDirectories() throws Exception {
     fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
     fileSystem.makeDirectory(new File("testDir/ExternalRoot").getCanonicalFile());
 

@@ -23,12 +23,6 @@ public class RenameFileConfirmationResponderTest {
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
-    SampleFileUtility.makeSampleFiles();
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    SampleFileUtility.deleteSampleFiles();
   }
 
   @Test
