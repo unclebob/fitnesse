@@ -142,10 +142,6 @@ public class FileUtil {
     }
   }
 
-  public static LinkedList<String> getFileLines(String filename) throws IOException {
-    return getFileLines(new File(filename));
-  }
-
   public static LinkedList<String> getFileLines(File file) throws IOException {
     LinkedList<String> lines = new LinkedList<String>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
