@@ -8,6 +8,9 @@ import java.net.URI;
 
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.fs.DiskFileSystem;
+import fitnesse.wiki.fs.FileSystem;
+import fitnesse.wiki.mem.MemoryFileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
@@ -30,10 +33,19 @@ import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.Utils;
 
 public class SymbolicLinkResponder implements Responder {
+  private final FileSystem fileSystem;
   private Response response;
   private String resource;
   private FitNesseContext context;
   private WikiPage page;
+
+  public SymbolicLinkResponder(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
+  }
+
+  public SymbolicLinkResponder() {
+    this(new DiskFileSystem());
+  }
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
@@ -133,11 +145,11 @@ public class SymbolicLinkResponder implements Responder {
   private boolean isValidDirectoryPath(String linkPath) {
     File file = createFileFromPath(linkPath);
 
-    if (file.exists())
-      return file.isDirectory();
+    if (fileSystem.exists(file))
+      return fileSystem.isDirectory(file);
     else {
       File parentDir = file.getParentFile();
-      return parentDir != null && parentDir.exists() && parentDir.isDirectory();
+      return parentDir != null && fileSystem.exists(parentDir) && fileSystem.isDirectory(parentDir);
     }
   }
 

@@ -66,4 +66,9 @@ public class DiskFileSystem implements FileSystem {
       throw new IOException("file rename failed: " + originalFile.getAbsolutePath());
     }
   }
+
+  @Override
+  public boolean isDirectory(File file) {
+    return file.isDirectory();
+  }
 }

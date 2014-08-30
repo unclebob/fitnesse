@@ -50,8 +50,8 @@ public class SymbolicLinkResponderTest {
 
     request = new MockRequest();
     request.setResource("PageOne");
-    responder = new SymbolicLinkResponder();
     context = FitNesseUtil.makeTestContext(root);
+    responder = new SymbolicLinkResponder(fileSystem);
   }
 
   private void reloadPages() {
@@ -272,15 +272,12 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
-    // Check both file system (used by responder) and in memory FS (used by page factory).
-    FileUtil.createDir(context.rootPath + "/somedir");
-    FileUtil.createDir(context.rootPath + "/somedir/ExternalRoot");
-
-    fileSystem.makeDirectory(new File("somedir").getCanonicalFile());
-    fileSystem.makeDirectory(new File("somedir/ExternalRoot").getCanonicalFile());
+    // Ise canonical names, since that's how they will be resolved.
+    fileSystem.makeDirectory(new File("/somedir"));
+    fileSystem.makeDirectory(new File("/somedir/ExternalRoot"));
 
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file://somedir/ExternalRoot");
+    request.addInput("linkPath", "file:/somedir/ExternalRoot");
     Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
@@ -291,7 +288,7 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("somedir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("/somedir/ExternalRoot"), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
