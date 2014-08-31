@@ -14,7 +14,6 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
