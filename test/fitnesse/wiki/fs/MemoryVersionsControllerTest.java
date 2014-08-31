@@ -1,4 +1,4 @@
-package fitnesse.wiki.mem;
+package fitnesse.wiki.fs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,8 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.SimpleFileVersionsController;
+import fitnesse.wiki.fs.MemoryFileSystem;
+import fitnesse.wiki.fs.MemoryVersionsController;
 import org.junit.Before;
 import org.junit.Test;
 

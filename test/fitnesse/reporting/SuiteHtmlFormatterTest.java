@@ -18,7 +18,7 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wikitext.parser.VariableSource;
 import org.junit.After;
 import org.junit.Before;

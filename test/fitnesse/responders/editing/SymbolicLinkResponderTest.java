@@ -10,7 +10,6 @@ import static org.junit.Assert.assertNull;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -22,12 +21,11 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
+import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileUtil;
 
 public class SymbolicLinkResponderTest {
   private WikiPage root;

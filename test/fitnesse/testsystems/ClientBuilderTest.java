@@ -9,7 +9,7 @@ import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 import org.junit.Assert;
 import org.junit.Before;

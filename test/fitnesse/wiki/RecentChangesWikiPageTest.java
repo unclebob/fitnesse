@@ -8,7 +8,7 @@ import static util.RegexTestCase.assertSubString;
 
 import java.util.List;
 
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

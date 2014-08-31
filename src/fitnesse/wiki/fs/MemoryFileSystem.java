@@ -1,4 +1,4 @@
-package fitnesse.wiki.mem;
+package fitnesse.wiki.fs;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

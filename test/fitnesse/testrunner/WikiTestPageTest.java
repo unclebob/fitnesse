@@ -8,7 +8,7 @@ import static util.RegexTestCase.*;
 
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.VariableSource;

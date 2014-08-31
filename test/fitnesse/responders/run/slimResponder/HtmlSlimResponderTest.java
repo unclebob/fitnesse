@@ -20,7 +20,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

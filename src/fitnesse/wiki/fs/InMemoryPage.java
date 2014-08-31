@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki.mem;
+package fitnesse.wiki.fs;
 
 import java.io.File;
 import java.util.Properties;
@@ -8,9 +8,6 @@ import java.util.Properties;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.SimpleFileVersionsController;
 
 // In memory page, used for testing and instant pages (like GitFileVersionController's RecentChanges page).
 public class InMemoryPage {

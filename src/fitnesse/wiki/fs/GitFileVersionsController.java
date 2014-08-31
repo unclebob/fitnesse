@@ -2,7 +2,6 @@ package fitnesse.wiki.fs;
 
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
