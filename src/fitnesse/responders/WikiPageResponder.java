@@ -14,6 +14,7 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
@@ -118,7 +119,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public String render() {
-      return WikiPageUtil.makePageHtml(page);
+      return WikiTestPageUtil.makePageHtml(page);
     }
   }
 
