@@ -122,7 +122,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 
   protected void maybeMakeErrorNavigatorVisible(){
     if(exceptionsOrErrorsExist()){
-      writeData(makeErrorNavigatorVisible());
       writeData(initErroMetadata());
     }
   }
@@ -140,11 +139,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
       return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OUTPUT);
 
     return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
-  }
-
-  private String makeErrorNavigatorVisible() {
-    HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "hidden");
-    return toggler.html();
   }
 
   private String initErroMetadata() {
