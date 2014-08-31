@@ -4,13 +4,11 @@ package fitnesse.responders.editing;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
-import fitnesse.wiki.SystemVariableSource;
+import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
@@ -30,7 +28,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wikitext.Utils;
 
 public class SymbolicLinkResponder implements Responder {
   private final FileSystem fileSystem;
@@ -135,7 +132,7 @@ public class SymbolicLinkResponder implements Responder {
       response.setStatus(404);
       return false;
     } else if (!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath)) {
-      response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.").makeResponse(context, null);
+      response = new ErrorResponder("The page to which you are attempting to link, " + HtmlUtil.escapeHTML(linkPath) + ", doesn't exist.").makeResponse(context, null);
       response.setStatus(404);
       return false;
     }

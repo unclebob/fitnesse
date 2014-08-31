@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -18,14 +19,12 @@ import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
-import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
@@ -99,7 +98,7 @@ public class ScriptTableExtensionTest {
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
+    assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
   }
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {

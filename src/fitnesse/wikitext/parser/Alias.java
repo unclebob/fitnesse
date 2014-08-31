@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
 import util.Maybe;
 
 public class Alias extends SymbolType implements Rule, Translation {
@@ -28,7 +28,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         if (symbol.childAt(0).childAt(0).isType(WikiWord.symbolType)) return translator.translate(symbol.childAt(0));
 
         String linkBody = translator.translate(symbol.childAt(0));
-        String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
+        String linkReferenceString = HtmlUtil.unescapeHTML(translator.translate(symbol.childAt(1)));
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parseToIgnoreFirst(Comment.symbolType);
 

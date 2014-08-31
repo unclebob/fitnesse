@@ -72,6 +72,16 @@ public class HtmlUtilTest {
     assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
+  @Test
+  public void shouldEscapeOnlyXmlCharacters() {
+    assertEquals("ab&amp;cd&lt;ef&gt;", HtmlUtil.escapeHTML("ab&cd<ef>"));
+  }
+
+  @Test
+  public void shouldEscapeMultipleOccurencesOfTheSameCharacter() {
+    assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
+  }
+
   private String getActionsHtml(String pageName) {
     WikiPageUtil.addPage(root, PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();

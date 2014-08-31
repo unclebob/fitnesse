@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -21,7 +22,6 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
@@ -277,7 +277,7 @@ public abstract class QueryTableTestBase {
         "[n, 2n], " +
         "[pass(2), pass($V->[4])]" +
         "]",
-      Utils.unescapeWiki(qt.getTable().toString())
+      HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 
@@ -330,7 +330,7 @@ public abstract class QueryTableTestBase {
         "[n, 2n], " +
         "[pass(2), fail(a=4;e=$V->[5])]" +
         "]",
-      Utils.unescapeWiki(qt.getTable().toString())
+      HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 

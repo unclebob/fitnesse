@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -23,7 +24,6 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import util.ListUtility;
@@ -99,7 +99,7 @@ public class ScriptTableTest {
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
+    assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
   }
 
   private void buildInstructionsFor(String scriptStatements, boolean localized) throws Exception {

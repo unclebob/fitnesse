@@ -9,13 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -179,7 +179,7 @@ public class HtmlTable implements Table {
       cell.setExceptionResult(exceptionResult);
     } else {
       Row childRow = makeChildRow(row,
-              new TextNode("<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"),
+              new TextNode("<pre>" + HtmlUtil.escapeHTML(exceptionResult.getException()) + "</pre>"),
               "exception");
       insertRowAfter(row, childRow);
       row.setExecutionResult(exceptionResult.getExecutionResult());
@@ -294,7 +294,7 @@ public class HtmlTable implements Table {
       if ("&nbsp;".equals(unescaped)) {
         return "";
       }
-      return qualifiesAsHtml(unescaped) ? unescaped : Utils.unescapeHTML(unescaped);
+      return qualifiesAsHtml(unescaped) ? unescaped : HtmlUtil.unescapeHTML(unescaped);
     }
 
     private void setContent(String s) {
@@ -361,7 +361,7 @@ public class HtmlTable implements Table {
   }
 
   private static String asHtml(String text) {
-    return qualifiesAsHtml(text) ? text : Utils.escapeHTML(text);
+    return qualifiesAsHtml(text) ? text : HtmlUtil.escapeHTML(text);
   }
 
   @Override

@@ -13,6 +13,7 @@ import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -25,7 +26,6 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -604,7 +604,7 @@ public class TestResponderTest {
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
-    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
+    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", HtmlUtil.unescapeHTML(results));
   }
 
 

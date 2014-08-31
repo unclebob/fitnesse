@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -135,7 +135,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         }
       }
     } else if (value != null)
-      element.appendChild(document.createTextNode(Utils.escapeHTML(value)));
+      element.appendChild(document.createTextNode(HtmlUtil.escapeHTML(value)));
 
     parent.appendChild(element);
   }
