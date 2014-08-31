@@ -1,13 +1,12 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
+import org.apache.commons.lang.StringUtils;
 import util.Maybe;
-import util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
@@ -55,7 +54,7 @@ public class WikiSourcePage implements SourcePage {
         WikiPage ancestor = crawler.findAncestorWithName(target);
         if (ancestor != null) {
             pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
-            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+          return "." + StringUtils.join(Arrays.asList(pathElements), ".");
         }
         return "." + targetName;
     }

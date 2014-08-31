@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.AddChildPageResponder;
@@ -139,7 +139,7 @@ public class ResponderFactory {
 
     if (usingResponderKey(responderKey)) {
       responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
-    } else if (StringUtil.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
+    } else if (StringUtils.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else if (resource.startsWith("files/") || resource.equals("files")) {
       responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));

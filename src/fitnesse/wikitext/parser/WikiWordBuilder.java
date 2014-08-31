@@ -4,7 +4,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 
@@ -34,7 +34,7 @@ public class WikiWordBuilder {
         for (WikiPage current = wikiPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
             pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
-            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+            return "." + StringUtils.join(Arrays.asList(pathElements), ".");
           }
         }
         return "." + undecoratedPath;

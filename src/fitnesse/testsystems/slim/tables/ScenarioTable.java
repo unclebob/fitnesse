@@ -20,7 +20,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 
 public class ScenarioTable extends SlimTable {
@@ -159,8 +159,8 @@ public class ScenarioTable extends SlimTable {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {
             String argument = scenarioArguments.get(arg);
-            content = StringUtil.replaceAll(content, "@" + arg, argument);
-            content = StringUtil.replaceAll(content, "@{" + arg + "}", argument);
+            content = StringUtils.replace(content, "@" + arg, argument);
+            content = StringUtils.replace(content, "@{" + arg + "}", argument);
           } else {
             throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
           }

@@ -12,7 +12,7 @@ import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
@@ -97,8 +97,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void addSymbolicLink(Request request, WikiPage page) throws IOException {
-    String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
-    String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
+    String linkName = StringUtils.trim((String) request.getInput("linkName"));
+    String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
 
     if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName)) {
       PageData data = page.getData();

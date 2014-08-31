@@ -3,13 +3,13 @@ package fitnesse.reporting.history;
 import java.util.Date;
 
 import fitnesse.testsystems.ExecutionResult;
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
 import fitnesse.testsystems.TestSummary;
 import util.DateTimeUtil;
-import util.StringUtil;
 import util.TimeMeasurement;
 import util.XmlUtil;
 
@@ -43,9 +43,9 @@ public abstract class ExecutionReport {
     if (!(o instanceof ExecutionReport))
       return false;
     ExecutionReport e = (ExecutionReport) o;
-    if (!StringUtil.stringsNullOrEqual(rootPath, e.rootPath))
+    if (!StringUtils.equals(rootPath, e.rootPath))
       return false;
-    else if (!StringUtil.stringsNullOrEqual(version, e.version))
+    else if (!StringUtils.equals(version, e.version))
       return false;
     else if (!DateTimeUtil.datesNullOrEqual(date, e.date))
       return false;

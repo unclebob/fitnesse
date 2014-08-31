@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   public void setValue(String value) {
-    this.value = StringUtil.trimNonNullString(value);
+    this.value = StringUtils.trim(value);
   }
 
   public void set(String name, WikiPageProperty child) {
