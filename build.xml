@@ -262,8 +262,8 @@
 
 	<target name="pom" depends="resolve,set-version-if-not-manualy-set">
 		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="release" />
-		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="standalone,default,test">
-			   <ivy:mapping conf="standalone" scope="compile" />
+		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="maven,default,test">
+			   <ivy:mapping conf="maven" scope="compile" />
 			   <ivy:mapping conf="test" scope="test" />
 		</ivy:makepom>
 	</target>
