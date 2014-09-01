@@ -1,4 +1,4 @@
-!2 Next release
+!2 20140901
  * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
  * Improved error message when included page does not exist (([[496][https://github.com/unclebob/fitnesse/pull/496]]).
  * Slim script tables can now really be addressed with ''script:MyClass'' ([[500][https://github.com/unclebob/fitnesse/pull/500]]).
