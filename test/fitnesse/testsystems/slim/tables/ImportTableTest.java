@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import java.util.Arrays;
 import java.util.List;
 
 import fitnesse.slim.instructions.ImportInstruction;
@@ -9,7 +10,6 @@ import fitnesse.slim.instructions.Instruction;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
 
 public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
 
@@ -31,10 +31,7 @@ public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
         "|x.y.z|\n"
     );
     List<? extends Instruction> expectedInstructions =
-      list(
-              new ImportInstruction("import_id_0", "fitnesse.slim.test"),
-              new ImportInstruction("import_id_1", "x.y.z")
-      );
+            Arrays.asList(new ImportInstruction("import_id_0", "fitnesse.slim.test"), new ImportInstruction("import_id_1", "x.y.z"));
     assertEquals(expectedInstructions, instructions);
   }
 }

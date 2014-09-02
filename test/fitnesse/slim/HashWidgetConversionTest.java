@@ -1,8 +1,8 @@
 package fitnesse.slim;
 
 
-import static util.ListUtility.list;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -28,11 +28,11 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
     }
     
     public List<Object> query() {
-      List<Object> list = list();
+      List<Object> list = new ArrayList<Object>();
       // Make the test stable by ordering the keys
       TreeSet<String> orderedKeySet = new TreeSet<String>(theMap.keySet());
       for (String key : orderedKeySet) {
-        list.add(list(key, theMap.get(key)));
+        list.add(Arrays.asList(key, theMap.get(key)));
       }
       return list;
     }

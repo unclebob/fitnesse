@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +20,8 @@ import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
 
 public class ScenarioAndDecisionTableTest {
   private WikiPage root;
@@ -61,9 +62,7 @@ public class ScenarioAndDecisionTableTest {
                     "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
@@ -89,9 +88,7 @@ public class ScenarioAndDecisionTableTest {
         "|7|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
-      );
+            asList(new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -107,10 +104,7 @@ public class ScenarioAndDecisionTableTest {
         "|bill|yabba|8892|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
-              new CallInstruction("decisionTable_did_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
-      );
+            asList(new CallInstruction("decisionTable_did_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}), new CallInstruction("decisionTable_did_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -125,9 +119,7 @@ public class ScenarioAndDecisionTableTest {
                     "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
@@ -153,9 +145,7 @@ public class ScenarioAndDecisionTableTest {
                     "|7|8|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
@@ -193,9 +183,7 @@ public class ScenarioAndDecisionTableTest {
         "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 

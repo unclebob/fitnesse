@@ -11,8 +11,6 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
-import static util.ListUtility.list;
-
 public class QueryTable extends SlimTable {
   private static final String COMMENT_COLUMN_MARKER = "#";
   protected List<String> fieldNames = new ArrayList<String>();
@@ -56,7 +54,7 @@ public class QueryTable extends SlimTable {
             new QueryTableExpectation());
     String tableInstruction = ti.getInstruction().getId();
     queryId = qi.getInstruction().getId();
-    return list(make, ti, qi);
+    return Arrays.asList(make, ti, qi);
   }
 
   private void assignColumns() {
