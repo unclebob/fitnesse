@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 import util.XmlUtil;
 
 public class PageXmlizer {
-  private final SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+  private final DateFormat dateFormat = WikiPageProperty.getTimeFormat();
   private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
   public Document xmlize(WikiPage page) {
@@ -42,7 +42,7 @@ public class PageXmlizer {
   public Document xmlize(PageData data) {
     Document document = XmlUtil.newDocument();
     Element dataElement = document.createElement("data");
-    XmlUtil.addCdataNode(document, dataElement, "content", data.getContent());
+    XmlUtil.addCdataNode(dataElement, "content", data.getContent());
 
     Element propertiesElement = data.getProperties().makeRootElement(document);
     dataElement.appendChild(propertiesElement);
@@ -53,22 +53,19 @@ public class PageXmlizer {
   }
 
   public PageData deXmlizeData(Document document) {
-    PageData data = new PageData(new WikiPageDummy());
     Element dataElement = document.getDocumentElement();
 
     String content = XmlUtil.getLocalTextValue(dataElement, "content");
-    data.setContent(content);
 
     Element propertiesElement = XmlUtil.getLocalElementByTagName(dataElement, "properties");
     WikiPageProperties properties = new WikiPageProperties(propertiesElement);
-    data.setProperties(properties);
 
-    return data;
+    return new PageData(content, properties);
   }
 
-  private void addPageXmlToElement(Document document, Element context, WikiPage page) {
+  private void addPageXmlToElement(Element context, WikiPage page) {
     if (pageMeetsConditions(page))
-      context.appendChild(createXmlFromPage(document, page));
+      context.appendChild(createXmlFromPage(context.getOwnerDocument(), page));
   }
 
   private boolean pageMeetsConditions(WikiPage page) {
@@ -82,28 +79,28 @@ public class PageXmlizer {
 
   private Element createXmlFromPage(Document document, WikiPage page) {
     Element pageElement = document.createElement("page");
-    XmlUtil.addTextNode(document, pageElement, "name", page.getName());
-    addLastModifiedTag(page, document, pageElement);
+    XmlUtil.addTextNode(pageElement, "name", page.getName());
+    addLastModifiedTag(page, pageElement);
 
-    addXmlFromChildren(page, document, pageElement);
+    addXmlFromChildren(page, pageElement);
 
     return pageElement;
   }
 
-  private void addLastModifiedTag(WikiPage page, Document document, Element pageElement) {
+  private void addLastModifiedTag(WikiPage page, Element pageElement) {
     Date lastModificationTime = page.getData().getProperties().getLastModificationTime();
     String lastModifiedTimeString = dateFormat.format(lastModificationTime);
-    XmlUtil.addTextNode(document, pageElement, "lastModified", lastModifiedTimeString);
+    XmlUtil.addTextNode(pageElement, "lastModified", lastModifiedTimeString);
   }
 
-  private void addXmlFromChildren(WikiPage page, Document document, Element pageElement) {
-    Element childrenElement = document.createElement("children");
+  private void addXmlFromChildren(WikiPage page, Element pageElement) {
+    Element childrenElement = pageElement.getOwnerDocument().createElement("children");
     List<WikiPage> children = page.getChildren();
     Collections.sort(children);
 
     for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
       WikiPage child = iterator.next();
-      addPageXmlToElement(document, childrenElement, child);
+      addPageXmlToElement(childrenElement, child);
     }
     pageElement.appendChild(childrenElement);
   }

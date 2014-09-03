@@ -186,7 +186,7 @@ public class HtmlTable implements Table {
     }
   }
 
-  private Tag newTag(Class<? extends Tag> klass) {
+  private static Tag newTag(Class<? extends Tag> klass) {
     Tag tag = null;
     try {
       tag = klass.newInstance();
@@ -267,7 +267,7 @@ public class HtmlTable implements Table {
     }
   }
 
-  class Cell {
+  static class Cell {
     private final TableColumn columnNode;
     private final String originalContent;
     private SlimTestResult testResult;
@@ -347,7 +347,12 @@ public class HtmlTable implements Table {
           }
           return String.format("<span class=\"fail\">%s</span>", message);
         case IGNORE:
-          return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
+          // IGNORE + does not count === Test Not Run
+          if (testResult.doesCount()) {
+            return String.format("<span class=\"ignore\">%s</span>", message);
+          } else {
+            return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
+          }
         case ERROR:
           return String.format("%s <span class=\"error\">%s</span>", originalContent, message);
       }
@@ -355,7 +360,7 @@ public class HtmlTable implements Table {
     }
   }
 
-  private String asHtml(String text) {
+  private static String asHtml(String text) {
     return qualifiesAsHtml(text) ? text : Utils.escapeHTML(text);
   }
 

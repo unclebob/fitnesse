@@ -34,7 +34,7 @@ public class AddChildPageResponderTest {
     root = InMemoryPage.makeRoot("root");
     
     crawler = root.getPageCrawler();
-    WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     childName = "ChildPage";
     String childContent = "child content";
     String pagetype = "";

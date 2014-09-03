@@ -15,10 +15,10 @@ public class FitClientBuilder extends ClientBuilder<CommandRunningFitClient> {
   public CommandRunningFitClient build() {
     String testRunner = getTestRunner();
     String classPath = getClassPath();
-    String command = buildCommand(getCommandPattern(), testRunner, classPath);
+    String[] command = buildCommand(getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables);
+            new CommandRunningFitClient.OutOfProcessCommandRunner(command, environmentVariables, getExecutionLogListener());
 
     return buildFitClient(runningStrategy);
   }

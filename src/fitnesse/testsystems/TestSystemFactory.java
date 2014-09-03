@@ -2,8 +2,6 @@ package fitnesse.testsystems;
 
 import java.io.IOException;
 
-import fitnesse.FitNesseContext;
-
 /**
  * Creates new test systems
  */

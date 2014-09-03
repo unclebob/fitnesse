@@ -41,24 +41,39 @@ label {
   }
 }
 
+.navbar-form.search {
+  float: right;
+  margin-right: 25px;
+}
+
 #add > ul {
   max-height: 300px;
   overflow-x: hidden;
 }
 
+.page-actions {
+  display: none;
+  float: right;
+  padding: 8px 40px;
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
 .breadcrumb {
   padding: 8px 40px;
   margin: 0;
-  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
+  #gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
   border-radius: 0;
-}
-
-.breadcrumb li+li:before {
+  li + li:before {
     content: "/ ";
     color: #ccc;
+  }
 }
-
 button,
 a.button,
 input[type="button"] {
@@ -91,11 +106,6 @@ input[type="checkbox"] {
   margin-left: 145px;
 }
 
-.meta {
-  .label;
-  .label-info;
-}
-
 /** Rich text editor style */
 .editor-toggle label {
   .radio;
@@ -106,7 +116,7 @@ input[type="checkbox"] {
     margin-left: -18px;
 }
 
-/** Collapsable section */
+/** Collapsible section */
 .collapsible {
   margin: 0;
   .panel;
@@ -145,13 +155,33 @@ input[type="checkbox"] {
 .collapsible > ul {
   float: right;
   margin: 0;
-  padding: 5px 15px;
-}
+  padding: 4px 4px;
+  li {
+    border: none;
+    padding: 0;
+    a {
+      color: inherit;
+      .btn;
+      .btn-default;
+      .btn-xs;
+      float: left;
+      position: relative;
+    }
+    a.expandall {
+      .border-right-radius(0);
+    }
+    a.expandall:hover {
+      z-index: 2;
 
-.collapsible > ul li {
-  display: inline;
-  padding: 0 5px;
-  border-left: 1px solid @panel-bg;
+    }
+    a.collapseall {
+      .border-left-radius(0);
+      margin-left: -1px;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 tr.scenario > td:first-child {
@@ -315,6 +345,9 @@ fieldset {
 
 // Specific pages:
 
+.editPage #editor {
+  margin: 0 40px;
+}
 
 .editPage .textarea-toolbar,
 .editPage .wysiwyg-toolbar {
@@ -322,13 +355,7 @@ fieldset {
 }
 
 .editPage textarea#pageContent {
-    border-left: none;
-    border-right: none;
     padding: 4px;
-}
-.editPage iframe.wysiwyg {
-    border-left: none;
-    border-right: none;
 }
 
 .editPage .textarea-toolbar input[type="button"] {
@@ -337,22 +364,18 @@ fieldset {
   margin: 3px 0 6px 0;
 }
 
-.tagsinput .tag {
+.tag {
     .badge;
     background-color: @brand-info;
     border: none;
 }
 
-.tagsinput .tag a {
+.tag a {
     color: @alert-danger-text;
 }
 
-body.editing {
-    padding: 0 40px;
-}
-
 .editPage #save_buttons {
-  margin-left: @padding-base-horizontal;
+  margin: 0 40px;
 }
 
 #tt-wrap-text {

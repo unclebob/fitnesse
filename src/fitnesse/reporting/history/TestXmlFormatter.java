@@ -4,7 +4,6 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -13,7 +12,6 @@ import fitnesse.testsystems.Expectation;
 import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -22,13 +20,14 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import util.TimeMeasurement;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class TestXmlFormatter extends BaseFormatter {
+public class TestXmlFormatter extends BaseFormatter implements Closeable {
   private WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
@@ -137,7 +136,7 @@ public class TestXmlFormatter extends BaseFormatter {
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getSourcePage().readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
     instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
@@ -149,7 +148,6 @@ public class TestXmlFormatter extends BaseFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
     setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }
@@ -168,7 +166,7 @@ public class TestXmlFormatter extends BaseFormatter {
 
   @Override
   public int getErrorCount() {
-    return getPageCounts().wrong + getPageCounts().exceptions;
+    return getPageCounts().getWrong() + getPageCounts().getExceptions();
   }
 
   protected void writeResults(Writer writer) throws IOException {

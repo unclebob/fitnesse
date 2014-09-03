@@ -43,5 +43,5 @@
 #end
  </table>
 #else
-<h2>Comparison Failed: $pageTitle.Title</h2>
+<h2>Comparison Failed: #escape($pageTitle.Title)</h2>
 #end

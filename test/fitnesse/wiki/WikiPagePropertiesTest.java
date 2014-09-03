@@ -12,7 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -116,7 +116,7 @@ public class WikiPagePropertiesTest {
 
   @Test
   public void testLastModificationTime() throws Exception {
-    SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+    DateFormat format = WikiPageProperty.getTimeFormat();
     WikiPageProperties props = new WikiPageProperties();
     assertEquals(format.format(Clock.currentDate()), format.format(props.getLastModificationTime()));
     Date date = format.parse("20040101000001");

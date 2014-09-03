@@ -8,8 +8,11 @@ import static util.RegexTestCase.assertSubString;
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +74,7 @@ public class HtmlUtilTest {
   }
 
   private String getActionsHtml(String pageName) {
-    root.addChildPage(pageName);
+    WikiPageUtil.addPage(root, PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setNavTemplate("wikiNav.vm");
     htmlPage.put("actions", new WikiPageActions(root.getChildPage(pageName)));

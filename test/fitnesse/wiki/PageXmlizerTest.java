@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotSame;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class PageXmlizerTest {
   private PageXmlizer xmlizer;
   private WikiPage root;
   private PageCrawler crawler;
-  private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+  private DateFormat format = WikiPageProperty.getTimeFormat();
 
   @Before
   public void setUp() throws Exception {
@@ -64,7 +64,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testXmlizeTwoPages() throws Exception {
-    WikiPage pageOne = root.addChildPage("PageOne");
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
     Document doc = xmlizer.xmlize(root);
     String value = XmlUtil.xmlAsString(doc);
 
@@ -76,7 +76,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testDeXmlizingTwoPages() throws Exception {
-    root.addChildPage("PageOne");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
     xmlizer.deXmlize(xmlizer.xmlize(root), root, new MockXmlizerPageHandler());
 
     assertEquals(2, root.getChildren().size());
@@ -212,7 +212,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testXmlizingData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 
@@ -232,7 +232,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testDeXmlizingPageData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 
@@ -247,9 +247,8 @@ public class PageXmlizerTest {
 
   @Test
   public void testConditionForXmlization() throws Exception {
-    WikiPage pageOne = root.addChildPage("PageOne");
-    @SuppressWarnings("unused")
-    WikiPage pageTwo = root.addChildPage("PageTwo");
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     xmlizer.addPageCondition(new XmlizePageCondition() {
       public boolean canBeXmlized(WikiPage page) {

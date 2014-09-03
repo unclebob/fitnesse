@@ -8,13 +8,10 @@ import java.util.List;
 
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-import fitnesse.wiki.ReadOnlyPageData;
-import fitnesse.wikitext.parser.ParsedPage;
 import org.htmlparser.Parser;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
@@ -51,7 +48,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
           processTable(theTable);
         } catch (SyntaxError e) {
           String tableName = theTable.getTable().getCellContents(0, 0);
-          theTable.getTable().updateContent(0, 0, SlimTestResult.fail(String.format("%s: <strong>Bad table! %s</strong>", tableName, e.getMessage())));
+          theTable.getTable().updateContent(0, 0, SlimTestResult.error(String.format("<strong> %s: Bad table! %s</strong>", tableName, e.getMessage())));
+          getTestContext().incrementErroredTestsCount();
         }
 
         String html = createHtmlResults(startWithTable, nextTable);
@@ -61,13 +59,13 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private List<SlimTable> createSlimTables(TestPage pageToTest) {
-    NodeList nodeList = makeNodeList(pageToTest.getDecoratedData());
+    NodeList nodeList = makeNodeList(pageToTest);
     tableScanner = new HtmlTableScanner(nodeList);
     return createSlimTables(tableScanner);
   }
 
-  private NodeList makeNodeList(ReadOnlyPageData pageData) {
-    String html = pageData.getHtml();
+  private NodeList makeNodeList(TestPage pageToTest) {
+    String html = pageToTest.getHtml();
     Parser parser = new Parser(new Lexer(new Page(html)));
     try {
       return parser.parse(null);

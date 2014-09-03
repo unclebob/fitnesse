@@ -84,7 +84,7 @@ public class EditResponder implements SecureResponder {
 
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.setMainTemplate("editPage");
-    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(context));
+    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(page));
 
     return html.html();
   }
@@ -107,7 +107,6 @@ public class EditResponder implements SecureResponder {
     html.put(TEMPLATE_MAP, TemplateUtil.getTemplateMap(page));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-
   }
 
   public SecureOperation getSecureOperation() {

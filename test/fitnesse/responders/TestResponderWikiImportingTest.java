@@ -4,12 +4,13 @@ package fitnesse.responders;
 
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 public class TestResponderWikiImportingTest {
   public MockWikiImporter mockWikiImporter;
   private MockTestResponder testResponder;
-  private MockSuiteResponder suiteResponder;
   private WikiPage pageOne;
   private WikiPage childOne;
   private WikiPage childTwo;
@@ -32,16 +32,15 @@ public class TestResponderWikiImportingTest {
     standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
 
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    pageOne = root.addChildPage("PageOne");
-    childOne = pageOne.addChildPage("ChildOne");
-    childTwo = pageOne.addChildPage("ChildTwo");
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    childOne = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");
+    childTwo = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildTwo"), "");
 
     mockWikiImporter = new MockWikiImporter();
 
     testResponder = new MockTestResponder(mockWikiImporter);
-    suiteResponder = new MockSuiteResponder(mockWikiImporter);
 
-    testResponder.page = suiteResponder.page = pageOne;
+    testResponder.page = pageOne;
   }
 
   @After
@@ -94,7 +93,7 @@ public class TestResponderWikiImportingTest {
   public void testRunWithSuiteFromRoot() throws Exception {
     addImportPropertyToPage(pageOne, true, true);
 
-    suiteResponder.importWikiPages();
+    testResponder.importWikiPages();
 
     assertEquals("", pageOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childOne.getData().getContent());
@@ -106,7 +105,7 @@ public class TestResponderWikiImportingTest {
   public void testRunWithSuiteFromNonRoot() throws Exception {
     addImportPropertyToPage(pageOne, false, true);
 
-    suiteResponder.importWikiPages();
+    testResponder.importWikiPages();
 
     assertEquals(MockWikiImporter.mockContent, pageOne.getData().getContent());
     assertEquals(MockWikiImporter.mockContent, childOne.getData().getContent());
@@ -143,17 +142,6 @@ public class TestResponderWikiImportingTest {
 
     public void setXmlFormat() {
       response = new ChunkedResponse("xml", new MockChunkedDataProvider());  
-    }
-  }
-
-  private class MockSuiteResponder extends SuiteResponder {
-    private MockSuiteResponder(MockWikiImporter mockWikiImporter) {
-      super(mockWikiImporter);
-      response = new ChunkedResponse("html", new MockChunkedDataProvider());
-    }
-
-    public void addToResponse(String output) {
-      AddMessage(output);
     }
   }
 }

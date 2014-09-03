@@ -1,5 +1,6 @@
 package fitnesse.slim;
 
+import fitnesse.slim.test.ConstructorThrows;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -113,7 +114,7 @@ public abstract class StatementExecutorTestBase {
     } catch (SlimException e) {
       String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
           annotatedFixtureName());
-      assertTrue(e.getMessage().contains(expectedErrorMessage));
+      assertTrue(e.getMessage(), e.getMessage().contains(expectedErrorMessage));
     }
   }
 
@@ -174,6 +175,18 @@ public abstract class StatementExecutorTestBase {
     Object result = statementExecutor.call(INSTANCE_NAME, deleteMethodName(), "filename.txt");
     assertEquals(voidMessage(), result);
     assertTrue(library.deleteCalled());
+  }
+
+  @Test
+  public void shouldThrowStopTestExceptionFromConstructor() {
+    try {
+      statementExecutor.create(INSTANCE_NAME, ConstructorThrows.class.getCanonicalName(), new Object[] { "stop test" });
+    } catch (SlimException e) {
+      assertTrue(e.toString(), e.toString().startsWith(SlimServer.EXCEPTION_STOP_TEST_TAG));
+      assertTrue(statementExecutor.stopHasBeenRequested());
+      return;
+    }
+    fail("should not get here");
   }
 
   protected MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() throws Exception {

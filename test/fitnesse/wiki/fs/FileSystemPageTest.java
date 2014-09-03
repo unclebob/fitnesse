@@ -15,6 +15,11 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageData.PropertyFILES;
+import static fitnesse.wiki.PageData.PropertyVERSIONS;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.*;
 
 public class FileSystemPageTest {
@@ -25,20 +30,18 @@ public class FileSystemPageTest {
   @BeforeClass
   public static void initialize() {
     FileUtil.deleteFileSystemDirectory(base);
-    FileUtil.deleteFileSystemDirectory("RooT");
   }
 
   @Before
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makeRootPage(defaultPath, "RooT");
+    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
   }
 
   @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
-    FileUtil.deleteFileSystemDirectory("RooT");
   }
 
   public static void createFileSystemDirectory(File current) {
@@ -48,7 +51,7 @@ public class FileSystemPageTest {
   @Test
   public void testCreateBase() throws Exception {
     FileSystemPage levelA = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
-    assertEquals("./teststorage/RooT/PageA", levelA.getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT/PageA"), levelA.getFileSystemPath());
     assertTrue(new File(defaultPath + "/RooT/PageA").exists());
   }
 
@@ -129,12 +132,99 @@ public class FileSystemPageTest {
   }
 
   @Test
-  public void testDefaultAttributes() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "something");
-    assertTrue(page.getData().hasAttribute("Edit"));
-    assertTrue(page.getData().hasAttribute("Search"));
-    assertFalse(page.getData().hasAttribute("Test"));
-    assertFalse(page.getData().hasAttribute("TestSuite"));
+  public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageExamples"));
+    PageData data = page.getData();
+    assertTrue(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ExamplePageExample"));
+    PageData data = page.getData();
+    assertTrue(data.hasAttribute(TEST.toString()));
+  }
+
+  @Test
+  public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageExample"));
+    PageData data = page.getData();
+    assertTrue(data.hasAttribute(TEST.toString()));
+  }
+
+  @Test
+  public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
+    WikiPage suitePage1 = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"));
+    PageData data = suitePage1.getData();
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
+    WikiPage suitePage2 = WikiPageUtil.addPage(root, PathParser.parse("PageSuite"));
+    PageData data = suitePage2.getData();
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
+    WikiPage testPage1 = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
+    PageData data = testPage1.getData();
+    assertTrue(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
+    WikiPage testPage2 = WikiPageUtil.addPage(root, PathParser.parse("PageTest"));
+    PageData data = testPage2.getData();
+    assertTrue(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testDefaultAttributesForNormalPageNames() throws Exception {
+    WikiPage normalPage = WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
+    PageData data = normalPage.getData();
+    assertTrue(data.hasAttribute(PropertyEDIT));
+    assertTrue(data.hasAttribute(PropertySEARCH));
+    assertTrue(data.hasAttribute(PropertyVERSIONS));
+    assertTrue(data.hasAttribute(PropertyFILES));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testDefaultAttributesForSuitePageNames() throws Exception {
+    WikiPage suitePage3 = WikiPageUtil.addPage(root, PathParser.parse("TestPageSuite"));
+    PageData data = suitePage3.getData();
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testDefaultAttributesForErrorLogsPageName() throws Exception {
+    WikiPage errorLogsPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
+    PageData data = errorLogsPage.getData();
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
+  }
+
+  @Test
+  public void testDefaultAttributesForSuiteSetUpPageNames() throws Exception {
+    WikiPage suiteSetupPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
+    PageData data = suiteSetupPage.getData();
+    assertFalse(data.hasAttribute(SUITE.toString()));
+  }
+
+
+  @Test
+  public void testDefaultAttributesForSuiteTearDownPageNames() throws Exception {
+    WikiPage suiteTearDownPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_TEARDOWN_NAME));
+    PageData data = suiteTearDownPage.getData();
+    assertFalse(data.hasAttribute(SUITE.toString()));
   }
 
   @Test
@@ -154,13 +244,13 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = new FileSystemPageFactory().makeRootPage(defaultPath, "RooT");
+    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 
   @Test
   public void testGetPath() throws Exception {
-    assertEquals(defaultPath + "/RooT", root.getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT"), root.getFileSystemPath());
   }
 
   @Test

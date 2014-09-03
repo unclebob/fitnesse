@@ -13,21 +13,28 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 import fitnesse.ConfigurationParameter;
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.PluginException;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import util.FileUtil;
 
 public class FitNesseMainTest {
 
-  private FitNesseContext context;
+  private ContextConfigurator context;
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null, ".", "testFitnesseRoot", 80);
+    context = ContextConfigurator.systemDefaults()
+            .withRootPath(".")
+            .withRootDirectoryName("testFitnesseRoot")
+            .withPort(80);
   }
 
   @After
@@ -37,28 +44,38 @@ public class FitNesseMainTest {
 
   @Test
   public void testInstallOnly() throws Exception {
-    context.getProperties().setProperty(ConfigurationParameter.INSTALL_ONLY.getKey(), "true");
-    FitNesse fitnesse = mockFitNesse();
-    new FitNesseMain().launch(context);
-    verify(fitnesse, never()).start();
+    final FitNesse fitNesse = mock(FitNesse.class);
+    context.withParameter(ConfigurationParameter.INSTALL_ONLY, "true");
+    // Avoid doing a real update...
+    context.withParameter(ConfigurationParameter.OMITTING_UPDATES, "true");
+
+    context = spy(context);
+    doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
+    new FitNesseMain().launchFitNesse(context);
+    verify(fitNesse, never()).start();
   }
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
-    context.getProperties().setProperty(ConfigurationParameter.OMITTING_UPDATES.getKey(), "true");
-    context.getProperties().setProperty(ConfigurationParameter.COMMAND.getKey(), "command");
-    FitNesse fitnesse = mockFitNesse();
-    when(fitnesse.start()).thenReturn(true);
-    int exitCode = new FitNesseMain().launch(context);
+    context.withParameter(ConfigurationParameter.OMITTING_UPDATES, "true");
+    context.withParameter(ConfigurationParameter.COMMAND, "command");
+
+    FitNesse fitNesse = mock(FitNesse.class);
+    when(fitNesse.start()).thenReturn(true);
+
+    context = spy(context);
+    doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
+
+    int exitCode = new FitNesseMain().launchFitNesse(context);
     assertThat(exitCode, is(0));
-    verify(fitnesse, never()).start();
-    verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
-    verify(fitnesse, times(1)).stop();
+    verify(fitNesse, never()).start();
+    verify(fitNesse, times(1)).executeSingleCommand("command", System.out);
+    verify(fitNesse, times(1)).stop();
   }
 
   @Test
-  public void testDirCreations() throws IOException {
-    FitNesse fitnesse = context.fitNesse;
+  public void testDirCreations() throws IOException, PluginException {
+    FitNesse fitnesse = context.makeFitNesseContext().fitNesse;
     fitnesse.start();
 
     try {
@@ -71,7 +88,7 @@ public class FitNesseMainTest {
 
   @Test
   public void testIsRunning() throws Exception {
-    context = FitNesseUtil.makeTestContext(null, null, null, FitNesseUtil.PORT);
+    FitNesseContext context = FitNesseUtil.makeTestContext(null, ".", "TestDir", FitNesseUtil.PORT);
     FitNesse fitnesse = context.fitNesse.dontMakeDirs();
 
     assertFalse(fitnesse.isRunning());
@@ -123,12 +140,17 @@ public class FitNesseMainTest {
     return response;
   }
 
-  private FitNesse mockFitNesse() throws NoSuchFieldException, IllegalAccessException {
-    FitNesse fitNesse = mock(FitNesse.class);
-    Field aField = context.getClass().getDeclaredField("fitNesse");
-    aField.setAccessible(true);
-    aField.set(context, fitNesse);
-    return fitNesse;
+  private Answer fitNesseContextWith(final FitNesse fitNesse) {
+    return new Answer() {
+      @Override
+      public FitNesseContext answer(InvocationOnMock invocation) throws Throwable {
+        FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();
+        Field aField = fitNesseContext.getClass().getDeclaredField("fitNesse");
+        aField.setAccessible(true);
+        aField.set(fitNesseContext, fitNesse);
+        return fitNesseContext;
+      }
+    };
   }
 
 }

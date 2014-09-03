@@ -19,14 +19,14 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
 
   @Override
   public SlimCommandRunningClient build() throws IOException {
-    CommandRunner commandRunner = new MockCommandRunner();
-    final String slimArguments = buildArguments();
+    CommandRunner commandRunner = new MockCommandRunner(getExecutionLogListener());
+    final String[] slimArguments = buildArguments();
     createSlimService(slimArguments);
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
   }
 
-  void createSlimService(String args) throws IOException {
+  void createSlimService(String[] args) throws IOException {
     while (!tryCreateSlimService(args))
       try {
         Thread.sleep(10);
@@ -35,9 +35,9 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
       }
   }
 
-  private boolean tryCreateSlimService(String args) throws IOException {
+  private boolean tryCreateSlimService(String[] args) throws IOException {
     try {
-      SlimService.Options options = SlimService.parseCommandLine(args.trim().split(" "));
+      SlimService.Options options = SlimService.parseCommandLine(args);
       SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
       return true;
     } catch (IOException e) {

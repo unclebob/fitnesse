@@ -30,7 +30,6 @@ public abstract class SecurePageOperation implements SecureOperation {
 
   private boolean hasSecurityModeAttribute(WikiPage ancestor) {
     PageData data = ancestor.getData();
-    boolean hasSecurityMode = data.hasAttribute(getSecurityMode());
-    return hasSecurityMode;
+    return data.hasAttribute(getSecurityMode());
   }
 }

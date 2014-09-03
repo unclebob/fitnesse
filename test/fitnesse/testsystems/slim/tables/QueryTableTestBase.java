@@ -59,7 +59,7 @@ public abstract class QueryTableTestBase {
 
   private QueryTable makeQueryTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     testContext = new SlimTestContextImpl();
     return constructQueryTable(t);
@@ -79,8 +79,7 @@ public abstract class QueryTableTestBase {
             list("queryTable_id_1", "blah"),
             list("queryTable_id_2", queryResults)
     ));
-    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(table, qt.getTable().toString());
+    evaluateResults(pseudoResults, table);
   }
 
   @Test
@@ -349,14 +348,16 @@ public abstract class QueryTableTestBase {
                     )
             )
     );
+    evaluateResults(pseudoResults, "[" +
+      headRow +
+      "[n, 2n], " +
+      "[fail(e=3;missing), $V->[5]]" +
+      "]");
+  }
+
+  protected void evaluateResults(Map<String, Object> pseudoResults, String expectedTable) {
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(
-      "[" +
-        headRow +
-        "[n, 2n], " +
-        "[fail(e=3;missing), $V->[5]]" +
-        "]", qt.getTable().toString()
-    );
+    org.junit.Assert.assertEquals(expectedTable, qt.getTable().toString());
   }
 
   @Test
@@ -380,7 +381,7 @@ public abstract class QueryTableTestBase {
     TestResult result = expectation.evaluateExpectation("String result");
 
     assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().exceptions);
+    assertEquals(1, testContext.getTestSummary().getExceptions());
   }
 
   @Test
@@ -390,7 +391,7 @@ public abstract class QueryTableTestBase {
     TestResult result = expectation.evaluateExpectation(null);
 
     assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().exceptions);
+    assertEquals(1, testContext.getTestSummary().getExceptions());
   }
 
 }

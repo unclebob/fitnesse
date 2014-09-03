@@ -3,10 +3,10 @@
 package fitnesse.responders.editing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -18,6 +18,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,16 +96,31 @@ public class SaveResponderTest {
     request.setResource("ChildPageTwo");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
     request.addInput(EditResponder.HELP_TEXT, "some help");
-    request.addInput(EditResponder.SUITES, "some help");
+    request.addInput(EditResponder.SUITES, "some suite");
 
     responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
 
     assertEquals(true, root.hasChildPage("ChildPageTwo"));
-    String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
+    PageData pageData = root.getChildPage("ChildPageTwo").getData();
+    String newContent = pageData.getContent();
     assertEquals("some new content", newContent);
-    assertEquals("some help", root.getChildPage("ChildPageTwo").getData().getAttribute("Help"));
+    assertEquals("some help", pageData.getAttribute(PageData.PropertyHELP));
+    assertEquals("some suite", pageData.getAttribute(PageData.PropertySUITES));
     assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
     checkRecentChanges(root, "ChildPageTwo");
+  }
+  
+  @Test
+  public void testRemovesHelpAndSuitesAttributeIfEmpty() throws Exception {
+    request.setResource("ChildPageTwo");
+    request.addInput(EditResponder.HELP_TEXT, "");
+    request.addInput(EditResponder.SUITES, "");
+    
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    
+    PageData pageData = root.getChildPage("ChildPageTwo").getData();
+    assertFalse("should not have help attribute", pageData.hasAttribute(PageData.PropertyHELP));
+    assertFalse("should not have suites attribute", pageData.hasAttribute(PageData.PropertySUITES));
   }
 
   @Test
@@ -155,7 +171,7 @@ public class SaveResponderTest {
     WikiPage simplePage = WikiPageUtil.addPage(root, PathParser.parse(pageName));
 
     PageData data = simplePage.getData();
-    SaveRecorder.pageSaved(data, 0);
+    SaveRecorder.pageSaved(simplePage, 0);
     simplePage.commit(data);
   }
 

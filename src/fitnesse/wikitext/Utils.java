@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 public class Utils {
 
   private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};

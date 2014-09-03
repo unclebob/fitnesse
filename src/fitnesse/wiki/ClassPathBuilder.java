@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class ClassPathBuilder {
     page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
       @Override
       public void process(WikiPage p) {
-        addItemsFromPage(p, items);
+        items.addAll(getItemsFromPage(p));
       }
     });
     return items;
@@ -58,7 +59,7 @@ public class ClassPathBuilder {
   }
 
   public String getPathSeparator(WikiPage page) {
-    String separator = page.getData().getVariable(PageData.PATH_SEPARATOR);
+    String separator = page.getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
       separator = System.getProperty("path.separator");
     return separator;
@@ -80,20 +81,12 @@ public class ClassPathBuilder {
   }
 
   private void addPathToClassPathString(String separator, String path) {
-    path = surroundPathWithQuotesIfItHasSpaces(path);
-
     if (!addedPaths.contains(path)) {
       addedPaths.add(path);
       if (pathsString.length() > 0)
         pathsString.append(separator);
       pathsString.append(path);
     }
-  }
-
-  private String surroundPathWithQuotesIfItHasSpaces(String path) {
-    if (path.matches(".*\\s.*") && !path.contains("\""))
-      path = "\"" + path + "\"";
-    return path;
   }
 
   private List<String> expandWildcards(List<String> paths) {
@@ -157,16 +150,13 @@ public class ClassPathBuilder {
     }
   }
 
-  private void addItemsFromPage(WikiPage itemPage, List<String> items) {
-    List<String> itemsOnThisPage = getItemsFromPage(itemPage);
-    items.addAll(itemsOnThisPage);
-  }
-
   protected List<String> getItemsFromPage(WikiPage page) {
-    PageData data = page.getData();
-    Symbol tree = data.getParsedPage().getSyntaxTree();
-    ParsingPage parsingPage = data.getParsedPage().getParsingPage();
-    return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);
+    if (page instanceof WikitextPage) {
+      Symbol tree = ((WikitextPage) page).getSyntaxTree();
+      ParsingPage parsingPage = ((WikitextPage) page).getParsingPage();
+      return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);
+    }
+    return Collections.emptyList();
   }
 
 

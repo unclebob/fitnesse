@@ -2,17 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.List;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-
-import fitnesse.wiki.mem.InMemoryPage;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
 
 public class ClassPathBuilderTest {
   private WikiPage root;
@@ -72,7 +70,7 @@ public class ClassPathBuilderTest {
     String cp = builder.getClasspath(pageCrawler.getPage(PathParser.parse("ProjectOne.TesT")));
     assertSubString("path1", cp);
     assertSubString("path2", cp);
-    assertSubString("\"path 3\"", cp);
+    assertSubString("path 3", cp);
   }
 
   @Test
@@ -99,18 +97,6 @@ public class ClassPathBuilderTest {
     WikiPage page = crawler.getPage(somePagePath, new MockingPageCrawler());
     String classPath = builder.getClasspath(page);
     return classPath;
-  }
-
-  @Test
-  public void testThatPathsWithSpacesGetQuoted() throws Exception {
-    WikiPageUtil.addPage(root, somePagePath, "!path Some File.jar");
-    PageCrawler crawler = root.getPageCrawler();
-    WikiPage page = crawler.getPage(somePagePath);
-
-    assertEquals("\"Some File.jar\"", builder.getClasspath(page));
-
-    WikiPageUtil.addPage(root, somePagePath, "!path somefile.jar\n!path Some Dir/someFile.jar");
-    assertEquals("somefile.jar" + pathSeparator + "\"Some Dir/someFile.jar\"", builder.getClasspath(page));
   }
 
   @Test

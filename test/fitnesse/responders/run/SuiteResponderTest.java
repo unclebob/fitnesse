@@ -37,7 +37,7 @@ import static util.RegexTestCase.*;
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
   private MockRequest request;
-  private SuiteResponder responder;
+  private TestResponder responder;
   private WikiPage root;
   private WikiPage suite;
   private FitNesseContext context;
@@ -64,7 +64,7 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     request.addInput("debug", "");
-    responder = new SuiteResponder();
+    responder = new TestResponder();
     responder.page = suite;
 
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
@@ -271,13 +271,24 @@ public class SuiteResponderTest {
 
 
   @Test
-  public void exculdeSuiteQuery() throws Exception {
+  public void excludeSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("excludeSuiteFilter=foo");
     String results = runSuite();
     assertHasRegexp("#TestOne", results);
     assertDoesntHaveRegexp("#TestTwo", results);
     assertHasRegexp("#TestThree", results);
+  }
+
+
+  @Test
+  public void excludeSuiteWithSuiteFilterQuery() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("excludeSuiteFilter=bar&suiteFilter=smoke,foo");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertDoesntHaveRegexp("#TestThree", results);
   }
 
 

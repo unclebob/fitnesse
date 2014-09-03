@@ -2,7 +2,6 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 
 import fitnesse.socketservice.SocketFactory;
 
@@ -82,6 +81,13 @@ public class SlimClientBuilderTest {
   }
 
   @Test
+  public void slimVersionVariableSetsRequiredVersion() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("SLIM_VERSION")).thenReturn("0.0");
+    assertEquals(0.0, new SlimClientBuilder(descriptor).getSlimVersion(), 0.000001);
+  }
+
+  @Test
   public void slimHostVariableSetsTheHostEnvironmentVariable() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("slim.host")).thenReturn("somehost");
@@ -96,11 +102,27 @@ public class SlimClientBuilderTest {
     ServerSocket slimSocket = SocketFactory.tryCreateServerSocket(slimServerPort);
     try {
       InProcessSlimClientBuilder sys = new InProcessSlimClientBuilder(descriptor);
-      String slimArguments = String.format("%s %d", "", slimServerPort);
+      String[] slimArguments = new String[] { Integer.toString(slimServerPort) };
       sys.createSlimService(slimArguments);
     } finally {
       slimSocket.close();
     }
+  }
+
+  @Test
+  public void slimDefaultTimeoutIs10Seconds() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("slim.debug.timeout")).thenReturn("30");
+    assertEquals(10, new SlimClientBuilder(descriptor).determineTimeout());
+  }
+
+
+  @Test
+  public void slimDebugTimeoutIsUsedWhenExecutingWithDebugMode() throws Exception {
+    Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.isDebug()).thenReturn(true);
+    when(descriptor.getVariable("slim.debug.timeout")).thenReturn("30");
+    assertEquals(30, new SlimClientBuilder(descriptor).determineTimeout());
   }
 
 

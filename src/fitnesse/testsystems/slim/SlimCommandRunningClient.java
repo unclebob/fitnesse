@@ -8,8 +8,9 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.CommandRunnerExecutionLog;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
+import org.apache.commons.lang.StringUtils;
 import util.ListUtility;
 import util.StreamReader;
 
@@ -32,6 +33,8 @@ public class SlimCommandRunningClient implements SlimClient {
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
 
   private final CommandRunner slimRunner;
+  private final int connectionTimeout;
+  private final double requiredSlimVersion;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -40,11 +43,12 @@ public class SlimCommandRunningClient implements SlimClient {
   private String hostName;
   private int port;
 
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion) {
     this.slimRunner = slimRunner;
-    this.port = port;
     this.hostName = hostName;
+    this.port = port;
+    this.connectionTimeout = connectionTimeout;
+    this.requiredSlimVersion = requiredSlimVersion;
   }
 
   @Override
@@ -59,8 +63,8 @@ public class SlimCommandRunningClient implements SlimClient {
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
       throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
     }
-    else if (serverVersionNumber < MINIMUM_REQUIRED_SLIM_VERSION) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", MINIMUM_REQUIRED_SLIM_VERSION, serverVersionNumber));
+    else if (serverVersionNumber < requiredSlimVersion) {
+      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
@@ -78,7 +82,10 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public void connect() throws IOException {
-    client = tryConnect(200);
+    int maxTries = connectionTimeout * 20; // wait time is 50 ms
+    while (client == null) {
+      client = tryConnect(maxTries--);
+    }
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersionMessage = reader.readLine();
@@ -107,7 +114,7 @@ public class SlimCommandRunningClient implements SlimClient {
         } catch (InterruptedException i) {
           throw new SlimError("Wait for connection interrupted.");
         }
-        return tryConnect(maxTries - 1);
+        return null;
       }
     }
   }
@@ -131,11 +138,6 @@ public class SlimCommandRunningClient implements SlimClient {
     // resultList is a list: [tag, resultValue]
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
-  }
-
-  @Override
-  public ExecutionLog getExecutionLog() {
-    return new CommandRunnerExecutionLog(slimRunner);
   }
 
   private interface ToListExecutor extends InstructionExecutor {
@@ -187,16 +189,19 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   private int getLengthToRead() throws IOException  {
-	String resultLength = reader.read(6);
-    reader.read(1);
-    int length = 0;
+    String length = reader.read(6);
     try {
-    	length = Integer.parseInt(resultLength);
+      Integer resultLength = Integer.parseInt(length);
+
+      String next;
+      while (StringUtils.isNumeric(next = reader.read(1)))
+        resultLength = resultLength * 10 + Integer.valueOf(next);
+
+      return resultLength;
     }
     catch (NumberFormatException e){
-    	throw new IOException("Steam Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+      throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + length);
     }
-	return length;
   }
 
   protected void writeString(String string) throws IOException {

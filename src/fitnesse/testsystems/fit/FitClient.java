@@ -109,7 +109,7 @@ public class FitClient implements SocketAccepter {
     }
   }
 
-  public void exceptionOccurred(Exception e) {
+  public void exceptionOccurred(Throwable e) {
     for (FitClientListener listener : listeners)
       listener.exceptionOccurred(e);
   }
@@ -139,12 +139,7 @@ public class FitClient implements SocketAccepter {
           testOutputChunk(readValue);
         } else {
           Counts counts = FitProtocol.readCounts(fitOutput);
-          TestSummary summary = new TestSummary();
-          summary.right = counts.right;
-          summary.wrong = counts.wrong;
-          summary.ignores = counts.ignores;
-          summary.exceptions = counts.exceptions;
-          testComplete(summary);
+          testComplete(new TestSummary(counts.right, counts.wrong, counts.ignores, counts.exceptions));
           received++;
         }
       }

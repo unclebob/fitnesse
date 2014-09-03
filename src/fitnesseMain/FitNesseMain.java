@@ -7,6 +7,7 @@ import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.reporting.ExitCodeListener;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 
@@ -20,6 +21,8 @@ import static fitnesse.ConfigurationParameter.*;
 
 public class FitNesseMain {
   private static final Logger LOG = Logger.getLogger(FitNesseMain.class.getName());
+
+  private final ExitCodeListener exitCodeListener = new ExitCodeListener();
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = null;
@@ -50,13 +53,21 @@ public class FitNesseMain {
 
   public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
     configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
-    loadPlugins();
+    loadPlugins(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+
+    if (contextConfigurator.get(COMMAND) != null) {
+      contextConfigurator.withTestSystemListener(exitCodeListener);
+    }
 
     FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
     logStartupInfo(context);
 
     update(context);
+
+    if ("true".equalsIgnoreCase(contextConfigurator.get(INSTALL_ONLY))) {
+      return null;
+    }
 
     return launch(context);
   }
@@ -69,16 +80,18 @@ public class FitNesseMain {
     return false;
   }
 
-  private void loadPlugins() throws Exception {
-    new PluginsClassLoader().addPluginsToClassLoader();
+  private void loadPlugins(String rootPath) throws Exception {
+    new PluginsClassLoader(rootPath).addPluginsToClassLoader();
   }
 
-  Integer launch(FitNesseContext context) throws Exception {
+  private Integer launch(FitNesseContext context) throws Exception {
     if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       String command = context.getProperty(COMMAND.getKey());
       if (command != null) {
         String output = context.getProperty(OUTPUT.getKey());
-        return executeSingleCommand(context.fitNesse, command, output);
+        executeSingleCommand(context.fitNesse, command, output);
+
+        return exitCodeListener.getFailCount();
       } else {
         context.fitNesse.start();
       }
@@ -86,8 +99,7 @@ public class FitNesseMain {
     return null;
   }
 
-  private int executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
-    TestTextFormatter.finalErrorCount = 0;
+  private void executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
 
     LOG.info("Executing command: " + command);
 
@@ -111,11 +123,13 @@ public class FitNesseMain {
     } else {
       LOG.info("-----Command Complete-----");
     }
-
-    return TestTextFormatter.finalErrorCount;
   }
 
   private void logStartupInfo(FitNesseContext context) {
+    // This message is on standard output for backward compatibility with Jenkins Fitnesse plugin.
+    // (ConsoleHandler of JUL uses standard error output for all messages).
+    System.out.println("Bootstrapping FitNesse, the fully integrated standalone wiki and acceptance testing framework.");
+    
     LOG.info("root page: " + context.root);
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);

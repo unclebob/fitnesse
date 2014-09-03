@@ -46,7 +46,7 @@ public class UpdaterImplementationTest {
 
   private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPageFactory().makeRootPage(testDir, name);
+    root = new FileSystemPageFactory().makePage(new File(testDir), name, null);
     root.commit(root.getData());
     context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }

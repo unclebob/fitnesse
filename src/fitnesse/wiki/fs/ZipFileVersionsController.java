@@ -195,7 +195,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private Collection<VersionInfo> loadVersions(final FileSystemPage page) {
-    final File dir = new File(page.getFileSystemPath());
+    final File dir = page.getFileSystemPath();
     final File[] files = dir.listFiles();
     final Set<VersionInfo> versions = new HashSet<VersionInfo>();
     if (files != null) {

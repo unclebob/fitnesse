@@ -7,20 +7,20 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.CommandRunnerExecutionLog;
-import fitnesse.testsystems.ExecutionLog;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
+
+import static util.StringUtil.combineArrays;
 
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
   public static int TIMEOUT = 60000;
-  private static final String SPACE = " ";
 
   private final int ticketNumber;
   private final CommandRunningStrategy commandRunningStrategy;
@@ -46,10 +46,6 @@ public class CommandRunningFitClient extends FitClient {
     } catch (Exception e) {
       exceptionOccurred(e);
     }
-  }
-
-  public ExecutionLog getExecutionLog() {
-    return new CommandRunnerExecutionLog(commandRunningStrategy.getCommandRunner());
   }
 
   @Override
@@ -102,28 +98,28 @@ public class CommandRunningFitClient extends FitClient {
     void join();
 
     void kill();
-
-    CommandRunner getCommandRunner();
   }
 
   /** Runs commands by starting a new process. */
   public static class OutOfProcessCommandRunner implements CommandRunningStrategy {
 
-    private final String command;
+    private final String[] command;
     private final Map<String, String> environmentVariables;
+    private final ExecutionLogListener executionLogListener;
     private Thread timeoutThread;
     private Thread earlyTerminationThread;
     private CommandRunner commandRunner;
 
-    public OutOfProcessCommandRunner(String command, Map<String, String> environmentVariables) {
+    public OutOfProcessCommandRunner(String[] command, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
       this.command = command;
       this.environmentVariables = environmentVariables;
+      this.executionLogListener = executionLogListener;
     }
 
     private void makeCommandRunner(int port, int ticketNumber) {
-      String fitArguments = getLocalhostName() + SPACE + port + SPACE + ticketNumber;
-      String commandLine = command + SPACE + fitArguments;
-      this.commandRunner = new CommandRunner(commandLine, "", environmentVariables);
+      String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
+      String[] commandLine = combineArrays(command, fitArguments);
+      commandRunner = new CommandRunner(commandLine, "", environmentVariables, executionLogListener);
     }
 
     @Override
@@ -146,11 +142,6 @@ public class CommandRunningFitClient extends FitClient {
     public void kill() {
       commandRunner.kill();
       killVigilantThreads();
-    }
-
-    @Override
-    public CommandRunner getCommandRunner() {
-      return commandRunner;
     }
 
     private void killVigilantThreads() {
@@ -200,8 +191,10 @@ public class CommandRunningFitClient extends FitClient {
           synchronized (fitClient) {
             if (!fitClient.isConnectionEstablished()) {
               fitClient.notify();
-              fitClient.exceptionOccurred(new Exception(
-                  "FitClient: external process terminated before a connection could be established."));
+              Exception e = new Exception(
+                      "FitClient: external process terminated before a connection could be established.");
+              commandRunner.exceptionOccurred(e);
+              fitClient.exceptionOccurred(e);
             }
           }
         } catch (InterruptedException e) {
@@ -214,11 +207,13 @@ public class CommandRunningFitClient extends FitClient {
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private final String testRunner;
+    private final ExecutionLogListener executionLogListener;
     private Thread fastFitServer;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(String testRunner) {
+    public InProcessCommandRunner(String testRunner, ExecutionLogListener executionLogListener) {
       this.testRunner = testRunner;
+      this.executionLogListener = executionLogListener;
     }
 
     @Override
@@ -226,8 +221,7 @@ public class CommandRunningFitClient extends FitClient {
       String[] arguments = new String[] { "-x", getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       this.fastFitServer = createTestRunnerThread(testRunner, arguments);
       this.fastFitServer.start();
-      this.commandRunner = new MockCommandRunner();
-
+      commandRunner = new MockCommandRunner(executionLogListener);
       commandRunner.asynchronousStart();
     }
 
@@ -243,11 +237,6 @@ public class CommandRunningFitClient extends FitClient {
     @Override
     public void kill() {
       commandRunner.kill();
-    }
-
-    @Override
-    public CommandRunner getCommandRunner() {
-      return commandRunner;
     }
 
     protected Thread createTestRunnerThread(final String testRunner, final String[] args) {

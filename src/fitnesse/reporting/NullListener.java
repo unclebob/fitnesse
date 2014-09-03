@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -32,5 +31,5 @@ public class NullListener implements TestSystemListener {
   public void testComplete(TestPage test, TestSummary testSummary) throws IOException {}
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {}
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {}
 }

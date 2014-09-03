@@ -1,5 +1,5 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
+// Released under the terms of the CPL Common Public License versionName 1.0.
 package fitnesse.wiki.fs;
 
 import java.io.ByteArrayInputStream;
@@ -7,20 +7,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiWordPath;
+import util.Clock;
 import util.FileUtil;
+
+import static fitnesse.wiki.PageType.STATIC;
 
 public class FileSystemPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;
@@ -28,36 +30,48 @@ public class FileSystemPage extends BaseWikiPage {
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
 
-  // Only used for root page:
-  private final String path;
-
-  private final transient FileSystem fileSystem;
+  private final File path;
   private final transient VersionsController versionsController;
-  private boolean autoCommit;
+  private final transient SubWikiPageFactory subWikiPageFactory;
+  private final String versionName;
+  private transient PageData pageData;
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem,
-                        final VersionsController versionsController, final SymbolicPageFactory symbolicPageFactory,
+  public FileSystemPage(final File path, final String name,
+                        final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                         final VariableSource variableSource) {
-    super(name, symbolicPageFactory, variableSource);
+    super(name, variableSource);
     this.path = path;
-    this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.subWikiPageFactory = subWikiPageFactory;
+    this.versionName = null;
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent) {
-    super(name, parent);
-    path = null;
-    fileSystem = parent.fileSystem;
-    versionsController = parent.versionsController;
-    autoCommit = parent.autoCommit;
+  public FileSystemPage(final File path, final String name, final FileSystemPage parent) {
+    this(path, name, parent, null, parent.versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
-  public FileSystemPage(final String name, final FileSystemPage parent,
-                        final FileSystem fileSystem, final VersionsController versionsController) {
-    super(name, parent);
-    path = null;
-    this.fileSystem = fileSystem;
+  public FileSystemPage(final File path, final String name, final FileSystemPage parent, final VersionsController versionsController) {
+    this(path, name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
+  }
+
+  private FileSystemPage(FileSystemPage page, String versionName) {
+    this(page.getFileSystemPath(), page.getName(), (FileSystemPage) (page.isRoot() ? null : page.getParent()), versionName,
+            page.versionsController, page.subWikiPageFactory, page.getVariableSource());
+  }
+
+  private FileSystemPage(final File path, final String name, final FileSystemPage parent, final String versionName,
+                         final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
+                         final VariableSource variableSource) {
+    super(name, parent, variableSource);
+    this.path = path;
     this.versionsController = versionsController;
+    this.subWikiPageFactory = subWikiPageFactory;
+    this.versionName = versionName;
+  }
+
+  @Override
+  public boolean hasChildPage(final String pageName) {
+    return subWikiPageFactory.getChildPage(this, pageName) != null;
   }
 
   @Override
@@ -67,7 +81,7 @@ public class FileSystemPage extends BaseWikiPage {
       versionsController.delete(new FileVersion() {
         @Override
         public File getFile() {
-          return new File(((FileSystemPage) childPage).getFileSystemPath());
+          return ((FileSystemPage) childPage).getFileSystemPath();
         }
 
         @Override
@@ -90,99 +104,40 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      addChildPage(pageName);
-      return true;
+  public WikiPage addChildPage(String pageName) {
+    WikiPage page = getChildPage(pageName);
+    if (page == null) {
+      page = new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
     }
-    return false;
+    return page;
   }
 
   @Override
-  public WikiPage addChildPage(String name) {
-    File path = new File(getFileSystemPath(), name);
-    if (hasContentChild(path)) {
-      return new FileSystemPage(name, this);
-    } else if (hasHtmlChild(path)) {
-      return new ExternalSuitePage(path, name, this, fileSystem);
-    } else {
-      FileSystemPage page = new FileSystemPage(name, this);
-      if (autoCommit) page.commit(page.getData());
-      return page;
-    }
-  }
-
-  private boolean hasContentChild(File path) {
-    for (String child : fileSystem.list(path)) {
-      if (child.equals("content.txt")) return true;
-    }
-    return false;
-  }
-
-  private boolean hasHtmlChild(File path) {
-    if (path.getName().endsWith(".html")) return true;
-    for (String child : fileSystem.list(path)) {
-      if (hasHtmlChild(new File(path, child))) return true;
-    }
-    return false;
-  }
-
-
-  @Override
-  public List<WikiPage> getNormalChildren() {
-    final File thisDir = new File(getFileSystemPath());
-    final List<WikiPage> children = new ArrayList<WikiPage>();
-    if (fileSystem.exists(thisDir)) {
-      final String[] subFiles = fileSystem.list(thisDir);
-      for (final String subFile : subFiles) {
-        if (fileIsValid(subFile, thisDir)) {
-          children.add(getChildPage(subFile));
-        }
-      }
-    }
-    return children;
+  public List<WikiPage> getChildren() {
+    return subWikiPageFactory.getChildren(this);
   }
 
   @Override
-  protected WikiPage getNormalChildPage(String pageName) {
-    final File file = new File(getFileSystemPath(), pageName);
-    if (fileSystem.exists(file)) {
-      return addChildPage(pageName);
-    }
-    return null;
+  public WikiPage getChildPage(String childName) {
+    return subWikiPageFactory.getChildPage(this, childName);
   }
 
   @Override
   public PageData getData() {
-    return getDataVersion(null);
-  }
-
-  @Override
-  public ReadOnlyPageData readOnlyData() {
-    return getData();
-  }
-
-  private boolean fileIsValid(final String filename, final File dir) {
-    if (WikiWordPath.isWikiWord(filename)) {
-      if (fileSystem.exists(new File(dir, filename))) {
-        return true;
-      }
+    if (pageData == null) {
+      pageData = getDataVersion();
     }
-    return false;
+    return new PageData(pageData);
   }
 
-  private String getParentFileSystemPath() {
-    return this.parent != null ? ((FileSystemPage) this.parent).getFileSystemPath() : this.path;
-  }
-
-  public String getFileSystemPath() {
-    return getParentFileSystemPath() + "/" + getName();
+  public File getFileSystemPath() {
+    return this.path;
   }
 
   @Override
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
+    resetCache();
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
@@ -191,38 +146,81 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
+  protected void resetCache() {
+    super.resetCache();
+    pageData = null;
+  }
+
+  @Override
   public Collection<VersionInfo> getVersions() {
     return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
   }
 
-  @Override
-  public PageData getDataVersion(final String versionName) {
+  private PageData getDataVersion() {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
-    PageData data = new PageData(this);
+    String content = "";
+    WikiPageProperties properties = null;
     try {
       for (FileVersion version : versions) {
         if (version == null) continue;
         if (contentFilename.equals(version.getFile().getName())) {
-          data.setContent(loadContent(version));
+          content = loadContent(version);
         } else if (propertiesFilename.equals(version.getFile().getName())) {
-          data.setProperties(loadAttributes(version));
+          properties = loadAttributes(version);
         }
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
-    return new PageData(data, getVariableSource());
+    if (properties == null) {
+      properties = defaultPageProperties();
+    }
+    return new PageData(content, properties);
   }
 
-  public void autoCommit(boolean autoCommit) {
-    this.autoCommit = autoCommit;
+  public WikiPageProperties defaultPageProperties() {
+    WikiPageProperties properties = new WikiPageProperties();
+    if (!isErrorLogsPage()) {
+      properties.set(PageData.PropertyEDIT);
+      properties.set(PageData.PropertyPROPERTIES);
+      properties.set(PageData.PropertyREFACTOR);
+    }
+    properties.set(PageData.PropertyWHERE_USED);
+    properties.set(PageData.PropertyRECENT_CHANGES);
+    properties.set(PageData.PropertyFILES);
+    properties.set(PageData.PropertyVERSIONS);
+    properties.set(PageData.PropertySEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+
+    if (isErrorLogsPage())
+      return properties;
+
+    PageType pageType = PageType.getPageTypeForPageName(getName());
+
+    if (STATIC.equals(pageType))
+      return properties;
+
+    properties.set(pageType.toString());
+    return properties;
+  }
+
+  private boolean isErrorLogsPage() {
+    WikiPagePath pagePath = getPageCrawler().getFullPath();
+    return ErrorLogName.equals(pagePath.getFirst());
+  }
+
+  @Override
+  public WikiPage getVersion(String versionName) {
+    // Just assert the version is valid
+    versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    return new FileSystemPage(this, versionName);
   }
 
   @Override
   public String toString() {
     try {
-      return getClass().getName() + " at " + this.getFileSystemPath();
+      return getClass().getName() + " at " + this.getFileSystemPath() + "#" + (versionName != null ? versionName : "latest");
     } catch (final Exception e) {
       return super.toString();
     }
@@ -249,12 +247,30 @@ public class FileSystemPage extends BaseWikiPage {
     final WikiPageProperties props = new WikiPageProperties();
     InputStream content = fileVersion.getContent();
     try {
-      props.loadFromXml(content);
+      props.loadFromXmlStream(content);
     } finally {
       content.close();
     }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof FileSystemPage)) return false;
+
+    FileSystemPage that = (FileSystemPage) o;
+
+    if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
+    return super.equals(that);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (versionName != null ? versionName.hashCode() : 0);
+    return result;
   }
 
   class ContentFileVersion implements FileVersion {

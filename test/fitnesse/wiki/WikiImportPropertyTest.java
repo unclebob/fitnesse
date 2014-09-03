@@ -7,7 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 
 import org.junit.Before;
@@ -53,7 +53,7 @@ public class WikiImportPropertyTest {
 
   @Test
   public void testLastUpdated() throws Exception {
-    SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+    DateFormat format = WikiPageProperty.getTimeFormat();
     Date date = Clock.currentDate();
     property.setLastRemoteModificationTime(date);
 
@@ -80,7 +80,7 @@ public class WikiImportPropertyTest {
     assertEquals("some source", importProperty.getSourceUrl());
     assertTrue(importProperty.isRoot());
     assertTrue(importProperty.isAutoUpdate());
-    SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+    DateFormat format = WikiPageProperty.getTimeFormat();
     assertEquals(format.format(date), format.format(importProperty.getLastRemoteModificationTime()));
   }
 

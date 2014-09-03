@@ -4,6 +4,7 @@ package fitnesse.reporting;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import fitnesse.testrunner.WikiTestPage;
@@ -16,22 +17,24 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
-  private TestSummary pageCounts = new TestSummary();
+public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
+  private TestSummary pageCounts = new TestSummary();
   private int currentTest = 0;
+
+  private final String testBasePathName;
   private String testSystemName = null;
-  private boolean printedTestOutput = false;
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
   private String testSummariesId = TEST_SUMMARIES_ID;
   private TimeMeasurement totalTimeMeasurement;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page) {
-    super(context, page);
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
+    super(context, page, log);
     totalTimeMeasurement = new TimeMeasurement().start();
+    testBasePathName = PathParser.render(page.getPageCrawler().getFullPath());
   }
 
   @Override
@@ -44,34 +47,26 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     currentTest++;
     updateSummaryDiv(getProgressHtml(relativeName));
 
-    maybeWriteTestOutputDiv();
     maybeWriteTestSystem();
-    writeTestOuputDiv(relativeName, fullPathName);
+    writeTestOutputDiv(relativeName, fullPathName);
   }
 
-  private void writeTestOuputDiv(String relativeName, String fullPathName) {
-    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
-    HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
-    anchor.addAttribute("id", relativeName + currentTest);
-    anchor.addAttribute("class", "test_name");
-    HtmlTag title = new HtmlTag("h3", anchor);
+  private void writeTestOutputDiv(String relativeName, String fullPathName) {
+    if (!testBasePathName.equals(fullPathName)) {
+      HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
+      HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
+      anchor.addAttribute("id", relativeName + currentTest);
+      anchor.addAttribute("class", "test_name");
+      HtmlTag title = new HtmlTag("h3", anchor);
 
-    HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
-    topLink.addAttribute("class", "top_of_page");
+      HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
+      topLink.addAttribute("class", "top_of_page");
 
-    pageNameBar.add(title);
-    pageNameBar.add(topLink);
-    writeData(pageNameBar.html());
-
-    writeData("<div class=\"alternating_block\">");
-  }
-
-  private void maybeWriteTestOutputDiv() {
-    if (!printedTestOutput) {
-      HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
-      writeData(outputTitle.html());
-      printedTestOutput = true;
+      pageNameBar.add(title);
+      pageNameBar.add(topLink);
+      writeData(pageNameBar.html());
     }
+    writeData("<div class=\"alternating_block\">");
   }
 
   private void maybeWriteTestSystem() {
@@ -83,14 +78,12 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     }
   }
 
-
   @Override
   public void testStarted(WikiTestPage testPage) {
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
-    WikiPagePath fullPath = testPage.getSourcePage().getPageCrawler().getFullPath();
-    String fullPathName = PathParser.render(fullPath);
+    String fullPathName = testPage.getFullPath();
 
     announceStartNewTest(getRelativeName(), fullPathName);
   }
@@ -143,11 +136,9 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     // Todo: why assign it to this variable, looks inconsistent.
     latestTestTime = totalTimeMeasurement.stop();
     removeStopTestLink();
-    publishAndAddLog();
+    AddLogLink();
     maybeMakeErrorNavigatorVisible();
     finishWritingOutput();
-
-    super.close();
   }
 
   @Override
@@ -178,7 +169,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
-
   }
 
   protected String makeSummaryContent() {

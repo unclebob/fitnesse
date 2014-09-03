@@ -35,11 +35,11 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     page2Path = PathParser.parse("PageTwo");
     child1FullPath = PathParser.parse("PageOne.ChildOne");
     grandChild1FullPath = PathParser.parse("PageOne.ChildOne.GrandChildOne");
-    page1 = WikiPageUtil.addPage(root, page1Path);
-    page2 = WikiPageUtil.addPage(root, page2Path);
-    child1 = WikiPageUtil.addPage(page1, PathParser.parse("ChildOne"));
-    child2 = WikiPageUtil.addPage(page1, PathParser.parse("ChildTwo"));
-    grandChild1 = WikiPageUtil.addPage(child1, PathParser.parse("GrandChildOne"));
+    page1 = WikiPageUtil.addPage(root, page1Path, "");
+    page2 = WikiPageUtil.addPage(root, page2Path, "");
+    child1 = WikiPageUtil.addPage(page1, PathParser.parse("ChildOne"), "");
+    child2 = WikiPageUtil.addPage(page1, PathParser.parse("ChildTwo"), "");
+    grandChild1 = WikiPageUtil.addPage(child1, PathParser.parse("GrandChildOne"), "");
   }
 
   @Test
@@ -174,9 +174,9 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void canFindAllUncles() throws Exception {
-    WikiPage grandUnclePage = WikiPageUtil.addPage(root, PathParser.parse("UnclePage"));
-    WikiPage unclePage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.UnclePage"));
-    WikiPage brotherPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
+    WikiPage grandUnclePage = WikiPageUtil.addPage(root, PathParser.parse("UnclePage"), "");
+    WikiPage unclePage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.UnclePage"), "");
+    WikiPage brotherPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"), "");
     final List<WikiPage> uncles = new ArrayList<WikiPage>();
     grandChild1.getPageCrawler().traverseUncles("UnclePage", new TraversalListener<WikiPage>() {
       @Override

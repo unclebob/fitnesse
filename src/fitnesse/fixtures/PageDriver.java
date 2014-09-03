@@ -146,14 +146,12 @@ public class PageDriver {
 
   public boolean containsJsonPacket(String packet) throws Exception {
     packet = ResponseExaminer.convertBreaksToLineSeparators(packet);
-    System.out.println("packet = " + packet);
     JSONObject expected = new JSONObject(packet);
     String contentString = requester.contents();
     int jsonStart = contentString.indexOf("{");
     if (jsonStart == -1)
       return false;
     contentString = contentString.substring(jsonStart);
-    System.out.println("contentString = " + contentString);
     JSONObject actual = new JSONObject(contentString);
     return expected.toString(1).equals(actual.toString(1));
   }
@@ -271,13 +269,5 @@ public class PageDriver {
     WikiPage page = crawler.getPage(PathParser.parse(fullPathOfPage));
     PageData data = page.getData();
     return data.hasAttribute(attribute);
-  }
-
-  public void sendAsHash(Map<String, String> hash) {
-    this.hash = hash;
-  }
-
-  public String hashIs(String key) {
-    return hash.get(key);
   }
 }

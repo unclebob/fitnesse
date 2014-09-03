@@ -63,8 +63,7 @@ public class RssResponder implements SecureResponder {
     if (contextPage == null) {
       return null;
     }
-    PageData data = contextPage.getData();
-    return data.getVariable("RSS_PREFIX");
+    return contextPage.getVariable("RSS_PREFIX");
   }
 
   protected static boolean isNeitherNullNorBlank(String string) {
@@ -88,11 +87,11 @@ public class RssResponder implements SecureResponder {
     public void addItem(RecentChangesPageEntry line) throws Exception {
       Map<String, String> itemProperties = line.getItemProperties();
       Element itemElement = document.createElement("item");
-      makeNodes(document, itemElement, itemProperties);
-      linkPrefixBuilder.buildLink(document, itemElement, itemProperties.get("path"));
+      makeNodes(itemElement, itemProperties);
+      linkPrefixBuilder.buildLink(itemElement, itemProperties.get("path"));
 
       String description = makeDescription(itemProperties);
-      XmlUtil.addTextNode(document, itemElement, "description", description);
+      XmlUtil.addTextNode(itemElement, "description", description);
       channelElement.appendChild(itemElement);
     }
 
@@ -113,11 +112,10 @@ public class RssResponder implements SecureResponder {
       return description;
     }
 
-    private static void makeNodes(Document rssDocument, Element itemElement,
-        Map<String, String> itemProperties) {
-      XmlUtil.addTextNode(rssDocument, itemElement, "title", itemProperties.get("path"));
-      XmlUtil.addTextNode(rssDocument, itemElement, "author", itemProperties.get("author"));
-      XmlUtil.addTextNode(rssDocument, itemElement, "pubDate", itemProperties.get("pubDate"));
+    private static void makeNodes(Element itemElement, Map<String, String> itemProperties) {
+      XmlUtil.addTextNode(itemElement, "title", itemProperties.get("path"));
+      XmlUtil.addTextNode(itemElement, "author", itemProperties.get("author"));
+      XmlUtil.addTextNode(itemElement, "pubDate", itemProperties.get("pubDate"));
     }
 
     private Document buildDocumentWithRssHeader() throws Exception {
@@ -127,7 +125,7 @@ public class RssResponder implements SecureResponder {
       channelElement = rssDocument.createElement("channel");
       rssDocumentElement.setAttribute("version", "2.0");
       rssDocumentElement.appendChild(channelElement);
-      XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
+      XmlUtil.addTextNode(channelElement, "title", "FitNesse:");
 
       return rssDocument;
     }
@@ -228,12 +226,12 @@ public class RssResponder implements SecureResponder {
       this.preconfiguredPrefix = preconfiguredPrefix;
     }
 
-    public void buildLink(Document rssDocument, Element itemElement, String pageName)
+    public void buildLink(Element itemElement, String pageName)
         throws Exception {
       String prefix = getRssLinkPrefix();
       String link = prefix + pageName;
 
-      XmlUtil.addTextNode(rssDocument, itemElement, "link", link);
+      XmlUtil.addTextNode(itemElement, "link", link);
     }
 
     private static String hostnameRssLinkPrefix() throws UnknownHostException {

@@ -37,16 +37,10 @@ public class FitNesseServerTest {
 
   @Before
   public void setUp() throws Exception {
-    SampleFileUtility.makeSampleFiles();
     root = InMemoryPage.makeRoot("RootPage");
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    SampleFileUtility.deleteSampleFiles();
   }
 
   @Test
@@ -104,12 +98,6 @@ public class FitNesseServerTest {
     output = getSocketOutput("GET /PageOne.PageThree HTTP/1.1\r\n\r\n", root);
     expected = "href=\"PageTwo\".*[.]PageTwo";
     assertTrue("Should have absolute link", hasSubString(expected, output));
-  }
-
-  @Test
-  public void testServingRegularFiles() throws Exception {
-    String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new WikiPageDummy());
-    assertHasRegexp("file2 content", output);
   }
 
   @Test

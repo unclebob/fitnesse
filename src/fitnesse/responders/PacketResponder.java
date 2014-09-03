@@ -47,7 +47,7 @@ public class PacketResponder implements SecureResponder {
 
   private void buildPacket() {
     packet = new JSONObject();
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
 
     TableScanner scanner = new HtmlTableScanner(html);
 

@@ -33,7 +33,7 @@ article .centered {
     font-style: italic;
 }
 
-/** Collapsable section */
+/** Collapsible section */
 .collapsible {
   background: #F9F9F9;
   margin: 5px 0px 5px 0px;

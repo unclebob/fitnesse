@@ -66,8 +66,7 @@ public class WikiWordTest {
       WikiPage top = addPage(root2, "TopPage");
       WikiPage target = addPage(top, "TargetPage");
       WikiPage referer = addPage(target, "ReferingPage");
-      @SuppressWarnings("unused")
-      WikiPage subTarget = addPage(target, "SubTarget");
+      addPage(target, "SubTarget");
 
       String actual = WikiWordBuilder.expandPrefix(referer, "<TargetPage.SubTarget");
       assertEquals(".TopPage.TargetPage.SubTarget", actual);
@@ -78,12 +77,12 @@ public class WikiWordTest {
       PageData data = referer.getData();
       data.setContent("<TargetPage.SubTarget");
       referer.commit(data);
-      String renderedLink = referer.getData().getHtml();
+      String renderedLink = referer.getHtml();
       assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
     }
 
     private WikiPage addPage(WikiPage parent, String childName) throws Exception {
-        return WikiPageUtil.addPage(parent, PathParser.parse(childName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(childName), "");
     }
 
     private String wikiLink(String link, String text) {

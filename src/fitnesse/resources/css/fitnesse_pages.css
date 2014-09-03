@@ -20,17 +20,12 @@ label {
 /** Wiki pages (wiki, test, suite, report) **/
 .wikiPage td,
 .testPage td,
-.suitePage td,
 .testExecutionReport td,
 .compareHistory td {
   white-space: pre-line;
 }
 
 /** Edit page **/
-.editPage {
-    overflow: hidden;
-}
-
 .editPage article {
     margin: 0;
 }
@@ -53,7 +48,7 @@ label {
 .editPage #pagetypes label:first-child {
     margin-left: 145px;
 }
-.editPage textarea, .editPage iframe {
+.editPage textarea {
 	display: block;
 	width: 100%;
 	height: 32em;
@@ -74,7 +69,7 @@ label {
 .tagsinput {
     display: inline;
 }
-.tagsinput .tag {
+.tag {
     background-color: #F9F9F9;
     border: 1px dotted #BF8660;
     color: #BF8660;
@@ -82,7 +77,7 @@ label {
     padding: 2px;
     text-decoration: none;
 }
-.tagsinput .tag a {
+.tag a {
     font-weight: bold;
     text-decoration: none;
     margin-left: 4px;
@@ -174,6 +169,11 @@ tr.exception-detail {
 #test-summary.fail,
 #test-summary.error {
     padding: 0.5em;
+    white-space: nowrap;
+}
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error {
     padding-left: 1.5em;
 }
 

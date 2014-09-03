@@ -283,8 +283,7 @@ public class HistoryComparerTest {
         "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
     WikiPage myPage = WikiPageUtil.addPage(root, PathParser.parse("MyPage"), pageText);
-    PageData myData = myPage.getData();
-    String html = myData.getHtml();
+    String html = myPage.getHtml();
     return html;
   }
 

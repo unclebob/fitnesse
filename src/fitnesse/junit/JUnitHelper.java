@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
@@ -79,13 +80,14 @@ public class JUnitHelper {
     MultipleTestsRunner testRunner = createTestRunner(initChildren(pageName, suiteFilter, excludeSuiteFilter, context), context);
     testRunner.addTestSystemListener(testFormatter);
     testRunner.addTestSystemListener(resultsListener);
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
 
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.wrong);
-    assertEquals("exceptions", 0, summary.exceptions);
-    assertTrue(msgAtLeastOneTest(pageName, summary), summary.right > 0);
+    assertEquals("wrong", 0, summary.getWrong());
+    assertEquals("exceptions", 0, summary.getExceptions());
+    assertTrue(msgAtLeastOneTest(pageName, summary), summary.getRight() > 0);
   }
 
   private List<WikiPage> initChildren(String suiteName, String suiteFilter, String excludeSuiteFilter, FitNesseContext context) {
@@ -96,7 +98,6 @@ public class JUnitHelper {
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
   }
 
-
   private WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(suiteName);
     PageCrawler crawler = context.root.getPageCrawler();
@@ -106,7 +107,7 @@ public class JUnitHelper {
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context) {
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory, context.variableSource);
     runner.setRunInProcess(debugMode);
     return runner;
   }

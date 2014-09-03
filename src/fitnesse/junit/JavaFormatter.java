@@ -7,17 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.NullListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -26,7 +23,7 @@ import fitnesse.wiki.WikiPagePath;
  *
  * @see {@link fitnesse.junit.FitNesseSuite}
  */
-public class JavaFormatter extends BaseFormatter {
+public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private String mainPageName;
   private boolean isSuite = true;
@@ -58,7 +55,7 @@ public class JavaFormatter extends BaseFormatter {
   public static class TestResultPage {
     private OutputStreamWriter currentWriter;
 
-    public TestResultPage(String outputPath, String testName) throws IOException, UnsupportedEncodingException {
+    public TestResultPage(String outputPath, String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
       currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
       writeHeaderFor(testName);
@@ -118,7 +115,10 @@ public class JavaFormatter extends BaseFormatter {
     private void copyAssets() throws IOException {
       String base = "/fitnesse/resources/";
       String cssDir = base + "css/";
-      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse.css");
+      addFile(cssDir + "fitnesse.css", "css/fitnesse.css");
+      addFile(cssDir + "fitnesse_wiki.css", "css/fitnesse_wiki.css");
+      addFile(cssDir + "fitnesse_pages.css", "css/fitnesse_pages.css");
+      addFile(cssDir + "fitnesse_straight.css", "css/fitnesse_straight.css");
       String javascriptDir = base + "javascript/";
       addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
       addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
@@ -130,20 +130,16 @@ public class JavaFormatter extends BaseFormatter {
 
   private TestSummary totalSummary = new TestSummary();
 
-  public String getFullPath(final WikiPage wikiPage) {
-    return new WikiPagePath(wikiPage).toString();
-  }
-
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
   public void testStarted(WikiTestPage test) throws IOException {
-    resultsRepository.open(getFullPath(test.getSourcePage()));
+    resultsRepository.open(test.getFullPath());
   }
 
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
-    String fullPath = getFullPath(test.getSourcePage());
+    String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));
@@ -206,17 +202,17 @@ public class JavaFormatter extends BaseFormatter {
       StringBuffer sb = new StringBuffer();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
               "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
-              "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)
-              .append("</td><td>").append(testSummary.exceptions).append("</td></tr>");
+              "</td><td>").append(testSummary.getRight()).append("</td><td>").append(testSummary.getWrong())
+              .append("</td><td>").append(testSummary.getExceptions()).append("</td></tr>");
       return sb.toString();
     }
 
     private String getCssClass(TestSummary ts) {
-      if (ts.exceptions > 0)
+      if (ts.getExceptions() > 0)
         return "error";
-      if (ts.wrong > 0)
+      if (ts.getWrong() > 0)
         return "fail";
-      if (ts.right > 0)
+      if (ts.getRight() > 0)
         return "pass";
       return "plain";
     }

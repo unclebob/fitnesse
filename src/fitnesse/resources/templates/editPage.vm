@@ -9,7 +9,7 @@
  <input type="hidden" name="ticketId" value="$ticketId"/>
 #end
 #if($!redirect)
- <input type="hidden" name="redirect" value="$redirect"/>
+ <input type="hidden" name="redirect" value="#escape($redirect)"/>
 #end
 #if($!isNewPage)
  <input type="hidden" name="responder" value="addChild"/>
@@ -18,9 +18,9 @@
   <input type="text" id="pagename" name="pageName" value="" class="wikiword" />
  </fieldset>
  #if($!pageTemplate)
- <input type="hidden" name="pageTemplate" value="$pageTemplate"/>
+ <input type="hidden" name="pageTemplate" value="#escape($pageTemplate)"/>
  #elseif( $!pageType )
- <input type="hidden" name="pageType" value="$pageType"/>
+ <input type="hidden" name="pageType" value="#escape($pageType)"/>
  #else
  <fieldset id="pagetypes">
   #foreach( $pageType in $pageTypes )
@@ -34,18 +34,18 @@
 #end
  <fieldset>
   <label for="helptext">Help text:</label>
-  <input type="text" id="helptext" name="helpText" value="$!helpText" />
+  <input type="text" id="helptext" name="helpText" value="#escape($!helpText)" />
  </fieldset>
  <fieldset>
   <label for="suites">Tags:</label>
-  <input type="text" id="suites" title="Separate tags by a comma" name="suites" value="$!suites" />
+  <input type="text" id="suites" title="Separate tags by a comma" name="suites" value="#escape($!suites)" />
  </fieldset>
 
  <div id="backingData" class="hidden">
   <select id="templateMap">
    <option value=""></option>
    #foreach ($templateEntry in $templateMap.entrySet())
-   <option value="$templateEntry.value">$templateEntry.key</option>
+   <option value="#escape($templateEntry.value)">#escape($templateEntry.key)</option>
    #end
   </select>
 
@@ -61,6 +61,7 @@
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 </form>
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen" />
 <script src="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -99,12 +100,12 @@ $(function () {
     };
   }
 
-  var rte = $('#editor iframe');
+  var rte = $('#editor .wysiwyg');
   var textarea = $('#editor textarea');
   $(window).resize(function () {
     var h = $('#save_buttons').position().top;
-    rte.height(h - rte.position().top - 1);
-    textarea.height(h - textarea.position().top - 1);
+    rte.height(h - rte.position().top - 6);
+    textarea.height(h - textarea.position().top - 6);
   }).resize();
 
   /* Tags */

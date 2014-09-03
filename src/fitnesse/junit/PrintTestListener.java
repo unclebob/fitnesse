@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -32,8 +31,8 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    LOG.info(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
-        + testSummary.wrong + " " + testSummary.exceptions 
+    LOG.info(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.getRight() + " w "
+        + testSummary.getWrong() + " " + testSummary.getExceptions()
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }
 
@@ -54,7 +53,7 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
   }
 
 }

@@ -1,19 +1,25 @@
 package fitnesse.components;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 
 public class PluginsClassLoader {
 
-  protected String pluginsDirectory = "plugins";
+  private File pluginsDirectory;
+
+  public PluginsClassLoader(String rootPath) {
+    pluginsDirectory = new File(rootPath, "plugins");
+  }
 
   public void addPluginsToClassLoader() throws Exception {
-    File pluginsDir = new File(pluginsDirectory);
-    if (pluginsDir.exists())
-      for (File plugin : pluginsDir.listFiles())
+    if (pluginsDirectory.exists())
+      for (File plugin : pluginsDirectory.listFiles())
         if (plugin.getName().endsWith("jar"))
           addItemsToClasspath(plugin.getCanonicalPath());
   }

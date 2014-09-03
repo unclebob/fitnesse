@@ -46,7 +46,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
     try {
       Constructor<T> constructor = getParameterizedClass().getConstructor(Table.class, String.class, SlimTestContext.class);
       WikiPageUtil.setPageContents(root, tableText);
-      String html = root.getData().getHtml();
+      String html = root.getHtml();
       TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
       Table t = ts.getTable(0);
       SlimTestContextImpl testContext = new SlimTestContextImpl();

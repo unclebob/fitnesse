@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -64,18 +63,6 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
       document = XmlUtil.newDocument(xml);
     } catch (Exception e) {
       throw new RuntimeException("Unable to parse XML from string " + xml, e);
-    }
-    Element root = document.getDocumentElement();
-    loadFromRootElement(root);
-  }
-
-
-  public void loadFromXml(InputStream xml) {
-    Document document;
-    try {
-      document = XmlUtil.newDocument(xml);
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to parse XML from input stream " + xml, e);
     }
     Element root = document.getDocumentElement();
     loadFromRootElement(root);

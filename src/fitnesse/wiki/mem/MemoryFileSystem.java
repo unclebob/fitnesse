@@ -5,18 +5,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import fitnesse.wiki.fs.FileSystem;
 import util.Clock;
 import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
-    private final Hashtable<String, Payload> files = new Hashtable<String, Payload>();
+  public static final String DIRECTORY_PLACEHOLDER = "*This is a directory*";
+  private final Map<String, Payload> files = new LinkedHashMap<String, Payload>();
 
     @Override
     public void makeFile(File file, String content) {
@@ -32,7 +33,7 @@ public class MemoryFileSystem implements FileSystem {
 
     @Override
     public void makeDirectory(File path) {
-        files.put(path.getPath(), payload(""));
+        files.put(path.getPath(), payload(DIRECTORY_PLACEHOLDER));
     }
 
     @Override
@@ -89,6 +90,11 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public void rename(File file, File originalFile) {
     throw new RuntimeException("FileSystem.rename() has not been implemented for Memory file system.");
+  }
+
+  @Override
+  public boolean isDirectory(File file) {
+    return DIRECTORY_PLACEHOLDER.equals(files.get(file.getPath()).payload);
   }
 
   private Payload payload(String payload) {

@@ -10,45 +10,64 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Maybe;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
 
-  private WikiPage sourcePage;
-  private PageData data;
+  private final WikiPage sourcePage;
+  private final VariableSource variableSource;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
-  public WikiTestPage(WikiPage sourcePage) {
+  public WikiTestPage(WikiPage sourcePage, VariableSource variableSource) {
     this.sourcePage = sourcePage;
+    this.variableSource = variableSource;
   }
 
-  public WikiTestPage(PageData data) {
-    this.data = data;
-    this.sourcePage = data.getWikiPage();
+  public static boolean isTestPage(WikiPage page) {
+    return isTestPage(page.getData());
   }
-
   public static boolean isTestPage(ReadOnlyPageData pageData) {
     return pageData.hasAttribute("Test");
+  }
+
+  public PageData getData() {
+    return sourcePage.getData();
+  }
+
+  @Override
+  public String getHtml() {
+    String content = getDecoratedContent();
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
+    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
+    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
+  }
+
+  @Override
+  public String getVariable(String variable) {
+    return sourcePage.getVariable(variable);
+  }
+
+  @Override
+  public String getFullPath() {
+    return PathParser.render(sourcePage.getPageCrawler().getFullPath());
   }
 
   public WikiPage getSourcePage() {
     return sourcePage;
   }
 
-  public PageData getData() {
-    return data == null ? sourcePage.getData() : data;
-  }
-
-  /**
-   * Obtain one big page containing all (suite-) setUp and -tearDown content needed to run a test.
-   *
-   * @return
-   */
-  @Override
-  public ReadOnlyPageData getDecoratedData() {
+  protected String getDecoratedContent() {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
@@ -57,8 +76,7 @@ public class WikiTestPage implements TestPage {
     addPageContent(decoratedContent);
 
     decorate(getTearDown(), decoratedContent);
-
-    return new PageData(getSourcePage().getData(), decoratedContent.toString());
+    return decoratedContent.toString();
   }
 
   protected void addPageContent(StringBuilder decoratedContent) {
@@ -77,7 +95,7 @@ public class WikiTestPage implements TestPage {
     } else if (getScenarioLibraries().contains(wikiPage)) {
       includeScenarioLibrary(wikiPage, decoratedContent);
     } else {
-      decoratedContent.append(wikiPage.readOnlyData().getContent());
+      decoratedContent.append(wikiPage.getData().getContent());
     }
   }
 
@@ -130,8 +148,9 @@ public class WikiTestPage implements TestPage {
   }
 
   public boolean shouldIncludeScenarioLibraries() {
-    boolean isSlim = "slim".equalsIgnoreCase(getData().getVariable(WikiPageIdentity.TEST_SYSTEM));
-    String includeScenarioLibraries = getData().getVariable("INCLUDE_SCENARIO_LIBRARIES");
+    // Should consider all of the decorated content to resolve those variables.
+    boolean isSlim = "slim".equalsIgnoreCase(sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM));
+    String includeScenarioLibraries = sourcePage.getVariable("INCLUDE_SCENARIO_LIBRARIES");
     boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
     boolean notIncludeScenarios = "false".equalsIgnoreCase(includeScenarioLibraries);
 
@@ -183,5 +202,4 @@ public class WikiTestPage implements TestPage {
     }
     return uncles;
   }
-
 }

@@ -22,5 +22,8 @@
 		<url name="sonatype-nexus-staging" m2compatible="true" signer="nexus-sig">
 			<artifact pattern="${sonatype.nexus.staging.url}/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
 		</url>
+		<url name="sonatype-nexus-snapshots" m2compatible="true" signer="nexus-sig">
+			<artifact pattern="${sonatype.nexus.snapshots.url}/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+		</url>
         </resolvers>
 </ivysettings>

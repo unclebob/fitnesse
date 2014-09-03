@@ -1,9 +1,12 @@
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.slim.results.SlimTestResult;
 import org.junit.Test;
 
 import static fitnesse.testsystems.slim.HtmlTable.qualifiesAsHtml;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class HtmlTableTest {
@@ -61,4 +64,23 @@ public class HtmlTableTest {
   public void htmlDocumentDoesNotQualify() {
     assertFalse(qualifiesAsHtml("<html><head></head><body></body></html>"));
   }
+
+  @Test
+  public void ignoredCellWithoutMessageShouldRenderOriginalContentAsIgnored() {
+    HtmlTable.Cell cell = new HtmlTable.Cell("original content");
+
+    cell.setTestResult(SlimTestResult.ignore());
+
+    assertThat(cell.formatTestResult(), is("<span class=\"ignore\">original content</span>"));
+  }
+
+  @Test
+  public void ignoredCellWithMessageShouldRenderMessageAsIgnored() {
+    HtmlTable.Cell cell = new HtmlTable.Cell("original content");
+
+    cell.setTestResult(SlimTestResult.ignore("a message"));
+
+    assertThat(cell.formatTestResult(), is("<span class=\"ignore\">a message</span>"));
+  }
+
 }

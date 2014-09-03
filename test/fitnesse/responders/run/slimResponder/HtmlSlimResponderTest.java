@@ -11,7 +11,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLog;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -210,7 +209,7 @@ public class HtmlSlimResponderTest {
   public void tableWithBadConstructorHasException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|badArgument|\n"
         + "|returnConstructorArgument?|\n" + "|3|\n");
-    TableScanner ts = new HtmlTableScanner(testPage.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(testPage.getHtml());
     ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }
@@ -430,7 +429,7 @@ public class HtmlSlimResponderTest {
     }
 
     @Override
-    public void testSystemStopped(TestSystem testSystem, ExecutionLog executionLog, Throwable throwable) {
+    public void testSystemStopped(TestSystem testSystem, Throwable throwable) {
     }
 
     @Override
