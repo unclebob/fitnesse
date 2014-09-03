@@ -1,7 +1,5 @@
 package fitnesse.slim.converters;
 
-import org.apache.commons.lang.StringUtils;
-
 import fitnesse.slim.Converter;
 
 public class EnumConverter<T extends Enum<T>> implements Converter<T> {
@@ -19,7 +17,7 @@ public class EnumConverter<T extends Enum<T>> implements Converter<T> {
 
 	@Override
 	public T fromString(String name) {
-		if (StringUtils.isBlank(name))
+		if (name == null || "".equals(name.trim()))
 			return null;
 		else
 			try {
