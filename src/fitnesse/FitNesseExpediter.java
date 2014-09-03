@@ -10,7 +10,7 @@ import fitnesse.http.ResponseSender;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import org.apache.commons.lang.StringUtils;
-import util.Clock;
+import fitnesse.util.Clock;
 
 import java.io.IOException;
 import java.io.InputStream;

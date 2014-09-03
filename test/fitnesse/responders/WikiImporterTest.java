@@ -25,8 +25,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;

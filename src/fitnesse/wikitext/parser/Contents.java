@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import util.Maybe;
 
 public class Contents extends SymbolType implements Rule, Translation {
     public static final String FILTER_TOC = "FILTER_TOC";

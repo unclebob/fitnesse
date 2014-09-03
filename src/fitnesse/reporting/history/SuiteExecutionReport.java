@@ -12,8 +12,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.DateTimeUtil;
-import util.XmlUtil;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.Writer;
 import java.text.SimpleDateFormat;

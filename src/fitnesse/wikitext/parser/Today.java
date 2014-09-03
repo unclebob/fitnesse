@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
-import util.Clock;
-import util.Maybe;
+import fitnesse.util.Clock;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

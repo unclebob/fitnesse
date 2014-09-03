@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 public class Literal extends SymbolType implements Rule {
     public static final Literal symbolType = new Literal();
     

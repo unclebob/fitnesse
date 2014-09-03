@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import util.Maybe;
 
 public class Link extends SymbolType implements Rule, Translation {
     public static final Link symbolType = new Link();

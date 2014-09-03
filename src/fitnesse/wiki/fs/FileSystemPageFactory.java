@@ -16,7 +16,7 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wiki.VariableTool;
 import fitnesse.wikitext.parser.WikiWordPath;
-import util.Maybe;
+import fitnesse.wikitext.parser.Maybe;
 
 import java.io.File;
 import java.util.ArrayList;

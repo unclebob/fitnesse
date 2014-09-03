@@ -13,11 +13,11 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.XmlUtil;
 
 public class PageXmlizerTest {
   private PageXmlizer xmlizer;

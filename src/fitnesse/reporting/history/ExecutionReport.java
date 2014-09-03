@@ -9,9 +9,9 @@ import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
 import fitnesse.testsystems.TestSummary;
-import util.DateTimeUtil;
-import util.TimeMeasurement;
-import util.XmlUtil;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
+import fitnesse.util.XmlUtil;
 
 public abstract class ExecutionReport {
   private String version;
@@ -84,7 +84,7 @@ public abstract class ExecutionReport {
   }
 
   private void unpackFinalCounts(Element testResults) {
-    Element counts = util.XmlUtil.getElementByTagName(testResults, "finalCounts");
+    Element counts = XmlUtil.getElementByTagName(testResults, "finalCounts");
     if (counts != null) {
       finalCounts = new TestSummary(
         Integer.parseInt(XmlUtil.getTextValue(counts, "right")),

@@ -1,4 +1,4 @@
-package util;
+package fitnesse.wikitext.parser;
 
 public class Maybe<T> {
     public static final Maybe<String> noString = new Maybe<String>("*nothing*", "");

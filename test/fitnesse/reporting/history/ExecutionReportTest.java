@@ -17,8 +17,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import util.DateTimeUtil;
-import util.TimeMeasurement;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;

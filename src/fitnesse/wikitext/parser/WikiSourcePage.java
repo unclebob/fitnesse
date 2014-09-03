@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
 import org.apache.commons.lang.StringUtils;
-import util.Maybe;
 
 import java.util.ArrayList;
 import java.util.Arrays;

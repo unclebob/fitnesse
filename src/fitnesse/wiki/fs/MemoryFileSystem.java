@@ -11,8 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import fitnesse.wiki.fs.FileSystem;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {

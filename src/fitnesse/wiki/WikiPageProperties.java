@@ -16,12 +16,12 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import fitnesse.html.HtmlUtil;
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());

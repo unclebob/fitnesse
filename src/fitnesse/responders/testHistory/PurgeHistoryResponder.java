@@ -14,7 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.TestResponder;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 public class PurgeHistoryResponder implements SecureResponder {

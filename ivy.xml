@@ -31,6 +31,7 @@
 			<exclude org="com.sun" module="tools" />
 		</dependency>
 		<dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="default,maven->default" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="default,maven->default" />
 		<dependency org="org.json" name="json" rev="20140107" conf="default,maven->default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.7.1" conf="default" transitive="false" />
 		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.2.1" conf="default,maven->default"/>

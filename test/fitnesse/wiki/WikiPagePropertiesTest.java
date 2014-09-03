@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
+import fitnesse.util.Clock;
 
 public class WikiPagePropertiesTest {
   private WikiPageProperties properties;

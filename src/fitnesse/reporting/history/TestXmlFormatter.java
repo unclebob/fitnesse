@@ -18,7 +18,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 
 import java.io.Closeable;
 import java.io.IOException;
