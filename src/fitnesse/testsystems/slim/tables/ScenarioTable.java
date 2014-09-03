@@ -287,7 +287,7 @@ public class ScenarioTable extends SlimTable {
 
   // This context is mainly used to determine if the scenario table evaluated successfully
   // This determines the execution result for the "calling" table row.
-  final class ScenarioTestContext implements SlimTestContext {
+  protected final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;
     private final TestSummary testSummary = new TestSummary();
