@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import static fitnesse.wiki.PageData.PropertyHELP;
+import static fitnesse.wiki.PageData.PropertySUITES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +19,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiImportProperty;
@@ -25,6 +28,7 @@ import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,9 +94,8 @@ public class PropertiesResponderTest {
   public void testJsonResponse() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
-    data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
-    properties.set("Test", "true");
+    properties.set(PageType.TEST.toString(), "true");
     page.commit(data);
 
     MockRequest request = new MockRequest();
@@ -112,13 +115,48 @@ public class PropertiesResponderTest {
     assertTrue(jsonObject.getBoolean("Refactor"));
     assertTrue(jsonObject.getBoolean("WhereUsed"));
     assertTrue(jsonObject.getBoolean("RecentChanges"));
+    assertTrue(jsonObject.getBoolean("Files"));
 
+    assertFalse(jsonObject.has("Help"));
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
     assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
   }
+
+  @Test
+  public void testJsonResponseWithHelpTextAndTags() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    properties.set(PropertyHELP, "help text");
+    properties.set(PropertySUITES, "foo,bar");
+    page.commit(data);
+
+    MockRequest request = new MockRequest();
+    request.setResource("PageOne");
+    request.addInput("format", "json");
+
+    Responder responder = new PropertiesResponder();
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertEquals("text/json", response.getContentType());
+    String jsonText = response.getContent();
+    JSONObject jsonObject = new JSONObject(jsonText);
+
+    assertEquals("help text", jsonObject.getString("Help"));
+    JSONArray suites = jsonObject.getJSONArray("Suites");
+    assertEquals("foo", suites.getString(0));
+    assertEquals("bar", suites.getString(1));
+
+    assertFalse(jsonObject.getBoolean("Test"));
+    assertFalse(jsonObject.getBoolean("Suite"));
+    assertFalse(jsonObject.getBoolean("Prune"));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
+  }
+
 
   @Test
   public void testUsernameDisplayed() throws Exception {

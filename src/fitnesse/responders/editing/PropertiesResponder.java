@@ -14,6 +14,8 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,10 +72,21 @@ public class PropertiesResponder implements SecureResponder {
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
-        PropertySECURE_TEST };
+        PropertySECURE_TEST, PropertyFILES };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
-
+    if (pageData.hasAttribute(PropertyHELP)) {
+      jsonObject.put(PropertyHELP, pageData.getAttribute(PropertyHELP));
+    }
+    if (pageData.hasAttribute(PropertySUITES)) {
+      JSONArray tags = new JSONArray();
+      for(String tag : pageData.getAttribute(PropertySUITES).split(",")) {
+        if (StringUtils.isNotBlank(tag)) {
+          tags.put(tag.trim());
+        }
+      }
+      jsonObject.put(PropertySUITES, tags);
+    }
     return jsonObject;
   }
 
