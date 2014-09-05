@@ -111,7 +111,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
-  @Override
   public void setTrackingId(String stopResponderId) {
     addStopLink(stopResponderId);
   }

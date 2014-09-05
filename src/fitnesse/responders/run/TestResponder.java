@@ -36,20 +36,15 @@ import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.WikiImportingTraverser;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
+import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
@@ -67,6 +62,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
   private static final String OR_FILTER_ARG_2 = "suiteFilter";
+
+  static final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
   private final WikiImporter wikiImporter;
   private SuiteHistoryFormatter suiteHistoryFormatter;
@@ -270,9 +267,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
+    String stopId = runningTestingTracker.addStartedProcess(runner);
+    if (isInteractive()) {
+      ((InteractiveFormatter) mainFormatter).setTrackingId(stopId);
+    }
     try {
       runner.executeTestPages();
     } finally {
+      runningTestingTracker.removeEndedProcess(stopId);
       log.publish(context.pageFactory);
     }
   }
@@ -280,7 +282,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker,
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
             context.testSystemFactory, context.variableSource);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);

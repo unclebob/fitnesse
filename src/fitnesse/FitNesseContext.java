@@ -28,7 +28,6 @@ public class FitNesseContext {
 
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
-  public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
   public final String rootPath;
@@ -64,7 +63,6 @@ public class FitNesseContext {
     this.testSystemFactory = testSystemFactory;
     this.testSystemListener = testSystemListener;
     this.properties = properties;
-    runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
     variableSource = new SystemVariableSource(properties);
     fitNesse = new FitNesse(this);

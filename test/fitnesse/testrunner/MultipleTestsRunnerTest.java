@@ -51,7 +51,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
 
     runner.executeTestPages();
 
@@ -65,7 +65,7 @@ public class MultipleTestsRunnerTest {
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
 
@@ -80,7 +80,7 @@ public class MultipleTestsRunnerTest {
     when(testingTracker.addStartedProcess(any(Stoppable.class))).thenReturn(stopId);
 
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
 
@@ -99,7 +99,7 @@ public class MultipleTestsRunnerTest {
   private MultipleTestsRunner newTestRunnerWithListener(TestSystemListener listener) {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem((List) asList(testPage), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
     runner.addTestSystemListener(listener);
     return runner;
   }

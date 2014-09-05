@@ -28,12 +28,10 @@ public class MultipleTestsRunner implements Stoppable {
   private final PagesByTestSystem pagesByTestSystem;
 
   private final TestSystemFactory testSystemFactory;
-  private final TestingTracker testingTracker;
   private final CompositeExecutionLogListener executionLogListener;
   private final VariableSource variableSource;
 
   private volatile boolean isStopped = false;
-  private String stopId = null;
 
   private boolean runInProcess;
   private boolean enableRemoteDebug;
@@ -42,11 +40,9 @@ public class MultipleTestsRunner implements Stoppable {
   private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
-                             final TestingTracker testingTracker,
                              final TestSystemFactory testSystemFactory,
                              final VariableSource variableSource) {
     this.pagesByTestSystem = pagesByTestSystem;
-    this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
     this.variableSource = variableSource;
     this.formatters = new CompositeFormatter();
@@ -78,17 +74,10 @@ public class MultipleTestsRunner implements Stoppable {
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
-    stopId = testingTracker.addStartedProcess(this);
-
-    formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    try {
-      for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
-        startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
-      }
-    } finally {
-      testingTracker.removeEndedProcess(stopId);
+    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
+      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
     }
   }
 
@@ -241,9 +230,6 @@ public class MultipleTestsRunner implements Stoppable {
   public void stop() {
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
-    if (stopId != null) {
-      testingTracker.removeEndedProcess(stopId);
-    }
 
     if (wasNotStopped && testSystem != null) {
       try {
