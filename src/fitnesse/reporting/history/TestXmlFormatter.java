@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class TestXmlFormatter extends BaseFormatter implements Closeable {
-  private WriterFactory writerFactory;
+  private final FitNesseContext context;
+  private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
@@ -36,7 +37,8 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-    super(context, page);
+    super(page);
+    this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());

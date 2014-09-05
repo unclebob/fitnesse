@@ -26,7 +26,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   private String relativeName;
 
   protected InteractiveFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
-    super(context, page);
+    super(page);
     this.log = log;
   }
 

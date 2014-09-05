@@ -17,16 +17,13 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
   protected final Logger LOG = Logger.getLogger(getClass().getName());
 
   private final WikiPage page;
-  protected final FitNesseContext context;
 
   protected BaseFormatter() {
     this.page = null;
-    this.context = null;
   }
 
-  protected BaseFormatter(FitNesseContext context, final WikiPage page) {
+  protected BaseFormatter(final WikiPage page) {
     this.page = page;
-    this.context = context;
   }
 
   protected WikiPage getPage() {
