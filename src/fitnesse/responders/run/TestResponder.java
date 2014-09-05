@@ -69,6 +69,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private SuiteHistoryFormatter suiteHistoryFormatter;
 
   private PageData data;
+  private String testRunId;
   private BaseFormatter mainFormatter;
   private volatile boolean isClosed = false;
 
@@ -90,6 +91,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   private boolean isInteractive() {
     return mainFormatter instanceof InteractiveFormatter;
+  }
+
+  @Override
+  public Response makeResponse(FitNesseContext context, Request request) {
+    super.makeResponse(context, request);
+    testRunId = runningTestingTracker.generateNextTicket();
+    response.addHeader("X-FitNesse-Test-Id", testRunId);
+    return response;
   }
 
   protected void doSending() throws Exception {
@@ -267,14 +276,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
-    String stopId = runningTestingTracker.addStartedProcess(runner);
+    runningTestingTracker.addStartedProcess(testRunId, runner);
     if (isInteractive()) {
-      ((InteractiveFormatter) mainFormatter).setTrackingId(stopId);
+      ((InteractiveFormatter) mainFormatter).setTrackingId(testRunId);
     }
     try {
       runner.executeTestPages();
     } finally {
-      runningTestingTracker.removeEndedProcess(stopId);
+      runningTestingTracker.removeEndedProcess(testRunId);
       log.publish(context.pageFactory);
     }
   }

@@ -2,28 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.testrunner.Stoppable;
-
-public class RunningTestingTracker implements TestingTracker {
+public class RunningTestingTracker {
   public static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
 
-  private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
+  private Map<String, Stoppable> processes = new ConcurrentHashMap<String, Stoppable>();
   private int nextTicketNumber = 1;
+
+  public String generateNextTicket() {
+    int ticketNumber;
+    synchronized (this) {
+      ticketNumber = nextTicketNumber++;
+    }
+    return Integer.toString(ticketNumber);
+  }
 
   /**
    * @param process
    * @return id used to identify this process for use with the stop responder
    */
-  public synchronized String addStartedProcess(Stoppable process) {
-    int ticketNumber;
-    synchronized (this) {
-      ticketNumber = nextTicketNumber++;
-    }
-    String ticket = Integer.toString(ticketNumber);
+  public synchronized String addStartedProcess(String ticket, Stoppable process) {
     processes.put(ticket, process);
     return ticket;
   }
@@ -57,5 +59,4 @@ public class RunningTestingTracker implements TestingTracker {
       LOG.log(Level.WARNING, "Unable to stop test system", e);
     }
   }
-
 }

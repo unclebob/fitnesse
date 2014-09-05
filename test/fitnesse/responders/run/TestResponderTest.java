@@ -222,6 +222,19 @@ public class TestResponderTest {
   }
 
   @Test
+  public void testTestIdIsSentAsHeader() throws Exception {
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
+    request.setResource(testPage.getName());
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+
+    String results = sender.sentData();
+    assertSubString("X-FitNesse-Test-Id: ", results);
+  }
+
+  @Test
   public void testFixtureThatCrashes() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
     request.setResource(testPage.getName());
@@ -448,7 +461,7 @@ public class TestResponderTest {
 
     public void run() {
       waitForSemaphore();
-      context.runningTestingTracker.stopAllProcesses();
+      TestResponder.runningTestingTracker.stopAllProcesses();
     }
 
     private void waitForSemaphore() {
