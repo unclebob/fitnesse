@@ -29,7 +29,7 @@ public class SymbolProvider {
     public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            new SymbolType[] {SymbolType.CloseBracket, SymbolType.Whitespace, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider linkTargetProvider = new SymbolProvider(
             new SymbolType[] {Literal.symbolType, Variable.symbolType});

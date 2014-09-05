@@ -37,12 +37,14 @@ public class Alias extends SymbolType implements Rule, Translation {
                     .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }
 
+        HtmlTag alias = new HtmlTag("a", linkBody);
+
         if (linkReference.childAt(0).isType(Link.symbolType)) {
-            return Link.symbolType.buildLink(translator, linkBody, linkReference.childAt(0));
+            alias.addAttribute("href", linkReferenceString.startsWith("http://files/") ? linkReferenceString.substring(7) : linkReferenceString);
+        } else {
+            alias.addAttribute("href", translator.translate(linkReference));
         }
 
-        HtmlTag alias = new HtmlTag("a", linkBody);
-        alias.addAttribute("href", translator.translate(linkReference));
         return alias.htmlInline();
     }
 }
