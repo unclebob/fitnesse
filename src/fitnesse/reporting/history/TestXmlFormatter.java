@@ -44,7 +44,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   public long startedAt() {
-    return currentTestStartTime.startedAt();
+    return totalTimeMeasurement.startedAt();
   }
 
   public long runTime() {
