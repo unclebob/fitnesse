@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.*;
 
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
@@ -135,6 +136,20 @@ public class WikiTestPageTest {
     addPage("ScenarioLibrary", "scenario library");
     String html = testPage.getHtml();
     assertNotSubString("scenario library", html);
+  }
+
+
+  @Test
+  public void testPathSeparatorVariable() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define PATH_SEPARATOR {|}\n" +
+                    "!path fitnesse.jar\n" +
+                    "!path my.jar");
+    PageData data = page.getData();
+    page.commit(data);
+
+    String expected = "fitnesse.jar" + "|" + "my.jar";
+    assertEquals(expected, new WikiTestPage(page, variableSource).getClassPath().toString());
   }
 
 }

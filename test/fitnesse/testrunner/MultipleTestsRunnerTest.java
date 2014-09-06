@@ -48,8 +48,8 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
 
     runner.executeTestPages();
 
@@ -62,8 +62,8 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory, null);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
 

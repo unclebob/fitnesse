@@ -1,6 +1,8 @@
 package fitnesse.testsystems;
 
 
+import java.util.List;
+
 public interface TestPage {
 
   String getHtml();
@@ -8,4 +10,6 @@ public interface TestPage {
   String getVariable(String name);
 
   String getFullPath();
+
+  ClassPath getClassPath();
 }

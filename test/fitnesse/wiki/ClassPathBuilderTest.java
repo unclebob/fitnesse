@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.List;
+
 import fitnesse.wiki.mem.InMemoryPage;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -31,21 +34,9 @@ public class ClassPathBuilderTest {
     WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!path fitnesse.jar\n" +
                     "!path my.jar");
-    String expected = "fitnesse.jar" + pathSeparator + "my.jar";
-    assertEquals(expected, builder.getClasspath(root.getChildPage("TestPage")));
-  }
-
-  @Test
-  public void testPathSeparatorVariable() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
-            "!define PATH_SEPARATOR {|}\n" +
-                    "!path fitnesse.jar\n" +
-                    "!path my.jar");
-    PageData data = page.getData();
-    page.commit(data);
-
-    String expected = "fitnesse.jar" + "|" + "my.jar";
-    assertEquals(expected, builder.getClasspath(root.getChildPage("TestPage")));
+    List<String> classPath = builder.getClassPath(root.getChildPage("TestPage"));
+    assertEquals("fitnesse.jar", classPath.get(0));
+    assertEquals("my.jar", classPath.get(1));
   }
 
   @Test
@@ -55,8 +46,8 @@ public class ClassPathBuilderTest {
       "end of conent\n";
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), pageContent);
-    String path = builder.getClasspath(page);
-    assertEquals("aPath", path);
+    List<String> path = builder.getClassPath(page);
+    assertEquals("aPath", path.get(0));
   }
 
   @Test
@@ -67,10 +58,10 @@ public class ClassPathBuilderTest {
                     "!path path 3");
     WikiPageUtil.addPage(root, PathParser.parse("ProjectOne.TesT"), "!path path1");
     PageCrawler pageCrawler = root.getPageCrawler();
-    String cp = builder.getClasspath(pageCrawler.getPage(PathParser.parse("ProjectOne.TesT")));
-    assertSubString("path1", cp);
-    assertSubString("path2", cp);
-    assertSubString("path 3", cp);
+    List<String> cp = builder.getClassPath(pageCrawler.getPage(PathParser.parse("ProjectOne.TesT")));
+    assertSubString("path1", cp.get(0));
+    assertSubString("path2", cp.get(1));
+    assertSubString("path 3", cp.get(2));
   }
 
   @Test
@@ -78,8 +69,9 @@ public class ClassPathBuilderTest {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage superPage = WikiPageUtil.addPage(root, PathParser.parse("SuperPage"), "!path superPagePath");
     WikiPage subPage = WikiPageUtil.addPage(superPage, PathParser.parse("SubPage"), "!path subPagePath");
-    String cp = builder.getClasspath(subPage);
-    assertEquals("subPagePath" + pathSeparator + "superPagePath", cp);
+    List<String> cp = builder.getClassPath(subPage);
+    assertEquals("subPagePath", cp.get(0));
+    assertEquals("superPagePath", cp.get(1));
   }
 
   @Test
@@ -95,8 +87,8 @@ public class ClassPathBuilderTest {
     root.commit(data);
     PageCrawler crawler = root.getPageCrawler();
     WikiPage page = crawler.getPage(somePagePath, new MockingPageCrawler());
-    String classPath = builder.getClasspath(page);
-    return classPath;
+    List<String> classPath = builder.getClassPath(page);
+    return StringUtils.join(classPath, System.getProperty("path.separator"));
   }
 
   @Test
@@ -133,7 +125,7 @@ public class ClassPathBuilderTest {
   public void testClasspath() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
-    String paths = builder.getClasspath(page);
+    List<String> paths = builder.getClassPath(page);
     assertTrue(paths.contains("123"));
     assertTrue(paths.contains("abc"));
   }
@@ -143,16 +135,16 @@ public class ClassPathBuilderTest {
     WikiPage root = InMemoryPage.makeRoot("RooT");
 
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
-    String paths = builder.getClasspath(page);
-    assertEquals("/my/path.jar", paths.toString());
+    List<String> paths = builder.getClassPath(page);
+    assertEquals("/my/path.jar", paths.get(0));
 
     PageData data = root.getData();
     data.setContent("!define PATH {/my/path}\n");
     root.commit(data);
 
     page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
-    paths = builder.getClasspath(page);
-    assertEquals("/my/path.jar", paths.toString());
+    paths = builder.getClassPath(page);
+    assertEquals("/my/path.jar", paths.get(0));
   }
 
   @Test
@@ -161,8 +153,8 @@ public class ClassPathBuilderTest {
     WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
 
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
-    String paths = builder.getClasspath(page);
-    assertEquals("/my/path.jar", paths.toString());
+    List<String> paths = builder.getClassPath(page);
+    assertEquals("/my/path.jar", paths.get(0));
   }
 
   public static void makeSampleFiles() {

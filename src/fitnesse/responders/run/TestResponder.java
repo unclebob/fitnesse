@@ -289,10 +289,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, context.variableSource);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
-            context.testSystemFactory, context.variableSource);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
     runner.addExecutionLogListener(log);

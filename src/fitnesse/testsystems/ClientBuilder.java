@@ -125,7 +125,7 @@ public abstract class ClientBuilder<T> {
   }
 
   public String getClassPath() {
-    return descriptor.getClassPath();
+    return descriptor.getClassPath().toString();
   }
 
   public boolean isDebug() {

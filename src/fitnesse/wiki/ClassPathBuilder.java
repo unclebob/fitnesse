@@ -18,16 +18,13 @@ import fitnesse.wikitext.parser.WikiSourcePage;
 import util.Wildcard;
 
 public class ClassPathBuilder {
-  private List<String> allPaths;
-  private StringBuilder pathsString;
-  private Set<String> addedPaths;
 
-  public String getClasspath(WikiPage page) {
+  public List<String> getClassPath(WikiPage page) {
     List<String> paths = getInheritedPathElements(page);
-    return createClassPathString(paths, getPathSeparator(page));
+    return createClassPath(paths);
   }
 
-  public List<String> getInheritedPathElements(WikiPage page) {
+  private List<String> getInheritedPathElements(WikiPage page) {
     final List<String> items = new ArrayList<String>();
 
     page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
@@ -39,78 +36,44 @@ public class ClassPathBuilder {
     return items;
   }
 
-  public String buildClassPath(List<WikiPage> testPages) {
-    if (testPages.size() == 0) {
-      return "";
-    }
-    final String pathSeparator = getPathSeparator(testPages.get(0));
-    List<String> classPathElements = new ArrayList<String>();
-
-    for (WikiPage testPage : testPages) {
-      addClassPathElements(testPage, classPathElements);
-    }
-
-    return createClassPathString(classPathElements, pathSeparator);
-  }
-
-  private void addClassPathElements(WikiPage page, List<String> classPathElements) {
-    List<String> pathElements = getInheritedPathElements(page);
-    classPathElements.addAll(pathElements);
-  }
-
-  public String getPathSeparator(WikiPage page) {
-    String separator = page.getVariable(PageData.PATH_SEPARATOR);
-    if (separator == null)
-      separator = System.getProperty("path.separator");
-    return separator;
-  }
-
-
-  public String createClassPathString(List<String> paths, String separator) {
-    if (paths.isEmpty())
-      return "defaultPath";
-
-    pathsString = new StringBuilder();
+  public List<String> createClassPath(List<String> paths) {
     paths = expandWildcards(paths);
-    addedPaths = new HashSet<String>();
+    Set<String> addedPaths = new HashSet<String>();
+    List<String> classPath = new ArrayList<String>();
 
-    for (String path : paths)
-      addPathToClassPathString(separator, path);
-
-    return pathsString.toString();
-  }
-
-  private void addPathToClassPathString(String separator, String path) {
-    if (!addedPaths.contains(path)) {
-      addedPaths.add(path);
-      if (pathsString.length() > 0)
-        pathsString.append(separator);
-      pathsString.append(path);
+    for (String path : paths) {
+      if (!addedPaths.contains(path)) {
+        addedPaths.add(path);
+        classPath.add(path);
+      }
     }
+
+    return classPath;
   }
 
   private List<String> expandWildcards(List<String> paths) {
-    allPaths = new ArrayList<String>();
+    List<String> allPaths = new ArrayList<String>();
     for (String path : paths)
-      expandWildcards(path);
-
+      allPaths.addAll(expandWildcard(path));
     return allPaths;
   }
 
-  private void expandWildcards(String path) {
+  private List<String> expandWildcard(String path) {
+    List<String> allPaths = new ArrayList<String>();
     File file = new File(path);
     File dir = new File(file.getAbsolutePath()).getParentFile();
     if (isExpandableDoubleWildcard(path, dir))
-      recursivelyAddMatchingFiles(path, dir);
+      allPaths.addAll(recursivelyAddMatchingFiles(path, dir));
     else if (isExpandableSingleWildcard(path, dir))
-      addMatchingFiles(path, dir);
+      allPaths.addAll(getMatchingFiles(path, dir));
     else
       allPaths.add(path);
+    return allPaths;
   }
 
-  private void recursivelyAddMatchingFiles(String path, File dir) {
+  private List<String> recursivelyAddMatchingFiles(String path, File dir) {
     String singleWildcardPath = convertDoubleToSingleWildcard(path);
-    addMatchingSubfiles(singleWildcardPath, dir);
+    return getMatchingSubfiles(singleWildcardPath, dir);
   }
 
   private boolean isExpandableSingleWildcard(String path, File dir) {
@@ -134,20 +97,24 @@ public class ClassPathBuilder {
     return path.contains("**");
   }
 
-  private void addMatchingFiles(String path, File dir) {
+  private List<String> getMatchingFiles(String path, File dir) {
     String fileName = new File(path).getName();
     File[] files = dir.listFiles(new Wildcard(fileName));
+    List<String> allPaths = new ArrayList<String>();
     for (File file : files) {
       allPaths.add(file.getPath());
     }
+    return allPaths;
   }
 
-  private void addMatchingSubfiles(String path, File dir) {
-    addMatchingFiles(path, dir);
+  private List<String> getMatchingSubfiles(String path, File dir) {
+    List<String> allPaths = new ArrayList<String>();
+    allPaths.addAll(getMatchingFiles(path, dir));
     for (File file : dir.listFiles()) {
       if (file.isDirectory())
-        addMatchingSubfiles(path, file);
+        allPaths.addAll(getMatchingSubfiles(path, file));
     }
+    return allPaths;
   }
 
   protected List<String> getItemsFromPage(WikiPage page) {

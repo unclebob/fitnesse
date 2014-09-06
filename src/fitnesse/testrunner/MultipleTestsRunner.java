@@ -3,23 +3,24 @@
 package fitnesse.testrunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.ClassPathBuilder;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wiki.PageData;
 
 public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
@@ -29,7 +30,6 @@ public class MultipleTestsRunner implements Stoppable {
 
   private final TestSystemFactory testSystemFactory;
   private final CompositeExecutionLogListener executionLogListener;
-  private final VariableSource variableSource;
 
   private volatile boolean isStopped = false;
 
@@ -40,11 +40,9 @@ public class MultipleTestsRunner implements Stoppable {
   private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
-                             final TestSystemFactory testSystemFactory,
-                             final VariableSource variableSource) {
+                             final TestSystemFactory testSystemFactory) {
     this.pagesByTestSystem = pagesByTestSystem;
     this.testSystemFactory = testSystemFactory;
-    this.variableSource = variableSource;
     this.formatters = new CompositeFormatter();
     this.executionLogListener = new CompositeExecutionLogListener();
   }
@@ -81,7 +79,7 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -99,9 +97,9 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<WikiPage> testPages) throws IOException {
+  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) throws IOException {
     Descriptor descriptor = new Descriptor() {
-      private String classPath;
+      private ClassPath classPath;
 
       @Override
       public String getTestSystem() {
@@ -117,9 +115,13 @@ public class MultipleTestsRunner implements Stoppable {
       }
 
       @Override
-      public String getClassPath() {
+      public ClassPath getClassPath() {
         if (classPath == null) {
-          classPath = new ClassPathBuilder().buildClassPath(testPages);
+          ArrayList<ClassPath> paths = new ArrayList<ClassPath>();
+          for (TestPage testPage: testPages) {
+            paths.add(testPage.getClassPath());
+          }
+          classPath = new ClassPath(paths);
         }
         return classPath;
       }
@@ -158,10 +160,10 @@ public class MultipleTestsRunner implements Stoppable {
     return testSystem;
   }
 
-  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
-    for (WikiPage testPage : pagesInTestSystem) {
+  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+    for (TestPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
-      testSystem.runTests(new WikiTestPage(testPage, variableSource));
+      testSystem.runTests(testPage);
     }
   }
 

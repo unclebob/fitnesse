@@ -1,5 +1,6 @@
 package fitnesse.testrunner;
 
+import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLogListener;
@@ -14,14 +15,14 @@ public class WikiPageDescriptor implements Descriptor {
   private final WikiPage page;
   private final boolean inProcess;
   private final boolean remoteDebug;
-  private final String classPath;
+  private final ClassPath classPath;
 
   public WikiPageDescriptor(WikiPage data, boolean inProcess, boolean remoteDebug, String classPath) {
     this.page = data;
     this.inProcess = inProcess;
     // Debug property should move to ClientBuilder
     this.remoteDebug = remoteDebug;
-    this.classPath = classPath;
+    this.classPath = new ClassPath(classPath, ",");
   }
 
   @Override
@@ -38,7 +39,7 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
-  public String getClassPath() {
+  public ClassPath getClassPath() {
     return classPath;
   }
 

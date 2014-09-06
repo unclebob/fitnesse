@@ -68,7 +68,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected Descriptor getDescriptor() {
-    return new WikiPageDescriptor(page, true, false, new ClassPathBuilder().getClasspath(page));
+    return new WikiPageDescriptor(page, true, false, "");
   }
 
   public class SlimRenderer {
