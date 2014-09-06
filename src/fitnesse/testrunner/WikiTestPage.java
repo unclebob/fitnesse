@@ -6,7 +6,6 @@ import java.util.List;
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;

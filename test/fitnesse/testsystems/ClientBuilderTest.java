@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import fitnesse.testrunner.WikiPageDescriptor;
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
