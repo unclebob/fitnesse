@@ -3,6 +3,7 @@
 package fitnesse.testrunner;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +18,6 @@ import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Wildcard;
 
 public class ClassPathBuilder {
 
@@ -129,4 +129,32 @@ public class ClassPathBuilder {
   }
 
 
+  public static class Wildcard implements FilenameFilter {
+    private String pattern;
+    private String prefix;
+    private String suffix;
+    private int length;
+
+    public Wildcard(String pattern) {
+      int starIndex = pattern.indexOf("*");
+      if (starIndex > -1) {
+        prefix = pattern.substring(0, starIndex);
+        suffix = pattern.substring(starIndex + 1);
+        length = prefix.length() + suffix.length();
+      } else {
+        this.pattern = pattern;
+      }
+    }
+
+    public boolean accept(File dir, String name) {
+      if (pattern != null)
+        return pattern.equals(name);
+
+      boolean goodLength = name.length() >= length;
+      boolean goodPrefix = name.startsWith(prefix);
+      boolean goodSufix = name.endsWith(suffix);
+
+      return goodLength && goodPrefix && goodSufix;
+    }
+  }
 }

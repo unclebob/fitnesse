@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 import java.io.File;

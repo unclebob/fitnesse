@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 public class CommandRunner {
   private static final String DEFAULT_CHARSET_NAME = "UTF-8";
@@ -84,7 +84,7 @@ public class CommandRunner {
     executionLogListener.commandStarted(new ExecutionLogListener.ExecutionContext() {
       @Override
       public String getCommand() {
-        return StringUtil.join(Arrays.asList(command), " ");
+        return StringUtils.join(Arrays.asList(command), " ");
       }
 
       @Override

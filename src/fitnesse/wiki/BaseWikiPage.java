@@ -9,7 +9,7 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Maybe;
+import fitnesse.wikitext.parser.Maybe;
 
 public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private static final long serialVersionUID = 1L;

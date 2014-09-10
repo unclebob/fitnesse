@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
@@ -13,8 +14,6 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
 
@@ -30,7 +29,7 @@ public class TableTable extends SlimTable {
     SlimAssertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
     String doTableId = doTable.getId();
-    return list(make, makeAssertion(doTable, new TableTableExpectation()));
+    return Arrays.asList(make, makeAssertion(doTable, new TableTableExpectation()));
   }
 
   public class TableTableExpectation implements SlimExpectation {

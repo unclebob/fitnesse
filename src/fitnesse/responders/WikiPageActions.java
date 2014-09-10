@@ -1,10 +1,15 @@
-package fitnesse.wiki;
+package fitnesse.responders;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
 import fitnesse.responders.editing.TemplateUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 // Work in progress, WikiPage, versions, directory should each have specific actions instances.
 public class WikiPageActions {

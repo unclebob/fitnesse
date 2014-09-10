@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
-import util.Maybe;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};

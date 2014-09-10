@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -13,7 +14,6 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -187,7 +187,7 @@ public class PropertiesResponder implements SecureResponder {
       String link = symLinksProperty.get(name);
 
       String path = makePathForSymbolicLink(link);
-      symlinks.add(new Symlink(name, Utils.escapeHTML(link), path));
+      symlinks.add(new Symlink(name, HtmlUtil.escapeHTML(link), path));
     }
     html.put("symlinks", symlinks);
   }

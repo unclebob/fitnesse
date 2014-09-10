@@ -8,7 +8,7 @@ import fitnesse.testsystems.ExecutionResult;
 import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 

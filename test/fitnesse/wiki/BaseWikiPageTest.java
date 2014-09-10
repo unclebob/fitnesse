@@ -11,8 +11,8 @@ import java.io.File;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
+import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

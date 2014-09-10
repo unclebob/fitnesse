@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
-import util.Maybe;
 
 public class Collapsible extends SymbolType implements Rule, Translation {
 

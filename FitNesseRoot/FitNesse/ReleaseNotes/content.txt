@@ -1,3 +1,10 @@
+!2 Next release
+ * Removed classes:
+   * util.StringUtil, use org.apache.commons.lang.StringUtils instead.
+   * util.ListUtility, use java.util.Arrays instead.
+   * fitnesse.wikitext.Utils, use fitnesse.html.HtmlUtil instead.
+   * fitnesse.FitFilter.
+
 !2 20140901
  * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
  * Improved error message when included page does not exist (([[496][https://github.com/unclebob/fitnesse/pull/496]]).

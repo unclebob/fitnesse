@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fitnesse.html.HtmlTag;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import util.StringUtil;
 
 import static org.junit.Assert.assertEquals;
 
@@ -124,7 +124,7 @@ public class MapConverterTest {
     MapEditor editor = new MapEditor();
     editor.setValue(aMap());
 
-    assertEquals(StringUtil.join(Arrays.asList(
+    assertEquals(StringUtils.join(Arrays.asList(
             "<table class=\"hash_table\">",
             "\t<tr class=\"hash_row\">",
             "\t\t<td class=\"hash_key\">a</td>",

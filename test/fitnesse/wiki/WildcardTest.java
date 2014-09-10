@@ -1,17 +1,19 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package util;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+package fitnesse.wiki;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.testrunner.ClassPathBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.FileUtil;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WildcardTest {
   private File testDir;
@@ -31,7 +33,7 @@ public class WildcardTest {
 
   @Test
   public void testJar() throws Exception {
-    Wildcard wildcard = new Wildcard("*.jar");
+    ClassPathBuilder.Wildcard wildcard = new ClassPathBuilder.Wildcard("*.jar");
     File[] files = testDir.listFiles(wildcard);
     List<String> list = fileArrayToStringList(files);
     assertEquals(2, files.length);
@@ -41,7 +43,7 @@ public class WildcardTest {
 
   @Test
   public void testDll() throws Exception {
-    Wildcard wildcard = new Wildcard("*.dll");
+    ClassPathBuilder.Wildcard wildcard = new ClassPathBuilder.Wildcard("*.dll");
     File[] files = testDir.listFiles(wildcard);
     List<String> list = fileArrayToStringList(files);
     assertEquals(2, files.length);
@@ -51,7 +53,7 @@ public class WildcardTest {
 
   @Test
   public void testOne() throws Exception {
-    Wildcard wildcard = new Wildcard("one*");
+    ClassPathBuilder.Wildcard wildcard = new ClassPathBuilder.Wildcard("one*");
     File[] files = testDir.listFiles(wildcard);
     List<String> list = fileArrayToStringList(files);
     assertEquals(3, files.length);
@@ -62,7 +64,7 @@ public class WildcardTest {
 
   @Test
   public void testAll() throws Exception {
-    Wildcard wildcard = new Wildcard("*");
+    ClassPathBuilder.Wildcard wildcard = new ClassPathBuilder.Wildcard("*");
     File[] files = testDir.listFiles(wildcard);
     assertEquals(6, files.length);
   }

@@ -1,13 +1,14 @@
-package util;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+package fitnesse.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.After;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DateAlteringClockTest {
 

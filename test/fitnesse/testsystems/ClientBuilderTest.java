@@ -8,12 +8,12 @@ import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import util.StringUtil;
 
 import static fitnesse.testsystems.ClientBuilder.replace;
 import static org.junit.Assert.assertEquals;
@@ -280,7 +280,7 @@ public class ClientBuilderTest {
   }
 
   private String join(String[] args) {
-    return StringUtil.join(Arrays.asList(args), " ");
+    return StringUtils.join(Arrays.asList(args), " ");
   }
 
   public static class MockClientBuilder extends ClientBuilder<MockClient> {

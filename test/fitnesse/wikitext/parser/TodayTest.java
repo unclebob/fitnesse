@@ -3,8 +3,8 @@ package fitnesse.wikitext.parser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
-import util.DateAlteringClock;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
 
 import java.util.GregorianCalendar;
 

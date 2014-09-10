@@ -20,13 +20,13 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;

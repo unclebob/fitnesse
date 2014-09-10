@@ -18,10 +18,10 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -112,7 +112,7 @@ public class VersionResponder implements SecureResponder {
     public String render() {
       if (WikiTestPage.isTestPage(page)) {
         WikiTestPage testPage = new WikiTestPage(page, context.variableSource);
-        return WikiPageUtil.makePageHtml(testPage);
+        return WikiTestPageUtil.makePageHtml(testPage);
       } else {
         return WikiPageUtil.makePageHtml(page);
       }

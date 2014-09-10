@@ -1,12 +1,14 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package util;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+package fitnesse.util;
 
 import org.junit.After;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ClockTest {
 

@@ -3,7 +3,6 @@ package fitnesse.wiki.fs;
 import java.io.File;
 
 import fitnesse.wiki.SystemVariableSource;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 

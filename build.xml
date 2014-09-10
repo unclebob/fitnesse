@@ -34,11 +34,17 @@
 	</zipfileset>
 
 	<target name="run" depends="compile, compile-bootstrap-less, retrieve" description="Start FitNesse from the command line">
-		<java classpathref="classpath" classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
+        <ivy:cachepath pathid="standalone.classpath" conf="standalone"/>
+        <java classname="fitnesseMain.FitNesseMain" fork="true" failonerror="true">
 			<arg value="-o" />
 			<arg value="-v" />
 			<arg value="-p" />
 			<arg value="${port}" />
+            <classpath>
+                <path refid="standalone.classpath"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+ 
 		</java>
 	</target>
 
@@ -81,7 +87,7 @@
 
 	<target name="javadoc-jar" depends="compile">
 		<mkdir dir="${javadoc.dir}" />
-		<javadoc sourcepath="${src.dir}" destdir="${javadoc.dir}" classpathref="classpath" />
+		<javadoc sourcepath="${src.dir}" destdir="${javadoc.dir}" classpathref="compile.classpath" />
 		<jar jarfile="${dist.dir}/fitnesse-javadoc.jar" basedir="${javadoc.dir}" />
 
 	</target>
@@ -114,9 +120,20 @@
 		</java>
 	</target>
 
-    <target name="compile" depends="stamp-version, resolve" description="compile the source (make)">
+    <!--
+      Building
+      -->
+    <target name="compile" depends="compile-fit,compile-slim,compile-server" description="compile all FitNesse sources">
+    </target>
+
+    <target name="compile-server" depends="stamp-version, resolve" description="compile FitNesse sources">
         <mkdir dir="${classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
+	    <ivy:cachepath pathid="compile.classpath" conf="default"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false">
+            <classpath>
+                <path refid="compile.classpath"/>
+            </classpath>
+        </javac>
         <copy todir="${classes.dir}">
             <fileset dir="${src.dir}">
                 <include name="fitnesse/resources/**" />
@@ -125,9 +142,34 @@
         </copy>
     </target>
 
-    <target name="test-compile" depends="compile" description="compile the source (make)">
+    <target name="compile-fit" description="compile FIT sources only">
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false">
+            <include name="fit/**/*.java"/>
+            <include name="util/*.java"/>
+        </javac>
+    </target>
+
+    <target name="compile-slim" depends="resolve" description="compile SLIM sources only">
+        <mkdir dir="${classes.dir}" />
+	    <ivy:cachepath pathid="slim.classpath" conf="slim"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="slim.classpath" debug="true" source="1.6" target="1.6" includeantruntime="false">
+            <include name="fitnesse/html/*.java"/>
+            <include name="fitnesse/slim/**/*.java"/>
+            <include name="fitnesse/socketservice/*.java"/>
+            <include name="util/*.java"/>
+        </javac>
+    </target>
+
+    <target name="test-compile" depends="compile" description="compile the tests">
         <mkdir dir="${test.classes.dir}" />
-        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" classpathref="classpath" debug="true" source="1.6" target="1.6" includeantruntime="false" />
+	    <ivy:cachepath pathid="test.classpath" conf="test"/>
+        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" >
+            <classpath>
+                <path refid="test.classpath"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+        </javac>
     </target>
 
     <target name="post-compile" depends="stamp-version, retrieve" description="post-compile steps, use those in your IDE" />
@@ -194,7 +236,12 @@
 	<target name="unit_test" depends="test-compile" description="run the unit tests">
 		<mkdir dir="${results.dir}" />
 		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
-			<classpath refid="classpath" />
+			<classpath>
+                <path refid="compile.classpath" />
+                <path refid="test.classpath" />
+                <pathelement location="${classes.dir}" />
+                <pathelement location="${test.classes.dir}" />
+            </classpath>
 			<formatter type="xml" usefile="true" />
 			<formatter type="plain" usefile="false" />
 			<batchtest todir="${results.dir}">
@@ -203,10 +250,6 @@
 				</fileset>
 			</batchtest>
 		</junit>
-	</target>
-
-	<target name="load_fitnesse_taskdef">
-		<taskdef classpathref="classpath" resource="tasks.properties" />
 	</target>
 
 	<target name="release" depends="unit_tests, acceptance_tests" />
@@ -243,15 +286,9 @@
 
 	<target name="resolve" depends="ivy-init">
 		<ivy:resolve />
-		<ivy:cachepath pathid="lib.classpath" />
-		<path id="classpath">
-			<pathelement path="${classes.dir}" />
-			<pathelement path="${test.classes.dir}" />
-			<path refid="lib.classpath" />
-		</path>
 	</target>
 
-	<target name="install" depends="set-version-if-not-manualy-set,jar,sources-jar">
+	<target name="install" depends="set-version-if-not-manualy-set,jar,sources-jar" description="Install FitNesse in a local Ivy repository">
 		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}" status="integration" />
 		<ivy:publish resolver="local"
 			pubrevision="${version}"
@@ -268,7 +305,7 @@
 		</ivy:makepom>
 	</target>
 
-	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar" description="Publish a snapshot to oss.sonatype.org">
 		<ivy:settings id="ivy.publish.instance"
 			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-snapshots"
@@ -281,7 +318,7 @@
 	</target>
 
 
-	<target name="publish" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar">
+	<target name="publish" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar" description="Publish a release to oss.sonatype.org">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>

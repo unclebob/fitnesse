@@ -1,4 +1,4 @@
-package util;
+package fitnesse.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

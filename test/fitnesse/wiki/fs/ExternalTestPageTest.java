@@ -8,7 +8,6 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;

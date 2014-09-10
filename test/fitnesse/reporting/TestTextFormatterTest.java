@@ -11,8 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.Clock;
-import util.DateAlteringClock;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
 
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestSummary;

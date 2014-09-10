@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package util;
+package fitnesse.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import fitnesse.util.XmlWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;

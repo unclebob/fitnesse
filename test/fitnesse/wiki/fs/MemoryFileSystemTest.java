@@ -1,10 +1,11 @@
-package fitnesse.wiki.mem;
+package fitnesse.wiki.fs;
 
 import java.io.File;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 

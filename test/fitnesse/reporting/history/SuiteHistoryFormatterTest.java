@@ -6,7 +6,7 @@ import fitnesse.reporting.history.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,10 +20,10 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.IOException;
 import java.io.StringWriter;

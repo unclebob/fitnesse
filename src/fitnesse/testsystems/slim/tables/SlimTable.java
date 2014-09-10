@@ -25,7 +25,6 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
 
 public abstract class SlimTable {
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
@@ -156,7 +155,7 @@ public abstract class SlimTable {
   }
 
   protected List<Object> tableAsList() {
-    List<Object> tableArgument = list();
+    List<Object> tableArgument = new ArrayList<Object>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++)
       tableArgument.add(tableRowAsList(row));
@@ -164,7 +163,7 @@ public abstract class SlimTable {
   }
 
   private List<Object> tableRowAsList(int row) {
-    List<Object> rowList = list();
+    List<Object> rowList = new ArrayList<Object>();
     int cols = table.getColumnCountInRow(row);
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));

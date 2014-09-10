@@ -1,6 +1,6 @@
 package fitnesse.wiki.fs;
 
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 import java.io.BufferedInputStream;

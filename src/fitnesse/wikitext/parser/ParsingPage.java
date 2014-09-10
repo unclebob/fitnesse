@@ -2,8 +2,6 @@ package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
 
-import util.Maybe;
-
 /**
  * The page represents wiki page in the course of being parsed.
  */

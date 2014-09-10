@@ -6,12 +6,11 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
-import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,7 +24,7 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
       JSONArray jsonPages = new JSONArray(lines);
       return jsonPages.toString();
     }
-    return StringUtil.join(lines, System.getProperty("line.separator"));
+    return StringUtils.join(lines, System.getProperty("line.separator"));
   }
 
   private List<String> addLines(WikiPage requestedPage, String prefix) {

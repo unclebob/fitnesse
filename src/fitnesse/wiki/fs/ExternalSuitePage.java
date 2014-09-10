@@ -1,7 +1,6 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiWordPath;
 
@@ -16,7 +15,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import util.Clock;
+import fitnesse.util.Clock;
 
 public class ExternalSuitePage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;

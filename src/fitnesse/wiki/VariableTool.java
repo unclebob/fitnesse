@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.wikitext.parser.VariableSource;
-import util.Maybe;
+import fitnesse.wikitext.parser.Maybe;
 
 
 public class VariableTool {

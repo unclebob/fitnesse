@@ -14,9 +14,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;

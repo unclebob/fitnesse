@@ -11,7 +11,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 
 public class PrintTestListener implements TestSystemListener<WikiTestPage>, Closeable {
   private final static Logger LOG = Logger.getLogger(PrintTestListener.class.getName());
