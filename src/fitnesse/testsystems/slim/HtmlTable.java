@@ -30,10 +30,10 @@ public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
   // Source: http://dev.w3.org/html5/markup/common-models.html
-  private final static Pattern HTML_PATTERN = Pattern.compile("^<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
+  private final static Pattern HTML_PATTERN = Pattern.compile("^(?:\\$[a-zA-Z]\\w*->\\[)?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
           "blockquote|ins|del|object|map||video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
           "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
-          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)\\]?$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
@@ -374,7 +374,7 @@ public class HtmlTable implements Table {
 
   static boolean qualifiesAsHtml(String text) {
     // performance improvement: First check 1st character.
-    return text.startsWith("<") && HTML_PATTERN.matcher(text).matches();
+    return (text.startsWith("<") || text.startsWith("$")) && HTML_PATTERN.matcher(text).matches();
   }
 
 }
