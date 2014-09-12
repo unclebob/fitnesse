@@ -31,6 +31,8 @@ public class TodayExtensionTest {
         ParserTestHelper.assertTranslatesTo("!monthsFromToday (MMM)", "Mar");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday (dd MMM)", "04 Mar");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday (dd MMM", "!monthsFromToday (dd MMM");
+        ParserTestHelper.assertTranslatesTo("!monthsFromToday -t.", "04 Mar, 2003 15:06.");
+        ParserTestHelper.assertTranslatesTo("!monthsFromToday -xml.", "2003-03-04T15:06:07.");
     }
 
     @Test
@@ -49,7 +51,7 @@ public class TodayExtensionTest {
     @Test
     public void translatesInTable() {
         ParserTestHelper.assertTranslatesTo("|!monthsFromToday (ddMMM)|\n", ParserTestHelper.tableWithCell("04Mar"));
-        ParserTestHelper.assertTranslatesTo("|!monthsFromToday -t +2|\n", ParserTestHelper.tableWithCell("04 May, 2003 15:06"));
+        ParserTestHelper.assertTranslatesTo("|!monthsFromToday -t +2.|\n", ParserTestHelper.tableWithCell("04 May, 2003 15:06."));
     }
 
     private static class MonthsFromToday extends Today {
