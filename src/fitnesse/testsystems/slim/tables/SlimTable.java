@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.VariableStore;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -22,6 +23,7 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
+import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
@@ -331,12 +333,11 @@ public abstract class SlimTable {
   class SymbolReplacer {
     protected String replacedString;
     private Matcher symbolMatcher;
-    private final Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     private int startingPosition;
 
     SymbolReplacer(String s) {
       this.replacedString = s;
-      symbolMatcher = symbolPattern.matcher(s);
+      symbolMatcher = SYMBOL_PATTERN.matcher(s);
     }
 
     String replace() {
@@ -376,7 +377,7 @@ public abstract class SlimTable {
 
 
     private boolean symbolFound() {
-      symbolMatcher = symbolPattern.matcher(replacedString);
+      symbolMatcher = SYMBOL_PATTERN.matcher(replacedString);
       return symbolMatcher.find(startingPosition);
     }
 
