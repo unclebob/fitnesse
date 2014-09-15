@@ -29,11 +29,17 @@ import org.htmlparser.util.NodeList;
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
+  private static final String SYMBOL_ASSIGNMENT = "\\$[a-zA-Z]\\w*<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
+
   // Source: http://dev.w3.org/html5/markup/common-models.html
-  private final static Pattern HTML_PATTERN = Pattern.compile("^(?:\\$[a-zA-Z]\\w*->\\[)?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
-          "blockquote|ins|del|object|map||video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
+  private final static Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
+          "blockquote|ins|del|object|map|video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
           "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
-          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)\\]?$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)" + SYMBOL_ASSIGNMENT_SUFFIX + "?$",
+          Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^" + SYMBOL_ASSIGNMENT + ".*" +
+          SYMBOL_ASSIGNMENT_SUFFIX + "$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
@@ -361,7 +367,16 @@ public class HtmlTable implements Table {
   }
 
   private static String asHtml(String text) {
-    return qualifiesAsHtml(text) ? text : HtmlUtil.escapeHTML(text);
+    if (qualifiesAsHtml(text)) {
+      if (qualifiesAsSymbolReplacement(text)) {
+        int contentOffset = text.indexOf('[');
+        String assignment = text.substring(0, contentOffset);
+        String content = text.substring(contentOffset);
+        return HtmlUtil.escapeHTML(assignment) + content;
+      }
+      return text;
+    }
+    return HtmlUtil.escapeHTML(text);
   }
 
   @Override
@@ -370,6 +385,10 @@ public class HtmlTable implements Table {
     // Quick 'n' Dirty
     script = substitution.substitute(script);
     return new HtmlTableScanner(script).getTable(0);
+  }
+
+  static boolean qualifiesAsSymbolReplacement(String text) {
+    return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
   }
 
   static boolean qualifiesAsHtml(String text) {
