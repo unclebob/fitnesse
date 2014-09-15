@@ -22,7 +22,7 @@ public class SymbolProvider {
             Evaluator.symbolType, SymbolType.CloseEvaluator, Variable.symbolType, Preformat.symbolType,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket, SymbolType.CloseNesting,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
-            SymbolType.Bold,
+            SymbolType.Bold, SymbolType.DateFormatOption,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
 

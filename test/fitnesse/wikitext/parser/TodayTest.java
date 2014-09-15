@@ -28,6 +28,8 @@ public class TodayTest {
         ParserTestHelper.assertTranslatesTo("!today (MMM)", "Mar");
         ParserTestHelper.assertTranslatesTo("!today (dd MMM)", "04 Mar");
         ParserTestHelper.assertTranslatesTo("!today (dd MMM", "!today (dd MMM");
+        ParserTestHelper.assertTranslatesTo("!today -t.", "04 Mar, 2002 15:06.");
+        ParserTestHelper.assertTranslatesTo("!today -xml.", "2002-03-04T15:06:07.");
     }
 
     @Test
@@ -46,6 +48,6 @@ public class TodayTest {
     @Test
     public void translatesInTable() {
         ParserTestHelper.assertTranslatesTo("|!today (ddMMM)|\n", ParserTestHelper.tableWithCell("04Mar"));
-        ParserTestHelper.assertTranslatesTo("|!today -t|\n", ParserTestHelper.tableWithCell("04 Mar, 2002 15:06"));
+        ParserTestHelper.assertTranslatesTo("|!today -t.|\n", ParserTestHelper.tableWithCell("04 Mar, 2002 15:06."));
     }
 }

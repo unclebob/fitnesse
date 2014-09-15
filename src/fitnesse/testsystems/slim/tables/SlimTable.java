@@ -618,7 +618,7 @@ public abstract class SlimTable {
     }
 
     private SlimTestResult rangeMessage(boolean pass) {
-      String[] fragments = expected.replaceAll(" ", "").split("_");
+      String[] fragments = expected.trim().replaceAll("( )+", " ").split("_");
       String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
@@ -657,7 +657,7 @@ public abstract class SlimTable {
     }
 
     private SlimTestResult simpleComparisonMessage(boolean pass) {
-      String message = String.format("%s%s", actual, expected.replaceAll(" ", ""));
+      String message = String.format("%s%s", actual, expected.trim().replaceAll("( )+", " "));
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
 

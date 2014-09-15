@@ -50,3 +50,4 @@ http:// and https:// link
 | table
 } close brace
 }}} close preformat
+-xml and -t date format option
