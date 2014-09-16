@@ -29,7 +29,7 @@ import org.htmlparser.util.NodeList;
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
-  private static final String SYMBOL_ASSIGNMENT = "\\$\\w+<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[";
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
   // Source: http://dev.w3.org/html5/markup/common-models.html
