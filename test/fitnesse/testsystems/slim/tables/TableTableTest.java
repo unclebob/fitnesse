@@ -305,7 +305,7 @@ public class TableTableTest {
   public void tableWithSetSymbols() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-asList(
+            asList(
                     asList("tableTable_id_0", "OK"),
                     asList("tableTable_id_1", asList(
                         asList("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")
