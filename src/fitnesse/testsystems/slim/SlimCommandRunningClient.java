@@ -174,8 +174,8 @@ public class SlimCommandRunningClient implements SlimClient {
 
         @Override
         public void setVariable(String symbolName, Object value) {
-          List<Object> list = ListUtility.list((Object) instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value);
-          statementsAsList.add(list);
+          Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
+          statementsAsList.add(asList(list));
         }
       };
 
