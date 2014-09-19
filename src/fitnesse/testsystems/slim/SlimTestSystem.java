@@ -159,14 +159,20 @@ public abstract class SlimTestSystem implements TestSystem {
           testAssertionVerified(a, testResult);
 
           //Retrieve variables set during expectation step
-          Map<String, ?> variables = testResult.getVariablesToStore();
-          List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
-          int i = 0;
-          for (Entry<String, ?> variable : variables.entrySet()) {
-            instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
+          if (testResult != null) {
+            Map<String, ?> variables = testResult.getVariablesToStore();
+            if (variables != null) {
+              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              int i = 0;
+              for (Entry<String, ?> variable : variables.entrySet()) {
+                instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
+              }
+              //Store variables in context
+              if (i > 0) {
+                slimClient.invokeAndGetResponse(instructions);
+              }
+            }
           }
-          //Store variables in context
-          slimClient.invokeAndGetResponse(instructions);
         }
       } catch (Throwable ex) {
         exceptionOccurred(ex);
