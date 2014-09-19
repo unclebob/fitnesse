@@ -1,0 +1,10 @@
+|query:SplitFixture | Bob,100 |
+|1|2|
+|Bob|$Y|
+
+|script|test slim|
+|set string|$Y|
+|check|get string arg|100|
+
+|script|test slim|$Y|
+|check|return Constructor Arg|100|
