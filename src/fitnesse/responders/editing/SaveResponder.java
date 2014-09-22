@@ -10,8 +10,6 @@ import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
@@ -21,14 +19,16 @@ public class SaveResponder implements SecureResponder {
   private String savedContent;
   private String helpText;
   private String suites;
+  private WikiPage page;
   private PageData data;
   private long editTimeStamp;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
-    WikiPage page = getPage(resource, context);
+    page = getPage(resource, context);
     data = page.getData();
     user = request.getAuthorizationUsername();
 
@@ -47,8 +47,10 @@ public class SaveResponder implements SecureResponder {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Current-Version", commitRecord.getName());
-    context.recentChanges.updateRecentChanges(data);
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
+    context.recentChanges.updateRecentChanges(page);
 
     if (request.hasInput("redirect"))
       response.redirect("", request.getInput("redirect").toString());
@@ -59,7 +61,7 @@ public class SaveResponder implements SecureResponder {
   }
 
   private boolean editsNeedMerge() {
-    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
+    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, page);
   }
 
   private long getTicketId(Request request) {
@@ -73,8 +75,7 @@ public class SaveResponder implements SecureResponder {
     if (!request.hasInput(EditResponder.TIME_STAMP))
       return 0;
     String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
-    long editTimeStamp = Long.parseLong(editTimeStampString);
-    return editTimeStamp;
+    return Long.parseLong(editTimeStampString);
   }
 
   private WikiPage getPage(String resource, FitNesseContext context) {
@@ -88,21 +89,14 @@ public class SaveResponder implements SecureResponder {
 
   private void setData() {
     data.setContent(savedContent);
-    setAttribute(PageData.PropertyHELP, helpText);
-    setAttribute(PageData.PropertySUITES, suites);
-    SaveRecorder.pageSaved(data, ticketId);
+    data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
+    data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
+    SaveRecorder.pageSaved(page, ticketId);
     
-    setAttribute(PageData.LAST_MODIFYING_USER, user);
+    data.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
   }
 
-  private void setAttribute(String property, String content) {
-    if (content == null || "".equals(content)) {
-      data.removeAttribute(property);
-    } else {
-      data.setAttribute(property, content);
-    }
-  }
-
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }

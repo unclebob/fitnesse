@@ -36,6 +36,13 @@ public class ComponentFactory {
   public <T> T createComponent(Class<T> componentClass) throws ComponentInstantiationException {
     try {
       try {
+        Constructor<?> constructor = componentClass.getConstructor(ComponentFactory.class);
+        return (T) constructor.newInstance(this);
+      } catch (NoSuchMethodException e) {
+        // no problem, we can deal with some other constructors as well
+      }
+
+      try {
         Constructor<?> constructor = componentClass.getConstructor(Properties.class);
         return (T) constructor.newInstance(properties);
       } catch (NoSuchMethodException e) {
@@ -55,4 +62,7 @@ public class ComponentFactory {
     return createComponent(componentType, null);
   }
 
+  public String getProperty(String key) {
+    return properties.getProperty(key);
+  }
 }

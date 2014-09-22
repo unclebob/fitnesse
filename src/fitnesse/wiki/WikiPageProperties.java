@@ -9,20 +9,19 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());
@@ -64,18 +63,6 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
       document = XmlUtil.newDocument(xml);
     } catch (Exception e) {
       throw new RuntimeException("Unable to parse XML from string " + xml, e);
-    }
-    Element root = document.getDocumentElement();
-    loadFromRootElement(root);
-  }
-
-
-  public void loadFromXml(InputStream xml) {
-    Document document;
-    try {
-      document = XmlUtil.newDocument(xml);
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to parse XML from input stream " + xml, e);
     }
     Element root = document.getDocumentElement();
     loadFromRootElement(root);
@@ -148,7 +135,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         }
       }
     } else if (value != null)
-      element.appendChild(document.createTextNode(Utils.escapeHTML(value)));
+      element.appendChild(document.createTextNode(HtmlUtil.escapeHTML(value)));
 
     parent.appendChild(element);
   }

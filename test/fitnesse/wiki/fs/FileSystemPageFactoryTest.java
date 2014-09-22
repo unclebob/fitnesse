@@ -4,7 +4,6 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class FileSystemPageFactoryTest {
     public void SetUp() throws Exception {
         fileSystem = new MemoryFileSystem();
         fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController(), new SystemVariableSource());
-        rootPage = fileSystemPageFactory.makeRootPage(".", "somepath") ;
+        rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null) ;
     }
 
     @Test
@@ -61,7 +60,7 @@ public class FileSystemPageFactoryTest {
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile(new File("./somepath/ExternalSuite/myfile.html"), "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
-        WikiPage child = page.getNormalChildren().get(0);
+        WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
         assertEquals("MyfilE", child.getName());
     }
@@ -70,7 +69,7 @@ public class FileSystemPageFactoryTest {
     public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile(new File("./somepath/ExternalSuite/subsuite/myfile.html"), "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
-        WikiPage child = page.getNormalChildren().get(0);
+        WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
         assertEquals("SubsuitE", child.getName());
     }

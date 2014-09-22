@@ -7,16 +7,19 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.*;
 
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
 
 public class WikiTestPageTest {
   private WikiPage root;
   private WikiPage wikiPage;
+  private VariableSource variableSource = null;
 
   @Before
   public void setUp() throws Exception {
@@ -41,8 +44,8 @@ public class WikiTestPageTest {
   @Test
   public void testIncludeSetupTearDownOutsideOfSuite()
     throws Exception {
-    TestPage testPage = new WikiTestPage(wikiPage);
-    String html = testPage.getDecoratedData().getHtml();
+    TestPage testPage = new WikiTestPage(wikiPage, variableSource);
+    String html = testPage.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -57,8 +60,8 @@ public class WikiTestPageTest {
 
   @Test
   public void testIncludeSetupTearDownInsideOfSuite() throws Exception {
-    TestPage test = new TestPageWithSuiteSetUpAndTearDown(wikiPage);
-    String html = test.getDecoratedData().getHtml();
+    TestPage test = new TestPageWithSuiteSetUpAndTearDown(wikiPage, variableSource);
+    String html = test.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -76,9 +79,9 @@ public class WikiTestPageTest {
   @Test
   public void includeScenarioLibraryBrother() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
-    TestPage testPage = new WikiTestPage(slimTestPage);
+    TestPage testPage = new WikiTestPage(slimTestPage, variableSource);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString("scenario library", html);
   }
 
@@ -89,8 +92,8 @@ public class WikiTestPageTest {
     WikiPage nephew = addPage("TestPage.TestPageChild.TestPageGrandChild", "!define TEST_SYSTEM {slim}\n");
     addPage("TestPage.TestPageChild.ScenarioLibrary", "grand child library");
 
-    TestPage testPage = new WikiTestPage(nephew);
-    String html = testPage.getDecoratedData().getHtml();
+    TestPage testPage = new WikiTestPage(nephew, variableSource);
+    String html = testPage.getHtml();
     assertSubString("child library", html);
     assertSubString("grand child library", html);
     assertSubString("TestPage.ScenarioLibrary", html);
@@ -102,8 +105,8 @@ public class WikiTestPageTest {
   @Test
   public void shouldNotContainScenarioLibrarySectionIfThereAreNone() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
-    TestPage testPage = new WikiTestPage(slimTestPage);
-    String html = testPage.getDecoratedData().getHtml();
+    TestPage testPage = new WikiTestPage(slimTestPage, variableSource);
+    String html = testPage.getHtml();
     assertNotSubString("Scenario Libraries", html);
   }
 
@@ -112,27 +115,41 @@ public class WikiTestPageTest {
   public void shouldNotIncludeScenarioLibrariesIfNotSlimTest() throws Exception {
     addPage("ScenarioLibrary", "scenario library");
     WikiPage someTest = addPage("SomeTest", "some test");
-    TestPage testPage = new WikiTestPage(someTest);
-    String html = testPage.getDecoratedData().getHtml();
+    TestPage testPage = new WikiTestPage(someTest, variableSource);
+    String html = testPage.getHtml();
     assertNotSubString("scenario library", html);
   }
 
   @Test
   public void shouldIncludeScenarioLibrariesIfIncludeVariableSetAndNotSlimTest() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define INCLUDE_SCENARIO_LIBRARIES {true}\n");
-    TestPage testPage = new WikiTestPage(slimTestPage);
+    TestPage testPage = new WikiTestPage(slimTestPage, variableSource);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertSubString("scenario library", html);
   }
 
   @Test
   public void shouldNotIncludeScenarioLibrariesIfSlimTestAndIncludeVariableSetToFalse() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n!define INCLUDE_SCENARIO_LIBRARIES {false}\n");
-    TestPage testPage = new WikiTestPage(slimTestPage);
+    TestPage testPage = new WikiTestPage(slimTestPage, variableSource);
     addPage("ScenarioLibrary", "scenario library");
-    String html = testPage.getDecoratedData().getHtml();
+    String html = testPage.getHtml();
     assertNotSubString("scenario library", html);
+  }
+
+
+  @Test
+  public void testPathSeparatorVariable() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+            "!define PATH_SEPARATOR {|}\n" +
+                    "!path fitnesse.jar\n" +
+                    "!path my.jar");
+    PageData data = page.getData();
+    page.commit(data);
+
+    String expected = "fitnesse.jar" + "|" + "my.jar";
+    assertEquals(expected, new WikiTestPage(page, variableSource).getClassPath().toString());
   }
 
 }

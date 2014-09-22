@@ -77,6 +77,12 @@ public class DecisionTable extends SlimTable {
         String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
+      for (String var : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
+          String disgracedVar = Disgracer.disgraceMethodName(var);
+          int col = funcStore.getColumnNumber(var);
+          String valueToSet = table.getCellContents(col, row);
+          scenarioArguments.put(disgracedVar, valueToSet);
+        }
       return scenarioArguments;
     }
   }

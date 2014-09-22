@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,8 +40,8 @@ public class SuiteContentsFinderTest {
   @Test
   public void testGatherXRefTestPages() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
-    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"));
+    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"), "");
     SuiteContentsFinder finder = new SuiteContentsFinder(testPage, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -52,8 +52,8 @@ public class SuiteContentsFinderTest {
   @Test
   public void shouldTestXRefsInSubSuites() throws Exception {
     WikiPageUtil.addPage(suite, PathParser.parse("SubSuite"), "!see .PageA\n!see .PageB");
-    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"));
+    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    WikiPage pageB = WikiPageUtil.addPage(root, PathParser.parse("PageB"), "");
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
@@ -75,7 +75,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
 
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(true, testPages.contains(testPage));
@@ -88,7 +88,7 @@ public class SuiteContentsFinderTest {
     setUpForGetAllTestPages();
     
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.makePageList();
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
     assertEquals(3, testPages.size());
     assertEquals(testPage, testPages.get(0));
@@ -109,6 +109,30 @@ public class SuiteContentsFinderTest {
     assertEquals(2, testPages.size());
     assertEquals(testPage, testPages.get(0));
     assertEquals(testPage2, testPages.get(1));
+  }
 
+  @Test
+  public void shouldRejectNestedPrunedPages() {
+    PageData data = testPage.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    testPage.commit(data);
+
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+
+    assertEquals(0, testPages.size());
+
+  }
+
+  @Test
+  public void shouldAddPrunedPageToTest() {
+    PageData data = suite.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    suite.commit(data);
+
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+
+    assertEquals(1, testPages.size());
   }
 }

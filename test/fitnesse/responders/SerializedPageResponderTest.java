@@ -23,7 +23,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,9 +96,9 @@ public class SerializedPageResponderTest {
 
   @Test
   public void testGetPageHieratchyAsXml() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     request.setResource("root");
     request.addInput("type", "pages");
@@ -114,9 +114,9 @@ public class SerializedPageResponderTest {
 
   @Test
   public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
-    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"));
+    WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     PageData data = pageOne.getData();
     WikiPageProperties properties = data.getProperties();

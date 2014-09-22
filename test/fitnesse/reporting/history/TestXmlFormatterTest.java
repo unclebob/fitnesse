@@ -14,9 +14,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
@@ -50,7 +50,7 @@ public class TestXmlFormatterTest {
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null), null);
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();
@@ -87,7 +87,7 @@ public class TestXmlFormatterTest {
   @Test
   public void allTestingCompleteShouldSetTotalRunTime() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiPage page = new WikiPageDummy("name", "content");
+    WikiPage page = new WikiPageDummy("name", "content", null);
     WriterFactory writerFactory = mock(WriterFactory.class);
     TestXmlFormatter formatter = new TestXmlFormatter(context , page, writerFactory) {
       @Override

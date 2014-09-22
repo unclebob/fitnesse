@@ -4,7 +4,6 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -13,23 +12,24 @@ import fitnesse.testsystems.Expectation;
 import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class TestXmlFormatter extends BaseFormatter {
-  private WriterFactory writerFactory;
+public class TestXmlFormatter extends BaseFormatter implements Closeable {
+  private final FitNesseContext context;
+  private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
@@ -37,7 +37,8 @@ public class TestXmlFormatter extends BaseFormatter {
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-    super(context, page);
+    super(page);
+    this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
@@ -45,7 +46,7 @@ public class TestXmlFormatter extends BaseFormatter {
   }
 
   public long startedAt() {
-    return currentTestStartTime.startedAt();
+    return totalTimeMeasurement.startedAt();
   }
 
   public long runTime() {
@@ -137,7 +138,7 @@ public class TestXmlFormatter extends BaseFormatter {
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getSourcePage().readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
     instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
@@ -149,7 +150,6 @@ public class TestXmlFormatter extends BaseFormatter {
 
   @Override
   public void close() throws IOException {
-    super.close();
     setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }
@@ -168,7 +168,7 @@ public class TestXmlFormatter extends BaseFormatter {
 
   @Override
   public int getErrorCount() {
-    return getPageCounts().wrong + getPageCounts().exceptions;
+    return getPageCounts().getWrong() + getPageCounts().getExceptions();
   }
 
   protected void writeResults(Writer writer) throws IOException {

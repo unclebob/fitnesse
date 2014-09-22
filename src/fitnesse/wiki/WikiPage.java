@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.List;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
+
+  public static final String ErrorLogName = "ErrorLogs";
+
   WikiPage getParent();
 
   boolean isRoot();
@@ -20,25 +23,36 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   void removeChildPage(String name);
 
+  /**
+   * Get child pages for this wiki page
+   * @return children, an empty list if there are none.
+   */
   List<WikiPage> getChildren();
 
   String getName();
 
   PageData getData();
 
-  ReadOnlyPageData readOnlyData();
-
+  /**
+   * Get a list/set of version info
+   * @return a collection, never null.
+   */
   Collection<VersionInfo> getVersions();
 
-  PageData getDataVersion(String versionName);
+  WikiPage getVersion(String versionName);
 
+  String getHtml();
+
+  /**
+   * Commit new content
+   * @param data
+   * @return version information about this new data version, may be null.
+   */
   VersionInfo commit(PageData data);
 
   PageCrawler getPageCrawler();
 
-  WikiPage getHeaderPage();
-
-  WikiPage getFooterPage();
+  String getVariable(String name);
 }
 
 

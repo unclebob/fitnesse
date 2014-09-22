@@ -32,8 +32,8 @@ public class DeletePageResponderTest extends ResponderTestCase {
 
   @Test
   public void testDeleteConfirmation() throws Exception {
-    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
-    WikiPageUtil.addPage(level1, this.level2Path);
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path, "");
+    WikiPageUtil.addPage(level1, this.level2Path, "");
     MockRequest request = new MockRequest();
     request.setResource(this.qualifiedLevel2Name);
     request.addInput("deletePage", "");
@@ -45,8 +45,8 @@ public class DeletePageResponderTest extends ResponderTestCase {
 
   @Test
   public void testDeletePage() throws Exception {
-    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path);
-    WikiPageUtil.addPage(level1, this.level2Path);
+    WikiPage level1 = WikiPageUtil.addPage(this.root, this.level1Path, "");
+    WikiPageUtil.addPage(level1, this.level2Path, "");
     assertTrue(this.root.getPageCrawler().pageExists(this.level1Path));
     MockRequest request = new MockRequest();
     request.setResource(this.level1Name);

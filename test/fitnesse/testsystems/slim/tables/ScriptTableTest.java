@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -22,22 +23,21 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
+import fitnesse.wiki.fs.InMemoryPage;
+import org.apache.commons.collections.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
-import util.ListUtility;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static util.ListUtility.list;
 
 public class ScriptTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   public ScriptTable st;
 
-  private class LocalizedScriptTable extends ScriptTable {
+  static class LocalizedScriptTable extends ScriptTable {
 
     public LocalizedScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
@@ -86,20 +86,19 @@ public class ScriptTableTest {
 
   private ScriptTable makeScriptTable(String tableText, boolean localized) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     if (localized) return new LocalizedScriptTable(t, "id", testContext);
     else return new ScriptTable(t, "id", testContext);
   }
 
-  private void assertScriptResults(String scriptStatements, List<List<?>> scriptResults, String table, boolean localized) throws Exception {
+  private void assertScriptResults(String scriptStatements, List<List<String>> scriptResults, String table, boolean localized) throws Exception {
     buildInstructionsFor(scriptStatements, localized);
-    List<List<?>> resultList = ListUtility.<List<?>>list(list(localized ?  "localizedScriptTable_id_0": "scriptTable_id_0", "OK"));
-    resultList.addAll(scriptResults);
+    List<List<?>> resultList = ListUtils.union(asList(asList(localized ? "localizedScriptTable_id_0" : "scriptTable_id_0", "OK")), scriptResults);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
+    assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
   }
 
   private void buildInstructionsFor(String scriptStatements, boolean localized) throws Exception {
@@ -121,7 +120,7 @@ public class ScriptTableTest {
   public void startStatement() throws Exception {
     buildInstructionsFor("|start|Bob|\n", false);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -131,7 +130,7 @@ public class ScriptTableTest {
   public void localizedStartStatement() throws Exception {
     buildInstructionsFor("|localized start|Bob|\n", true);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -141,7 +140,7 @@ public class ScriptTableTest {
   public void scriptWithActor() throws Exception {
     buildInstructionsForWholeTable("|script|Bob|\n", false);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -151,7 +150,7 @@ public class ScriptTableTest {
   public void localizedScriptWithActor() throws Exception {
     buildInstructionsForWholeTable("|localized script|Bob|\n", true);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -161,7 +160,7 @@ public class ScriptTableTest {
   public void startStatementWithArguments() throws Exception {
     buildInstructionsFor("|start|Bob martin|x|y|\n", false);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -171,7 +170,7 @@ public class ScriptTableTest {
   public void localizedStartStatementWithArguments() throws Exception {
     buildInstructionsFor("|localized start|Bob martin|x|y|\n", true);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -181,9 +180,16 @@ public class ScriptTableTest {
   public void scriptStatementWithArguments() throws Exception {
     buildInstructionsForWholeTable("|script|Bob martin|x|y|\n", false);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
+  public void scriptStatementInOneColumnWithArguments() throws Exception {
+    buildInstructionsForWholeTable("|script:Bob martin|x|y|\n", false);
+    List<MakeInstruction> expectedInstructions = asList(new MakeInstruction("scriptTable_id_0", "scriptTableActor", "BobMartin", new Object[]{"x", "y"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -191,7 +197,7 @@ public class ScriptTableTest {
   public void localizedScriptStatementWithArguments() throws Exception {
     buildInstructionsForWholeTable("|localized script|Bob martin|x|y|\n", true);
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -201,7 +207,7 @@ public class ScriptTableTest {
   public void simpleFunctionCall() throws Exception {
     buildInstructionsFor("|function|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function")
       );
     assertEquals(expectedInstructions, instructions());
@@ -211,7 +217,7 @@ public class ScriptTableTest {
   public void functionCallWithOneArgument() throws Exception {
     buildInstructionsFor("|function|arg|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -221,7 +227,7 @@ public class ScriptTableTest {
   public void functionCallWithOneArgumentAndTrailingName() throws Exception {
     buildInstructionsFor("|function|arg|trail|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -231,7 +237,7 @@ public class ScriptTableTest {
   public void complexFunctionCallWithManyArguments() throws Exception {
     buildInstructionsFor("|eat|3|meals with|12|grams protein|3|grams fat |\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "eatMealsWithGramsProteinGramsFat", new Object[]{"3", "12", "3"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -241,7 +247,7 @@ public class ScriptTableTest {
   public void functionCallWithSequentialArgumentProcessingAndOneArgument() throws Exception {
     buildInstructionsFor("|function;|arg0|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -251,7 +257,7 @@ public class ScriptTableTest {
   public void functionCallWithSequentialArgumentProcessingAndMultipleArguments() throws Exception {
     buildInstructionsFor("|function;|arg0|arg1|arg2|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg0", "arg1", "arg2"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -261,7 +267,7 @@ public class ScriptTableTest {
   public void functionCallWithSequentialArgumentProcessingEmbedded() throws Exception {
     buildInstructionsFor("|set name|Marisa|department and title;|QA|Tester|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentAndTitle", new Object[]{"Marisa", "QA", "Tester"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -271,7 +277,7 @@ public class ScriptTableTest {
   public void functionCallWithSequentialArgumentProcessingEmbedded2() throws Exception {
     buildInstructionsFor("|set name|Marisa|department|QA|title and length of employment;|Tester|2 years|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", new Object[]{"Marisa", "QA", "Tester", "2 years"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -281,7 +287,7 @@ public class ScriptTableTest {
   public void checkWithFunction() throws Exception {
     buildInstructionsFor("|check|function|arg|result|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -291,7 +297,7 @@ public class ScriptTableTest {
   public void localizedCheckWithFunction() throws Exception {
     buildInstructionsFor("|localized check|function|arg|result|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -301,7 +307,7 @@ public class ScriptTableTest {
   public void checkNotWithFunction() throws Exception {
     buildInstructionsFor("|check not|function|arg|result|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -311,7 +317,7 @@ public class ScriptTableTest {
   public void localizedCheckNotWithFunction() throws Exception {
     buildInstructionsFor("|localized check not|function|arg|result|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -321,7 +327,7 @@ public class ScriptTableTest {
   public void checkWithFunctionAndTrailingName() throws Exception {
     buildInstructionsFor("|check|function|arg|trail|result|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -331,7 +337,7 @@ public class ScriptTableTest {
   public void localizedCheckWithFunctionAndTrailingName() throws Exception {
     buildInstructionsFor("|localized check|function|arg|trail|result|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -341,7 +347,7 @@ public class ScriptTableTest {
   public void rejectWithFunctionCall() throws Exception {
     buildInstructionsFor("|reject|function|arg|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -351,7 +357,7 @@ public class ScriptTableTest {
   public void localizedRejectWithFunctionCall() throws Exception {
     buildInstructionsFor("|localized reject|function|arg|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -361,7 +367,7 @@ public class ScriptTableTest {
   public void ensureWithFunctionCall() throws Exception {
     buildInstructionsFor("|ensure|function|arg|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -371,7 +377,7 @@ public class ScriptTableTest {
   public void localizedEnsureWithFunctionCall() throws Exception {
     buildInstructionsFor("|localized ensure|function|arg|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -381,7 +387,7 @@ public class ScriptTableTest {
   public void showWithFunctionCall() throws Exception {
     buildInstructionsFor("|show|function|arg|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -391,7 +397,7 @@ public class ScriptTableTest {
   public void localizedShowWithFunctionCall() throws Exception {
     buildInstructionsFor("|localized show|function|arg|\n", true);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("localizedScriptTable_id_0", "localizedScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -401,7 +407,7 @@ public class ScriptTableTest {
   public void setSymbol() throws Exception {
     buildInstructionsFor("|$V=|function|arg|\n", false);
     List<CallAndAssignInstruction> expectedInstructions =
-      list(
+      asList(
               new CallAndAssignInstruction("scriptTable_id_0", "V", "scriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -411,7 +417,7 @@ public class ScriptTableTest {
   public void useSymbol() throws Exception {
     buildInstructionsFor("|function|$V|\n", false);
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"$V"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -455,8 +461,8 @@ public class ScriptTableTest {
   @Test
   public void voidActionHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", VoidConverter.VOID_TAG)
+            asList(
+                    asList("scriptTable_id_0", VoidConverter.VOID_TAG)
             ),
             "[[Script], [func]]", false
     );
@@ -465,8 +471,8 @@ public class ScriptTableTest {
   @Test
   public void actionReturningNullHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "null")
+            asList(
+                    asList("scriptTable_id_0", "null")
             ),
       "[[Script], [func]]", false
     );
@@ -475,8 +481,8 @@ public class ScriptTableTest {
   @Test
   public void trueActionPasses() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [pass(func)]]", false
     );
@@ -485,8 +491,8 @@ public class ScriptTableTest {
   @Test
   public void falseActionFails() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [fail(func)]]", false
     );
@@ -495,8 +501,8 @@ public class ScriptTableTest {
   @Test
   public void checkPasses() throws Exception {
     assertScriptResults("|check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "3")
+            asList(
+                    asList("scriptTable_id_0", "3")
             ),
       "[[Script], [check, func, pass(3)]]", false
     );
@@ -505,8 +511,8 @@ public class ScriptTableTest {
   @Test
   public void localizedCheckPasses() throws Exception {
     assertScriptResults("|localized check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", "3")
+            asList(
+                    asList("localizedScriptTable_id_0", "3")
             ),
       "[[Script], [localized check, func, pass(3)]]", true
     );
@@ -515,8 +521,8 @@ public class ScriptTableTest {
   @Test
   public void checkNotFails() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "3")
+            asList(
+                    asList("scriptTable_id_0", "3")
             ),
       "[[Script], [check not, func, fail(3)]]", false
     );
@@ -525,8 +531,8 @@ public class ScriptTableTest {
   @Test
   public void localizedCheckNotFails() throws Exception {
     assertScriptResults("|localized check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", "3")
+            asList(
+                    asList("localizedScriptTable_id_0", "3")
             ),
       "[[Script], [localized check not, func, fail(3)]]", true
     );
@@ -535,8 +541,8 @@ public class ScriptTableTest {
   @Test
   public void checkFails() throws Exception {
     assertScriptResults("|check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "4")
+            asList(
+                    asList("scriptTable_id_0", "4")
             ),
       "[[Script], [check, func, fail(a=4;e=3)]]", false
     );
@@ -545,8 +551,8 @@ public class ScriptTableTest {
   @Test
   public void localizedCheckFails() throws Exception {
     assertScriptResults("|localized check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", "4")
+            asList(
+                    asList("localizedScriptTable_id_0", "4")
             ),
       "[[Script], [localized check, func, fail(a=4;e=3)]]", true
     );
@@ -555,8 +561,8 @@ public class ScriptTableTest {
   @Test
   public void checkNotPasses() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "4")
+            asList(
+                    asList("scriptTable_id_0", "4")
             ),
       "[[Script], [check not, func, pass(a=4;e=3)]]", false
     );
@@ -565,8 +571,8 @@ public class ScriptTableTest {
   @Test
   public void localizedCheckNotPasses() throws Exception {
     assertScriptResults("|localized check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", "4")
+            asList(
+                    asList("localizedScriptTable_id_0", "4")
             ),
       "[[Script], [localized check not, func, pass(a=4;e=3)]]", true
     );
@@ -575,8 +581,8 @@ public class ScriptTableTest {
   @Test
   public void ensurePasses() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [pass(ensure), func, 3]]", false
     );
@@ -585,8 +591,8 @@ public class ScriptTableTest {
   @Test
   public void localizedEnsurePasses() throws Exception {
     assertScriptResults("|localized ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("localizedScriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [pass(localized ensure), func, 3]]", true
     );
@@ -595,8 +601,8 @@ public class ScriptTableTest {
   @Test
   public void ensureFails() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [fail(ensure), func, 3]]", false
     );
@@ -605,8 +611,8 @@ public class ScriptTableTest {
   @Test
   public void localizedEnsureFails() throws Exception {
     assertScriptResults("|localized ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("localizedScriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [fail(localized ensure), func, 3]]", true
     );
@@ -615,8 +621,8 @@ public class ScriptTableTest {
   @Test
   public void rejectPasses() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [pass(reject), func, 3]]", false
     );
@@ -625,8 +631,8 @@ public class ScriptTableTest {
   @Test
   public void localizedRejectPasses() throws Exception {
     assertScriptResults("|localized reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("localizedScriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [pass(localized reject), func, 3]]", true
     );
@@ -635,8 +641,8 @@ public class ScriptTableTest {
   @Test
   public void rejectFails() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("scriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [fail(reject), func, 3]]", false
     );
@@ -645,8 +651,8 @@ public class ScriptTableTest {
   @Test
   public void localizedRejectFails() throws Exception {
     assertScriptResults("|localized reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("localizedScriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [fail(localized reject), func, 3]]", true
     );
@@ -655,8 +661,8 @@ public class ScriptTableTest {
   @Test
   public void show() throws Exception {
     assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "kawabunga")
+            asList(
+                    asList("scriptTable_id_0", "kawabunga")
             ),
       "[[Script], [show, func, 3, kawabunga]]", false
     );
@@ -665,8 +671,8 @@ public class ScriptTableTest {
   @Test
   public void showDoesEscapes() throws Exception {
     assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "1 < 0")
+            asList(
+                    asList("scriptTable_id_0", "1 < 0")
             ),
             "[[Script], [show, func, 3, 1 < 0]]", false
     );
@@ -678,8 +684,8 @@ public class ScriptTableTest {
   @Test
   public void showDoesNotEscapeValidHtml() throws Exception {
     assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
+            asList(
+                    asList("scriptTable_id_0", "<a href=\"http://myhost/turtle.html\">kawabunga</a>")
             ),
             "[[Script], [show, func, 3, <a href=\"http://myhost/turtle.html\">kawabunga</a>]]", false
     );
@@ -731,8 +737,8 @@ String newLine = System.getProperty("line.separator");
   @Test
   public void localizedShow() throws Exception {
     assertScriptResults("|localized show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("localizedScriptTable_id_0", "kawabunga")
+            asList(
+                    asList("localizedScriptTable_id_0", "kawabunga")
             ),
       "[[Script], [localized show, func, 3, kawabunga]]", true
     );
@@ -743,22 +749,35 @@ String newLine = System.getProperty("line.separator");
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V|$V|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "3"),
-                    list("scriptTable_id_1", "3")
+            asList(
+                    asList("scriptTable_id_0", "3"),
+                    asList("scriptTable_id_1", "3")
             ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]", false
     );
   }
-
+  
+  @Test
+  public void symbolReplacementAAAAAAAA() throws Exception {
+    assertScriptResults(
+      "|$V=|function|\n" +
+       "|start|Class|$V|\n",
+            asList(
+                    asList("scriptTable_id_0", "3"),
+                    asList("scriptTable_id_1", "OK")
+            ),
+      "[[Script], [$V<-[3], function], [start, pass(Class), $V->[3]]]", false
+    );
+  }
+  
   @Test
   public void sameSymbolTwiceReplacement() throws Exception {
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V $V|$V|\n",
-            ListUtility.<List<?>>list(
-                    list("scriptTable_id_0", "3"),
-                    list("scriptTable_id_1", "3")
+            asList(
+                    asList("scriptTable_id_0", "3"),
+                    asList("scriptTable_id_1", "3")
             ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3] $V->[3], pass($V->[3])]]", false
     );

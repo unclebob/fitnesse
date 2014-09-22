@@ -15,7 +15,7 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 
 /**
@@ -46,7 +46,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
     try {
       Constructor<T> constructor = getParameterizedClass().getConstructor(Table.class, String.class, SlimTestContext.class);
       WikiPageUtil.setPageContents(root, tableText);
-      String html = root.getData().getHtml();
+      String html = root.getHtml();
       TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
       Table t = ts.getTable(0);
       SlimTestContextImpl testContext = new SlimTestContextImpl();

@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 
 import fitnesse.testsystems.TestSummary;
 
-import util.XmlUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,6 @@ public class TestExecutionReport extends ExecutionReport {
     result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
     addResult(result);
 
-    unpackTables(xmlResult, result);
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
     if (xmlInstructions != null) {
       unpackInstructions(result, xmlInstructions);
@@ -96,36 +95,6 @@ public class TestExecutionReport extends ExecutionReport {
       expectation.actual = XmlUtil.getTextValue(expectationElement, "actual");
       expectation.expected = XmlUtil.getTextValue(expectationElement, "expected");
       expectation.evaluationMessage = XmlUtil.getTextValue(expectationElement, "evaluationMessage");
-    }
-  }
-
-  private void unpackTables(Element xmlResult, TestResult result) {
-    NodeList tables = xmlResult.getElementsByTagName("tables");
-    for (int tableIndex = 0; tableIndex < tables.getLength(); tableIndex++) {
-      Element xmlTable = (Element) tables.item(tableIndex);
-      String tableName = XmlUtil.getTextValue(xmlTable, "name");
-      Table table = new Table(tableName);
-      result.tables.add(table);
-      unpackTable(xmlTable, table);
-    }
-  }
-
-  private void unpackTable(Element xmlTable, Table table) {
-    NodeList xmlRows = xmlTable.getElementsByTagName("row");
-    for (int rowIndex = 0; rowIndex < xmlRows.getLength(); rowIndex++) {
-      Element xmlRow = (Element) xmlRows.item(rowIndex);
-      unpackRow(table, xmlRow);
-    }
-  }
-
-  private void unpackRow(Table table, Element xmlRow) {
-    Row row = new Row();
-    table.add(row);
-    NodeList xmlCols = xmlRow.getElementsByTagName("col");
-    for (int colIndex = 0; colIndex < xmlCols.getLength(); colIndex++) {
-      Element xmlCol = (Element) xmlCols.item(colIndex);
-      String colText = XmlUtil.getElementText(xmlCol);
-      row.add(colText);
     }
   }
 
@@ -165,7 +134,6 @@ public class TestExecutionReport extends ExecutionReport {
     public String relativePageName;
     public List<InstructionResult> instructions = new ArrayList<InstructionResult>();
     public String tags;
-    public List<Table> tables = new ArrayList<Table>();
     public long startTime;
     public String runTimeInMillis;
 
@@ -207,10 +175,6 @@ public class TestExecutionReport extends ExecutionReport {
 
     public void setTags(String tags) {
       this.tags = tags;
-    }
-
-    public List<Table> getTables() {
-      return tables;
     }
 
     public TestSummary getTestSummary() {

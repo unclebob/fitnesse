@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import util.Clock;
+import fitnesse.util.Clock;
 
 import fitnesse.FitNesseContext;
 
@@ -23,9 +23,9 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   @Override
-  public void updateRecentChanges(PageData pageData) {
-    createRecentChangesIfNecessary(pageData);
-    addCurrentPageToRecentChanges(pageData);
+  public void updateRecentChanges(WikiPage page) {
+    createRecentChangesIfNecessary(page);
+    addCurrentPageToRecentChanges(page);
   }
 
   @Override
@@ -48,13 +48,13 @@ public class RecentChangesWikiPage implements RecentChanges {
     return lines;
   }
 
-  private void addCurrentPageToRecentChanges(PageData data) {
-    WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot().getChildPage(RECENT_CHANGES);
-    String resource = resource(data);
+  private void addCurrentPageToRecentChanges(WikiPage page) {
+    WikiPage recentChanges = page.getPageCrawler().getRoot().getChildPage(RECENT_CHANGES);
+    String resource = resource(page);
     PageData recentChangesData = recentChanges.getData();
     List<String> lines = getRecentChangesLines(recentChangesData);
     removeDuplicate(lines, resource);
-    lines.add(0, makeRecentChangesLine(data));
+    lines.add(0, makeRecentChangesLine(page));
     trimExtraLines(lines);
     String content = convertLinesToWikiText(lines);
     recentChangesData.setContent(content);
@@ -62,24 +62,24 @@ public class RecentChangesWikiPage implements RecentChanges {
 
   }
 
-  private String resource(PageData data) {
-    WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath();
+  private String resource(WikiPage page) {
+    WikiPagePath fullPath = page.getPageCrawler().getFullPath();
     String resource = PathParser.render(fullPath);
     return resource;
   }
 
-  private void createRecentChangesIfNecessary(PageData data) {
-    PageCrawler crawler = data.getWikiPage().getPageCrawler();
+  private void createRecentChangesIfNecessary(WikiPage page) {
+    PageCrawler crawler = page.getPageCrawler();
     WikiPage root = crawler.getRoot();
     if (!root.hasChildPage(RECENT_CHANGES))
       WikiPageUtil.addPage(root, PathParser.parse(RECENT_CHANGES), "");
   }
 
-  private String makeRecentChangesLine(PageData data) {
-    String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
+  private String makeRecentChangesLine(WikiPage page) {
+    String user = page.getData().getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null)
       user = "";
-    return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(Clock.currentDate()) + "|";
+    return "|" + resource(page) + "|" + user + "|" + makeDateFormat().format(Clock.currentDate()) + "|";
   }
 
   private void removeDuplicate(List<String> lines, String resource) {

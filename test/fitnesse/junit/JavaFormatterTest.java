@@ -1,15 +1,14 @@
 package fitnesse.junit;
 
-import java.io.Closeable;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -19,6 +18,7 @@ public class JavaFormatterTest {
   private final String suiteName="MySuite";
   JavaFormatter jf;
   JavaFormatter.ResultsRepository mockResultsRepository;
+  private VariableSource variableSource = null;
 
   @Before
   public void prepare(){
@@ -30,15 +30,14 @@ public class JavaFormatterTest {
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
     WikiTestPage wp = buildNestedTestPage();
-    assertEquals(nestedPageName, jf.getFullPath(wp.getSourcePage()));
+    assertEquals(nestedPageName, wp.getFullPath());
   }
 
   private WikiTestPage buildNestedTestPage() throws Exception {
-    WikiPageDummy wp=new WikiPageDummy("ChildTest",null);
-    WikiPageDummy parent=new WikiPageDummy("ParentTest",null);
-    wp.setParent(parent);
-    parent.setParent(new WikiPageDummy("root", null));
-    return new WikiTestPage(wp);
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy parent=new WikiPageDummy("ParentTest",null, root);
+    WikiPageDummy wp=new WikiPageDummy("ChildTest",null, parent);
+    return new WikiTestPage(wp, variableSource);
   }
 
   @Test
@@ -59,9 +58,9 @@ public class JavaFormatterTest {
   @Test
   public void writeSummary_WritesSummaryOfTestExecutions() throws Exception{
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
-    secondPage.setParent(new WikiPageDummy("root", null));
-    jf.testComplete(new WikiTestPage(secondPage), new TestSummary(11,12,13,14));
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null, root);
+    jf.testComplete(new WikiTestPage(secondPage, variableSource), new TestSummary(11,12,13,14));
     jf.writeSummary("SummaryPageName");
     String expectedOutput = new StringBuffer()
             .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_HEADER)
@@ -75,13 +74,16 @@ public class JavaFormatterTest {
 
   @Test
   public void testComplete_clones_TestSummary_Objects() throws Exception{
-    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
-    secondPage.setParent(new WikiPageDummy("root", null));
+    WikiPageDummy root = new WikiPageDummy("root", null, null);
+    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null, root);
 
     TestSummary ts=new TestSummary(5,6,7,8);
     jf.testComplete(buildNestedTestPage(), ts);
-    ts.right=11; ts.wrong=12; ts.ignores=13; ts.exceptions=14;
-    jf.testComplete(new WikiTestPage(secondPage), ts);
+    ts.add(ExecutionResult.PASS);
+    ts.add(ExecutionResult.FAIL);
+    ts.add(ExecutionResult.IGNORE);
+    ts.add(ExecutionResult.ERROR);
+    jf.testComplete(new WikiTestPage(secondPage, variableSource), ts);
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }
 

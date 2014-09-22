@@ -1,20 +1,20 @@
 package fitnesse.testrunner;
 
-import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.WikiPage;
 
 public class WikiPageIdentity {
 
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
-  private ReadOnlyPageData data;
+  private WikiPage page;
 
-  public WikiPageIdentity(ReadOnlyPageData data) {
-    this.data = data;
+  public WikiPageIdentity(WikiPage page) {
+    this.page = page;
   }
 
   public String getVariable(String name) {
-    return data.getVariable(name);
+    return page.getVariable(name);
   }
 
   public String testSystem() {

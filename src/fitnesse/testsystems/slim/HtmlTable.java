@@ -9,13 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -29,11 +29,17 @@ import org.htmlparser.util.NodeList;
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
+  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
+
   // Source: http://dev.w3.org/html5/markup/common-models.html
-  private final static Pattern HTML_PATTERN = Pattern.compile("^<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
-          "blockquote|ins|del|object|map||video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
+  private final static Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
+          "blockquote|ins|del|object|map|video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
           "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
-          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+          "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)" + SYMBOL_ASSIGNMENT_SUFFIX + "?$",
+          Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^" + SYMBOL_ASSIGNMENT + ".*" +
+          SYMBOL_ASSIGNMENT_SUFFIX + "$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
@@ -179,7 +185,7 @@ public class HtmlTable implements Table {
       cell.setExceptionResult(exceptionResult);
     } else {
       Row childRow = makeChildRow(row,
-              new TextNode("<pre>" + Utils.escapeHTML(exceptionResult.getException()) + "</pre>"),
+              new TextNode("<pre>" + HtmlUtil.escapeHTML(exceptionResult.getException()) + "</pre>"),
               "exception");
       insertRowAfter(row, childRow);
       row.setExecutionResult(exceptionResult.getExecutionResult());
@@ -294,7 +300,7 @@ public class HtmlTable implements Table {
       if ("&nbsp;".equals(unescaped)) {
         return "";
       }
-      return qualifiesAsHtml(unescaped) ? unescaped : Utils.unescapeHTML(unescaped);
+      return qualifiesAsHtml(unescaped) ? unescaped : HtmlUtil.unescapeHTML(unescaped);
     }
 
     private void setContent(String s) {
@@ -347,9 +353,12 @@ public class HtmlTable implements Table {
           }
           return String.format("<span class=\"fail\">%s</span>", message);
         case IGNORE:
-          return testResult.hasMessage()
-                  ? String.format("%s <span class=\"ignore\">%s</span>", originalContent, message)
-                  : String.format("<span class=\"ignore\">%s</span>", originalContent);
+          // IGNORE + does not count === Test Not Run
+          if (testResult.doesCount()) {
+            return String.format("<span class=\"ignore\">%s</span>", message);
+          } else {
+            return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
+          }
         case ERROR:
           return String.format("%s <span class=\"error\">%s</span>", originalContent, message);
       }
@@ -358,7 +367,16 @@ public class HtmlTable implements Table {
   }
 
   private static String asHtml(String text) {
-    return qualifiesAsHtml(text) ? text : Utils.escapeHTML(text);
+    if (qualifiesAsHtml(text)) {
+      if (qualifiesAsSymbolReplacement(text)) {
+        int contentOffset = text.indexOf('[');
+        String assignment = text.substring(0, contentOffset);
+        String content = text.substring(contentOffset);
+        return HtmlUtil.escapeHTML(assignment) + content;
+      }
+      return text;
+    }
+    return HtmlUtil.escapeHTML(text);
   }
 
   @Override
@@ -369,9 +387,13 @@ public class HtmlTable implements Table {
     return new HtmlTableScanner(script).getTable(0);
   }
 
+  static boolean qualifiesAsSymbolReplacement(String text) {
+    return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
+  }
+
   static boolean qualifiesAsHtml(String text) {
     // performance improvement: First check 1st character.
-    return text.startsWith("<") && HTML_PATTERN.matcher(text).matches();
+    return (text.startsWith("<") || text.startsWith("$")) && HTML_PATTERN.matcher(text).matches();
   }
 
 }

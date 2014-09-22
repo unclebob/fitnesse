@@ -12,7 +12,7 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class ScenarioTableTest {
         throws Exception {
         WikiPageUtil.setPageContents(root, pageContents);
 
-        TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+        TableScanner ts = new HtmlTableScanner(root.getHtml());
         Table t = ts.getTable(0);
       SlimTestContextImpl testContext = new SlimTestContextImpl();
         st = new ScenarioTable(t, "id", testContext);

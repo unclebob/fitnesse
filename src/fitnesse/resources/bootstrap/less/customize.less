@@ -19,6 +19,10 @@ table {
   .table-bordered;
   .table-condensed;
   width: auto;
+
+  &.hash_table {
+    margin-bottom: 0;
+  }
 }
 
 label {
@@ -41,24 +45,39 @@ label {
   }
 }
 
+.navbar-form.search {
+  float: right;
+  margin-right: 25px;
+}
+
 #add > ul {
   max-height: 300px;
   overflow-x: hidden;
 }
 
+.page-actions {
+  display: none;
+  float: right;
+  padding: 8px 40px;
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
 .breadcrumb {
   padding: 8px 40px;
   margin: 0;
-  #gradient > .vertical-three-colors(#ffffff, #ffffff, 70%, rgba(255,255,255,0.0));
+  #gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
   border-radius: 0;
-}
-
-.breadcrumb li+li:before {
+  li + li:before {
     content: "/ ";
     color: #ccc;
+  }
 }
-
 button,
 a.button,
 input[type="button"] {
@@ -140,13 +159,33 @@ input[type="checkbox"] {
 .collapsible > ul {
   float: right;
   margin: 0;
-  padding: 5px 15px;
-}
+  padding: 4px 4px;
+  li {
+    border: none;
+    padding: 0;
+    a {
+      color: inherit;
+      .btn;
+      .btn-default;
+      .btn-xs;
+      float: left;
+      position: relative;
+    }
+    a.expandall {
+      .border-right-radius(0);
+    }
+    a.expandall:hover {
+      z-index: 2;
 
-.collapsible > ul li {
-  display: inline;
-  padding: 0 5px;
-  border-left: 1px solid @panel-bg;
+    }
+    a.collapseall {
+      .border-left-radius(0);
+      margin-left: -1px;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 tr.scenario > td:first-child {
@@ -329,13 +368,13 @@ fieldset {
   margin: 3px 0 6px 0;
 }
 
-.tagsinput .tag {
+.tag {
     .badge;
     background-color: @brand-info;
     border: none;
 }
 
-.tagsinput .tag a {
+.tag a {
     color: @alert-danger-text;
 }
 

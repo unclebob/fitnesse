@@ -6,22 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
 
 public class ScenarioAndDecisionTableExtensionTest {
   private static final String SCEN_EXTENSION_NAME = "diffScriptScenario";
@@ -50,7 +50,7 @@ public class ScenarioAndDecisionTableExtensionTest {
             + "\n"
             + "!|DT:" + scriptText + "|\n";
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", testContext);
     t = ts.getTable(1);
@@ -70,8 +70,8 @@ public class ScenarioAndDecisionTableExtensionTest {
         "|7|7"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+            asList(
+                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -96,7 +96,7 @@ public class ScenarioAndDecisionTableExtensionTest {
         "|7"
     );
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_0", "diffScriptTableActor", "function", new Object[]{"7"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -114,7 +114,7 @@ public class ScenarioAndDecisionTableExtensionTest {
         "|bill|yabba|8892"
     );
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_0", "diffScriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
               new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_1", "diffScriptTableActor", "currentUserProfileUrl", new Object[0]),
               new CallInstruction("decisionTable_did_1/diffScriptTable_s_id_0", "diffScriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"}),
@@ -133,8 +133,8 @@ public class ScenarioAndDecisionTableExtensionTest {
                     "|7|7"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+            asList(
+                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -159,8 +159,8 @@ public class ScenarioAndDecisionTableExtensionTest {
                     "|7|8"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+            asList(
+                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -196,8 +196,8 @@ public class ScenarioAndDecisionTableExtensionTest {
         "|7|7"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+            asList(
+                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -216,9 +216,9 @@ public class ScenarioAndDecisionTableExtensionTest {
     public ScenarioTableWithDifferentScript(Table table, String tableId, SlimTestContext testContext) {
       super(table, tableId, testContext);
     }
-    
+
     @Override
-    protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
+    protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
       return new DiffScriptTable(newTable, id, testContext);
     }
   }

@@ -3,23 +3,13 @@
 package fitnesse.wiki;
 
 import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
-import static fitnesse.wiki.PageData.PropertyEDIT;
-import static fitnesse.wiki.PageData.PropertyFILES;
-import static fitnesse.wiki.PageData.PropertySEARCH;
-import static fitnesse.wiki.PageData.PropertyVERSIONS;
-import static fitnesse.wiki.PageData.SUITE_SETUP_NAME;
-import static fitnesse.wiki.PageData.SUITE_TEARDOWN_NAME;
-import static fitnesse.wiki.PageType.SUITE;
-import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 
-import java.util.List;
-
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +35,7 @@ public class PageDataTest {
     String text = "!define x {''italics''}\n${x}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), text);
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
     assertHasRegexp("''italics''", html);
     assertHasRegexp("<i>italics</i>", html);
   }
@@ -55,25 +45,18 @@ public class PageDataTest {
     String text = "!define x {b}\n!define y (a${x}c)\n${y}";
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"), text);
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
     assertHasRegexp("abc", html);
     assertHasRegexp("variable defined: y=a\\$\\{x\\}c", html);
-    String variableContents = page.getData().getVariable("y");
+    String variableContents = page.getVariable("y");
     assertEquals("abc", variableContents);
-  }
-
-  @Test
-  public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    PageData d = new PageData(new WikiPageDummy().getData(), "<b>");
-    String html = d.getHtml();
-    assertEquals("&lt;b&gt;", html);
   }
 
   @Test
   public void testLiteral() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
-    String renderedContent = page.getData().getHtml();
+    String renderedContent = page.getHtml();
     assertHasRegexp("literal", renderedContent);
     assertDoesntHaveRegexp("!-literal-!", renderedContent);
   }
@@ -83,100 +66,8 @@ public class PageDataTest {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
     WikiPage child = WikiPageUtil.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
-    String renderedContent = child.getData().getHtml();
+    String renderedContent = child.getHtml();
     assertHasRegexp("undefined variable", renderedContent);
-  }
-
-  @Test
-  public void testGetCrossReferences() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
-    List<?> xrefs = page.getData().getXrefPages();
-    assertEquals("XrefPage", xrefs.get(0));
-  }
-
-  @Test
-  public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageExamples"));
-    PageData data = new PageData(page);
-    assertTrue(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ExamplePageExample"));
-    PageData data = new PageData(page);
-    assertTrue(data.hasAttribute(TEST.toString()));
-  }
-
-  @Test
-  public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageExample"));
-    PageData data = new PageData(page);
-    assertTrue(data.hasAttribute(TEST.toString()));
-  }
-
-  @Test
-  public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
-    WikiPage suitePage1 = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"));
-    PageData data = new PageData(suitePage1);
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertTrue(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
-    WikiPage suitePage2 = WikiPageUtil.addPage(root, PathParser.parse("PageSuite"));
-    PageData data = new PageData(suitePage2);
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertTrue(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
-    WikiPage testPage1 = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
-    PageData data = new PageData(testPage1);
-    assertTrue(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
-    WikiPage testPage2 = WikiPageUtil.addPage(root, PathParser.parse("PageTest"));
-    PageData data = new PageData(testPage2);
-    assertTrue(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testDefaultAttributes() throws Exception {
-    WikiPage normalPage = WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
-    WikiPage suitePage3 = WikiPageUtil.addPage(root, PathParser.parse("TestPageSuite"));
-    WikiPage errorLogsPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    WikiPage suiteSetupPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
-    WikiPage suiteTearDownPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_TEARDOWN_NAME));
-
-    PageData data = new PageData(normalPage);
-    assertTrue(data.hasAttribute(PropertyEDIT));
-    assertTrue(data.hasAttribute(PropertySEARCH));
-    assertTrue(data.hasAttribute(PropertyVERSIONS));
-    assertTrue(data.hasAttribute(PropertyFILES));
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-
-    data = new PageData(suitePage3);
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertTrue(data.hasAttribute(SUITE.toString()));
-
-    data = new PageData(errorLogsPage);
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-
-    data = new PageData(suiteSetupPage);
-    assertFalse(data.hasAttribute(SUITE.toString()));
-
-    data = new PageData(suiteTearDownPage);
-    assertFalse(data.hasAttribute(SUITE.toString()));
   }
 
   @Test
@@ -198,6 +89,6 @@ public class PageDataTest {
     String contentWithCarriageReturns = content.replaceAll("\n", "\r\n");
     WikiPage pageWithDosLineEndings = WikiPageUtil.addPage(root, PathParser.parse("PageName2"), contentWithCarriageReturns);
     
-    assertEquals(pageWithUnixLineEndings.getData().getHtml(), pageWithDosLineEndings.getData().getHtml());
+    assertEquals(pageWithUnixLineEndings.getHtml(), pageWithDosLineEndings.getHtml());
   }
 }

@@ -20,13 +20,13 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
@@ -55,9 +55,9 @@ public class WikiImporterTest implements WikiImporterClient {
 
   public void createLocalRoot() throws Exception {
     localRoot = InMemoryPage.makeRoot("RooT2");
-    pageOne = localRoot.addChildPage("PageOne");
-    childPageOne = pageOne.addChildPage("ChildOne");
-    pageTwo = localRoot.addChildPage("PageTwo");
+    pageOne = WikiPageUtil.addPage(localRoot, PathParser.parse("PageOne"), "");
+    childPageOne = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");
+    pageTwo = WikiPageUtil.addPage(localRoot, PathParser.parse("PageTwo"), "");
   }
 
   public WikiPage createRemoteRoot() throws Exception {

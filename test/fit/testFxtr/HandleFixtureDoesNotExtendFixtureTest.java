@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
-import util.StringUtil;
 import fit.Fixture;
 import fit.Parse;
 
@@ -23,7 +23,7 @@ public class HandleFixtureDoesNotExtendFixtureTest {
         "    </tr>",
         "</table>"});
 
-    String tableText = StringUtil.join(tableLines, "\r\n");
+    String tableText = StringUtils.join(tableLines, "\r\n");
 
     Parse tableForFaultyFixture = new Parse(tableText);
 

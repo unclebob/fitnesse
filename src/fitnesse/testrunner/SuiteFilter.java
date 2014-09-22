@@ -11,9 +11,10 @@ import java.util.logging.Logger;
 
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 public class SuiteFilter {
   public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
@@ -33,7 +34,7 @@ public class SuiteFilter {
 
   public SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
-    if(andTags != null){
+    if(andTags != null) {
       matchTags = new SuiteTagMatcher(andTags, true);
       andStrategy = true;
     } else {
@@ -52,10 +53,8 @@ public class SuiteFilter {
 
   public boolean isMatchingTest(WikiPage testPage) {
     PageData data = testPage.getData();
-    boolean pruned = data.hasAttribute(PageData.PropertyPRUNE);
-    boolean isTest = data.hasAttribute("Test");
-    return !pruned && 
-           isTest && 
+    boolean isTest = data.hasAttribute(PageType.TEST.toString());
+    return isTest &&
            matchTags.matches(testPage) &&
            !notMatchTags.matches(testPage) && 
            afterStartingTest(testPage);
@@ -75,12 +74,8 @@ public class SuiteFilter {
   }
 
   public SuiteFilter getFilterForTestsInSuite(WikiPage suitePage) {
-    if (suitePage.getData().hasAttribute(PageData.PropertyPRUNE)) {
-      return NO_MATCHING;
-    }
-    
     PageData pageData = suitePage.getData();
-    if (pageData.hasAttribute("Suite") && matchTags.isFiltering() && matchTags.matches(suitePage)) {
+    if (pageData.hasAttribute(PageType.SUITE.toString()) && matchTags.isFiltering() && matchTags.matches(suitePage)) {
       return new SuiteFilter(null, notMatchTags.tagString, null, startWithTest).getFilterForTestsInSuite(suitePage);
     }
     
@@ -111,8 +106,8 @@ public class SuiteFilter {
     if (startWithTest != null) {
       criterias.add("starts with test '" + startWithTest + "'");
     }
-    
-    return StringUtil.join(criterias, " & ");
+
+    return StringUtils.join(criterias, " & ");
   }
   
   private class SuiteTagMatcher {
@@ -124,7 +119,7 @@ public class SuiteFilter {
     public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags) {
       tagString = suiteTags;
       if (suiteTags != null) {
-        tags = new LinkedList<String>(Arrays.asList(suiteTags.split(LIST_SEPARATOR)));
+        tags = Arrays.asList(suiteTags.split(LIST_SEPARATOR));
       }
       else {
         tags = null;

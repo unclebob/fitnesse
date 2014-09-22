@@ -20,7 +20,7 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;
@@ -283,8 +283,7 @@ public class HistoryComparerTest {
         "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
     WikiPage myPage = WikiPageUtil.addPage(root, PathParser.parse("MyPage"), pageText);
-    PageData myData = myPage.getData();
-    String html = myData.getHtml();
+    String html = myPage.getHtml();
     return html;
   }
 

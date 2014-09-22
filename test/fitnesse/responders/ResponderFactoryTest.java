@@ -4,13 +4,9 @@ package fitnesse.responders;
 
 
 import java.io.File;
-import java.io.IOException;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
 import fitnesse.responders.editing.AddChildPageResponder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.PropertiesResponder;
@@ -30,7 +26,6 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
 import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
@@ -43,9 +38,6 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -126,7 +118,7 @@ public class ResponderFactoryTest {
 
   @Test
   public void testSuiteResponder() throws Exception {
-    assertResponderTypeMatchesInput("suite", SuiteResponder.class);
+    assertResponderTypeMatchesInput("suite", TestResponder.class);
   }
 
   @Test

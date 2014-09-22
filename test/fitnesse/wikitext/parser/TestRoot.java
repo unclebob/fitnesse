@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestRoot {
     public WikiPage root;
@@ -15,7 +15,7 @@ public class TestRoot {
     }
 
     public WikiPage makePage(WikiPage parent, String pageName) {
-        return WikiPageUtil.addPage(parent, PathParser.parse(pageName));
+        return WikiPageUtil.addPage(parent, PathParser.parse(pageName), "");
     }
 
     public WikiPage makePage(String pageName, String content) {

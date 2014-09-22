@@ -14,7 +14,7 @@ public class SuiteContentsFinder {
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
-  private LinkedList<WikiPage> testPageList;
+  private List<WikiPage> testPageList;
 
   public SuiteContentsFinder(final WikiPage pageToRun, final SuiteFilter suiteFilter, WikiPage root) {
     this.pageToRun = pageToRun;
@@ -23,31 +23,8 @@ public class SuiteContentsFinder {
     testPageList = new LinkedList<WikiPage>();
   }
 
-  public List<WikiPage> makePageListForSingleTest() {
-    testPageList = new LinkedList<WikiPage>();
-
-    testPageList.add(pageToRun);
-
-    return testPageList;
-  }
-
-  public List<WikiPage> makePageList() {
-    getAllPagesToRunForThisSuite();
-
-    if (testPageList.isEmpty()) {
-      String name = new WikiPagePath(pageToRun).toString();
-      WikiPageDummy dummy = new WikiPageDummy("",
-        "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n"
-      );
-      dummy.setParent(wikiRootPage);
-      testPageList.add(dummy);
-    }
-    return testPageList;
-  }
-
-
-  public LinkedList<WikiPage> getAllPagesToRunForThisSuite() {
-    String content = pageToRun.getData().getHtml();
+  public List<WikiPage> getAllPagesToRunForThisSuite() {
+    String content = pageToRun.getHtml();
     //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
@@ -61,9 +38,8 @@ public class SuiteContentsFinder {
     return testPageList;
   }
 
-  private LinkedList<WikiPage> getAllTestPagesUnder() {
-    LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-    addTestPagesToSuite(testPages, pageToRun, suiteFilter);
+  private List<WikiPage> getAllTestPagesUnder() {
+    List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
@@ -84,20 +60,31 @@ public class SuiteContentsFinder {
     return testPages;
   }
 
-  private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) {
-      if (suiteFilter.isMatchingTest(page)) {
-        suite.add(page);
-      }
+  private List<WikiPage> addTestPagesToSuite(WikiPage page, SuiteFilter suiteFilter) {
+    List<WikiPage> testPages = new LinkedList<WikiPage>();
+    boolean includePage = isTopPage(page) || !isPruned(page);
+    if (suiteFilter.isMatchingTest(page) && includePage) {
+      testPages.add(page);
+    }
 
-      SuiteFilter suiteFilterForChildren = suiteFilter.getFilterForTestsInSuite(page);
+    SuiteFilter suiteFilterForChildren = includePage ? suiteFilter.getFilterForTestsInSuite(page) : SuiteFilter.NO_MATCHING;
 
-	    List<WikiPage> children = getChildren(page);
-	    for (WikiPage child : children) {
-	      addTestPagesToSuite(suite, child, suiteFilterForChildren);
-	    }
-	  }
+    for (WikiPage child : getChildren(page)) {
+      testPages.addAll(addTestPagesToSuite(child, suiteFilterForChildren));
+    }
+    return testPages;
+  }
 
-	  private static List<WikiPage> getChildren(WikiPage page) {
+  private boolean isPruned(WikiPage page) {
+    return page.getData().hasAttribute(PageData.PropertyPRUNE);
+
+  }
+
+  private boolean isTopPage(WikiPage page) {
+    return page == pageToRun;
+  }
+
+  private static List<WikiPage> getChildren(WikiPage page) {
 	    List<WikiPage> children = new ArrayList<WikiPage>();
 	    children.addAll(page.getChildren());
 	    return children;
@@ -117,8 +104,7 @@ public class SuiteContentsFinder {
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
-    ReadOnlyPageData data = thePage.readOnlyData();
-    List<String> pageReferences = data.getXrefPages();
+    List<String> pageReferences = WikiPageUtil.getXrefPages(thePage);
     WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath();
     WikiPage parent = wikiRootPage.getPageCrawler().getPage(testPagePath.parentPath());
     for (String pageReference : pageReferences) {

@@ -46,8 +46,8 @@ public interface TestSystem {
   boolean isSuccessfullyStarted();
 
   /**
-   * Add a listener. During test execution the listeners will be kept informed about the
-   * status of the test execution.
+   * Add a listener for test system events. During test execution the listeners will be kept
+   * informed about the status of the test execution.
    * @param listener
    */
   void addTestSystemListener(TestSystemListener listener);

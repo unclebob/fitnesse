@@ -14,6 +14,7 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
@@ -76,16 +77,16 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (WikiTestPage.isTestPage(pageData)) {
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
-      html.put("content", new WikiPageRenderer(testPage.getDecoratedData()));
+    if (WikiTestPage.isTestPage(page)) {
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
+      html.put("content", new WikiTestPageRenderer(testPage));
     } else {
-      html.put("content", new WikiPageRenderer(pageData));
+      html.put("content", new WikiPageRenderer(page));
     }
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
-    html.put("footerContent", new WikiPageFooterRenderer(pageData));
+    html.put("footerContent", new WikiPageFooterRenderer(page));
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -99,26 +100,38 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public class WikiPageRenderer {
-    private ReadOnlyPageData data;
+    private WikiPage page;
 
-    WikiPageRenderer(ReadOnlyPageData data) {
-      this.data = data;
+    WikiPageRenderer(WikiPage page) {
+      this.page = page;
     }
 
     public String render() {
-        return WikiPageUtil.makePageHtml(data);
+        return WikiPageUtil.makePageHtml(page);
+    }
+  }
+
+  public class WikiTestPageRenderer {
+    private WikiTestPage page;
+
+    WikiTestPageRenderer(WikiTestPage page) {
+      this.page = page;
+    }
+
+    public String render() {
+      return WikiTestPageUtil.makePageHtml(page);
     }
   }
 
   public class WikiPageFooterRenderer {
-    private PageData data;
+    private WikiPage page;
 
-    WikiPageFooterRenderer(PageData data) {
-      this.data = data;
+    WikiPageFooterRenderer(WikiPage page) {
+      this.page = page;
     }
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(data.getWikiPage());
+        return WikiPageUtil.getFooterPageHtml(page);
     }
   }
 

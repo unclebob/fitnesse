@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 import java.util.Collection;
 
 public interface SourcePage extends Comparable<SourcePage> {

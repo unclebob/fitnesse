@@ -2,7 +2,6 @@ package fitnesse.wiki.fs;
 
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
@@ -125,7 +124,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
         adder.addFilepattern(getPath(fileVersion.getFile(), repository));
       }
       adder.call();
-      commit(git, String.format("[FitNesse] Updated files: %s.", formatFileVersions(fileVersions)));
+      commit(git, String.format("[FitNesse] Updated files: %s.", formatFileVersions(fileVersions)), fileVersions[0].getAuthor());
     } catch (GitAPIException e) {
       throw new IOException("Unable to commit changes", e);
     }
@@ -142,7 +141,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
         remover.addFilepattern(getPath(fileVersion.getFile(), repository));
       }
       remover.call();
-      commit(git, String.format("[FitNesse] Deleted files: %s.", formatFileVersions(files)));
+      commit(git, String.format("[FitNesse] Deleted files: %s.", formatFileVersions(files)), files[0].getAuthor());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -171,10 +170,13 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     return builder.toString();
   }
 
-  private void commit(Git git, String message) throws GitAPIException {
+  private void commit(Git git, String message, String author) throws GitAPIException {
     Status status = git.status().call();
     if (!status.getAdded().isEmpty() || !status.getChanged().isEmpty() || !status.getRemoved().isEmpty()) {
-      git.commit().setMessage(message).call();
+      if (author==null)
+        author = "";
+      // set the commit author (if given) but ignores the email
+      git.commit().setAuthor(author, "").setMessage(message).call();
     }
   }
 
@@ -185,10 +187,15 @@ public class GitFileVersionsController implements VersionsController, RecentChan
 
     assert pagePath.startsWith(workTreePath);
 
-    // Add 1 for trailing '/' (not included in abs. path)
-    pagePath = pagePath.substring(workTreePath.length() + 1);
+    pagePath = pagePath.substring(workTreePath.length());
+    
     // git stores paths unix-style
     pagePath = pagePath.replace(File.separatorChar, '/');
+    
+    // Skip starting '/'
+    if (pagePath.startsWith("/"))
+        pagePath = pagePath.substring(1);
+
     return pagePath;
   }
 
@@ -210,7 +217,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   }
 
   @Override
-  public void updateRecentChanges(PageData pageData) {
+  public void updateRecentChanges(WikiPage page) {
     // Nothing to do, read history from Git repository
   }
 
@@ -220,7 +227,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
     PageData pageData = recentChangesPage.getData();
     try {
-      pageData.setContent(convertToWikiText(history(new File(fsPage.getFileSystemPath()), new LogCommandSpec() {
+      pageData.setContent(convertToWikiText(history(fsPage.getFileSystemPath(), new LogCommandSpec() {
         @Override
         public LogCommand specify(LogCommand log, Repository repository) {
           return log.setMaxCount(RECENT_CHANGES_DEPTH);
@@ -269,7 +276,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
       git.rm()
               .addFilepattern(getPath(oldFile, repository))
               .call();
-      commit(git, String.format("[FitNesse] Renamed file %s to %s.", oldFile.getPath(), renameTo.getPath()));
+      commit(git, String.format("[FitNesse] Renamed file %s to %s.", oldFile.getPath(), renameTo.getPath()), fileVersion.getAuthor());
     } catch (GitAPIException e) {
       throw new RuntimeException(e);
     }

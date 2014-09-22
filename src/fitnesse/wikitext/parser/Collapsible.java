@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
-import util.Maybe;
 
 public class Collapsible extends SymbolType implements Rule, Translation {
 
@@ -65,8 +64,8 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         outerBlock.addAttribute("class", "collapsible" + state);
         
         outerBlock.add(new RawHtml("<ul>" +
-        		"<li><a href='#' class='expandall'>Expand All</a></li>" +
-        		"<li><a href='#' class='collapseall'>Collapse All</a></li>" +
+        		"<li><a href='#' class='expandall'>Expand</a></li>" +
+        		"<li><a href='#' class='collapseall'>Collapse</a></li>" +
         		"</ul>"));
 
       	HtmlTag title = new HtmlTag("p", titleText);

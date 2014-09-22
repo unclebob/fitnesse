@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,39 +41,10 @@ public class SuiteFilterTest {
   }
 
   @Test
-  public void testPrunesTests() throws Exception {
-    SuiteFilter filter = new SuiteFilter(null, null, null, null);
-    
-    WikiPage prunedTest = addTestPage(root, "PrunedTest", "Pruned Test");
-    PageData data = prunedTest.getData();
-    data.setAttribute(PageData.PropertyPRUNE);
-    prunedTest.commit(data);
-    assertFalse(filter.isMatchingTest(prunedTest));
-    
-    WikiPage test = addTestPage(root, "TestPage", "Test test");
-    assertTrue(filter.isMatchingTest(test));
-  }
-
-  @Test
   public void testPrunesNonTests() throws Exception {
     SuiteFilter filter = new SuiteFilter(null, null, null, null);
 
     assertFalse(filter.isMatchingTest(root));
-  }
-  
-  @Test
-  public void testPrunesSuites() throws Exception {
-    SuiteFilter filter = new SuiteFilter(null, null, null, null);
-    
-    WikiPage prunedSuite = WikiPageUtil.addPage(root, PathParser.parse("MySuite"), "the suite");
-    PageData data = prunedSuite.getData();
-    data.setAttribute(PageData.PropertyPRUNE);
-    data.setAttribute("Suite");
-    prunedSuite.commit(data);
-    
-    assertFalse(filter.getFilterForTestsInSuite(prunedSuite).hasMatchingTests());
-
-    assertTrue(filter.getFilterForTestsInSuite(root).hasMatchingTests());
   }
 
   @Test

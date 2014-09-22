@@ -73,7 +73,7 @@ public abstract class PageMovementResponder implements SecureResponder {
   }
 
   private Responder makeErrorMessageResponder(String message) {
-    return new ErrorResponder(getErrorMessageHeader() + "<br/>" + message);
+    return new ErrorResponder(getErrorMessageHeader() + " " + message);
   }
 
   private boolean targetPageExists() {

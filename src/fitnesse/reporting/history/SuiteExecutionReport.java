@@ -5,15 +5,15 @@ import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.DateTimeUtil;
-import util.StringUtil;
-import util.XmlUtil;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.Writer;
 import java.text.SimpleDateFormat;
@@ -88,10 +88,12 @@ public class SuiteExecutionReport extends ExecutionReport {
       long runTimeInMillis = getRunTimeInMillisOrZeroIfNotPresent(refElement);
       PageHistoryReference r1 = new PageHistoryReference(name,time,runTimeInMillis);
       Element counts = XmlUtil.getElementByTagName(refElement,"counts");
-      r1.getTestSummary().right = new Integer(XmlUtil.getTextValue(counts,"right"));
-      r1.getTestSummary().wrong = new Integer(XmlUtil.getTextValue(counts,"wrong"));
-      r1.getTestSummary().ignores = new Integer(XmlUtil.getTextValue(counts,"ignores"));
-      r1.getTestSummary().exceptions = new Integer(XmlUtil.getTextValue(counts,"exceptions"));
+
+      r1.setTestSummary(new TestSummary(
+              Integer.valueOf(XmlUtil.getTextValue(counts, "right")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "wrong")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "ignores")),
+              Integer.valueOf(XmlUtil.getTextValue(counts, "exceptions"))));
       pageHistoryReferences.add(r1);
     }
   }
@@ -135,7 +137,7 @@ public class SuiteExecutionReport extends ExecutionReport {
       if (! (o instanceof PageHistoryReference))
         return false;
       PageHistoryReference r = (PageHistoryReference) o;
-      return StringUtil.stringsNullOrEqual(pageName, r.pageName) &&
+      return StringUtils.equals(pageName, r.pageName) &&
         time == r.time &&
         testSummary.equals(r.testSummary) &&
         runTimeInMillis == r.runTimeInMillis;

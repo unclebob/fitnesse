@@ -56,6 +56,11 @@ public class HtmlTableTest {
   }
 
   @Test
+  public void htmlFromSymbolReplacementDoesQualify() {
+    assertTrue(qualifiesAsHtml("$foo->[<div>less < more</div>]"));
+  }
+
+  @Test
   public void justSomeXmlDoesNotQualify() {
     assertFalse(qualifiesAsHtml("<content>blah</content>"));
   }
@@ -80,7 +85,7 @@ public class HtmlTableTest {
 
     cell.setTestResult(SlimTestResult.ignore("a message"));
 
-    assertThat(cell.formatTestResult(), is("original content <span class=\"ignore\">a message</span>"));
+    assertThat(cell.formatTestResult(), is("<span class=\"ignore\">a message</span>"));
   }
 
 }

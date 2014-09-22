@@ -17,6 +17,7 @@ test-classes/*
 antlib/*
 javadoc/*
 lib/*
+dependencies/*
 .svn
 .classpath
 .project

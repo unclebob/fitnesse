@@ -6,7 +6,6 @@ import static util.RegexTestCase.assertSubString;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
@@ -15,7 +14,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class AddChildPageResponderTest {
     root = InMemoryPage.makeRoot("root");
     
     crawler = root.getPageCrawler();
-    WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     childName = "ChildPage";
     String childContent = "child content";
     String pagetype = "";

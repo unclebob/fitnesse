@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +41,9 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string(":"));
     public static final SymbolType Comma = new SymbolType("Comma")
             .wikiMatcher(new Matcher().string(","));
+    public static final SymbolType DateFormatOption = new SymbolType("DateFormatOption")
+            .wikiMatcher(new Matcher().string("-xml"))
+            .wikiMatcher(new Matcher().string("-t"));
     public static final SymbolType Delta = new SymbolType("Delta")
             .wikiMatcher(new Matcher().string("+").digits())
             .wikiMatcher(new Matcher().string("-").digits());

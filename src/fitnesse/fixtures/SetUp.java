@@ -13,7 +13,7 @@ import fit.Fixture;
 import fitnesse.authentication.Authenticator;
 import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {

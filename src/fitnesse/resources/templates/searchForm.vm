@@ -2,7 +2,7 @@
  <input type="hidden" name="responder" value="search"/>
  <fieldset>
   <label for="searchString">Search:</label>
-  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end"/>
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="searchType" value="Search Titles"/>

@@ -8,19 +8,16 @@ import java.io.StringWriter;
 import java.util.List;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.Expectation;
 import fitnesse.reporting.history.TestExecutionReport.InstructionResult;
-import fitnesse.reporting.history.TestExecutionReport.Row;
-import fitnesse.reporting.history.TestExecutionReport.Table;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestExecutionReportTest {
   private TestExecutionReport expected;
@@ -80,36 +77,6 @@ public class TestExecutionReportTest {
   public void getAssertions() throws Exception {
     addDummyResult();
     assertEquals(expected.getAssertionCounts(), new TestSummary(1, 2, 3, 4));
-  }
-
-  @Test
-  public void tablesShouldBeDeserialized() throws Exception {
-    addTablesToResult();
-    serializeAndDeserialize();
-    List<Table> tables = actual.getResults().get(0).tables;
-    assertEquals(1, tables.size());
-    Table table = tables.get(0);
-    assertEquals(2, table.size());
-    Row r0 = table.get(0);
-    assertEquals(1, r0.size());
-    assertEquals("r0c0", r0.get(0));
-    Row r1 = table.get(1);
-    assertEquals(2, r1.size());
-    assertEquals("r1c0", r1.get(0));
-    assertEquals("r1c1", r1.get(1));
-  }
-
-  private void addTablesToResult() {
-    addDummyResult();
-    Table table = new Table("table");
-    Row r0 = new Row();
-    table.add(r0);
-    r0.add("r0c0");
-    Row r1 = new Row();
-    r1.add("r1c0");
-    r1.add("r1c1");
-    table.add(r1);
-    result.tables.add(table);
   }
 
   @Test

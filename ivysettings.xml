@@ -1,8 +1,10 @@
 <ivysettings>
-        <settings defaultResolver="default" />
-        <resolvers>
-		<chain name="default">
-			<ibiblio name="maven2" root="${maven.central.url}" m2compatible="true" />
-		</chain>
-        </resolvers>
+    <settings defaultResolver="default" />
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+
+    <resolvers>
+    <chain name="default">
+        <ibiblio name="maven2" root="${maven.central.url}" m2compatible="true" />
+    </chain>
+    </resolvers>
 </ivysettings>

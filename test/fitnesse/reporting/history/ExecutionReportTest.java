@@ -11,22 +11,18 @@ import static org.mockito.Mockito.when;
 import java.io.StringWriter;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.ExecutionReport;
-import fitnesse.reporting.history.SuiteExecutionReport;
-import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
-import util.DateTimeUtil;
-import util.TimeMeasurement;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
@@ -68,7 +64,7 @@ public class ExecutionReportTest {
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(41));
     long time = DateTimeUtil.getTimeFromString("12/31/1969 18:00:00");
     SuiteExecutionReport.PageHistoryReference reference = new SuiteExecutionReport.PageHistoryReference("dah", time, 3L);
-    reference.getTestSummary().wrong = 99;
+    reference.setTestSummary(new TestSummary(0, 99, 0, 0));
     original.addPageHistoryReference(reference);
     StringWriter writer = new StringWriter();
     original.toXml(writer, context.pageFactory.getVelocityEngine());
@@ -90,15 +86,10 @@ public class ExecutionReportTest {
     element = mock(Element.class);
     NodeList matchingNodeList = mock(NodeList.class);
     Node elementWithText = mock(Element.class);
-    NodeList childNodeList = mock(NodeList.class);
-    Text text = mock(Text.class);
     when(element.getElementsByTagName("totalRunTimeInMillis")).thenReturn(matchingNodeList);
     when(matchingNodeList.getLength()).thenReturn(1);
     when(matchingNodeList.item(0)).thenReturn(elementWithText);
-    when(elementWithText.getChildNodes()).thenReturn(childNodeList);
-    when(childNodeList.getLength()).thenReturn(1);
-    when(childNodeList.item(0)).thenReturn(text);
-    when(text.getNodeValue()).thenReturn("255");
+    when(elementWithText.getTextContent()).thenReturn("255");
     assertThat(report.getTotalRunTimeInMillisOrZeroIfNotPresent(element), is(255L));
   }
 

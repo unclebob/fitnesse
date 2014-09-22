@@ -1,9 +1,7 @@
 package fitnesse.wikitext.parser;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
-
-import util.Maybe;
 
 public class Image extends SymbolType implements Rule {
     public static final Image symbolType = new Image();
@@ -27,7 +25,7 @@ public class Image extends SymbolType implements Rule {
 
         parser.moveNext(1);
         
-        Map<String, String> options = new HashMap<String, String>();
+        Map<String, String> options = new TreeMap<String, String>();
         while (parser.getCurrent().isType(SymbolType.Text) && parser.getCurrent().getContent().startsWith("-")) {
             String option = parser.getCurrent().getContent();
             parser.moveNext(1);

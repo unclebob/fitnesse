@@ -9,8 +9,8 @@ import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import util.Clock;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+import fitnesse.util.Clock;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,7 +129,7 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   public Response createGoodResponse(Request request) throws Exception {
-    if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
+    if (StringUtils.isBlank(request.getResource()) && StringUtils.isBlank(request.getQueryString()))
       request.setResource("FrontPage");
     Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);

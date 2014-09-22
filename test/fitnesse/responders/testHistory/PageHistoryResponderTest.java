@@ -23,10 +23,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.DateTimeUtil;
+import fitnesse.util.DateTimeUtil;
 import util.FileUtil;
 import util.RegexTestCase;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.http.MockRequest;
@@ -35,7 +35,7 @@ import fitnesse.reporting.history.SuiteExecutionReport;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class PageHistoryResponderTest {
@@ -349,8 +349,6 @@ public class PageHistoryResponderTest {
     SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time, 9);
     SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time, 11);
 
-    r1.getTestSummary().right=4;
-    r2.getTestSummary().right=4;
     report.addPageHistoryReference(r1);
     report.addPageHistoryReference(r2);
 

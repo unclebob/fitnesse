@@ -6,11 +6,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import java.io.File;
 import java.util.List;
 
-import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import util.FileUtil;
 
 public class SymbolicPageTest {
   private WikiPage root;
-  private WikiPage pageOne;
+  private BaseWikiPage pageOne;
   private WikiPage pageTwo;
   private SymbolicPage symPage;
   private String pageOnePath = "PageOne";
@@ -30,7 +30,7 @@ public class SymbolicPageTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     String pageOneContent = "page one";
-    pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+    pageOne = (BaseWikiPage) WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
   }
@@ -54,7 +54,6 @@ public class SymbolicPageTest {
   public void testInternalData() throws Exception {
     PageData data = symPage.getData();
     assertEquals(pageTwoContent, data.getContent());
-    assertSame(symPage, data.getWikiPage());
   }
 
   @Test
@@ -108,6 +107,26 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void nestedSymbolicLinksShouldKeepTheRightPath() {
+    String pageThreePath = "PageThree";
+    String pageThreeContent = "page three";
+    WikiPage pageThree = WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
+
+    PageData data = pageOne.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
+    pageOne.commit(data);
+
+    data = pageTwo.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageThreePath);
+    pageTwo.commit(data);
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPagePath fullPath = PathParser.parse(pageOnePath + ".SymOne.SymTwo");
+    WikiPage deepPage = pageCrawler.getPage(fullPath);
+
+    assertEquals(deepPage.getPageCrawler().getFullPath(), fullPath);
+  }
+
+  @Test
   public void testSymbolicPageUsingExternalDirectory() throws Exception {
     CreateExternalRoot();
 
@@ -129,7 +148,7 @@ public class SymbolicPageTest {
   private void CreateExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
-    externalRoot = new FileSystemPageFactory().makeRootPage("testDir/ExternalRoot", "ExternalRoot");
+    externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null);
     WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
     WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");

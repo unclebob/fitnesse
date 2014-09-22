@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.AddChildPageResponder;
@@ -31,7 +31,6 @@ import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
@@ -62,7 +61,7 @@ public class ResponderFactory {
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
-    addResponder("suite", SuiteResponder.class);
+    addResponder("suite", TestResponder.class);
     addResponder("proxy", SerializedPageResponder.class);
     addResponder("versions", VersionSelectionResponder.class);
     addResponder("viewVersion", VersionResponder.class);
@@ -140,7 +139,7 @@ public class ResponderFactory {
 
     if (usingResponderKey(responderKey)) {
       responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
-    } else if (StringUtil.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
+    } else if (StringUtils.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else if (resource.startsWith("files/") || resource.equals("files")) {
       responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));

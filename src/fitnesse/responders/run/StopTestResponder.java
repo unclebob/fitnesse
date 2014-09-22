@@ -30,7 +30,7 @@ public class StopTestResponder extends BasicResponder {
     HtmlPage page = context.pageFactory.newPage();
     page.addTitles("Stopping tests");
     page.put("testId", testId);
-    page.put("runningTestingTracker", context.runningTestingTracker);
+    page.put("runningTestingTracker", TestResponder.runningTestingTracker);
     page.setMainTemplate("stopTestPage.vm");
     return page.html();
   }

@@ -1,3 +1,57 @@
+!2 Next release
+ * Removed classes:
+   * util.StringUtil, use org.apache.commons.lang.StringUtils instead.
+   * util.ListUtility, use java.util.Arrays instead.
+   * fitnesse.wikitext.Utils, use fitnesse.html.HtmlUtil instead.
+   * fitnesse.FitFilter.
+
+!2 20140901
+ * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
+ * Improved error message when included page does not exist (([[496][https://github.com/unclebob/fitnesse/pull/496]]).
+ * Slim script tables can now really be addressed with ''script:MyClass'' ([[500][https://github.com/unclebob/fitnesse/pull/500]]).
+ * Slim can deal with arbitrary length messages ([[504][https://github.com/unclebob/fitnesse/pull/504]])
+ * Plugin classes can support more elements (sub)types ([[506][https://github.com/unclebob/fitnesse/pull/506]])
+ * Make Scenario tables play nice with custom script table (sub)types ([[507][https://github.com/unclebob/fitnesse/pull/507]])
+ * Output parameters in a decision table have been made available in scenarios ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+ * Command pattern can contain quoted parameters (this helps at places where spaces are involved) ([[508][https://github.com/unclebob/fitnesse/pull/508]]).
+ * Via the property ''!-WikiPageFactories-!'' (plural) extra wiki page types can be supported ([[505][https://github.com/unclebob/fitnesse/pull/505]]).
+ * Code cleanup in the Wiki module ([[511][https://github.com/unclebob/fitnesse/pull/511]]).
+ * Issues fixed:
+   * Fixed issue when rendering stack traces on Windows with spaces in paths ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+   * Allow Scenarios with parameterised style but with empty parameter names ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+   * Fix handling and recording of errors in table definitions ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/milestones/Next%20release.
+
+!2 20140630
+ * Add page wide Expand/Collapse All buttons (bootstrap theme).
+ * Performance improvements: cache big factory classes and page data.
+ * Issues fixed:
+   * Fix issue introduced in Order Query Table comparison in 20140623.
+   * ''!-ErrorLog-!'' was not written if test execution was interrupted.
+   * Include page header when executing test or suite.
+   * Slow page tags again (bootstrap theme).
+   * ''SLIM_VERSION'' variable is back: allow older SLiM implementations to connect.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=7&state=closed.
+
+!2 2014-06-23
+ * Author information for !-GitVersionController-!.
+ * ''?suite'' and ''?test'' are now the same responder.
+ * More useful failure message for jUnit runner.
+ * Use String arrays for commands. This should avoid errors with spaces in path names.
+ * Improved matching for query tables.
+ * Plugins are now loaded relative to the FitNesse root path.
+ * SLIM can handle checks on Map's.
+ * Refactoring on wiki subsystem.
+ * Issues fixed:
+   * Support more than one level of symlinks.
+   * !-ErrorLog-! is written for tests ran with ''format=text'' or ''format=xml''.
+   * Rich Text Format horizontal scrollbar is missing.
+   * Failure navigator should only show in case of failures.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
+
 !2 2014-04-18
  * Introduced new logo.
  * New table type for Slim: [[Dynamic Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
@@ -18,7 +72,7 @@
    * Missing stylesheets added to JUnit test results.
    * Fix representation issue with ignored field in SLim !-TableTable.-!
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=5&state=closed.
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
 
 !2 2014-02-01
  * '''Files outside the http://files section can no longer be accessed!'''

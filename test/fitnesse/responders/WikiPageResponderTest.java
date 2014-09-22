@@ -23,7 +23,7 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,8 +65,8 @@ public class WikiPageResponderTest {
 
   @Test
   public void testAttributeButtons() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
-    final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"));
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "");
+    final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"), "");
     for (final String attribute : PageData.NON_SECURITY_ATTRIBUTES) {
       final PageData data = noButtonsPage.getData();
       data.removeAttribute(attribute);

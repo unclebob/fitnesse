@@ -1,8 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wikitext.Utils;
-import util.Maybe;
+import fitnesse.html.HtmlUtil;
 
 public class Alias extends SymbolType implements Rule, Translation {
     public static final Alias symbolType = new Alias();
@@ -28,7 +27,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         if (symbol.childAt(0).childAt(0).isType(WikiWord.symbolType)) return translator.translate(symbol.childAt(0));
 
         String linkBody = translator.translate(symbol.childAt(0));
-        String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
+        String linkReferenceString = HtmlUtil.unescapeHTML(translator.translate(symbol.childAt(1)));
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parseToIgnoreFirst(Comment.symbolType);
 
@@ -37,12 +36,14 @@ public class Alias extends SymbolType implements Rule, Translation {
                     .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }
 
+        HtmlTag alias = new HtmlTag("a", linkBody);
+
         if (linkReference.childAt(0).isType(Link.symbolType)) {
-            return Link.symbolType.buildLink(translator, linkBody, linkReference.childAt(0));
+            alias.addAttribute("href", linkReferenceString.startsWith("http://files/") ? linkReferenceString.substring(7) : linkReferenceString);
+        } else {
+            alias.addAttribute("href", translator.translate(linkReference));
         }
 
-        HtmlTag alias = new HtmlTag("a", linkBody);
-        alias.addAttribute("href", translator.translate(linkReference));
         return alias.htmlInline();
     }
 }

@@ -1,13 +1,11 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import util.Maybe;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
@@ -55,7 +53,7 @@ public class WikiSourcePage implements SourcePage {
         WikiPage ancestor = crawler.findAncestorWithName(target);
         if (ancestor != null) {
             pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
-            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+          return "." + StringUtils.join(Arrays.asList(pathElements), ".");
         }
         return "." + targetName;
     }
@@ -64,15 +62,15 @@ public class WikiSourcePage implements SourcePage {
         PageCrawler crawler = page.getPageCrawler();
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
-          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
+          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.");
         }
 
         WikiPage includedPage = crawler.getSiblingPage(pagePath);
         if (includedPage == null) {
-            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
+            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.");
         }
         else if (isParentOf(includedPage))
-           return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
+           return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").");
         else {
             return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
         }

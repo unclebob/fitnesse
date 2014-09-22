@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
