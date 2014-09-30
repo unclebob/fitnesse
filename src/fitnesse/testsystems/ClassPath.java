@@ -46,7 +46,11 @@ public class ClassPath {
     if (elements.isEmpty()) {
       return "defaultPath";
     } else {
-      return StringUtils.join(elements, separator);
+      String result = StringUtils.join(elements, separator);
+      if (result.contains(" ") && !(result.startsWith("\"") && result.endsWith("\""))) {
+    	 result = "\""+result +"\"";
+      }
+      return result;
     }
   }
 }
