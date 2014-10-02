@@ -17,11 +17,17 @@ public class VariableStore {
   }
 
   public Object getStored(String nameWithDollar) {
+    if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
+      return null;
+
     String name = nameWithDollar.substring(1);
+    if (!variables.containsKey(name)) {
+      return null;
+    }
     return variables.get(name).getObject();
   }
 
-  public boolean containsValueFor(String nameWithDollar) {
+  private boolean containsValueFor(String nameWithDollar) {
     return nameWithDollar != null && nameWithDollar.startsWith("$")
     && variables.containsKey(nameWithDollar.substring(1));
   }
