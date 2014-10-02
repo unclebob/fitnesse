@@ -29,9 +29,4 @@ public class InMemoryPage {
     FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null);
     return page;
   }
-
-  public static WikiPage createChildPage(String name, FileSystemPage parent) {
-    MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new FileSystemPage(new File(parent.getFileSystemPath(), name), name, parent, new MemoryVersionsController(fileSystem));
-  }
 }
