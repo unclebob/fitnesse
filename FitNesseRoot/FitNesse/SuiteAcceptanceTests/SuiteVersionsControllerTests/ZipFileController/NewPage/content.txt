@@ -1,4 +1,0 @@
-!help 
-!| script | versions controller fixture | ${VERSION_CONTROLLER_CLASS} |
-| Given a new wiki page |
-| check | history size | 0 |
