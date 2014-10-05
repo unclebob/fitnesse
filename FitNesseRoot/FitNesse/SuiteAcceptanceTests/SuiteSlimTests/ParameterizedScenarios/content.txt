@@ -38,7 +38,7 @@ Use the Division class from the eg library to implement the scenario
 
 Test the scenario with a decision table
 | myDivision |
-| # | numerator | denominator | quotient? |
+| # | numerator | denominator | quotient |
 | any comment| 10 | 2 | 5.0 |
 
 

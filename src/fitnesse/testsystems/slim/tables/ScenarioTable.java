@@ -76,23 +76,33 @@ public class ScenarioTable extends SlimTable {
     for (int inputCol = 2; inputCol < colsInHeader; inputCol += 2) {
       String argName = table.getCellContents(inputCol, 0);
 
-      if (argName.endsWith("?")) {
-        String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
-          0, argName.length()));
+      splitInputAndOutputArguments(argName);
+    }
+  }
+
+private void splitInputAndOutputArguments(String argName) {
+	argName = argName.trim();
+	if (argName.endsWith("?")) {
+//        String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
+//          0, argName.length()));
+        String disgracedArgName = Disgracer.disgraceMethodName(argName);
         outputs.add(disgracedArgName);
+        //inputs.add(disgracedArgName);
       } else {
         String disgracedArgName = Disgracer.disgraceMethodName(argName);
         inputs.add(disgracedArgName);
       }
-    }
-  }
+    System.out.println("Inputs : " + inputs.toString());
+    System.out.println("Outputs: " + outputs.toString());
+}
 
   private void getArgumentsForParameterizedName() {
     String argumentString = table.getCellContents(2, 0);
     String[] arguments = argumentString.split(",");
 
     for (String argument : arguments) {
-      addInput(Disgracer.disgraceMethodName(argument.trim()));
+        splitInputAndOutputArguments(argument);
+      //addInput(Disgracer.disgraceMethodName(argument.trim()));
     }
   }
 
@@ -275,7 +285,9 @@ public class ScenarioTable extends SlimTable {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
+      // Update the first column in the row which called the scenario with the scenario result
+      // TODO if the scenario has no output parameters the whole line should be flagged
+      parent.getTable().updateContent(0, getRow(), new SlimTestResult(testStatus));
       return null;
     }
 
