@@ -21,6 +21,8 @@ public class AddChildPageResponder implements SecureResponder {
   private String helpText;
   private String suites;
   private WikiPage pageTemplate;
+  private String user;
+
 
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
@@ -37,6 +39,7 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
+	user = request.getAuthorizationUsername();
     childName = (String) request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
@@ -58,7 +61,7 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private Response createChildPageAndMakeResponse(FitNesseContext context) {
-    createChildPage();
+    createChildPage(context);
     SimpleResponse response = new SimpleResponse();
     WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
     response.redirect(context.contextRoot, fullPathOfCurrentPage.toString());
@@ -71,9 +74,11 @@ public class AddChildPageResponder implements SecureResponder {
     return !WikiWordPath.isSingleWikiWord(name);
   }
 
-  private void createChildPage() {
+  private void createChildPage(FitNesseContext context) {
     WikiPage childPage = WikiPageUtil.addPage(currentPage, childPath, childContent);
     setAttributes(childPage);
+    context.recentChanges.updateRecentChanges(childPage);
+
   }
 
   private void setAttributes(WikiPage childPage) {
@@ -90,6 +95,7 @@ public class AddChildPageResponder implements SecureResponder {
     }
     childPageData.setAttribute(PageData.PropertyHELP, helpText);
     childPageData.setAttribute(PageData.PropertySUITES, suites);
+    childPageData.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
     childPage.commit(childPageData);
   }
 

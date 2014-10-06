@@ -2,13 +2,13 @@
 <properties>
 	<Edit>true</Edit>
 	<Files>true</Files>
-	<Help>Retrieve an old version from git</Help>
+	<Help>Check that the content of an older version can be retrieved</Help>
+	<LastModifyingUser>six42</LastModifyingUser>
 	<Properties>true</Properties>
 	<RecentChanges>true</RecentChanges>
 	<Refactor>true</Refactor>
 	<Search>true</Search>
-	<Suites></Suites>
-	<Test/>
+	<Test>true</Test>
 	<Versions>true</Versions>
 	<WhereUsed>true</WhereUsed>
 </properties>

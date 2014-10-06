@@ -2,7 +2,7 @@
 <properties>
 	<Edit>true</Edit>
 	<Files>true</Files>
-	<Help>Create a new page, it will be added it to version control</Help>
+	<Help>Create a page with two history versions, all versions content can be retrieved</Help>
 	<Properties>true</Properties>
 	<RecentChanges>true</RecentChanges>
 	<Refactor>true</Refactor>

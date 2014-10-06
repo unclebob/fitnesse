@@ -2,7 +2,7 @@
 <properties>
 	<Edit>true</Edit>
 	<Files>true</Files>
-	<Help>Save changes to an existing page will create a backup zip file of the old contents.</Help>
+	<Help>Save changes to an existing page will create a backup of the old contents.</Help>
 	<Properties>true</Properties>
 	<RecentChanges>true</RecentChanges>
 	<Refactor>true</Refactor>
