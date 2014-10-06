@@ -123,6 +123,7 @@ public class TestResponderTest {
       pageData.setAttribute(PageData.PropertySUITES, tags);
       testPage.commit(pageData);
     }
+    request.addInput("requestParam", "2");
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
@@ -724,7 +725,7 @@ public class TestResponderTest {
         "!|f|\n" +
         "|a|\n" +
         "|1|\n" +
-        "|2|\n";
+        "|${requestParam}|\n";
 
     public void assertXmlReportOfSlimScenarioTableIsCorrect() throws Exception {
       assertHeaderOfXmlDocumentsInResponseIsCorrect();

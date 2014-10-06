@@ -24,7 +24,7 @@ public class WikiPageResponder implements SecureResponder {
     if (page == null)
       return notFoundResponse(context, request);
     else
-      return makePageResponse(context, page);
+      return makePageResponse(context, page, request);
   }
 
   protected WikiPage loadPage(FitNesseContext context, String pageName) {
@@ -51,7 +51,11 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
-      String html = makeHtml(context, page);
+      return makePageResponse(context, page, null);
+  }
+
+  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page, Request request) {
+      String html = makeHtml(context, page, request);
 
       SimpleResponse response = new SimpleResponse();
       response.setMaxAge(0);
@@ -60,6 +64,10 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public String makeHtml(FitNesseContext context, WikiPage page) {
+      return makeHtml(context, page, null);
+  }
+
+  public String makeHtml(FitNesseContext context, WikiPage page, Request request) {
     PageData pageData = page.getData();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
@@ -78,9 +86,15 @@ public class WikiPageResponder implements SecureResponder {
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
     if (WikiTestPage.isTestPage(page)) {
+      // Add test url inputs to context's variableSource.
+      context.variableSource.addUrlParams(request.getMap());
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
       html.put("content", new WikiTestPageRenderer(testPage));
     } else {
+      // Add page url inputs to VariableSource of wikipage.
+      if(page instanceof BaseWikiPage && ((BaseWikiPage) page).getVariableSource() instanceof SystemVariableSource){
+          ((SystemVariableSource)((BaseWikiPage)page).getVariableSource()).addUrlParams(request.getMap());
+      }
       html.put("content", new WikiPageRenderer(page));
     }
 

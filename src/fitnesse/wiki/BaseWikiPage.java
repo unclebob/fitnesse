@@ -54,7 +54,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return parent == null || parent == this;
   }
 
-  protected VariableSource getVariableSource() {
+  public VariableSource getVariableSource() {
     return variableSource;
   }
 

@@ -1,6 +1,7 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Properties;
 
 import fitnesse.wikitext.parser.VariableSource;
@@ -8,13 +9,19 @@ import fitnesse.wikitext.parser.Maybe;
 
 public class SystemVariableSource implements VariableSource, Serializable {
   private final Properties properties;
+  private Map<String,Object> testUrlParams;
 
   public SystemVariableSource(Properties properties) {
     this.properties = properties;
+    this.testUrlParams = null;
   }
 
   public SystemVariableSource() {
     this(null);
+  }
+
+  public void addUrlParams(Map<String,Object> testUrlParams){
+      this.testUrlParams = testUrlParams;
   }
 
   @Override
@@ -25,6 +32,8 @@ public class SystemVariableSource implements VariableSource, Serializable {
   }
 
   public String getProperty(String name) {
+    if(testUrlParams != null && testUrlParams.containsKey(name)) { return (String)testUrlParams.get(name); }
+
     String p = System.getenv(name);
     if (p != null) return p;
 

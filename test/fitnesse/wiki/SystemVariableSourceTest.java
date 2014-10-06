@@ -3,6 +3,8 @@
 
 package fitnesse.wiki;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -40,6 +42,19 @@ public class SystemVariableSourceTest {
     SystemVariableSource source = new SystemVariableSource(properties);
 
     assertThat(source.getProperty("PATH"), is(System.getenv("PATH")));
+  }
+
+  @Test
+  public void urlVariableShouldTakePrecedenceOverEnvironmentAndSystemProperties() {
+    Properties properties = new Properties();
+    System.setProperty("PATH", "xxxxx");
+
+    SystemVariableSource source = new SystemVariableSource(properties);
+    Map<String,Object> urlVariables = new HashMap<String,Object>();
+    urlVariables.put("PATH", "yyyyy");
+    source.addUrlParams(urlVariables);
+
+    assertThat(source.getProperty("PATH"), is(urlVariables.get("PATH")));
   }
 
 }
