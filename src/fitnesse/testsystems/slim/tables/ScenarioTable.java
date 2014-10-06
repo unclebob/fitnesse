@@ -285,9 +285,13 @@ private void splitInputAndOutputArguments(String argName) {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      // Update the first column in the row which called the scenario with the scenario result
-      // TODO if the scenario has no output parameters the whole line should be flagged
-      parent.getTable().updateContent(0, getRow(), new SlimTestResult(testStatus));
+      if (outputs.isEmpty()){
+    	  // if the scenario has no output parameters the whole line should be flagged
+    	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
+      }else{
+          // Update the first column in the row which called the scenario with the scenario result
+    	  parent.getTable().updateContent(0, getRow(), new SlimTestResult(testStatus));
+      }
       return null;
     }
 

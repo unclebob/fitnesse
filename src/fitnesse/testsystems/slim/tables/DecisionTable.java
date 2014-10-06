@@ -95,9 +95,8 @@ public class DecisionTable extends SlimTable {
         if (assignedSymbol != null) {
 //          assertion = makeAssertion(callAndAssign(assignedSymbol, echo, new Object[] {"$"+functionName}),
 //                  new SymbolAssignmentExpectation(assignedSymbol, col, row));
-        	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "echo", "$"+functionName),
+        	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+functionName),
         			new ReturnedSymbolExpectation(col, row,functionName, assignedSymbol));
-          //assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(col, row,functionName, assignedSymbol));
         } else {
           assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(col, row,functionName));
         }

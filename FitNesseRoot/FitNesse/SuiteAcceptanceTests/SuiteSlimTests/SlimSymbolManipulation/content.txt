@@ -1,0 +1,86 @@
+!1 The below functions are used internally by Slim. They should not be used in normal test cases:
+* freeSymbol
+
+* cloneSymbol
+* getValuefromQueryResultSymbol
+* getValuefromTableResultSymbol
+
+This page tests the above functions
+
+|import|
+|fitnesse.slim.test|
+
+!|Library|
+|EchoScript|
+
+!3 Check that the clone $copy of a symbol $q is a real clone and not impacted by a modification of the $q
+!|script| Test Query| 2|
+|$q= | query|
+|show | echo| $q|
+|$copy= | cloneSymbol | $q|
+|show | echo| $copy|
+|start | Test Query | 3|
+|$q= | query|
+|show | echo| $q|
+|show | echo| $copy|
+|check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+|check |echo|$q|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]], [[n, 3], [2n, 6]]]|
+
+!3 Free the symbol again
+!|script|
+|check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+|check |echo|$q|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]], [[n, 3], [2n, 6]]]|
+|$q= | freeSymbol|
+|check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+|check |echo|$q|null|
+
+!3  Get individual cell values from a query result (List<List<List<Object>>>)
+!|script|
+|check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 0| 2n|
+|check| echo |$cell|  2|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 1| 2n|
+|check| echo |$cell|  4|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 1| n|
+|check| echo |$cell|  2|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 0| n|
+|check| echo |$cell|  1|
+
+!3 Get individual cell values from a table result (List<List<Object>>)
+|script|
+|check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+|$cell= | getValuefromTableResultSymbol;| $copy| 0| 0|
+|check | echo | $cell |[n, 1]|
+|$cell= | getValuefromTableResultSymbol;| $copy| 0| 1|
+|check | echo | $cell |[2n, 2]|
+|$cell= | getValuefromTableResultSymbol;| $copy| 1| 0|
+|check | echo | $cell |[n, 2]|
+|$cell= | getValuefromTableResultSymbol;| $copy| 1| 1|
+|check | echo | $cell |[2n, 4]|
+
+!3 No index out of range is crashing the slim client or wiki server
+Also after an exception the value of a variable stays in sync between clint and server
+ 
+|script|
+|$cell= | getValuefromTableResultSymbol;| $copy| 2| 1|
+|show | echo | $cell ||
+|$clientCell= | cloneSymbol| $cell|
+|check | echo | $cell |$clientCell|
+
+|script|
+|$cell= | getValuefromTableResultSymbol;| $copy| 1| 2|
+|show | echo | $cell ||
+
+|script|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 4| 2n|
+|show | echo | $cell ||
+
+|script|
+|$cell= | getValuefromQueryResultSymbol;| $copy| 1| nix|
+|show | echo | $cell ||
+
+!3 Free the $copy, the $cell value must not be impacted
+|script|
+|$cell= | getValuefromTableResultSymbol;| $copy| 1| 1|
+|$copy= | freeSymbol|
+|check | echo | $cell |[2n, 4]|
