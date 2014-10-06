@@ -87,13 +87,13 @@ public class WikiPageResponder implements SecureResponder {
 
     if (WikiTestPage.isTestPage(page)) {
       // Add test url inputs to context's variableSource.
-      context.variableSource.addUrlParams(request.getMap());
+      context.variableSource.setUrlParams(request.getMap());
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
       html.put("content", new WikiTestPageRenderer(testPage));
     } else {
       // Add page url inputs to VariableSource of wikipage.
       if(page instanceof BaseWikiPage && ((BaseWikiPage) page).getVariableSource() instanceof SystemVariableSource){
-          ((SystemVariableSource)((BaseWikiPage)page).getVariableSource()).addUrlParams(request.getMap());
+          ((SystemVariableSource)((BaseWikiPage)page).getVariableSource()).setUrlParams(request.getMap());
       }
       html.put("content", new WikiPageRenderer(page));
     }

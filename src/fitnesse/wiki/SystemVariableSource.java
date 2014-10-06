@@ -20,8 +20,12 @@ public class SystemVariableSource implements VariableSource, Serializable {
     this(null);
   }
 
-  public void addUrlParams(Map<String,Object> testUrlParams){
+  public void setUrlParams(Map<String,Object> testUrlParams){
       this.testUrlParams = testUrlParams;
+  }
+
+  public Map<String,Object> getUrlParams(){
+      return this.testUrlParams;
   }
 
   @Override

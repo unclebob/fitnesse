@@ -290,7 +290,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    context.variableSource.addUrlParams(request.getMap());
+    context.variableSource.setUrlParams(request.getMap());
     final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, context.variableSource);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);

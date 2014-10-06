@@ -52,7 +52,7 @@ public class SystemVariableSourceTest {
     SystemVariableSource source = new SystemVariableSource(properties);
     Map<String,Object> urlVariables = new HashMap<String,Object>();
     urlVariables.put("PATH", "yyyyy");
-    source.addUrlParams(urlVariables);
+    source.setUrlParams(urlVariables);
 
     assertThat(source.getProperty("PATH"), is(urlVariables.get("PATH")));
   }
