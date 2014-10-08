@@ -1,9 +1,13 @@
 !2 Next release
- * Removed classes:
-   * util.StringUtil, use org.apache.commons.lang.StringUtils instead.
-   * util.ListUtility, use java.util.Arrays instead.
-   * fitnesse.wikitext.Utils, use fitnesse.html.HtmlUtil instead.
-   * fitnesse.FitFilter.
+ * Big cleanup. Removed classes:
+   * !-util.StringUtil-!, use !-org.apache.commons.lang.StringUtils-! instead.
+   * !-util.ListUtility-!, use java.util.Arrays instead.
+   * fitnesse.wikitext.Utils, use !-fitnesse.html.HtmlUtil-! instead.
+   * !-fitnesse.FitFilter-!.
+ * Issues fixed:
+   * Fix !-SimpleFileVersionsController-! so it can be configured in ''plugins.properties''.
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=9&state=closed.
 
 !2 20140901
  * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
@@ -21,7 +25,7 @@
    * Allow Scenarios with parameterised style but with empty parameter names ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
    * Fix handling and recording of errors in table definitions ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/milestones/Next%20release.
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=8&state=closed.
 
 !2 20140630
  * Add page wide Expand/Collapse All buttons (bootstrap theme).
