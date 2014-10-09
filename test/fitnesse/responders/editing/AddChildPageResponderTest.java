@@ -88,7 +88,7 @@ public class AddChildPageResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 
-    request = makeInvalidRequest("1man1mission");
+    request = makeInvalidRequest("1man+1mission");
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 

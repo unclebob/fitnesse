@@ -115,7 +115,7 @@ public class SymbolicLinkResponder implements Responder {
       response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
       response.setStatus(412);
       return false;
-    } else if (!WikiWordPath.isSingleWikiWord(linkName)) {
+    } else if (!PathParser.isSingleWikiWord(linkName)) {
       response = new ErrorResponder(linkName + " is not a valid WikiWord.").makeResponse(context, null);
       response.setStatus(412);
       return false;

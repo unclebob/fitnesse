@@ -62,7 +62,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
-        assertEquals("MyfilE", child.getName());
+        assertEquals("myfile", child.getName());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
-        assertEquals("SubsuitE", child.getName());
+        assertEquals("subsuite", child.getName());
     }
 
   @Test

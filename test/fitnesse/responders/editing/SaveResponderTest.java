@@ -89,6 +89,19 @@ public class SaveResponderTest {
   }
 
   @Test
+  public void testCanCreatePageForNonWikiWord() throws Exception {
+    prepareRequest("child_page_two");
+
+    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+
+    assertEquals(true, root.hasChildPage("child_page_two"));
+    String newContent = root.getChildPage("child_page_two").getData().getContent();
+    assertEquals("some new content", newContent);
+    assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
+    checkRecentChanges(root, "child_page_two");
+  }
+
+  @Test
   public void testCanCreatePageWithoutTicketIdAndEditTime() throws Exception {
     request.setResource("ChildPageTwo");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");

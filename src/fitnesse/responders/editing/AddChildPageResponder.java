@@ -10,7 +10,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
@@ -71,7 +70,7 @@ public class AddChildPageResponder implements SecureResponder {
   private boolean nameIsInvalid(String name) {
     if (name.equals(""))
       return true;
-    return !WikiWordPath.isSingleWikiWord(name);
+    return !PathParser.isSingleWikiWord(name);
   }
 
   private void createChildPage(FitNesseContext context) {

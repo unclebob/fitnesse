@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
+import fitnesse.wikitext.parser.WikiWordPath;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class PathParserTest {
   public WikiPagePath path;
@@ -20,6 +20,13 @@ public class PathParserTest {
   public void testSimpleName() throws Exception {
     path = makePath("ParentPage");
     assertEquals("ParentPage", path.getFirst());
+    assertTrue(path.getRest().isEmpty());
+  }
+
+  @Test
+  public void testSimpleLowercaseName() throws Exception {
+    path = makePath("parent_page");
+    assertEquals("parent_page", path.getFirst());
     assertTrue(path.getRest().isEmpty());
   }
 
@@ -62,9 +69,8 @@ public class PathParserTest {
 
   @Test
   public void testInvalidNames() throws Exception {
-    assertNull(makePath("bob"));
-    assertNull(makePath("bobMartin"));
-    assertNull(makePath("_root"));
+    assertNull(makePath("&bob"));
+    assertNull(makePath("+bobMartin"));
   }
 
   @Test
@@ -99,4 +105,28 @@ public class PathParserTest {
     assertEquals("<MyPage", PathParser.render(makePath("<MyPage")));
     assertEquals(">MyPage", PathParser.render(makePath(">MyPage")));
   }
+
+  @Test
+  public void testIsSingleWikiWord() throws Exception {
+    assertTrue(PathParser.isSingleWikiWord("WikiWord"));
+    assertTrue(PathParser.isSingleWikiWord("anotherWikiWord"));
+    assertFalse(PathParser.isSingleWikiWord("NotSingle.WikiWord"));
+    assertFalse(PathParser.isSingleWikiWord("WikiW\u00F0rd"));
+  }
+
+
+  @Test
+  public void isValidWikiPath() {
+    assertWikiPath("SomePage");
+    assertWikiPath("SomePage.AnotherPage");
+    assertWikiPath("SomePage.someotherpage");
+    assertWikiPath(".SomePage.someotherpage");
+    assertWikiPath("<SomePage.someotherpage");
+    assertWikiPath(">SomePage.someotherpage");
+  }
+
+  private void assertWikiPath(String path) {
+    assertTrue(path, PathParser.isWikiPath(path));
+  }
+
 }

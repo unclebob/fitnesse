@@ -156,17 +156,6 @@ public class WikiImporterTest implements WikiImporterClient {
   }
 
   @Test
-  public void testParsingUrlWithNonWikiWord() throws Exception {
-    try {
-      importer.parseUrl("http://blah.com/notawikiword");
-      fail("should throw exception");
-    }
-    catch (Exception e) {
-      assertEquals("The URL's resource path, notawikiword, is not a valid WikiWord.", e.getMessage());
-    }
-  }
-
-  @Test
   public void testImportingWiki() throws Exception {
     localRoot = InMemoryPage.makeRoot("LocalRoot");
     importer.importWiki(localRoot);

@@ -1,17 +1,11 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.PathParser;
+
 public class WikiWordPath {
 
-    public static boolean isSingleWikiWord(String s) {
-      return new WikiWordPath().wikiWordLength(s) == s.length();
-    }
-
-    public static boolean isWikiWord(String word) {
-      return new WikiWordPath().findLength(word) == word.length();
-    }
-
     public static String makeWikiWord(String input) {
-        if (isWikiWord(input)) return input;
+        if (PathParser.isWikiPath(input)) return input;
         StringBuilder base = new StringBuilder(input);
         while (base.length() < 3) base.append("a");
         return base.substring(0, 1).toUpperCase()

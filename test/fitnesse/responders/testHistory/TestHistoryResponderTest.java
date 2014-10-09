@@ -300,7 +300,7 @@ public class TestHistoryResponderTest {
   @Test
   public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
     addPageDirectoryWithOneResult("SomePage", "20090419123103_1_0_0_0");
-    addPageDirectoryWithOneResult("bad-directory-name", "20090419123103_1_0_0_0");
+    addPageDirectoryWithOneResult("bad+directory+name", "20090419123103_1_0_0_0");
     history.readHistoryDirectory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));

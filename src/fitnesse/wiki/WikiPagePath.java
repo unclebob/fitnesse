@@ -80,7 +80,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   public String last() {
-    return (String) (names.size() == 0 ? null : names.get(names.size() - 1));
+    return (names.size() == 0 ? null : names.get(names.size() - 1));
   }
 
   public List<String> getNames() {

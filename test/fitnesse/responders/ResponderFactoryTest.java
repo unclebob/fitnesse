@@ -75,6 +75,8 @@ public class ResponderFactoryTest {
     assertResponderType(WikiPageResponder.class);
     request.setResource("root");
     assertResponderType(WikiPageResponder.class);
+    request.setResource("custom_page");
+    assertResponderType(WikiPageResponder.class);
   }
 
   @Test
@@ -266,7 +268,7 @@ public class ResponderFactoryTest {
 
   @Test
   public void testNotFoundResponder() throws Exception {
-    request.setResource("somepage");
+    request.setResource("$$$");
     assertResponderType(NotFoundResponder.class);
   }
 
