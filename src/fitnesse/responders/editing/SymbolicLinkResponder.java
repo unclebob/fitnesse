@@ -10,7 +10,6 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
-import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;

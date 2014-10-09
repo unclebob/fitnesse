@@ -43,7 +43,6 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionComparerResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
   private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());

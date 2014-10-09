@@ -8,7 +8,6 @@ import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class RenamePageResponder extends PageMovementResponder {
   private String newName;

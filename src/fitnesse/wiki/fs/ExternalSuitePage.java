@@ -2,7 +2,6 @@ package fitnesse.wiki.fs;
 
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,10 +84,10 @@ public class ExternalSuitePage extends BaseWikiPage {
       File childPath = new File(path, child);
       if (child.endsWith(HTML)) {
         children.add(new ExternalTestPage(childPath,
-                WikiWordPath.makeWikiWord(child.replace(HTML, "")), this, fileSystem, getVariableSource()));
+                child.replace(HTML, ""), this, fileSystem, getVariableSource()));
       } else if (hasHtmlChild(childPath)) {
         children.add(new ExternalSuitePage(childPath,
-                WikiWordPath.makeWikiWord(child), this, fileSystem, getVariableSource()));
+                child, this, fileSystem, getVariableSource()));
       }
     }
     return children;
