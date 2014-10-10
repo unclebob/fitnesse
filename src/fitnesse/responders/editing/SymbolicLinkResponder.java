@@ -64,7 +64,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void setRedirect(String resource) {
-    response.redirect(context.contextRoot, resource + "?properties");
+    response.redirect(context.contextRoot, resource + "?properties#symbolics");
   }
 
   private void removeSymbolicLink(Request request, WikiPage page) {
