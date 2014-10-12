@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
 
 /**
  * The page represents wiki page in the course of being parsed.
@@ -13,6 +14,7 @@ public class ParsingPage implements VariableSource {
   private final SourcePage page;
   private final SourcePage namedPage;
   private final VariableSource variableSource;
+  private Map<String,Object> urlParams;
 
   private final HashMap<String, HashMap<String, Maybe<String>>> cache;
 
@@ -21,26 +23,32 @@ public class ParsingPage implements VariableSource {
   }
 
   public ParsingPage(SourcePage page, VariableSource variableSource) {
-    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>());
+    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>(), null);
+  }
+
+  public ParsingPage(SourcePage page, VariableSource variableSource, Map<String,Object> urlParams ) {
+    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>(), urlParams);
   }
 
   public ParsingPage copy() {
-    return new ParsingPage(page, page, variableSource, cache);
+    return new ParsingPage(page, page, variableSource, cache, urlParams);
   }
 
   public ParsingPage copyForPage(SourcePage page) {
-    return new ParsingPage(page, page, variableSource, cache);
+    return new ParsingPage(page, page, variableSource, cache, urlParams);
   }
 
   public ParsingPage copyForNamedPage(SourcePage namedPage) {
-    return new ParsingPage(this.page, namedPage, variableSource, cache);
+    return new ParsingPage(this.page, namedPage, variableSource, cache, urlParams);
   }
 
-  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache) {
+  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache,
+          Map<String,Object> urlParams) {
     this.page = page;
     this.namedPage = namedPage;
     this.variableSource = variableSource;
     this.cache = cache;
+    this.urlParams = urlParams;
   }
 
   public SourcePage getPage() {
@@ -81,8 +89,13 @@ public class ParsingPage implements VariableSource {
     Maybe<String> result = findSpecialVariableValue(name);
     if (!result.isNothing()) return result;
 
-    result = findVariableInUrl(name);
-    if (!result.isNothing()) return result;
+    if(variableSource instanceof UrlPathVariableSource){
+        urlParams = ((UrlPathVariableSource) variableSource).getUrlParams();
+    }
+
+    if(urlParams != null && urlParams.containsKey(name)){
+        return new Maybe<String>((String)urlParams.get(name));
+    }
 
     result = findVariableInPages(name);
     if (!result.isNothing()) return result;
@@ -112,14 +125,6 @@ public class ParsingPage implements VariableSource {
     } else
       return Maybe.noString;
     return new Maybe<String>(value);
-  }
-
-  private Maybe<String> findVariableInUrl(String name) {
-      if(!(variableSource instanceof SystemVariableSource)) return Maybe.noString;
-      Map<String,Object> urlParams = ((SystemVariableSource)variableSource).getUrlParams();
-      if(urlParams == null) return Maybe.noString;
-      if(!urlParams.containsKey(name)) return Maybe.noString;
-      return new Maybe<String>((String)urlParams.get(name));
   }
 
   private Maybe<String> findVariableInPages(String name) {

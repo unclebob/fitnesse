@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.util.Map;
+
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -17,6 +19,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private final String name;
   private final WikiPage parent;
   private final VariableSource variableSource;
+  private Map<String,Object> urlParams;
   private ParsingPage parsingPage;
   private Symbol syntaxTree;
 
@@ -54,10 +57,13 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return parent == null || parent == this;
   }
 
-  public VariableSource getVariableSource() {
+  protected VariableSource getVariableSource() {
     return variableSource;
   }
 
+  public void setUrlParams(Map<String,Object> urlParams){
+      this.urlParams = urlParams;
+  }
 
   @Override
   public String getVariable(String name) {
@@ -89,7 +95,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private void parse() {
     if (syntaxTree == null) {
       // This is the only page where we need a VariableSource
-      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
+      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource(), urlParams);
       syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }
   }

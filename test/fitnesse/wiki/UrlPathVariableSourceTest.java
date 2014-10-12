@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class SystemVariableSourceTest {
+public class UrlPathVariableSourceTest {
 
   @Test
   public void shouldReadProvidedProperties() {
@@ -20,28 +20,23 @@ public class SystemVariableSourceTest {
     properties.setProperty("TestProp", "found");
 
     SystemVariableSource source = new SystemVariableSource(properties);
+    UrlPathVariableSource urlSource = new UrlPathVariableSource(source, null);
 
-    assertThat(source.findVariable("TestProp").getValue(), is("found"));
+    assertThat(urlSource.findVariable("TestProp").getValue(), is("found"));
   }
 
   @Test
-  public void systemPropertyShouldTakePrecedenceOverProvidedProperties() {
-    Properties properties = new Properties();
-    properties.setProperty("user.name", "xxxxx");
-
-    SystemVariableSource source = new SystemVariableSource(properties);
-
-    assertThat(source.findVariable("user.name").getValue(), is(System.getProperty("user.name")));
-  }
-
-  @Test
-  public void environmentVariableShouldTakePrecedenceOverSystemProperties() {
+  public void urlVariableShouldTakePrecedenceOverEnvironmentAndSystemProperties() {
     Properties properties = new Properties();
     System.setProperty("PATH", "xxxxx");
+    properties.setProperty("PATH", "zzzzz");
 
     SystemVariableSource source = new SystemVariableSource(properties);
-
-    assertThat(source.getProperty("PATH"), is(System.getenv("PATH")));
+    Map<String,Object> urlVariables = new HashMap<String,Object>();
+    urlVariables.put("PATH", "yyyyy");
+    UrlPathVariableSource urlSource = new UrlPathVariableSource(source, urlVariables);
+    
+    assertThat(urlSource.findVariable("PATH").getValue(), is(urlVariables.get("PATH")));
   }
 
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.http.Request;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
@@ -30,12 +31,23 @@ public class WikiPageUtil {
 
 
   public static String getHeaderPageHtml(WikiPage wikiPage) {
+    return getHeaderPageHtml(wikiPage, null);
+  }
+
+  public static String getHeaderPageHtml(WikiPage wikiPage, Request request) {
     WikiPage header = getHeaderPage(wikiPage);
+    if(wikiPage != null && request != null) { ((BaseWikiPage)wikiPage).setUrlParams(request.getMap()); }
+    if(header != null && request != null) { ((BaseWikiPage)header).setUrlParams(request.getMap()); }
     return header == null ? "" : header.getHtml();
   }
 
   public static String getFooterPageHtml(WikiPage wikiPage) {
+    return getFooterPageHtml(wikiPage, null);
+  }
+
+  public static String getFooterPageHtml(WikiPage wikiPage, Request request) {
     WikiPage footer = getFooterPage(wikiPage);
+    if(footer != null && request != null) { ((BaseWikiPage)footer).setUrlParams(request.getMap()); }
     return footer == null ? "" : footer.getHtml();
   }
 
@@ -66,8 +78,12 @@ public class WikiPageUtil {
   }
 
   public static String makePageHtml(WikiPage page) {
+      return makePageHtml(page, null);
+  }
+
+  public static String makePageHtml(WikiPage page, Request request) {
     StringBuffer buffer = new StringBuffer();
-    buffer.append(getHeaderPageHtml(page));
+    buffer.append(getHeaderPageHtml(page,request));
     buffer.append(page.getHtml());
     return buffer.toString();
   }
