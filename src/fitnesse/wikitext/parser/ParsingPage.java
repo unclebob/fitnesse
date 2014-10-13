@@ -14,7 +14,6 @@ public class ParsingPage implements VariableSource {
   private final SourcePage page;
   private final SourcePage namedPage;
   private final VariableSource variableSource;
-  private Map<String,Object> urlParams;
 
   private final HashMap<String, HashMap<String, Maybe<String>>> cache;
 
@@ -23,32 +22,26 @@ public class ParsingPage implements VariableSource {
   }
 
   public ParsingPage(SourcePage page, VariableSource variableSource) {
-    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>(), null);
-  }
-
-  public ParsingPage(SourcePage page, VariableSource variableSource, Map<String,Object> urlParams ) {
-    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>(), urlParams);
+    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>());
   }
 
   public ParsingPage copy() {
-    return new ParsingPage(page, page, variableSource, cache, urlParams);
+    return new ParsingPage(page, page, variableSource, cache);
   }
 
   public ParsingPage copyForPage(SourcePage page) {
-    return new ParsingPage(page, page, variableSource, cache, urlParams);
+    return new ParsingPage(page, page, variableSource, cache);
   }
 
   public ParsingPage copyForNamedPage(SourcePage namedPage) {
-    return new ParsingPage(this.page, namedPage, variableSource, cache, urlParams);
+    return new ParsingPage(this.page, namedPage, variableSource, cache);
   }
 
-  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache,
-          Map<String,Object> urlParams) {
+  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache) {
     this.page = page;
     this.namedPage = namedPage;
     this.variableSource = variableSource;
     this.cache = cache;
-    this.urlParams = urlParams;
   }
 
   public SourcePage getPage() {
@@ -90,11 +83,8 @@ public class ParsingPage implements VariableSource {
     if (!result.isNothing()) return result;
 
     if(variableSource instanceof UrlPathVariableSource){
-        urlParams = ((UrlPathVariableSource) variableSource).getUrlParams();
-    }
-
-    if(urlParams != null && urlParams.containsKey(name)){
-        return new Maybe<String>((String)urlParams.get(name));
+       result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
+       if (!result.isNothing()) return result;
     }
 
     result = findVariableInPages(name);
