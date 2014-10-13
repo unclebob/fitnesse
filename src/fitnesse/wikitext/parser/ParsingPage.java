@@ -1,9 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.UrlPathVariableSource;
 
 /**

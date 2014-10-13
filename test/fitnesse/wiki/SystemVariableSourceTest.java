@@ -3,8 +3,6 @@
 
 package fitnesse.wiki;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Test;

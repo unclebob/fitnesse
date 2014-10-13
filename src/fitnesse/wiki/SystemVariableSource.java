@@ -1,7 +1,6 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Properties;
 
 import fitnesse.wikitext.parser.VariableSource;
