@@ -125,14 +125,14 @@ $(document).ready(function() {
 
 	$('input.wikiword').keyup(function () {
 		validateField.apply(this,
-				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
-		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
+				[/^\w[\w-]*$/,
+		         "<p class='validationerror'>The page name is not valid.</p>"]);
 	});
 
 	$('input.wikipath').keyup(function () {
 		validateField.apply(this,
-				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
-				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
+				[/^[<>^\.]?\w[\w-]*(\.\w[\w-]+)*$/,
+				 "<p class='validationerror'>The page path is not valid.</p>"]);
 	});
 
 
