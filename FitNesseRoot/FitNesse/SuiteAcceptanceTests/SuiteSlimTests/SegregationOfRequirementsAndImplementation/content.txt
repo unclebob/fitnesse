@@ -22,10 +22,8 @@ Generate an instance of the class used by the scenario:
 | Library | 
 | eg.Division|
 
-|script | Division|
 
 
 We retest the requirements and get the same results.
-Also the output is differently printed.
 
 !include >CalculatorRequirements

@@ -53,7 +53,9 @@ If you'd rather you can reference the scenario with parameters so long as you ma
 
 The column headers of the DecisionTable are named for the arguments of the scenario (again, once properly camel-cased).  The scenario processor simply replaces the arguments in the scenario with the contents of the table cells below the corresponding header.
 
-Notice that there is no concept of an ''output'' header; i.e. there is no '?' in any of the column headers.  A DecisionTable that calls a ScenarioTable does not make any assertions of its own.  Rather it relies on the Scenario table to do the asserting.  If you look at the ScenarioTable above, it uses the ''check'' keyword to make the assertion.  Again, this is important.  When you call a Scenario, you only pass data ''into'' it.  You don't get data back out of it.  Scenarios have no return value.
+You can also use ''output'' header; i.e. a '?' at the end of the name of a header column.
+See [[Scenario Test Suite][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioTestSuite]] for examples how to do this.
+
 
 If you hit the test button, you will see the scenario operate.  It's pretty self-explanatory.  If you look at the resulting DecisionTable you'll see that an extra column has been added to each row.  That column contains a collapsed section with the entire scenario table with all the arguments replaced.  You can expand it by clicking on the litte arrow. Try it.
 

@@ -83,17 +83,12 @@ public class ScenarioTable extends SlimTable {
 private void splitInputAndOutputArguments(String argName) {
 	argName = argName.trim();
 	if (argName.endsWith("?")) {
-//        String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
-//          0, argName.length()));
         String disgracedArgName = Disgracer.disgraceMethodName(argName);
         outputs.add(disgracedArgName);
-        //inputs.add(disgracedArgName);
       } else {
         String disgracedArgName = Disgracer.disgraceMethodName(argName);
         inputs.add(disgracedArgName);
       }
-    System.out.println("Inputs : " + inputs.toString());
-    System.out.println("Outputs: " + outputs.toString());
 }
 
   private void getArgumentsForParameterizedName() {
@@ -102,7 +97,6 @@ private void splitInputAndOutputArguments(String argName) {
 
     for (String argument : arguments) {
         splitInputAndOutputArguments(argument);
-      //addInput(Disgracer.disgraceMethodName(argument.trim()));
     }
   }
 
@@ -285,12 +279,11 @@ private void splitInputAndOutputArguments(String argName) {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      if (outputs.isEmpty()){
-    	  // if the scenario has no output parameters the whole line should be flagged
+      if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
+    	  // if the scenario has no output parameters 
+    	  // or the scenario failed
+    	  // then the whole line should be flagged
     	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
-      }else{
-          // Update the first column in the row which called the scenario with the scenario result
-    	  parent.getTable().updateContent(0, getRow(), new SlimTestResult(testStatus));
       }
       return null;
     }

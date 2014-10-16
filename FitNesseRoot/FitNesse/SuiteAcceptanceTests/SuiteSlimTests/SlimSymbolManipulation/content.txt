@@ -26,7 +26,7 @@ This page tests the above functions
 |check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
 |check |echo|$q|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]], [[n, 3], [2n, 6]]]|
 
-!3 Free the symbol again
+!3 Free the symbol
 !|script|
 |check| echo |$copy| [[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
 |check |echo|$q|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]], [[n, 3], [2n, 6]]]|
@@ -57,27 +57,9 @@ This page tests the above functions
 |check | echo | $cell |[n, 2]|
 |$cell= | getValuefromTableResultSymbol;| $copy| 1| 1|
 |check | echo | $cell |[2n, 4]|
+|check | getValuefromTableResultSymbol;| $copy| 1| 1| [2n, 4]|
 
-!3 No index out of range is crashing the slim client or wiki server
-Also after an exception the value of a variable stays in sync between clint and server
- 
-|script|
-|$cell= | getValuefromTableResultSymbol;| $copy| 2| 1|
-|show | echo | $cell ||
-|$clientCell= | cloneSymbol| $cell|
-|check | echo | $cell |$clientCell|
 
-|script|
-|$cell= | getValuefromTableResultSymbol;| $copy| 1| 2|
-|show | echo | $cell ||
-
-|script|
-|$cell= | getValuefromQueryResultSymbol;| $copy| 4| 2n|
-|show | echo | $cell ||
-
-|script|
-|$cell= | getValuefromQueryResultSymbol;| $copy| 1| nix|
-|show | echo | $cell ||
 
 !3 Free the $copy, the $cell value must not be impacted
 |script|
