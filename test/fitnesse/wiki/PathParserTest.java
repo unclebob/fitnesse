@@ -111,6 +111,8 @@ public class PathParserTest {
     assertTrue(PathParser.isSingleWikiWord("anotherWikiWord"));
     assertFalse(PathParser.isSingleWikiWord("NotSingle.WikiWord"));
     assertFalse(PathParser.isSingleWikiWord("WikiW\u00F0rd"));
+    assertFalse(PathParser.isSingleWikiWord("files"));
+    assertFalse(PathParser.isSingleWikiWord("root"));
   }
 
 
