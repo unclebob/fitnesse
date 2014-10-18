@@ -133,7 +133,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(1 + 1, lastCol, row, assertions);
-      assertions.add(makeAssertion(callAndAssign(symbolName, getTableType() + "Actor", actionName, args),
+      assertions.add(makeAssertion(callAndAssign(symbolName, getTableType() + "Actor", actionName, (Object[]) args),
               new SymbolAssignmentExpectation(symbolName, 0, row)));
 
     }

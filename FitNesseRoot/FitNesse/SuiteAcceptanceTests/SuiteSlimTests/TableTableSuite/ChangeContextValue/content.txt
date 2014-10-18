@@ -1,0 +1,11 @@
+|import|
+|fitnesse.slim.test|
+
+|script|test slim|
+|$X=|echo int|99|
+
+|table: Table Table Inc First Col |
+|$X|$Y=|
+
+|script|test slim|$Y|
+|check|return Constructor Arg|100|

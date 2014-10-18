@@ -3,8 +3,10 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,10 +24,11 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
+import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
+
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
-import static util.ListUtility.list;
 
 public abstract class SlimTable {
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
@@ -41,6 +44,8 @@ public abstract class SlimTable {
   protected final Table table;
   protected String id;
   protected CustomComparatorRegistry customComparatorRegistry;
+
+  private final Map<String, String> symbolsToStore = new HashMap<String, String>();
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -95,7 +100,18 @@ public abstract class SlimTable {
   }
 
   public void setSymbol(String variableName, String value) {
+    setSymbol(variableName, value, false);
+  }
+
+  public void setSymbol(String variableName, String value, boolean toStore) {
     testContext.setSymbol(variableName, value);
+    if (toStore) {
+      symbolsToStore.put(variableName, value);
+    }
+  }
+
+  public Map<String, String> getSymbolsToStore() {
+    return symbolsToStore;
   }
 
   public Table getTable() {
@@ -141,12 +157,16 @@ public abstract class SlimTable {
     return new CallInstruction(makeInstructionTag(), instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
-  protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
+  protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, Object... args) {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
   protected String ifSymbolAssignment(int col, int row) {
     String expected = table.getCellContents(col, row);
+    return ifSymbolAssignment(expected);
+  }
+
+  protected String ifSymbolAssignment(String expected) {
     Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(expected);
     return matcher.find() ? matcher.group(1) : null;
   }
@@ -155,16 +175,16 @@ public abstract class SlimTable {
     return testContext;
   }
 
-  protected List<Object> tableAsList() {
-    List<Object> tableArgument = list();
+  protected List<List<String>> tableAsList() {
+    List<List<String>> tableArgument = new ArrayList<List<String>>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++)
       tableArgument.add(tableRowAsList(row));
     return tableArgument;
   }
 
-  private List<Object> tableRowAsList(int row) {
-    List<Object> rowList = list();
+  private List<String> tableRowAsList(int row) {
+    List<String> rowList = new ArrayList<String>();
     int cols = table.getColumnCountInRow(row);
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
@@ -332,12 +352,11 @@ public abstract class SlimTable {
   class SymbolReplacer {
     protected String replacedString;
     private Matcher symbolMatcher;
-    private final Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     private int startingPosition;
 
     SymbolReplacer(String s) {
       this.replacedString = s;
-      symbolMatcher = symbolPattern.matcher(s);
+      symbolMatcher = SYMBOL_PATTERN.matcher(s);
     }
 
     String replace() {
@@ -377,7 +396,7 @@ public abstract class SlimTable {
 
 
     private boolean symbolFound() {
-      symbolMatcher = symbolPattern.matcher(replacedString);
+      symbolMatcher = SYMBOL_PATTERN.matcher(replacedString);
       return symbolMatcher.find(startingPosition);
     }
 
@@ -618,7 +637,7 @@ public abstract class SlimTable {
     }
 
     private SlimTestResult rangeMessage(boolean pass) {
-      String[] fragments = expected.replaceAll(" ", "").split("_");
+      String[] fragments = expected.trim().replaceAll("( )+", " ").split("_");
       String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
@@ -657,7 +676,7 @@ public abstract class SlimTable {
     }
 
     private SlimTestResult simpleComparisonMessage(boolean pass) {
-      String message = String.format("%s%s", actual, expected.replaceAll(" ", ""));
+      String message = String.format("%s%s", actual, expected.trim().replaceAll("( )+", " "));
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
 

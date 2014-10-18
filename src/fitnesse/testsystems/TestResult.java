@@ -1,5 +1,7 @@
 package fitnesse.testsystems;
 
+import java.util.Map;
+
 public interface TestResult {
   boolean doesCount();
 
@@ -16,4 +18,6 @@ public interface TestResult {
   String getMessage();
 
   ExecutionResult getExecutionResult();
+
+  Map<String, ?> getVariablesToStore();
 }
