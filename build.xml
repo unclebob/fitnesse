@@ -68,14 +68,19 @@
 
 	<target name="standalone-jar" depends="jar" description="generate the standalone jar file">
 		<ivy:cachefileset setid="standalone.jar.fileset" conf="standalone" />
-		<jar jarfile="${dist.dir}/fitnesse-standalone.jar">
-			<zipfileset src="${dist.dir}/fitnesse.jar" />
+		<!-- Create a temporary file, so we can remove all META-INF stuff when packaging the real thing -->
+		<zip destfile="${dist.dir}/.fitnesse-standalone-jar-dependencies.tmp">
 			<zipgroupfileset refid="standalone.jar.fileset" />
+		</zip>
+		<jar destfile="${dist.dir}/fitnesse-standalone.jar">
+			<zipfileset src="${dist.dir}/fitnesse.jar" />
+			<zipfileset src="${dist.dir}/.fitnesse-standalone-jar-dependencies.tmp" excludes="META-INF/**" />
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
+		<delete file="${dist.dir}/.fitnesse-standalone-jar-dependencies.tmp" />
 	</target>
 
 	<target name="sources-jar" depends="stamp-version">
