@@ -494,6 +494,36 @@ public abstract class SlimTable {
 
   }
 
+  class ReturnedSymbolExpectation extends ReturnedValueExpectation {
+	  private String symbolName;
+	  private String assignToName = null;
+	  public ReturnedSymbolExpectation(int col, int row, String symbolName) {
+	      super(col, row);
+		  this.symbolName = symbolName;
+	    }
+	  public ReturnedSymbolExpectation(int col, int row, String symbolName, String assignToName) {
+	      super(col, row);
+		  this.symbolName = symbolName;
+		  this.assignToName = assignToName;
+	    }
+
+	    @Override
+	    public TestResult evaluateExpectation(Object returnValue) {
+		  returnValue = getSymbol(this.symbolName);
+	      return super.evaluateExpectation(returnValue);
+	    }
+	    
+	    @Override
+	    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
+	      if (assignToName != null){	
+	        setSymbol(assignToName, actual);
+	        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
+	      }else{
+	    	  return super.createEvaluationMessage(actual, expected);
+	      }
+	    }
+  }
+  
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);

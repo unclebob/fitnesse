@@ -1,0 +1,175 @@
+!1 Positiv Test Case: No Error no exception
+Check that the test page we build internally is 100% correct.
+
+This makes sure that the exceptions we get in the negativ test cases are related to the functionality we test and not the setup
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+!|script| Test Query| 2|
+|$sq= | query|
+|$scell= | getValuefromQueryResultSymbol;| $sq| 1| 2n|
+|check| echo |$scell|  4|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain |  1 right, 0 wrong, 0 ignored, 0 exceptions |
+|# echo $cell must be flagged as pass|
+| ensure | content contains | !-scell->[4]-!|
+| ensure | content contains | !-class="pass">4<-!|
+
+
+!1 Negativ Test Cases
+
+!2 Symbol has the wrong Type: Passed a String instead of an Array
+
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+|script|
+|$sstr= | echo |"Hello World!"|
+|$scell= | getValuefromQueryResultSymbol;| $sstr| 1| 2n|
+|check| echo |$scell|  4|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain | __EXCEPTION__:java.lang.ArrayIndexOutOfBoundsException |
+|# Cell must be flagged as error|
+| ensure | content contains | td class="error">getValuefromQueryResultSymbol |
+|# Error must happens in expected function| 
+| ensure | content contains | at fitnesse.slim.SlimHelperLibrary.getValuefromQueryResultSymbol |
+|# Test Summary shows exception| 
+| ensure | content contains | 0 right, 1 wrong, 0 ignored, 1 exceptions |
+
+
+
+!2 Query Result row index is out of range
+
+
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+!|script| Test Query| 2|
+|$sq= | query|
+|$scell= | getValuefromQueryResultSymbol;| $sq| 4| 2n|
+|check| echo |$scell|  4|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain | __EXCEPTION__:java.lang.IndexOutOfBoundsException: Index: 4, Size: 2 |
+|# Cell must be flagged as error|
+| ensure | content contains | td class="error">getValuefromQueryResultSymbol |
+|# Error must happens in expected function| 
+| ensure | content contains | at fitnesse.slim.SlimHelperLibrary.getValuefromQueryResultSymbol |
+|# The comand after the exception is still executed|
+| ensure | content contains | !-"fail">expected [4]-!|
+|# Test Summary shows exception| 
+| ensure | content contains | 0 right, 1 wrong, 0 ignored, 1 exceptions |
+
+
+!2 Query Result column name doesn't exists
+
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+!|script| Test Query| 2|
+|$sq= | query|
+|$scell= | getValuefromQueryResultSymbol;| $sq| 1| wrongColumnName|
+|check| echo |$scell|  4|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain | __EXCEPTION__:java.lang.RuntimeException: No column with name 'wrongColumnName' found in row 1 |
+|# Cell must be flagged as error|
+| ensure | content contains | td class="error">getValuefromQueryResultSymbol |
+|# Error must happens in expected function| 
+| ensure | content contains | at fitnesse.slim.SlimHelperLibrary.getValuefromQueryResultSymbol |
+|# The comand after the exception is still executed|
+| ensure | content contains | !-"fail">expected [4]-!|
+|# Test Summary shows exception| 
+| ensure | content contains | 0 right, 1 wrong, 0 ignored, 1 exceptions |
+
+
+
+!2 Table result column index out of range
+Also after an exception the value of a variable stays in sync between clint and server
+ 
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+!|script| Test Query| 3|
+|$scell= | echo | InitialValue|
+|$sq= | query|
+|$scell= | getValuefromTableResultSymbol;| $sq| 2| 5|
+|check| echo |$scell|  InitialValue|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain | __EXCEPTION__:java.lang.IndexOutOfBoundsException: Index: 5, Size: 2 |
+|# Cell must be flagged as error|
+| ensure | content contains | td class="error">getValuefromTableResultSymbol |
+|# Error must happens in expected function| 
+| ensure | content contains | at fitnesse.slim.SlimHelperLibrary.getValuefromTableResultSymbol |
+|# The comand after the exception is still executed|
+| ensure | content contains | !-"pass">InitialValue-!|
+|# Test Summary shows exception| 
+| ensure | content contains | 0 right, 0 wrong, 0 ignored, 1 exceptions |
+
+!2 Table result row index out of range
+Also after an exception the value of a variable stays in sync between clint and server
+
+!| script |
+| given page | TestPage | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+| import |
+| fitnesse.slim.test |
+
+!|Library|
+|EchoScript|
+
+!|script| Test Query| 3|
+|$sq= | query|
+|$scell= | getValuefromTableResultSymbol;| $sq| 3| 2|
+|check| echo |$scell|  4|
+
+-! |
+|# Page must have an exception|
+| test results for page | TestPage | should contain | __EXCEPTION__:java.lang.IndexOutOfBoundsException: Index: 3, Size: 3 |
+|# Cell must be flagged as error|
+| ensure | content contains | td class="error">getValuefromTableResultSymbol |
+|# Error must happens in expected function| 
+| ensure | content contains | at fitnesse.slim.SlimHelperLibrary.getValuefromTableResultSymbol |
+|# The comand after the exception is still executed|
+| ensure | content contains | !-"fail">expected [4]-!|
+|# Test Summary shows exception| 
+| ensure | content contains | 0 right, 1 wrong, 0 ignored, 1 exceptions |
+

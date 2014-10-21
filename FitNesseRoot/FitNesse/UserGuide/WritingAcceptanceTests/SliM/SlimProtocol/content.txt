@@ -84,6 +84,15 @@ That last one was probably puzzling.  Symbol values are strings or objects (or n
  * pushFixture(): pushes the object from the dictionary of created objects named "scriptTableActor" on to the stack of actor objects. Throws an exception if no object exists.
  * popFixture(): pops an object from the stack of actor objects and adds it to the dictionary of created objects with the name "scriptTableActor". Throws an exception if the stack is empty.
 
+   To support symbol assignments in Decision Tables which are implemened with a Script or in Table Tables or Query Tables the following four functions are required in a Library:
+ * freeSymbol
+ * cloneSymbol
+ * getValuefromQueryResultSymbol
+ * getValuefromTableResultSymbol
+
+   For details see: .FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolManipulation 
+                    and .FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolManipulationException
+
 !3 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.
 

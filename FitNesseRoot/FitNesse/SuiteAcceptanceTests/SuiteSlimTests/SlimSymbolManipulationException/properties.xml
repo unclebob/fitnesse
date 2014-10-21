@@ -2,14 +2,14 @@
 <properties>
 	<Edit/>
 	<Files/>
+	<Help>This test has been marked as skip because it works perfect when run manual but makes FitNesse hang when called from ant.</Help>
 	<LastModifyingUser>six42</LastModifyingUser>
 	<Properties/>
+	<Prune/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Test/>
 	<Versions/>
 	<WhereUsed/>
-	<saveId>1238174209178</saveId>
-	<ticketId>1483156031156832784</ticketId>
 </properties>
