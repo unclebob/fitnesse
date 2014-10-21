@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -24,7 +23,6 @@ import fitnesse.http.SimpleResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import fitnesse.util.XmlUtil;
-import fitnesse.util.XmlWriter;
 
 public class RssResponder implements SecureResponder {
   private RssFeed feed;
@@ -96,7 +94,7 @@ public class RssResponder implements SecureResponder {
     }
 
     public SimpleResponse asResponse() throws Exception {
-      byte[] bytes = toByteArray(document);
+      String bytes = XmlUtil.xmlAsString(document);
       SimpleResponse response = new SimpleResponse();
       response.setContent(bytes);
       response.setContentType("text/xml");
@@ -127,24 +125,6 @@ public class RssResponder implements SecureResponder {
       rssDocumentElement.appendChild(channelElement);
       XmlUtil.addTextNode(channelElement, "title", "FitNesse:");
 
-      return rssDocument;
-    }
-
-    private static byte[] toByteArray(Document rssDocument) throws Exception {
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      XmlWriter writer = new XmlWriter(os);
-      writer.write(rssDocument);
-      writer.close();
-      return os.toByteArray();
-    }
-
-    private Document buildRssHeader() {
-      Document rssDocument = XmlUtil.newDocument();
-      Element rssDocumentElement = rssDocument.createElement("rss");
-      rssDocument.appendChild(rssDocumentElement);
-      channelElement = rssDocument.createElement("channel");
-      rssDocumentElement.setAttribute("version", "2.0");
-      rssDocumentElement.appendChild(channelElement);
       return rssDocument;
     }
   }
