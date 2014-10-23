@@ -31,12 +31,11 @@ The latest stable build of FitNesse can be [downloaded here](https://cleancoder.
 
 ## Developers
 
-Check out the [FitNesse Story Backlog and Issue Tracking](https://www.pivotaltracker.com/projects/44141) on Pivotal Tracker.
+Issues and pull requests are administered at [GitHub](https://github.com/unclebob/fitnesse/issues).
 
 ### Building
 
-The `build.xml` and a proper internet connection is sufficient to build FitNesse.
-The build process will bootstrap itself by downloading Ivy (dependency management) and from there will download the modules required to build and test FitNesse.
+[Apache Ant](http://ant.apache.org/) and a proper internet connection is sufficient to build FitNesse. The build process will bootstrap itself by downloading Ivy (dependency management) and from there will download the modules required to build and test FitNesse.
 
 To build and run all tests, run the command
 
@@ -74,7 +73,7 @@ tests are not run as part of the normal ant test-related targets. When using an
 IDE, make sure it does not invoke these tests when running the "normal" tests
 under the `src` directory.
 
-Direct any questions to the FitNesse yahoo group or to [unclebob](https://www.github.com/unclebob).
+Direct any questions to the [FitNesse Yahoo group](https://groups.yahoo.com/neo/groups/fitnesse/info).
 
 
 ### Working with Eclipse and IntelliJ
