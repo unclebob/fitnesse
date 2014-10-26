@@ -148,9 +148,9 @@ public class HistoryComparerResponder implements Responder {
   private PageTitle makePageTitle(String resource) {
 
     String tags="";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

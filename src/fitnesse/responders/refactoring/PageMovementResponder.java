@@ -68,7 +68,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     oldNameOfPageToBeMoved = request.getResource();
 
     WikiPagePath path = PathParser.parse(oldNameOfPageToBeMoved);
-    oldRefactoredPage = context.root.getPageCrawler().getPage(path);
+    oldRefactoredPage = context.getRootPage().getPageCrawler().getPage(path);
     return (oldRefactoredPage != null);
   }
 

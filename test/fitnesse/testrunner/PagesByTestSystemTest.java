@@ -46,7 +46,7 @@ public class PagesByTestSystemTest{
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root, null);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.getRootPage(), null);
     Collection<WikiPageIdentity> descriptors = pagesByTestSystem.identities();
     WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage);
     WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage);

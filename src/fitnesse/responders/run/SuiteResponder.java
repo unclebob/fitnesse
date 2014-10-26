@@ -295,7 +295,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root,
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage(),
             new UrlPathVariableSource(context.variableSource, request.getMap()));
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);

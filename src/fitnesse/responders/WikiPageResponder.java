@@ -30,10 +30,10 @@ public class WikiPageResponder implements SecureResponder {
   protected WikiPage loadPage(FitNesseContext context, String pageName) {
     WikiPage page;
     if (RecentChanges.RECENT_CHANGES.equals(pageName)) {
-      page = context.recentChanges.toWikiPage(context.root);
+      page = context.recentChanges.toWikiPage(context.getRootPage());
     } else {
       WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       page = crawler.getPage(path);
     }
     return page;

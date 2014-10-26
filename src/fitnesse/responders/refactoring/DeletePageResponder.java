@@ -40,11 +40,11 @@ public class DeletePageResponder implements SecureResponder {
   private void tryToDeletePage(Request request) {
     String confirmedString = (String) request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
-      response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
+      response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
     } else {
       String nameOfPageToBeDeleted = path.last();
       path.removeNameFromEnd();
-      WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(path);
+      WikiPage parentOfPageToBeDeleted = context.getRootPage().getPageCrawler().getPage(path);
       if (parentOfPageToBeDeleted != null) {
         parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
       }
@@ -75,9 +75,9 @@ public class DeletePageResponder implements SecureResponder {
     HtmlPage html = context.pageFactory.newPage();
     
     String tags = "";
-    if(context.root!=null){
+    if(context.getRootPage() !=null){
       WikiPagePath path = PathParser.parse(qualifiedPageName);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

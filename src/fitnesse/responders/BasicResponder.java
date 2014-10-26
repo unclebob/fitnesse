@@ -29,7 +29,7 @@ public abstract class BasicResponder implements SecureResponder {
 
   protected WikiPage getRequestedPage(Request request, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(request.getResource());
-    WikiPage requestedPage = context.root.getPageCrawler().getPage(path);
+    WikiPage requestedPage = context.getRootPage().getPageCrawler().getPage(path);
     return requestedPage;
   }
 

@@ -40,7 +40,7 @@ public class VersionResponder implements SecureResponder {
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)

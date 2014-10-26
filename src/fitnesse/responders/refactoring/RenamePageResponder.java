@@ -27,7 +27,7 @@ public class RenamePageResponder extends PageMovementResponder {
 
   @Override
   protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
-    return new PageReferenceRenamer(context.root, oldRefactoredPage, getNewPageName());
+    return new PageReferenceRenamer(context.getRootPage(), oldRefactoredPage, getNewPageName());
   }
 
   @Override

@@ -323,7 +323,7 @@ public class PropertiesResponderTest {
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertEquals(page, context.root.getPageCrawler().getPage(PathParser.parse(".SomePage")));
+    assertEquals(page, context.getRootPage().getPageCrawler().getPage(PathParser.parse(".SomePage")));
     request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();

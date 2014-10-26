@@ -23,10 +23,9 @@ public class RefactorPageResponder implements SecureResponder {
     String resource = request.getResource();
 
     String tags = "";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(path);
+      WikiPage wikiPage = context.getRootPage().getPageCrawler().getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);

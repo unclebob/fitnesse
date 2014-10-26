@@ -23,7 +23,8 @@ public class FitNesseContext {
 
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
-  public final WikiPage root;
+
+  private final WikiPage root;
 
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
@@ -66,6 +67,10 @@ public class FitNesseContext {
     variableSource = new SystemVariableSource(properties);
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
+  }
+
+  public WikiPage getRootPage() {
+    return root;
   }
 
   public File getTestHistoryDirectory() {

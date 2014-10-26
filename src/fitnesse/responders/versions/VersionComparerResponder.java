@@ -41,7 +41,7 @@ public class VersionComparerResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
     String resource = request.getResource();
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -117,9 +117,9 @@ public class VersionComparerResponder implements Responder {
   private PageTitle makePageTitle(String resource) {
 
     String tags="";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
