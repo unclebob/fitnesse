@@ -64,12 +64,9 @@ public class FitNesseUtil {
     return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, PORT, authenticator);
   }
 
-  public static FitNesseContext makeTestContext(WikiPage root, int port,
-      Authenticator authenticator) {
-    return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, port, authenticator);
+  public static FitNesseContext makeTestContext(WikiPage root, int port, Authenticator authenticator, Properties properties) {
+    return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, port, authenticator, properties);
   }
-
-
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port) {
@@ -78,6 +75,11 @@ public class FitNesseUtil {
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port, Authenticator authenticator) {
+    return makeTestContext(root, rootPath, rootDirectoryName, port, authenticator, new Properties());
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
+      String rootDirectoryName, int port, Authenticator authenticator, Properties properties) {
 
     FitNesseContext context;
 
@@ -90,6 +92,7 @@ public class FitNesseUtil {
         .withAuthenticator(authenticator)
         .withVersionsController(new ZipFileVersionsController())
         .withRecentChanges(new RecentChangesWikiPage())
+        .updatedWith(properties)
         .makeFitNesseContext();
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -121,5 +124,4 @@ public class FitNesseUtil {
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
-
 }
