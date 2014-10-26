@@ -45,6 +45,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.WikiPageActions;
@@ -194,7 +195,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   public class WikiPageHeaderRenderer {
 
     public String render() {
-      return WikiPageUtil.getHeaderPageHtml(page);
+      return WikiPageUtil.getHeaderPageHtml(page,request);
     }
 
   }
@@ -202,7 +203,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   public class WikiPageFooterRenderer {
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page);
+        return WikiPageUtil.getFooterPageHtml(page,request);
     }
 
   }
@@ -289,7 +290,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, context.variableSource);
+    // Add test url inputs to context's variableSource.
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root,
+            new UrlPathVariableSource(context.variableSource, request.getMap()));
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);

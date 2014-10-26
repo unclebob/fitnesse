@@ -24,7 +24,7 @@ public class WikiPageResponder implements SecureResponder {
     if (page == null)
       return notFoundResponse(context, request);
     else
-      return makePageResponse(context, page);
+      return makePageResponse(context, page, request);
   }
 
   protected WikiPage loadPage(FitNesseContext context, String pageName) {
@@ -51,7 +51,11 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
-      String html = makeHtml(context, page);
+      return makePageResponse(context, page, null);
+  }
+
+  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page, Request request) {
+      String html = makeHtml(context, page, request);
 
       SimpleResponse response = new SimpleResponse();
       response.setMaxAge(0);
@@ -60,6 +64,10 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public String makeHtml(FitNesseContext context, WikiPage page) {
+      return makeHtml(context, page, null);
+  }
+
+  public String makeHtml(FitNesseContext context, WikiPage page, Request request) {
     PageData pageData = page.getData();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
@@ -78,15 +86,17 @@ public class WikiPageResponder implements SecureResponder {
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
     if (WikiTestPage.isTestPage(page)) {
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
-      html.put("content", new WikiTestPageRenderer(testPage));
+      // Add test url inputs to context's variableSource.
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page,
+              new UrlPathVariableSource(context.variableSource, request.getMap()));
+      html.put("content", new WikiTestPageRenderer(testPage,request));
     } else {
-      html.put("content", new WikiPageRenderer(page));
+      html.put("content", new WikiPageRenderer(page,request));
     }
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
-    html.put("footerContent", new WikiPageFooterRenderer(page));
+    html.put("footerContent", new WikiPageFooterRenderer(page,request));
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -101,37 +111,55 @@ public class WikiPageResponder implements SecureResponder {
 
   public class WikiPageRenderer {
     private WikiPage page;
+    private Request request;
 
-    WikiPageRenderer(WikiPage page) {
+    WikiPageRenderer(WikiPage page){
+        this(page, null);
+    }
+
+    WikiPageRenderer(WikiPage page, Request request) {
       this.page = page;
+      this.request = request;
     }
 
     public String render() {
-        return WikiPageUtil.makePageHtml(page);
+        return WikiPageUtil.makePageHtml(page, request);
     }
   }
 
   public class WikiTestPageRenderer {
     private WikiTestPage page;
+    private Request request;
 
-    WikiTestPageRenderer(WikiTestPage page) {
+    WikiTestPageRenderer(WikiTestPage page){
+        this(page, null);
+    }
+
+    WikiTestPageRenderer(WikiTestPage page, Request request) {
       this.page = page;
+      this.request = request;
     }
 
     public String render() {
-      return WikiTestPageUtil.makePageHtml(page);
+      return WikiTestPageUtil.makePageHtml(page, request);
     }
   }
 
   public class WikiPageFooterRenderer {
     private WikiPage page;
+    private Request request;
 
-    WikiPageFooterRenderer(WikiPage page) {
+    WikiPageFooterRenderer(WikiPage page){
+        this(page, null);
+    }
+
+    WikiPageFooterRenderer(WikiPage page, Request request) {
       this.page = page;
+      this.request = request;
     }
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page);
+        return WikiPageUtil.getFooterPageHtml(page,request);
     }
   }
 
