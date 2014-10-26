@@ -111,6 +111,11 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
+  @Override
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
+    writeData(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", testSystemName, cause.toString()));
+  }
+
   public void setTrackingId(String stopResponderId) {
     addStopLink(stopResponderId);
   }
