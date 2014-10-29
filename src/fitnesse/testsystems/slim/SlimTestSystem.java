@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.slim.SlimError;
+import fitnesse.slim.instructions.AssignInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -25,7 +26,6 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
@@ -143,6 +143,7 @@ public abstract class SlimTestSystem implements TestSystem {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
+        //Exception management
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).startsWith(EXCEPTION_TAG)) {
           SlimExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           if (exceptionResult.isStopTestException()) {
@@ -153,8 +154,25 @@ public abstract class SlimTestSystem implements TestSystem {
             testExceptionOccurred(a, exceptionResult);
           }
         } else {
+          //Normal results
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
           testAssertionVerified(a, testResult);
+
+          //Retrieve variables set during expectation step
+          if (testResult != null) {
+            Map<String, ?> variables = testResult.getVariablesToStore();
+            if (variables != null) {
+              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              int i = 0;
+              for (Entry<String, ?> variable : variables.entrySet()) {
+                instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
+              }
+              //Store variables in context
+              if (i > 0) {
+                slimClient.invokeAndGetResponse(instructions);
+              }
+            }
+          }
         }
       } catch (Throwable ex) {
         exceptionOccurred(ex);

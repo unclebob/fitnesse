@@ -19,6 +19,8 @@ public class InstructionFactory {
 
     if (MakeInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
       instruction = createMakeInstruction(id, words);
+    } else if (AssignInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
+      instruction = createAssignInstruction(id, words);
     } else if (CallAndAssignInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
       instruction = createCallAndAssignInstruction(id, words, methodNameTranslator);
     } else if (CallInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
@@ -37,6 +39,12 @@ public class InstructionFactory {
     String className = getWord(words, 3);
     Object[] args = makeArgsArray(words, 4);
     return new MakeInstruction(id, instanceName, className, args);
+  }
+
+  private static AssignInstruction createAssignInstruction(String id, List<Object> words) {
+    String symbolName = getWord(words, 2);
+    String value = getWord(words, 3);
+    return new AssignInstruction(id, symbolName, value);
   }
 
   private static CallAndAssignInstruction createCallAndAssignInstruction(String id,
