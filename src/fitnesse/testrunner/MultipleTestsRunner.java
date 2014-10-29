@@ -154,7 +154,7 @@ public class MultipleTestsRunner implements Stoppable {
       testSystem.addTestSystemListener(internalTestSystemListener);
       testSystem.start();
     } catch (Exception e) {
-      internalTestSystemListener.testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
+      formatters.unableToStartTestSystem(descriptor.getTestSystem(), e);
       return null;
     }
     return testSystem;
