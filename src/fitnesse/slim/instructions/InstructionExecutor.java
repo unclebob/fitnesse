@@ -4,7 +4,7 @@ import fitnesse.slim.SlimException;
 
 public interface InstructionExecutor {
 
-  void setVariable(String name, Object value);
+  void assign(String name, Object value);
 
   void addPath(String path) throws SlimException;
 

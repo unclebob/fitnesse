@@ -65,7 +65,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public void setVariable(String name, Object value) {
+  public void assign(String name, Object value) {
     context.setVariable(name, value);
   }
 

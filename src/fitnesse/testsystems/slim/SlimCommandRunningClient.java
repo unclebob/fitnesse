@@ -173,7 +173,10 @@ public class SlimCommandRunningClient implements SlimClient {
         }
 
         @Override
-        public void setVariable(String symbolName, Object value) {
+        public void assign(String symbolName, Object value) {
+          if (slimServerVersion < 0.4) {
+            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
+          }
           Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
           statementsAsList.add(asList(list));
         }

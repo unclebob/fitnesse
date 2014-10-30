@@ -24,7 +24,7 @@ public class AssignInstructionTest {
 
     instruction.execute(executor);
 
-    verify(executor, times(1)).setVariable("symbolName", "value");
+    verify(executor, times(1)).assign("symbolName", "value");
   }
 
   @Test

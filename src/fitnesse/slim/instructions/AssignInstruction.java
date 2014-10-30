@@ -15,7 +15,7 @@ public class AssignInstruction extends Instruction {
 
   @Override
   protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
-    executor.setVariable(symbolName, value);
+    executor.assign(symbolName, value);
     return new InstructionResult.Ok(getId());
   }
 
