@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
@@ -60,7 +61,7 @@ public class ResponderFactory {
     addResponder("search", SearchResponder.class);
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("stoptest", StopTestResponder.class);
-    addResponder("test", SuiteResponder.class);
+    addResponder("test", TestResponder.class);
     addResponder("suite", SuiteResponder.class);
     addResponder("proxy", SerializedPageResponder.class);
     addResponder("versions", VersionSelectionResponder.class);

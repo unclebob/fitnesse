@@ -70,7 +70,7 @@ public class TestResponderTest {
     root = InMemoryPage.makeRoot("Root", properties);
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
-    responder = new SuiteResponder();
+    responder = new TestResponder();
     context = FitNesseUtil.makeTestContext(root);
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
