@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.PathParser;
 
 public class Alias extends SymbolType implements Rule, Translation {
     public static final Alias symbolType = new Alias();
@@ -31,7 +32,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parseToIgnoreFirst(Comment.symbolType);
 
-        if (linkReference.childAt(0).isType(WikiWord.symbolType)) {
+        if (linkReference.childAt(0).isType(WikiWord.symbolType) || PathParser.isWikiPath(linkReference.childAt(0).getContent())) {
             return new WikiWordBuilder(translator.getPage(), linkReference.childAt(0).getContent(), linkBody)
                     .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }

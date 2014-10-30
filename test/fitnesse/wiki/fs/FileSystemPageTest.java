@@ -94,13 +94,14 @@ public class FileSystemPageTest {
   public void testGetChidren() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("AaAa"), "A content");
     WikiPageUtil.addPage(root, PathParser.parse("BbBb"), "B content");
-    WikiPageUtil.addPage(root, PathParser.parse("CcCc"), "C content");
-    new File(defaultPath + "/root/someOtherDir").mkdir();
+    WikiPageUtil.addPage(root, PathParser.parse("c"), "C content");
+    new File(defaultPath + "/root/.someOtherDir").mkdir();
+    new File(defaultPath + "/root/someOther.SubDir").mkdir();
     List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
     for (WikiPage child : children) {
       String name = child.getName();
-      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "CcCc".equals(name);
+      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "c".equals(name);
       assertTrue("WikiPAge is not a valid one: " + name, isOk);
     }
   }

@@ -67,6 +67,24 @@ public class WikiPageResponderTest {
   }
 
   @Test
+  public void testResponseWithNonWikiWordChildPage() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
+    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+
+    final MockRequest request = new MockRequest();
+    request.setResource("page.child_page");
+
+    final Responder responder = new WikiPageResponder();
+    final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+
+    assertEquals(200, response.getStatus());
+
+    final String body = response.getContent();
+
+    assertSubString("child content", body);
+  }
+
+  @Test
   public void testAttributeButtons() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "");
     final WikiPage noButtonsPage = WikiPageUtil.addPage(root, PathParser.parse("NoButtonPage"), "");

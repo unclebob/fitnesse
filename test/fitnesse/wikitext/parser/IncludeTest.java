@@ -142,16 +142,16 @@ public class IncludeTest {
   private static final String NEW_LINE = System.getProperty("line.separator");
   private static final String HTML_ERR = ""
       + "<div class=\"collapsible\"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>" + NEW_LINE //
-      + "\t<p class=\"title\">Included page: %s</p>" + NEW_LINE//
-      + "\t<div><span class=\"error\">%s</span></div>" + NEW_LINE// 
+      + "\t<p class=\"title\">Included page: %s</p>" + NEW_LINE
+      + "\t<div><span class=\"error\">%s</span></div>" + NEW_LINE
       + "</div>" + NEW_LINE;
   @Test
   public void doesNotIncludeParent() throws Exception {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
-    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR, // 
-        "<a href=\"ParentPage\">&lt;ParentPage</a>", //
+    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR,
+        "<a href=\"ParentPage\">&lt;ParentPage</a>",
         "Error! Cannot include parent page (&lt;ParentPage)."));
   }
 
@@ -159,10 +159,10 @@ public class IncludeTest {
   public void doesNotIncludeInvalidPageName() throws Exception {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
-    WikiPage currentPage = root.makePage(parent, "PageOne", "!include not.a.wiki.page");
-    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR, // 
-        "not.a.wiki.page", //
-        "Page include failed because the page not.a.wiki.page does not have a valid WikiPage name."));
+    WikiPage currentPage = root.makePage(parent, "PageOne", "!include not.a.+wiki.page");
+    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR,
+        "not.a.+wiki.page",
+        "Page include failed because the page not.a.+wiki.page does not have a valid WikiPage name."));
   }
 
   @Test
@@ -170,8 +170,8 @@ public class IncludeTest {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include NotExistingPage");
-    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR, // 
-        "NotExistingPage<a title=\"create page\" href=\"ParentPage.NotExistingPage?edit&amp;nonExistent=true\">[?]</a>", //
+    ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR,
+        "NotExistingPage<a title=\"create page\" href=\"ParentPage.NotExistingPage?edit&amp;nonExistent=true\">[?]</a>",
         "Page include failed because the page NotExistingPage does not exist."));
   }
 

@@ -10,7 +10,6 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
-import fitnesse.wikitext.parser.WikiWordPath;
 import fitnesse.wiki.VariableTool;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
@@ -115,7 +114,7 @@ public class SymbolicLinkResponder implements Responder {
       response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
       response.setStatus(412);
       return false;
-    } else if (!WikiWordPath.isSingleWikiWord(linkName)) {
+    } else if (!PathParser.isSingleWikiWord(linkName)) {
       response = new ErrorResponder(linkName + " is not a valid WikiWord.").makeResponse(context, null);
       response.setStatus(412);
       return false;

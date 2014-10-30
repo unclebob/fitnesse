@@ -4,12 +4,11 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
-import fitnesse.wikitext.parser.WikiWordPath;
+import fitnesse.wiki.PathParser;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some
 // scenarios (we skip directly to an EditResponder...).
@@ -28,7 +27,7 @@ public class NotFoundResponder implements Responder {
     HtmlPage page = context.pageFactory.newPage();
     page.addTitles("Not Found:" + resource);
     page.put("name", resource);
-    page.put("shouldCreate", WikiWordPath.isWikiWord(resource));
+    page.put("shouldCreate", PathParser.isWikiPath(resource));
     page.setMainTemplate("notFoundPage.vm");
     return page.html();
   }

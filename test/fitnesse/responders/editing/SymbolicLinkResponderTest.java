@@ -197,7 +197,7 @@ public class SymbolicLinkResponderTest {
   @Test
   public void linkNameShouldBeAValidWikiWordWhenRenaming() throws Exception {
     prepareSymlinkOnPageOne();
-    request.addInput("newname", "Newlink");
+    request.addInput("newname", "New+link");
     Response response = invokeResponder();
 
     assertEquals(412, response.getStatus());
@@ -244,7 +244,7 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void linkNameShouldBeAValidWikiWord() throws Exception {
-    request.addInput("linkName", "Symlink");
+    request.addInput("linkName", "Sym+link");
     request.addInput("linkPath", "PageTwo");
     Response response = invokeResponder();
 

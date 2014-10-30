@@ -37,11 +37,17 @@ public class MemoryFileSystem implements FileSystem {
 
     @Override
     public boolean exists(File file) {
-        String path = file.getPath();
-        for (String filePath: files.keySet()) {
-            if (filePath.startsWith(path)) return true;
-        }
-        return false;
+      return getPayload(file) != null;
+    }
+
+    public Payload getPayload(File file) {
+      String path = file.getPath();
+      for (String filePath: files.keySet()) {
+        if (filePath.equals(path)) return files.get(filePath);
+        // Part is matching, assume a directory.
+        if (filePath.startsWith(path)) return new Payload(DIRECTORY_PLACEHOLDER);
+      }
+      return null;
     }
 
     @Override
@@ -93,7 +99,8 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public boolean isDirectory(File file) {
-    return DIRECTORY_PLACEHOLDER.equals(files.get(file.getPath()).payload);
+    Payload payload = getPayload(file);
+    return (payload != null && DIRECTORY_PLACEHOLDER.equals(payload.payload));
   }
 
   private Payload payload(String payload) {

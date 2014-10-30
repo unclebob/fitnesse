@@ -59,7 +59,7 @@ public class ExternalTestPageTest {
     ExternalSuitePage suite = new ExternalSuitePage(new File("somewhere", "MyTest"), "MyTest", rootPage, fileSystem, variableSource);
     ExternalTestPage testPage = (ExternalTestPage) suite.getChildren().get(0);
     WikiPagePath path = testPage.getPageCrawler().getFullPath();
-    assertEquals("Page path for external file", "MyTest.MyfilE", path.toString());
+    assertEquals("Page path for external file", "MyTest.myfile", path.toString());
   }
 
   private ExternalTestPage makePage(String directory, String name, String content) throws IOException {

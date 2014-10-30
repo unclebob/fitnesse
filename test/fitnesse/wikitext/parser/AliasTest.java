@@ -20,7 +20,6 @@ public class AliasTest {
   @Test
   public void translatesAliases() throws Exception {
     TestSourcePage page = new TestSourcePage().withTarget("PageOne");
-    ParserTestHelper.assertTranslatesTo(page, "[[tag][link]]", link("tag", "link"));
     ParserTestHelper.assertTranslatesTo(page, "[[tag][#anchor]]", link("tag", "#anchor"));
     ParserTestHelper.assertTranslatesTo(page, "[[tag][PageOne]]", link("tag", "PageOne"));
     ParserTestHelper.assertTranslatesTo(page, "[[''tag''][PageOne]]", link("<i>tag</i>", "PageOne"));
@@ -49,6 +48,15 @@ public class AliasTest {
     WikiPage page = root.makePage("PageOne", "[[tag][PageTwo${x}]]");
     root.makePage("PageTwo3", "hi");
     ParserTestHelper.assertTranslatesTo(page, new TestVariableSource("x", "3"), link("tag", "PageTwo3"));
+  }
+
+  @Test
+  public void evaluatesLowercaseLink() throws Exception {
+    TestRoot root = new TestRoot();
+    WikiPage parent = root.makePage("parent", "[[tag][other_page]]");
+    WikiPage page1 = root.makePage(parent, "page", "[[tag][other_page]]");
+    root.makePage(parent, "other_page", "hi");
+    ParserTestHelper.assertTranslatesTo(page1, link("tag", "parent.other_page"));
   }
 
   private String link(String body, String href) {

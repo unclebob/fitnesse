@@ -238,13 +238,13 @@ public class WikiImportingResponderTest {
 
   @Test
   public void testErrorMessageForBadUrlProvided() throws Exception {
-    String remoteUrl = baseUrl + "blah";
+    String remoteUrl = baseUrl + "+blah";
     Response response = makeSampleResponse(remoteUrl);
 
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
-    assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
+    assertSubString("The URL's resource path, +blah, is not a valid WikiWord.", content);
   }
 
   @Test
