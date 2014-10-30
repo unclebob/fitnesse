@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -19,7 +19,7 @@ import org.junit.Test;
 public class ExposeThreadingIssueInMockResponseTest {
   private WikiPage root;
   private MockRequest request;
-  private TestResponder responder;
+  private SuiteResponder responder;
   private FitNesseContext context;
   private String results;
 
@@ -27,7 +27,7 @@ public class ExposeThreadingIssueInMockResponseTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
-    responder = new TestResponder();
+    responder = new SuiteResponder();
     int port = 9123;
     context = FitNesseUtil.makeTestContext(root, port);
   }

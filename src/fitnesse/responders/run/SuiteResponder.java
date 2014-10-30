@@ -55,8 +55,8 @@ import fitnesse.wiki.WikiPageUtil;
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
-public class TestResponder extends ChunkingResponder implements SecureResponder {
-  private final Logger LOG = Logger.getLogger(TestResponder.class.getName());
+public class SuiteResponder extends ChunkingResponder implements SecureResponder {
+  private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
@@ -81,11 +81,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private CompositeExecutionLog log;
 
 
-  public TestResponder() {
+  public SuiteResponder() {
     this(new WikiImporter());
   }
 
-  public TestResponder(WikiImporter wikiImporter) {
+  public SuiteResponder(WikiImporter wikiImporter) {
     super();
     this.wikiImporter = wikiImporter;
   }
@@ -274,9 +274,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void performExecution() throws IOException, InterruptedException {
-    SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
-    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-    MultipleTestsRunner runner = newMultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite());
+    MultipleTestsRunner runner = newMultipleTestsRunner(getPagesToRun());
     runningTestingTracker.addStartedProcess(testRunId, runner);
     if (isInteractive()) {
       ((InteractiveFormatter) mainFormatter).setTrackingId(testRunId);
@@ -287,6 +285,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       runningTestingTracker.removeEndedProcess(testRunId);
       log.publish(context.pageFactory);
     }
+  }
+
+  protected List<WikiPage> getPagesToRun() {
+    SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
+    return suiteTestFinder.getAllPagesToRunForThisSuite();
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {

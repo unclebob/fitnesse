@@ -50,7 +50,7 @@ public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
   private WikiPage root;
   private MockRequest request;
-  private TestResponder responder;
+  private SuiteResponder responder;
   private FitNesseContext context;
   private Response response;
   private MockResponseSender sender;
@@ -70,7 +70,7 @@ public class TestResponderTest {
     root = InMemoryPage.makeRoot("Root", properties);
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
-    responder = new TestResponder();
+    responder = new SuiteResponder();
     context = FitNesseUtil.makeTestContext(root);
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
@@ -462,7 +462,7 @@ public class TestResponderTest {
 
     public void run() {
       waitForSemaphore();
-      TestResponder.runningTestingTracker.stopAllProcesses();
+      SuiteResponder.runningTestingTracker.stopAllProcesses();
     }
 
     private void waitForSemaphore() {

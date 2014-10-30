@@ -26,7 +26,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
 import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
@@ -115,12 +115,12 @@ public class ResponderFactoryTest {
 
   @Test
   public void testTestResponder() throws Exception {
-    assertResponderTypeMatchesInput("test", TestResponder.class);
+    assertResponderTypeMatchesInput("test", SuiteResponder.class);
   }
 
   @Test
   public void testSuiteResponder() throws Exception {
-    assertResponderTypeMatchesInput("suite", TestResponder.class);
+    assertResponderTypeMatchesInput("suite", SuiteResponder.class);
   }
 
   @Test
