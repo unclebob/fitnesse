@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -159,6 +160,11 @@ public abstract class SlimTable {
 
   protected Instruction callAndAssign(String symbolName, String instanceName, String functionName, Object... args) {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
+  }
+
+
+  protected Instruction assign(String symbolName, String value) {
+    return new AssignInstruction(makeInstructionTag(), symbolName, value);
   }
 
   protected String ifSymbolAssignment(int col, int row) {
