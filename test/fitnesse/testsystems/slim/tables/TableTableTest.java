@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
@@ -21,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TableTableTest {
   private WikiPage root;
@@ -285,20 +286,59 @@ public class TableTableTest {
 
   @Test
   public void tableWithSymbols() throws Exception {
-    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|\n");
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|$X|$X|\n");
     tt.setSymbol("X", "value");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
+        asList(
                     asList("tableTable_id_0", "OK"),
                     asList("tableTable_id_1", asList(
-                            asList("pass", "fail")
+                        asList("pass", "fail", "no change", "ignore")
                     ))
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
+    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value]), $X->[value], ignore($X->[value])]]",
+        tt.getTable().toString());
+  }
+  
+  @Test
+  public void tableWithSetSymbols() throws Exception {
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(
+                    asList("tableTable_id_0", "OK"),
+                    asList("tableTable_id_1", asList(
+                        asList("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")
+                    ))
+            )
+    );
+
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+    assertEquals("[[pass(Table:fixture), argument], [pass($A<-[1]), ignore($B<-[2]), fail($C<-[3]), fail($D<-[sole:l]), $E=, pass($F=)]]",
+        tt.getTable().toString());
+    assertEquals("1", tt.getSymbol("A"));
+    assertEquals("2", tt.getSymbol("B"));
+    assertEquals("3", tt.getSymbol("C"));
+    assertEquals("sole:l", tt.getSymbol("D"));
+    assertEquals(null, tt.getSymbol("E"));
+    assertEquals(null, tt.getSymbol("F"));
   }
 
+  @Test
+  public void tableWithSetSymbolReturnVariableInResult() throws Exception {
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
+    TableTable.TableTableExpectation expectation = tt.new TableTableExpectation();
+    TestResult result = expectation.evaluateExpectation(asList(asList("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")));
+
+    assertNotNull(result.getVariablesToStore());
+    assertEquals("1", result.getVariablesToStore().get("A"));
+    assertEquals("2", result.getVariablesToStore().get("B"));
+    assertEquals("3", result.getVariablesToStore().get("C"));
+    assertEquals("sole:l", result.getVariablesToStore().get("D"));
+    assertNull(result.getVariablesToStore().get("E"));
+    assertNull(result.getVariablesToStore().get("F"));
+  }
+  
   @Test
   public void tableMethodReturnsNull() throws Exception {
     assertTableResults("|2|4|\n", null,

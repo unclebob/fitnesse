@@ -180,14 +180,14 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void handleNullSymbols() throws Exception {
-    caller.setVariable("x", null);
+    caller.assign("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"$x"});
     Assert.assertNull(result);
   }
 
   @Test
   public void handleNullSymbolsSurroundedByString() throws Exception {
-    caller.setVariable("x", null);
+    caller.assign("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"A $x B"});
     assertEquals("A null B", result);
   }

@@ -171,6 +171,15 @@ public class SlimCommandRunningClient implements SlimClient {
           Object[] list = new Object[] { instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className };
           statementsAsList.add(asList(ArrayUtils.addAll(list, constructorArgs)));
         }
+
+        @Override
+        public void assign(String symbolName, Object value) {
+          if (slimServerVersion < 0.4) {
+            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
+          }
+          Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
+          statementsAsList.add(asList(list));
+        }
       };
 
       instruction.execute(executor);

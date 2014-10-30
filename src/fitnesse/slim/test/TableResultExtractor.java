@@ -17,4 +17,9 @@ public class TableResultExtractor {
   public Object getValueFromTableResultSymbol(List<List<Object>> tableResult, int rowNo, int columnNo ){
     return  tableResult.get(rowNo).get(columnNo);
   }
+
+  public Object freeSymbol(){
+    return null;
+  }
+
 }

@@ -110,7 +110,8 @@ public abstract class ListExecutorTestBase {
 
   @Test
   public void oneFunctionCallVerbose() throws Exception {
-    final String endl = System.getProperty("line.separator");    executor.setVerbose();
+    final String endl = System.getProperty("line.separator");
+    executor.setVerbose();
     PrintStream oldOut = System.out;
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     System.setOut(new PrintStream(os));

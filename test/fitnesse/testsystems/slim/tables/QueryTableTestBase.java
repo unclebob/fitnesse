@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public abstract class QueryTableTestBase {
   private WikiPage root;
@@ -283,6 +283,34 @@ public abstract class QueryTableTestBase {
     );
   }
 
+  @Test
+  public void tableWithSetSymbol() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+        asList(
+            asList("queryTable_id_0", "OK"),
+            asList("queryTable_id_2", asList(asList(asList("n", "1"), asList("2n", "2"))))
+        )
+    );
+    evaluateResults(pseudoResults, "[" +
+        headRow +
+        "[n, 2n], " +
+        "[pass(1), ignore($A<-[2])]" + "]");
+
+    assertEquals("2", qt.getSymbol("A"));
+  }
+
+  @Test
+  public void tableWithSetSymbolReturnVariableInResult() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
+    QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
+    TestResult result = expectation.evaluateExpectation(asList(asList(asList("n", "1"), asList("2n", "2"))));
+
+    assertNotNull(result.getVariablesToStore());
+    assertEquals("2", result.getVariablesToStore().get("A"));
+  }
+
+  
   @Test
   public void commentColumn() throws Exception {
 	queryTableHeader =

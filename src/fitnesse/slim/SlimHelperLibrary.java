@@ -32,8 +32,4 @@ public class SlimHelperLibrary implements StatementExecutorConsumer {
   public Object cloneSymbol(Object master){
 	  return master;
   }
-
-  public Object freeSymbol(){
-	  return null;
-  }
 }
