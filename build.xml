@@ -267,8 +267,6 @@
 		<java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
-			<arg value="-p" />
-			<arg value="9234" />
 		</java>
 	</target>
 
@@ -276,8 +274,6 @@
 		<java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true">
 			<arg value="-c" />
 			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
-			<arg value="-p" />
-			<arg value="9234" />
 		</java>
 	</target>
 
