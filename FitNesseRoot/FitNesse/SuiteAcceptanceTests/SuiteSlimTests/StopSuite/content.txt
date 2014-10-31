@@ -3,6 +3,7 @@ Raising an exception with the term "StopSuite" in it will make sure all remainin
 !| script |
 | given page | MySuite | with content | ${SUT_PATH} !-
 !define TEST_SYSTEM {slim}
+!define SLIM_PORT {9900}
 -! |
 | given page | MySuite.TestPageA | with content | !-
 | import |
