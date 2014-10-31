@@ -1,7 +1,7 @@
 package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
@@ -168,7 +168,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
       return pageHistoryFormatter.format(new Date(time));
     }
 

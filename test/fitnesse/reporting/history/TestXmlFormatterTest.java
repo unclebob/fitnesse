@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
 
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class TestXmlFormatterTest {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
       "20090413152143_1_2_3_4.xml", 
-      TestResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
+      SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test

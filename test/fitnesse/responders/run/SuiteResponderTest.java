@@ -37,7 +37,7 @@ import static util.RegexTestCase.*;
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
   private MockRequest request;
-  private TestResponder responder;
+  private SuiteResponder responder;
   private WikiPage root;
   private WikiPage suite;
   private FitNesseContext context;
@@ -64,7 +64,7 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     request.addInput("debug", "");
-    responder = new TestResponder();
+    responder = new SuiteResponder();
     responder.page = suite;
 
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();

@@ -33,8 +33,8 @@ public class StopTestResponderTest {
 
   @Test
   public void testStopAll() throws Exception {
-    TestResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
-    TestResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
+    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
+    SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
 
     StopTestResponder stopResponder = new StopTestResponder();
     String response = runResponder(stopResponder);
@@ -49,8 +49,8 @@ public class StopTestResponderTest {
 
   @Test
   public void testStopB() throws Exception {
-    TestResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
-    final String bId = TestResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
+    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
+    final String bId = SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
 
     request = new MockRequest() {
       @Override

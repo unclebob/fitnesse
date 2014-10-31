@@ -4,7 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -19,7 +19,7 @@ import util.StandardOutAndErrorRecorder;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestResponderWikiImportingTest {
+public class SuiteResponderWikiImportingTest {
   public MockWikiImporter mockWikiImporter;
   private MockTestResponder testResponder;
   private WikiPage pageOne;
@@ -129,7 +129,7 @@ public class TestResponderWikiImportingTest {
     sentMessages += output.replaceAll("<.*?>", "");
   }
 
-  private class MockTestResponder extends TestResponder {
+  private class MockTestResponder extends SuiteResponder {
 
     public MockTestResponder(MockWikiImporter mockWikiImporter) {
       super(mockWikiImporter);
