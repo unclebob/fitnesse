@@ -6,6 +6,7 @@ import static util.RegexTestCase.assertSubString;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
@@ -75,6 +76,15 @@ public class AddChildPageResponderTest {
     assertTrue(crawler.getPage(path) == null);
     responder.makeResponse(context, request);
     assertTrue(crawler.getPage(path) == null);
+  }
+
+  @Test
+  public void noPageIsMadeIfPageAlreadyExists() throws Exception {
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage." + childName), "");
+
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getStatus() == 409);
+    assertSubString("Child page already exists", response.getContent());
   }
 
   @Test
