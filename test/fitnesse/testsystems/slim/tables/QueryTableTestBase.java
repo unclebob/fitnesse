@@ -413,13 +413,12 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
-  public void anErrorShouldBeRegisteredIfQueryResultIsNull() throws Exception {
+  public void ShouldBeIgnoredIfQueryResultIsNull() throws Exception {
     makeQueryTableAndBuildInstructions("|a|\n|b|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
     TestResult result = expectation.evaluateExpectation(null);
 
-    assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().getExceptions());
+    assertEquals(ExecutionResult.IGNORE, result.getExecutionResult());
   }
 
 }
