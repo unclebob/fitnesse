@@ -73,21 +73,6 @@ public class HtmlSlimResponderTest {
   }
 
   @Test
-  public void slimResponderStartsAndQuitsSlim() throws Exception {
-    responder.setFastTest(false);
-    request.setResource("TestPage");
-    responder.makeResponse(context, request);
-    assertTrue(!responder.slimOpen());
-  }
-
-//  @Test
-//  public void verboseOutputIfSlimFlagSet() throws Exception {
-//    getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-//    assertTrue(responder.getCommandLine().contains(
-//        "fitnesse.slim.SlimService -v"));
-//  }
-
-  @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
     //assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span> <span class=\"error\">The instance decisionTable_0.table. does not exist</span></td>");
@@ -408,36 +393,6 @@ public class HtmlSlimResponderTest {
     @Override
     public boolean matches(String actual, String expected) {
       throw new RuntimeException("exception message");
-    }
-  }
-	  
-  private static class DummyListener implements TestSystemListener {
-    @Override
-    public void testSystemStarted(TestSystem testSystem) {
-    }
-
-    @Override
-    public void testOutputChunk(String output) {
-    }
-
-    @Override
-    public void testStarted(TestPage testPage) {
-    }
-
-    @Override
-    public void testComplete(TestPage testPage, TestSummary testSummary) {
-    }
-
-    @Override
-    public void testSystemStopped(TestSystem testSystem, Throwable throwable) {
-    }
-
-    @Override
-    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    }
-
-    @Override
-    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     }
   }
 }
