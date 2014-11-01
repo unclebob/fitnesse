@@ -1,0 +1,24 @@
+Raising an exception with the term "StopSuite" in it will make sure all remaining tests are skipped.
+
+!| script |
+| given page | MySuite | with content | ${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+-! |
+| given page | MySuite.TestPageA | with content | !-
+| import |
+| fitnesse.slim.test |
+
+| constructor throws | stop suite |
+
+| table in page A never to be executed |
+
+-! |
+| given page | MySuite.TestPageB | with content | !-
+| import |
+| fitnesse.slim.test |
+
+| table in page B never to be executed |
+
+-! |
+| test results for suite | MySuite | should contain | table in page A never to be executed <span class="ignore">Test not run</span> |
+| ensure | content contains | table in page B never to be executed <span class="ignore">Test not run</span> |

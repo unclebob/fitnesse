@@ -40,6 +40,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
+  private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
 
@@ -116,7 +117,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
     List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
-    if (!stopTestCalled) {
+    if (!stopTestCalled && !stopSuiteCalled) {
       // Okay, if this crashes, the test system is killed.
       // We're not gonna continue here, but instead declare our test system done.
       try {
@@ -148,6 +149,9 @@ public abstract class SlimTestSystem implements TestSystem {
           SlimExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           if (exceptionResult.isStopTestException()) {
             stopTestCalled = true;
+          }
+          if (exceptionResult.isStopSuiteException()) {
+            stopTestCalled = stopSuiteCalled = true;
           }
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {

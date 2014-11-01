@@ -99,9 +99,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
+      int port = offset + base;
       offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
-      return offset + base;
+      // is port available??
+      return port;
     }
   }
 

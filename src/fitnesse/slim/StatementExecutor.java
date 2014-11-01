@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static fitnesse.slim.SlimException.isStopSuiteException;
+import static fitnesse.slim.SlimException.isStopTestException;
 import static java.lang.String.format;
 
 /**
@@ -128,7 +130,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   private void checkExceptionForStop(Throwable exception) {
-    if (exception.getClass().toString().contains("StopTest")) {
+    if (isStopTestException(exception) || isStopSuiteException(exception)) {
       stopRequested = true;
     }
   }
