@@ -1,7 +1,6 @@
 !| script |
 | given page | MySuite | with content | ${SUT_PATH} !-
 !define TEST_SYSTEM {slim}
-!define SLIM_PORT {9900}
 -! |
 | given page | MySuite.TestPageA | with content | !-
 | import |
@@ -20,5 +19,5 @@
 | check | echo | hello | hello |
 
 -! |
-| test results for page | MySuite | should contain | table never to be executed <span class="ignore">Test not run</span> |
+| test results for suite | MySuite | should contain | table never to be executed <span class="ignore">Test not run</span> |
 | ensure | content contains | <span class="pass">echo script</span> |

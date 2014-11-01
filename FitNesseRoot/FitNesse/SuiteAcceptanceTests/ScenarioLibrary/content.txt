@@ -64,6 +64,11 @@
 |ensure|content contains|@text|
 |show|content|
 
+!|scenario|test results for suite|source|should contain|text|
+|check|request page|@source?suite|200|
+|ensure|content contains|@text|
+|show|content|
+
 !|scenario|its test results should contain|text|
 |test results for page|$IT|should contain|@text|
 

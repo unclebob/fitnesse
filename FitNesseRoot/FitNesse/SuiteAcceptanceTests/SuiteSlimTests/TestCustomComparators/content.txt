@@ -3,7 +3,6 @@ You can define a custom comparator in the plugins.properties file. This is now d
 !| script |
 | given page | TestPage | with content | ${SUT_PATH} !-
 !define TEST_SYSTEM {slim}
-!define SLIM_PORT {9900}
 | scenario | test in scenario |
 | check | echo | test | glob:t*t |
 
