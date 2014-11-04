@@ -9,6 +9,9 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -23,7 +26,7 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,6 +64,24 @@ public class WikiPageResponderTest {
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
     assertSubString("<h5> Wiki Page tags</h5>", body);
+  }
+
+  @Test
+  public void testResponseWithNonWikiWordChildPage() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
+    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+
+    final MockRequest request = new MockRequest();
+    request.setResource("page.child_page");
+
+    final Responder responder = new WikiPageResponder();
+    final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+
+    assertEquals(200, response.getStatus());
+
+    final String body = response.getContent();
+
+    assertSubString("child content", body);
   }
 
   @Test
@@ -120,9 +141,62 @@ public class WikiPageResponderTest {
     assertHasRegexp("suite teardown", content);
   }
 
+  @Test
+  public void testInputValues() throws Exception {
+    WikiPageUtil.addPage(root, PathParser.parse("NormalPage"), "normal ${normalParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "test page ${testPageParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "header ${headerParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer ${footerParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("SetUp"), "setup ${setupParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("TearDown"), "teardown ${teardownParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup ${suiteSetupParam}");
+    WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown ${suiteTeardownParam}");
+
+    Map<String,String> urlInputValues = new HashMap<String,String>();
+    urlInputValues.put("normalParam", "normalValue");
+    urlInputValues.put("headerParam", "headerValue");
+    urlInputValues.put("footerParam", "footerValue");
+
+    SimpleResponse response = requestPage("NormalPage", urlInputValues);
+    String content = response.getContent();
+    assertHasRegexp("header headerValue", content);
+    assertHasRegexp("normal normalValue", content);
+    assertHasRegexp("footer footerValue", content);
+
+
+    urlInputValues = new HashMap<String,String>();
+    urlInputValues.put("headerParam", "headerValue");
+    urlInputValues.put("footerParam", "footerValue");
+    urlInputValues.put("testPageParam", "testPageValue");
+    urlInputValues.put("footerParam", "footerValue");
+    urlInputValues.put("setupParam", "setupValue");
+    urlInputValues.put("teardownParam", "teardownValue");
+    urlInputValues.put("suiteSetupParam", "suiteSetupValue");
+    urlInputValues.put("suiteTeardownParam", "suiteTeardownValue");
+
+
+    response = requestPage("TestPage", urlInputValues);
+    content = response.getContent();
+    assertHasRegexp("header headerValue", content);
+    assertHasRegexp("test page testPageValue", content);
+    assertHasRegexp("footer footerValue", content);
+    assertHasRegexp("setup setupValue", content);
+    assertHasRegexp("teardown teardownValue", content);
+    assertHasRegexp("suite setup suiteSetupValue", content);
+    assertHasRegexp("suite teardown suiteTeardownValue", content);
+  }
+
   private SimpleResponse requestPage(String name) throws Exception {
+      return requestPage(name, new HashMap<String,String>());
+  }
+
+  private SimpleResponse requestPage(String name, Map<String,String> inputs) throws Exception {
     final MockRequest request = new MockRequest();
     request.setResource(name);
+
+    for(String input: inputs.keySet()){
+        request.addInput(input, inputs.get(input));
+    }
     final Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(context, request);
   }

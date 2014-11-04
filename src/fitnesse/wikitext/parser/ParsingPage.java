@@ -2,8 +2,6 @@ package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
 
-import util.Maybe;
-
 /**
  * The page represents wiki page in the course of being parsed.
  */
@@ -75,6 +73,7 @@ public class ParsingPage implements VariableSource {
     putVariable(page, name, new Maybe<String>(value));
   }
 
+  @Override
   public Maybe<String> findVariable(String name) {
     Maybe<String> result = findSpecialVariableValue(name);
     if (!result.isNothing()) return result;
@@ -122,6 +121,7 @@ public class ParsingPage implements VariableSource {
   private Maybe<String> lookInParentPages(String name) {
     for (SourcePage sourcePage : page.getAncestors()) {
       if (!inCache(sourcePage)) {
+        // The cache is passed along... page is rendered as a normal page.
         Parser.make(copyForPage(sourcePage), sourcePage.getContent()).parse();
         putVariable(sourcePage, "", Maybe.noString);
       }

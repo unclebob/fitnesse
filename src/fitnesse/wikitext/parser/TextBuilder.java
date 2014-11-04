@@ -1,9 +1,9 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
 
 public class TextBuilder implements Translation {
     public String toTarget(Translator translator, Symbol symbol) {
-        return Utils.escapeHTML(Utils.unescapeWiki(symbol.getContent()));
+        return HtmlUtil.escapeHTML(HtmlUtil.unescapeWiki(symbol.getContent()));
     }
 }

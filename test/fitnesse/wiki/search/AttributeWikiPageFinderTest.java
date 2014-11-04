@@ -16,7 +16,7 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> {
 

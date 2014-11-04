@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 public class Nesting extends SymbolType implements Rule, Translation{
     public static final Nesting symbolType = new Nesting();
 

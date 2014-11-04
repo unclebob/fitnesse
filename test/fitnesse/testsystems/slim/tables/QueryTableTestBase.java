@@ -280,10 +280,31 @@ public abstract class QueryTableTestBase {
         "[pass(2), pass($V->[4])]" +
         "]",
       HtmlUtil.unescapeWiki(qt.getTable().toString())
+<<<<<<< HEAD
+=======
     );
   }
 
   @Test
+  public void tableWithSetSymbol() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+        asList(
+            asList("queryTable_id_0", "OK"),
+            asList("queryTable_id_2", asList(asList(asList("n", "1"), asList("2n", "2"))))
+        )
+>>>>>>> upstream/master
+    );
+    evaluateResults(pseudoResults, "[" +
+        headRow +
+        "[n, 2n], " +
+        "[pass(1), ignore($A<-[2])]" + "]");
+
+    assertEquals("2", qt.getSymbol("A"));
+  }
+
+  @Test
+<<<<<<< HEAD
   public void tableWithSetSymbol() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
@@ -301,6 +322,8 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
+=======
+>>>>>>> upstream/master
   public void tableWithSetSymbolReturnVariableInResult() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
@@ -413,13 +436,12 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
-  public void anErrorShouldBeRegisteredIfQueryResultIsNull() throws Exception {
+  public void ShouldBeIgnoredIfQueryResultIsNull() throws Exception {
     makeQueryTableAndBuildInstructions("|a|\n|b|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
     TestResult result = expectation.evaluateExpectation(null);
 
-    assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().getExceptions());
+    assertEquals(ExecutionResult.IGNORE, result.getExecutionResult());
   }
 
 }

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

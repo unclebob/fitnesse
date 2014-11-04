@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 
 public class PageHistory {
   private String name;
@@ -16,7 +16,7 @@ public class PageHistory {
   private int wrong;
   private int ignores;
   private int exceptions;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
 
   public void setName(String name) {
     this.name = name;

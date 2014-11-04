@@ -1,5 +1,4 @@
-!2 The Slim Protocol
-!note !4 (V0.3)
+!2 The Slim Protocol, version 0.4
 {{{
              instruction list
   +----------+    o--->     +------------+      +----------+       +-----+
@@ -72,6 +71,11 @@ This instruction causes slim to find a function named ''<function>'' in the clas
 
 This instruction is identical to ''call'' except that the return value is saved in the dictionary of symbol values with the name ''<symbol>''.  Symbol names may only contain letters.
 
+!4 !-Assign-!
+[''<id>'', assign, ''<symbol>'', ''<value>'']
+
+This instruction is used to set symbols on the SUT. The ''<value>'' is saved in the dictionary of symbol values with the name ''<symbol>''. This instruction returns ''OK''.
+
 !3 Symbols
 That last one was probably puzzling.  Symbol values are strings or objects (or null values) that are kept in a dictionary.  The ''callAndAssign'' instruction is the only thing that can create a symbol.  Symbols are used in in the ''<arg>'' strings of the ''make'', ''call'', and ''callAndAssign'' instructions.  If one of those ''<arg>'' strings contains a $ followed by a symbol name (as in $V), and if the symbol has been assigned, then that string will be replaced by the value of the symbol. What this means is that the !-FitNesse-! side can tell Slim to remember a value in a symbol, and then to use that value later.
 
@@ -83,6 +87,9 @@ That last one was probably puzzling.  Symbol values are strings or objects (or n
  * getFixture(): returns the object from the dictionary of created objects named "scriptTableActor". Throws an exception if no object exists.
  * pushFixture(): pushes the object from the dictionary of created objects named "scriptTableActor" on to the stack of actor objects. Throws an exception if no object exists.
  * popFixture(): pops an object from the stack of actor objects and adds it to the dictionary of created objects with the name "scriptTableActor". Throws an exception if the stack is empty.
+
+To support symbol assignments in Decision Tables which are implemented with a Scenario function is required in a Library:
+ * cloneSymbol
 
 !3 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.

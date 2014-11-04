@@ -2,7 +2,6 @@ package fitnesse.wiki.fs;
 
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
@@ -225,7 +224,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   @Override
   public WikiPage toWikiPage(WikiPage root) {
     FileSystemPage fsPage = (FileSystemPage) root;
-    WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
+    WikiPage recentChangesPage = createInMemoryRecentChangesPage(fsPage);
     PageData pageData = recentChangesPage.getData();
     try {
       pageData.setContent(convertToWikiText(history(fsPage.getFileSystemPath(), new LogCommandSpec() {
@@ -241,6 +240,11 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     pageData.setProperties(new WikiPageProperties());
     recentChangesPage.commit(pageData);
     return recentChangesPage;
+  }
+
+  private WikiPage createInMemoryRecentChangesPage(FileSystemPage parent) {
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return new FileSystemPage(new File(parent.getFileSystemPath(), RECENT_CHANGES), RECENT_CHANGES, parent, new MemoryVersionsController(fileSystem));
   }
 
   private String convertToWikiText(Collection<GitVersionInfo> history) {
@@ -329,6 +333,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     public Date getLastModificationTime() {
       return lastModified;
     }
+
   }
 }
 

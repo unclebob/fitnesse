@@ -12,7 +12,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
+import fitnesse.util.Clock;
 
 public class WikiImportPropertyTest {
   private WikiImportProperty property;

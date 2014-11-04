@@ -16,17 +16,17 @@ import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.DateTimeUtil;
+import fitnesse.util.DateTimeUtil;
 import util.FileUtil;
 import util.RegexTestCase;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.http.MockRequest;
@@ -35,13 +35,13 @@ import fitnesse.reporting.history.SuiteExecutionReport;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;

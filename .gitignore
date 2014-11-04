@@ -41,3 +41,4 @@ junk/*
 fitserverSentinel*
 tmp/*
 /classes
+*.log

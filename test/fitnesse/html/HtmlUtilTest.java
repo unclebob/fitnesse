@@ -10,10 +10,9 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,6 +70,16 @@ public class HtmlUtilTest {
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+  }
+
+  @Test
+  public void shouldEscapeOnlyXmlCharacters() {
+    assertEquals("ab&amp;cd&lt;ef&gt;", HtmlUtil.escapeHTML("ab&cd<ef>"));
+  }
+
+  @Test
+  public void shouldEscapeMultipleOccurencesOfTheSameCharacter() {
+    assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
   }
 
   private String getActionsHtml(String pageName) {

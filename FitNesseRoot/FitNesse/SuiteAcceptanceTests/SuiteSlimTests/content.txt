@@ -1,8 +1,4 @@
 !define TEST_SYSTEM {slim}
 
-Use a non-default port number, so SLIM tests systems can be run as well:
-
-!define SLIM_PORT {8093}
-
 !contents -R2 -g -p -f -h
 

@@ -26,7 +26,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   private String relativeName;
 
   protected InteractiveFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
-    super(context, page);
+    super(page);
     this.log = log;
   }
 
@@ -112,6 +112,10 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   @Override
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
+    writeData(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", testSystemName, cause.toString()));
+  }
+
   public void setTrackingId(String stopResponderId) {
     addStopLink(stopResponderId);
   }
@@ -122,7 +126,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 
   protected void maybeMakeErrorNavigatorVisible(){
     if(exceptionsOrErrorsExist()){
-      writeData(makeErrorNavigatorVisible());
       writeData(initErroMetadata());
     }
   }
@@ -140,11 +143,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
       return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OUTPUT);
 
     return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
-  }
-
-  private String makeErrorNavigatorVisible() {
-    HtmlTag toggler = HtmlUtil.makeToggleClassScript("error-nav", "hidden");
-    return toggler.html();
   }
 
   private String initErroMetadata() {

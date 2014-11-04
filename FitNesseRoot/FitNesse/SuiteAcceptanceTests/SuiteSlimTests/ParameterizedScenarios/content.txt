@@ -27,7 +27,7 @@ beat Bill with a noodle
 |login user with password;|Bob|xyzzy|
 
 !3 Scenarios can be defined without a filler name between the underscores 
-|scenario | myDivision _ _ _|numerator, denominator, quotient|
+|scenario | my division _ _ _|numerator, denominator, quotient|
 |setNumerator| @numerator|
 |setDenominator| @denominator|
 |check | quotient| @quotient|
@@ -36,16 +36,22 @@ Use the Division class from the eg library to implement the scenario
 |Library|
 |eg.Division|
 
-Test the scenario with a decision table
-| myDivision |
-| # | numerator | denominator | quotient? |
+!4 Test the scenario with a decision table
+| my division |
+| # | numerator | denominator | quotient |
 | any comment| 10 | 2 | 5.0 |
 
+You can change the order of the columns
+| my division |
+|quotient | # | numerator | denominator | 
+| 5.0| any comment| 10 | 2 |
 
-Test the scenario with a script
+
+!4 Test the scenario with a script
+the order of the parameters can't be changed!
 |script|
-|myDivision 20 5 4.0|
-|myDivision |6|| 3|| 2.0|
-|#| open Bug: The next syntax fails|
-|#|myDivision; |10 2 5.0|
+|my division 20 5 4.0|
+|my division |6|| 3|| 2.0|
+|my division; |35 |5| 7.0 |
+
 

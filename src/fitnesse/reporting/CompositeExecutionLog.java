@@ -8,14 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.html.HtmlElement;
 import fitnesse.html.template.PageFactory;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
-import util.Clock;
-
-import static fitnesse.html.HtmlElement.endl;
+import fitnesse.util.Clock;
 
 public class CompositeExecutionLog implements ExecutionLogListener {
 

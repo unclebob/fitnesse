@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.wiki.ReadOnlyPageData;
-
 public abstract class ClientBuilder<T> {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String[] DEFAULT_COMMAND_PATTERN = {
@@ -127,7 +125,7 @@ public abstract class ClientBuilder<T> {
   }
 
   public String getClassPath() {
-    return descriptor.getClassPath();
+    return descriptor.getClassPath().toString();
   }
 
   public boolean isDebug() {

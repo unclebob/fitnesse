@@ -16,8 +16,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;

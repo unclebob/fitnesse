@@ -18,7 +18,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class HistoryComparerResponderTest {
@@ -27,13 +27,19 @@ public class HistoryComparerResponderTest {
   public WikiPage root;
   public MockRequest request;
   public HistoryComparer mockedComparer;
-  private final String FIRST_FILE_PATH = "./TestDir/files/testResults/TestFolder/firstFakeFile"
+  private String firstFilePath = "./TestDir/files/testResults/TestFolder/firstFakeFile"
       .replace('/', File.separatorChar);
-  private final String SECOND_FILE_PATH = "./TestDir/files/testResults/TestFolder/secondFakeFile"
+  private String secondFilePath = "./TestDir/files/testResults/TestFolder/secondFakeFile"
       .replace('/', File.separatorChar);
 
   @Before
   public void setup() throws Exception {
+    context = FitNesseUtil.makeTestContext(root);
+    firstFilePath = context.getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile"
+            .replace('/', File.separatorChar);
+    secondFilePath = context.getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile"
+            .replace('/', File.separatorChar);
+
     request = new MockRequest();
     mockedComparer = mock(HistoryComparer.class);
 
@@ -43,7 +49,7 @@ public class HistoryComparerResponderTest {
     mockedComparer.resultContent.add("pass");
     when(mockedComparer.getResultContent()).thenReturn(
         mockedComparer.resultContent);
-    when(mockedComparer.compare(FIRST_FILE_PATH, SECOND_FILE_PATH)).thenReturn(
+    when(mockedComparer.compare(firstFilePath, secondFilePath)).thenReturn(
         true);
     mockedComparer.firstTableResults = new ArrayList<String>();
     mockedComparer.secondTableResults = new ArrayList<String>();
@@ -55,11 +61,10 @@ public class HistoryComparerResponderTest {
     request.addInput("TestResult_firstFakeFile", "");
     request.addInput("TestResult_secondFakeFile", "");
     request.setResource("TestFolder");
-    FileUtil.createFile("TestDir/files/testResults/TestFolder/firstFakeFile",
+    FileUtil.createFile(context.getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile",
         "firstFile");
-    FileUtil.createFile("TestDir/files/testResults/TestFolder/secondFakeFile",
+    FileUtil.createFile(context.getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile",
         "secondFile");
-    context = FitNesseUtil.makeTestContext(root);
     root = InMemoryPage.makeRoot("RooT");
   }
 
@@ -73,12 +78,12 @@ public class HistoryComparerResponderTest {
   @Test
   public void shouldGetTwoHistoryFilesFromRequest() throws Exception {
     responder.makeResponse(context, request);
-    verify(mockedComparer).compare(FIRST_FILE_PATH, SECOND_FILE_PATH);
+    verify(mockedComparer).compare(firstFilePath, secondFilePath);
   }
 
   @Test
   public void shouldReturnErrorPageIfCompareFails() throws Exception {
-    when(mockedComparer.compare(FIRST_FILE_PATH, SECOND_FILE_PATH)).thenReturn(
+    when(mockedComparer.compare(firstFilePath, secondFilePath)).thenReturn(
         false);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
         request);

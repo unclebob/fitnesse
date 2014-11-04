@@ -31,6 +31,7 @@ public class SlimHelperLibrary implements StatementExecutorConsumer {
   
   // The following functions are used to manipulate Symbols from the Slim Tables
   public Object cloneSymbol(Object master){
+<<<<<<< HEAD
   return master;
   }
   public Object freeSymbol(){
@@ -47,5 +48,8 @@ public class SlimHelperLibrary implements StatementExecutorConsumer {
   }
   public Object getValuefromTableResultSymbol(List<List<Object>> tableResult, int rowNo, int columnNo ){
   return tableResult.get(rowNo).get(columnNo);
+=======
+	  return master;
+>>>>>>> upstream/master
   }
 }

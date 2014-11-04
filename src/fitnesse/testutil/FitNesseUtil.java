@@ -10,10 +10,11 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.fs.ZipFileVersionsController;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -55,20 +56,17 @@ public class FitNesseUtil {
   }
 
   public static FitNesseContext makeTestContext(WikiPage root, int port) {
-    return makeTestContext(root, ".", FitNesseUtil.base, port, new PromiscuousAuthenticator());
+    return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, port, new PromiscuousAuthenticator());
   }
 
   public static FitNesseContext makeTestContext(WikiPage root,
       Authenticator authenticator) {
-    return makeTestContext(root, ".", FitNesseUtil.base, PORT, authenticator);
+    return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, PORT, authenticator);
   }
 
-  public static FitNesseContext makeTestContext(WikiPage root, int port,
-      Authenticator authenticator) {
-    return makeTestContext(root, ".", FitNesseUtil.base, port, authenticator);
+  public static FitNesseContext makeTestContext(WikiPage root, int port, Authenticator authenticator, Properties properties) {
+    return makeTestContext(root, createTemporaryFolder(), FitNesseUtil.base, port, authenticator, properties);
   }
-
-
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port) {
@@ -77,6 +75,11 @@ public class FitNesseUtil {
 
   public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
       String rootDirectoryName, int port, Authenticator authenticator) {
+    return makeTestContext(root, rootPath, rootDirectoryName, port, authenticator, new Properties());
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
+      String rootDirectoryName, int port, Authenticator authenticator, Properties properties) {
 
     FitNesseContext context;
 
@@ -89,6 +92,7 @@ public class FitNesseUtil {
         .withAuthenticator(authenticator)
         .withVersionsController(new ZipFileVersionsController())
         .withRecentChanges(new RecentChangesWikiPage())
+        .updatedWith(properties)
         .makeFitNesseContext();
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -101,8 +105,23 @@ public class FitNesseUtil {
     return context;
   }
 
+  private static String createTemporaryFolder() {
+    File createdFolder;
+    try {
+      createdFolder = File.createTempFile("fitnesse", "");
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to create temporary folder for test execution", e);
+    }
+    createdFolder.delete();
+    createdFolder.mkdir();
+    return createdFolder.getPath();
+  }
+
+  public static void destroyTestContext(FitNesseContext context) {
+    FileUtil.deleteFileSystemDirectory(context.rootPath);
+  }
+
   public static void destroyTestContext() {
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
-
 }

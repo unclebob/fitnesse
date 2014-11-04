@@ -18,10 +18,11 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -30,10 +31,12 @@ import fitnesse.wiki.WikiPageUtil;
 public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
+  private FitNesseContext context;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     version = (String) request.getInput("version");
+    this.context = context;
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
@@ -44,7 +47,7 @@ public class VersionResponder implements SecureResponder {
       return new NotFoundResponder().makeResponse(context, request);
 
     String fullPathName = PathParser.render(page.getPageCrawler().getFullPath());
-    HtmlPage html = makeHtml(fullPathName, page, context);
+    HtmlPage html = makeHtml(fullPathName, page, context, request);
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(html.html());
@@ -52,7 +55,7 @@ public class VersionResponder implements SecureResponder {
     return response;
   }
 
-  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
+  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context, Request request) {
     WikiPage pageVersion = page.getVersion(version);
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
@@ -71,7 +74,7 @@ public class VersionResponder implements SecureResponder {
     html.put("previousVersion", previousVersion);
 
     html.setMainTemplate("wikiPage");
-    html.put("content", new VersionRenderer(pageVersion));
+    html.put("content", new VersionRenderer(pageVersion, request));
     return html;
   }
 
@@ -101,19 +104,25 @@ public class VersionResponder implements SecureResponder {
 
   public class VersionRenderer {
     private WikiPage page;
+    private Request request;
 
     public VersionRenderer(WikiPage page) {
+      this(page, null);
+    }
+
+    public VersionRenderer(WikiPage page, Request request) {
       super();
       this.page = page;
+      this.request = request;
     }
 
     public String render() {
-      ReadOnlyPageData data;
       if (WikiTestPage.isTestPage(page)) {
-        WikiTestPage testPage = new WikiTestPage(page);
-        return WikiPageUtil.makePageHtml(testPage);
+        WikiTestPage testPage = new WikiTestPage(page, new UrlPathVariableSource(
+                context.variableSource, request == null?null : request.getMap()));
+        return WikiTestPageUtil.makePageHtml(testPage,request);
       } else {
-        return WikiPageUtil.makePageHtml(page);
+        return WikiPageUtil.makePageHtml(page,request);
       }
     }
   }

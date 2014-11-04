@@ -2,27 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
-import static util.ListUtility.list;
-
+import java.util.Arrays;
 import java.util.List;
 
 public class Bowling {
   private Game g;
 
   @SuppressWarnings("unchecked")
-  public List<?> doTable(List<Object> table) {
+  public List<?> doTable(List<List<String>> table) {
     g = new Game();
-    List<?> rollResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
-    List<String> scoreResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+    List<?> rollResults = Arrays.asList("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+    List<String> scoreResults = Arrays.asList("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
     rollBalls(table);
-    evaluateScores(g, (List<String>)table.get(1), scoreResults);
-    return list(rollResults, scoreResults);
+    evaluateScores(g, table.get(1), scoreResults);
+    return Arrays.asList(rollResults, scoreResults);
   }
 
   private void evaluateScores(Game g, List<String> object, List<String> scoreResults) {
     for (int frame = 0; frame < 10; frame++) {
       int actualScore = g.score(frame + 1);
-      int expectedScore = Integer.parseInt((String)object.get(frameCoordinate(frame)));
+      int expectedScore = Integer.parseInt(object.get(frameCoordinate(frame)));
       if (expectedScore == actualScore)
         scoreResults.set(frameCoordinate(frame), "pass");
       else
@@ -35,8 +34,8 @@ public class Bowling {
   }
 
   @SuppressWarnings("unchecked")
-  private void rollBalls(List<Object> table) {
-    List<String> rollRow = (List<String>)table.get(0);
+  private void rollBalls(List<List<String>> table) {
+    List<String> rollRow = table.get(0);
     for (int frame = 0; frame < 10; frame++) {
       String firstRoll = rollRow.get(frame * 2);
       String secondRoll = rollRow.get(frame * 2 + 1);

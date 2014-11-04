@@ -13,6 +13,7 @@ import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -24,19 +25,18 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
 import util.FileUtil;
-import util.XmlUtil;
+import fitnesse.util.XmlUtil;
 
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
@@ -44,13 +44,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 import static util.RegexTestCase.*;
-import static util.XmlUtil.getElementByTagName;
+import static fitnesse.util.XmlUtil.getElementByTagName;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
   private WikiPage root;
   private MockRequest request;
-  private TestResponder responder;
+  private SuiteResponder responder;
   private FitNesseContext context;
   private Response response;
   private MockResponseSender sender;
@@ -123,6 +123,7 @@ public class TestResponderTest {
       pageData.setAttribute(PageData.PropertySUITES, tags);
       testPage.commit(pageData);
     }
+    request.addInput("requestParam", "2");
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
@@ -219,6 +220,19 @@ public class TestResponderTest {
     doSimpleRun(passFixtureTable());
     assertSubString("href=\"TestPage?pageHistory\">", results);
     assertSubString("Page History", results);
+  }
+
+  @Test
+  public void testTestIdIsSentAsHeader() throws Exception {
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
+    request.setResource(testPage.getName());
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+
+    String results = sender.sentData();
+    assertSubString("X-FitNesse-Test-Id: ", results);
   }
 
   @Test
@@ -448,7 +462,7 @@ public class TestResponderTest {
 
     public void run() {
       waitForSemaphore();
-      context.runningTestingTracker.stopAllProcesses();
+      SuiteResponder.runningTestingTracker.stopAllProcesses();
     }
 
     private void waitForSemaphore() {
@@ -604,7 +618,7 @@ public class TestResponderTest {
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
-    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
+    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", HtmlUtil.unescapeHTML(results));
   }
 
 
@@ -711,7 +725,7 @@ public class TestResponderTest {
         "!|f|\n" +
         "|a|\n" +
         "|1|\n" +
-        "|2|\n";
+        "|${requestParam}|\n";
 
     public void assertXmlReportOfSlimScenarioTableIsCorrect() throws Exception {
       assertHeaderOfXmlDocumentsInResponseIsCorrect();

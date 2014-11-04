@@ -3,14 +3,15 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlUtil;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.BasicResponder;
 import fitnesse.html.template.HtmlPage;
 
-public class StopTestResponder extends BasicResponder {
+public class StopTestResponder implements SecureResponder {
 
   String testId = null;
   
@@ -30,9 +31,13 @@ public class StopTestResponder extends BasicResponder {
     HtmlPage page = context.pageFactory.newPage();
     page.addTitles("Stopping tests");
     page.put("testId", testId);
-    page.put("runningTestingTracker", context.runningTestingTracker);
+    page.put("runningTestingTracker", SuiteResponder.runningTestingTracker);
     page.setMainTemplate("stopTestPage.vm");
     return page.html();
   }
-  
+
+  public SecureOperation getSecureOperation() {
+    return new SecureTestOperation();
+  }
+
 }

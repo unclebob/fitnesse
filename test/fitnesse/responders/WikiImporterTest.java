@@ -20,13 +20,13 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.Clock;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
@@ -152,17 +152,6 @@ public class WikiImporterTest implements WikiImporterClient {
     }
     catch (Exception e) {
       assertEquals("blah is not a valid URL.", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testParsingUrlWithNonWikiWord() throws Exception {
-    try {
-      importer.parseUrl("http://blah.com/notawikiword");
-      fail("should throw exception");
-    }
-    catch (Exception e) {
-      assertEquals("The URL's resource path, notawikiword, is not a valid WikiWord.", e.getMessage());
     }
   }
 

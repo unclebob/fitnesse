@@ -1,13 +1,15 @@
 package fitnesse.testsystems;
 
-import fitnesse.wiki.ReadOnlyPageData;
+
+import java.util.List;
 
 public interface TestPage {
-  ReadOnlyPageData getDecoratedData();
 
   String getHtml();
 
   String getVariable(String name);
 
   String getFullPath();
+
+  ClassPath getClassPath();
 }
