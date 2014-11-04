@@ -27,3 +27,7 @@ $!headerContent.render()
 
 ## Test results are placed here:
 $testExecutor.execute()
+
+##Keyboard shortcuts
+#parse("keyboardShortcuts.vm")
+	
