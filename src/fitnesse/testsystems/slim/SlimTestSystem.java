@@ -158,6 +158,7 @@ public abstract class SlimTestSystem implements TestSystem {
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
           testAssertionVerified(a, testResult);
           
+          System.out.println("TestResult");
           
           //Retrieve variables set during expectation step
           if (testResult != null) {
@@ -166,8 +167,11 @@ public abstract class SlimTestSystem implements TestSystem {
               List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
               int i = 0;
               for (Entry<String, ?> variable : variables.entrySet()) {
+                //instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
             	  String[] s = new String[] {variable.getValue().toString()};
+            	  System.out.println ("Key: " +variable.getKey() +"- Value: " + variable.getValue());
                 instructions.add(new CallAndAssignInstruction("assign_"+i++, variable.getKey(), "scriptTable" + "Actor", "cloneSymbol", s));
+                //assertion= makeAssertion(callAndAssign(variable.getKey(), "scriptTable" + "Actor", "echo", variable.getValue()), new SymbolAssignmentExpectation(variable.getKey(), col, row)));
               }
               //Store variables in context
               if (i > 0) {
