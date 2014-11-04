@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VariableStore {
-  public static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([A-Za-z]\\w*)");
+  private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([a-zA-Z]\\w*)");
   private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
   private Matcher symbolMatcher;
 
