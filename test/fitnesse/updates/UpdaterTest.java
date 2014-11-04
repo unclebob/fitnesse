@@ -2,13 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.wiki.PathParser;
-import static org.junit.Assert.*;
+import java.io.File;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Test;
 
-import java.io.File;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UpdaterTest extends UpdateTestCase {
 
@@ -19,7 +20,7 @@ public class UpdaterTest extends UpdateTestCase {
 
   @Test
   public void testProperties() throws Exception {
-    File file = new File("TestDir/properties");
+    File file = new File(testDir, "properties");
     assertFalse(file.exists());
     updater.updates = new Update[]{};
     updater.update();

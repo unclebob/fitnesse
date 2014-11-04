@@ -6,7 +6,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 
 import org.junit.After;
@@ -74,7 +74,7 @@ public class PurgeHistoryResponderTest {
   }
 
   private Date makeDate(String dateString) throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
     Date date = format.parse(dateString);
     return date;
   }

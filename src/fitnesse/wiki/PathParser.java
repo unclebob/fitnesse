@@ -3,32 +3,32 @@
 package fitnesse.wiki;
 
 import java.util.Iterator;
-
-import fitnesse.wikitext.parser.WikiWordPath;
+import java.util.regex.Pattern;
 
 public class PathParser {
   public static final String PATH_SEPARATOR = ".";
 
-  public static final String PATH_PREFIX_CHARS = ".<>^"; //..."^" is deprecated
+  private static final Pattern WIKI_WORD_PATTERN = Pattern.compile("\\w[\\w-]*");
+  private static final Pattern WIKI_PATH_PATTERN = Pattern.compile("[<>^\\.]?\\w[\\w-]*(\\.\\w[\\w-]+)*");
+
   private WikiPagePath path;
 
   public static WikiPagePath parse(String pathName) {
-    return new PathParser().makePath(pathName);
+    return new PathParser().makePath(pathName, new WikiPagePath());
   }
 
-  private WikiPagePath makePath(String pathName) {
-    path = new WikiPagePath();
+  private static WikiPagePath makePath(String pathName, WikiPagePath path) {
     if (pathName.equals("")) {
       return path;
     } else if (pathName.equals("root") || pathName.equals(PATH_SEPARATOR) || pathName.equals("/")) {
       path.makeAbsolute();
       return path;
     } else {
-      return parsePathName(pathName);
+      return parsePathName(pathName, path);
     }
   }
 
-  private WikiPagePath parsePathName(String pathName) {
+  private static WikiPagePath parsePathName(String pathName, WikiPagePath path) {
     if (pathName.startsWith(PATH_SEPARATOR)) {
       path.makeAbsolute();
       pathName = pathName.substring(1);
@@ -42,7 +42,7 @@ public class PathParser {
     String[] names = pathName.split("\\" + PATH_SEPARATOR);
     for (int i = 0; i < names.length; i++) {
       String pageName = names[i];
-      if (nameIsValid(pageName))
+      if (isWikiPath(pageName))
         path.addNameToEnd(pageName);
       else
         return null;
@@ -50,12 +50,14 @@ public class PathParser {
     return path;
   }
 
-  public static boolean isPathPrefix(Character c) {
-    return PATH_PREFIX_CHARS.indexOf(c) >= 0;
+  public static boolean isSingleWikiWord(String name) {
+    return WIKI_WORD_PATTERN.matcher(name).matches()
+            && !"files".equals(name)
+            && !"root".equals(name);
   }
 
-  private static boolean nameIsValid(String name) {
-    return WikiWordPath.isWikiWord(name);
+  public static boolean isWikiPath(String name) {
+    return WIKI_PATH_PATTERN.matcher(name).matches();
   }
 
   public static String render(WikiPagePath path) {

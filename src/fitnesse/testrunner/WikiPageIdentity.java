@@ -1,6 +1,5 @@
 package fitnesse.testrunner;
 
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 public class WikiPageIdentity {

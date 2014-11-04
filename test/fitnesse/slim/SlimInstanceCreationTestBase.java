@@ -35,7 +35,7 @@ public abstract class SlimInstanceCreationTestBase {
 
   @Test
   public void canCreateInstanceWhenSpecifiedBySymbol() throws Exception {
-    caller.setVariable("X", getTestClassName());
+    caller.assign("X", getTestClassName());
     caller.create("x", "$X", new Object[0]);
     Object x = caller.getInstance("x");
     assertInstanceOfTestSlim(x);
@@ -45,7 +45,7 @@ public abstract class SlimInstanceCreationTestBase {
   public void canSetActorFromInstanceStoredInSymbol() throws Exception {
     caller.create("x", getTestClassName(), new Object[0]);
     Object x = caller.getInstance("x");
-    caller.setVariable("X", x);
+    caller.assign("X", x);
     caller.create("y", "$X", new Object[0]);
     Object y = caller.getInstance("y");
     assertEquals(x, y);

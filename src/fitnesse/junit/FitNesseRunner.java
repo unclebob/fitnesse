@@ -374,9 +374,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, context.variableSource);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
+            context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;
   }

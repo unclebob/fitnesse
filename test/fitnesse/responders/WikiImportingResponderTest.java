@@ -24,12 +24,11 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -239,13 +238,13 @@ public class WikiImportingResponderTest {
 
   @Test
   public void testErrorMessageForBadUrlProvided() throws Exception {
-    String remoteUrl = baseUrl + "blah";
+    String remoteUrl = baseUrl + "+blah";
     Response response = makeSampleResponse(remoteUrl);
 
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
-    assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
+    assertSubString("The URL's resource path, +blah, is not a valid WikiWord.", content);
   }
 
   @Test

@@ -10,7 +10,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
@@ -34,12 +33,14 @@ public class AddChildPageResponder implements SecureResponder {
       return notFoundResponse(context, request);
     else if (nameIsInvalid(childName))
       return errorResponse(context, request);
+    else if (pageAlreadyExists(childName))
+      return alreadyExistsResponse(context, request);
 
     return createChildPageAndMakeResponse(context);
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
-	user = request.getAuthorizationUsername();
+	  user = request.getAuthorizationUsername();
     childName = (String) request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
@@ -71,7 +72,11 @@ public class AddChildPageResponder implements SecureResponder {
   private boolean nameIsInvalid(String name) {
     if (name.equals(""))
       return true;
-    return !WikiWordPath.isSingleWikiWord(name);
+    return !PathParser.isSingleWikiWord(name);
+  }
+
+  private boolean pageAlreadyExists(String childName) {
+    return currentPage.getPageCrawler().pageExists(PathParser.parse(childName));
   }
 
   private void createChildPage(FitNesseContext context) {
@@ -101,6 +106,10 @@ public class AddChildPageResponder implements SecureResponder {
 
   private Response errorResponse(FitNesseContext context, Request request) {
     return new ErrorResponder("Invalid Child Name").makeResponse(context, request);
+  }
+
+  private Response alreadyExistsResponse(FitNesseContext context, Request request) {
+    return new ErrorResponder("Child page already exists", 409).makeResponse(context, request);
   }
 
   private Response notFoundResponse(FitNesseContext context, Request request) {

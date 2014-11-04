@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class TestSlim implements TestSlimInterface {
+  public static final int HUGE_MESSAGE_SIZE = 999999 + 10;
   private boolean niladWasCalled = false;
   private String stringArg;
   private int intArg;
@@ -75,7 +74,11 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public String returnHugeString() {
-    return StringUtils.repeat("x", 999999 + 10);
+    StringBuilder builder = new StringBuilder(HUGE_MESSAGE_SIZE);
+    for (int i = 0; i < HUGE_MESSAGE_SIZE; i++) {
+      builder.append('x');
+    }
+    return builder.toString();
   }
 
   public void setString(String arg) {

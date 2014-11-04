@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -17,7 +18,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
@@ -84,7 +84,7 @@ public class EditResponder implements SecureResponder {
 
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.setMainTemplate("editPage");
-    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(context));
+    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(page));
 
     return html.html();
   }
@@ -106,8 +106,7 @@ public class EditResponder implements SecureResponder {
     html.put(HELP_TEXT, pageData.getAttribute(PageData.PropertyHELP));
     html.put(TEMPLATE_MAP, TemplateUtil.getTemplateMap(page));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
-    html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-
+    html.put(CONTENT_INPUT_NAME, HtmlUtil.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
   public SecureOperation getSecureOperation() {

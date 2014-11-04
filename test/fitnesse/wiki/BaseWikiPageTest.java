@@ -11,8 +11,8 @@ import java.io.File;
 import java.util.List;
 
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
+import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,8 +54,16 @@ public class BaseWikiPageTest {
     checkSymbolicPage(linkingPage.getChildPage("SymLink"));
   }
 
+
   @Test
-  public void testCanCreateSymLinksToExternalDirectories() throws Exception {
+  public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SpecialChars"), "<b>");
+    String html = page.getHtml();
+    assertEquals("&lt;b&gt;", html);
+  }
+
+  @Test
+  public void testCanCreateSymLinksToRelativeExternalDirectories() throws Exception {
     fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
     fileSystem.makeDirectory(new File("testDir/ExternalRoot").getCanonicalFile());
 

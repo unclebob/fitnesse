@@ -8,3 +8,4 @@ Wiki Import replaces the old, deprecated and now removed, Virtual Wiki feature.
 !contents
 
 !define TEST_SYSTEM {slim}
+!define INTERNAL_PORT {9123}

@@ -8,15 +8,15 @@ import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
 
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testrunner.WikiTestPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
@@ -44,13 +44,13 @@ public class TestXmlFormatterTest {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
       "20090413152143_1_2_3_4.xml", 
-      TestResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
+      SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null), null);
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();

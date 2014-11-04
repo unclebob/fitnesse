@@ -26,12 +26,20 @@ public class DecisionTable extends SlimTable {
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
+        // or 1 if only the constructor of a class should be called
+
     String scenarioName = getScenarioName();
     ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     if (scenario != null) {
       return new ScenarioCaller().call(scenario);
-    } else {
-      return new FixtureCaller().call(getFixtureName());
+    } else{ 
+    	scenarioName =getFixtureName();
+    	scenario = getTestContext().getScenario(scenarioName);
+        if (scenario != null) {
+            return new ScenarioCallerWithConstuctorParameters().call(scenario);
+        }else{
+        	return new FixtureCaller().call(getFixtureName());
+        }
     }
   }
 
@@ -51,16 +59,19 @@ public class DecisionTable extends SlimTable {
     return callAndAssign(symbolName, getTableName(), functionName);
   }
 
+
   private class ScenarioCaller extends DecisionTableCaller {
     public ScenarioCaller() {
       super(table);
     }
 
     public ArrayList<SlimAssertion> call(ScenarioTable scenario) throws SyntaxError {
-      gatherFunctionsAndVariablesFromColumnHeader();
+    	gatherFunctionsAndVariablesFromColumnHeader();
       ArrayList<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-      for (int row = 2; row < table.getRowCount(); row++)
+      for (int row = 2; row < table.getRowCount(); row++){
         assertions.addAll(callScenarioForRow(scenario, row));
+        assertions.addAll(callFunctions(row));
+      }
       return assertions;
     }
 
@@ -69,24 +80,59 @@ public class DecisionTable extends SlimTable {
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
 
+    private List<SlimAssertion> callFunctions(int row) {
+        List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
+        for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
+          instructions.add(callFunctionInRow(functionName, row));
+        }
+        return instructions;
+      }
+
+      private SlimAssertion callFunctionInRow(String functionName, int row) {
+        int col = funcStore.getColumnNumber(functionName);
+        String assignedSymbol = ifSymbolAssignment(col, row);
+        SlimAssertion assertion;
+        if (assignedSymbol != null) {
+        	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+functionName),
+        			new ReturnedSymbolExpectation(col, row, functionName, assignedSymbol));
+        } else {
+          assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(col, row, functionName));
+        }
+        return assertion;
+      }
+
+    
     private Map<String, String> getArgumentsForRow(int row) {
       Map<String, String> scenarioArguments = new HashMap<String, String>();
+      for (String var : constructorParameterStore.getLeftToRightAndResetColumnNumberIterator()) {
+          String disgracedVar = Disgracer.disgraceMethodName(var);
+          int col = constructorParameterStore.getColumnNumber(var);
+          String valueToSet = table.getCellContents(col, 0);
+          scenarioArguments.put(disgracedVar, valueToSet);
+      }      
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         String disgracedVar = Disgracer.disgraceMethodName(var);
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
-      for (String var : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
-          String disgracedVar = Disgracer.disgraceMethodName(var);
-          int col = funcStore.getColumnNumber(var);
-          String valueToSet = table.getCellContents(col, row);
-          scenarioArguments.put(disgracedVar, valueToSet);
-        }
+//      for (String var : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
+//          String disgracedVar = Disgracer.disgraceMethodName(var);
+//          int col = funcStore.getColumnNumber(var);
+//          String valueToSet = table.getCellContents(col, row);
+//          scenarioArguments.put(disgracedVar, valueToSet);
+//      }
       return scenarioArguments;
     }
   }
 
+  private class ScenarioCallerWithConstuctorParameters extends ScenarioCaller {
+	    public ScenarioCallerWithConstuctorParameters() {
+	      super();
+	      gatherConstructorParameters();
+	    }
+  }
+  
   private class FixtureCaller extends DecisionTableCaller {
     public FixtureCaller() {
       super(table);

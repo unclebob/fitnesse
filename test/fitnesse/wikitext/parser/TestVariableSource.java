@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 public class TestVariableSource implements VariableSource {
     private String name;
     private String value;

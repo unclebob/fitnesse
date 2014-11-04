@@ -5,12 +5,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import fitnesse.testrunner.WikiTestPage;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class TestTextFormatter extends BaseFormatter implements Closeable {
   private ChunkedResponse response;

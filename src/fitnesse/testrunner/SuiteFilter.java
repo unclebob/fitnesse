@@ -14,7 +14,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 public class SuiteFilter {
   public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
@@ -106,8 +106,8 @@ public class SuiteFilter {
     if (startWithTest != null) {
       criterias.add("starts with test '" + startWithTest + "'");
     }
-    
-    return StringUtil.join(criterias, " & ");
+
+    return StringUtils.join(criterias, " & ");
   }
   
   private class SuiteTagMatcher {

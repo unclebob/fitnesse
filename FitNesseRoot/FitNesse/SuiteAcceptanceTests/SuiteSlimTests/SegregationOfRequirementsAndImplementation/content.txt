@@ -12,20 +12,18 @@ The first implementation used is the Devision class from the eg library.
 
 
 Now we define a second technical solution using a FitNesse scenario
-|scenario | Division _ _ _|numerator, denominator, quotient|
+|scenario | Division _ _ _|numerator, denominator, quotient?|
 |setNumerator| @numerator|
 |setDenominator| @denominator|
-|check | quotient| @quotient|
+|$quotient=| quotient|
 
 
 Generate an instance of the class used by the scenario:
 | Library | 
 | eg.Division|
 
-|script | Division|
 
 
 We retest the requirements and get the same results.
-Also the output is differently printed.
 
 !include >CalculatorRequirements

@@ -5,12 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class PagesByTestSystemTest{
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.root, null);
     Collection<WikiPageIdentity> descriptors = pagesByTestSystem.identities();
     WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage);
     WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage);
@@ -53,19 +54,19 @@ public class PagesByTestSystemTest{
     assertTrue(descriptors.contains(fitDescriptor));
     assertTrue(descriptors.contains(slimDescriptor));
 
-    List<WikiPage> fitList = pagesByTestSystem.testPagesForIdentity(fitDescriptor);
-    List<WikiPage> slimList = pagesByTestSystem.testPagesForIdentity(slimDescriptor);
+    List<TestPage> fitList = pagesByTestSystem.testPagesForIdentity(fitDescriptor);
+    List<TestPage> slimList = pagesByTestSystem.testPagesForIdentity(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
 
-    assertEquals(setUp, fitList.get(0));
-    assertEquals(testPage, fitList.get(1));
-    assertEquals(tearDown, fitList.get(2));
+    assertEquals(setUp, ((WikiTestPage) fitList.get(0)).getSourcePage());
+    assertEquals(testPage, ((WikiTestPage) fitList.get(1)).getSourcePage());
+    assertEquals(tearDown, ((WikiTestPage) fitList.get(2)).getSourcePage());
 
-    assertEquals(setUp, slimList.get(0));
-    assertEquals(slimPage, slimList.get(1));
-    assertEquals(tearDown, slimList.get(2));
+    assertEquals(setUp, ((WikiTestPage) slimList.get(0)).getSourcePage());
+    assertEquals(slimPage, ((WikiTestPage) slimList.get(1)).getSourcePage());
+    assertEquals(tearDown, ((WikiTestPage) slimList.get(2)).getSourcePage());
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) {

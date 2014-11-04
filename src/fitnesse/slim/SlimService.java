@@ -6,6 +6,7 @@ import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import util.CommandLine;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -118,10 +119,13 @@ public class SlimService {
     try {
       serverSocket = SocketFactory.tryCreateServerSocket(port);
     } catch (java.lang.OutOfMemoryError e) {
-      System.err.println("Out of Memory. Aborting");
+      System.err.println("Out of Memory. Aborting.");
       e.printStackTrace();
       System.exit(99);
-
+      throw e;
+    } catch (BindException e) {
+      System.err.println("Can not bind to port " + port + ". Aborting.");
+      e.printStackTrace();
       throw e;
     }
   }

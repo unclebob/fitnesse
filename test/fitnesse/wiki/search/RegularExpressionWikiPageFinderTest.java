@@ -2,7 +2,7 @@ package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;

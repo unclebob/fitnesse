@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestRoot {
     public WikiPage root;

@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import util.Maybe;
 
 public class HashTable extends SymbolType implements Rule, Translation {
     private static final SymbolType[] terminators = new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace};

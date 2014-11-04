@@ -8,19 +8,16 @@ import java.io.StringWriter;
 import java.util.List;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.Expectation;
 import fitnesse.reporting.history.TestExecutionReport.InstructionResult;
-import fitnesse.reporting.history.TestExecutionReport.Row;
-import fitnesse.reporting.history.TestExecutionReport.Table;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestExecutionReportTest {
   private TestExecutionReport expected;

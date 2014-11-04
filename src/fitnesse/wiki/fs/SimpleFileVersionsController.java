@@ -13,12 +13,15 @@ import java.util.logging.Logger;
 import fitnesse.wiki.VersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
-  private static final Logger LOG = Logger.getLogger(SimpleFileVersionsController.class.getName());
 
   private final FileSystem fileSystem;
 
   public SimpleFileVersionsController(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
+  }
+
+  public SimpleFileVersionsController() {
+    this(new DiskFileSystem());
   }
 
   @Override

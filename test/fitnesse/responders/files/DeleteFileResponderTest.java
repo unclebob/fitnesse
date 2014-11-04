@@ -16,7 +16,6 @@ import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileUtil;
 
 public class DeleteFileResponderTest {
   public MockRequest request;
@@ -24,19 +23,18 @@ public class DeleteFileResponderTest {
 
   @Before
   public void setUp() {
-    FileUtil.makeDir(FitNesseUtil.base);
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext();
   }
 
   @After
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
+    FitNesseUtil.destroyTestContext(context);
   }
 
   @Test
   public void testDelete() throws Exception {
-    File dir = new File(FitNesseUtil.base + "/files");
+    File dir = new File(context.getRootPagePath(), "files");
     dir.mkdirs();
     File file = new File(dir, "testfile");
     assertTrue(file.createNewFile());
@@ -51,7 +49,7 @@ public class DeleteFileResponderTest {
 
   @Test
   public void testDeleteDirectory() throws Exception {
-    File dir = new File(FitNesseUtil.base + "/files/dir");
+    File dir = new File(context.getRootPagePath() + "/files/dir");
     assertTrue(dir.mkdirs());
     File file = new File(dir, "testChildFile");
     assertTrue(file.createNewFile());

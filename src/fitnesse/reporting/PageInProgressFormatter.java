@@ -22,7 +22,6 @@ public class PageInProgressFormatter implements TestSystemListener<WikiTestPage>
   }
 
   public String getLockFileName(WikiTestPage test) {
-    ReadOnlyPageData data = test.getData();
     return context.getTestProgressPath() + "/" + test.getVariable("PAGE_PATH") + "." + test.getVariable("PAGE_NAME");
   }
 
