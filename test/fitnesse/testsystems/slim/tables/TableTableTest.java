@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -17,12 +16,13 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
+import util.ListUtility;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
 
 public class TableTableTest {
   private WikiPage root;
@@ -52,12 +52,12 @@ public class TableTableTest {
     return new TableTable(t, "id", testContext);
   }
 
-  private void assertTableResults(String tableRows, List<List<String>> tableResults, String table) throws Exception {
+  private void assertTableResults(String tableRows, List<Object> tableResults, String table) throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + tableRows);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList("tableTable_id_0", "OK"),
-                    asList("tableTable_id_1", tableResults)
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", tableResults)
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -71,9 +71,9 @@ public class TableTableTest {
   @Test
   public void instructionsForEmptyTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader);
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
-            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{asList()})
+            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list()})
     );
     assertEquals(expectedInstructions, instructions());
   }
@@ -81,9 +81,9 @@ public class TableTableTest {
   @Test
   public void instructionsForTableTable() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|a|b|\n|x|y|\n");
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction("tableTable_id_0", "tableTable_id", "fixture", new Object[]{"argument"}),
-            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{asList(asList("a", "b"), asList("x", "y"))})
+            new CallInstruction("tableTable_id_1", "tableTable_id", "doTable", new Object[]{list(list("a", "b"), list("x", "y"))})
     );
     assertEquals(expectedInstructions, instructions());
   }
@@ -91,8 +91,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesUnchanged() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("pass", "pass")
+            ListUtility.<Object>list(
+                    list("pass", "pass")
             ),
       "[[pass(Table:fixture), argument], [pass(2), pass(4)]]"
     );
@@ -101,8 +101,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesChanged() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("pass:x", "pass:y")
+            ListUtility.<Object>list(
+                    list("pass:x", "pass:y")
             ),
       "[[pass(Table:fixture), argument], [pass(x), pass(y)]]"
     );
@@ -111,8 +111,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatPassesWithManyColons() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("pass:x:z", "pass:http://me")
+            ListUtility.<Object>list(
+                    list("pass:x:z", "pass:http://me")
             ),
       "[[pass(Table:fixture), argument], [pass(x:z), pass(http://me)]]"
     );
@@ -121,8 +121,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatImplicitlyFails() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("bad", "boy")
+            ListUtility.<Object>list(
+                    list("bad", "boy")
             ),
       "[[pass(Table:fixture), argument], [fail(bad), fail(boy)]]"
     );
@@ -131,8 +131,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatImplicitlyFailsWithColon() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("x:bad", "x:boy")
+            ListUtility.<Object>list(
+                    list("x:bad", "x:boy")
             ),
       "[[pass(Table:fixture), argument], [fail(x:bad), fail(x:boy)]]"
     );
@@ -141,8 +141,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyFails() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("fail:bad", "fail:boy")
+            ListUtility.<Object>list(
+                    list("fail:bad", "fail:boy")
             ),
       "[[pass(Table:fixture), argument], [fail(bad), fail(boy)]]"
     );
@@ -151,8 +151,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyFailsNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("fail", "fail")
+            ListUtility.<Object>list(
+                    list("fail", "fail")
             ),
       "[[pass(Table:fixture), argument], [fail(2), fail(4)]]"
     );
@@ -161,8 +161,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyIgnoresNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("ignore", "ignore")
+            ListUtility.<Object>list(
+                    list("ignore", "ignore")
             ),
       "[[pass(Table:fixture), argument], [ignore(2), ignore(4)]]"
     );
@@ -171,8 +171,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatExplicitlyIgnoresWithChange() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("ignore:x", "ignore:y")
+            ListUtility.<Object>list(
+                    list("ignore:x", "ignore:y")
             ),
       "[[pass(Table:fixture), argument], [ignore(x), ignore(y)]]"
     );
@@ -181,8 +181,8 @@ public class TableTableTest {
   @Test
   public void oneRowThatReports() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("report:x", "report:y")
+            ListUtility.<Object>list(
+                    list("report:x", "report:y")
             ),
       "[[pass(Table:fixture), argument], [x, y]]"
     );
@@ -191,8 +191,8 @@ public class TableTableTest {
   @Test
   public void noChange() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("no change", "no change")
+            ListUtility.<Object>list(
+                    list("no change", "no change")
             ),
       "[[pass(Table:fixture), argument], [2, 4]]"
     );
@@ -201,8 +201,8 @@ public class TableTableTest {
   @Test
   public void blankNoChange() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "")
+            ListUtility.<Object>list(
+                    list("", "")
             ),
       "[[pass(Table:fixture), argument], [2, 4]]"
     );
@@ -211,8 +211,8 @@ public class TableTableTest {
   @Test
   public void error() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("error:myError", "error:anError")
+            ListUtility.<Object>list(
+                    list("error:myError", "error:anError")
             ),
       "[[pass(Table:fixture), argument], [error(myError), error(anError)]]"
     );
@@ -221,9 +221,9 @@ public class TableTableTest {
   @Test
   public void surplusErrors() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "", "error:surplus A"),
-                    asList("error:surplus B", "error:surplus C")
+            ListUtility.<Object>list(
+                    list("", "", "error:surplus A"),
+                    list("error:surplus B", "error:surplus C")
             ),
       "[[pass(Table:fixture), argument], [2, 4, error(surplus A)], [error(surplus B), error(surplus C)]]"
     );
@@ -232,9 +232,9 @@ public class TableTableTest {
   @Test
   public void surplusFailures() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "", "fail:surplus A"),
-                    asList("fail:surplus B", "fail:surplus C")
+            ListUtility.<Object>list(
+                    list("", "", "fail:surplus A"),
+                    list("fail:surplus B", "fail:surplus C")
             ),
       "[[pass(Table:fixture), argument], [2, 4, fail(surplus A)], [fail(surplus B), fail(surplus C)]]"
     );
@@ -243,9 +243,9 @@ public class TableTableTest {
   @Test
   public void surplusImplicitFailures() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "", "fail"),
-                    asList("fail", "fail")
+            ListUtility.<Object>list(
+                    list("", "", "fail"),
+                    list("fail", "fail")
             ),
       "[[pass(Table:fixture), argument], [2, 4, fail(fail)], [fail(fail), fail(fail)]]"
     );
@@ -254,9 +254,9 @@ public class TableTableTest {
   @Test
   public void surplusImplicitPasses() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "", "pass"),
-                    asList("pass", "pass")
+            ListUtility.<Object>list(
+                    list("", "", "pass"),
+                    list("pass", "pass")
             ),
       "[[pass(Table:fixture), argument], [2, 4, pass(pass)], [pass(pass), pass(pass)]]"
     );
@@ -265,9 +265,9 @@ public class TableTableTest {
   @Test
   public void surplusExplicitPasses() throws Exception {
     assertTableResults("|2|4|\n",
-            asList(
-                    asList("", "", "pass:x"),
-                    asList("pass:y", "pass:z")
+            ListUtility.<Object>list(
+                    list("", "", "pass:x"),
+                    list("pass:y", "pass:z")
             ),
       "[[pass(Table:fixture), argument], [2, 4, pass(x)], [pass(y), pass(z)]]"
     );
@@ -276,9 +276,9 @@ public class TableTableTest {
   @Test
   public void emptyTableWithResults() throws Exception {
     assertTableResults("",
-            asList(
-                    asList("", "pass:x"),
-                    asList("pass:y", "pass:z")
+            ListUtility.<Object>list(
+                    list("", "pass:x"),
+                    list("pass:y", "pass:z")
             ),
       "[[pass(Table:fixture), argument], [, pass(x)], [pass(y), pass(z)]]"
     );
@@ -286,59 +286,20 @@ public class TableTableTest {
 
   @Test
   public void tableWithSymbols() throws Exception {
-    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|$X|$X|\n");
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|\n");
     tt.setSymbol("X", "value");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-        asList(
-                    asList("tableTable_id_0", "OK"),
-                    asList("tableTable_id_1", asList(
-                        asList("pass", "fail", "no change", "ignore")
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", list(
+                            list("pass", "fail")
                     ))
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value]), $X->[value], ignore($X->[value])]]",
-        tt.getTable().toString());
-  }
-  
-  @Test
-  public void tableWithSetSymbols() throws Exception {
-    makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList("tableTable_id_0", "OK"),
-                    asList("tableTable_id_1", asList(
-                        asList("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")
-                    ))
-            )
-    );
-
-    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals("[[pass(Table:fixture), argument], [pass($A<-[1]), ignore($B<-[2]), fail($C<-[3]), fail($D<-[sole:l]), $E=, pass($F=)]]",
-        tt.getTable().toString());
-    assertEquals("1", tt.getSymbol("A"));
-    assertEquals("2", tt.getSymbol("B"));
-    assertEquals("3", tt.getSymbol("C"));
-    assertEquals("sole:l", tt.getSymbol("D"));
-    assertEquals(null, tt.getSymbol("E"));
-    assertEquals(null, tt.getSymbol("F"));
+    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
   }
 
-  @Test
-  public void tableWithSetSymbolReturnVariableInResult() throws Exception {
-    makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
-    TableTable.TableTableExpectation expectation = tt.new TableTableExpectation();
-    TestResult result = expectation.evaluateExpectation(asList(asList("pass:1", "ignore:2", "fail:3", "sole:l", "no change", "pass")));
-
-    assertNotNull(result.getVariablesToStore());
-    assertEquals("1", result.getVariablesToStore().get("A"));
-    assertEquals("2", result.getVariablesToStore().get("B"));
-    assertEquals("3", result.getVariablesToStore().get("C"));
-    assertEquals("sole:l", result.getVariablesToStore().get("D"));
-    assertNull(result.getVariablesToStore().get("E"));
-    assertNull(result.getVariablesToStore().get("F"));
-  }
-  
   @Test
   public void tableMethodReturnsNull() throws Exception {
     assertTableResults("|2|4|\n", null,
@@ -350,9 +311,9 @@ public class TableTableTest {
   public void tableMethodThrowsException() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|2|4|\n");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList("tableTable_id_0", "OK"),
-                    asList("tableTable_id_1", "Exception: except")
+            list(
+                    list("tableTable_id_0", "OK"),
+                    list("tableTable_id_1", "Exception: except")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);

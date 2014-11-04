@@ -1,7 +1,5 @@
 package fitnesse.testsystems.slim.results;
 
-import java.util.Map;
-
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 
@@ -12,7 +10,6 @@ public class SlimTestResult implements TestResult {
   private final ExecutionResult executionResult;
   private final String message;
   private final boolean counts;
-  private Map<String, ?> variables;
 
   public SlimTestResult(ExecutionResult executionResult) {
     this(null, null, null, executionResult, true);
@@ -23,16 +20,11 @@ public class SlimTestResult implements TestResult {
   }
 
   protected SlimTestResult(String actual, String expected, String message, ExecutionResult executionResult, boolean counts) {
-    this(actual, expected, message, executionResult, counts, null);
-  }
-
-  protected SlimTestResult(String actual, String expected, String message, ExecutionResult executionResult, boolean counts, Map<String, ?> variables) {
     this.actual = actual;
     this.expected = expected;
     this.message = message;
     this.executionResult = executionResult;
     this.counts = counts;
-    this.variables = variables;
   }
 
   @Override
@@ -72,15 +64,6 @@ public class SlimTestResult implements TestResult {
   @Override
   public ExecutionResult getExecutionResult() {
     return executionResult;
-  }
-
-  @Override
-  public Map<String, ?> getVariablesToStore() {
-    return variables;
-  }
-
-  public void setVariables(Map<String, ?> variables) {
-    this.variables = variables;
   }
 
   public SlimTestResult negateTestResult() {

@@ -1,9 +1,0 @@
-|import|
-|fitnesse.slim.test|
-
-!| Query:SplitFixture | Bob,100 |
-|1|2|
-|Bob|$Y=|
-
-|script|test slim|$Y|
-|check|return Constructor Arg|100|
