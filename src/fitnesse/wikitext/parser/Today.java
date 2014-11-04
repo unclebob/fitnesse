@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.util.Clock;
+import util.Clock;
+import util.Maybe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,7 +26,7 @@ public class Today extends SymbolType implements Rule, Translation {
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.DateFormatOption});
+        List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (lookAhead.size() != 0 ) {
             String option = lookAhead.get(1).getContent();
             if (isDateFormatOption(option)) {

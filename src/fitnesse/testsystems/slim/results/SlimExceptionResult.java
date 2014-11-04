@@ -56,9 +56,6 @@ public class SlimExceptionResult implements ExceptionResult {
   public boolean isStopTestException() {
     return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
   }
-  public boolean isStopSuiteException() {
-    return exceptionValue.contains(EXCEPTION_STOP_SUITE_TAG);
-  }
 
   public boolean isNoMethodInClassException() {
     return isExceptionOfType(NO_METHOD_IN_CLASS);

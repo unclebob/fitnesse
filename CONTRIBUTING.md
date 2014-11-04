@@ -4,7 +4,7 @@
 
     If you're using IntelliJ IDEA, move [extra/idea/fitnesse.xml](https://github.com/unclebob/fitnesse/blob/master/extra/idea/fitnesse.xml) 
     into the `codestyles` directory somewhere beneath IntelliJ config home. I found it on my MAC in 
-    `~/Library/Preferences/IntelijIDEA8/codestyles`, or on Linux under `~/.IntelliJIdea12/config/codestyles`.
+    `~/Library/Preferences/IntelijIDEA8/codestyles`, or on Linux under ~/.IntelliJIdea12/config/codestyles .
 
     If you're using Eclipse, use [extra/eclipse/fitnesse-code-formatter-eclipse.xml](https://github.com/unclebob/fitnesse/blob/master/extra/eclipse/fitnesse-code-formatter-eclipse.xml) 
 

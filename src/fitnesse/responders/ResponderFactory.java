@@ -12,10 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.responders.run.TestResponder;
-import fitnesse.wiki.PathParser;
-import org.apache.commons.lang.StringUtils;
+import util.StringUtil;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.AddChildPageResponder;
@@ -34,6 +31,7 @@ import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.StopTestResponder;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
@@ -44,6 +42,7 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionComparerResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
   private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
@@ -62,7 +61,7 @@ public class ResponderFactory {
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
-    addResponder("suite", SuiteResponder.class);
+    addResponder("suite", TestResponder.class);
     addResponder("proxy", SerializedPageResponder.class);
     addResponder("versions", VersionSelectionResponder.class);
     addResponder("viewVersion", VersionResponder.class);
@@ -101,6 +100,8 @@ public class ResponderFactory {
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
     filterMap = new HashMap<String, List<Responder>>();
+//    addFilter("test", WikiImportTestEventListener.class);
+//    addFilter("suite", WikiImportTestEventListener.class);
   }
 
   public final void addResponder(String key, Class<? extends Responder> responderClass) {
@@ -138,10 +139,10 @@ public class ResponderFactory {
 
     if (usingResponderKey(responderKey)) {
       responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
+    } else if (StringUtil.isBlank(resource) || WikiWordPath.isWikiWord(resource) || "root".equals(resource)) {
+      responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else if (resource.startsWith("files/") || resource.equals("files")) {
       responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));
-    } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
-      responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else {
       responder = new NotFoundResponder();
     }

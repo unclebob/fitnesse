@@ -2,15 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import static util.RegexTestCase.assertSubString;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static util.RegexTestCase.assertSubString;
 
 public class RenameFileConfirmationResponderTest {
   MockRequest request;
@@ -21,6 +23,12 @@ public class RenameFileConfirmationResponderTest {
   public void setUp() throws Exception {
     request = new MockRequest();
     context = FitNesseUtil.makeTestContext(null);
+    SampleFileUtility.makeSampleFiles();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    SampleFileUtility.deleteSampleFiles();
   }
 
   @Test

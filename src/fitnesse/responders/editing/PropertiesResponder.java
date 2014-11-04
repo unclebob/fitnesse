@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -14,8 +13,7 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
+import fitnesse.wikitext.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,21 +70,10 @@ public class PropertiesResponder implements SecureResponder {
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
-        PropertySECURE_TEST, PropertyFILES };
+        PropertySECURE_TEST };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
-    if (pageData.hasAttribute(PropertyHELP)) {
-      jsonObject.put(PropertyHELP, pageData.getAttribute(PropertyHELP));
-    }
-    if (pageData.hasAttribute(PropertySUITES)) {
-      JSONArray tags = new JSONArray();
-      for(String tag : pageData.getAttribute(PropertySUITES).split(",")) {
-        if (StringUtils.isNotBlank(tag)) {
-          tags.put(tag.trim());
-        }
-      }
-      jsonObject.put(PropertySUITES, tags);
-    }
+
     return jsonObject;
   }
 
@@ -187,7 +174,7 @@ public class PropertiesResponder implements SecureResponder {
       String link = symLinksProperty.get(name);
 
       String path = makePathForSymbolicLink(link);
-      symlinks.add(new Symlink(name, HtmlUtil.escapeHTML(link), path));
+      symlinks.add(new Symlink(name, Utils.escapeHTML(link), path));
     }
     html.put("symlinks", symlinks);
   }

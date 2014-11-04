@@ -2,7 +2,7 @@ package fitnesse.wiki.fs;
 
 
 import fitnesse.wiki.VersionInfo;
-import fitnesse.util.Clock;
+import util.Clock;
 
 import java.io.File;
 import java.text.ParseException;

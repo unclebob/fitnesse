@@ -4,8 +4,6 @@ package fitnesse.testsystems.slim.tables;
 
 import org.junit.Test;
 
-import static java.util.Arrays.asList;
-
 public class SubsetQueryTableTest extends QueryTableTestBase {
 
   protected String tableType() {
@@ -21,9 +19,9 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
     assertQueryResults(
       "|3|6|\n" +
         "|2|4|\n",
-            asList(
-              asList(asList("n", "2"), asList("2n", "4")),
-              asList(asList("n", "3"), asList("2n", "6"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
             ),
       "[" +
         headRow +
@@ -38,9 +36,9 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
   public void oneMatchingRowOutOfTwo() throws Exception {
     assertQueryResults(
         "|2|4|\n",
-            asList(
-              asList(asList("n", "2"), asList("2n", "4")),
-              asList(asList("n", "3"), asList("2n", "6"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
             ),
       "[" +
         headRow +
@@ -54,8 +52,8 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
   @Override
   public void oneRowThatFails() throws Exception {
     assertQueryResults("|2|4|\n",
-            asList(
-              asList(asList("n", "3"), asList("2n", "5"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "5"))
             ),
       "[" +
         headRow +
@@ -71,9 +69,9 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
     assertQueryResults(
             "|3|6|\n" +
             "|99|99|\n",
-            asList(
-              asList(asList("n", "2"), asList("2n", "4")),
-              asList(asList("n", "3"), asList("2n", "6"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
             ),
             "[" +
             headRow +
@@ -90,9 +88,9 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
     assertQueryResults(
            "|99|99|\n" +
            "|2|4|\n",
-            asList(
-              asList(asList("n", "2"), asList("2n", "4")),
-              asList(asList("n", "3"), asList("2n", "6"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
             ),
             "[" +
               headRow +
@@ -108,8 +106,8 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
   public void fieldInSurplusRowDoesntExist() throws Exception {
     assertQueryResults(
             "",
-            asList(
-              asList(asList("n", "3"))
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "3"))
             ),
             "[" +
             headRow +

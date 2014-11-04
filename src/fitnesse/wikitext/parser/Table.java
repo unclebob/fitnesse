@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class Table extends SymbolType implements Rule, Translation {
   public static final Table symbolType = new Table();
 

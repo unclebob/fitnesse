@@ -5,9 +5,7 @@ package fitnesse.fixtures;
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
 import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.Map;
 import java.util.Properties;
 
 import util.FileUtil;
@@ -15,19 +13,12 @@ import fit.Fixture;
 import fitnesse.authentication.Authenticator;
 import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
-    this(new Properties());
-  }
-
-  public SetUp(String configuration) throws Exception {
-    this(asProperties(configuration));
-  }
-
-  private SetUp(Properties properties) throws Exception {
     final int port = 9123;
+    Properties properties = new Properties();
     properties.setProperty("FITNESSE_PORT", String.valueOf(port));
     root = InMemoryPage.makeRoot("RooT", properties);
     context = FitNesseUtil.makeTestContext(root, port, new Authenticator() {
@@ -37,7 +28,7 @@ public class SetUp extends Fixture {
         }
         return true;
       }
-    }, properties);
+    });
     context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
@@ -45,11 +36,5 @@ public class SetUp extends Fixture {
     historyDirectory.mkdirs();
     SaveRecorder.clear();
     context.fitNesse.start();
-  }
-
-  private static Properties asProperties(String configuration) throws Exception {
-    Properties properties = new Properties();
-    properties.load(new ByteArrayInputStream(configuration.getBytes("utf-8")));
-    return properties;
   }
 }

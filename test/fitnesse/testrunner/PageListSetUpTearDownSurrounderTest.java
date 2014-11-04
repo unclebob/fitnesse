@@ -4,7 +4,7 @@ import fitnesse.wiki.*;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

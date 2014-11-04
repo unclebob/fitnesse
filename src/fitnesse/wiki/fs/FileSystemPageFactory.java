@@ -15,7 +15,8 @@ import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wiki.VariableTool;
-import fitnesse.wikitext.parser.Maybe;
+import fitnesse.wikitext.parser.WikiWordPath;
+import util.Maybe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   }
 
   private boolean fileIsValid(final File path) {
-    return fileSystem.isDirectory(path) && PathParser.isSingleWikiWord(path.getName());
+    return WikiWordPath.isWikiWord(path.getName()) && fileSystem.exists(path);
   }
 
   protected class FileSystemSubWikiPageFactory implements SubWikiPageFactory {

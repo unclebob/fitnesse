@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class Variable extends SymbolType implements Rule, Translation {
     public static final Variable symbolType = new Variable();
     

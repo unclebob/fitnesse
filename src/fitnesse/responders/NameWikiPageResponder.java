@@ -2,50 +2,49 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.Request;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
+import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class NameWikiPageResponder extends BasicResponder {
-  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
-    List<String> lines = addLines(request, requestedPage, "");
+public class NameWikiPageResponder extends BasicWikiPageResponder {
+  protected String contentFrom(WikiPage requestedPage) {
+    List<String> lines = addLines(requestedPage, "");
 
     String format = (String) request.getInput("format");
     if ("json".equalsIgnoreCase(format)) {
       JSONArray jsonPages = new JSONArray(lines);
       return jsonPages.toString();
     }
-    return StringUtils.join(lines, System.getProperty("line.separator"));
+    return StringUtil.join(lines, System.getProperty("line.separator"));
   }
 
-  private List<String> addLines(Request request, WikiPage requestedPage, String prefix) {
+  private List<String> addLines(WikiPage requestedPage, String prefix) {
     List<String> lines = new ArrayList<String>();
 	
     for (WikiPage child : requestedPage.getChildren()) {
 	  if(!request.hasInput("LeafOnly") || child.getChildren().isEmpty()) {
-        lines.add(makeLine(request, child, prefix));
+        lines.add(makeLine(child, prefix));
       }
 	  
 	  if (request.hasInput("Recursive")) {
-	    lines.addAll(addLines(request, child, prefix + child.getName() + "."));
+	    lines.addAll(addLines(child, prefix + child.getName() + "."));
 	  }
     }
 	
     return lines;
   }
 
-  private String makeLine(Request request, WikiPage child, String prefix) {
+  private String makeLine(WikiPage child, String prefix) {
     int numberOfChildren = child.getChildren().size();
 	
     StringBuilder line = new StringBuilder(64)

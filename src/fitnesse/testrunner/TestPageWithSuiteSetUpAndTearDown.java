@@ -3,19 +3,17 @@ package fitnesse.testrunner;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 
 public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
 
   private WikiPage suiteSetUp;
   private WikiPage suiteTearDown;
 
-  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage, VariableSource variableSource) {
-    super(sourcePage, variableSource);
+  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage) {
+    super(sourcePage);
   }
 
-  @Override
-  protected String getDecoratedContent() {
+  public PageData getDecoratedData() {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
@@ -27,7 +25,7 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
     includePage(getTearDown(), "-teardown", decoratedContent);
     includePage(getSuiteTearDown(), "-teardown", decoratedContent);
 
-    return decoratedContent.toString();
+    return new PageData(getData(), decoratedContent.toString());
   }
 
   public WikiPage getSuiteSetUp() {

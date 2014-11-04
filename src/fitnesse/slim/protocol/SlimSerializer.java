@@ -4,6 +4,8 @@ package fitnesse.slim.protocol;
 
 import java.util.List;
 
+import util.ListUtility;
+
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.
  * They will be recursively serialized.
@@ -46,7 +48,7 @@ public class SlimSerializer {
     else if (o instanceof String)
       s = (String) o;
     else if (o instanceof List)
-      s = SlimSerializer.serialize((List<Object>) o);
+      s = SlimSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
     else
       s = o.toString();
     return s;

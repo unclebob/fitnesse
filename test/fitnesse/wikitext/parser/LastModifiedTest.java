@@ -4,8 +4,8 @@ import fitnesse.wiki.PageData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
+import util.Clock;
+import util.DateAlteringClock;
 
 import java.util.GregorianCalendar;
 

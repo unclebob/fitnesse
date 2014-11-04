@@ -1,6 +1,9 @@
 package fitnesse.slim.test;
 
-import java.util.Arrays;
+import util.ListUtility;
+
+import static util.ListUtility.list;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,8 +19,24 @@ public class EmployeesHiredBefore {
     //optional function
   }
 
-  public List<List<List<String>>> query() {
+  public List<Object> query() {
 
-    return Arrays.asList(Arrays.asList(Arrays.asList("company number", "4808147"), Arrays.asList("employee number", "1429"), Arrays.asList("first name", "Bob"), Arrays.asList("last name", "Martin"), Arrays.asList("hire date", "10-Oct-1974")), Arrays.asList(Arrays.asList("company number", "5123122"), Arrays.asList("employee number", "8832"), Arrays.asList("first name", "James"), Arrays.asList("last name", "Grenning"), Arrays.asList("hire date", "15-Dec-1979")));
+    return
+            ListUtility.<Object>list(
+                    list(
+                            list("company number", "4808147"),
+                            list("employee number", "1429"),
+                            list("first name", "Bob"),
+                            list("last name", "Martin"),
+                            list("hire date", "10-Oct-1974")
+                    ),
+                    list(
+                            list("company number", "5123122"),
+                            list("employee number", "8832"),
+                            list("first name", "James"),
+                            list("last name", "Grenning"),
+                            list("hire date", "15-Dec-1979")
+                    )
+            );
   }
 }

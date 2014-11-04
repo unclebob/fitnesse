@@ -13,7 +13,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;

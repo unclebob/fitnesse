@@ -18,7 +18,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import fitnesse.util.TimeMeasurement;
+import util.TimeMeasurement;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class TestXmlFormatter extends BaseFormatter implements Closeable {
-  private final FitNesseContext context;
-  private final WriterFactory writerFactory;
+  private WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
@@ -37,8 +36,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-    super(page);
-    this.context = context;
+    super(context, page);
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
@@ -46,7 +44,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   public long startedAt() {
-    return totalTimeMeasurement.startedAt();
+    return currentTestStartTime.startedAt();
   }
 
   public long runTime() {

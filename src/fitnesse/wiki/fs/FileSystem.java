@@ -21,6 +21,4 @@ public interface FileSystem {
   long lastModified(File file);
 
   void rename(File file, File originalFile) throws IOException;
-
-  boolean isDirectory(File file);
 }

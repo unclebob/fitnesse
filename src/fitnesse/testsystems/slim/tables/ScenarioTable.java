@@ -20,7 +20,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import org.apache.commons.lang.StringUtils;
+import util.StringUtil;
 
 
 public class ScenarioTable extends SlimTable {
@@ -76,27 +76,23 @@ public class ScenarioTable extends SlimTable {
     for (int inputCol = 2; inputCol < colsInHeader; inputCol += 2) {
       String argName = table.getCellContents(inputCol, 0);
 
-      splitInputAndOutputArguments(argName);
-    }
-  }
-
-private void splitInputAndOutputArguments(String argName) {
-	argName = argName.trim();
-	if (argName.endsWith("?")) {
-        String disgracedArgName = Disgracer.disgraceMethodName(argName);
+      if (argName.endsWith("?")) {
+        String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
+          0, argName.length()));
         outputs.add(disgracedArgName);
       } else {
         String disgracedArgName = Disgracer.disgraceMethodName(argName);
         inputs.add(disgracedArgName);
       }
-}
+    }
+  }
 
   private void getArgumentsForParameterizedName() {
     String argumentString = table.getCellContents(2, 0);
     String[] arguments = argumentString.split(",");
 
     for (String argument : arguments) {
-        splitInputAndOutputArguments(argument);
+      addInput(Disgracer.disgraceMethodName(argument.trim()));
     }
   }
 
@@ -163,8 +159,8 @@ private void splitInputAndOutputArguments(String argName) {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {
             String argument = scenarioArguments.get(arg);
-            content = StringUtils.replace(content, "@" + arg, argument);
-            content = StringUtils.replace(content, "@{" + arg + "}", argument);
+            content = StringUtil.replaceAll(content, "@" + arg, argument);
+            content = StringUtil.replaceAll(content, "@{" + arg + "}", argument);
           } else {
             throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
           }
@@ -279,12 +275,7 @@ private void splitInputAndOutputArguments(String argName) {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
-    	  // if the scenario has no output parameters 
-    	  // or the scenario failed
-    	  // then the whole line should be flagged
-    	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
-      }
+      parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
       return null;
     }
 
@@ -296,7 +287,7 @@ private void splitInputAndOutputArguments(String argName) {
 
   // This context is mainly used to determine if the scenario table evaluated successfully
   // This determines the execution result for the "calling" table row.
-  protected final class ScenarioTestContext implements SlimTestContext {
+  final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;
     private final TestSummary testSummary = new TestSummary();

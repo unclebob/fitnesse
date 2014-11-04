@@ -15,12 +15,21 @@ import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikitextPage;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.ParsedPage;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.util.Clock;
+import fitnesse.wikitext.parser.WikiSourcePage;
+import util.Clock;
 import util.FileUtil;
+import util.Maybe;
 
 import static fitnesse.wiki.PageType.STATIC;
 
@@ -137,18 +146,13 @@ public class FileSystemPage extends BaseWikiPage {
   @Override
   public VersionInfo commit(final PageData data) {
     // Note: RecentChanges is not handled by the versionsController?
-    resetCache();
+    pageData = null;
+    resetParsedPage();
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Override
-  protected void resetCache() {
-    super.resetCache();
-    pageData = null;
   }
 
   @Override
@@ -215,6 +219,11 @@ public class FileSystemPage extends BaseWikiPage {
     // Just assert the version is valid
     versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     return new FileSystemPage(this, versionName);
+  }
+
+  @Override
+  public String getHtml() {
+    return getParsedPage().toHtml();
   }
 
   @Override

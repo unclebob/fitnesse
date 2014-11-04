@@ -23,7 +23,6 @@ public class SlimServer implements SocketServer {
   public static final String COULD_NOT_INVOKE_CONSTRUCTOR = "COULD_NOT_INVOKE_CONSTRUCTOR";
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
-  public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
   private StreamReader reader;
   private BufferedWriter writer;

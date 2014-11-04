@@ -56,11 +56,6 @@ public class HtmlTableTest {
   }
 
   @Test
-  public void htmlFromSymbolReplacementDoesQualify() {
-    assertTrue(qualifiesAsHtml("$foo->[<div>less < more</div>]"));
-  }
-
-  @Test
   public void justSomeXmlDoesNotQualify() {
     assertFalse(qualifiesAsHtml("<content>blah</content>"));
   }

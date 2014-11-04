@@ -14,7 +14,7 @@ public final class SocketFactory {
     try {
       socket = new ServerSocket(port);
     } catch (BindException e) {
-      throw e;
+      throw new IOException("Bind exception on port " + port + ": " + e.getMessage(), e);
     } catch (IOException e) {
       throw new IOException("IO exception on port " + port + ": " + e.getMessage(), e);
     }

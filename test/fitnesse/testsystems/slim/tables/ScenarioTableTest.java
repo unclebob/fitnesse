@@ -12,7 +12,7 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

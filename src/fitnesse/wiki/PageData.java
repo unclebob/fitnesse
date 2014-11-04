@@ -7,8 +7,9 @@ import static fitnesse.wiki.PageType.*;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import fitnesse.wikitext.parser.VariableSource;
+import util.Clock;
+import util.StringUtil;
 
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());
@@ -40,7 +41,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String[] NAVIGATION_ATTRIBUTES = {
       PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
 
-  public static final String[] NON_SECURITY_ATTRIBUTES = (String[]) ArrayUtils.addAll(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
+  public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
+      .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
 
   public static final String PropertySECURE_READ = "secure-read";
   public static final String PropertySECURE_WRITE = "secure-write";
@@ -119,7 +121,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public void setContent(String content) {
-    this.content = StringUtils.remove(content, '\r');
+    this.content = StringUtil.stripCarriageReturns(content);
   }
 
   public boolean isEmpty() {

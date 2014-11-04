@@ -1,9 +1,12 @@
 package fitnesse.reporting.history;
 
-import fitnesse.wiki.PathParser;
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.wikitext.parser.WikiWordPath;
 import util.FileUtil;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TestHistory {
@@ -17,7 +20,7 @@ public class TestHistory {
   }
 
   private boolean isValidFile(File file) {
-    return file.isDirectory() && file.list().length > 0 && PathParser.isWikiPath(file.getName());
+    return file.isDirectory() && file.list().length > 0 && WikiWordPath.isWikiWord(file.getName());
   }
 
   public Set<String> getPageNames() {

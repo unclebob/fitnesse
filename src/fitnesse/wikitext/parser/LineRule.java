@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class LineRule implements Rule {
     public static final String Level = "level";
 

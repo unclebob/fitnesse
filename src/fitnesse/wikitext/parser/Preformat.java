@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class Preformat extends SymbolType implements Rule {
     public static final Preformat symbolType = new Preformat();
 

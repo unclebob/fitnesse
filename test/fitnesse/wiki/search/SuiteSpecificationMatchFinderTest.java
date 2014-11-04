@@ -2,7 +2,7 @@ package fitnesse.wiki.search;
 
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import static org.junit.Assert.assertEquals;

@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.util.Clock;
+import util.Clock;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

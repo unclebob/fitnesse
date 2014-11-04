@@ -18,7 +18,7 @@ import java.util.Set;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,14 +28,14 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 public class TestHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private TestHistoryResponder responder;
   private SimpleResponse response;
   private FitNesseContext context;
@@ -300,7 +300,7 @@ public class TestHistoryResponderTest {
   @Test
   public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
     addPageDirectoryWithOneResult("SomePage", "20090419123103_1_0_0_0");
-    addPageDirectoryWithOneResult("bad+directory+name", "20090419123103_1_0_0_0");
+    addPageDirectoryWithOneResult("bad-directory-name", "20090419123103_1_0_0_0");
     history.readHistoryDirectory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));

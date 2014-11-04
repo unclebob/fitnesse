@@ -5,9 +5,7 @@
   (map
     #(list (.toString %) (count (read-lines %)))
     (remove #(.isDirectory %)
-      (concat
-        (file-seq (file-str "~/projects/FitNesseGit/src/fitnesse"))
-        (file-seq (file-str "~/projects/FitNesseGit/test/fitnesse"))))))
+      (file-seq (file-str "~/projects/FitNesseGit/src/fitnesse")))))
 
 (defn count-lines-that-end-with [file-counts suffix]
   (reduce +

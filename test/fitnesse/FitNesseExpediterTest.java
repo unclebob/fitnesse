@@ -18,7 +18,7 @@ import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

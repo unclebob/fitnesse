@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Random;
 
 import org.junit.Test;
-import fitnesse.util.TimeMeasurement;
+import util.TimeMeasurement;
 
 public class HashingCipherTest {
   private String[] inputs = new String[]{"123", "abc", "12345678901234567890", "this is a test", "!@#$%^&*()"};

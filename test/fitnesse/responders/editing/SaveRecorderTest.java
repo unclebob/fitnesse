@@ -9,7 +9,7 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 public class SaveRecorderTest {
   public WikiPage somePage;

@@ -16,7 +16,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -29,11 +29,13 @@ public class MultipleTestsRunnerTest {
   private WikiPage suite;
   private FitNesseContext context;
 
+  private TestingTracker testingTracker;
   private TestSystemFactory testSystemFactory;
   private TestSystem testSystem;
 
   @Before
   public void setUp() throws Exception {
+    testingTracker = mock(TestingTracker.class);
     testSystemFactory = mock(TestSystemFactory.class);
     testSystem = mock(TestSystem.class);
     when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
@@ -48,8 +50,8 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root, null);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
 
     runner.executeTestPages();
 
@@ -62,12 +64,28 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, null);
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
 
     verify(listener).close();
+  }
+
+  @Test
+  public void callsTestingTrackerBeforeAndAfterTestExecution() throws IOException, InterruptedException {
+    final String stopId = "42";
+    WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
+    when(testingTracker.addStartedProcess(any(Stoppable.class))).thenReturn(stopId);
+
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+    runner.addTestSystemListener(listener);
+    runner.executeTestPages();
+
+    verify(testingTracker).addStartedProcess(runner);
+    verify(testingTracker).removeEndedProcess(stopId);
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) {
@@ -77,6 +95,15 @@ public class MultipleTestsRunnerTest {
     testPage.commit(data);
     return testPage;
   }
+
+  private MultipleTestsRunner newTestRunnerWithListener(TestSystemListener listener) {
+    WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem((List) asList(testPage), context.root);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testingTracker, testSystemFactory);
+    runner.addTestSystemListener(listener);
+    return runner;
+  }
+
 
   private Descriptor forTestSystem(String type) {
     return argThat(new ForTestSystem(type));

@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -15,6 +14,8 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+
+import util.StringUtil;
 
 /**
  * Task to run fit tests. This task runs fitnesse tests and publishes the results.
@@ -81,7 +82,7 @@ public class ExecuteFitnesseTestsTask extends Task {
 
     Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
     String[] commandLine = cmd.getCommandline();
-    log("Executing: " + StringUtils.join(Arrays.asList(commandLine), " "));
+    log("Executing: " + StringUtil.join(Arrays.asList(commandLine), " "));
     execute.setCommandline(commandLine);
     execute.setNewenvironment(false);
     execute.setAntRun(getProject());

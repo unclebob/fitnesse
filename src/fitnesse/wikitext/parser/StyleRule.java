@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class StyleRule implements Rule {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String content = current.getContent();

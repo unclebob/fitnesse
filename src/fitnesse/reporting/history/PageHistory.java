@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.testsystems.ExecutionResult;
 
 public class PageHistory extends PageHistoryReader{
@@ -177,7 +177,7 @@ public class PageHistory extends PageHistoryReader{
     private ExecutionResult result;
 
     public PassFailReport(Date date, ExecutionResult result) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
       this.date = dateFormat.format(date);
       this.result = result;
     }

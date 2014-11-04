@@ -6,17 +6,24 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class VersionSelectionResponderTest {

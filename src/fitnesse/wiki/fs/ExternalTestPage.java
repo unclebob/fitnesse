@@ -9,11 +9,12 @@ import java.util.List;
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.util.Clock;
+import util.Clock;
 
 public class ExternalTestPage extends BaseWikiPage {
   private static final long serialVersionUID = 1L;

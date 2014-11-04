@@ -7,7 +7,7 @@ import java.util.List;
 
 import fitnesse.reporting.history.MostRecentPageHistoryReader;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
 import fitnesse.wiki.WikiPage;
 import util.GracefulNamer;
 
@@ -85,7 +85,7 @@ public class SuiteOverviewTree {
     
   }
   
-  private SimpleDateFormat dateFormatter = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormatter = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
 
   public class TreeItem
   {

@@ -7,7 +7,7 @@ import fit.Fixture;
 import java.io.File;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
-import fitnesse.util.Clock;
+import util.Clock;
 import util.FileUtil;
 
 public class TearDown extends Fixture {

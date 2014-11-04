@@ -6,8 +6,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
-
+import static util.RegexTestCase.assertSubString;
+import fitnesse.Responder;
 import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
@@ -15,8 +17,9 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -86,19 +89,6 @@ public class SaveResponderTest {
     assertEquals("some new content", newContent);
     assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
     checkRecentChanges(root, "ChildPageTwo");
-  }
-
-  @Test
-  public void testCanCreatePageForNonWikiWord() throws Exception {
-    prepareRequest("child_page_two");
-
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-
-    assertEquals(true, root.hasChildPage("child_page_two"));
-    String newContent = root.getChildPage("child_page_two").getData().getContent();
-    assertEquals("some new content", newContent);
-    assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
-    checkRecentChanges(root, "child_page_two");
   }
 
   @Test

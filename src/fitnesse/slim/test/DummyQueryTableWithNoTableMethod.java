@@ -1,10 +1,11 @@
 package fitnesse.slim.test;
 
-import java.util.ArrayList;
+import static util.ListUtility.list;
+
 import java.util.List;
 
 public class DummyQueryTableWithNoTableMethod {
   public List<Object> query() {
-    return new ArrayList<Object>();
+    return list();
   }
 }

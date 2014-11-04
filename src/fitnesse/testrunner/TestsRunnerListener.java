@@ -2,7 +2,7 @@ package fitnesse.testrunner;
 
 public interface TestsRunnerListener {
 
-  void announceNumberTestsToRun(int testsToRun);
+  void setTrackingId(String stopResponderId);
 
-  void unableToStartTestSystem(String testSystemName, Throwable cause);
+  void announceNumberTestsToRun(int testsToRun);
 }

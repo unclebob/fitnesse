@@ -15,8 +15,8 @@ public class RunningTestingTrackerTest {
     StoppedRecorder stoppableB = new StoppedRecorder();
     
     RunningTestingTracker tracker = new RunningTestingTracker();
-    tracker.addStartedProcess("1", stoppableA);
-    tracker.addStartedProcess("2", stoppableB);
+    tracker.addStartedProcess(stoppableA);
+    tracker.addStartedProcess(stoppableB);
     
     tracker.stopAllProcesses();
     assertTrue(stoppableA.wasStopped());
@@ -30,9 +30,9 @@ public class RunningTestingTrackerTest {
     StoppedRecorder stoppableC = new StoppedRecorder();
     
     RunningTestingTracker tracker = new RunningTestingTracker();
-    tracker.addStartedProcess("1", stoppableA);
-    String idB = tracker.addStartedProcess("2", stoppableB);
-    tracker.addStartedProcess("3", stoppableC);
+    tracker.addStartedProcess(stoppableA);
+    String idB = tracker.addStartedProcess(stoppableB);
+    tracker.addStartedProcess(stoppableC);
     
     tracker.removeEndedProcess(idB);
     
@@ -50,9 +50,9 @@ public class RunningTestingTrackerTest {
     StoppedRecorder stoppableC = new StoppedRecorder();
     
     RunningTestingTracker tracker = new RunningTestingTracker();
-    tracker.addStartedProcess("1", stoppableA);
-    String idB = tracker.addStartedProcess("2", stoppableB);
-    tracker.addStartedProcess("3", stoppableC);
+    tracker.addStartedProcess(stoppableA);
+    String idB = tracker.addStartedProcess(stoppableB);
+    tracker.addStartedProcess(stoppableC);
     String results = tracker.stopProcess(idB);
 
     assertFalse(stoppableA.wasStopped());
@@ -69,9 +69,9 @@ public class RunningTestingTrackerTest {
     StoppedRecorder stoppableC = new StoppedRecorder();
     
     RunningTestingTracker tracker = new RunningTestingTracker();
-    tracker.addStartedProcess("1", stoppableA);
-    tracker.addStartedProcess("2", stoppableB);
-    tracker.addStartedProcess("3", stoppableC);
+    tracker.addStartedProcess(stoppableA);
+    tracker.addStartedProcess(stoppableB);
+    tracker.addStartedProcess(stoppableC);
 
     String results = tracker.stopAllProcesses();
 

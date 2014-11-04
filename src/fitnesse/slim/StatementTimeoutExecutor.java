@@ -25,8 +25,8 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
   }
 
   @Override
-  public void assign(final String name, final Object value) {
-    inner.assign(name, value);
+  public void setVariable(final String name, final Object value) {
+    inner.setVariable(name, value);
   }
 
   @Override

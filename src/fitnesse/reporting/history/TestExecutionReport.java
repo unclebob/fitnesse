@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 
 import fitnesse.testsystems.TestSummary;
 
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;

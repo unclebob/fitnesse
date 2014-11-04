@@ -14,7 +14,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 
 
 public class StopTestResponderTest {
@@ -33,8 +33,8 @@ public class StopTestResponderTest {
 
   @Test
   public void testStopAll() throws Exception {
-    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
-    SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
+    context.runningTestingTracker.addStartedProcess(stoppableA);
+    context.runningTestingTracker.addStartedProcess(stoppableB);
 
     StopTestResponder stopResponder = new StopTestResponder();
     String response = runResponder(stopResponder);
@@ -49,8 +49,8 @@ public class StopTestResponderTest {
 
   @Test
   public void testStopB() throws Exception {
-    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
-    final String bId = SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
+    context.runningTestingTracker.addStartedProcess(stoppableA);
+    final String bId = context.runningTestingTracker.addStartedProcess(stoppableB);
 
     request = new MockRequest() {
       @Override

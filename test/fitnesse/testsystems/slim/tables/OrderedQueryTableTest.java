@@ -1,11 +1,12 @@
 package fitnesse.testsystems.slim.tables;
 
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import org.junit.Test;
+import util.ListUtility;
 
-import static java.util.Arrays.asList;
+import java.util.Map;
+
+import static util.ListUtility.list;
 
 public class OrderedQueryTableTest extends QueryTableTestBase {
   @Override
@@ -23,13 +24,10 @@ public class OrderedQueryTableTest extends QueryTableTestBase {
     assertQueryResults(
       "|3|6|\n" +
         "|2|4|\n",
-            asList(
-                    asList(
-                            asList("n", "2"),
-                            asList("2n", "4")),
-                    asList(
-                            asList("n", "3"),
-                            asList("2n", "6"))),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -45,16 +43,11 @@ public class OrderedQueryTableTest extends QueryTableTestBase {
       "|3|6|\n" +
         "|7|5|\n" +
         "|2|4|\n",
-            asList(
-                    asList(
-                            asList("n", "2"),
-                            asList("2n", "4")),
-                    asList(
-                            asList("n", "7"),
-                            asList("2n", "5")),
-                    asList(
-                            asList("n", "3"),
-                            asList("2n", "6"))),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "7"), list("2n", "5")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -71,13 +64,10 @@ public class OrderedQueryTableTest extends QueryTableTestBase {
       "|3|6|\n" +
         "|7|5|\n" +
         "|2|4|\n",
-            asList(
-                    asList(
-                            asList("n", "2"),
-                            asList("2n", "4")),
-                    asList(
-                            asList("n", "3"),
-                            asList("2n", "6"))),
+            ListUtility.<Object>list(
+                    list(list("n", "2"), list("2n", "4")),
+                    list(list("n", "3"), list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -97,48 +87,18 @@ public class OrderedQueryTableTest extends QueryTableTestBase {
       "|010302|201107|201107|201105|G|\n" +
       "|010302|201107|201107|201106|G|\n" +
       "|010302|201107|201107|201107|G|\n");
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList("queryTable_id_0", "OK"),
-                    asList("queryTable_id_1", "blah"),
-                    asList("queryTable_id_2",
-                            asList(
-                                    asList(
-                                            asList("a", "010301"),
-                                            asList("b", "201107"),
-                                            asList("c", "201105"),
-                                            asList("d", "201105"),
-                                            asList("e", "L")),
-                                    asList(
-                                            asList("a", "010301"),
-                                            asList("b", "201107"),
-                                            asList("c", "201106"),
-                                            asList("d", "201106"),
-                                            asList("e", "L")),
-                                    asList(
-                                            asList("a", "010301"),
-                                            asList("b", "201107"),
-                                            asList("c", "201107"),
-                                            asList("d", "201107"),
-                                            asList("e", "V")),
-                                    asList(
-                                            asList("a", "010302"),
-                                            asList("b", "201107"),
-                                            asList("c", "201107"),
-                                            asList("d", "201105"),
-                                            asList("e", "G")),
-                                    asList(
-                                            asList("a", "010302"),
-                                            asList("b", "201107"),
-                                            asList("c", "201107"),
-                                            asList("d", "201106"),
-                                            asList("e", "G")),
-                                    asList(
-                                            asList("a", "010302"),
-                                            asList("b", "201107"),
-                                            asList("c", "201107"),
-                                            asList("d", "201107"),
-                                            asList("e", "G"))))));
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(list(
+      list("queryTable_id_0", "OK"),
+      list("queryTable_id_1", "blah"),
+      list("queryTable_id_2",
+        util.ListUtility.<Object>list(
+          util.ListUtility.list(util.ListUtility.list("a", "010301"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201105"), util.ListUtility.list("d", "201105"), util.ListUtility.list("e", "L")),
+          util.ListUtility.list(util.ListUtility.list("a", "010301"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201106"), util.ListUtility.list("d", "201106"), util.ListUtility.list("e", "L")),
+          util.ListUtility.list(util.ListUtility.list("a", "010301"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201107"), util.ListUtility.list("d", "201107"), util.ListUtility.list("e", "V")),
+          util.ListUtility.list(util.ListUtility.list("a", "010302"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201107"), util.ListUtility.list("d", "201105"), util.ListUtility.list("e", "G")),
+          util.ListUtility.list(util.ListUtility.list("a", "010302"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201107"), util.ListUtility.list("d", "201106"), util.ListUtility.list("e", "G")),
+          util.ListUtility.list(util.ListUtility.list("a", "010302"), util.ListUtility.list("b", "201107"), util.ListUtility.list("c", "201107"), util.ListUtility.list("d", "201107"), util.ListUtility.list("e", "G")))
+      )));
     evaluateResults(pseudoResults, "[" +
       headRow +
       "[a, b, c, d, e], " +

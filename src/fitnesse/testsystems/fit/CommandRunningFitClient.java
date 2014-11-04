@@ -12,9 +12,11 @@ import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
-import org.apache.commons.lang.ArrayUtils;
+
+import static util.StringUtil.combineArrays;
 
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
@@ -116,7 +118,7 @@ public class CommandRunningFitClient extends FitClient {
 
     private void makeCommandRunner(int port, int ticketNumber) {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
-      String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
+      String[] commandLine = combineArrays(command, fitArguments);
       commandRunner = new CommandRunner(commandLine, "", environmentVariables, executionLogListener);
     }
 

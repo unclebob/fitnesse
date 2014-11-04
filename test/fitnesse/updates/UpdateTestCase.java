@@ -7,20 +7,16 @@ import java.io.File;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import util.FileUtil;
 
 public abstract class UpdateTestCase {
   public static final String rootName = "RooT";
-
-  @Rule
-  public TemporaryFolder testRoot = new TemporaryFolder();
-  protected File testDir;
 
   protected WikiPage root;
   protected Update update;
@@ -31,9 +27,10 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    testDir = testRoot.newFolder("TestDir");
-    root = new FileSystemPageFactory().makePage(testDir, rootName, null);
-    context = FitNesseUtil.makeTestContext(root, testRoot.getRoot().getPath(), testDir.getName(), 0);
+    root = new FileSystemPageFactory().makePage(new File(FitNesseUtil.base), rootName, null);
+    context = FitNesseUtil.makeTestContext(root);
+
+    FileUtil.makeDir(FitNesseUtil.base);
 
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "some content");
     pageTwo = WikiPageUtil.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
@@ -45,6 +42,7 @@ public abstract class UpdateTestCase {
 
   @After
   public void tearDown() throws Exception {
+    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 
   protected Update makeUpdate() throws Exception {

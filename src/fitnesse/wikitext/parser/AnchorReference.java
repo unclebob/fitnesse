@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlUtil;
+import util.Maybe;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package fitnesse.html;
 
+import fitnesse.wikitext.Utils;
+
 public class HtmlText extends HtmlElement {
     private String text;
 
@@ -7,6 +9,6 @@ public class HtmlText extends HtmlElement {
 
     @Override
     public String html() {
-        return HtmlUtil.escapeHTML(text);
+        return Utils.escapeHTML(text);
     }
 }

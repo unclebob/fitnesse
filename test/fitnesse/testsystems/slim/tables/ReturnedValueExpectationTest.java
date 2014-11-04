@@ -76,49 +76,49 @@ public class ReturnedValueExpectationTest {
 
   @Test
   public void lessThanComparisons() throws Exception {
-    assertExpectationMessage(" < 5.2 ", "3", "pass(3< 5.2)");
-    assertExpectationMessage("   <   5.2 ", "2", "pass(2< 5.2)");
-    assertExpectationMessage(" < 5.2  ", "6", "fail(6< 5.2)");
-    assertExpectationMessage(" <  5.2  ", "2.8", "pass(2.8< 5.2)");
+    assertExpectationMessage(" < 5.2", "3", "pass(3<5.2)");
+    assertExpectationMessage(" < 5.2", "2", "pass(2<5.2)");
+    assertExpectationMessage(" < 5.2", "6", "fail(6<5.2)");
+    assertExpectationMessage(" < 5.2", "2.8", "pass(2.8<5.2)");
   }
 
   @Test
   public void NotGEComparisons() throws Exception {
-    assertExpectationMessage(" !>= 5.2", "3", "pass(3!>= 5.2)");
-    assertExpectationMessage(" !>= 5.2", "2", "pass(2!>= 5.2)");
-    assertExpectationMessage(" !>= 5.2", "6", "fail(6!>= 5.2)");
-    assertExpectationMessage(" !>= 5.2", "2.8", "pass(2.8!>= 5.2)");
+    assertExpectationMessage(" !>= 5.2", "3", "pass(3!>=5.2)");
+    assertExpectationMessage(" !>= 5.2", "2", "pass(2!>=5.2)");
+    assertExpectationMessage(" !>= 5.2", "6", "fail(6!>=5.2)");
+    assertExpectationMessage(" !>= 5.2", "2.8", "pass(2.8!>=5.2)");
   }
 
   @Test
   public void greaterThanComparison() throws Exception {
-    assertExpectationMessage(" > 5.9", "8", "pass(8> 5.9)");
-    assertExpectationMessage(" > 5.9", "3.6", "fail(3.6> 5.9)");
+    assertExpectationMessage(" > 5.9", "8", "pass(8>5.9)");
+    assertExpectationMessage(" > 5.9", "3.6", "fail(3.6>5.9)");
   }
 
   @Test
   public void notLEComparison() throws Exception {
-    assertExpectationMessage(" !<= 5.9", "8", "pass(8!<= 5.9)");
-    assertExpectationMessage(" !<= 5.9", "3.6", "fail(3.6!<= 5.9)");
+    assertExpectationMessage(" !<= 5.9", "8", "pass(8!<=5.9)");
+    assertExpectationMessage(" !<= 5.9", "3.6", "fail(3.6!<=5.9)");
   }
 
   @Test
   public void approximatelyEquals() throws Exception {
-    assertExpectationMessage("~= 3.0", "2.95", "pass(2.95~= 3.0)");
-    assertExpectationMessage("~= 3.0", "2.8", "fail(2.8~= 3.0)");
+    assertExpectationMessage("~= 3.0", "2.95", "pass(2.95~=3.0)");
+    assertExpectationMessage("~= 3.0", "2.8", "fail(2.8~=3.0)");
   }
 
   @Test
   public void notApproximatelyEqual() throws Exception {
-    assertExpectationMessage("!~= 3.0", "2.95", "fail(2.95!~= 3.0)");
-    assertExpectationMessage("!~= 3.0", "2.8", "pass(2.8!~= 3.0)");
+    assertExpectationMessage("!~= 3.0", "2.95", "fail(2.95!~=3.0)");
+    assertExpectationMessage("!~= 3.0", "2.8", "pass(2.8!~=3.0)");
   }
 
 
   @Test
   public void notEqualComparison() throws Exception {
-    assertExpectationMessage(" != 5.9", "8", "pass(8!= 5.9)");
-    assertExpectationMessage(" != 5.9", "5.9", "fail(5.9!= 5.9)");
+    assertExpectationMessage(" != 5.9", "8", "pass(8!=5.9)");
+    assertExpectationMessage(" != 5.9", "5.9", "fail(5.9!=5.9)");
   }
 
   @Test
@@ -132,64 +132,64 @@ public class ReturnedValueExpectationTest {
 
   @Test
   public void greaterOrEqualComparison() throws Exception {
-    assertExpectationMessage(" >=  5.9 ", "8", "pass(8>= 5.9)");
-    assertExpectationMessage(" >=  5.9 ", "5.9", "pass(5.9>= 5.9)");
-    assertExpectationMessage(" >=  5.9 ", "3.6", "fail(3.6>= 5.9)");
+    assertExpectationMessage(" >=  5.9 ", "8", "pass(8>=5.9)");
+    assertExpectationMessage(" >=  5.9 ", "5.9", "pass(5.9>=5.9)");
+    assertExpectationMessage(" >=  5.9 ", "3.6", "fail(3.6>=5.9)");
   }
 
   @Test
   public void notLessThanComparison() throws Exception {
-    assertExpectationMessage(" !<  5.9 ", "8", "pass(8!< 5.9)");
-    assertExpectationMessage(" !<  5.9 ", "5.9", "pass(5.9!< 5.9)");
-    assertExpectationMessage(" !<  5.9 ", "3.6", "fail(3.6!< 5.9)");
+    assertExpectationMessage(" !<  5.9 ", "8", "pass(8!<5.9)");
+    assertExpectationMessage(" !<  5.9 ", "5.9", "pass(5.9!<5.9)");
+    assertExpectationMessage(" !<  5.9 ", "3.6", "fail(3.6!<5.9)");
   }
 
   @Test
   public void lessOrEqualComparison() throws Exception {
-    assertExpectationMessage(" <= 5.9 ", "2", "pass(2<= 5.9)");
-    assertExpectationMessage(" <= 5.9 ", "5.9", "pass(5.9<= 5.9)");
-    assertExpectationMessage(" <= 5.9 ", "8.3", "fail(8.3<= 5.9)");
+    assertExpectationMessage(" <= 5.9 ", "2", "pass(2<=5.9)");
+    assertExpectationMessage(" <= 5.9 ", "5.9", "pass(5.9<=5.9)");
+    assertExpectationMessage(" <= 5.9 ", "8.3", "fail(8.3<=5.9)");
   }
 
   @Test
   public void notGreaterThanComparison() throws Exception {
-    assertExpectationMessage(" !> 5.9 ", "2", "pass(2!> 5.9)");
-    assertExpectationMessage(" !> 5.9 ", "5.9", "pass(5.9!> 5.9)");
-    assertExpectationMessage(" !> 5.9 ", "8.3", "fail(8.3!> 5.9)");
+    assertExpectationMessage(" !> 5.9 ", "2", "pass(2!>5.9)");
+    assertExpectationMessage(" !> 5.9 ", "5.9", "pass(5.9!>5.9)");
+    assertExpectationMessage(" !> 5.9 ", "8.3", "fail(8.3!>5.9)");
   }
 
   @Test
   public void openIntervalComparison() throws Exception {
-    assertExpectationMessage(" 2.1 < _ < 5.9", "4.3", "pass(2.1 < 4.3 < 5.9)");
-    assertExpectationMessage(" 2.1 < _ < 5.9", "2.1", "fail(2.1 < 2.1 < 5.9)");
-    assertExpectationMessage(" 2.1 < _ < 5.9", "8.3", "fail(2.1 < 8.3 < 5.9)");
+    assertExpectationMessage(" 2.1 < _ < 5.9", "4.3", "pass(2.1<4.3<5.9)");
+    assertExpectationMessage(" 2.1 < _ < 5.9", "2.1", "fail(2.1<2.1<5.9)");
+    assertExpectationMessage(" 2.1 < _ < 5.9", "8.3", "fail(2.1<8.3<5.9)");
   }
 
   @Test
   public void closedLeftIntervalComparison() throws Exception {
-    assertExpectationMessage(" 2.1 <= _ < 5.9", "4.3", "pass(2.1 <= 4.3 < 5.9)");
-    assertExpectationMessage(" 2.1 <= _ < 5.9", "2.1", "pass(2.1 <= 2.1 < 5.9)");
-    assertExpectationMessage(" 2.1 <= _ < 5.9", "8.3", "fail(2.1 <= 8.3 < 5.9)");
+    assertExpectationMessage(" 2.1 <= _ < 5.9", "4.3", "pass(2.1<=4.3<5.9)");
+    assertExpectationMessage(" 2.1 <= _ < 5.9", "2.1", "pass(2.1<=2.1<5.9)");
+    assertExpectationMessage(" 2.1 <= _ < 5.9", "8.3", "fail(2.1<=8.3<5.9)");
   }
 
   @Test
   public void closedRightIntervalComparison() throws Exception {
-    assertExpectationMessage(" 2.1 < _ <= 5.9", "4.3", "pass(2.1 < 4.3 <= 5.9)");
-    assertExpectationMessage(" 2.1 < _ <= 5.9", "2.1", "fail(2.1 < 2.1 <= 5.9)");
-    assertExpectationMessage(" 2.1 < _ <= 5.9", "5.9", "pass(2.1 < 5.9 <= 5.9)");
-    assertExpectationMessage(" 2.1 < _ <= 5.9", "8.3", "fail(2.1 < 8.3 <= 5.9)");
+    assertExpectationMessage(" 2.1 < _ <= 5.9", "4.3", "pass(2.1<4.3<=5.9)");
+    assertExpectationMessage(" 2.1 < _ <= 5.9", "2.1", "fail(2.1<2.1<=5.9)");
+    assertExpectationMessage(" 2.1 < _ <= 5.9", "5.9", "pass(2.1<5.9<=5.9)");
+    assertExpectationMessage(" 2.1 < _ <= 5.9", "8.3", "fail(2.1<8.3<=5.9)");
   }
 
   @Test
   public void negativeNumberInSimpleComparison() throws Exception {
-    assertExpectationMessage(" < -2 ", "-3", "pass(-3< -2)");
-    assertExpectationMessage(" < -3 ", "-2", "fail(-2< -3)");
+    assertExpectationMessage(" < -2 ", "-3", "pass(-3<-2)");
+    assertExpectationMessage(" < -3 ", "-2", "fail(-2<-3)");
   }
 
   @Test
   public void negativeNumberInRangeComparison() throws Exception {
-    assertExpectationMessage(" -4 < _ < -2", "-3", "pass(-4 < -3 < -2)");
-    assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4 < 3 < -2)");
+    assertExpectationMessage(" -4 < _ < -2", "-3", "pass(-4<-3<-2)");
+    assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4<3<-2)");
   }
 
   @Test

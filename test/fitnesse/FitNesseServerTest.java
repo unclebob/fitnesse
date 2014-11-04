@@ -2,24 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
+
 import java.util.regex.Pattern;
 
 import fitnesse.components.LogData;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SampleFileUtility;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static util.RegexTestCase.assertSubString;
 
 public class FitNesseServerTest {
   private WikiPage root;
@@ -32,10 +37,16 @@ public class FitNesseServerTest {
 
   @Before
   public void setUp() throws Exception {
+    SampleFileUtility.makeSampleFiles();
     root = InMemoryPage.makeRoot("RootPage");
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
     context = FitNesseUtil.makeTestContext(root);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    SampleFileUtility.deleteSampleFiles();
   }
 
   @Test
@@ -93,6 +104,12 @@ public class FitNesseServerTest {
     output = getSocketOutput("GET /PageOne.PageThree HTTP/1.1\r\n\r\n", root);
     expected = "href=\"PageTwo\".*[.]PageTwo";
     assertTrue("Should have absolute link", hasSubString(expected, output));
+  }
+
+  @Test
+  public void testServingRegularFiles() throws Exception {
+    String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new WikiPageDummy());
+    assertHasRegexp("file2 content", output);
   }
 
   @Test

@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class ListRule implements Rule {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         return populateList(parser, current);

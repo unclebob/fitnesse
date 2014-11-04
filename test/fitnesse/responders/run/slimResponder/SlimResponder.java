@@ -8,7 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
-import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -22,6 +22,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.Utils;
 
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
@@ -67,7 +68,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   protected Descriptor getDescriptor() {
-    return new WikiPageDescriptor(page, true, false, "");
+    return new WikiPageDescriptor(page, true, false, new ClassPathBuilder().getClasspath(page));
   }
 
   public class SlimRenderer {
@@ -78,7 +79,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         output = new StringBuilder(512);
         testSystem = getTestSystem();
         testSystem.start();
-        testSystem.runTests(new WikiTestPage(page, null));
+        testSystem.runTests(new WikiTestPage(page));
       } catch (IOException e) {
         slimException = e;
       } finally {
@@ -92,7 +93,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       }
       String exceptionString = "";
       if (slimException != null) {
-        exceptionString = String.format("<div class='error'>%s</div>", HtmlUtil.escapeHTML(slimException.getMessage()));
+        exceptionString = String.format("<div class='error'>%s</div>", Utils.escapeHTML(slimException.getMessage()));
       }
       return exceptionString + output.toString();
     }

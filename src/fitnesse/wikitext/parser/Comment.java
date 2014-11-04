@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class Comment extends SymbolType implements Rule, Translation {
     public static final Comment symbolType = new Comment();
     

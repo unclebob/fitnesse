@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 import java.util.List;
 
 public class AnchorName extends SymbolType implements Rule {

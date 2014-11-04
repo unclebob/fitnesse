@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static util.RegexTestCase.assertSubString;
 
-import fitnesse.FitNesseContext;
+import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -21,20 +21,20 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.fs.MemoryFileSystem;
+import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.FileUtil;
 
 public class SymbolicLinkResponderTest {
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage childTwo;
   private MockRequest request;
-  private SymbolicLinkResponder responder;
+  private Responder responder;
   private MemoryFileSystem fileSystem;
-  private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
@@ -48,8 +48,7 @@ public class SymbolicLinkResponderTest {
 
     request = new MockRequest();
     request.setResource("PageOne");
-    context = FitNesseUtil.makeTestContext(root);
-    responder = new SymbolicLinkResponder(fileSystem);
+    responder = new SymbolicLinkResponder();
   }
 
   private void reloadPages() {
@@ -60,14 +59,14 @@ public class SymbolicLinkResponderTest {
 
 
   private Response invokeResponder() throws Exception {
-    Response response = responder.makeResponse(context, request);
+    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
     reloadPages();
     return response;
   }
 
   @After
   public void tearDown() throws Exception {
-    FitNesseUtil.destroyTestContext(context);
+    FileUtil.deleteFileSystemDirectory("testDir");
   }
 
   @Test
@@ -197,7 +196,7 @@ public class SymbolicLinkResponderTest {
   @Test
   public void linkNameShouldBeAValidWikiWordWhenRenaming() throws Exception {
     prepareSymlinkOnPageOne();
-    request.addInput("newname", "New+link");
+    request.addInput("newname", "Newlink");
     Response response = invokeResponder();
 
     assertEquals(412, response.getStatus());
@@ -244,7 +243,7 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void linkNameShouldBeAValidWikiWord() throws Exception {
-    request.addInput("linkName", "Sym+link");
+    request.addInput("linkName", "Symlink");
     request.addInput("linkPath", "PageTwo");
     Response response = invokeResponder();
 
@@ -270,12 +269,14 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
-    // Ise canonical names, since that's how they will be resolved.
-    fileSystem.makeDirectory(new File("/somedir"));
-    fileSystem.makeDirectory(new File("/somedir/ExternalRoot"));
+    // Check both file system (used by responder) and in memory FS (used by page factory).
+    FileUtil.createDir("testDir");
+    FileUtil.createDir("testDir/ExternalRoot");
+    fileSystem.makeDirectory(new File("testDir").getCanonicalFile());
+    fileSystem.makeDirectory(new File("testDir/ExternalRoot").getCanonicalFile());
 
     request.addInput("linkName", "SymLink");
-    request.addInput("linkPath", "file:/somedir/ExternalRoot");
+    request.addInput("linkPath", "file://testDir/ExternalRoot");
     Response response = invokeResponder();
 
     checkPageOneRedirectToProperties(response);
@@ -286,7 +287,7 @@ public class SymbolicLinkResponderTest {
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
     assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("/somedir/ExternalRoot"), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
   }
 
   @Test
@@ -303,11 +304,11 @@ public class SymbolicLinkResponderTest {
 
   private void checkPageOneRedirectToProperties(Response response) {
     assertEquals(303, response.getStatus());
-    assertEquals(response.getHeader("Location"), "/PageOne?properties#symbolics");
+    assertEquals(response.getHeader("Location"), "/PageOne?properties");
   }
 
   private void checkChildTwoRedirectToProperties(Response response) {
     assertEquals(303, response.getStatus());
-    assertEquals(response.getHeader("Location"), "/PageTwo.ChildTwo?properties#symbolics");
+    assertEquals(response.getHeader("Location"), "/PageTwo.ChildTwo?properties");
   }
 }

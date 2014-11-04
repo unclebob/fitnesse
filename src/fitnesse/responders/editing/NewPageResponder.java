@@ -49,8 +49,7 @@ public class NewPageResponder implements Responder {
     html.put("isNewPage", true);
     html.put(EditResponder.HELP_TEXT, "");
 
-    WikiPage parentWikiPage = getParentWikiPage(context, request);
-    html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(parentWikiPage));
+    html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
     if (request.hasInput(PAGE_TEMPLATE)) {
       PageCrawler crawler = context.root.getPageCrawler();
       String pageTemplate = (String) request.getInput(PAGE_TEMPLATE);
@@ -63,15 +62,15 @@ public class NewPageResponder implements Responder {
       // Validate page type:
       PageType.fromString(pageType);
       html.put(EditResponder.PAGE_TYPE, pageType);
-      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(parentWikiPage));
+      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(context));
     } else {
       html.put(PAGE_TYPES, PAGE_TYPE_ATTRIBUTES);
-      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(parentWikiPage));
+      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(context));
     }
   }
 
-  public static String getDefaultContent(WikiPage page) {
-    String content = page.getVariable(DEFAULT_PAGE_CONTENT_PROPERTY);
+  public static String getDefaultContent(FitNesseContext context) {
+    String content = context.getProperty(DEFAULT_PAGE_CONTENT_PROPERTY);
     if (content == null) {
       content = DEFAULT_PAGE_CONTENT;
     }

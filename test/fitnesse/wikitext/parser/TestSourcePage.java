@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

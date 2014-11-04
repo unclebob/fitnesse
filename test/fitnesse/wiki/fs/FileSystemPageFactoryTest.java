@@ -4,6 +4,7 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +63,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
-        assertEquals("myfile", child.getName());
+        assertEquals("MyfilE", child.getName());
     }
 
     @Test
@@ -71,7 +72,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
-        assertEquals("subsuite", child.getName());
+        assertEquals("SubsuitE", child.getName());
     }
 
   @Test

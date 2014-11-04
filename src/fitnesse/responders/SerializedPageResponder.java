@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 
 import org.w3c.dom.Document;
 
-import fitnesse.util.XmlWriter;
+import util.XmlWriter;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;

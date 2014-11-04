@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 
 public class DecisionTableCaller {
@@ -45,7 +44,6 @@ public class DecisionTableCaller {
     }
   }
 
-  protected ColumnHeaderStore constructorParameterStore = new ColumnHeaderStore();
   protected ColumnHeaderStore varStore = new ColumnHeaderStore();
   protected ColumnHeaderStore funcStore = new ColumnHeaderStore();
   protected int columnHeaders;
@@ -55,15 +53,6 @@ public class DecisionTableCaller {
     this.table = table;
   }
 
-  protected void gatherConstructorParameters() {
-	    columnHeaders = table.getColumnCountInRow(0);
-	    String cell;
-	    for (int col = 3; col < columnHeaders; col +=2){
-	        cell = table.getCellContents(col-1, 0);
-	        constructorParameterStore.add(cell, col);
-	    }
-  } 
-  
   protected void gatherFunctionsAndVariablesFromColumnHeader() {
     columnHeaders = table.getColumnCountInRow(1);
     for (int col = 0; col < columnHeaders; col++)

@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.Map;
-
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import org.junit.Test;
 
-import static java.util.Arrays.asList;
+import java.util.Map;
+
+import static util.ListUtility.list;
 
 public class QueryTableTest extends QueryTableTestBase {
 
@@ -24,13 +24,10 @@ public class QueryTableTest extends QueryTableTestBase {
     assertQueryResults(
       "|3|6|\n" +
         "|2|4|\n",
-            asList(
-                    asList(
-                            asList("n", "2"),
-                            asList("2n", "4")),
-                    asList(
-                            asList("n", "3"),
-                            asList("2n", "6"))),
+            util.ListUtility.<Object>list(
+              util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+              util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
+            ),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -47,16 +44,13 @@ public class QueryTableTest extends QueryTableTestBase {
       "|x|n|2n|\n" +
       "|1|2|4|\n" +
       "|1|3|6|\n");
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList("queryTable_id_0", "OK"),
-                    asList("queryTable_id_1", "blah"),
-                    asList("queryTable_id_2",
-                            asList(
-                                    asList(
-                                            asList("x", "1"),
-                                            asList("n", "3"),
-                                            asList("2n", "5"))))));
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(list(
+      list("queryTable_id_0", "OK"),
+      list("queryTable_id_1", "blah"),
+      list("queryTable_id_2",
+        util.ListUtility.<Object>list(
+          util.ListUtility.list(util.ListUtility.list("x", "1"), util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "5")))
+      )));
     evaluateResults(pseudoResults, "[" +
         headRow +
         "[x, n, 2n], " +

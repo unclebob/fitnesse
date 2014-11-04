@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;

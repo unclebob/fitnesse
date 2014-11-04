@@ -9,12 +9,13 @@ import java.io.IOException;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
-import fitnesse.util.TimeMeasurement;
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
   private static final String TEST_SUMMARIES_ID = "test-summaries";

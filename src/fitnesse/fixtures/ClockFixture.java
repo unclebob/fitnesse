@@ -2,8 +2,8 @@ package fitnesse.fixtures;
 
 import java.text.ParseException;
 
-import fitnesse.util.DateAlteringClock;
-import fitnesse.util.DateTimeUtil;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
 
 public class ClockFixture {
   public void freezeClockAt(String dateTime) throws ParseException {

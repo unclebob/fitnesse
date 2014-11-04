@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -20,7 +19,8 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wikitext.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,6 +71,21 @@ public class HtmlSlimResponderTest {
   protected SlimResponder getSlimResponder(CustomComparatorRegistry customComparatorRegistry) {
     return new HtmlSlimResponder(customComparatorRegistry);
   }
+
+  @Test
+  public void slimResponderStartsAndQuitsSlim() throws Exception {
+    responder.setFastTest(false);
+    request.setResource("TestPage");
+    responder.makeResponse(context, request);
+    assertTrue(!responder.slimOpen());
+  }
+
+//  @Test
+//  public void verboseOutputIfSlimFlagSet() throws Exception {
+//    getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
+//    assertTrue(responder.getCommandLine().contains(
+//        "fitnesse.slim.SlimService -v"));
+//  }
 
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
@@ -253,7 +268,7 @@ public class HtmlSlimResponderTest {
   }
 
   private String unescape(String x) {
-    return HtmlUtil.unescapeWiki(HtmlUtil.unescapeHTML(x));
+    return Utils.unescapeWiki(Utils.unescapeHTML(x));
   }
 
   @Test
@@ -393,6 +408,36 @@ public class HtmlSlimResponderTest {
     @Override
     public boolean matches(String actual, String expected) {
       throw new RuntimeException("exception message");
+    }
+  }
+	  
+  private static class DummyListener implements TestSystemListener {
+    @Override
+    public void testSystemStarted(TestSystem testSystem) {
+    }
+
+    @Override
+    public void testOutputChunk(String output) {
+    }
+
+    @Override
+    public void testStarted(TestPage testPage) {
+    }
+
+    @Override
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
+    }
+
+    @Override
+    public void testSystemStopped(TestSystem testSystem, Throwable throwable) {
+    }
+
+    @Override
+    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    }
+
+    @Override
+    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     }
   }
 }

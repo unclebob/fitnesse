@@ -1,7 +1,7 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.Symbol;
-import org.apache.commons.lang.StringUtils;
+import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class WikiWordReference {
         for (WikiPage current = currentPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
             pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
-            return "." + StringUtils.join(Arrays.asList(pathElements), ".");
+            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
           }
         }
         return "." + undecoratedPath;
@@ -128,7 +128,7 @@ public class WikiWordReference {
       int branchPoint = findBranchPoint(parentPath.getNames(), renamedPathToReferent.getNames());
       List<String> referentPath = renamedPathToReferent.getNames();
       List<String> referentPathAfterBranchPoint = referentPath.subList(branchPoint, referentPath.size());
-      return "<" + StringUtils.join(referentPathAfterBranchPoint, ".");
+        return "<" + StringUtil.join(referentPathAfterBranchPoint, ".");
     }
 
     private int findBranchPoint(List<String> list1, List<String> list2) {

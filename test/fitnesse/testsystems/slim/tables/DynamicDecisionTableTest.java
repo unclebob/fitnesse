@@ -1,9 +1,9 @@
 package fitnesse.testsystems.slim.tables;
 
 import static fitnesse.slim.converters.VoidConverter.VOID_TAG;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static util.ListUtility.list;
 
 import java.util.List;
 import java.util.Map;
@@ -65,15 +65,15 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
   @Test
   public void dynamicDecisionTableCanBeConstructorOnly() throws Exception {
     makeDynamicDecisionTableAndBuildInstructions("|fixture|argument|\n");
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(0), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
-            new CallInstruction(id(1), TABLE_INSTANCE_NAME, "table", new Object[]{asList()})
+            new CallInstruction(id(1), TABLE_INSTANCE_NAME, "table", new Object[]{list()})
     );
     assertEquals(expectedInstructions, instructions);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList(id(0), "OK"),
-                    asList(id(1), "OK")
+            list(
+                    list(id(0), "OK"),
+                    list(id(1), "OK")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -88,9 +88,9 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
   public void canBuildInstructionsForSimpleDecisionTable() throws Exception {
     makeDynamicDecisionTableAndBuildInstructions(simpleDynamicDecisionTable);
     int n = 0;
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
-            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{asList(asList("var", "func?"), asList("3", "5"), asList("7", "9"))}),
+            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{list(list("var", "func?"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "set", new Object[]{"var", "3"}),
@@ -114,9 +114,9 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
             "|7|9|\n";
     makeDynamicDecisionTableAndBuildInstructions(decisionTableWithSameSetterMultipleTimes);
     int n = 0;
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
-            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{asList(asList("var", "var"), asList("3", "5"), asList("7", "9"))}),
+            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{list(list("var", "var"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "set", new Object[]{"var", "3"}),
@@ -136,9 +136,9 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
   public void canBuildInstructionsForMultipleCallsToSameFunction() throws Exception {
     makeDynamicDecisionTableAndBuildInstructions(dynamicDecisionTableWithSameFunctionMultipleTimes);
     int n = 0;
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
-            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{asList(asList("func?", "func?"), asList("3", "5"), asList("7", "9"))}),
+            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{list(list("func?", "func?"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "execute"),
@@ -166,9 +166,9 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
       "|3|5|\n" +
       "|7|9|\n");
     int n=0;
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
-            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{asList(asList("var", "func!"), asList("3", "5"), asList("7", "9"))}),
+            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{list(list("var", "func!"), list("3", "5"), list("7", "9"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "set", new Object[]{"var", "3"}),
@@ -192,11 +192,11 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
       "|a|a|b|b|c|c|d|e|f|d|e|f|\n");
     int n = 0;
 
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture"),
-            new CallInstruction(id(n++),TABLE_INSTANCE_NAME, "table", new Object[] {asList(
-                asList("a", "fa?", "b", "fb?", "c", "fc?", "d", "e", "f", "fd?", "fe?", "ff?"),
-                asList("a", "a", "b", "b", "c", "c", "d", "e", "f", "d", "e", "f"))}),
+            new CallInstruction(id(n++),TABLE_INSTANCE_NAME, "table", new Object[] {list(
+                list("a", "fa?", "b", "fb?", "c", "fc?", "d", "e", "f", "fd?", "fe?", "ff?"),
+                list("a", "a", "b", "b", "c", "c", "d", "e", "f", "d", "e", "f"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "set", new Object[]{"a", "a"}),
@@ -228,9 +228,9 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
         "|$V|9|\n"
     );
     int n=0;
-    List<Instruction> expectedInstructions = asList(
+    List<Instruction> expectedInstructions = list(
             new MakeInstruction(id(n++), TABLE_INSTANCE_NAME, "fixture"),
-            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{asList(asList("var", "func?"), asList("3", "$V="), asList("$V", "9"))}),
+            new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "table", new Object[]{list(list("var", "func?"), list("3", "$V="), list("$V", "9"))}),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "beginTable"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "reset"),
             new CallInstruction(id(n++), TABLE_INSTANCE_NAME, "set", new Object[]{"var", "3"}),
@@ -304,19 +304,19 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
   private Map<String, Object> makePseudoResultsForSimpleTable() {
     int n = 0;
     return SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList(id(n++), "OK"),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), VOID_TAG), //beginTable
-                    asList(id(n++), VOID_TAG), //reset
-                    asList(id(n++), VOID_TAG), //set
-                    asList(id(n++), VOID_TAG), //execute
-                    asList(id(n++), "5"),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), "5"),
-                    asList(id(n++), VOID_TAG) //endTable
+            list(
+                    list(id(n++), "OK"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), //beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //set
+                    list(id(n++), VOID_TAG), //execute
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG) //endTable
             )
     );
   }
@@ -326,19 +326,19 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
     makeDynamicDecisionTableAndBuildInstructions(dynamicDecisionTableWithSameFunctionMultipleTimes);
     int n = 0;
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(
-                    asList(id(n++), "OK"),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), VOID_TAG), // beginTable
-                    asList(id(n++), VOID_TAG), //reset
-                    asList(id(n++), VOID_TAG), //execute
-                    asList(id(n++), "4"),
-                    asList(id(n++), "5"),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), VOID_TAG),
-                    asList(id(n++), "7"),
-                    asList(id(n++), "5"),
-                    asList(id(n++), VOID_TAG) //endTable
+            list(
+                    list(id(n++), "OK"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG), // beginTable
+                    list(id(n++), VOID_TAG), //reset
+                    list(id(n++), VOID_TAG), //execute
+                    list(id(n++), "4"),
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), VOID_TAG),
+                    list(id(n++), "7"),
+                    list(id(n++), "5"),
+                    list(id(n++), VOID_TAG) //endTable
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);

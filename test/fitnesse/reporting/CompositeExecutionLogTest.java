@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;

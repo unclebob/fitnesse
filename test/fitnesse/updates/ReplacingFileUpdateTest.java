@@ -14,14 +14,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class ReplacingFileUpdateTest extends UpdateTestCase {
-  public final File sourceFile = new File("classes", "testFile");
+  public final String sourceFilename = "classes/testFile";
+  public final File sourceFile = new File(sourceFilename);
 
   public final String destDirName = "subDir";
-  public File destFile;
+  public final String destPath = FitNesseUtil.base + "/" + destDirName + "/testFile";
+  public final File destFile = new File(destPath);
 
   public void setUp() throws Exception {
     super.setUp();
-    destFile = new File(new File(testDir.getPath(), destDirName), "testFile");
     sourceFile.createNewFile();
   }
 

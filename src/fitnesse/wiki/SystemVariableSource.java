@@ -3,8 +3,9 @@ package fitnesse.wiki;
 import java.io.Serializable;
 import java.util.Properties;
 
+import fitnesse.FitNesseContext;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.Maybe;
+import util.Maybe;
 
 public class SystemVariableSource implements VariableSource, Serializable {
   private final Properties properties;

@@ -17,17 +17,17 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
-import fitnesse.util.DateTimeUtil;
-import fitnesse.util.XmlUtil;
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
+import util.XmlUtil;
 
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
@@ -37,7 +37,7 @@ import static util.RegexTestCase.*;
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
   private MockRequest request;
-  private SuiteResponder responder;
+  private TestResponder responder;
   private WikiPage root;
   private WikiPage suite;
   private FitNesseContext context;
@@ -64,7 +64,7 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     request.addInput("debug", "");
-    responder = new SuiteResponder();
+    responder = new TestResponder();
     responder.page = suite;
 
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();

@@ -1,5 +1,7 @@
 package fitnesse.testsystems;
 
+import java.util.Map;
+
 /**
  * Configuration for a test system.
  */
@@ -8,7 +10,7 @@ public interface Descriptor {
 
   String getTestSystemType();
 
-  ClassPath getClassPath();
+  String getClassPath();
 
   boolean runInProcess();
 

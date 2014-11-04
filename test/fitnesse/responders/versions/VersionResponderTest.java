@@ -20,7 +20,7 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Test;
 
 public class VersionResponderTest {
@@ -30,7 +30,7 @@ public class VersionResponderTest {
   private void makeTestResponse(String pageName) throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content ${requestParam}");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     
     WikiPageProperties properties = data.getProperties();
@@ -42,7 +42,6 @@ public class VersionResponderTest {
     MockRequest request = new MockRequest();
     request.setResource(pageName);
     request.addInput("version", oldVersion);
-    request.addInput("requestParam", "requestValue");
 
     Responder responder = new VersionResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
@@ -52,7 +51,7 @@ public class VersionResponderTest {
   public void testVersionName() throws Exception {
     makeTestResponse("PageOne");
 
-    assertHasRegexp("original content requestValue", response.getContent());
+    assertHasRegexp("original content", response.getContent());
     assertDoesntHaveRegexp("new stuff", response.getContent());
     assertHasRegexp(oldVersion, response.getContent());
     assertNotSubString("New Page tags", response.getContent());

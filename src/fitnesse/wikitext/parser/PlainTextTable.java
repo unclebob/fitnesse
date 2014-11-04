@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 public class PlainTextTable extends SymbolType implements Rule {
     public PlainTextTable() {
         super("PlainTextTable");

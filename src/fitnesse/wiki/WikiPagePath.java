@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import util.StringUtil;
 
 public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable {
   private static final long serialVersionUID = 1L;
@@ -80,7 +80,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   public String last() {
-    return (names.size() == 0 ? null : names.get(names.size() - 1));
+    return (String) (names.size() == 0 ? null : names.get(names.size() - 1));
   }
 
   public List<String> getNames() {
@@ -95,7 +95,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
       prefix = ">";
     else if (mode == BACKWARD_SEARCH)
       prefix = "<";
-    return prefix + StringUtils.join(names, ".");
+    return prefix + StringUtil.join(names, ".");
   }
 
   public void removeNameFromEnd() {
@@ -119,7 +119,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   public int hashCode() {
-    return StringUtils.join(names, "").hashCode();
+    return StringUtil.join(names, "").hashCode();
   }
 
   public WikiPagePath relativePath() {
@@ -134,8 +134,8 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   public int compareTo(Object o) {
     if (o instanceof WikiPagePath) {
       WikiPagePath p = (WikiPagePath) o;
-      String compressedName = StringUtils.join(names, "");
-      String compressedArgumentName = StringUtils.join(p.names, "");
+      String compressedName = StringUtil.join(names, "");
+      String compressedArgumentName = StringUtil.join(p.names, "");
       return compressedName.compareTo(compressedArgumentName);
     }
     return 1; // we are greater because we are the right type.

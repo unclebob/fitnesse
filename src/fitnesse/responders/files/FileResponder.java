@@ -13,7 +13,7 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.util.Clock;
+import util.Clock;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;

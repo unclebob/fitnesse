@@ -3,13 +3,12 @@
 package fitnesse.testrunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExceptionResult;
@@ -20,7 +19,8 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.ClassPathBuilder;
+import fitnesse.wiki.WikiPage;
 
 public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
@@ -29,9 +29,11 @@ public class MultipleTestsRunner implements Stoppable {
   private final PagesByTestSystem pagesByTestSystem;
 
   private final TestSystemFactory testSystemFactory;
+  private final TestingTracker testingTracker;
   private final CompositeExecutionLogListener executionLogListener;
 
   private volatile boolean isStopped = false;
+  private String stopId = null;
 
   private boolean runInProcess;
   private boolean enableRemoteDebug;
@@ -40,8 +42,10 @@ public class MultipleTestsRunner implements Stoppable {
   private volatile int testsInProgressCount;
 
   public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
+                             final TestingTracker testingTracker,
                              final TestSystemFactory testSystemFactory) {
     this.pagesByTestSystem = pagesByTestSystem;
+    this.testingTracker = testingTracker;
     this.testSystemFactory = testSystemFactory;
     this.formatters = new CompositeFormatter();
     this.executionLogListener = new CompositeExecutionLogListener();
@@ -72,14 +76,21 @@ public class MultipleTestsRunner implements Stoppable {
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
+    stopId = testingTracker.addStartedProcess(this);
+
+    formatters.setTrackingId(stopId);
     announceTotalTestsToRun(pagesByTestSystem);
 
-    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
-      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
+    try {
+      for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
+        startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
+      }
+    } finally {
+      testingTracker.removeEndedProcess(stopId);
     }
   }
 
-  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<WikiPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -97,9 +108,9 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) throws IOException {
+  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<WikiPage> testPages) throws IOException {
     Descriptor descriptor = new Descriptor() {
-      private ClassPath classPath;
+      private String classPath;
 
       @Override
       public String getTestSystem() {
@@ -115,13 +126,9 @@ public class MultipleTestsRunner implements Stoppable {
       }
 
       @Override
-      public ClassPath getClassPath() {
+      public String getClassPath() {
         if (classPath == null) {
-          ArrayList<ClassPath> paths = new ArrayList<ClassPath>();
-          for (TestPage testPage: testPages) {
-            paths.add(testPage.getClassPath());
-          }
-          classPath = new ClassPath(paths);
+          classPath = new ClassPathBuilder().buildClassPath(testPages);
         }
         return classPath;
       }
@@ -154,16 +161,16 @@ public class MultipleTestsRunner implements Stoppable {
       testSystem.addTestSystemListener(internalTestSystemListener);
       testSystem.start();
     } catch (Exception e) {
-      formatters.unableToStartTestSystem(descriptor.getTestSystem(), e);
+      internalTestSystemListener.testOutputChunk(String.format("<span class=\"error\">Unable to start test system '%s': %s</span>", descriptor.getTestSystem(), e.toString()));
       return null;
     }
     return testSystem;
   }
 
-  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
-    for (TestPage testPage : pagesInTestSystem) {
+  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+    for (WikiPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
-      testSystem.runTests(testPage);
+      testSystem.runTests(new WikiTestPage(testPage));
     }
   }
 
@@ -232,6 +239,9 @@ public class MultipleTestsRunner implements Stoppable {
   public void stop() {
     boolean wasNotStopped = isNotStopped();
     isStopped = true;
+    if (stopId != null) {
+      testingTracker.removeEndedProcess(stopId);
+    }
 
     if (wasNotStopped && testSystem != null) {
       try {

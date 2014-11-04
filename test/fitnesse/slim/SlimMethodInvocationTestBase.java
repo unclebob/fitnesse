@@ -5,8 +5,8 @@ package fitnesse.slim;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static util.ListUtility.list;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import fitnesse.slim.converters.BooleanConverter;
@@ -104,8 +104,8 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void passOneList() throws Exception {
-    caller.call("testSlim", "oneList", Arrays.asList("one", "two"));
-    assertEquals(Arrays.asList("one", "two"), testSlim.getListArg());
+    caller.call("testSlim", "oneList", list("one", "two"));
+    assertEquals(list("one", "two"), testSlim.getListArg());
   }
 
   @Test
@@ -119,7 +119,7 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void convertLists() throws Exception {
     caller.call("testSlim", "oneList", "[1 ,2, 3,4, hello Bob]");
-    assertEquals(Arrays.asList("1", "2", "3", "4", "hello Bob"), caller.call("testSlim", "getListArg"));
+    assertEquals(list("1", "2", "3", "4", "hello Bob"), caller.call("testSlim", "getListArg"));
   }
 
   @Test
@@ -180,14 +180,14 @@ abstract public class SlimMethodInvocationTestBase {
 
   @Test
   public void handleNullSymbols() throws Exception {
-    caller.assign("x", null);
+    caller.setVariable("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"$x"});
     Assert.assertNull(result);
   }
 
   @Test
   public void handleNullSymbolsSurroundedByString() throws Exception {
-    caller.assign("x", null);
+    caller.setVariable("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"A $x B"});
     assertEquals("A null B", result);
   }

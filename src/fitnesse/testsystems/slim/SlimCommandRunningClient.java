@@ -8,8 +8,10 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import org.apache.commons.lang.ArrayUtils;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import org.apache.commons.lang.StringUtils;
+import util.ListUtility;
 import util.StreamReader;
 
 import java.io.BufferedWriter;
@@ -17,13 +19,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static java.util.Arrays.asList;
+import static util.ListUtility.list;
 
 public class SlimCommandRunningClient implements SlimClient {
   private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());
@@ -149,42 +150,42 @@ public class SlimCommandRunningClient implements SlimClient {
       ToListExecutor executor = new ToListExecutor() {
         @Override
         public void addPath(String path) throws SlimException {
-          statementsAsList.add(asList(instruction.getId(), ImportInstruction.INSTRUCTION, path));
+          statementsAsList.add(list(instruction.getId(), ImportInstruction.INSTRUCTION, path));
         }
 
         @Override
         public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
+          List<Object> list = ListUtility.list((Object) instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName);
+          addArguments(list, arguments);
+          statementsAsList.add(list);
           return null;
         }
 
         @Override
         public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
+          List<Object> list = ListUtility.list((Object) instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName);
+          addArguments(list, arguments);
+          statementsAsList.add(list);
           return null;
         }
 
         @Override
         public void create(String instanceName, String className, Object... constructorArgs) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, constructorArgs)));
-        }
-
-        @Override
-        public void assign(String symbolName, Object value) {
-          if (slimServerVersion < 0.4) {
-            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
-          }
-          Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
-          statementsAsList.add(asList(list));
+          List<Object> list = ListUtility.list((Object) instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
+          addArguments(list, constructorArgs);
+          statementsAsList.add(list);
         }
       };
 
       instruction.execute(executor);
     }
     return statementsAsList;
+  }
+
+  private static void addArguments(List<Object> list, Object[] arguments) {
+    for (Object arg: arguments) {
+      list.add(arg);
+    }
   }
 
   private int getLengthToRead() throws IOException  {
@@ -219,7 +220,7 @@ public class SlimCommandRunningClient implements SlimClient {
   public static Map<String, Object> resultToMap(List<?> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
-      List<Object> resultList = (List<Object>) aResult;
+      List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);
       map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;

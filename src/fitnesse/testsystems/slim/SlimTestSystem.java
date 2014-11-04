@@ -12,11 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.slim.SlimError;
-<<<<<<< HEAD
 import fitnesse.slim.instructions.CallAndAssignInstruction;
-=======
-import fitnesse.slim.instructions.AssignInstruction;
->>>>>>> upstream/master
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeTestSystemListener;
@@ -44,7 +40,6 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
-  private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
 
@@ -121,7 +116,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
     List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
-    if (!stopTestCalled && !stopSuiteCalled) {
+    if (!stopTestCalled) {
       // Okay, if this crashes, the test system is killed.
       // We're not gonna continue here, but instead declare our test system done.
       try {
@@ -154,9 +149,6 @@ public abstract class SlimTestSystem implements TestSystem {
           if (exceptionResult.isStopTestException()) {
             stopTestCalled = true;
           }
-          if (exceptionResult.isStopSuiteException()) {
-            stopTestCalled = stopSuiteCalled = true;
-          }
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {
             testExceptionOccurred(a, exceptionResult);
@@ -165,12 +157,8 @@ public abstract class SlimTestSystem implements TestSystem {
           //Normal results
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
           testAssertionVerified(a, testResult);
-<<<<<<< HEAD
           
           
-=======
-
->>>>>>> upstream/master
           //Retrieve variables set during expectation step
           if (testResult != null) {
             Map<String, ?> variables = testResult.getVariablesToStore();
@@ -178,12 +166,8 @@ public abstract class SlimTestSystem implements TestSystem {
               List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
               int i = 0;
               for (Entry<String, ?> variable : variables.entrySet()) {
-<<<<<<< HEAD
             	  String[] s = new String[] {variable.getValue().toString()};
                 instructions.add(new CallAndAssignInstruction("assign_"+i++, variable.getKey(), "scriptTable" + "Actor", "cloneSymbol", s));
-=======
-                instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
->>>>>>> upstream/master
               }
               //Store variables in context
               if (i > 0) {

@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.PathParser;
+import fitnesse.wikitext.Utils;
+import util.Maybe;
 
 public class Alias extends SymbolType implements Rule, Translation {
     public static final Alias symbolType = new Alias();
@@ -28,23 +28,21 @@ public class Alias extends SymbolType implements Rule, Translation {
         if (symbol.childAt(0).childAt(0).isType(WikiWord.symbolType)) return translator.translate(symbol.childAt(0));
 
         String linkBody = translator.translate(symbol.childAt(0));
-        String linkReferenceString = HtmlUtil.unescapeHTML(translator.translate(symbol.childAt(1)));
+        String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parseToIgnoreFirst(Comment.symbolType);
 
-        if (linkReference.childAt(0).isType(WikiWord.symbolType) || PathParser.isWikiPath(linkReference.childAt(0).getContent())) {
+        if (linkReference.childAt(0).isType(WikiWord.symbolType)) {
             return new WikiWordBuilder(translator.getPage(), linkReference.childAt(0).getContent(), linkBody)
                     .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }
 
-        HtmlTag alias = new HtmlTag("a", linkBody);
-
         if (linkReference.childAt(0).isType(Link.symbolType)) {
-            alias.addAttribute("href", linkReferenceString.startsWith("http://files/") ? linkReferenceString.substring(7) : linkReferenceString);
-        } else {
-            alias.addAttribute("href", translator.translate(linkReference));
+            return Link.symbolType.buildLink(translator, linkBody, linkReference.childAt(0));
         }
 
+        HtmlTag alias = new HtmlTag("a", linkBody);
+        alias.addAttribute("href", translator.translate(linkReference));
         return alias.htmlInline();
     }
 }

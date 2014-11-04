@@ -2,9 +2,9 @@ package fitnesse.responders.versions;
 
 import static util.RegexTestCase.assertSubString;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+import util.StringUtil;
 
 public class VersionComparerTest {
   
@@ -22,14 +22,14 @@ public class VersionComparerTest {
   @Test
   public void testSimpleCompare() {
     comparer.compare("1", originalContent, "2", revisedContent);
-    assertSubString("-Line in first content", StringUtils.join(comparer.getDifferences(), "\n"));
-    assertSubString("+Line in second content", StringUtils.join(comparer.getDifferences(), "\n"));
+    assertSubString("-Line in first content", StringUtil.join(comparer.getDifferences(), "\n"));
+    assertSubString("+Line in second content", StringUtil.join(comparer.getDifferences(), "\n"));
   }
 
   @Test
   public void testPadsNonDifferentLinesWithSpaces() {
     comparer.compare("1", originalContent, "2", revisedContent);
-    assertSubString(" First line in content", StringUtils.join(comparer.getDifferences(), "\n"));
-    assertSubString(" Last line in content.", StringUtils.join(comparer.getDifferences(), "\n"));
+    assertSubString(" First line in content", StringUtil.join(comparer.getDifferences(), "\n"));
+    assertSubString(" Last line in content.", StringUtil.join(comparer.getDifferences(), "\n"));
   }
 }

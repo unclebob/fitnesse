@@ -1,7 +1,4 @@
-!|Import|
-|fitnesse.fixtures|
-
-!| SetUp | CustomComparators=glob:fitnesse.testsystems.slim.GlobComparator |
+!include -c <SuiteAcceptanceTests.SetUp
 
 |Library|
 |page driver|

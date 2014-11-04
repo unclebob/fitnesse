@@ -15,7 +15,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,15 +79,6 @@ public class AddChildPageResponderTest {
   }
 
   @Test
-  public void noPageIsMadeIfPageAlreadyExists() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("TestPage." + childName), "");
-
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    assertTrue(response.getStatus() == 409);
-    assertSubString("Child page already exists", response.getContent());
-  }
-
-  @Test
   public void givesAInvalidNameErrorForAInvalidName() throws Exception {
     request = makeInvalidRequest("");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -98,7 +89,7 @@ public class AddChildPageResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 
-    request = makeInvalidRequest("1man+1mission");
+    request = makeInvalidRequest("1man1mission");
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 

@@ -2,7 +2,7 @@ package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.mem.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

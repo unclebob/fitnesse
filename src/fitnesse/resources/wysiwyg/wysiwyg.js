@@ -3502,8 +3502,9 @@ Wysiwyg.setCookie = function (key, val) {
     var now = new Date();
     var expires = new Date(now.getTime() + 365 * 86400 * 1000);
     var pieces = [ key + "=" + val,
+        "path=" + window.location.origin,
         "expires=" + expires.toUTCString() ];
-    document.cookie = pieces.join(";");
+    document.cookie = pieces.join("; ");
 };
 
 Wysiwyg.removeEvent = function (element, type, func) {

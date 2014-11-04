@@ -1,5 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.WikiPage;
+import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.List;
 

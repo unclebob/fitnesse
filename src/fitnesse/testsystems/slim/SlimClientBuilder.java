@@ -10,7 +10,8 @@ import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
-import org.apache.commons.lang.ArrayUtils;
+
+import static util.StringUtil.combineArrays;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -62,7 +63,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   protected String[] buildCommand() {
     String[] slimArguments = buildArguments();
     String[] slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
-    return (String[]) ArrayUtils.addAll(slimCommandPrefix, slimArguments);
+    return combineArrays(slimCommandPrefix, slimArguments);
   }
 
   protected String[] buildArguments() {
@@ -99,11 +100,9 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
-      int port = offset + base;
       offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
-      // is port available??
-      return port;
+      return offset + base;
     }
   }
 

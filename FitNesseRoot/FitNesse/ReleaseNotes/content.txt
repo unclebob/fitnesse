@@ -1,32 +1,3 @@
-!2 Next release
- * Big cleanup. Removed classes:
-   * !-util.StringUtil-!, use !-org.apache.commons.lang.StringUtils-! instead.
-   * !-util.ListUtility-!, use java.util.Arrays instead.
-   * fitnesse.wikitext.Utils, use !-fitnesse.html.HtmlUtil-! instead.
-   * !-fitnesse.FitFilter-!.
- * Issues fixed:
-   * Fix !-SimpleFileVersionsController-! so it can be configured in ''plugins.properties''.
-
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=9&state=closed.
-
-!2 20140901
- * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
- * Improved error message when included page does not exist (([[496][https://github.com/unclebob/fitnesse/pull/496]]).
- * Slim script tables can now really be addressed with ''script:MyClass'' ([[500][https://github.com/unclebob/fitnesse/pull/500]]).
- * Slim can deal with arbitrary length messages ([[504][https://github.com/unclebob/fitnesse/pull/504]])
- * Plugin classes can support more elements (sub)types ([[506][https://github.com/unclebob/fitnesse/pull/506]])
- * Make Scenario tables play nice with custom script table (sub)types ([[507][https://github.com/unclebob/fitnesse/pull/507]])
- * Output parameters in a decision table have been made available in scenarios ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
- * Command pattern can contain quoted parameters (this helps at places where spaces are involved) ([[508][https://github.com/unclebob/fitnesse/pull/508]]).
- * Via the property ''!-WikiPageFactories-!'' (plural) extra wiki page types can be supported ([[505][https://github.com/unclebob/fitnesse/pull/505]]).
- * Code cleanup in the Wiki module ([[511][https://github.com/unclebob/fitnesse/pull/511]]).
- * Issues fixed:
-   * Fixed issue when rendering stack traces on Windows with spaces in paths ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
-   * Allow Scenarios with parameterised style but with empty parameter names ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
-   * Fix handling and recording of errors in table definitions ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
-
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=8&state=closed.
-
 !2 20140630
  * Add page wide Expand/Collapse All buttons (bootstrap theme).
  * Performance improvements: cache big factory classes and page data.

@@ -3,6 +3,8 @@ package fitnesse.wikitext.parser;
 import java.util.TreeMap;
 import java.util.Map;
 
+import util.Maybe;
+
 public class Image extends SymbolType implements Rule {
     public static final Image symbolType = new Image();
     

@@ -14,26 +14,25 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import fitnesse.util.TimeMeasurement;
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
-  private final SuiteExecutionReport suiteExecutionReport;
-  private final TimeMeasurement totalTimeMeasurement;
-  private final FitNesseContext context;
-  private final TestXmlFormatter.WriterFactory writerFactory;
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
+  private SuiteExecutionReport suiteExecutionReport;
+  private final TimeMeasurement totalTimeMeasurement;
+  private TestXmlFormatter.WriterFactory writerFactory;
   private TimeMeasurement suiteTime;
   private TestXmlFormatter testHistoryFormatter;
 
   public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, TestXmlFormatter.WriterFactory source) {
-    super(page);
-    this.context = context;
+    super(context, page);
     writerFactory = source;
     suiteExecutionReport = new SuiteExecutionReport(context.version, getPage().getPageCrawler().getFullPath().toString());
     totalTimeMeasurement = new TimeMeasurement().start();

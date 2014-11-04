@@ -34,9 +34,8 @@ public class SlimExecutionContext {
     public void create(String instanceName, String className, Object[] args)
             throws SlimError, IllegalArgumentException, IllegalAccessException, InvocationTargetException,
             InstantiationException {
-      Object potentialActor = variables.getStored(className);
-      if (potentialActor != null && !(potentialActor instanceof String)) {
-          addToInstancesOrLibrary(instanceName, potentialActor);
+        if (hasStoredActor(className)) {
+            addToInstancesOrLibrary(instanceName, getStoredActor(className));
         } else {
             String replacedClassName = variables
                     .replaceSymbolsInString(className);
@@ -79,7 +78,19 @@ public class SlimExecutionContext {
         instances.put(instanceName, instance);
     }
 
-  private boolean isLibrary(String instanceName) {
+    private boolean hasStoredActor(String nameWithDollar) {
+        if (!variables.containsValueFor(nameWithDollar)) {
+            return false;
+        }
+        Object potentialActor = getStoredActor(nameWithDollar);
+        return potentialActor != null && !(potentialActor instanceof String);
+    }
+
+    private Object getStoredActor(String nameWithDollar) {
+        return variables.getStored(nameWithDollar);
+    }
+
+    private boolean isLibrary(String instanceName) {
         return instanceName.startsWith("library");
     }
 

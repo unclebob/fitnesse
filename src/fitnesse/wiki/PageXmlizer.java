@@ -10,11 +10,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import util.XmlUtil;
 
 public class PageXmlizer {
   private final DateFormat dateFormat = WikiPageProperty.getTimeFormat();

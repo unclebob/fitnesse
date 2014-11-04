@@ -5,7 +5,6 @@ package fitnesse.wiki.refactoring;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;
@@ -29,7 +28,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
             }
             else if (node.isType(Alias.symbolType)) {
                 String aliasReference = node.childAt(1).childAt(0).getContent();
-                if (PathParser.isWikiPath(aliasReference)) {
+                if (new WikiWordPath().findLength(aliasReference) > 0) {
                    new WikiWordReference(currentPage, aliasReference).wikiWordRenamePageIfReferenced(node.childAt(1).childAt(0), subjectPage, newName);
                 }
             }

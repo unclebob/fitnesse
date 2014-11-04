@@ -8,10 +8,13 @@ import java.util.List;
 
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
+import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wikitext.parser.ParsedPage;
 import org.htmlparser.Parser;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;

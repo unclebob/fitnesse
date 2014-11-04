@@ -23,8 +23,8 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import fitnesse.util.XmlUtil;
-import fitnesse.util.XmlWriter;
+import util.XmlUtil;
+import util.XmlWriter;
 
 public class RssResponder implements SecureResponder {
   private RssFeed feed;

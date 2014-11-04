@@ -5,6 +5,7 @@ package fitnesse.slim;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.InstructionFactory;
 import fitnesse.slim.instructions.InstructionResult;
+import util.ListUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,7 @@ public class ListExecutor {
   }
 
   private List<Object> asStatementList(Object statement) {
-    return (List<Object>) statement;
+    return ListUtility.uncheckedCast(Object.class, statement);
   }
 
   private void verboseMessage(Object message) {
