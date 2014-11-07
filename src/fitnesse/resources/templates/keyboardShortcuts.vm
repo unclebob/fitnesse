@@ -1,0 +1,127 @@
+##Keyboard shortcuts
+<div id="helpUnderlay" class="help-underlay">
+    <div id="helpModal" class="help-modal">
+        <h1>Keyboard Shortcuts <kbd class="help-key"><span>?</span></kbd></h1>
+        <div id="helpClose" class="help-close">&times;</div>
+        <div id="helpModalContent" class="help-modal-content">
+            <div id="helpListWrap" class="help-list-wrap">
+                <ul class="help-list">
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>t</span></kbd>
+                        <span class="help-key-def">Test page or suite</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>e</span></kbd>
+                        <span class="help-key-def">Edit page</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>v</span></kbd>
+                        <span class="help-key-def">View page (after test)</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>a</span></kbd>
+                        <span class="help-key-def">Add new page</span>
+                    </li>
+
+                    <li <h2> In Edit Mode </h2></li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>CTRL+s</span></kbd>
+                        <span class="help-key-def">Save page</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>ESC</span></kbd>
+                        <span class="help-key-def">Cancel edit</span>
+                    </li>
+
+                    <li <h2>Tools</h2></li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>p</span></kbd>
+                        <span class="help-key-def">Properties</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>w</span></kbd>
+                        <span class="help-key-def">Where used?</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>AK+v</span></kbd>
+                        <span class="help-key-def">Versions</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>AK+h</span></kbd>
+                        <span class="help-key-def">Page History</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>/</span></kbd>
+                        <span class="help-key-def">Focus on search bar</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>s</span></kbd>
+                        <span class="help-key-def">Open search page</span>
+                    </li>
+
+                    <li <h2>Go To</h2></li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>g</span> <span>u</span></kbd>
+                        <span class="help-key-def">User Guide</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>g</span> <span>q</span></kbd>
+                        <span class="help-key-def">Quick Reference Guide</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>g</span> <span>f</span></kbd>
+                        <span class="help-key-def">Full Reference Guide</span>
+                    </li>
+                    <li class="help-key-unit">
+                        <kbd class="help-key"><span>g</span> <span>c</span></kbd>
+                        <span class="help-key-def">Recent Changes</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/question.mark/question.mark.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+  #set( $localPath = $actions.localPageName )
+
+ ## View the current page (useful after testing) 
+  Mousetrap.bind('v', function() { window.location.href ="$localPath"; });
+
+ #if( $actions.testPage )
+    Mousetrap.bind('t', function() { window.location.href ="$localPath?test"; });
+ #end
+ #if( $actions.suitePage )
+    Mousetrap.bind('t', function() { window.location.href ="$localPath?suite"; });
+  #end
+  #if( $actions.withEdit && !$actions.imported)
+    Mousetrap.bind('e', function() { window.location.href ="$localPath?edit"; });
+  #end
+  #if( $actions.withEdit)
+    Mousetrap.bind('a', function() { window.location.href ="$localPath?new"; });
+  #end
+  #if( $actions.withProperties )
+    Mousetrap.bind('p', function() { window.location.href ="$localPath?properties"; });
+  #end
+  #if( $actions.withWhereUsed )
+    Mousetrap.bind('w', function() { window.location.href ="$localPath?whereUsed"; });
+  #end
+  #if( $actions.withSearch )
+    Mousetrap.bind('s', function() { window.location.href ="$localPath?searchForm"; });
+    Mousetrap.bind('/', function() { 
+      document.getElementById('searchString').focus();
+      return false;  // stops the / character appearing in search box
+    });
+  #end
+  #if( $actions.withUserGuide )
+    Mousetrap.bind('g u', function() { window.location.href =".FitNesse.UserGuide"; });
+    Mousetrap.bind('g q', function() { window.open(".FitNesse.UserGuide.QuickReferenceGuide", "_blank"); });
+    Mousetrap.bind('g f', function() { window.open(".FitNesse.FullReferenceGuide", "_blank"); });
+    Mousetrap.bind('g c', function() { window.location.href ="RecentChanges"; });
+  #end
+
+</script>
