@@ -61,7 +61,7 @@ public class HtmlUtilTest {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -69,7 +69,7 @@ public class HtmlUtilTest {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
