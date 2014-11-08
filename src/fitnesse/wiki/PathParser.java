@@ -11,8 +11,6 @@ public class PathParser {
   private static final Pattern WIKI_WORD_PATTERN = Pattern.compile("\\w[\\w-]*");
   private static final Pattern WIKI_PATH_PATTERN = Pattern.compile("[<>^\\.]?\\w[\\w-]*(\\.\\w[\\w-]+)*");
 
-  private WikiPagePath path;
-
   public static WikiPagePath parse(String pathName) {
 	return PathParser.makePath(pathName, new WikiPagePath());
   }
