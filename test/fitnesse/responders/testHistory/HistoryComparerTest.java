@@ -45,7 +45,7 @@ public class HistoryComparerTest {
     root = InMemoryPage.makeRoot("RooT");
     firstContent = getContentWith("pass");
     secondContent = getContentWith("fail");
-    comparer.resultContent = new ArrayList<String>();
+    HistoryComparer.resultContent = new ArrayList<String>();
     comparer.firstTableResults = new ArrayList<String>();
     comparer.secondTableResults = new ArrayList<String>();
     comparer.matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
@@ -92,9 +92,9 @@ public class HistoryComparerTest {
     comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
     comparer.secondFileContent = "<table><tr><td>x</td></tr></table>";
     assertTrue(comparer.grabAndCompareTablesFromHtml());
-    assertEquals(2, comparer.resultContent.size());
-    assertEquals("pass", comparer.resultContent.get(0));
-    assertEquals("fail", comparer.resultContent.get(1));
+    assertEquals(2, HistoryComparer.resultContent.size());
+    assertEquals("pass", HistoryComparer.resultContent.get(0));
+    assertEquals("fail", HistoryComparer.resultContent.get(1));
   }
 
   @Test
@@ -242,12 +242,12 @@ public class HistoryComparerTest {
     comparer.lineUpTheTables();
     comparer.addBlanksToUnmatchingRows();
     comparer.makePassFailResultsFromMatches();
-    assertEquals("fail", comparer.resultContent.get(0));
-    assertEquals("fail", comparer.resultContent.get(1));
-    assertEquals("pass", comparer.resultContent.get(2));
-    assertEquals("fail", comparer.resultContent.get(3));
-    assertEquals("fail", comparer.resultContent.get(4));
-    assertEquals("pass", comparer.resultContent.get(5));
+    assertEquals("fail", HistoryComparer.resultContent.get(0));
+    assertEquals("fail", HistoryComparer.resultContent.get(1));
+    assertEquals("pass", HistoryComparer.resultContent.get(2));
+    assertEquals("fail", HistoryComparer.resultContent.get(3));
+    assertEquals("fail", HistoryComparer.resultContent.get(4));
+    assertEquals("pass", HistoryComparer.resultContent.get(5));
 
   }
 

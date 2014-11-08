@@ -45,10 +45,10 @@ public class HistoryComparerResponderTest {
 
     responder = new HistoryComparerResponder(mockedComparer);
     responder.testing = true;
-    mockedComparer.resultContent = new ArrayList<String>();
-    mockedComparer.resultContent.add("pass");
+    HistoryComparer.resultContent = new ArrayList<String>();
+    HistoryComparer.resultContent.add("pass");
     when(mockedComparer.getResultContent()).thenReturn(
-        mockedComparer.resultContent);
+    		HistoryComparer.resultContent);
     when(mockedComparer.compare(firstFilePath, secondFilePath)).thenReturn(
         true);
     mockedComparer.firstTableResults = new ArrayList<String>();

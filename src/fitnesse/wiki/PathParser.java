@@ -14,7 +14,7 @@ public class PathParser {
   private WikiPagePath path;
 
   public static WikiPagePath parse(String pathName) {
-    return new PathParser().makePath(pathName, new WikiPagePath());
+	return PathParser.makePath(pathName, new WikiPagePath());
   }
 
   private static WikiPagePath makePath(String pathName, WikiPagePath path) {
