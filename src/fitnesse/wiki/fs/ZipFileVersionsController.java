@@ -204,20 +204,6 @@ public class ZipFileVersionsController implements VersionsController {
     return null;
   }
 
-  private Collection<VersionInfo> loadVersions(final FileSystemPage page) {
-    final File dir = page.getFileSystemPath();
-    final File[] files = dir.listFiles();
-    final Set<VersionInfo> versions = new HashSet<VersionInfo>();
-    if (files != null) {
-      for (final File file : files) {
-        if (isVersionFile(file)) {
-          versions.add(ZipFileVersionInfo.makeVersionInfo(file));
-        }
-      }
-    }
-    return versions;
-  }
-
   private File makeVersionFileName(final File file, final String name) {
     File zipFile = new File(file, name + ".zip");
     int counter = 1;
