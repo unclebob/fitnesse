@@ -3,12 +3,10 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 
 import fitnesse.socketservice.SocketServer;
-import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**

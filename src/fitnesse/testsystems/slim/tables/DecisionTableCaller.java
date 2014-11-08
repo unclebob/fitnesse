@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
 
 
 public class DecisionTableCaller {

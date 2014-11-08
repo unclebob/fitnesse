@@ -15,8 +15,6 @@ import java.util.Map;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 /**
  * Used to run tests from a JUnit test suite.

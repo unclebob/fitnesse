@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;

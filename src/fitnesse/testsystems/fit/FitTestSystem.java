@@ -5,9 +5,7 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;

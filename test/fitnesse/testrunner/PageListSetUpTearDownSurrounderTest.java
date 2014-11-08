@@ -1,7 +1,6 @@
 package fitnesse.testrunner;
 
 import fitnesse.wiki.*;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 
 import fitnesse.wiki.fs.InMemoryPage;

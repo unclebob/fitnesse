@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import static fitnesse.responders.files.FileResponder.isInFilesDirectory;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;

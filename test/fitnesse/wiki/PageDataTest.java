@@ -4,8 +4,6 @@ package fitnesse.wiki;
 
 import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 

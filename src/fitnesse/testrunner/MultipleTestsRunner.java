@@ -20,7 +20,6 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.PageData;
 
 public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());

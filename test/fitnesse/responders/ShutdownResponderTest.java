@@ -5,7 +5,6 @@ package fitnesse.responders;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.http.MockRequest;
