@@ -18,6 +18,7 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
@@ -62,6 +63,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   public @interface SuiteFilter {
 
     public String value();
+    public boolean andStrategy() default false;
   }
   /**
    * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
@@ -140,6 +142,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private String suiteName;
   private String outputDir;
   private String suiteFilter;
+  private boolean suiteFilterAndStrategy;
   private String excludeSuiteFilter;
   private boolean debugMode;
   private FitNesseContext context;
@@ -170,6 +173,12 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     try {
       this.suiteFilter = getSuiteFilter(suiteClass);
+    } catch (Throwable t) {
+      errors.add(t);
+    }
+
+    try {
+      this.suiteFilterAndStrategy = getSuiteFilterAndStrategy(suiteClass);
     } catch (Throwable t) {
       errors.add(t);
     }
@@ -234,6 +243,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
       return null;
     }
     return suiteFilterAnnotation.value();
+  }
+
+  protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
+    SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
+    if (suiteFilterAnnotation == null) {
+      return false;
+    }
+    return suiteFilterAnnotation.andStrategy();
   }
 
   protected String getExcludeSuiteFilter(Class<?> klass)
@@ -347,11 +364,23 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.root).getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
     return children;
+  }
+
+  private fitnesse.testrunner.SuiteFilter getSuiteFilter() {
+    return new fitnesse.testrunner.SuiteFilter(getOrSuiteFilter(), excludeSuiteFilter, getAndSuiteFilter(), null);
+  }
+
+  private String getOrSuiteFilter() {
+    return suiteFilterAndStrategy ? null : suiteFilter;
+  }
+
+  private String getAndSuiteFilter() {
+    return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
   static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
