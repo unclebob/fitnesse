@@ -42,7 +42,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface Suite {
 
-    public String value();
+    public String value() default "";
+    public String systemProperty() default "";
   }
   /**
    * The <code>DebugMode</code> annotation specifies whether the test is run
@@ -62,7 +63,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface SuiteFilter {
 
-    public String value();
+    public String value() default "";
+    public String systemProperty() default "";
     public boolean andStrategy() default false;
   }
   /**
@@ -216,7 +218,15 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (suiteAnnotation == null) {
       throw new InitializationError("There must be a @Suite annotation");
     }
-    return suiteAnnotation.value();
+
+    if (!"".equals(suiteAnnotation.value())) {
+      return suiteAnnotation.value();
+    }
+    if (!"".equals(suiteAnnotation.systemProperty())) {
+      return System.getProperty(suiteAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @Suite you have to specify either 'value' or 'systemProperty'");
   }
 
   protected String getOutputDir(Class<?> klass) throws InitializationError {
@@ -242,7 +252,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (suiteFilterAnnotation == null) {
       return null;
     }
-    return suiteFilterAnnotation.value();
+    if (!"".equals(suiteFilterAnnotation.value())) {
+      return suiteFilterAnnotation.value();
+    }
+    if (!"".equals(suiteFilterAnnotation.systemProperty())) {
+      return System.getProperty(suiteFilterAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @SuiteFilter you have to specify either 'value' or 'systemProperty'");
   }
 
   protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
