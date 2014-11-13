@@ -40,7 +40,7 @@ public class FileResponderTest {
   @Before
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
     SampleFileUtility.makeSampleFiles(context.getRootPagePath());
     response = null;
     saveLocale = Locale.getDefault();

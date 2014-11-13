@@ -5,11 +5,12 @@ package fitnesse.fixtures;
 import java.io.File;
 
 import fit.Fixture;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 
 public class FileSystemPageSetUp extends Fixture {
 
   public FileSystemPageSetUp() throws Exception {
-    FitnesseFixtureContext.root = new FileSystemPageFactory().makePage(new File(FitnesseFixtureContext.baseDir), "RooT", null);
+    FitnesseFixtureContext.root = new FileSystemPageFactory().makePage(new File(FitnesseFixtureContext.baseDir), "RooT", null, new SystemVariableSource());
   }
 }

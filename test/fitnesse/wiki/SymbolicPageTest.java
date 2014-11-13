@@ -148,7 +148,7 @@ public class SymbolicPageTest {
   private void CreateExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
-    externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null);
+    externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null, new SystemVariableSource());
     WikiPage externalPageOne = WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
     WikiPageUtil.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
     WikiPageUtil.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");

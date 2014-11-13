@@ -10,15 +10,13 @@ import fitnesse.wikitext.parser.VariableSource;
 public class ExternalSuitePageFactory implements WikiPageFactory<BaseWikiPage> {
 
   private final FileSystem fileSystem;
-  private final VariableSource variableSource;
 
-  public ExternalSuitePageFactory(FileSystem fileSystem, VariableSource variableSource) {
+  public ExternalSuitePageFactory(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.variableSource = variableSource;
   }
 
   @Override
-  public WikiPage makePage(File path, String pageName, BaseWikiPage parent) {
+  public WikiPage makePage(File path, String pageName, BaseWikiPage parent, VariableSource variableSource) {
     return new ExternalSuitePage(path, pageName, parent, fileSystem, variableSource);
   }
 

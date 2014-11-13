@@ -15,6 +15,7 @@ import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
@@ -104,7 +105,7 @@ public class ContextConfigurator {
     }
 
     if (root == null) {
-      root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null);
+      root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, new SystemVariableSource(properties));
     }
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);

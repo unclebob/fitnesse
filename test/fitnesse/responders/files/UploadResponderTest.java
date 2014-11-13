@@ -27,7 +27,7 @@ public class UploadResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
     FileUtil.makeDir(context.getRootPagePath());
     FileUtil.makeDir(context.getRootPagePath() + "/files");
     testFile = FileUtil.createFile(context.getRootPagePath() + "/tempFile.txt", "test content");
