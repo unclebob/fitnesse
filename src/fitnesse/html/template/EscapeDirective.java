@@ -26,7 +26,8 @@ public class EscapeDirective extends Directive {
   public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
     Object value = node.jjtGetChild(0).value(context);
     if (value != null) {
-      String text = HtmlUtil.escapeHTML(String.valueOf(value));
+        String text = HtmlUtil.escapeHTML(String.valueOf(value).replaceAll(
+                "([\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F])",""));
       writer.write(text);
     }
     return true;
