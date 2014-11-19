@@ -46,7 +46,7 @@ public class TestExecutionReportTest {
 
   private void addDummyResult() {
     result = new TestResult();
-    result.content = "content\u001B";
+    result.content = "content";
     result.right = "1";
     result.wrong = "2";
     result.ignores = "3";
