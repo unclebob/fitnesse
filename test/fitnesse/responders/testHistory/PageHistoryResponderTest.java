@@ -303,7 +303,7 @@ public class PageHistoryResponderTest {
     assertHasRegexp("33 ignored", response.getContent());
     assertHasRegexp("44 exceptions", response.getContent());
     assertHasRegexp("99 ms", response.getContent());
-    assertHasRegexp("wad of HTML content", response.getContent());
+    assertHasRegexp("wad of HTML content after control character", response.getContent());
   }
   
   @Test
@@ -395,7 +395,7 @@ public class PageHistoryResponderTest {
     result.ignores = "33";
     result.exceptions = "44";
     result.relativePageName = "relativePageName";
-    result.content = "wad of HTML content";
+    result.content = "wad of HTML content\u001B after control character";
     result.runTimeInMillis = "99";
     return testResponse;
   }
