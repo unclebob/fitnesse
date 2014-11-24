@@ -11,8 +11,6 @@ public interface CustomComparator {
    * @param actual String representation of the actual result
    * @param expected String representation of the expected result
    * @return true if they match, false if they don't match
-   * @throws Throwable if an exception or error is thrown, the throwable message is appended
-   * to the failure output
    */
   boolean matches(String actual, String expected);
 
