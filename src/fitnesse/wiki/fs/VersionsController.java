@@ -9,12 +9,6 @@ import fitnesse.wiki.VersionInfo;
 public interface VersionsController {
 
   /**
-   * Set the number of elements (either in days or number) that will be returned by the history() method.
-   * @param historyDepth
-   */
-  void setHistoryDepth(int historyDepth);
-
-  /**
    * Obtain data for the files requested at a specific revision,
    * @param revision The revision to look for
    * @param files Files to obtain data for

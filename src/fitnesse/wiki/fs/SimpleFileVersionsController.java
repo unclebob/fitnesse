@@ -25,11 +25,6 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void setHistoryDepth(int historyDepth) {
-    // Just one file, no history
-  }
-
-  @Override
   public FileVersion[] getRevisionData(String label, File... files) {
     FileVersion[] versions = new FileVersion[files.length];
     int counter = 0;

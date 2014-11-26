@@ -14,23 +14,33 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
+
 public class ZipFileVersionsController implements VersionsController {
   private static final Logger LOG = Logger.getLogger(ZipFileVersionsController.class.getName());
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
 
-  private int daysTillVersionsExpire = 14;
+  private final int daysTillVersionsExpire;
 
   private VersionsController persistence;
 
+  public ZipFileVersionsController(Properties properties) {
+    this(getVersionDays(properties));
+  }
   public ZipFileVersionsController() {
+    this(14);
+  }
+
+  public ZipFileVersionsController(int versionDays) {
+    this.daysTillVersionsExpire = versionDays;
     // Fix on Disk file system, since that's what ZipFileVersionsController can deal with.
     persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
-  @Override
-  public void setHistoryDepth(int historyDepth) {
-    daysTillVersionsExpire = historyDepth;
+  private static int getVersionDays(Properties properties) {
+    String days = properties.getProperty(VERSIONS_CONTROLLER_DAYS.getKey());
+    return days == null ? 14 : Integer.parseInt(days);
   }
 
   @Override

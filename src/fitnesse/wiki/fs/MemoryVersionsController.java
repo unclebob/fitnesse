@@ -28,10 +28,6 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public void setHistoryDepth(int historyDepth) {
-  }
-
-  @Override
   public FileVersion[] getRevisionData(String label, File... files) {
     if (label == null) {
       return persistence.getRevisionData(null, files);

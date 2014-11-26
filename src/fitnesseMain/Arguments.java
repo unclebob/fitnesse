@@ -60,7 +60,7 @@ public class Arguments {
     System.err.println("\t-l <log directory> {no logging}");
     System.err.println("\t-f <config properties file> {" +
       defaults.get(CONFIG_FILE) + "}");
-    System.err.println("\t-e <days> {" + defaults.getVersionDays() +
+    System.err.println("\t-e <days> {" + defaults.get(VERSIONS_CONTROLLER_DAYS) +
       "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
     System.err

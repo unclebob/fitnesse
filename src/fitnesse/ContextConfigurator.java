@@ -98,10 +98,6 @@ public class ContextConfigurator {
 
     if (versionsController == null) {
       versionsController = componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-      Integer versionDays = getVersionDays();
-      if (versionDays != null) {
-        versionsController.setHistoryDepth(versionDays);
-      }
     }
     if (recentChanges == null) {
       recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
@@ -272,10 +268,5 @@ public class ContextConfigurator {
       default:
         return properties.getProperty(parameter.getKey());
     }
-  }
-
-  public Integer getVersionDays() {
-    String days = get(VERSIONS_CONTROLLER_DAYS);
-    return days == null ? null : Integer.parseInt(days);
   }
 }
