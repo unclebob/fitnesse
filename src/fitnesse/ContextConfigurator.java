@@ -43,6 +43,7 @@ public class ContextConfigurator {
 
   /** Some properties are stored in typed fields: */
   private WikiPage root;
+  private WikiPageFactory wikiPageFactory;
   private Integer port;
   private String rootPath = DEFAULT_PATH;
   private String rootDirectoryName = DEFAULT_ROOT;
@@ -95,7 +96,9 @@ public class ContextConfigurator {
 
     updateFitNesseProperties(version);
 
-    WikiPageFactory wikiPageFactory = componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    if (wikiPageFactory == null) {
+      wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    }
 
     if (versionsController == null) {
       versionsController = componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
@@ -186,6 +189,7 @@ public class ContextConfigurator {
     }
   }
 
+  @Deprecated
   public ContextConfigurator withRoot(WikiPage root) {
     this.root = root;
     return this;
@@ -233,6 +237,11 @@ public class ContextConfigurator {
 
   public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
     this.rootDirectoryName = rootDirectoryName;
+    return this;
+  }
+
+  public ContextConfigurator withWikiPageFactory(WikiPageFactory wikiPageFactory) {
+    this.wikiPageFactory = wikiPageFactory;
     return this;
   }
 
