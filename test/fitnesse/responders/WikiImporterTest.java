@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -32,18 +33,20 @@ public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
   public WikiPage childPageOne;
   public WikiPage pageTwo;
-  public WikiPage remoteRoot;
   private WikiImporter importer;
   private LinkedList<WikiPage> imports;
   private LinkedList<Exception> errors;
-  public WikiPage localRoot;
+  private WikiPage remoteRoot;
+  private WikiPage localRoot;
+  public FitNesseContext localContext;
+  public FitNesseContext remoteContext;
 
   @Before
   public void setUp() throws Exception {
     createRemoteRoot();
     createLocalRoot();
 
-    FitNesseUtil.startFitnesse(remoteRoot);
+    FitNesseUtil.startFitnesseWithContext(remoteContext);
 
     importer = new WikiImporter();
     importer.setWikiImporterClient(this);
@@ -53,19 +56,22 @@ public class WikiImporterTest implements WikiImporterClient {
     errors = new LinkedList<Exception>();
   }
 
-  public void createLocalRoot() throws Exception {
-    localRoot = InMemoryPage.makeRoot("RooT2");
+  public FitNesseContext createLocalRoot() throws Exception {
+    localContext = FitNesseUtil.makeTestContext();
+    localRoot = localContext.getRootPage();
     pageOne = WikiPageUtil.addPage(localRoot, PathParser.parse("PageOne"), "");
     childPageOne = WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");
     pageTwo = WikiPageUtil.addPage(localRoot, PathParser.parse("PageTwo"), "");
+    return localContext;
   }
 
-  public WikiPage createRemoteRoot() throws Exception {
-    remoteRoot = InMemoryPage.makeRoot("RooT");
+  public FitNesseContext createRemoteRoot() throws Exception {
+    remoteContext = FitNesseUtil.makeTestContext();
+    remoteRoot = remoteContext.getRootPage();
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
-    return remoteRoot;
+    return remoteContext;
   }
 
   @After
