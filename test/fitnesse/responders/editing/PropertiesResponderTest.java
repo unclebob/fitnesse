@@ -46,8 +46,8 @@ public class PropertiesResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
   }
 
@@ -306,8 +306,6 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesHtml() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
-    PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);

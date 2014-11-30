@@ -29,7 +29,7 @@ public class ChunkingResponderTest {
 
  @Before
  public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test

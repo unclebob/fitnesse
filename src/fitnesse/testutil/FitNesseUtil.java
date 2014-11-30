@@ -11,7 +11,9 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wiki.fs.FileSystemPageFactory;
+import fitnesse.wiki.fs.MemoryFileSystem;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -23,7 +25,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class FitNesseUtil {
-  public static final String base = "TestDir";
+  public static final String base = "RooT";
   public static final int PORT = 1999;
   public static final String URL = "http://localhost:" + PORT + "/";
 
@@ -58,6 +60,10 @@ public class FitNesseUtil {
     return makeTestContext(InMemoryPage.newInstance(), createTemporaryFolder().getPath(), FitNesseUtil.base, PORT, authenticator);
   }
 
+  public static FitNesseContext makeTestContext(FileSystem fileSystem) {
+    return makeTestContext(InMemoryPage.newInstance(fileSystem), createTemporaryFolder().getPath(), FitNesseUtil.base, PORT, new PromiscuousAuthenticator());
+  }
+
   public static FitNesseContext makeTestContext(int port, Authenticator authenticator, Properties properties) {
     return makeTestContext(InMemoryPage.newInstance(), createTemporaryFolder().getPath(), FitNesseUtil.base, port, authenticator, properties);
   }
@@ -71,47 +77,13 @@ public class FitNesseUtil {
     return makeTestContext(wikiPageFactory, rootPath, rootDirectoryName, port, authenticator, new Properties());
   }
 
-  @Deprecated
-  public static FitNesseContext makeTestContext(WikiPage root) {
-    return makeTestContext(root, createTemporaryFolder().getPath(), FitNesseUtil.base, PORT, new PromiscuousAuthenticator(), new Properties());
-  }
-
-  @Deprecated
-  public static FitNesseContext makeTestContext(WikiPage root, String rootPath,
-      String rootDirectoryName, int port, Authenticator authenticator, Properties properties) {
-
-    FitNesseContext context;
-
-    try {
-      context = ContextConfigurator.systemDefaults()
-        .withRoot(root)
-        .withRootPath(rootPath)
-        .withRootDirectoryName(rootDirectoryName)
-        .withPort(port)
-        .withAuthenticator(authenticator)
-        .withVersionsController(new ZipFileVersionsController())
-        .withRecentChanges(new RecentChangesWikiPage())
-        .updatedWith(properties)
-        .makeFitNesseContext();
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    } catch (PluginException e) {
-      throw new IllegalStateException(e);
-    }
-
-    // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
-    context.pageFactory.getVelocityEngine();
-    return context;
-  }
-
   public static FitNesseContext makeTestContext(WikiPageFactory wikiPageFactory, String rootPath,
                                                 String rootDirectoryName, int port, Authenticator authenticator, Properties properties) {
     FitNesseContext context;
 
     try {
-      WikiPage root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, new SystemVariableSource(properties));
       context = ContextConfigurator.systemDefaults()
-              .withRoot(root)
+              .withWikiPageFactory(wikiPageFactory)
               .withRootPath(rootPath)
               .withRootDirectoryName(rootDirectoryName)
               .withPort(port)

@@ -67,11 +67,11 @@ public class TestResponderTest {
     File testDir = new File("TestDir");
     testDir.mkdir();
     Properties properties = new Properties();
-    root = InMemoryPage.makeRoot("Root", properties);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
-    context = FitNesseUtil.makeTestContext(root);
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }

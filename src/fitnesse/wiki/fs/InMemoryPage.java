@@ -35,7 +35,7 @@ public class InMemoryPage {
     return newInstance(fileSystem);
   }
 
-  private static FileSystemPageFactory newInstance(FileSystem fileSystem) {
+  public static WikiPageFactory newInstance(FileSystem fileSystem) {
     return new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem));
   }
 }

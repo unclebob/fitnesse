@@ -47,14 +47,12 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
-  private Properties properties;
 
   @Before
   public void setUp() throws Exception {
     String suitePageName = "SuitePage";
-    properties = new Properties();
-    root = InMemoryPage.makeRoot("Root", properties);
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);

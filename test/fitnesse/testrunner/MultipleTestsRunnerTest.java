@@ -23,7 +23,6 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
 public class MultipleTestsRunnerTest {
-  private WikiPage root;
   private WikiPage suite;
   private FitNesseContext context;
 
@@ -36,9 +35,8 @@ public class MultipleTestsRunnerTest {
     testSystem = mock(TestSystem.class);
     when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
 
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    suite = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"), "This is the test suite\n");
+    context = FitNesseUtil.makeTestContext();
+    suite = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SuitePage"), "This is the test suite\n");
  }
 
   @Test

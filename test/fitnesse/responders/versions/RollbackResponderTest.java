@@ -5,6 +5,7 @@ package fitnesse.responders.versions;
 import static fitnesse.responders.versions.VersionResponderTest.last;
 import static org.junit.Assert.assertEquals;
 
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -23,10 +24,10 @@ public class RollbackResponderTest {
   private WikiPage page;
   private Response response;
 
-  @Before
-  public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
+  @Test
+  public void testStuff() throws Exception {
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"), "original content");
     PageData data = page.getData();
     data.setContent("new stuff");
     data.setProperties(new WikiPageProperties());
@@ -38,16 +39,13 @@ public class RollbackResponderTest {
     request.addInput("version", commitRecord.getName());
 
     Responder responder = new RollbackResponder();
-    response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-  }
+    response = responder.makeResponse(context, request);
 
-  @Test
-  public void testStuff() throws Exception {
     assertEquals(303, response.getStatus());
     assertEquals("/PageOne", response.getHeader("Location"));
 
-    PageData data = page.getData();
-    assertEquals("original content", data.getContent());
-    assertEquals(true, data.hasAttribute("Edit"));
+    PageData data2 = page.getData();
+    assertEquals("original content", data2.getContent());
+    assertEquals(true, data2.hasAttribute("Edit"));
   }
 }

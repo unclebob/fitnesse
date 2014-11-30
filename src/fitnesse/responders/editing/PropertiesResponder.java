@@ -148,7 +148,6 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makePageTypeRadiosHtml(PageData pageData) {
     html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
-    String pt = getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES);
     html.put("selectedPageType", getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES));
   }
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 
+import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -21,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SaveResponderTest {
+  private FitNesseContext context;
   private WikiPage root;
   private Response response;
   public MockRequest request;
@@ -28,8 +30,8 @@ public class SaveResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
     responder = new SaveResponder();
     SaveRecorder.clear();
@@ -40,7 +42,7 @@ public class SaveResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertHasRegexp("Location: /ChildPage", response.makeHttpHeaders());
 
@@ -64,7 +66,7 @@ public class SaveResponderTest {
     prepareRequest("ChildPage");
     request.addInput("redirect", "http://fitnesse.org:8080/SomePage");
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertHasRegexp("Location: http://fitnesse.org:8080/SomePage", response.makeHttpHeaders());
   }
@@ -79,7 +81,7 @@ public class SaveResponderTest {
   public void testCanCreatePage() throws Exception {
     prepareRequest("ChildPageTwo");
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     assertEquals(true, root.hasChildPage("ChildPageTwo"));
     String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
@@ -108,7 +110,7 @@ public class SaveResponderTest {
     request.addInput(EditResponder.HELP_TEXT, "some help");
     request.addInput(EditResponder.SUITES, "some suite");
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     assertEquals(true, root.hasChildPage("ChildPageTwo"));
     PageData pageData = root.getChildPage("ChildPageTwo").getData();
@@ -126,7 +128,7 @@ public class SaveResponderTest {
     request.addInput(EditResponder.HELP_TEXT, "");
     request.addInput(EditResponder.SUITES, "");
     
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
     
     PageData pageData = root.getChildPage("ChildPageTwo").getData();
     assertFalse("should not have help attribute", pageData.hasAttribute(PageData.PropertyHELP));
@@ -143,7 +145,7 @@ public class SaveResponderTest {
     request.addInput(EditResponder.TIME_STAMP, "" + (SaveRecorder.timeStamp() - 10000));
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertHasRegexp("Merge", response.getContent());
   }
@@ -158,12 +160,12 @@ public class SaveResponderTest {
     request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
 
     request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
     request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
-    response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
   }
 
@@ -171,7 +173,7 @@ public class SaveResponderTest {
   public void testUsernameIsSavedInPageProperties() throws Exception {
     addRequestParameters();
     request.setCredentials("Aladdin", "open sesame");
-    response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = responder.makeResponse(context, request);
 
     String user = root.getChildPage("EditPage").getData().getAttribute(PageData.LAST_MODIFYING_USER);
     assertEquals("Aladdin", user);
@@ -189,7 +191,7 @@ public class SaveResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("EditPage"));
     addRequestParameters();
 
-    response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = responder.makeResponse(context, request);
   }
 
   private void addRequestParameters() {

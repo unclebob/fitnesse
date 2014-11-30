@@ -19,8 +19,7 @@ public class TraverseDirectiveTest {
   
   @Before
   public void setUp() {
-    WikiPage root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     context.pageFactory.getVelocityEngine().loadDirective(TraverseDirective.class.getName());
   }
   

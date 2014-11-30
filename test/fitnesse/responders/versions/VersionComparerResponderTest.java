@@ -24,9 +24,8 @@ public class VersionComparerResponderTest {
   
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ComparedPage"), "original content");
+    context = FitNesseUtil.makeTestContext();
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();
 

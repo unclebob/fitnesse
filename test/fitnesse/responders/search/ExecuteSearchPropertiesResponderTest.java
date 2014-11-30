@@ -33,16 +33,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ExecuteSearchPropertiesResponderTest {
-  private WikiPage root;
   private ExecuteSearchPropertiesResponder responder;
   private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    FitNesseUtil.makeTestContext(root);
     responder = new ExecuteSearchPropertiesResponder();
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
@@ -93,7 +90,7 @@ public class ExecuteSearchPropertiesResponderTest {
   }
 
   private MockRequest setupRequest() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
@@ -207,7 +204,7 @@ public class ExecuteSearchPropertiesResponderTest {
   }
 
   private MockRequest setupRequestForObsoletePage() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ObsoletePage"));
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties1 = data.getProperties();

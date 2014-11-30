@@ -40,7 +40,8 @@ public class AuthenticatorTest {
   
   @Before
   public void setUp() {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    WikiPage root = context.getRootPage();
     WikiPage frontpage = root.addChildPage("FrontPage");
     makeReadSecure(frontpage);
     authenticator = new SimpleAuthenticator();
@@ -48,7 +49,6 @@ public class AuthenticatorTest {
 
     request = new MockRequest();
     request.setResource("FrontPage");
-    context = FitNesseUtil.makeTestContext(root);
   }
 
   private void makeReadSecure(WikiPage frontpage) {

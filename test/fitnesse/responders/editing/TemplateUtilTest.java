@@ -26,9 +26,6 @@ public class TemplateUtilTest {
 
   @Before public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
-    MockRequest request = new MockRequest();
-    EditResponder responder = new EditResponder();
   }
 
   @Test public void testGetTemplatesFromUncles() {

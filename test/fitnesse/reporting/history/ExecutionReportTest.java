@@ -30,8 +30,7 @@ public class ExecutionReportTest {
 
   @Before
   public void setup() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test

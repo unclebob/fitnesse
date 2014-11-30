@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import static org.junit.Assert.assertEquals;
 
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -18,10 +19,12 @@ import org.junit.Test;
 public class PageDataWikiPageResponderTest {
   WikiPage root;
   WikiPage pageOne;
+  private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
   }
 
@@ -31,7 +34,7 @@ public class PageDataWikiPageResponderTest {
     MockRequest request = new MockRequest();
     request.setResource("PageOne");
     request.addInput("pageData", "");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(pageOne.getData().getContent(), response.getContent());
   }
 }

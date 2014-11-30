@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NameWikiPageResponderTest {
+  private FitNesseContext context;
   private WikiPage root;
   private NameWikiPageResponder responder;
   private MockRequest request;
@@ -37,10 +39,11 @@ public class NameWikiPageResponderTest {
   private String helloTag;
   private String worldTag;
   private String fitnesseTag;
-  
+
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     responder = new NameWikiPageResponder();
     request = new MockRequest();
 
@@ -65,7 +68,7 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void testTextPlain() throws Exception {
-    Response r = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response r = responder.makeResponse(context, request);
     assertEquals("text/plain", r.getContentType());
   }
 
@@ -74,7 +77,7 @@ public class NameWikiPageResponderTest {
     WikiPageUtil.addPage(root, pageOnePath, "");
     WikiPageUtil.addPage(root, pageTwoPath, "");
     request.setResource("");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp(pageOneName, response.getContent());
     assertHasRegexp(pageTwoName, response.getContent());
   }
@@ -85,13 +88,13 @@ public class NameWikiPageResponderTest {
     WikiPageUtil.addPage(frontPage, pageOnePath, "");
     WikiPageUtil.addPage(frontPage, pageTwoPath, "");
     request.setResource("");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp(frontPageName, response.getContent());
     assertDoesntHaveRegexp(pageOneName, response.getContent());
     assertDoesntHaveRegexp(pageTwoName, response.getContent());
 
     request.setResource(frontPageName);
-    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp(pageOneName, response.getContent());
     assertHasRegexp(pageTwoName, response.getContent());
     assertDoesntHaveRegexp(frontPageName, response.getContent());
@@ -103,7 +106,7 @@ public class NameWikiPageResponderTest {
     WikiPageUtil.addPage(root, pageTwoPath, "");
     request.setResource("");
     request.addInput("format", "json");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     JSONArray actual = new JSONArray(response.getContent());
     assertEquals(2, actual.length());
     Set<String> actualSet = new HashSet<String>();
@@ -122,7 +125,7 @@ public class NameWikiPageResponderTest {
     WikiPageUtil.addPage(frontPage, pageTwoPath, "");
     request.setResource("");
     request.addInput("ShowChildCount","");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("FrontPage 2", response.getContent());
   }
 
@@ -170,7 +173,7 @@ public class NameWikiPageResponderTest {
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
 	
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 	
     assertHasRegexp(pageOneName,                                             response.getContent());
     assertHasRegexp(pageOneName + "." + pageTwoName,                         response.getContent());
@@ -188,7 +191,7 @@ public class NameWikiPageResponderTest {
     request.addInput("Recursive", "");
     request.addInput("LeafOnly", "");
 	
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(2, CountLines(response.getContent())); // we only have 2 leave pages
   }
 
@@ -200,7 +203,7 @@ public class NameWikiPageResponderTest {
     request.addInput("Recursive", "");
     request.addInput("ShowTags", "");
 	
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 	
     // since the setAttribute() calls in createTestPageTree() don't have an effect the following tests are failing
     // reenable them once the issue above has been resolved!

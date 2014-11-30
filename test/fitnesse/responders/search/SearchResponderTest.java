@@ -25,12 +25,11 @@ public class SearchResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPageUtil.addPage(root, PathParser.parse("SomePage"), "has something in it");
+    context = FitNesseUtil.makeTestContext();
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
     request = new MockRequest();
     request.addInput("searchString", "blah");
     request.addInput("searchType", "blah");
-    context = FitNesseUtil.makeTestContext(root);
     responder = new SearchResponder();
   }
 
