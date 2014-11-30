@@ -21,7 +21,7 @@ public class ShutdownResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(FitNesseUtil.PORT);
+    context = FitNesseUtil.makeTestContext();
     context.fitNesse.start();
   }
 

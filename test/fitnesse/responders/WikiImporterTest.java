@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
+import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -65,13 +68,17 @@ public class WikiImporterTest implements WikiImporterClient {
     return localContext;
   }
 
-  public FitNesseContext createRemoteRoot() throws Exception {
-    remoteContext = FitNesseUtil.makeTestContext();
+  public FitNesseContext createRemoteRoot(Authenticator authenticator) {
+    remoteContext = FitNesseUtil.makeTestContext(authenticator);
     remoteRoot = remoteContext.getRootPage();
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
     WikiPageUtil.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
     return remoteContext;
+  }
+
+  public FitNesseContext createRemoteRoot() throws Exception {
+    return createRemoteRoot(new PromiscuousAuthenticator());
   }
 
   @After

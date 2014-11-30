@@ -27,12 +27,10 @@ public class WikiImportingResponderAuthenticationTest {
   @Before
   public void setUp() throws Exception {
     testData = new WikiImporterTest();
-    testData.createRemoteRoot();
+    testData.createRemoteRoot(new OneUserAuthenticator("joe", "blow"));
     testData.createLocalRoot();
 
-    FitNesseContext context = FitNesseUtil.makeTestContext(testData.remoteContext.getRootPage(), new OneUserAuthenticator("joe", "blow"));
-
-    FitNesseUtil.startFitnesseWithContext(context);
+    FitNesseUtil.startFitnesseWithContext(testData.remoteContext);
     baseUrl = FitNesseUtil.URL;
 
     createResponder();

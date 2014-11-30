@@ -28,8 +28,7 @@ public class SetUp extends Fixture {
   private SetUp(Properties properties) throws Exception {
     final int port = 9123;
     properties.setProperty("FITNESSE_PORT", String.valueOf(port));
-    root = InMemoryPage.makeRoot("RooT", properties);
-    context = FitNesseUtil.makeTestContext(root, port, new Authenticator() {
+    context = FitNesseUtil.makeTestContext(port, new Authenticator() {
       @Override public boolean isAuthenticated(String username, String password) {
         if (FitnesseFixtureContext.authenticator != null) {
           return FitnesseFixtureContext.authenticator.isAuthenticated(username, password);
@@ -37,6 +36,7 @@ public class SetUp extends Fixture {
         return true;
       }
     }, properties);
+    root = context.getRootPage();
     context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
