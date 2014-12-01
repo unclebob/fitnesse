@@ -42,7 +42,6 @@ public class ContextConfigurator {
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   /** Some properties are stored in typed fields: */
-  private WikiPage root;
   private WikiPageFactory wikiPageFactory;
   private Integer port;
   private String rootPath = DEFAULT_PATH;
@@ -107,10 +106,6 @@ public class ContextConfigurator {
       recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
     }
 
-    if (root == null) {
-      root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, new SystemVariableSource(properties));
-    }
-
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
 
     if (logger == null) {
@@ -126,7 +121,7 @@ public class ContextConfigurator {
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
 
     FitNesseContext context = new FitNesseContext(version,
-          root,
+          wikiPageFactory,
           rootPath,
           rootDirectoryName,
           contextRoot,
@@ -187,12 +182,6 @@ public class ContextConfigurator {
     } else {
       return port;
     }
-  }
-
-  @Deprecated
-  public ContextConfigurator withRoot(WikiPage root) {
-    this.root = root;
-    return this;
   }
 
   public ContextConfigurator withRootPath(String rootPath) {

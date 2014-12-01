@@ -3,7 +3,6 @@
 package fitnesse.fixtures;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.context;
-import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,7 +35,6 @@ public class SetUp extends Fixture {
         return true;
       }
     }, properties);
-    root = context.getRootPage();
     context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

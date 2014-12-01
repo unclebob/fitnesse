@@ -14,6 +14,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 
 public class FitNesseContext {
@@ -24,26 +25,25 @@ public class FitNesseContext {
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
 
-  private final WikiPage root;
-
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
 
   public final int port;
+  private final WikiPageFactory wikiPageFactory;
   public final String rootPath;
   private final String rootDirectoryName;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
-  public final SystemVariableSource variableSource;
 
+  public final SystemVariableSource variableSource;
   public final VersionsController versionsController;
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
   private final Properties properties;
 
-  protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
+  protected FitNesseContext(FitNesseVersion version, WikiPageFactory wikiPageFactory, String rootPath,
                             String rootDirectoryName, String contextRoot, VersionsController versionsController,
                             RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
@@ -51,7 +51,7 @@ public class FitNesseContext {
                             Properties properties) {
     super();
     this.version = version;
-    this.root = root;
+    this.wikiPageFactory = wikiPageFactory;
     this.rootPath = rootPath;
     this.rootDirectoryName = rootDirectoryName;
     this.contextRoot = contextRoot;
@@ -70,7 +70,7 @@ public class FitNesseContext {
   }
 
   public WikiPage getRootPage() {
-    return root;
+    return wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, new SystemVariableSource(properties));
   }
 
   public File getTestHistoryDirectory() {
