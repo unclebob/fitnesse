@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import java.util.Map;
+import java.util.Properties;
 
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
@@ -19,7 +20,6 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private final String name;
   private final WikiPage parent;
   private final VariableSource variableSource;
-  private Map<String, String> urlParams;
   private ParsingPage parsingPage;
   private Symbol syntaxTree;
 
@@ -61,10 +61,6 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return variableSource;
   }
 
-  public void setUrlParams(Map<String,String> urlParams){
-      this.urlParams = urlParams;
-  }
-
   @Override
   public String getVariable(String name) {
     ParsingPage parsingPage = getParsingPage();
@@ -95,8 +91,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private void parse() {
     if (syntaxTree == null) {
       // This is the only page where we need a VariableSource
-      parsingPage = new ParsingPage(new WikiSourcePage(this), new UrlPathVariableSource(
-              getVariableSource(), urlParams));
+      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
       syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }
   }

@@ -3,6 +3,7 @@
 package fitnesse;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
@@ -16,6 +17,7 @@ import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
@@ -70,9 +72,19 @@ public class FitNesseContext {
   }
 
   public WikiPage getRootPage() {
-    return wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, new SystemVariableSource(properties));
+    return getRootPage(variableSource);
   }
 
+  public WikiPage getRootPage(Map<String, String> customProperties) {
+    Properties mergedProperties = new Properties(properties);
+    mergedProperties.putAll(customProperties);
+    return getRootPage(new SystemVariableSource(mergedProperties));
+  }
+
+  private WikiPage getRootPage(VariableSource variableSource) {
+    return wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, variableSource);
+
+  }
   public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
   }

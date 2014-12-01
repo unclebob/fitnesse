@@ -195,7 +195,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageHeaderRenderer {
 
     public String render() {
-      return WikiPageUtil.getHeaderPageHtml(page,request);
+      return WikiPageUtil.getHeaderPageHtml(page);
     }
 
   }
@@ -203,7 +203,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageFooterRenderer {
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page,request);
+        return WikiPageUtil.getFooterPageHtml(page);
     }
 
   }

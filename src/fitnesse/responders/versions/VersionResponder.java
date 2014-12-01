@@ -40,7 +40,7 @@ public class VersionResponder implements SecureResponder {
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
-    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage(request.getMap()).getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -119,10 +119,10 @@ public class VersionResponder implements SecureResponder {
     public String render() {
       if (WikiTestPage.isTestPage(page)) {
         WikiTestPage testPage = new WikiTestPage(page, new UrlPathVariableSource(
-                context.variableSource, request == null?null : request.getMap()));
-        return WikiTestPageUtil.makePageHtml(testPage,request);
+                context.variableSource, request.getMap()));
+        return WikiTestPageUtil.makePageHtml(testPage);
       } else {
-        return WikiPageUtil.makePageHtml(page,request);
+        return WikiPageUtil.makePageHtml(page);
       }
     }
   }

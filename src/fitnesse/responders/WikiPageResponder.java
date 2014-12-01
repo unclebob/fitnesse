@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.Map;
+import java.util.Properties;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -20,20 +23,20 @@ import fitnesse.wiki.*;
 public class WikiPageResponder implements SecureResponder {
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    WikiPage page = loadPage(context, request.getResource());
+    WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
       return notFoundResponse(context, request);
     else
       return makePageResponse(context, page, request);
   }
 
-  protected WikiPage loadPage(FitNesseContext context, String pageName) {
+  protected WikiPage loadPage(FitNesseContext context, String pageName, Map<String,String> inputs) {
     WikiPage page;
     if (RecentChanges.RECENT_CHANGES.equals(pageName)) {
       page = context.recentChanges.toWikiPage(context.getRootPage());
     } else {
       WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.getRootPage().getPageCrawler();
+      PageCrawler crawler = context.getRootPage(inputs).getPageCrawler();
       page = crawler.getPage(path);
     }
     return page;
@@ -46,7 +49,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private boolean dontCreateNonExistentPage(Request request) {
-    String dontCreate = (String) request.getInput("dontCreatePage");
+    String dontCreate = request.getInput("dontCreatePage");
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
@@ -85,14 +88,14 @@ public class WikiPageResponder implements SecureResponder {
       // Add test url inputs to context's variableSource.
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page,
               new UrlPathVariableSource(context.variableSource, request.getMap()));
-      html.put("content", new WikiTestPageRenderer(testPage,request));
+      html.put("content", new WikiTestPageRenderer(testPage));
     } else {
-      html.put("content", new WikiPageRenderer(page,request));
+      html.put("content", new WikiPageRenderer(page));
     }
 
     html.setMainTemplate("wikiPage");
     html.setFooterTemplate("wikiFooter");
-    html.put("footerContent", new WikiPageFooterRenderer(page,request));
+    html.put("footerContent", new WikiPageFooterRenderer(page));
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -105,57 +108,39 @@ public class WikiPageResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public class WikiPageRenderer {
+  public static class WikiPageRenderer {
     private WikiPage page;
-    private Request request;
 
-    WikiPageRenderer(WikiPage page){
-        this(page, null);
-    }
-
-    WikiPageRenderer(WikiPage page, Request request) {
+    public WikiPageRenderer(WikiPage page){
       this.page = page;
-      this.request = request;
     }
 
     public String render() {
-        return WikiPageUtil.makePageHtml(page, request);
+        return WikiPageUtil.makePageHtml(page);
     }
   }
 
-  public class WikiTestPageRenderer {
+  public static class WikiTestPageRenderer {
     private WikiTestPage page;
-    private Request request;
 
-    WikiTestPageRenderer(WikiTestPage page){
-        this(page, null);
-    }
-
-    WikiTestPageRenderer(WikiTestPage page, Request request) {
+    public WikiTestPageRenderer(WikiTestPage page){
       this.page = page;
-      this.request = request;
     }
 
     public String render() {
-      return WikiTestPageUtil.makePageHtml(page, request);
+      return WikiTestPageUtil.makePageHtml(page);
     }
   }
 
   public class WikiPageFooterRenderer {
     private WikiPage page;
-    private Request request;
 
-    WikiPageFooterRenderer(WikiPage page){
-        this(page, null);
-    }
-
-    WikiPageFooterRenderer(WikiPage page, Request request) {
+    public WikiPageFooterRenderer(WikiPage page){
       this.page = page;
-      this.request = request;
     }
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page,request);
+        return WikiPageUtil.getFooterPageHtml(page);
     }
   }
 

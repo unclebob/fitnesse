@@ -94,7 +94,7 @@ public class SaveResponderTest {
   public void testCanCreatePageForNonWikiWord() throws Exception {
     prepareRequest("child_page_two");
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     assertEquals(true, root.hasChildPage("child_page_two"));
     String newContent = root.getChildPage("child_page_two").getData().getContent();

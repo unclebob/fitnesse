@@ -32,7 +32,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     this.context = context;
     this.request = request;
     this.root = context.getRootPage();
-    String format = (String) request.getInput("format");
+    String format = request.getInput("format");
     response = new ChunkedResponse(format, this);
 
     if (dontChunk || request.hasInput(Request.NOCHUNK))

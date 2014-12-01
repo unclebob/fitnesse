@@ -226,7 +226,7 @@ public class Request {
     return inputs.get(key);
   }
 
-  public Map<String,String> getMap(){
+  public Map<String, String> getMap(){
     return inputs;
   }
 

@@ -15,7 +15,6 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
