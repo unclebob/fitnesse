@@ -70,7 +70,7 @@ public class EditResponderTest {
   @Test
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
     request.setResource("NonExistentPage");
-    request.addInput("nonExistent", true);
+    request.addInput("nonExistent", "true");
 
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
@@ -91,7 +91,7 @@ public class EditResponderTest {
   public void testRedirectToRefererEffect() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("ChildPage");
-    request.addInput("redirectToReferer", true);
+    request.addInput("redirectToReferer", "true");
     request.addInput("redirectAction", "boom");
     request.addHeader("Referer", "http://fitnesse.org:8080/SomePage");
 

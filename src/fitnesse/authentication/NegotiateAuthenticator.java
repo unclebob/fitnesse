@@ -139,7 +139,7 @@ public class NegotiateAuthenticator extends Authenticator {
   * XXX It would be better to allow associating generic authenticator data to each request.
   */
   protected void negotiateCredentials(Request request) {
-    String authHeader = (String) request.getHeader("Authorization");
+    String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
       request.setCredentials(null, null);
     else {

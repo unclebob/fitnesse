@@ -3,14 +3,9 @@
 package fitnesse.http;
 
 public class MockRequest extends Request {
-  private RuntimeException parseException = null;
 
   public MockRequest() {
     super.setResource("");
-  }
-
-  public void setRequestUri(String value) {
-    requestURI = value;
   }
 
   public void setRequestLine(String value) {
@@ -26,16 +21,16 @@ public class MockRequest extends Request {
     parseQueryString(value);
   }
 
-  public void addInput(String key, Object value) {
+  public void addInput(String key, String value) {
     inputs.put(key, value);
   }
 
-  public void addHeader(String key, Object value) {
+  public void addHeader(String key, String value) {
     headers.put(key.toLowerCase(), value);
   }
 
-  public void throwExceptionOnParse(RuntimeException e) {
-    parseException = e;
+  public void addUploadedFile(String name, UploadedFile uploadedFile) {
+    uploadedFiles.put(name, uploadedFile);
   }
 
   public void getCredentials() {
@@ -48,8 +43,5 @@ public class MockRequest extends Request {
   }
 
   public void parse() {
-    if (parseException != null) {
-      throw parseException;
-    }
   }
 }

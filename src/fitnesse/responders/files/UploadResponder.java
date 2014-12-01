@@ -33,7 +33,7 @@ public class UploadResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
 
     String resource = URLDecoder.decode(request.getResource(), "UTF-8");
-    final UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
+    final UploadedFile uploadedFile = request.getUploadedFile("file");
     final String user = request.getAuthorizationUsername();
 
     if (uploadedFile.isUsable()) {

@@ -352,8 +352,7 @@ public class RequestTest {
   }
 
   private void testUploadedFile(String name, String filename, String contentType, String content) throws Exception {
-    assertEquals(true, request.hasInput(name));
-    UploadedFile file = (UploadedFile) request.getInput(name);
+    UploadedFile file = request.getUploadedFile(name);
     assertNotNull(file);
     assertEquals(filename, file.getName());
     assertEquals(contentType, file.getType());
@@ -376,7 +375,7 @@ public class RequestTest {
 
     parseMessage();
 
-    UploadedFile file = (UploadedFile) request.getInput("n");
+    UploadedFile file = request.getUploadedFile("n");
     assertNotNull(file);
 
     byte[] contents = FileUtil.getFileBytes(file.getFile());

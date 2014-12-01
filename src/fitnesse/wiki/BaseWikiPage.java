@@ -19,7 +19,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private final String name;
   private final WikiPage parent;
   private final VariableSource variableSource;
-  private Map<String,Object> urlParams;
+  private Map<String, String> urlParams;
   private ParsingPage parsingPage;
   private Symbol syntaxTree;
 
@@ -61,7 +61,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     return variableSource;
   }
 
-  public void setUrlParams(Map<String,Object> urlParams){
+  public void setUrlParams(Map<String,String> urlParams){
       this.urlParams = urlParams;
   }
 

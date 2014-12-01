@@ -43,7 +43,7 @@ public class UploadResponderTest {
 
   @Test
   public void testMakeResponse() throws Exception {
-    request.addInput("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
+    request.addUploadedFile("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
     request.setResource("files/");
 
     Response response = responder.makeResponse(context, request);
@@ -58,7 +58,7 @@ public class UploadResponderTest {
 
   @Test
   public void shouldErrorForInvalidFileName() throws Exception {
-    request.addInput("file", new UploadedFile("\0.txt", "plain/text", testFile));
+    request.addUploadedFile("file", new UploadedFile("\0.txt", "plain/text", testFile));
     request.setResource("files/");
     Response response;
     try {
@@ -79,7 +79,7 @@ public class UploadResponderTest {
 
   @Test
   public void testMakeResponseSpaceInFileName() throws Exception {
-    request.addInput("file", new UploadedFile("source filename.txt", "plain/text", testFile));
+    request.addUploadedFile("file", new UploadedFile("source filename.txt", "plain/text", testFile));
     request.setResource("files/");
 
     Response response = responder.makeResponse(context, request);
@@ -95,7 +95,7 @@ public class UploadResponderTest {
   @Test
   public void testMakeResponseSpaceInDirectoryName() throws Exception {
     FileUtil.makeDir(context.getRootPagePath() + "/files/Folder With Space");
-    request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
+    request.addUploadedFile("file", new UploadedFile("filename.txt", "plain/text", testFile));
     request.setResource("files/Folder%20With%20Space/");
 
     Response response = responder.makeResponse(context, request);
@@ -132,7 +132,7 @@ public class UploadResponderTest {
   @Test
   public void canNotUploadFileOutsideFilesSectionWithInvalidResource() throws Exception {
     UploadResponder responder = new UploadResponder();
-    request.addInput("file", new UploadedFile("name", "text/plain", new File("file")));
+    request.addUploadedFile("file", new UploadedFile("name", "text/plain", new File("file")));
     request.setResource("files/../../");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertTrue(response.getContent(), response.getContent().contains("Invalid path: name"));

@@ -32,7 +32,7 @@ public class UrlPathVariableSourceTest {
     properties.setProperty("PATH", "zzzzz");
 
     SystemVariableSource source = new SystemVariableSource(properties);
-    Map<String,Object> urlVariables = new HashMap<String,Object>();
+    Map<String, String> urlVariables = new HashMap<String,String>();
     urlVariables.put("PATH", "yyyyy");
     UrlPathVariableSource urlSource = new UrlPathVariableSource(source, urlVariables);
     

@@ -59,7 +59,7 @@ public class StopTestResponderTest {
       }
 
       @Override
-      public Object getInput(String key) {
+      public String getInput(String key) {
         return bId;
       }
     };

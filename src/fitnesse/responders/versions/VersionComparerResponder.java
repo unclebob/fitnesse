@@ -66,7 +66,7 @@ public class VersionComparerResponder implements Responder {
   private boolean getVersionsFromRequest(Request request) {
     firstVersion = "";
     secondVersion = "";
-    Map<String, Object> inputs = request.getMap();
+    Map<String, String> inputs = request.getMap();
     Set<String> keys = inputs.keySet();
     return setFileNames(keys);
   }

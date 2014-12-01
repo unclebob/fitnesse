@@ -114,7 +114,7 @@ public class FileResponder implements Responder {
 
   private boolean isNotModified(Request request) {
     if (request.hasHeader("If-Modified-Since")) {
-      String queryDateString = (String) request.getHeader("If-Modified-Since");
+      String queryDateString = request.getHeader("If-Modified-Since");
       try {
         Date queryDate = Response.makeStandardHttpDateFormat().parse(queryDateString);
         if (!queryDate.before(lastModifiedDate))

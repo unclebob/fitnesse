@@ -287,7 +287,7 @@ public class WikiImportingResponderTest {
   public void testAutoUpdateSettingDisplayed() throws Exception {
 
     MockRequest request = makeRequest(baseUrl);
-    request.addInput("autoUpdate", true);
+    request.addInput("autoUpdate", "true");
     String content = simulateWebRequest(request);
 
     assertSubString("Automatic Update turned ON", content);
@@ -304,7 +304,6 @@ public class WikiImportingResponderTest {
 
   public void pageRenderingSetUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    PageCrawler crawler = root.getPageCrawler();
   }
 
   @Test

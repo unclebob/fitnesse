@@ -91,7 +91,7 @@ public class HistoryComparerResponder implements Responder {
   private boolean getFileNameFromRequest(Request request) {
     firstFileName = "";
     secondFileName = "";
-    Map<String, Object> inputs = request.getMap();
+    Map<String, String> inputs = request.getMap();
     Set<String> keys = inputs.keySet();
     return setFileNames(keys);
   }

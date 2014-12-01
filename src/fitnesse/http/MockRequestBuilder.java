@@ -16,7 +16,7 @@ public class MockRequestBuilder {
       request.setCredentials(getUsername(), getPassword());
     }
     if (!chunk) {
-      request.addInput(Request.NOCHUNK, true);
+      request.addInput(Request.NOCHUNK, "true");
     }
     return request;
   }
