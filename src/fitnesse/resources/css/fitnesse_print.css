@@ -1,0 +1,83 @@
+@media print {
+  
+  body {
+    color: #222;
+    font-family: Helmet, Freesans, sans-serif;
+    font-size: 14px;
+    line-height: 1.5em;
+  }
+  
+  article a,
+  article a:hover,
+  article a:visited,
+  article a:active,
+  header a,
+  header a:visited,
+  header a:active {
+    color: #2a5fc0;
+    text-decoration: none;
+  }
+  
+  header h1,
+  header ul {
+    display: none;
+  }
+  
+  #error-nav {
+    display: none;
+  }
+  
+  #test-summaries h2 {
+    display: block;
+    visibility: hidden;
+  }
+  
+  #test-summaries h2:before {
+    content: "Table of Contents";
+    visibility: visible;
+  }
+  
+  #test-summaries h3 {
+    display: none;
+  }
+  
+  #test-summaries .results {
+    display: none;
+  }
+  
+  #test-summaries li span:not(.results) {
+    display: none;
+  }
+  
+  #test-summary {
+    display: none;
+  }
+  
+  nav {
+    display: none;
+  }
+  
+  article h2 {
+    display: none;
+  }
+  
+  span.pass a {
+    background-color: transparent;
+  }
+  
+  span.fail * {
+    background-color: transparent;
+  }
+  
+  .alternating_block {
+    margin-bottom: 20px;
+  }
+  
+  .collapsible {
+    display: none;
+  }
+  
+  footer {
+    display: none;
+  }
+}
