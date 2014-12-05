@@ -4,8 +4,6 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
-import java.util.List;
-
 public interface PageCrawler {
   WikiPage getPage(WikiPagePath path);
 

@@ -4,8 +4,6 @@ package fitnesse.testrunner;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;

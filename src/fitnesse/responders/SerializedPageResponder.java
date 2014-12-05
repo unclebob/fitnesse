@@ -16,7 +16,6 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageXmlizer;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;

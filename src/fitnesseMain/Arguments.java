@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import java.util.Properties;
-
 import fitnesse.ContextConfigurator;
 import util.CommandLine;
 

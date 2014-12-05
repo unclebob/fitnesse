@@ -3,7 +3,6 @@
 package fitnesse.socketservice;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;

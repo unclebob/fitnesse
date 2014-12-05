@@ -3,9 +3,6 @@ package fitnesse.wiki.search;
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class WikiPageFinder implements TraversalListener<WikiPage>, PageFinder {
 
   protected TraversalListener<? super WikiPage> observer;

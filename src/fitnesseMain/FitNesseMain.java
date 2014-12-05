@@ -3,16 +3,13 @@ package fitnesseMain;
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
-import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
-import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 
 import java.io.*;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;

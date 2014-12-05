@@ -4,7 +4,6 @@ import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 
 /**

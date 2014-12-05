@@ -29,8 +29,6 @@ package fitnesse.wiki;
 import java.io.IOException;
 import java.util.Properties;
 
-import fitnesse.ContextConfigurator;
-import fitnesse.FitNesseContext;
 import fitnesse.PluginException;
 import org.junit.Test;
 

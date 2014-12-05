@@ -9,7 +9,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.components.Logger;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.RecentChanges;

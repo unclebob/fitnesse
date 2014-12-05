@@ -50,10 +50,6 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
-      return makePageResponse(context, page, null);
-  }
-
   private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page, Request request) {
       String html = makeHtml(context, page, request);
 

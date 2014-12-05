@@ -137,16 +137,6 @@ public class RssResponder implements SecureResponder {
       writer.close();
       return os.toByteArray();
     }
-
-    private Document buildRssHeader() {
-      Document rssDocument = XmlUtil.newDocument();
-      Element rssDocumentElement = rssDocument.createElement("rss");
-      rssDocument.appendChild(rssDocumentElement);
-      channelElement = rssDocument.createElement("channel");
-      rssDocumentElement.setAttribute("version", "2.0");
-      rssDocumentElement.appendChild(channelElement);
-      return rssDocument;
-    }
   }
 
   static class RecentChangesPage {

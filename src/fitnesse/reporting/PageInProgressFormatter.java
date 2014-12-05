@@ -7,7 +7,6 @@ import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.testsystems.TestSummary;
 import util.FileUtil;
 
