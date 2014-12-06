@@ -1044,6 +1044,32 @@ describe("parser and formatter", function () {
         generateFragment(dom, "| '''''' | '''bold''' |");
     });
 
+    it("table with newline in cell", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", "first line", element("tt", {'class': 'escape'}, br()), "next line"))
+                )
+            )
+        );
+
+        generateWikitext(dom, "| first line!-\n-!next line |");
+    });
+
+    it("table preserves newline", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", element("i", "first line", br(), "next line")))
+                )
+            )
+        );
+
+        generateWikitext(dom, "| ''first line!-\n-!next line'' |");
+    });
+
     it("table with links", function() {
         var dom = fragment(
             element("table",
@@ -1149,7 +1175,9 @@ describe("parser and formatter", function () {
             "   1 item 1.1",
             "",
             "!define def {dt dd}",
-            "| cell 1 | cell 2 |",
+            "| cell!-",
+            "-!1 | cell!-",
+            "-!2 |",
             "" ].join("\n"));
     });
 

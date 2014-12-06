@@ -2348,6 +2348,7 @@ Wysiwyg.prototype.wikiInlineTags = {
 Wysiwyg.prototype.domToWikitext = function (root, options) {
     options = options || {};
     var retainNewLines = !!options.retainNewLines;
+    var escapeNewLines = !!options.escapeNewLines;
 
     var self = this;
     var getTextContent = Wysiwyg.getTextContent;
@@ -2599,6 +2600,8 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "br":
                 if (inCodeBlock || retainNewLines) {
                     _texts.push("\n");
+                } else if (escapeNewLines && node.nextSibling) {
+                    _texts.push("!-\n-!");
                 } else if (!self.isBogusLineBreak(node)) {
                     _texts.push(" ");
                 }
@@ -2611,7 +2614,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "td":
                 skipNode = node;
                 _texts.push("|");
-                text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                text = self.domToWikitext(node, $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
                 if (text) {
                     _texts.push(" ", text, " ");
                     break;
@@ -2640,7 +2643,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             case "span":
                 if (node.className === "wikianchor" && xmlNamePattern.test(node.id || "")) {
                     skipNode = node;
-                    text = self.domToWikitext(node, self.options).replace(/^ +| +$|\]/g, "");
+                    text = self.domToWikitext(node, options).replace(/^ +| +$|\]/g, "");
                     _texts.push("[=#", node.id, text ? " " + text + "]" : "]");
                 } else {
                     token = tokenFromSpan(node);
