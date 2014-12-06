@@ -6,11 +6,16 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import fitnesse.util.XmlWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
 
@@ -114,12 +119,24 @@ public class XmlUtil {
   }
 
   public static String xmlAsString(Document doc) throws IOException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    XmlWriter writer = new XmlWriter(outputStream);
-    writer.write(doc);
-    writer.flush();
-    writer.close();
-    String value = outputStream.toString();
-    return value;
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    transformerFactory.setAttribute("indent-number", new Integer(2));
+
+    StringWriter sw = new StringWriter();
+    try {
+      Transformer transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+      DOMSource source = new DOMSource(doc);
+
+      StreamResult result =  new StreamResult(sw);
+      transformer.transform(source, result);
+    } catch (TransformerException e) {
+      throw new RuntimeException("Arjan should catch this", e);
+    }
+
+    return sw.toString();
   }
 }

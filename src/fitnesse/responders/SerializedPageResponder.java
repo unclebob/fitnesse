@@ -6,9 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 
-import fitnesse.util.XmlWriter;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -54,14 +54,10 @@ public class SerializedPageResponder implements SecureResponder {
 
   private SimpleResponse makeResponseWithxml(Document doc) throws IOException {
     //TODO MdM Shoudl probably use a StreamedResponse
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    XmlWriter xmlWriter = new XmlWriter(output);
-    xmlWriter.write(doc);
-    xmlWriter.flush();
-    xmlWriter.close();
+    String output = XmlUtil.xmlAsString(doc);
     SimpleResponse response = new SimpleResponse();
     response.setContentType("text/xml");
-    response.setContent(output.toByteArray());
+    response.setContent(output);
     return response;
   }
 
