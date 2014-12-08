@@ -1233,7 +1233,7 @@ Wysiwyg.prototype.formatCodeBlock = function () {
     }
 
     var fragment = this.getSelectionFragment();
-    var text = this.domToWikitext(fragment).replace(/\s+$/, "");
+    var text = this.domToWikitext(fragment, this.options).replace(/\s+$/, "");
 
     var d = this.contentDocument;
     var anonymous = d.createElement("div");
@@ -2795,7 +2795,12 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     }
 
     this.treeWalk(root, iterator);
-    return texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n");
+    var wikiText = texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n");
+    if (window.WikiFormatter && Wysiwyg.getAutoformat()) {
+        return new window.WikiFormatter().format(wikiText);
+    } else {
+        return wikiText;
+    }
 };
 
 Wysiwyg.prototype.updateElementClassName = function (element) {
