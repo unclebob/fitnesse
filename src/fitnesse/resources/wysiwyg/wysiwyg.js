@@ -1522,15 +1522,17 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -2. list
     wikiRules.push("^[ \\t\\r\\f\\v]*[*1-9-][ \\t\\r\\f\\v]");
-    // -3. definition and comment
+    // -3. images, e.g. !img -b 10 -w 200 -m 10 http://files/blah.png
+    wikiRules.push("!img\\s(?:-[bmw]\\s+\\d+\\s+)*\\S+\\s*");
+    // -4. definition and comment
     wikiRules.push("^(?:![a-z]|#)");
-    // -4. closing table row
+    // -5. closing table row
     wikiRules.push("\\|[ \\t\\r\\f\\v]*$");
-    // -5. cell
+    // -6. cell
     wikiRules.push("^-?!?\\||\\|");
-    // -6: open collapsible section
+    // -7: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
-    // -7: close collapsible section
+    // -8: close collapsible section
     wikiRules.push("^\\*+!$");
 
     wikiRules = wikiRules.concat(wikiInlineRules);
@@ -1842,6 +1844,32 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
     function handleVariable(value) {
         holder.appendChild(contentDocument.createTextNode(value));
+    }
+
+    function handleImage(value) {
+        openParagraph();
+        var img = contentDocument.createElement("img");
+        var args = value.replace(/\s+/, ' ').replace(/ +$/, '').split(' ');
+        var border, margin, width;
+        for (var i = 1; i < args.length; i++) {
+            switch (args[i]) {
+                case "-b":
+                    img.style.border = args[++i] + "px";
+                    break;
+                case "-m":
+                    img.style.margin = args[++i] + "px";
+                    break;
+                case "-w":
+                    img.style.width = args[++i] + "px";
+                    break;
+            }
+        }
+        var src = args[args.length - 1];
+        if (/^http:\/\/files\//.test(src)) {
+            src = src.replace(/^http:\//, ".");
+        }
+        img.setAttribute("src", src);
+        holder.appendChild(img)
     }
 
     function handleList(value) {
@@ -2184,18 +2212,22 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleList(matchText);
                 continue;
-            case -3:    // definition (leading "!") and comments (leading "#")
+            case -3: // images
+                if (inEscapedText() || inCodeBlock()) { break; }
+                handleImage(matchText);
+                continue;
+            case -4:    // definition (leading "!") and comments (leading "#")
                 if (inEscapedText() || inCodeBlock()) { break; }
                 handleDefinition(matchText);
                 continue;
-            case -4:    // closing table row
+            case -5:    // closing table row
                 if (inEscapedText() || inCodeBlock()) { break; }
                 if (inTable()) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
-            case -5:    // cell
+            case -6:    // cell
                 if (inDefinition()) { break; }
                 if (inEscapedText() || inCodeBlock()) { 
                     if (/^-!/.test(matchText)) {
@@ -2214,11 +2246,11 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 wikiRulesPattern.lastIndex = prevIndex;
                 handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
                 continue;
-            case -6: // collapsible section
+            case -7: // collapsible section
                 if (inEscapedText()) { break; }
                 handleCollapsibleBlock(matchText);
                 continue;
-            case -7: // close collapsible section
+            case -8: // close collapsible section
                 if (inEscapedText()) { break; }
                 closeCollapsibleBlock();
                 continue;
@@ -2342,7 +2374,8 @@ Wysiwyg.prototype.wikiInlineTags = {
     "sub": true,
     "sup": true,
     "br": true,
-    "span": true
+    "span": true,
+    "img": true
 };
 
 Wysiwyg.prototype.domToWikitext = function (root, options) {
@@ -2567,7 +2600,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "p":
-                if (!/[^ \t\r\n\f\v]/.test(getTextContent(node))) {
+                if (!/[^ \t\r\n\f\v]/.test(getTextContent(node)) && $(node).find('img').length === 0) {
                     skipNode = node;
                 }
                 break;
@@ -2663,6 +2696,19 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                         _texts.push(" ");
                     }
                 }
+                break;
+            case "img":
+                var border = node.style.border,
+                    margin = node.style.margin,
+                    width = node.style.width,
+                    src = node.getAttribute("src");
+                _texts.push("!img ");
+                if (border) _texts.push("-b " + border.replace(/px$/, "") + " ");
+                if (margin) _texts.push("-m " + margin.replace(/px$/, "") + " ");
+                if (width) _texts.push("-w " + width.replace(/px$/, "") + " ");
+                if (/^\.\//.test(src)) src = src.replace(/^\.\//, "http://");
+                _texts.push(src);
+                _texts.push(" ");
                 break;
             case "script":
             case "style":
