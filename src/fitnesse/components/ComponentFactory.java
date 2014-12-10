@@ -81,7 +81,7 @@ public class ComponentFactory {
   }
 
   public <T> T createComponent(ConfigurationParameter componentType) {
-    return createComponent(componentType, null);
+    return createComponent(componentType, (Class<T>) null);
   }
 
   public String getProperty(String key) {
