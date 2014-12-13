@@ -1,0 +1,1 @@
+Most of the images are from the Material Design icons by Google (https://github.com/google/material-design-icons/).
