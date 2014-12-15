@@ -143,7 +143,11 @@ public class ParserTestHelper {
   }
 
   public static String tableWithCell(String cellContent) {
-    return tableWithCellAndRow(cellContent, "<tr>");
+      return tableWithCell(cellContent, false);
+  }
+
+  public static String tableWithCell(String cellContent, boolean hasRowTitle) {
+    return tableWithCellAndRow(cellContent, "<tr" + (hasRowTitle?" class=\"rowTitle\"":"") + ">");
   }
 
   public static String tableWithCells(String[] cellContent) {

@@ -15,7 +15,7 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("|a|\n", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("|a| \n", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("|a|", tableWithCell("a"));
-        ParserTestHelper.assertTranslatesTo("||\n", tableWithCell(""));
+        ParserTestHelper.assertTranslatesTo("||\n", tableWithCell("", true));
         ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "));
         ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
@@ -79,7 +79,7 @@ public class TableTest {
     }
 
     @Test public void overridesNestedRule() {
-        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''"));
+        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''", true));
         ParserTestHelper.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
     }
 
@@ -96,6 +96,10 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", " a "), tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "!- a -!"), tableWithCell(" a "));
         ParserTestHelper.assertTranslatesTo("!|${x}|\n${x}", new TestVariableSource("x", "!- a -!"), tableWithCell(" a ") + " a ");
+    }
+
+    private String tableWithCell(String cellContent, boolean hasRowTitle) {
+        return ParserTestHelper.tableWithCell(cellContent, hasRowTitle);
     }
 
     private String tableWithCell(String cellContent) {
