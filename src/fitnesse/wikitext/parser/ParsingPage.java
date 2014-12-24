@@ -2,6 +2,8 @@ package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
 
+import fitnesse.wiki.UrlPathVariableSource;
+
 /**
  * The page represents wiki page in the course of being parsed.
  */
@@ -77,6 +79,11 @@ public class ParsingPage implements VariableSource {
   public Maybe<String> findVariable(String name) {
     Maybe<String> result = findSpecialVariableValue(name);
     if (!result.isNothing()) return result;
+
+    if(variableSource instanceof UrlPathVariableSource){
+      result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
+      if (!result.isNothing()) return result;
+    }
 
     result = findVariableInPages(name);
     if (!result.isNothing()) return result;
