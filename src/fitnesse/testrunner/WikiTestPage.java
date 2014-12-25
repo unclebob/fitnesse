@@ -47,9 +47,10 @@ public class WikiTestPage implements TestPage {
   @Override
   public String getHtml() {
     String content = getDecoratedContent();
-    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
+    WikiSourcePage page = new WikiSourcePage(sourcePage);
+    ParsingPage parsingPage = new ParsingPage(page, variableSource);
     Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
+    return new HtmlTranslator(page, parsingPage).translateTree(syntaxTree);
   }
 
   @Override

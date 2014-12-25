@@ -73,7 +73,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
 
   @Override
   public String getHtml() {
-    return new HtmlTranslator(getParsingPage().getPage(), getParsingPage()).translateTree(getSyntaxTree());
+    return new HtmlTranslator(new WikiSourcePage(this), getParsingPage()).translateTree(getSyntaxTree());
   }
 
   @Override
