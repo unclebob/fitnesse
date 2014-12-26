@@ -31,7 +31,7 @@ public class ParsingPage implements VariableSource {
   private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
     this.page = page;
     this.namedPage = namedPage;
-    this.variableSource = variableSource;
+    this.variableSource = variableSource != null ? variableSource : new NothingVariableSource();
     this.cache = cache;
   }
 
@@ -58,10 +58,15 @@ public class ParsingPage implements VariableSource {
     result = new UserVariableSource(variableSource).findVariable(name);
     if (!result.isNothing()) return result;
 
-    result = new ParentPageVariableSource(page, cache).findVariable(name);
+    result = cache.findVariable(page, name);
     if (!result.isNothing()) return result;
 
-    return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
+    for (SourcePage sourcePage : page.getAncestors()) {
+      result = new ParentPageVariableSource(sourcePage, variableSource, cache).findVariable(name);
+      if (!result.isNothing()) return result;
+    }
+
+    return variableSource.findVariable(name);
   }
 
 
@@ -143,13 +148,15 @@ public class ParsingPage implements VariableSource {
   }
 
 
-  public class ParentPageVariableSource implements VariableSource {
+  public static class ParentPageVariableSource implements VariableSource {
 
     private final SourcePage page;
+    private final VariableSource variableSource;
     private final Cache cache;
 
-    public ParentPageVariableSource(SourcePage page, Cache cache) {
+    public ParentPageVariableSource(SourcePage page, VariableSource variableSource, Cache cache) {
       this.page = page;
+      this.variableSource = variableSource;
       this.cache = cache;
     }
 
@@ -159,21 +166,13 @@ public class ParsingPage implements VariableSource {
 
     @Override
     public Maybe<String> findVariable(String name) {
-      Maybe<String> localVariable = cache.findVariable(page, name);
-      if (!localVariable.isNothing()) return localVariable;
-      return lookInParentPages(name);
-    }
-
-    private Maybe<String> lookInParentPages(String name) {
-      for (SourcePage sourcePage : page.getAncestors()) {
-        if (!cache.inCache(sourcePage)) {
-          // The cache is passed along... page is rendered as a normal page.
-          Parser.make(copyForPage(sourcePage), sourcePage.getContent()).parse();
-          cache.putVariable(sourcePage, "", Maybe.noString);
-        }
-        Maybe<String> result = cache.findVariable(sourcePage, name);
-        if (!result.isNothing()) return result;
+      if (!cache.inCache(page)) {
+        // The cache is passed along... page is rendered as a normal page.
+        Parser.make(copyForPage(page), page.getContent()).parse();
+        cache.putVariable(page, "", Maybe.noString);
       }
+      Maybe<String> result = cache.findVariable(page, name);
+      if (!result.isNothing()) return result;
       return Maybe.noString;
     }
 
@@ -191,21 +190,18 @@ public class ParsingPage implements VariableSource {
     public Maybe<String> findVariable(String name) {
       String value;
       if (name.equals("FITNESSE_PORT")) {
-        Maybe<String> port = findVariableInContext("FITNESSE_PORT");
+        Maybe<String> port = variableSource.findVariable("FITNESSE_PORT");
         value = port.isNothing() ? "-1" : port.getValue();
       } else if (name.equals("FITNESSE_ROOTPATH")) {
-        Maybe<String> path = findVariableInContext("FITNESSE_ROOTPATH");
+        Maybe<String> path = variableSource.findVariable("FITNESSE_ROOTPATH");
         value = path.isNothing() ? "" : path.getValue();
       } else if (name.equals("FITNESSE_VERSION")) {
-        Maybe<String> version = findVariableInContext("FITNESSE_VERSION");
+        Maybe<String> version = variableSource.findVariable("FITNESSE_VERSION");
         value = version.isNothing() ? "" : version.getValue();
       } else {
         return Maybe.noString;
       }
       return new Maybe<String>(value);
-    }
-    private Maybe<String> findVariableInContext(String name) {
-      return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
     }
   }
 
@@ -224,6 +220,14 @@ public class ParsingPage implements VariableSource {
         Maybe<String> result = variableSource.findVariable(name);
         if (!result.isNothing()) return result;
       }
+      return Maybe.noString;
+    }
+  }
+
+  public static class NothingVariableSource implements VariableSource {
+
+    @Override
+    public Maybe<String> findVariable(String name) {
       return Maybe.noString;
     }
   }
