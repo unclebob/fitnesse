@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fitnesse.wiki.UrlPathVariableSource;
 
@@ -13,25 +14,21 @@ public class ParsingPage implements VariableSource {
   private final SourcePage namedPage;
   private final VariableSource variableSource;
 
-  private final HashMap<String, HashMap<String, Maybe<String>>> cache;
+  private final Cache cache;
 
   public ParsingPage(SourcePage page) {
     this(page, null);
   }
 
   public ParsingPage(SourcePage page, VariableSource variableSource) {
-    this(page, page, variableSource, new HashMap<String, HashMap<String, Maybe<String>>>());
-  }
-
-  public ParsingPage copy() {
-    return new ParsingPage(page, page, variableSource, cache);
+    this(page, page, variableSource, new Cache());
   }
 
   public ParsingPage copyForNamedPage(SourcePage namedPage) {
     return new ParsingPage(this.page, namedPage, variableSource, cache);
   }
 
-  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, HashMap<String, HashMap<String, Maybe<String>>> cache) {
+  private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
     this.page = page;
     this.namedPage = namedPage;
     this.variableSource = variableSource;
@@ -46,15 +43,8 @@ public class ParsingPage implements VariableSource {
     return namedPage;
   }
 
-
-  private void putVariable(SourcePage page, String name, Maybe<String> value) {
-    String key = page.getFullName();
-    if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
-    cache.get(key).put(name, value);
-  }
-
   public void putVariable(String name, String value) {
-    putVariable(page, name, new Maybe<String>(value));
+    cache.putVariable(page, name, new Maybe<String>(value));
   }
 
   @Override
@@ -65,20 +55,65 @@ public class ParsingPage implements VariableSource {
     result = new ApplicationVariableSource(variableSource).findVariable(name);
     if (!result.isNothing()) return result;
 
-    if(variableSource instanceof UrlPathVariableSource){
-      result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
-      if (!result.isNothing()) return result;
-    }
+    result = new UserVariableSource(variableSource).findVariable(name);
+    if (!result.isNothing()) return result;
 
     result = new ParentPageVariableSource(page, cache).findVariable(name);
     if (!result.isNothing()) return result;
 
-    return findVariableInContext(name);
-  }
-
-  private Maybe<String> findVariableInContext(String name) {
     return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
   }
+
+
+  public static class UserVariableSource implements VariableSource {
+
+    private VariableSource variableSource;
+
+    public UserVariableSource(VariableSource variableSource) {
+      this.variableSource = variableSource;
+    }
+
+    @Override
+    public Maybe<String> findVariable(String name) {
+      if(variableSource instanceof UrlPathVariableSource){
+        Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
+        if (!result.isNothing()) return result;
+      }
+      return Maybe.noString;
+    }
+  }
+
+
+  public static class Cache {
+
+    private Map<String, Map<String, Maybe<String>>> cache;
+
+    public Cache() {
+      this(new HashMap<String, Map<String, Maybe<String>>>());
+    }
+
+    public Cache(Map<String, Map<String, Maybe<String>>> cache) {
+      this.cache = cache;
+    }
+
+    public void putVariable(SourcePage page, String name, Maybe<String> value) {
+      String key = page.getFullName();
+      if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
+      cache.get(key).put(name, value);
+    }
+
+    public Maybe<String> findVariable(SourcePage page, String name) {
+      String key = page.getFullName();
+      if (!cache.containsKey(key)) return Maybe.noString;
+      if (!cache.get(key).containsKey(name)) return Maybe.noString;
+      return cache.get(key).get(name);
+    }
+
+    private boolean inCache(SourcePage page) {
+      return cache.containsKey(page.getFullName());
+    }
+  }
+
 
   public static class PageVariableSource implements VariableSource {
 
@@ -107,12 +142,13 @@ public class ParsingPage implements VariableSource {
     }
   }
 
+
   public class ParentPageVariableSource implements VariableSource {
 
-    private final HashMap<String, HashMap<String, Maybe<String>>> cache;
     private final SourcePage page;
+    private final Cache cache;
 
-    public ParentPageVariableSource(SourcePage page, HashMap<String, HashMap<String, Maybe<String>>> cache) {
+    public ParentPageVariableSource(SourcePage page, Cache cache) {
       this.page = page;
       this.cache = cache;
     }
@@ -121,35 +157,21 @@ public class ParsingPage implements VariableSource {
       return new ParsingPage(page, page, variableSource, cache);
     }
 
-    private boolean inCache(SourcePage page) {
-      return cache.containsKey(page.getFullName());
-    }
-
-    private Maybe<String> findVariableInCache(SourcePage page, String name) {
-      String key = page.getFullName();
-      if (!cache.containsKey(key)) return Maybe.noString;
-      if (!cache.get(key).containsKey(name)) return Maybe.noString;
-      return cache.get(key).get(name);
-    }
-
-    private Maybe<String> findVariableInCache(String name) {
-      return findVariableInCache(page, name);
-    }
-
+    @Override
     public Maybe<String> findVariable(String name) {
-      Maybe<String> localVariable = findVariableInCache(name);
-      if (!localVariable.isNothing()) return new Maybe<String>(localVariable.getValue());
+      Maybe<String> localVariable = cache.findVariable(page, name);
+      if (!localVariable.isNothing()) return localVariable;
       return lookInParentPages(name);
     }
 
     private Maybe<String> lookInParentPages(String name) {
       for (SourcePage sourcePage : page.getAncestors()) {
-        if (!inCache(sourcePage)) {
+        if (!cache.inCache(sourcePage)) {
           // The cache is passed along... page is rendered as a normal page.
           Parser.make(copyForPage(sourcePage), sourcePage.getContent()).parse();
-          putVariable(sourcePage, "", Maybe.noString);
+          cache.putVariable(sourcePage, "", Maybe.noString);
         }
-        Maybe<String> result = findVariableInCache(sourcePage, name);
+        Maybe<String> result = cache.findVariable(sourcePage, name);
         if (!result.isNothing()) return result;
       }
       return Maybe.noString;
@@ -185,7 +207,24 @@ public class ParsingPage implements VariableSource {
     private Maybe<String> findVariableInContext(String name) {
       return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
     }
+  }
 
 
+  private static class CompositeVariableSource implements VariableSource {
+
+    private VariableSource[] variableSources;
+
+    public CompositeVariableSource(VariableSource... variableSources) {
+      this.variableSources = variableSources;
+    }
+
+    @Override
+    public Maybe<String> findVariable(String name) {
+      for (VariableSource variableSource : variableSources) {
+        Maybe<String> result = variableSource.findVariable(name);
+        if (!result.isNothing()) return result;
+      }
+      return Maybe.noString;
+    }
   }
 }
