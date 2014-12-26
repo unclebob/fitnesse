@@ -77,7 +77,10 @@ public class ParsingPage implements VariableSource {
 
   @Override
   public Maybe<String> findVariable(String name) {
-    Maybe<String> result = findSpecialVariableValue(name);
+    Maybe<String> result = new PageVariableSource(page, namedPage).findVariable(name);
+    if (!result.isNothing()) return result;
+
+    result = new ApplicationVariableSource(variableSource).findVariable(name);
     if (!result.isNothing()) return result;
 
     if(variableSource instanceof UrlPathVariableSource){
@@ -91,28 +94,31 @@ public class ParsingPage implements VariableSource {
     return findVariableInContext(name);
   }
 
-  private Maybe<String> findSpecialVariableValue(String key) {
-    String value;
-    if (key.equals("RUNNING_PAGE_NAME"))
-      value = page.getName();
-    else if (key.equals("RUNNING_PAGE_PATH"))
-      value = page.getPath();
-    else if (key.equals("PAGE_NAME"))
-      value = namedPage.getName();
-    else if (key.equals("PAGE_PATH"))
-      value = namedPage.getPath();
-    else if (key.equals("FITNESSE_PORT")) {
-      Maybe<String> port = findVariableInContext("FITNESSE_PORT");
-      value = port.isNothing() ? "-1" : port.getValue();
-    } else if (key.equals("FITNESSE_ROOTPATH")) {
-      Maybe<String> path = findVariableInContext("FITNESSE_ROOTPATH");
-      value = path.isNothing() ? "" : path.getValue();
-    } else if (key.equals("FITNESSE_VERSION")) {
-      Maybe<String> version = findVariableInContext("FITNESSE_VERSION");
-      value = version.isNothing() ? "" : version.getValue();
-    } else
-      return Maybe.noString;
-    return new Maybe<String>(value);
+  public static class PageVariableSource implements VariableSource {
+
+    private SourcePage page;
+    private SourcePage namedPage;
+
+    public PageVariableSource(SourcePage page, SourcePage namedPage) {
+      this.page = page;
+      this.namedPage = namedPage;
+    }
+
+    public Maybe<String> findVariable(String key) {
+      String value;
+      if (key.equals("RUNNING_PAGE_NAME"))
+        value = page.getName();
+      else if (key.equals("RUNNING_PAGE_PATH"))
+        value = page.getPath();
+      else if (key.equals("PAGE_NAME"))
+        value = namedPage.getName();
+      else if (key.equals("PAGE_PATH"))
+        value = namedPage.getPath();
+      else
+        return Maybe.noString;
+
+      return new Maybe<String>(value);
+    }
   }
 
   private Maybe<String> findVariableInPages(String name) {
@@ -136,5 +142,37 @@ public class ParsingPage implements VariableSource {
       if (!result.isNothing()) return result;
     }
     return Maybe.noString;
+  }
+
+  public static class ApplicationVariableSource implements VariableSource {
+
+    private VariableSource variableSource;
+
+    public ApplicationVariableSource(VariableSource variableSource) {
+      this.variableSource = variableSource;
+    }
+
+    @Override
+    public Maybe<String> findVariable(String name) {
+      String value;
+      if (name.equals("FITNESSE_PORT")) {
+        Maybe<String> port = findVariableInContext("FITNESSE_PORT");
+        value = port.isNothing() ? "-1" : port.getValue();
+      } else if (name.equals("FITNESSE_ROOTPATH")) {
+        Maybe<String> path = findVariableInContext("FITNESSE_ROOTPATH");
+        value = path.isNothing() ? "" : path.getValue();
+      } else if (name.equals("FITNESSE_VERSION")) {
+        Maybe<String> version = findVariableInContext("FITNESSE_VERSION");
+        value = version.isNothing() ? "" : version.getValue();
+      } else {
+        return Maybe.noString;
+      }
+      return new Maybe<String>(value);
+    }
+    private Maybe<String> findVariableInContext(String name) {
+      return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
+    }
+
+
   }
 }
