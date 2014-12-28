@@ -76,6 +76,12 @@ public class WikiSourcePage implements SourcePage {
         }
     }
 
+    @Override
+    public SourcePage getParent() {
+        return page.isRoot() ? null : new WikiSourcePage(page.getParent());
+    }
+
+
     public Collection<SourcePage> getAncestors() {
         ArrayList<SourcePage> ancestors = new ArrayList<SourcePage>();
         for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {

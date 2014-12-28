@@ -51,6 +51,8 @@ public class TestSourcePage implements SourcePage {
         return includedPage != null ? new Maybe<SourcePage>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
     }
 
+    @Override
+    public SourcePage getParent() { return null; }
     public Collection<SourcePage> getAncestors() { return new ArrayList<SourcePage>(); }
     public Collection<SourcePage> getChildren() { return null; }
 

@@ -13,8 +13,8 @@ public class ParsingPage implements VariableSource {
   private final SourcePage page;
   private final SourcePage namedPage;
   private final VariableSource variableSource;
-
   private final Cache cache;
+  private final ParentPageVariableSource parentPageVariableSource;
 
   public ParsingPage(SourcePage page) {
     this(page, null);
@@ -24,15 +24,18 @@ public class ParsingPage implements VariableSource {
     this(page, page, variableSource, new Cache());
   }
 
-  public ParsingPage copyForNamedPage(SourcePage namedPage) {
-    return new ParsingPage(this.page, namedPage, variableSource, cache);
-  }
-
   private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
     this.page = page;
     this.namedPage = namedPage;
     this.variableSource = variableSource != null ? variableSource : new NothingVariableSource();
     this.cache = cache;
+    
+    SourcePage parentPage = page.getParent();
+    this.parentPageVariableSource = parentPage != null ? new ParentPageVariableSource(parentPage, variableSource) : null;
+  }
+
+  public ParsingPage copyForNamedPage(SourcePage namedPage) {
+    return new ParsingPage(this.page, namedPage, variableSource, cache);
   }
 
   public SourcePage getPage() {
@@ -44,7 +47,7 @@ public class ParsingPage implements VariableSource {
   }
 
   public void putVariable(String name, String value) {
-    cache.putVariable(page, name, new Maybe<String>(value));
+    cache.putVariable(name, new Maybe<String>(value));
   }
 
   @Override
@@ -58,11 +61,11 @@ public class ParsingPage implements VariableSource {
     result = new UserVariableSource(variableSource).findVariable(name);
     if (!result.isNothing()) return result;
 
-    result = cache.findVariable(page, name);
+    result = cache.findVariable(name);
     if (!result.isNothing()) return result;
 
-    for (SourcePage sourcePage : page.getAncestors()) {
-      result = new ParentPageVariableSource(sourcePage, variableSource, cache).findVariable(name);
+    if (parentPageVariableSource != null) {
+      result = parentPageVariableSource.findVariable(name);
       if (!result.isNothing()) return result;
     }
 
@@ -72,7 +75,7 @@ public class ParsingPage implements VariableSource {
 
   public static class UserVariableSource implements VariableSource {
 
-    private VariableSource variableSource;
+    private final VariableSource variableSource;
 
     public UserVariableSource(VariableSource variableSource) {
       this.variableSource = variableSource;
@@ -89,41 +92,34 @@ public class ParsingPage implements VariableSource {
   }
 
 
-  public static class Cache {
+  public static class Cache implements VariableSource {
 
-    private Map<String, Map<String, Maybe<String>>> cache;
+    private final Map<String, Maybe<String>> cache;
 
     public Cache() {
-      this(new HashMap<String, Map<String, Maybe<String>>>());
+      this(new HashMap<String, Maybe<String>>());
     }
 
-    public Cache(Map<String, Map<String, Maybe<String>>> cache) {
+    public Cache(Map<String, Maybe<String>> cache) {
       this.cache = cache;
     }
 
-    public void putVariable(SourcePage page, String name, Maybe<String> value) {
-      String key = page.getFullName();
-      if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
-      cache.get(key).put(name, value);
+    public void putVariable(String name, Maybe<String> value) {
+      cache.put(name, value);
     }
 
-    public Maybe<String> findVariable(SourcePage page, String name) {
-      String key = page.getFullName();
-      if (!cache.containsKey(key)) return Maybe.noString;
-      if (!cache.get(key).containsKey(name)) return Maybe.noString;
-      return cache.get(key).get(name);
-    }
-
-    private boolean inCache(SourcePage page) {
-      return cache.containsKey(page.getFullName());
+    @Override
+    public Maybe<String> findVariable(String name) {
+      if (!cache.containsKey(name)) return Maybe.noString;
+      return cache.get(name);
     }
   }
 
 
   public static class PageVariableSource implements VariableSource {
 
-    private SourcePage page;
-    private SourcePage namedPage;
+    private final SourcePage page;
+    private final SourcePage namedPage;
 
     public PageVariableSource(SourcePage page, SourcePage namedPage) {
       this.page = page;
@@ -150,37 +146,28 @@ public class ParsingPage implements VariableSource {
 
   public static class ParentPageVariableSource implements VariableSource {
 
-    private final SourcePage page;
-    private final VariableSource variableSource;
-    private final Cache cache;
+    private final ParsingPage page;
+    private boolean parsed = false;
 
-    public ParentPageVariableSource(SourcePage page, VariableSource variableSource, Cache cache) {
-      this.page = page;
-      this.variableSource = variableSource;
-      this.cache = cache;
-    }
-
-    private ParsingPage copyForPage(SourcePage page) {
-      return new ParsingPage(page, page, variableSource, cache);
+    public ParentPageVariableSource(SourcePage page, VariableSource variableSource) {
+      this.page = new ParsingPage(page, variableSource);
     }
 
     @Override
     public Maybe<String> findVariable(String name) {
-      if (!cache.inCache(page)) {
+      if (!parsed) {
         // The cache is passed along... page is rendered as a normal page.
-        Parser.make(copyForPage(page), page.getContent()).parse();
-        cache.putVariable(page, "", Maybe.noString);
+        parsed = true;
+        Parser.make(page, page.page.getContent()).parse();
       }
-      Maybe<String> result = cache.findVariable(page, name);
-      if (!result.isNothing()) return result;
-      return Maybe.noString;
+      return page.findVariable(name);
     }
 
   }
 
   public static class ApplicationVariableSource implements VariableSource {
 
-    private VariableSource variableSource;
+    private final VariableSource variableSource;
 
     public ApplicationVariableSource(VariableSource variableSource) {
       this.variableSource = variableSource;
@@ -208,7 +195,7 @@ public class ParsingPage implements VariableSource {
 
   private static class CompositeVariableSource implements VariableSource {
 
-    private VariableSource[] variableSources;
+    private final VariableSource[] variableSources;
 
     public CompositeVariableSource(VariableSource... variableSources) {
       this.variableSources = variableSources;
