@@ -225,7 +225,7 @@ public class SymbolicLinkResponderTest {
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
     assertSubString("doesn't exist", content);
-    assertSubString("Error Occured", content);
+    assertSubString("Error Occurred", content);
   }
 
   @Test
@@ -239,7 +239,7 @@ public class SymbolicLinkResponderTest {
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
     assertSubString("doesn't exist", content);
-    assertSubString("Error Occured", content);
+    assertSubString("Error Occurred", content);
   }
 
   @Test
@@ -264,7 +264,7 @@ public class SymbolicLinkResponderTest {
     assertEquals(412, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
     assertSubString("already has a child named SymLink", content);
-    assertSubString("Error Occured", content);
+    assertSubString("Error Occurred", content);
   }
 
 
@@ -298,7 +298,7 @@ public class SymbolicLinkResponderTest {
     assertEquals(404, response.getStatus());
     String content = ((SimpleResponse) response).getContent();
     assertSubString("Cannot create link to the file system path 'file:/testDir/ExternalRoot'.", content);
-    assertSubString("Error Occured", content);
+    assertSubString("Error Occurred", content);
   }
 
   private void checkPageOneRedirectToProperties(Response response) {

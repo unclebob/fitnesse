@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 
 public class EqualPairTest {
     @Test public void scansTripleQuotes() {

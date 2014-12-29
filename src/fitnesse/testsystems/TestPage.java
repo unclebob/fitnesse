@@ -1,8 +1,5 @@
 package fitnesse.testsystems;
 
-
-import java.util.List;
-
 public interface TestPage {
 
   String getHtml();

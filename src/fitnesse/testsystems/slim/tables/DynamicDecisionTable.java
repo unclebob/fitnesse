@@ -7,11 +7,6 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.tables.SlimTable.Disgracer;
-import fitnesse.testsystems.slim.tables.SlimTable.ReturnedValueExpectation;
-import fitnesse.testsystems.slim.tables.SlimTable.SilentReturnExpectation;
-import fitnesse.testsystems.slim.tables.SlimTable.SymbolAssignmentExpectation;
-import fitnesse.testsystems.slim.tables.SlimTable.VoidReturnExpectation;
 
 public class DynamicDecisionTable extends SlimTable {
   private static final String TABLE_TYPE = "dynamicDecisionTable";

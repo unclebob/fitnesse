@@ -5,7 +5,6 @@ import java.util.logging.LogRecord;
 
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
 public class LogFormatterTest {

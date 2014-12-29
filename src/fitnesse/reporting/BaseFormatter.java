@@ -1,6 +1,5 @@
 package fitnesse.reporting;
 
-import fitnesse.FitNesseContext;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestResult;

@@ -7,7 +7,6 @@ import static fitnesse.fixtures.FitnesseFixtureContext.root;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.Map;
 import java.util.Properties;
 
 import util.FileUtil;

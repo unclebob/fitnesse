@@ -3,7 +3,6 @@
 package fitnesse.wiki.fs;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -33,6 +32,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest {
+  public static final int MAX_HISTORY_DEPTH = 3;
   public FileSystemPage page;
   private VersionInfo firstVersion;
   private VersionInfo secondVersion;
@@ -41,7 +41,7 @@ public class FileSystemPageZipFileVersioningTest {
 
   @Before
   public void setUp() throws Exception {
-    versionsController = new ZipFileVersionsController();
+    versionsController = new ZipFileVersionsController(MAX_HISTORY_DEPTH);
     FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController, new SystemVariableSource());
     root = fileSystemPageFactory.makePage(new File("TestDir/RooT"), "RooT", null);
     page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
@@ -102,7 +102,6 @@ public class FileSystemPageZipFileVersioningTest {
 
   @Test
   public void oldVersionsAreRemovedOnCommit() throws Exception {
-    versionsController.setHistoryDepth(3);
     PageData data = page.getData();
 
     Calendar modificationTime = Calendar.getInstance();
@@ -122,7 +121,7 @@ public class FileSystemPageZipFileVersioningTest {
     page.commit(data);
 
     Collection<VersionInfo> versions = page.getVersions();
-    assertEquals(3, versions.size());
+    assertEquals(MAX_HISTORY_DEPTH, versions.size());
 
     List<VersionInfo> versionsList = new LinkedList<VersionInfo>(versions);
     Collections.sort(versionsList);

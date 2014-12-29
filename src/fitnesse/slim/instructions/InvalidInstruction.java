@@ -3,8 +3,6 @@ package fitnesse.slim.instructions;
 import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimServer;
 
-import static java.lang.String.format;
-
 public class InvalidInstruction extends Instruction {
   private final String operation;
 

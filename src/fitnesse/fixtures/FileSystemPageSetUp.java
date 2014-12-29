@@ -5,7 +5,6 @@ package fitnesse.fixtures;
 import java.io.File;
 
 import fit.Fixture;
-import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 
 public class FileSystemPageSetUp extends Fixture {

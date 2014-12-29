@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -32,7 +31,7 @@ public class ErrorResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(statusCode);
     HtmlPage html = context.pageFactory.newPage();
-    html.addTitles("Error Occured");
+    html.addTitles("Error Occurred");
     html.setMainTemplate("error");
     html.put("exception", exception);
     if (exception != null)

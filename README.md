@@ -1,4 +1,4 @@
-# [FitNesse](http://fitnesse.org/)  [![Build Status](https://travis-ci.org/unclebob/fitnesse.png)](https://travis-ci.org/unclebob/fitnesse)
+# [FitNesse](http://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse)
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 

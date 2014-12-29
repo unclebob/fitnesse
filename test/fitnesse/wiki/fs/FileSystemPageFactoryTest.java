@@ -88,7 +88,6 @@ public class FileSystemPageFactoryTest {
 
     VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
     assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
-    assertEquals(14, ((NullVersionsController) defaultRevisionController).getHistoryDepth());
   }
 
   @Test
@@ -104,14 +103,11 @@ public class FileSystemPageFactoryTest {
   }
 
   public static class NullVersionsController implements VersionsController {
-    private int historyDepth;
 
-    public NullVersionsController() {
-    }
+    private final int historyDepth;
 
-    @Override
-    public void setHistoryDepth(int historyDepth) {
-      this.historyDepth = historyDepth;
+    public NullVersionsController(Properties properties) {
+      historyDepth = Integer.valueOf(properties.getProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS.getKey(), "0"));
     }
 
     public int getHistoryDepth() {

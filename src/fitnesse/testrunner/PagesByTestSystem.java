@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.VariableSource;

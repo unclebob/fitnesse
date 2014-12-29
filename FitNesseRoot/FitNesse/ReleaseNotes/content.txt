@@ -1,13 +1,23 @@
 !2 Next release
  * Big cleanup. Removed classes:
-   * !-util.StringUtil-!, use !-org.apache.commons.lang.StringUtils-! instead.
+   * !-util.StringUtil-!, use !-org.apache.commons.lang.StringUtils-! instead.
    * !-util.ListUtility-!, use java.util.Arrays instead.
-   * fitnesse.wikitext.Utils, use !-fitnesse.html.HtmlUtil-! instead.
+   * fitnesse.wikitext.Utils, use !-fitnesse.html.HtmlUtil-! instead.
    * !-fitnesse.FitFilter-!.
+ * Page names do no longer have to follow !-WikiWord-! syntax ([[513][https://github.com/unclebob/fitnesse/pull/513]])
+ * Implemented Slim !-StopSuiteException-! - stops whole suite from executing
+ * More flexible filter definitions for JUnit runner ([[555][https://github.com/unclebob/fitnesse/pull/555]])
+ * Can customize property characters used in !-!contents-! ([[541][https://github.com/unclebob/fitnesse/pull/541]])
+ * Deal more nicely with Slim scenario output parameters ([[536][https://github.com/unclebob/fitnesse/pull/536]])
+ * Allow for url parameters as variables in wiki pages ([[531][https://github.com/unclebob/fitnesse/pull/531]])
+ * Raise an error if a new page will override an existing page ([[459][https://github.com/unclebob/fitnesse/pull/459]])
  * Issues fixed:
-   * Fix !-SimpleFileVersionsController-! so it can be configured in ''plugins.properties''.
+   * Reverted old test behavior: only the current page will be tested (previously also test sub-pages were executed) ([[538][https://github.com/unclebob/fitnesse/pull/538]])
+   * Fix !-SimpleFileVersionsController-! so it can be configured in ''plugins.properties''.
+   * Remember Wrap and Auto-format options in Safari ([[521][https://github.com/unclebob/fitnesse/pull/521]])
+   * ?properties responder is now returning more properties when asked for json output ([[517][https://github.com/unclebob/fitnesse/pull/517]])
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=9&state=closed.
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=9&state=closed.
 
 !2 20140901
  * Code cleanup for FitNesse JUnit runner ([[487][https://github.com/unclebob/fitnesse/pull/487]]).
@@ -25,7 +35,7 @@ For a complete list of closed issues and merged pull requests see https://githu
    * Allow Scenarios with parameterised style but with empty parameter names ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
    * Fix handling and recording of errors in table definitions ([[510][https://github.com/unclebob/fitnesse/pull/510]]).
 
-For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=8&state=closed.
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=8&state=closed.
 
 !2 20140630
  * Add page wide Expand/Collapse All buttons (bootstrap theme).

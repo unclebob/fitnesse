@@ -9,6 +9,8 @@ public class Contents extends SymbolType implements Rule, Translation {
     public static final String MORE_SUFFIX_DEFAULT = " ...";
     public static final String MORE_SUFFIX_TOC = "MORE_SUFFIX_TOC";
     public static final String PROPERTY_TOC = "PROPERTY_TOC";
+    public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
+    public static final String PROPERTY_CHARACTERS_DEFAULT = "*+@>-";
     public static final String REGRACE_TOC = "REGRACE_TOC";
 
     public Contents() {
@@ -27,14 +29,14 @@ public class Contents extends SymbolType implements Rule, Translation {
         }
 
         current.evaluateVariables(
-                new String[] {HELP_TOC, REGRACE_TOC, PROPERTY_TOC, FILTER_TOC, MORE_SUFFIX_TOC},
+                new String[] {HELP_TOC, REGRACE_TOC, PROPERTY_TOC, FILTER_TOC, MORE_SUFFIX_TOC, PROPERTY_CHARACTERS},
                 parser.getVariableSource());
 
         return new Maybe<Symbol>(current);
     }
     public String toTarget(Translator translator, Symbol symbol) {
         ContentsItemBuilder itemBuilder
-                = new ContentsItemBuilder(symbol, 1);
+                = new ContentsItemBuilder(symbol, 1, translator.getPage());
         HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
         contentsDiv.add(HtmlUtil.makeBold("Contents:"));
         contentsDiv.add(itemBuilder.buildLevel(translator.getPage()));

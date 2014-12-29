@@ -5,7 +5,6 @@ package fitnesse.wiki;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class PathParserTest {
   public WikiPagePath path;

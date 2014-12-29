@@ -94,17 +94,13 @@ public class ContextConfigurator {
 
     updateFitNesseProperties(version);
 
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    WikiPageFactory wikiPageFactory = componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
 
     if (versionsController == null) {
-      versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-      Integer versionDays = getVersionDays();
-      if (versionDays != null) {
-        versionsController.setHistoryDepth(versionDays);
-      }
+      versionsController = componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     }
     if (recentChanges == null) {
-      recentChanges = (RecentChanges) componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+      recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
     }
 
     if (root == null) {
@@ -272,10 +268,5 @@ public class ContextConfigurator {
       default:
         return properties.getProperty(parameter.getKey());
     }
-  }
-
-  public Integer getVersionDays() {
-    String days = get(VERSIONS_CONTROLLER_DAYS);
-    return days == null ? null : Integer.parseInt(days);
   }
 }
