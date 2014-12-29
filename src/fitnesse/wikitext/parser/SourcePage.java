@@ -13,9 +13,6 @@ public interface SourcePage extends Comparable<SourcePage> {
     String findParentPath(String targetName);
     Maybe<SourcePage> findIncludedPage(String pageName);
 
-    SourcePage getParent();
-
-    Collection<SourcePage> getAncestors();
     Collection<SourcePage> getChildren();
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);

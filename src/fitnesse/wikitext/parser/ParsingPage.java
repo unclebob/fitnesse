@@ -146,32 +146,6 @@ public class ParsingPage implements VariableSource {
     }
   }
 
-  public static class ParentPageVariableSource implements VariableSource {
-
-    private final ParsingPage page;
-    private boolean parsed = false;
-
-    public ParentPageVariableSource(SourcePage page, VariableSource variableSource) {
-      SourcePage parentPage = page.getParent();
-      this.page = parentPage != null ? new ParsingPage(parentPage, variableSource, new Cache()) : null;
-    }
-
-    @Override
-    public Maybe<String> findVariable(String name) {
-      if (page == null) {
-        return Maybe.noString;
-      }
-      if (!parsed) {
-        // The cache is passed along... page is rendered as a normal page.
-        parsed = true;
-        Parser.make(page, page.page.getContent()).parse();
-      }
-//      System.out.println("Looked for " + name + " in " + page.page.getFullName() + " => " + page.findVariable(name));
-      return page.findVariable(name);
-    }
-
-  }
-
   public static class ApplicationVariableSource implements VariableSource {
 
     private final VariableSource variableSource;
