@@ -97,11 +97,12 @@ public class WikiTestPage implements TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    decorate(getSetUp(), decoratedContent);
+    includePage(getSetUp(), "-setup", decoratedContent);
 
     addPageContent(decoratedContent);
 
-    decorate(getTearDown(), decoratedContent);
+    includePage(getTearDown(), "-teardown", decoratedContent);
+
     return decoratedContent.toString();
   }
 
@@ -111,18 +112,6 @@ public class WikiTestPage implements TestPage {
             .append("\n")
             .append(content)
             .append(content.endsWith("\n") ? "" : "\n");
-  }
-
-  protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
-    if (wikiPage == getSetUp()) {
-      includePage(wikiPage, "-setup", decoratedContent);
-    } else if (wikiPage == getTearDown()) {
-      includePage(wikiPage, "-teardown", decoratedContent);
-    } else if (getScenarioLibraries().contains(wikiPage)) {
-      includeScenarioLibrary(wikiPage, decoratedContent);
-    } else {
-      decoratedContent.append(wikiPage.getData().getContent());
-    }
   }
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
