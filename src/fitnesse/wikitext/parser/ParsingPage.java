@@ -61,25 +61,6 @@ public class ParsingPage implements VariableSource {
     return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
   }
 
-
-  public static class UserVariableSource implements VariableSource {
-
-    private final VariableSource variableSource;
-
-    public UserVariableSource(VariableSource variableSource) {
-      this.variableSource = variableSource;
-    }
-
-    @Override
-    public Maybe<String> findVariable(String name) {
-      if(variableSource instanceof UrlPathVariableSource){
-        Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
-        if (!result.isNothing()) return result;
-      }
-      return Maybe.noString;
-    }
-  }
-
   public static class Cache implements VariableSource {
 
     private final Map<String, Maybe<String>> cache;

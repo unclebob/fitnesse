@@ -93,7 +93,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
       VariableSource compositeVariableSource = new ParsingPage.CompositeVariableSource(
               new ParsingPage.ApplicationVariableSource(variableSource),
               new ParsingPage.PageVariableSource(sourcePage),
-              new ParsingPage.UserVariableSource(variableSource),
+              new UserVariableSource(variableSource),
               cache,
               new ParentPageVariableSource(),
               variableSource);
@@ -143,6 +143,24 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
     catch (Exception e) {
       return 0;
+    }
+  }
+
+  public static class UserVariableSource implements VariableSource {
+
+    private final VariableSource variableSource;
+
+    public UserVariableSource(VariableSource variableSource) {
+      this.variableSource = variableSource;
+    }
+
+    @Override
+    public Maybe<String> findVariable(String name) {
+      if(variableSource instanceof UrlPathVariableSource){
+        Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
+        if (!result.isNothing()) return result;
+      }
+      return Maybe.noString;
     }
   }
 
