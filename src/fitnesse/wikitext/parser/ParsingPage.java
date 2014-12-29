@@ -16,22 +16,15 @@ public class ParsingPage implements VariableSource {
   private final Cache cache;
 
   public ParsingPage(SourcePage page) {
-    this(page, null);
+    this(page, new Cache());
   }
 
-  public ParsingPage(SourcePage page, VariableSource variableSource) {
-    this(page, variableSource, new Cache());
+  private ParsingPage(SourcePage page, Cache cache) {
+    this(page, page, cache, cache);
   }
 
   public ParsingPage(SourcePage page, VariableSource variableSource, Cache cache) {
-    this(page, page, new CompositeVariableSource(
-                      new ApplicationVariableSource(variableSource),
-                      new PageVariableSource(page),
-                      new UserVariableSource(variableSource),
-                      cache,
-                      new ParentPageVariableSource(page, variableSource),
-                      variableSource),
-            cache);
+    this(page, page, variableSource, cache);
   }
 
   private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
@@ -65,7 +58,7 @@ public class ParsingPage implements VariableSource {
 
   @Override
   public Maybe<String> findVariable(String name) {
-    return variableSource.findVariable(name);
+    return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
   }
 
 
@@ -87,7 +80,7 @@ public class ParsingPage implements VariableSource {
     }
   }
 
-  private static class Cache implements VariableSource {
+  public static class Cache implements VariableSource {
 
     private final Map<String, Maybe<String>> cache;
 
@@ -132,11 +125,11 @@ public class ParsingPage implements VariableSource {
     }
   }
 
-  public static class NamedPageVariableSource implements VariableSource {
+  private static class NamedPageVariableSource implements VariableSource {
 
     private final SourcePage namedPage;
 
-    public NamedPageVariableSource(SourcePage namedPage) {
+    private NamedPageVariableSource(SourcePage namedPage) {
       this.namedPage = namedPage;
     }
 
@@ -160,7 +153,7 @@ public class ParsingPage implements VariableSource {
 
     public ParentPageVariableSource(SourcePage page, VariableSource variableSource) {
       SourcePage parentPage = page.getParent();
-      this.page = parentPage != null ? new ParsingPage(parentPage, variableSource) : null;
+      this.page = parentPage != null ? new ParsingPage(parentPage, variableSource, new Cache()) : null;
     }
 
     @Override
@@ -210,7 +203,7 @@ public class ParsingPage implements VariableSource {
   }
 
 
-  private static class CompositeVariableSource implements VariableSource {
+  public static class CompositeVariableSource implements VariableSource {
 
     private final VariableSource[] variableSources;
 
@@ -226,14 +219,6 @@ public class ParsingPage implements VariableSource {
           if (!result.isNothing()) return result;
         }
       }
-      return Maybe.noString;
-    }
-  }
-
-  public static class NothingVariableSource implements VariableSource {
-
-    @Override
-    public Maybe<String> findVariable(String name) {
       return Maybe.noString;
     }
   }

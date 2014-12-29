@@ -81,8 +81,8 @@ public class VariableTest {
     @Test public void evaluatesVariablesFromParentInCurrentContext() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage parent = root.makePage("PageOne", "!define x {${y}}\n");
-        WikiPage child = root.makePage(parent, "PageTwo", "!define y {stuff}\n${x}");
-        assertTrue(ParserTestHelper.translateTo(child).endsWith("stuff"));
+        WikiPage child = root.makePage(parent, "PageTwo");
+        assertTrue(ParserTestHelper.translateTo(child, "!define y {stuff}\n${x}").endsWith("stuff"));
     }
 
     @Test public void evaluatesVariablesFromInclude() throws Exception {

@@ -6,6 +6,7 @@ import java.util.List;
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
@@ -47,8 +48,20 @@ public class WikiTestPage implements TestPage {
   @Override
   public String getHtml() {
     String content = getDecoratedContent();
+
+    // TODO: Why am I copying the wiki page parsing logic here??? Simply because I need different content? This logic is only applicable to pages that use the wiki syntax!
+
     WikiSourcePage page = new WikiSourcePage(sourcePage);
-    ParsingPage parsingPage = new ParsingPage(page, variableSource);
+    ParsingPage.Cache cache = new ParsingPage.Cache();
+    VariableSource compositeVariableSource = new ParsingPage.CompositeVariableSource(
+            new ParsingPage.ApplicationVariableSource(variableSource),
+            new ParsingPage.PageVariableSource(page),
+            new ParsingPage.UserVariableSource(variableSource),
+            cache,
+            ((BaseWikiPage)sourcePage).new ParentPageVariableSource(),
+            variableSource);
+    ParsingPage parsingPage = new ParsingPage(page, compositeVariableSource, cache);
+
     Symbol syntaxTree = Parser.make(parsingPage, content).parse();
     return new HtmlTranslator(page, parsingPage).translateTree(syntaxTree);
   }

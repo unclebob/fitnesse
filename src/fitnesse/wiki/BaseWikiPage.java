@@ -2,17 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.Map;
-import java.util.Properties;
-
 import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
-import fitnesse.wikitext.parser.Maybe;
 
 public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private static final long serialVersionUID = 1L;
@@ -91,7 +88,16 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private void parse() {
     if (syntaxTree == null) {
       // This is the only page where we need a VariableSource
-      parsingPage = new ParsingPage(new WikiSourcePage(this), getVariableSource());
+      WikiSourcePage sourcePage = new WikiSourcePage(this);
+      ParsingPage.Cache cache = new ParsingPage.Cache();
+      VariableSource compositeVariableSource = new ParsingPage.CompositeVariableSource(
+              new ParsingPage.ApplicationVariableSource(variableSource),
+              new ParsingPage.PageVariableSource(sourcePage),
+              new ParsingPage.UserVariableSource(variableSource),
+              cache,
+              new ParentPageVariableSource(),
+              variableSource);
+      parsingPage = new ParsingPage(sourcePage, compositeVariableSource, cache);
       syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }
   }
@@ -137,6 +143,22 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
     catch (Exception e) {
       return 0;
+    }
+  }
+
+  public class ParentPageVariableSource implements VariableSource {
+    @Override
+    public Maybe<String> findVariable(String name) {
+      if (BaseWikiPage.this.isRoot()) {
+        return Maybe.noString;
+      }
+      WikiPage parentPage = BaseWikiPage.this.getParent();
+      if (parentPage instanceof WikitextPage) {
+        return ((WikitextPage) parentPage).getParsingPage().findVariable(name);
+      } else {
+        String value = parentPage.getVariable(name);
+        return value != null ? new Maybe<String>(value) : Maybe.noString;
+      }
     }
   }
 }
