@@ -42,3 +42,4 @@ fitserverSentinel*
 tmp/*
 /classes
 /test-classes/
+/bin/
