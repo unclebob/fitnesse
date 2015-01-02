@@ -420,7 +420,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage(), context.variableSource);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
             context.testSystemFactory);

@@ -27,7 +27,7 @@ public class WikiPageResponder implements SecureResponder {
     if (page == null)
       return notFoundResponse(context, request);
     else
-      return makePageResponse(context, page, request);
+      return makePageResponse(context, page);
   }
 
   protected WikiPage loadPage(FitNesseContext context, String pageName, Map<String,String> inputs) {
@@ -53,8 +53,8 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page, Request request) {
-      String html = makeHtml(context, page, request);
+  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
+      String html = makeHtml(context, page);
 
       SimpleResponse response = new SimpleResponse();
       response.setMaxAge(0);
@@ -63,10 +63,6 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public String makeHtml(FitNesseContext context, WikiPage page) {
-      return makeHtml(context, page, null);
-  }
-
-  public String makeHtml(FitNesseContext context, WikiPage page, Request request) {
     PageData pageData = page.getData();
     HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
@@ -86,8 +82,7 @@ public class WikiPageResponder implements SecureResponder {
 
     if (WikiTestPage.isTestPage(page)) {
       // Add test url inputs to context's variableSource.
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page,
-              new UrlPathVariableSource(context.variableSource, request.getMap()));
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiTestPageRenderer(testPage));
     } else {
       html.put("content", new WikiPageRenderer(page));

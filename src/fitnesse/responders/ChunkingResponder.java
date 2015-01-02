@@ -31,7 +31,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     this.request = request;
-    this.root = context.getRootPage();
+    this.root = context.getRootPage(request.getMap());
     String format = request.getInput("format");
     response = new ChunkedResponse(format, this);
 

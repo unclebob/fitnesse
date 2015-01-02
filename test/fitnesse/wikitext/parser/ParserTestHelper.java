@@ -75,7 +75,7 @@ public class ParserTestHelper {
 
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new CompositeVariableSource(cache, ((BaseWikiPage) page).new ParentPageVariableSource());
+    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikiPage.ParentPageVariableSource(page));
     Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }

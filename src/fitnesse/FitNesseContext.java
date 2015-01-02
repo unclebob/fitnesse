@@ -14,6 +14,7 @@ import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
@@ -76,9 +77,7 @@ public class FitNesseContext {
   }
 
   public WikiPage getRootPage(Map<String, String> customProperties) {
-    Properties mergedProperties = new Properties(properties);
-    mergedProperties.putAll(customProperties);
-    return getRootPage(new SystemVariableSource(mergedProperties));
+    return getRootPage(new UrlPathVariableSource(variableSource, customProperties));
   }
 
   private WikiPage getRootPage(VariableSource variableSource) {

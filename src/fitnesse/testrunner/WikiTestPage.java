@@ -24,14 +24,12 @@ public class WikiTestPage implements TestPage {
   public static final String SET_UP = "SetUp";
 
   private final WikiPage sourcePage;
-  private final VariableSource variableSource;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
-  public WikiTestPage(WikiPage sourcePage, VariableSource variableSource) {
+  public WikiTestPage(WikiPage sourcePage) {
     this.sourcePage = sourcePage;
-    this.variableSource = variableSource;
   }
 
   public static boolean isTestPage(WikiPage page) {
@@ -47,18 +45,18 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getHtml() {
-    String content = getDecoratedContent();
 
-    // TODO: split getDecoratedContent() -> getSetUpContent, getTearDownContent, render those in a BaseWikiPage derivative
-    // TODO: Render main page, use ParsingPage of setUpContent as variableSource?
-    // TODO: Why am I copying the wiki page parsing logic here??? Simply because I need different content?
-    // TODO: This logic is only applicable to pages that use the wiki syntax!
+    // -AJM- Okay, this is not as clean as I'd like it to be, but for now it does the trick
+    if (sourcePage instanceof BaseWikiPage) {
+      String content = getDecoratedContent();
+      ParsingPage parsingPage = BaseWikiPage.makeParsingPage((BaseWikiPage) sourcePage);
 
-    ParsingPage parsingPage = BaseWikiPage.makeParsingPage(sourcePage, variableSource);
+      Symbol syntaxTree = Parser.make(parsingPage, content).parse();
 
-    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-
-    return new HtmlTranslator(new WikiSourcePage(sourcePage), parsingPage).translateTree(syntaxTree);
+      return new HtmlTranslator(new WikiSourcePage(sourcePage), parsingPage).translateTree(syntaxTree);
+    } else {
+      return sourcePage.getHtml();
+    }
   }
 
   @Override

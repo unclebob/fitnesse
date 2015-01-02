@@ -50,7 +50,7 @@ public class TestXmlFormatterTest {
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null), null);
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null));
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();

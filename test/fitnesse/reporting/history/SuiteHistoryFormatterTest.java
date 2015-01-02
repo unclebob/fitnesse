@@ -42,7 +42,7 @@ public class SuiteHistoryFormatterTest {
 
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
-    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"), null);
+    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<StringWriter>();
     formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override

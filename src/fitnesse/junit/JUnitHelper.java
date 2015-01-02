@@ -105,7 +105,7 @@ public class JUnitHelper {
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage(), context.variableSource);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debugMode);
