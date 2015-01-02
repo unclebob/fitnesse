@@ -3,8 +3,6 @@ package fitnesse.wikitext.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import fitnesse.wiki.UrlPathVariableSource;
-
 /**
  * The page represents wiki page in the course of being parsed.
  */
@@ -85,27 +83,6 @@ public class ParsingPage implements VariableSource {
   }
 
 
-  public static class PageVariableSource implements VariableSource {
-
-    private final SourcePage page;
-
-    public PageVariableSource(SourcePage page) {
-      this.page = page;
-    }
-
-    public Maybe<String> findVariable(String key) {
-      String value;
-      if (key.equals("RUNNING_PAGE_NAME"))
-        value = page.getName();
-      else if (key.equals("RUNNING_PAGE_PATH"))
-        value = page.getPath();
-      else
-        return Maybe.noString;
-
-      return new Maybe<String>(value);
-    }
-  }
-
   private static class NamedPageVariableSource implements VariableSource {
 
     private final SourcePage namedPage;
@@ -124,57 +101,6 @@ public class ParsingPage implements VariableSource {
         return Maybe.noString;
 
       return new Maybe<String>(value);
-    }
-  }
-
-  public static class ApplicationVariableSource implements VariableSource {
-
-    private final VariableSource variableSource;
-
-    public ApplicationVariableSource(VariableSource variableSource) {
-      this.variableSource = variableSource;
-    }
-
-    @Override
-    public Maybe<String> findVariable(String name) {
-      String value;
-      if (variableSource != null) {
-        if (name.equals("FITNESSE_PORT")) {
-          Maybe<String> port = variableSource.findVariable("FITNESSE_PORT");
-          value = port.isNothing() ? "-1" : port.getValue();
-        } else if (name.equals("FITNESSE_ROOTPATH")) {
-          Maybe<String> path = variableSource.findVariable("FITNESSE_ROOTPATH");
-          value = path.isNothing() ? "" : path.getValue();
-        } else if (name.equals("FITNESSE_VERSION")) {
-          Maybe<String> version = variableSource.findVariable("FITNESSE_VERSION");
-          value = version.isNothing() ? "" : version.getValue();
-        } else {
-          return Maybe.noString;
-        }
-        return new Maybe<String>(value);
-      }
-      return Maybe.noString;
-    }
-  }
-
-
-  public static class CompositeVariableSource implements VariableSource {
-
-    private final VariableSource[] variableSources;
-
-    public CompositeVariableSource(VariableSource... variableSources) {
-      this.variableSources = variableSources;
-    }
-
-    @Override
-    public Maybe<String> findVariable(String name) {
-      for (VariableSource variableSource : variableSources) {
-        if (variableSource != null) {
-          Maybe<String> result = variableSource.findVariable(name);
-          if (!result.isNothing()) return result;
-        }
-      }
-      return Maybe.noString;
     }
   }
 }

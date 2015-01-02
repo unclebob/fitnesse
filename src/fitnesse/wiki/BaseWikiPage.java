@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wikitext.parser.CompositeVariableSource;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Parser;
@@ -88,16 +89,7 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   private void parse() {
     if (syntaxTree == null) {
       // This is the only page where we need a VariableSource
-      WikiSourcePage sourcePage = new WikiSourcePage(this);
-      ParsingPage.Cache cache = new ParsingPage.Cache();
-      VariableSource compositeVariableSource = new ParsingPage.CompositeVariableSource(
-              new ParsingPage.ApplicationVariableSource(variableSource),
-              new ParsingPage.PageVariableSource(sourcePage),
-              new UserVariableSource(variableSource),
-              cache,
-              new ParentPageVariableSource(),
-              variableSource);
-      parsingPage = new ParsingPage(sourcePage, compositeVariableSource, cache);
+      parsingPage = makeParsingPage(this, variableSource);
       syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
     }
   }
@@ -146,6 +138,18 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
   }
 
+  public static ParsingPage makeParsingPage(WikiPage page, VariableSource variableSource) {
+    ParsingPage.Cache cache = new ParsingPage.Cache();
+    VariableSource compositeVariableSource = new CompositeVariableSource(
+            new ApplicationVariableSource(variableSource),
+            new PageVariableSource(page),
+            new UserVariableSource(variableSource),
+            cache,
+            new ParentPageVariableSource(page),
+            variableSource);
+    return new ParsingPage(new WikiSourcePage(page), compositeVariableSource, cache);
+  }
+
   public static class UserVariableSource implements VariableSource {
 
     private final VariableSource variableSource;
@@ -164,13 +168,20 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
     }
   }
 
-  public class ParentPageVariableSource implements VariableSource {
+  public static class ParentPageVariableSource implements VariableSource {
+    private final WikiPage page;
+
+    public ParentPageVariableSource(WikiPage page) {
+
+      this.page = page;
+    }
+
     @Override
     public Maybe<String> findVariable(String name) {
-      if (BaseWikiPage.this.isRoot()) {
+      if (page.isRoot()) {
         return Maybe.noString;
       }
-      WikiPage parentPage = BaseWikiPage.this.getParent();
+      WikiPage parentPage = page.getParent();
       if (parentPage instanceof WikitextPage) {
         return ((WikitextPage) parentPage).getParsingPage().findVariable(name);
       } else {

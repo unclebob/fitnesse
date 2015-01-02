@@ -49,21 +49,16 @@ public class WikiTestPage implements TestPage {
   public String getHtml() {
     String content = getDecoratedContent();
 
-    // TODO: Why am I copying the wiki page parsing logic here??? Simply because I need different content? This logic is only applicable to pages that use the wiki syntax!
+    // TODO: split getDecoratedContent() -> getSetUpContent, getTearDownContent, render those in a BaseWikiPage derivative
+    // TODO: Render main page, use ParsingPage of setUpContent as variableSource?
+    // TODO: Why am I copying the wiki page parsing logic here??? Simply because I need different content?
+    // TODO: This logic is only applicable to pages that use the wiki syntax!
 
-    WikiSourcePage page = new WikiSourcePage(sourcePage);
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource compositeVariableSource = new ParsingPage.CompositeVariableSource(
-            new ParsingPage.ApplicationVariableSource(variableSource),
-            new ParsingPage.PageVariableSource(page),
-            new ParsingPage.UserVariableSource(variableSource),
-            cache,
-            ((BaseWikiPage)sourcePage).new ParentPageVariableSource(),
-            variableSource);
-    ParsingPage parsingPage = new ParsingPage(page, compositeVariableSource, cache);
+    ParsingPage parsingPage = BaseWikiPage.makeParsingPage(sourcePage, variableSource);
 
     Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-    return new HtmlTranslator(page, parsingPage).translateTree(syntaxTree);
+
+    return new HtmlTranslator(new WikiSourcePage(sourcePage), parsingPage).translateTree(syntaxTree);
   }
 
   @Override

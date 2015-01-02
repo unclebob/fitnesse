@@ -75,7 +75,7 @@ public class ParserTestHelper {
 
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new ParsingPage.CompositeVariableSource(cache, ((BaseWikiPage) page).new ParentPageVariableSource());
+    VariableSource variableSource = new CompositeVariableSource(cache, ((BaseWikiPage) page).new ParentPageVariableSource());
     Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }
@@ -92,7 +92,7 @@ public class ParserTestHelper {
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    ParsingPage currentPage = new ParsingPage(new WikiSourcePage(page), new ParsingPage.CompositeVariableSource(cache, variableSource), cache);
+    ParsingPage currentPage = new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache);
     Symbol list = Parser.make(currentPage, input, SymbolProvider.wikiParsingProvider).parse();
     return new HtmlTranslator(new WikiSourcePage(page), currentPage).translateTree(list);
   }
@@ -103,7 +103,7 @@ public class ParserTestHelper {
 
   public static String translateTo(SourcePage page, VariableSource variableSource) throws Exception {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, new ParsingPage.CompositeVariableSource(cache, variableSource), cache), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
+    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
   }
 
   public static String translateTo(SourcePage page) throws Exception {
