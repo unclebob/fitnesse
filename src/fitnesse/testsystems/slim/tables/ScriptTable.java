@@ -153,7 +153,8 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
+    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
+            actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
