@@ -111,7 +111,9 @@ public class QueryTable extends SlimTable {
     }
 
     markMissingRows(unmatchedTableRows);
-    return markSurplusRows(queryResults, unmatchedResultRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return unmatchedTableRows.size() > 0 || unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
@@ -159,8 +161,7 @@ public class QueryTable extends SlimTable {
     getTestContext().increment(testResult.getExecutionResult());
   }
 
-  protected ExecutionResult markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
-    ExecutionResult result = ExecutionResult.PASS;
+  protected void markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
@@ -168,9 +169,7 @@ public class QueryTable extends SlimTable {
       table.updateContent(0, newTableRow, testResult);
       getTestContext().increment(ExecutionResult.FAIL);
       markMissingFields(surplusRow, newTableRow);
-      result = ExecutionResult.FAIL;
     }
-    return result;
   }
 
   private void markMissingFields(List<String> surplusRow, int newTableRow) {
