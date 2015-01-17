@@ -2,6 +2,7 @@
 .wysiwyg {
     border: 1px solid #d7d7d7;
     display: block;
+    outline: none;
 }
 textarea#pageContent {
     border: 1px solid #d7d7d7;
