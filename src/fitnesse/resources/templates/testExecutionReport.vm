@@ -18,6 +18,10 @@
     ($testResult.runTimeInMillis ms)
 </div>
 
-<div>$testResult.Content</div>
+<div class="alternating_block">$testResult.Content</div>
+
+<script type="text/javascript">
+ $(initErrorMetadata)
+</script>
 #end
 #end
