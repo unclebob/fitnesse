@@ -37,7 +37,7 @@ class DirectoryResponder implements SecureResponder {
     this.context = context;
 
     if (!resource.endsWith("/")) {
-      return setRedirectForDirectory();
+      return setRedirectForDirectory(request.getQueryString());
     } else if ("json".equals(request.getInput("format"))) {
       return makeDirectoryListingJsonPage();
     } else {
@@ -45,9 +45,9 @@ class DirectoryResponder implements SecureResponder {
     }
   }
 
-  private Response setRedirectForDirectory() {
+  private Response setRedirectForDirectory(String queryString) {
     SimpleResponse simpleResponse = new SimpleResponse();
-    simpleResponse.redirect(context.contextRoot, resource + "/");
+    simpleResponse.redirect(context.contextRoot, resource + "/" + (queryString != null ? "?" + queryString : ""));
     return simpleResponse;
   }
 

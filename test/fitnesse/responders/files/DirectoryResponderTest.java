@@ -70,4 +70,14 @@ public class DirectoryResponderTest {
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));
   }
+
+  @Test
+  public void testRedirectForDirectoryWithQueryParameters() throws Exception {
+    request.setResource("files/testDir");
+    request.setQueryString("responder=files&format=json");
+    Responder responder = new FileResponder();
+    Response response = responder.makeResponse(context, request);
+    assertEquals(303, response.getStatus());
+    assertEquals("/files/testDir/?responder=files&format=json", response.getHeader("Location"));
+  }
 }
