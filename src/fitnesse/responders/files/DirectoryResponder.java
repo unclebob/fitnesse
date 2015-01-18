@@ -19,7 +19,8 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
-public class DirectoryResponder implements SecureResponder {
+// This responder is called from FileResponder in case
+class DirectoryResponder implements SecureResponder {
   private String resource;
   private File requestedDirectory;
   private FitNesseContext context;

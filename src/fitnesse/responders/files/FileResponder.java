@@ -30,35 +30,25 @@ public class FileResponder implements Responder {
 
   private static final int RESOURCE_SIZE_LIMIT = 262144;
   private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
-  final public String resource;
-  final public File requestedFile;
-  public Date lastModifiedDate;
-
-  public static Responder makeResponder(Request request, String rootPath) throws IOException {
-    String resource = request.getResource();
-
-    try {
-      resource = URLDecoder.decode(resource, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      return new ErrorResponder(e);
-    }
-
-    File requestedFile = new File(rootPath, resource);
-
-    if (!isInFilesDirectory(new File(rootPath), requestedFile)) {
-      return new ErrorResponder("Invalid path: " + resource);
-    } else if (requestedFile.isDirectory())
-      return new DirectoryResponder(resource, requestedFile);
-    else
-      return new FileResponder(resource, requestedFile);
-  }
-
-  public FileResponder(String resource, File requestedFile) {
-    this.resource = resource;
-    this.requestedFile = requestedFile;
-  }
+  String resource;
+  File requestedFile;
+  Date lastModifiedDate;
 
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+    String rootPath = context.getRootPagePath();
+    try {
+      resource = URLDecoder.decode(request.getResource(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return new ErrorResponder(e).makeResponse(context, request);
+    }
+
+    requestedFile = new File(rootPath, resource);
+
+    if (!isInFilesDirectory(new File(rootPath), requestedFile)) {
+      return new ErrorResponder("Invalid path: " + resource).makeResponse(context, request);
+    } else if (requestedFile.isDirectory()) {
+      return new DirectoryResponder(resource, requestedFile).makeResponse(context, request);
+    }
     if (requestedFile.exists()) {
       return makeFileResponse(request);
     } else if (canLoadFromClasspath()) {
