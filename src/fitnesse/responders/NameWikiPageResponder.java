@@ -8,7 +8,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
 import java.util.Arrays;

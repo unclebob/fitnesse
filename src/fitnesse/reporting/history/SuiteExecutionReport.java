@@ -5,7 +5,7 @@ import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

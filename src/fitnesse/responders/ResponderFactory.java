@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.wiki.PathParser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.AddChildPageResponder;

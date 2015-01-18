@@ -3,7 +3,7 @@ package fitnesse.html.template;
 import java.io.InputStream;
 
 import org.apache.commons.collections.ExtendedProperties;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;

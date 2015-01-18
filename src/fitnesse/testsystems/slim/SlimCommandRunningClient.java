@@ -8,8 +8,8 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import util.StreamReader;
 
 import java.io.BufferedWriter;
