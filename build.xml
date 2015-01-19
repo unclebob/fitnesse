@@ -30,6 +30,7 @@
 		<include name="PageHeader/**"/>
 		<include name="PageFooter/**"/>
 		<include name="TemplateLibrary/**"/>
+		<include name=".gitignore"/>
 		<exclude name="**/*.zip"/>
 	</zipfileset>
 
@@ -52,6 +53,7 @@
 	  Bundling
 	  -->
 	<target name="jar" depends="compile, compile-bootstrap-less, createUpdateLists" description="generate the jar file">
+		<defaultexcludes remove="**/.gitignore"/>
 		<mkdir dir="${dist.dir}" />
 		<delete file="${dist.dir}/fitnesse.jar" />
 
@@ -117,11 +119,13 @@
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml" />
+			<arg value="-doNotReplace:FitNesseRoot/.gitignore" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 			<arg value="FitNesseRoot/TemplateLibrary" />
+			<arg value="FitNesseRoot/.gitignore" />
 		</java>
 	</target>
 
