@@ -177,7 +177,7 @@ public abstract class ClientBuilder<T> {
       result = javaHome + separator + "bin" + separator + "java"; 
       if (wrapInQuotes) {
     	  result = "\"" + result + "\"";
-      };
+      }
     }
     return result;
   }
