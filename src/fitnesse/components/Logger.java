@@ -102,6 +102,7 @@ public class Logger {
     return tmpFormat.format(calendar.getTime());
   }
 
+  @Override
   public String toString() {
     return getDirectory().getAbsolutePath();
   }

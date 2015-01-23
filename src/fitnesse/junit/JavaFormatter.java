@@ -82,7 +82,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       }
     }
   }
-  
+
   public static class FolderResultsRepository implements ResultsRepository {
     private String outputPath;
     private TestResultPage testResultPage;
@@ -92,14 +92,17 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       copyAssets();
     }
 
+    @Override
     public void close() throws IOException {
       testResultPage.finish();
     }
 
+    @Override
     public void open(String testName) throws IOException {
       testResultPage = new TestResultPage(outputPath, testName);
     }
 
+    @Override
     public void write(String content) throws IOException {
       testResultPage.appendResultChunk(content);
     }
@@ -136,6 +139,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
     resultsRepository.open(test.getFullPath());
   }
 
+  @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
@@ -196,6 +200,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       this.testSummary = testSummary;
     }
 
+    @Override
     public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
@@ -231,6 +236,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       return new TestResultsSummaryTableRow(testName, testSummary).toString();
     }
 
+    @Override
     public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append(SUMMARY_HEADER);

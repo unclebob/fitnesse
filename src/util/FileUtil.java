@@ -12,7 +12,7 @@ public class FileUtil {
   }
 
   public static File createFile(String path, InputStream content) {
-    String names[] = path.split("/");
+    String[] names = path.split("/");
     if (names.length == 1)
       return createFile(new File(path), content);
     else {

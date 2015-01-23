@@ -26,11 +26,13 @@ public class TestSummary {
   public TestSummary() {
   }
 
+  @Override
   public String toString() {
     return getRight() + " right, " + getWrong() + " wrong, " + getIgnores()
     + " ignored, " + getExceptions() + " exceptions";
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o == null || !(o instanceof TestSummary))
       return false;
@@ -40,6 +42,7 @@ public class TestSummary {
     && getExceptions() == other.getExceptions();
   }
 
+  @Override
   public int hashCode() {
     assert false : "hashCode not designed";
   return 42;

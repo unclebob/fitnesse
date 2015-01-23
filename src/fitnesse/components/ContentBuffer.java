@@ -92,6 +92,7 @@ public class ContentBuffer {
     tempFile.delete();
   }
 
+  @Override
   protected void finalize() throws Throwable {
     delete();
     super.finalize();
