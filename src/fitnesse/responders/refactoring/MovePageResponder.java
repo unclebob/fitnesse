@@ -18,7 +18,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) {
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
 
     newParentName = getNameofNewParent(request);
     if (newParentName == null)
@@ -59,7 +59,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
 
   @Override
   protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
-    return new MovedPageReferenceRenamer(context.root, oldRefactoredPage, newParentName);
+    return new MovedPageReferenceRenamer(context.getRootPage(), oldRefactoredPage, newParentName);
   }
 
   @Override

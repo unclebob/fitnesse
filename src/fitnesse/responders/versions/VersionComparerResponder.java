@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import fitnesse.FitNesseContext;
@@ -41,7 +42,7 @@ public class VersionComparerResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
     String resource = request.getResource();
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -66,7 +67,7 @@ public class VersionComparerResponder implements Responder {
   private boolean getVersionsFromRequest(Request request) {
     firstVersion = "";
     secondVersion = "";
-    Map<String, Object> inputs = request.getMap();
+    Map<String, String> inputs = request.getMap();
     Set<String> keys = inputs.keySet();
     return setFileNames(keys);
   }
@@ -117,9 +118,9 @@ public class VersionComparerResponder implements Responder {
   private PageTitle makePageTitle(String resource) {
 
     String tags="";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

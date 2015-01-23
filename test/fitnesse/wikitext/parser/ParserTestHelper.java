@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -73,7 +74,9 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(WikiPage page, String input) {
-    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
+    ParsingPage.Cache cache = new ParsingPage.Cache();
+    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikiPage.ParentPageVariableSource(page));
+    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }
 
@@ -88,8 +91,10 @@ public class ParserTestHelper {
   }
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource), input, SymbolProvider.wikiParsingProvider).parse();
-    return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+    ParsingPage.Cache cache = new ParsingPage.Cache();
+    ParsingPage currentPage = new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache);
+    Symbol list = Parser.make(currentPage, input, SymbolProvider.wikiParsingProvider).parse();
+    return new HtmlTranslator(new WikiSourcePage(page), currentPage).translateTree(list);
   }
 
   public static String translateTo(WikiPage page) {
@@ -97,7 +102,8 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(SourcePage page, VariableSource variableSource) {
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, variableSource), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
+    ParsingPage.Cache cache = new ParsingPage.Cache();
+    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
   }
 
   public static String translateTo(SourcePage page) {

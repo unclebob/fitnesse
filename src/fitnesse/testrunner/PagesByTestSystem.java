@@ -18,11 +18,9 @@ import fitnesse.wikitext.parser.VariableSource;
 public class PagesByTestSystem {
   private final WikiPage root;
   private final Map<WikiPageIdentity, List<TestPage>> pagesByTestSystem;
-  private final VariableSource variableSource;
 
-  public PagesByTestSystem(List<WikiPage> pages, WikiPage root, VariableSource variableSource) {
+  public PagesByTestSystem(List<WikiPage> pages, WikiPage root) {
     this.root = root;
-    this.variableSource = variableSource;
     this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown(pages));
   }
 
@@ -64,7 +62,8 @@ public class PagesByTestSystem {
   private List<TestPage> asTestPages(List<WikiPage> wikiPages) {
     List<TestPage> testPages = new ArrayList<TestPage>(wikiPages.size());
     for (WikiPage page : wikiPages) {
-      testPages.add(new WikiTestPage(page, variableSource));
+      // TODO: find the appropriate type of test page for this test system
+      testPages.add(new WikiTestPage(page));
     }
     return testPages;
   }

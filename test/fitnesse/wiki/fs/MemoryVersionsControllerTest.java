@@ -25,20 +25,24 @@ public class MemoryVersionsControllerTest {
   public void setUp() {
     FileSystem fileSystem = new MemoryFileSystem();
     MemoryVersionsController memoryVersionsController = new MemoryVersionsController(fileSystem);
-    wikiPageFactory = new FileSystemPageFactory(fileSystem, memoryVersionsController, new SystemVariableSource());
+    wikiPageFactory = new FileSystemPageFactory(fileSystem, memoryVersionsController);
   }
 
   @Test
   public void shouldStoreFirstVersionAsZero() {
-    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
+    WikiPage root = makeRoot();
     root.commit(root.getData());
     assertEquals(1, root.getVersions().size());
     assertEquals("0", root.getVersions().iterator().next().getName());
   }
 
+  private FileSystemPage makeRoot() {
+    return wikiPageFactory.makePage(new File(""), "RooT", null, new SystemVariableSource());
+  }
+
   @Test
   public void shouldStoreSecondVersionAsOne() {
-    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
+    WikiPage root = makeRoot();
     root.commit(root.getData());
     root.commit(root.getData());
 
@@ -50,7 +54,7 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldStoreFirstVersionAsZeroForSecondPage() {
-    WikiPage root = wikiPageFactory.makePage(new File(""), "RooT", null);
+    WikiPage root = makeRoot();
     root.commit(root.getData());
     WikiPage page = root.addChildPage("PageOne");
     page.commit(root.getData());
@@ -64,7 +68,7 @@ public class MemoryVersionsControllerTest {
 
   @Test
   public void shouldLoadMostRecentVersion() {
-    WikiPage root = wikiPageFactory.makePage(new File("."), "RooT", null);
+    WikiPage root = makeRoot();
     VersionInfo version = root.commit(root.getData());
 
     WikiPage versionData = root.getVersion(version.getName());

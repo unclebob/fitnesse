@@ -31,7 +31,7 @@ public class PageBuilder extends Fixture {
   public void page(String name) throws Exception {
     String content = stringWriter.toString();
     WikiPagePath path = PathParser.parse(name);
-    WikiPage page = WikiPageUtil.addPage(FitnesseFixtureContext.root, path, content);
+    WikiPage page = WikiPageUtil.addPage(FitnesseFixtureContext.context.getRootPage(), path, content);
     if (pageAttributes != null) {
       PageData data = page.getData();
       setAttributes(data);

@@ -37,7 +37,7 @@ public class JavaFormatterTest {
     WikiPageDummy root = new WikiPageDummy("root", null, null);
     WikiPageDummy parent=new WikiPageDummy("ParentTest",null, root);
     WikiPageDummy wp=new WikiPageDummy("ChildTest",null, parent);
-    return new WikiTestPage(wp, variableSource);
+    return new WikiTestPage(wp);
   }
 
   @Test
@@ -60,7 +60,7 @@ public class JavaFormatterTest {
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
     WikiPageDummy root = new WikiPageDummy("root", null, null);
     WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null, root);
-    jf.testComplete(new WikiTestPage(secondPage, variableSource), new TestSummary(11,12,13,14));
+    jf.testComplete(new WikiTestPage(secondPage), new TestSummary(11,12,13,14));
     jf.writeSummary("SummaryPageName");
     String expectedOutput = new StringBuffer()
             .append(JavaFormatter.TestResultsSummaryTable.SUMMARY_HEADER)
@@ -83,7 +83,7 @@ public class JavaFormatterTest {
     ts.add(ExecutionResult.FAIL);
     ts.add(ExecutionResult.IGNORE);
     ts.add(ExecutionResult.ERROR);
-    jf.testComplete(new WikiTestPage(secondPage, variableSource), ts);
+    jf.testComplete(new WikiTestPage(secondPage), ts);
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }
 

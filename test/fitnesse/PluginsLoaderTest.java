@@ -42,6 +42,7 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolStream;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
+import fitnesse.wikitext.parser.VariableSource;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
@@ -318,7 +319,7 @@ public class PluginsLoaderTest {
   public static class FooWikiPageFactory implements WikiPageFactory {
 
     @Override
-    public WikiPage makePage(File path, String pageName, WikiPage parent) {
+    public WikiPage makePage(File path, String pageName, WikiPage parent, VariableSource variableSource) {
       return null;
     }
 

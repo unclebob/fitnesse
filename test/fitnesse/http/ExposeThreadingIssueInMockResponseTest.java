@@ -25,11 +25,11 @@ public class ExposeThreadingIssueInMockResponseTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
     responder = new SuiteResponder();
     int port = 9123;
-    context = FitNesseUtil.makeTestContext(root, port);
+    context = FitNesseUtil.makeTestContext(port);
+    root = context.getRootPage();
   }
 
   public static void assertHasRegexp(String regexp, String output) {

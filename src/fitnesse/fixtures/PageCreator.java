@@ -17,7 +17,7 @@ public class PageCreator extends ColumnFixture {
       pageContents = pageContents.replaceAll("<br>", "\n");
       pageContents = pageContents.replaceAll("<br/>", "\n");
     }
-    WikiPage root = FitnesseFixtureContext.root;
+    WikiPage root = FitnesseFixtureContext.context.getRootPage();
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
     if (!"".equals(pageAttributes)) {

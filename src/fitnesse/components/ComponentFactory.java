@@ -87,4 +87,8 @@ public class ComponentFactory {
   public String getProperty(String key) {
     return properties.getProperty(key);
   }
+
+  public String getProperty(String key, String defaultValue) {
+    return properties.getProperty(key, defaultValue);
+  }
 }

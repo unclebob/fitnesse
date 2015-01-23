@@ -22,8 +22,8 @@ public class FileSystemPageFactoryTest {
     @Before
     public void SetUp() throws Exception {
         fileSystem = new MemoryFileSystem();
-        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController(), new SystemVariableSource());
-        rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null) ;
+        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController());
+        rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null, new SystemVariableSource()) ;
     }
 
     @Test

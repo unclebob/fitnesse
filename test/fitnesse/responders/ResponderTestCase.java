@@ -18,10 +18,10 @@ public abstract class ResponderTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
     responder = responderInstance();
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
   }
 
   // Return an instance of the Responder being tested.

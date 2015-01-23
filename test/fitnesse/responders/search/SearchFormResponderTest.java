@@ -21,8 +21,7 @@ public class SearchFormResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     SearchFormResponder responder = new SearchFormResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
     content = response.getContent();

@@ -42,8 +42,7 @@ public class TestHistoryResponderTest {
 
   @Before
   public void setup() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     resultsDirectory = context.getTestHistoryDirectory();
     removeResultsDirectory();
     resultsDirectory.mkdirs();

@@ -10,8 +10,8 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
   private WikiPage suiteSetUp;
   private WikiPage suiteTearDown;
 
-  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage, VariableSource variableSource) {
-    super(sourcePage, variableSource);
+  public TestPageWithSuiteSetUpAndTearDown(WikiPage sourcePage) {
+    super(sourcePage);
   }
 
   @Override

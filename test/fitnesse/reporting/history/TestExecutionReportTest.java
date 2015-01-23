@@ -29,7 +29,7 @@ public class TestExecutionReportTest {
   public void setup() throws Exception {
     expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
+    context = FitNesseUtil.makeTestContext();
   }
 
   private String reportToXml(TestExecutionReport report) throws Exception {

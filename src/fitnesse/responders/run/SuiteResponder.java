@@ -194,7 +194,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageHeaderRenderer {
 
     public String render() {
-      return WikiPageUtil.getHeaderPageHtml(page,request);
+      return WikiPageUtil.getHeaderPageHtml(page);
     }
 
   }
@@ -202,7 +202,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageFooterRenderer {
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page,request);
+        return WikiPageUtil.getFooterPageHtml(page);
     }
 
   }
@@ -294,8 +294,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root,
-            new UrlPathVariableSource(context.variableSource, request.getMap()));
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, root);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);

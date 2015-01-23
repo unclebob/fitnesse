@@ -14,7 +14,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,10 +31,10 @@ public class FitNesseServerTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RootPage");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
-    context = FitNesseUtil.makeTestContext(root);
   }
 
   @Test

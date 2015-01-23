@@ -46,7 +46,7 @@ public class SymbolicLinkResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
     this.context = context;
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     page = crawler.getPage(PathParser.parse(resource));
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);

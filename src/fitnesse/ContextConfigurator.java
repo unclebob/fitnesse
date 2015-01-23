@@ -15,6 +15,7 @@ import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
@@ -41,7 +42,7 @@ public class ContextConfigurator {
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   /** Some properties are stored in typed fields: */
-  private WikiPage root;
+  private WikiPageFactory wikiPageFactory;
   private Integer port;
   private String rootPath = DEFAULT_PATH;
   private String rootDirectoryName = DEFAULT_ROOT;
@@ -94,17 +95,15 @@ public class ContextConfigurator {
 
     updateFitNesseProperties(version);
 
-    WikiPageFactory wikiPageFactory = componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    if (wikiPageFactory == null) {
+      wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    }
 
     if (versionsController == null) {
       versionsController = componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     }
     if (recentChanges == null) {
       recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
-    }
-
-    if (root == null) {
-      root = wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null);
     }
 
     PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
@@ -122,7 +121,7 @@ public class ContextConfigurator {
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
 
     FitNesseContext context = new FitNesseContext(version,
-          root,
+          wikiPageFactory,
           rootPath,
           rootDirectoryName,
           contextRoot,
@@ -185,11 +184,6 @@ public class ContextConfigurator {
     }
   }
 
-  public ContextConfigurator withRoot(WikiPage root) {
-    this.root = root;
-    return this;
-  }
-
   public ContextConfigurator withRootPath(String rootPath) {
     this.rootPath = rootPath;
     return this;
@@ -232,6 +226,11 @@ public class ContextConfigurator {
 
   public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
     this.rootDirectoryName = rootDirectoryName;
+    return this;
+  }
+
+  public ContextConfigurator withWikiPageFactory(WikiPageFactory wikiPageFactory) {
+    this.wikiPageFactory = wikiPageFactory;
     return this;
   }
 

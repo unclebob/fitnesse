@@ -48,12 +48,12 @@ public class EditResponder implements SecureResponder {
   }
 
   protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) {
-    initializeResponder(context.root, request);
+    initializeResponder(context.getRootPage(), request);
 
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = root.getPageCrawler();
 
     page = crawler.getPage(path, new MockingPageCrawler());
     pageData = page.getData();
@@ -95,7 +95,7 @@ public class EditResponder implements SecureResponder {
     html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
 
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
-      String redirectUrl = request.getHeader("Referer").toString();
+      String redirectUrl = request.getHeader("Referer");
       int questionMarkIndex = redirectUrl.indexOf("?");
       if (questionMarkIndex > 0)
         redirectUrl = redirectUrl.substring(0, questionMarkIndex);

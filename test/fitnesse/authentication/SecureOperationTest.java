@@ -23,8 +23,8 @@ public class SecureOperationTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     sro = new SecureReadOperation();
     request = new MockRequest();
     parentPagePath = PathParser.parse("ParentPage");

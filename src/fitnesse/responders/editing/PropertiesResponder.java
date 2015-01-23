@@ -39,7 +39,7 @@ public class PropertiesResponder implements SecureResponder {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
@@ -148,7 +148,6 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makePageTypeRadiosHtml(PageData pageData) {
     html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
-    String pt = getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES);
     html.put("selectedPageType", getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES));
   }
 

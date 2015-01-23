@@ -46,10 +46,9 @@ public class NotFoundResponderTest {
   public void testHasEditLinkForWikiWords() throws Exception {
     MockRequest request = new MockRequest();
     request.setResource("PageOne.PageTwo");
-    WikiPage root = InMemoryPage.makeRoot("RooT");
 
     Responder responder = new NotFoundResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
   }

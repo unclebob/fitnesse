@@ -18,13 +18,11 @@ import org.junit.Test;
 
 public class HtmlUtilTest {
 
-  private WikiPage root;
   private FitNesseContext context;
 
   @Before
   public void setUp() {
-    root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
@@ -83,10 +81,10 @@ public class HtmlUtilTest {
   }
 
   private String getActionsHtml(String pageName) {
-    WikiPageUtil.addPage(root, PathParser.parse(pageName), "");
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setNavTemplate("wikiNav.vm");
-    htmlPage.put("actions", new WikiPageActions(root.getChildPage(pageName)));
+    htmlPage.put("actions", new WikiPageActions(context.getRootPage().getChildPage(pageName)));
     return htmlPage.html();
   }
 

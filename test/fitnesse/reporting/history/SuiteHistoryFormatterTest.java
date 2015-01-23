@@ -40,10 +40,9 @@ public class SuiteHistoryFormatterTest {
     testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
     clock = new DateAlteringClock(testTime).freeze();
 
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    WikiPage suitePage = root.addChildPage("SuitePage");
-    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"), null);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
+    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<StringWriter>();
     formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override

@@ -37,7 +37,7 @@ public class TestTextFormatterTest {
 
   @Test
   public void testCompleteShouldAddPageAndSummaryAndTimingToResponse() throws Exception {
-    WikiTestPage page = new WikiTestPage(new WikiPageDummy("page", "content", null), null);
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("page", "content", null));
     TestSummary summary = new TestSummary(1, 2, 3, 4);
 
     ChunkedResponse response = mock(ChunkedResponse.class);

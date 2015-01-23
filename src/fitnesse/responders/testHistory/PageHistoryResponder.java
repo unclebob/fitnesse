@@ -166,9 +166,9 @@ public class PageHistoryResponder implements SecureResponder {
     page = context.pageFactory.newPage();
 
     String tags = "";    
-    if (context.root != null){
+    if (context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

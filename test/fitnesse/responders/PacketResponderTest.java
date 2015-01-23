@@ -25,10 +25,10 @@ public class PacketResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
     responder = new PacketResponder();
-    context = FitNesseUtil.makeTestContext(root);
   }
 
   private SimpleResponse makeResponse() throws Exception {

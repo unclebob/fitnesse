@@ -39,7 +39,8 @@ public class SymbolicLinkResponderTest {
   @Before
   public void setUp() throws Exception {
     fileSystem = new MemoryFileSystem();
-    root = InMemoryPage.makeRoot("RooT", fileSystem);          //#  root
+    context = FitNesseUtil.makeTestContext(fileSystem);
+    root = context.getRootPage();          //#  root
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");       //#    |--PageOne
     WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");   //#    |    `--ChildOne
     WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
@@ -48,7 +49,6 @@ public class SymbolicLinkResponderTest {
 
     request = new MockRequest();
     request.setResource("PageOne");
-    context = FitNesseUtil.makeTestContext(root);
     responder = new SymbolicLinkResponder(fileSystem);
   }
 

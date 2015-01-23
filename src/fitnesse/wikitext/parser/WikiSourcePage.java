@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
-    private static final Logger LOG = Logger.getLogger(WikiSourcePage.class.getName());
-
     private WikiPage page;
 
     public WikiSourcePage(WikiPage page) { this.page = page; }
@@ -76,16 +74,8 @@ public class WikiSourcePage implements SourcePage {
         }
     }
 
-    public Collection<SourcePage> getAncestors() {
-        ArrayList<SourcePage> ancestors = new ArrayList<SourcePage>();
-        for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {
-            ancestors.add(new WikiSourcePage(ancestor));
-            if (ancestor.isRoot()) break;
-        }
-        return ancestors;
-    }
 
-    public Collection<SourcePage> getChildren() {
+  public Collection<SourcePage> getChildren() {
         ArrayList<SourcePage> children = new ArrayList<SourcePage>();
         for (WikiPage child: page.getChildren()) {
             children.add(new WikiSourcePage(child));
