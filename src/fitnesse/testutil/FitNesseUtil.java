@@ -38,7 +38,7 @@ public class FitNesseUtil {
 
   public static void stopFitnesse() throws IOException {
     instance.stop();
-    FileUtil.deleteFileSystemDirectory("TestDir");
+    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 
   public static FitNesseContext makeTestContext() {
@@ -122,6 +122,6 @@ public class FitNesseUtil {
   }
 
   public static void destroyTestContext() {
-    FileUtil.deleteFileSystemDirectory("TestDir");
+    FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 }
