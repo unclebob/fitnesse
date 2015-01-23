@@ -136,9 +136,16 @@ $(function () {
 
 <div id="insert-image" class="modal-dialog">
  <div>
-  <h2>Add image</h2>
+  <h2>Insert image</h2>
+  <fieldset>
+  <p>From the files section:</p>
   <pre></pre>
   <ul></ul>
-  <a href="#">Cancel</a>
+  </fieldset>
+  <fieldset>
+  <p>Provide a URL:</p>
+  <input type="text" size="50" value=""></input><button value="Add">Add</button>
+  </fieldset>
+  <a href="#" class="button">Cancel</a>
  </div>
 </div>

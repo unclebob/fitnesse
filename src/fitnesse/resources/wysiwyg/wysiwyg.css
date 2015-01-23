@@ -210,3 +210,25 @@ textarea#pageContent {
     /*background: -webkit-linear-gradient(#fff, #999);*/
     /*background: -o-linear-gradient(#fff, #999);*/
 }
+
+.modal-dialog ul {
+    border: 1px solid #eee;
+    padding-left: 28px;
+    height: 15em;
+    overflow: scroll;
+    width: 370px;
+}
+.modal-dialog li {
+    list-style: none outside;
+    padding: 2px;
+}
+.modal-dialog li:nth-child(odd) {
+    background: #fff
+}
+.modal-dialog li:nth-child(even) {
+    background: #efefef
+}
+
+.modal-dialog .directory {
+    list-style-image: url('../images/folder.gif');
+}

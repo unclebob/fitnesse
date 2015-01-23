@@ -1026,7 +1026,7 @@ Wysiwyg.prototype.insertUnorderedList = function () {
 Wysiwyg.prototype.insertImage = function () {
     var self = this;
     var insertImage = 'insert-image';
-    var path = 'files/';
+    var path = ['files'];
     var filesList = $('#' + insertImage + ' ul');
     var pathName = $('#' + insertImage + ' pre');
     var selectionRange = self.getSelectionRange();
@@ -1035,15 +1035,19 @@ Wysiwyg.prototype.insertImage = function () {
 
     var insertImageBox = $('#' + insertImage);
     insertImageBox
+        .on('click', 'span', function () {
+            path = Array.prototype.slice.call($(this).data());
+            console.log('path', path);
+            loadFiles();
+        })
         .on('click', 'li.directory', function () {
-            var oldPath = path;
-            path = path + $(this).data().name;
+            path.push($(this).data().name);
             loadFiles();
         })
         .on('click', 'li.file', function () {
             window.location.hash = "";
             insertImageBox.off();
-            self.execCommand("insertimage", path + $(this).data().name, selectionRange);
+            self.execCommand("insertimage", pathStr() + $(this).data().name, selectionRange);
             self.selectionChanged();
         });
 
@@ -1051,15 +1055,36 @@ Wysiwyg.prototype.insertImage = function () {
 
     function loadFiles() {
 
-        $.getJSON(path, {responder: 'files', format: 'json'}, function (data) {
-            pathName.text(path);
+        $.getJSON(pathStr(), {responder: 'files', format: 'json'}, function (data) {
+            breadcrumbHtml();
             filesList.empty();
             $(data).each(function (i, e) {
-                var h = $("<li>" + e.name +"</li>").attr('class', e.directory ? 'directory' : 'file').data(e);
+                var h = $("<li>" + e.name + (e.directory ? '/' : '') + "</li>").attr('class', e.directory ? 'directory' : 'file').data(e);
                 filesList.append(h);
             });
         });
     }
+
+    function pathStr() {
+        var s = "";
+        for (var i in path) {
+            s = s + path[i] + '/';
+        }
+        return s;
+    }
+
+    function breadcrumbHtml() {
+        var s = [];
+        pathName.empty();
+        for (var i in path) {
+            s.push(path[i]);
+            var d = $.extend({}, s);
+            d.length = s.length;
+            pathName.append(" / ");
+            pathName.append($("<span rel='" + s + "'>" + path[i] + "</span>").data(d));
+        }
+    }
+
 };
 
 Wysiwyg.prototype.insertTable = function () {
