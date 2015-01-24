@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import fitnesse.FitNesseContext;
 import fitnesse.socketservice.SocketFactory;
 
 import fitnesse.testsystems.ClientBuilder;
@@ -18,8 +19,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
-
+  public static final String SLIM_SSL = "SLIM_SSL";
+  
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
+
 
   private final int slimPort;
 
@@ -38,7 +41,24 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSSL(), determineHostSSLParameterClass());
+  }
+
+  protected String determineClientSSLParameterClass() {
+      String sslParameterClassName = getVariable("slim.ssl");
+      if (sslParameterClassName == null) {
+    	  sslParameterClassName = getVariable(SLIM_SSL);
+      }
+      if (sslParameterClassName != null && sslParameterClassName.equalsIgnoreCase("false")) sslParameterClassName=null;
+      return sslParameterClassName;
+  }
+
+  protected boolean determineSSL() {
+      return (determineClientSSLParameterClass() != null );
+  }
+
+  protected String determineHostSSLParameterClass() {
+      return getVariable(FitNesseContext.SSL_PARAMETER_CLASS_PROPERTY);
   }
 
   public double getSlimVersion() {
@@ -66,11 +86,19 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   protected String[] buildArguments() {
-    int slimSocket = getSlimPort();
+    Object[] arguments = new String[] {};
+    String useSSL =  determineClientSSLParameterClass();
+    if (useSSL != null){
+    	arguments = ArrayUtils.add(arguments, "-ssl");
+    	arguments = ArrayUtils.add(arguments, useSSL);
+    }    	
     String slimFlags = getSlimFlags();
-    if ("".equals(slimFlags))
-      return new String[] { Integer.toString(slimSocket) };
-    return new String[] { slimFlags, Integer.toString(slimSocket) };
+    if (!"".equals(slimFlags))
+    	arguments = ArrayUtils.add(arguments, slimFlags);
+    
+	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
+
+    return (String[]) arguments;
   }
 
   public int getSlimPort() {

@@ -85,6 +85,7 @@ public class ExecuteSearchPropertiesResponderTest {
     assertOutputHasRowWithLabels("filter1,filter2");
   }
 
+
   private String invokeResponder(MockRequest request) throws Exception {
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
@@ -122,7 +123,7 @@ public class ExecuteSearchPropertiesResponderTest {
   }
 
   private void assertOutputHasRow(String content, String title, String tagName) {
-    assertHasRegexp("<table.*<tr.*<t[dh].*<" + tagName + ".*>.*" + title + ".*</"
+    assertHasRegexp("<table.*<tr.*<t[dh][^<]*<" + tagName + "[^<]*>[^>]*" + title + "[^<]*</"
         + tagName.split(" ")[0] + ">", content);
   }
 
