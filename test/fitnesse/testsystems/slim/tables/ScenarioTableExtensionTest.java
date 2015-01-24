@@ -82,6 +82,22 @@ public class ScenarioTableExtensionTest {
   }
 
   @Test
+  public void parameterizedNameWithOutputArg() throws Exception {
+    makeScenarioTable("login user|\n|enter|@{name}|for|login|\n|enter|@{password}|for|secret|\n|$myName=|current user");
+    assertEquals("LoginUser", st.getName());
+
+    Set<String> inputs = st.getInputs();
+    assertEquals(2, inputs.size());
+    assertTrue(inputs.contains("name"));
+    assertTrue(inputs.contains("password"));
+    assertTrue(st.isParameterized());
+
+    Set<String> outputs = st.getOutputs();
+    assertEquals(1, outputs.size());
+    assertTrue(outputs.contains("myName"));
+  }
+
+  @Test
   public void parameterizedNameWithOneArgAndWordWithEmbeddedUnderscore()
       throws Exception {
     makeScenarioTable("login user_name|\n|enter|@{name}|for|login|\n|enter|bla|for|secret");
@@ -123,8 +139,10 @@ public class ScenarioTableExtensionTest {
    */
   public static class AutoArgScenarioTable extends ScenarioTable {
     private final static Pattern ARG_PATTERN = Pattern.compile("@\\{(.+?)\\}");
+    private static final Pattern OUT_PATTERN = Pattern.compile("\\$(.+?)=");
 
     private Set<String> inputs;
+    private Set<String> outputs;
 
     public AutoArgScenarioTable(Table table, String tableId, SlimTestContext testContext) {
       super(table, tableId, testContext);
@@ -132,7 +150,8 @@ public class ScenarioTableExtensionTest {
 
     @Override
     public List<SlimAssertion> getAssertions() throws SyntaxError {
-      inputs = findInputs();
+      inputs = findArguments(ARG_PATTERN);
+      outputs = findArguments(OUT_PATTERN);
       return super.getAssertions();
     }
 
@@ -146,16 +165,19 @@ public class ScenarioTableExtensionTest {
       for (String input : inputs) {
         addInput(input);
       }
+      for (String output : outputs) {
+        addOutput(output);
+      }
     }
 
-    private Set<String> findInputs() {
+    private Set<String> findArguments(Pattern pattern) {
       Set<String> found = new LinkedHashSet<String>();
       int rowCount = table.getRowCount();
       for (int row = 0; row < rowCount; row++) {
         int columnCount = table.getColumnCountInRow(row);
         for (int column = 0; column < columnCount; column++) {
           String cellContent = table.getCellContents(column, row);
-          Matcher m = ARG_PATTERN.matcher(cellContent);
+          Matcher m = pattern.matcher(cellContent);
           while (m.find()) {
             String input = m.group(1);
             found.add(input);

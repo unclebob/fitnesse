@@ -104,6 +104,10 @@ private void splitInputAndOutputArguments(String argName) {
     inputs.add(argument);
   }
 
+  protected void addOutput(String argument) {
+    outputs.add(argument);
+  }
+
   public String getScenarioName() {
     if (parameterized) {
       String parameterizedName = table.getCellContents(1, 0);
@@ -151,7 +155,7 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   public Set<String> getOutputs() {
-    return outputs;
+    return new HashSet<String>(outputs);
   }
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
