@@ -110,11 +110,7 @@ class DirectoryResponder implements SecureResponder {
     }
 
     public String getName() {
-      String name = file.getName();
-      if (file.isDirectory()) {
-        name += "/";
-      }
-      return name;
+      return file.getName();
     }
 
     public String getSize() {
