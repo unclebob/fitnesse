@@ -541,6 +541,7 @@ Wysiwyg.prototype.execCommand = function (name, arg, selectionRange) {
     this.frame.focus();
     if (selectionRange) {
         this.selectRange(selectionRange.startContainer, selectionRange.startOffset, selectionRange.endContainer, selectionRange.endOffset);
+        this.selectionChanged();
     }
     return this.contentDocument.execCommand(name, false, arg);
 };
@@ -1048,7 +1049,12 @@ Wysiwyg.prototype.insertImage = function () {
             window.location.hash = "";
             insertImageBox.off();
             self.execCommand("insertimage", pathStr() + $(this).data().name, selectionRange);
-            self.selectionChanged();
+        })
+        .on('click', 'button', function () {
+            var url = $('#' + insertImage + ' input').val();
+            window.location.hash = "";
+            insertImageBox.off();
+            self.execCommand("insertimage", url, selectionRange);
         });
 
     window.location.hash = insertImage;

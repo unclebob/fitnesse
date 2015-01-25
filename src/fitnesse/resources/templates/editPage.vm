@@ -138,12 +138,12 @@ $(function () {
  <div>
   <h2>Insert image</h2>
   <fieldset>
-  <p>From the files section:</p>
+  <p>1. From the files section:</p>
   <pre></pre>
   <ul></ul>
   </fieldset>
   <fieldset>
-  <p>Provide a URL:</p>
+  <p>2. Provide a URL:</p>
   <input type="text" size="50" value=""></input><button value="Add">Add</button>
   </fieldset>
   <a href="#" class="button">Cancel</a>
