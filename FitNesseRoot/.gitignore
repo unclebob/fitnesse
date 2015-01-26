@@ -1,0 +1,14 @@
+TestDir
+properties
+updateList
+updateDoNotCopyOverList
+JunkParent/*
+JunkPage/*
+ProjectPage/*
+ErrorLogs/*
+files/testResults/*
+files/testProgress/*
+files/javascript/jsunit/*
+.svn
+.DS_Store
+desktop.ini
