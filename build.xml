@@ -30,7 +30,6 @@
 		<include name="PageHeader/**"/>
 		<include name="PageFooter/**"/>
 		<include name="TemplateLibrary/**"/>
-		<include name=".gitignore"/>
 		<exclude name="**/*.zip"/>
 	</zipfileset>
 
@@ -60,7 +59,6 @@
 		<jar jarfile="${dist.dir}/fitnesse.jar" basedir="${classes.dir}">
 			<include name="**" />
 			<zipfileset refid="wikipages.fileset" />
-
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
@@ -100,7 +98,7 @@
 	</target>
 
 	<target name="createUpdateLists" depends="compile" description="creates two lists of files to be updated">
-		<mkdir dir="${classes.dir}/Resources" />
+		<mkdir dir="${classes.dir}/Resources/FitNesseRoot" />
 		<java classpath="${classes.dir}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
 			<arg value="-baseDirectory:." />
 			<arg value="-outputDirectory:${classes.dir}/Resources" />
@@ -127,6 +125,9 @@
 			<arg value="FitNesseRoot/TemplateLibrary" />
 			<arg value="FitNesseRoot/.gitignore" />
 		</java>
+
+        <copy file="FitNesseRoot/.gitignore" todir="${classes.dir}/Resources/FitNesseRoot" />
+        <replace file="${classes.dir}/Resources/FitNesseRoot/.gitignore"  token="###" value="" />
 	</target>
 
     <!--

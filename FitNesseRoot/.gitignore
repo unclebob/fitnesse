@@ -1,14 +1,10 @@
-TestDir
 properties
 updateList
 updateDoNotCopyOverList
-JunkParent/*
-JunkPage/*
-ProjectPage/*
 ErrorLogs/*
+###FitNesse/*
 files/testResults/*
 files/testProgress/*
-files/javascript/jsunit/*
 .svn
 .DS_Store
 desktop.ini
