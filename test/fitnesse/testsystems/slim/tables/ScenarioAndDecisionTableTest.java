@@ -134,13 +134,13 @@ public class ScenarioAndDecisionTableTest {
   }
 
   @Test
-  public void simpleInputAndOutputArgPassing() throws Exception {
+  public void gracefulNamesInputAndOutputArgPassing() throws Exception {
     SlimTestContextImpl testContext = makeTables(
-            "!|scenario|echo|input|giving|output?|\n" +
-                    "|$output=|echo|@input|\n" +
+            "!|scenario|echo|inPut|giving|outPut?|\n" +
+                    "|$outPut=|echo|@inPut|\n" +
                     "\n" +
                     "!|DT:EchoGiving|\n" +
-                    "|input|output?|\n" +
+                    "|in put|out put?|\n" +
                     "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
@@ -150,11 +150,11 @@ public class ScenarioAndDecisionTableTest {
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-            "[[scenario, echo, input, giving, output?], [$output<-[7], echo, 7]]";
+            "[[scenario, echo, inPut, giving, outPut?], [$outPut<-[7], echo, 7]]";
     assertEquals(expectedScript, scriptTable);
 
     String dtHtml = dt.getTable().toString();
-    assertEquals("[[DT:EchoGiving], [input, output?], [7, pass(7)]]", dtHtml);
+    assertEquals("[[DT:EchoGiving], [in put, out put?], [7, pass(7)]]", dtHtml);
 
     assertEquals(1, testContext.getTestSummary().getRight());
     assertEquals(0, testContext.getTestSummary().getWrong());
@@ -163,31 +163,87 @@ public class ScenarioAndDecisionTableTest {
   }
 
   @Test
-  public void simpleInputAndMultipleOutputArgPassing() throws Exception {
+  public void camelNamesInputAndOutputArgPassing() throws Exception {
     SlimTestContextImpl testContext = makeTables(
-            "!|scenario|echo|input|giving|output?|and|outp2?|\n" +
-                    "|$output=|echo|@input|\n" +
-                    "|$outp2=|echo|@input|\n" +
+            "!|scenario|echo|inPut|giving|outPut?|\n" +
+                    "|$outPut=|echo|@inPut|\n" +
                     "\n" +
-                    "!|DT:EchoGivingAnd|\n" +
-                    "|input|output?|outp2?|\n" +
-                    "|7|7|7|\n"
+                    "!|DT:EchoGiving|\n" +
+                    "|inPut|outPut?|\n" +
+                    "|7|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"),
-                    asList("decisionTable_did_0/scriptTable_s_id_1", "7"))
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-            "[[scenario, echo, input, giving, output?, and, outp2?], [$output<-[7], echo, 7], [$outp2<-[7], echo, 7]]";
+            "[[scenario, echo, inPut, giving, outPut?], [$outPut<-[7], echo, 7]]";
     assertEquals(expectedScript, scriptTable);
 
     String dtHtml = dt.getTable().toString();
-    assertEquals("[[DT:EchoGivingAnd], [input, output?, outp2?], [7, pass(7), pass(7)]]", dtHtml);
+    assertEquals("[[DT:EchoGiving], [inPut, outPut?], [7, pass(7)]]", dtHtml);
 
-    assertEquals(2, testContext.getTestSummary().getRight());
+    assertEquals(1, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
+  }
+
+  @Test
+  public void gracefulNamesInputAndOutputArgAssign() throws Exception {
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|inPut|giving|outPut?|\n" +
+                    "|$outPut=|echo|@inPut|\n" +
+                    "\n" +
+                    "!|DT:EchoGiving|\n" +
+                    "|in put|out put?|\n" +
+                    "|7|$x=|\n"
+    );
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
+    );
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+
+    String scriptTable = dt.getChildren().get(0).getTable().toString();
+    String expectedScript =
+            "[[scenario, echo, inPut, giving, outPut?], [$outPut<-[7], echo, 7]]";
+    assertEquals(expectedScript, scriptTable);
+
+    String dtHtml = dt.getTable().toString();
+    assertEquals("[[DT:EchoGiving], [in put, out put?], [7, $x<-[7]]]", dtHtml);
+
+    assertEquals(0, testContext.getTestSummary().getRight());
+    assertEquals(0, testContext.getTestSummary().getWrong());
+    assertEquals(0, testContext.getTestSummary().getIgnores());
+    assertEquals(0, testContext.getTestSummary().getExceptions());
+  }
+
+  @Test
+  public void camelNamesInputAndOutputArgAssign() throws Exception {
+    SlimTestContextImpl testContext = makeTables(
+            "!|scenario|echo|inPut|giving|outPut?|\n" +
+                    "|$outPut=|echo|@inPut|\n" +
+                    "\n" +
+                    "!|DT:EchoGiving|\n" +
+                    "|inPut|outPut?|\n" +
+                    "|7|$x=|\n"
+    );
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(asList("decisionTable_did_0/scriptTable_s_id_0", "7"))
+    );
+    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
+
+    String scriptTable = dt.getChildren().get(0).getTable().toString();
+    String expectedScript =
+            "[[scenario, echo, inPut, giving, outPut?], [$outPut<-[7], echo, 7]]";
+    assertEquals(expectedScript, scriptTable);
+
+    String dtHtml = dt.getTable().toString();
+    assertEquals("[[DT:EchoGiving], [inPut, outPut?], [7, $x<-[7]]]", dtHtml);
+
+    assertEquals(0, testContext.getTestSummary().getRight());
     assertEquals(0, testContext.getTestSummary().getWrong());
     assertEquals(0, testContext.getTestSummary().getIgnores());
     assertEquals(0, testContext.getTestSummary().getExceptions());

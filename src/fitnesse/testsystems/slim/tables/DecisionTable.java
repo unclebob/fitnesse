@@ -90,13 +90,14 @@ public class DecisionTable extends SlimTable {
 
       private SlimAssertion callFunctionInRow(String functionName, int row) {
         int col = funcStore.getColumnNumber(functionName);
+        String name = Disgracer.disgraceMethodName(functionName);
         String assignedSymbol = ifSymbolAssignment(col, row);
         SlimAssertion assertion;
         if (assignedSymbol != null) {
         	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+functionName),
-        			new ReturnedSymbolExpectation(col, row, functionName, assignedSymbol));
+        			new ReturnedSymbolExpectation(col, row, name, assignedSymbol));
         } else {
-          assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(col, row, functionName));
+          assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(col, row, name));
         }
         return assertion;
       }
