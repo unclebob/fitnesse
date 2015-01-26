@@ -120,7 +120,6 @@ public class XmlUtil {
 
   public static String xmlAsString(Document doc) throws IOException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    transformerFactory.setAttribute("indent-number", new Integer(2));
 
     StringWriter sw = new StringWriter();
     try {
@@ -134,7 +133,7 @@ public class XmlUtil {
       StreamResult result =  new StreamResult(sw);
       transformer.transform(source, result);
     } catch (TransformerException e) {
-      throw new RuntimeException("Arjan should catch this", e);
+      throw new RuntimeException("Unable to serialize XML", e);
     }
 
     return sw.toString();
