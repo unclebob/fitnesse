@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable {
   private static final long serialVersionUID = 1L;

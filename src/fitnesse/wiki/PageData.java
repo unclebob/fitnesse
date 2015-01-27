@@ -7,8 +7,8 @@ import static fitnesse.wiki.PageType.*;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());

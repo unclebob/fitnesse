@@ -14,7 +14,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class SuiteFilter {
   public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());

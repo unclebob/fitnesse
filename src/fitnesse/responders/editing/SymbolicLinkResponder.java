@@ -11,7 +11,7 @@ import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wiki.VariableTool;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;

@@ -9,7 +9,7 @@ import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import fitnesse.util.Clock;
 
 import java.io.IOException;
