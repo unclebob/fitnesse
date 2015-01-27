@@ -33,6 +33,7 @@ class DirectoryResponder implements SecureResponder {
     requestedDirectory = requestedFile;
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
 
@@ -80,7 +81,7 @@ class DirectoryResponder implements SecureResponder {
     return simpleResponse;
   }
 
-
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

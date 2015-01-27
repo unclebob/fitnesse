@@ -13,6 +13,9 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Date;
 
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.util.Clock;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
@@ -24,7 +27,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 
-public class FileResponder implements Responder {
+public class FileResponder implements SecureResponder {
   // 1000-trick: remove milliseconds.
   private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
 
@@ -34,6 +37,7 @@ public class FileResponder implements Responder {
   File requestedFile;
   Date lastModifiedDate;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     String rootPath = context.getRootPagePath();
     try {
@@ -166,4 +170,21 @@ public class FileResponder implements Responder {
   private static boolean isInSubDirectory(File dir, File file) {
     return file != null && (file.equals(dir) || isInSubDirectory(dir, file.getParentFile()));
   }
+
+  @Override
+  public SecureOperation getSecureOperation() {
+    return new SecureOperation() {
+      @Override
+      public boolean shouldAuthenticate(FitNesseContext context, Request request) {
+        try {
+          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), "UTF-8")).isDirectory();
+        } catch (UnsupportedEncodingException e) {
+          throw new RuntimeException("Invalid URL encoding", e);
+        }
+
+
+      }
+    };
+  }
+
 }
