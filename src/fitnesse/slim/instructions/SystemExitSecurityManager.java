@@ -26,9 +26,19 @@ public class SystemExitSecurityManager extends SecurityManager {
   public static void activateIfWanted() {
     if (isPreventSystemExit()) {
       SecurityManager currentSecMgr = System.getSecurityManager();
-      SystemExitSecurityManager systemExitSecurityManager = new SystemExitSecurityManager(
+      if (currentSecMgr != null) {
+        SystemExitSecurityManager systemExitSecurityManager = new SystemExitSecurityManager(
           currentSecMgr);
-      System.setSecurityManager(systemExitSecurityManager);
+        tryUpdateSecurityManager(systemExitSecurityManager);
+      }
+    }
+  }
+
+  private static void tryUpdateSecurityManager(SecurityManager securityManager) {
+    try {
+      System.setSecurityManager(securityManager);
+    } catch (SecurityException e) {
+      System.err.println("Security manager could not be updated");
     }
   }
 
@@ -37,7 +47,7 @@ public class SystemExitSecurityManager extends SecurityManager {
     if (currentSecMgr != null
         && currentSecMgr instanceof SystemExitSecurityManager) {
       SecurityManager originalSecurityManager = ((SystemExitSecurityManager) currentSecMgr).delegate;
-      System.setSecurityManager(originalSecurityManager);
+      tryUpdateSecurityManager(originalSecurityManager);
     }
   }
 

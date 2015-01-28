@@ -1,11 +1,9 @@
 package fitnesse.slim.converters;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
+import fitnesse.slim.Converter;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
-
-import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
@@ -32,6 +30,9 @@ public class ConverterRegistry {
 
     addConverter(Double.class, new DoubleConverter());
     addConverter(double.class, new PrimitiveDoubleConverter());
+
+    addConverter(Long.class, new LongConverter());
+    addConverter(long.class, new PrimitiveLongConverter());
 
     addConverter(Integer.class, new IntConverter());
     addConverter(int.class, new PrimitiveIntConverter());

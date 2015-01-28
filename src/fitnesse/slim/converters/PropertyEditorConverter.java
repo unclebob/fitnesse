@@ -1,6 +1,5 @@
 package fitnesse.slim.converters;
 
-import java.beans.PropertyEditor;
 
 import fitnesse.slim.Converter;
 
