@@ -1,17 +1,15 @@
 
-.wysiwyg {
-    border: 1px solid #d7d7d7;
-    display: block;
-    outline: none;
-}
 textarea#pageContent {
     border: 1px solid #d7d7d7;
 }
 
 .wysiwyg {
+    border: 1px solid #d7d7d7;
+    display: block;
     clear: both;
     overflow: scroll;
     padding: 0 4px;
+    outline: none;
 }
 
 .wysiwyg:focus {
@@ -47,12 +45,12 @@ textarea#pageContent {
 }
 .wysiwyg-toolbar li {
     display: inline-block;
-    background: white; /* Old browsers */
-	background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
-	background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
-    border: 1px solid gray;
+    background: white;
+    border: 1px solid #adadad;
     border-right: none;
     border-left-color: lightgray;
+    font-size: 12px;
+    line-height: 1.5;
 }
 .wysiwyg-toolbar svg {
     vertical-align: bottom;
@@ -66,24 +64,23 @@ textarea#pageContent {
 
 .wysiwyg-toolbar li:first-child,
 .wysiwyg-toolbar li:first-child a {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-left-color: gray;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-left-color: #adadad;
 }
 .wysiwyg-toolbar li:last-child {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-right: 1px solid gray;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-right: 1px solid #adadad;
 }
 .wysiwyg-toolbar li:last-child a {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 .wysiwyg-toolbar li a:hover,
 .wysiwyg-toolbar li a:active,
 .wysiwyg-toolbar li.selected a {
-	/*border: 1px inset gray;*/
-    background: #eee;
+    background: #ebebeb;
 }
 
 .wysiwyg-toolbar ul#wm-style a {
@@ -99,9 +96,8 @@ textarea#pageContent {
     width: 78px;
     white-space: nowrap;
     overflow-x: hidden;
-    padding-left: 2px;
-    padding-right: 2px;
     vertical-align: middle;
+    padding: 1px 5px;
 }
 .wysiwyg-toolbar li a#wt-style:active {
 	border: none;
@@ -169,4 +165,70 @@ textarea#pageContent {
 
 .wysiwyg-toolbar .in-table {
 	display: none;
+}
+
+.image-selector {
+    position: absolute;
+    background-color: white;
+    margin-top: 30px;
+    border:1px solid red;
+    z-index: 999;
+    width: 300px;
+    left: calc(50% - 150px);
+}
+
+
+.modal-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99999;
+    opacity:0;
+    /*-webkit-transition: opacity 400ms ease-in;*/
+    /*-moz-transition: opacity 400ms ease-in;*/
+    /*transition: opacity 400ms ease-in;*/
+    pointer-events: none;
+}
+
+.modal-dialog:target {
+    opacity:1;
+    pointer-events: auto;
+}
+
+.modal-dialog > div {
+    width: 400px;
+    position: relative;
+    margin: 10% auto;
+    padding: 5px 20px 13px 20px;
+    border: 1px solid #984D00
+    border-radius: 3px;
+    background: #fff;
+    /*background: -moz-linear-gradient(#fff, #999);*/
+    /*background: -webkit-linear-gradient(#fff, #999);*/
+    /*background: -o-linear-gradient(#fff, #999);*/
+}
+
+.modal-dialog ul {
+    border: 1px solid #eee;
+    padding-left: 28px;
+    height: 15em;
+    overflow: scroll;
+    width: 370px;
+}
+.modal-dialog li {
+    list-style: none outside;
+    padding: 2px;
+}
+.modal-dialog li:nth-child(odd) {
+    background: #fff
+}
+.modal-dialog li:nth-child(even) {
+    background: #efefef
+}
+
+.modal-dialog .directory {
+    list-style-image: url('../images/folder.gif');
 }

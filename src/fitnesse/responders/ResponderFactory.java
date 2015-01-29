@@ -139,7 +139,7 @@ public class ResponderFactory {
     if (usingResponderKey(responderKey)) {
       responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
     } else if (resource.startsWith("files/") || resource.equals("files")) {
-      responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));
+      responder = wrapWithFilters("files", new FileResponder());
     } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else {

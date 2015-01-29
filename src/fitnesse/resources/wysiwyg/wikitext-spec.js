@@ -1459,4 +1459,33 @@ describe("parser and formatter", function () {
             ""].join("\n"));
     });
 
+    it("renders images", function () {
+        var dom = fragment(
+            element("p", "blah ",
+                element("img", { src: "./files/some/path"})
+            ));
+
+        generateFragment(dom, "blah !img http://files/some/path   \n");
+    });
+
+    it("renders images with parameters", function () {
+        var dom = fragment(
+            element("p",
+                element("img", { src: "./files/some/path", style: "width: 200px; border: 2px; margin: 10px;"}),
+                br()
+            ));
+
+        generateFragment(dom, "!img -w 200 -b 2 -m 10 http://files/some/path");
+    });
+
+    it("parses images", function () {
+        var dom = fragment(
+            element("p",
+                element("img", { src: "./files/some/path", style: "width: 200px; border: 2px; margin: 10px;"})
+            ));
+
+        generateWikitext(dom, "!img -b 2 -m 10 -w 200 http://files/some/path");
+    });
+
+
 });

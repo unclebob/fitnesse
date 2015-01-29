@@ -4,6 +4,8 @@
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
 
+<a href="#insert-image">Open Modal</a>
+
 <form method="post" action="$resource" name="f" class="mousetrap">
 #if($!editTime)
  <input type="hidden" name="editTime" value="$editTime"/>
@@ -130,6 +132,20 @@ $(function () {
 
 });
 
-
-
 </script>
+
+<div id="insert-image" class="modal-dialog">
+ <div>
+  <h2>Insert image</h2>
+  <fieldset>
+  <p>1. From the files section:</p>
+  <pre></pre>
+  <ul></ul>
+  </fieldset>
+  <fieldset>
+  <p>2. Provide a URL:</p>
+  <input type="text" size="50" value=""></input><button value="Add">Add</button>
+  </fieldset>
+  <a href="#" class="button">Cancel</a>
+ </div>
+</div>
