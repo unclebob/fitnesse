@@ -71,6 +71,22 @@ You can also use ''output parameters'' with scenarios. These are basically symbo
 | this is ''italic'' text | this is <i>italic</i> text  | 200 |
 | this is '''bold''' text | this is <b>bold</b> text | > 100 |
 
+!5 Constructor parameters
+When all rows in a decision table need to set the same value for some parameters these can be specified using ‘’constructor parameters’’, instead of repeating them for each row. This can make the decision tables more readable.
+In the example below the input variables "wiki text" and “html text” are given on the table construction line and not repeated in each row. 
+
+!| widget renders code | given | wiki text | this is ''italic'' text | html text |this is <i>italic</i> text|
+| response code?|
+| 200 |
+| > 100 |
+
+The Syntax is - Scenario Name - [given|having] - 1. Variable Name - 1. Variable Value - 2. Variable Name - 2. Variable Value - ....
+
+To ensure backward compatibility constructor parameters are first checked if they are part of a scenario name.
+
+If a senario is found it will be used and no constructor values are passed.
+Only if no such scenario is found the constructor parameters can be used.
+
 
 !4 Invoking a scenario from a script table using ''Interposed'' style
 !| Script |
