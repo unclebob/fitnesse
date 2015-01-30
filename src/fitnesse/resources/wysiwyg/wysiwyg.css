@@ -215,7 +215,7 @@ textarea#pageContent {
     border: 1px solid #eee;
     padding-left: 28px;
     height: 15em;
-    overflow: scroll;
+    overflow: auto;
     width: 370px;
 }
 .modal-dialog li {
