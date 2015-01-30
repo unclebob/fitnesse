@@ -221,12 +221,16 @@ textarea#pageContent {
 .modal-dialog li {
     list-style: none outside;
     padding: 2px;
+    cursor: pointer;
 }
 .modal-dialog li:nth-child(odd) {
     background: #fff
 }
 .modal-dialog li:nth-child(even) {
     background: #efefef
+}
+.modal-dialog li:hover {
+    background: #dbeaf9;
 }
 
 .modal-dialog .directory {
