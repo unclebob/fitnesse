@@ -53,11 +53,40 @@ If you'd rather you can reference the scenario with parameters so long as you ma
 
 The column headers of the DecisionTable are named for the arguments of the scenario (again, once properly camel-cased).  The scenario processor simply replaces the arguments in the scenario with the contents of the table cells below the corresponding header.
 
-You can also use ''output'' header; i.e. a '?' at the end of the name of a header column.
-See [[Scenario Test Suite][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioTestSuite]] for examples how to do this.
-
 
 If you hit the test button, you will see the scenario operate.  It's pretty self-explanatory.  If you look at the resulting DecisionTable you'll see that an extra column has been added to each row.  That column contains a collapsed section with the entire scenario table with all the arguments replaced.  You can expand it by clicking on the litte arrow. Try it.
+
+
+!5 Output parameters
+You can also use ''output parameters'' with scenarios. These are basically symbols you assign in the scenario that you can then refer to in the decision table by creating a column whose name ends on '?'. This allows you to capture values in your scenario, making the symbols filled explicit and allowing different comparisons (for instance equality, greater than, etc) in different rows.
+
+!| scenario | widget _ renders _ code _ | wikiText,htmlText,responseCode? |
+| create page | WidgetPage | with content | @wikiText |
+| $responseCode= | request page | WidgetPage |
+| ensure | content matches | @htmlText |
+| show | content |
+
+!| widget renders code |
+| wiki text | html text | response code?|
+| this is ''italic'' text | this is <i>italic</i> text  | 200 |
+| this is '''bold''' text | this is <b>bold</b> text | > 100 |
+
+!5 Constructor parameters
+When all rows in a decision table need to set the same value for some parameters these can be specified using ‘’constructor parameters’’, instead of repeating them for each row. This can make the decision tables more readable.
+In the example below the input variables "wiki text" and “html text” are given on the table construction line and not repeated in each row. 
+
+!| widget renders code | given | wiki text | this is ''italic'' text | html text |this is <i>italic</i> text|
+| response code?|
+| 200 |
+| > 100 |
+
+The Syntax is - Scenario Name - [given|having] - 1. Variable Name - 1. Variable Value - 2. Variable Name - 2. Variable Value - ....
+
+To ensure backward compatibility constructor parameters are first checked if they are part of a scenario name.
+
+If a senario is found it will be used and no constructor values are passed.
+Only if no such scenario is found the constructor parameters can be used.
+
 
 !4 Invoking a scenario from a script table using ''Interposed'' style
 !| Script |
