@@ -232,3 +232,7 @@ textarea#pageContent {
 .modal-dialog .directory {
     list-style-image: url('../images/folder.gif');
 }
+
+.modal-dialog .url {
+    width: 100%
+}

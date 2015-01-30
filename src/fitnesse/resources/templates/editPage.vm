@@ -144,7 +144,8 @@ $(function () {
   </fieldset>
   <fieldset>
   <p>2. Provide a URL:</p>
-  <input type="text" size="50" value=""></input><button value="Add">Add</button>
+  <input class="url" type="text" value=""></input><br/>
+  <button value="Add">Add</button>
   </fieldset>
   <a href="#" class="button">Cancel</a>
  </div>
