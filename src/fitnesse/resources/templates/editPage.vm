@@ -4,8 +4,6 @@
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
 
-<a href="#insert-image">Open Modal</a>
-
 <form method="post" action="$resource" name="f" class="mousetrap">
 #if($!editTime)
  <input type="hidden" name="editTime" value="$editTime"/>
