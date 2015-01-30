@@ -201,7 +201,7 @@ textarea#pageContent {
 .modal-dialog > div {
     width: 400px;
     position: relative;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 5px 20px 13px 20px;
     border: 1px solid #984D00
     border-radius: 3px;
@@ -215,12 +215,13 @@ textarea#pageContent {
     border: 1px solid #eee;
     padding-left: 28px;
     height: 15em;
-    overflow: scroll;
+    overflow: auto;
     width: 370px;
 }
 .modal-dialog li {
     list-style: none outside;
     padding: 2px;
+    cursor: pointer;
 }
 .modal-dialog li:nth-child(odd) {
     background: #fff
@@ -228,7 +229,14 @@ textarea#pageContent {
 .modal-dialog li:nth-child(even) {
     background: #efefef
 }
+.modal-dialog li:hover {
+    background: #dbeaf9;
+}
 
 .modal-dialog .directory {
     list-style-image: url('../images/folder.gif');
+}
+
+.modal-dialog .url {
+    width: 100%
 }
