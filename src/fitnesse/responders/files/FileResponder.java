@@ -159,6 +159,8 @@ public class FileResponder implements Responder {
           contentType = "image/png";
       } else if (filename.endsWith(".gif")) {
           contentType = "image/gif";
+      } else if (filename.endsWith(".svg")) {
+        contentType = "image/svg+xml";
       } else {
         contentType = "text/plain";
       }

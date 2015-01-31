@@ -7,15 +7,3 @@
   <button id="error-nav-next">></button>
   </div>
 </div>
-#if ($!errorNavOnDocumentReady)
-<script>
-  $(document).ready(
-    function() {
-      if ( $('span.fail, span.exception').length ){
-        $('#error-nav').toggleClass('hidden');
-        initErrorMetadata();
-      }
-    }
-  )
-</script>
-#end

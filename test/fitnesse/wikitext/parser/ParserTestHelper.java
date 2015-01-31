@@ -47,7 +47,7 @@ public class ParserTestHelper {
     assertTranslatesTo(new TestSourcePage(), input, expected);
   }
 
-  public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception {
+  public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) {
     assertEquals(expected, translateToHtml(page, page.getData().getContent(), variableSource));
   }
 
@@ -64,11 +64,11 @@ public class ParserTestHelper {
     assertEquals("round trip", input, roundTrip(page, input));
   }
 
-  public static void assertTranslatesTo(SourcePage page, String expected) throws Exception {
+  public static void assertTranslatesTo(SourcePage page, String expected) {
     assertEquals(expected, translateTo(page));
   }
 
-  public static void assertTranslatesTo(WikiPage page, String expected) throws Exception {
+  public static void assertTranslatesTo(WikiPage page, String expected) {
     assertEquals(expected, translateTo(new WikiSourcePage(page)));
   }
 
@@ -92,25 +92,25 @@ public class ParserTestHelper {
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }
 
-  public static String translateTo(WikiPage page) throws Exception {
+  public static String translateTo(WikiPage page) {
     return translateTo(new WikiSourcePage(page));
   }
 
-  public static String translateTo(SourcePage page, VariableSource variableSource) throws Exception {
+  public static String translateTo(SourcePage page, VariableSource variableSource) {
     return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, variableSource), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
   }
 
-  public static String translateTo(SourcePage page) throws Exception {
+  public static String translateTo(SourcePage page) {
     return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
   }
 
-  public static void assertParses(String input, String expected) throws Exception {
+  public static void assertParses(String input, String expected) {
     WikiPage page = new TestRoot().makePage("TestPage", input);
     Symbol result = parse(page, input);
     assertEquals(expected, serialize(result));
   }
 
-  public static Symbol parse(WikiPage page) throws Exception {
+  public static Symbol parse(WikiPage page) {
     return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
   }
 

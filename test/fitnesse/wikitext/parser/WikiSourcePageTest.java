@@ -30,4 +30,13 @@ public class WikiSourcePageTest {
         WikiPage test = new TestRoot().makePage("MyPage");
         assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
     }
+
+  @Test
+  public void makeFullPathOfTarget() {
+    WikiPage test = new TestRoot().makePage("MyPage");
+    assertEquals("WikiPath", new WikiSourcePage(test).makeFullPathOfTarget("WikiPath"));
+    assertEquals("root", new WikiSourcePage(test).makeFullPathOfTarget("root"));
+    assertEquals("root", new WikiSourcePage(test).makeFullPathOfTarget("."));
+  }
+
 }

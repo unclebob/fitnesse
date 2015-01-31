@@ -48,8 +48,10 @@ public class PathParserTest {
   @Test
   public void testRoot() throws Exception {
     path = makePath("root");
+    String name = PathParser.render(path);
     assertTrue(path.isAbsolute());
     assertTrue(path.isEmpty());
+    assertEquals("root", name);
   }
 
   @Test
@@ -98,7 +100,8 @@ public class PathParserTest {
     p.makeAbsolute();
     assertEquals(".MyPage", PathParser.render(p));
 
-    assertEquals(".", PathParser.render(PathParser.parse(".")));
+    assertEquals("root", PathParser.render(PathParser.parse(".")));
+    assertEquals("root", PathParser.render(PathParser.parse("root")));
 
     assertEquals("<MyPage", PathParser.render(makePath("<MyPage")));
     assertEquals(">MyPage", PathParser.render(makePath(">MyPage")));

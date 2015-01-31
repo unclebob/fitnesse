@@ -177,7 +177,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
-    htmlPage.put("errorNavOnDocumentReady", false);
     htmlPage.put("multipleTestsRun", isMultipleTestsRun());
     WikiImportingResponder.handleImportProperties(htmlPage, page);
 

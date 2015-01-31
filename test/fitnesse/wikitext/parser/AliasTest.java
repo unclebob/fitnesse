@@ -11,14 +11,14 @@ public class AliasTest {
   }
 
   @Test
-  public void parsesAliases() throws Exception {
+  public void parsesAliases() {
     ParserTestHelper.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], SymbolList[Text]]]");
     ParserTestHelper.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]");
     ParserTestHelper.assertParses("[[PageOne][PageOne?edit]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]");
   }
 
   @Test
-  public void translatesAliases() throws Exception {
+  public void translatesAliases() {
     TestSourcePage page = new TestSourcePage().withTarget("PageOne");
     ParserTestHelper.assertTranslatesTo(page, "[[tag][#anchor]]", link("tag", "#anchor"));
     ParserTestHelper.assertTranslatesTo(page, "[[tag][PageOne]]", link("tag", "PageOne"));
@@ -31,7 +31,7 @@ public class AliasTest {
   }
 
   @Test
-  public void translatesLinksWithSpaces() throws Exception {
+  public void translatesLinksWithSpaces() {
     TestSourcePage page = new TestSourcePage().withTarget("PageOne");
     ParserTestHelper.assertTranslatesTo(page, "[[tag][http://files/my file]]", link("tag", "files/my file"));
   }
@@ -51,7 +51,7 @@ public class AliasTest {
   }
 
   @Test
-  public void evaluatesLowercaseLink() throws Exception {
+  public void evaluatesLowercaseLink() {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("parent", "[[tag][other_page]]");
     WikiPage page1 = root.makePage(parent, "page", "[[tag][other_page]]");

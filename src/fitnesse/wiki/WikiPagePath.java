@@ -123,7 +123,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   public WikiPagePath relativePath() {
-    if (isAbsolute()) {
+    if (isAbsolute() && !isEmpty()) {
       WikiPagePath relativePath = new WikiPagePath(this);
       relativePath.setPathMode(RELATIVE);
       return relativePath;
