@@ -89,37 +89,37 @@ table {
 }
 
 /* Table coloring */
-tr.rowTitle {
+tr.slimRowTitle {
 	background-color: #f5f5f5;
 }
-tr.rowColor0 {
+tr.slimRowColor0 {
 	background-color: #F5FEFF;
 }
-tr.rowColor1 {
+tr.slimRowColor1 {
 	background-color: #F5FFF7;
 }
-tr.rowColor2 {
+tr.slimRowColor2 {
 	background-color: #F9F5FA;
 }
-tr.rowColor3 {
+tr.slimRowColor3 {
 	background-color: #FDF9FB;
 }
-tr.rowColor4 {
+tr.slimRowColor4 {
 	background-color: #FCFAF7;
 }
-tr.rowColor5 {
+tr.slimRowColor5 {
 	background-color: #F7FCFA;
 }
-tr.rowColor6 {
+tr.slimRowColor6 {
 	background-color: #F7F7F9;
 }
-tr.rowColor7 {
+tr.slimRowColor7 {
 	background-color: #FFFAFA;
 }
-tr.rowColor8 {
+tr.slimRowColor8 {
 	background-color: #FBF9FF;
 }
-tr.rowColor9 {
+tr.slimRowColor9 {
 	background-color: #FDFCF9;
 }
 
