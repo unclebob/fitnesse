@@ -47,6 +47,11 @@ public class SuiteExecutionReport extends ExecutionReport {
     return false;
   }
 
+  @Override
+  public int hashCode() {
+    return pageHistoryReferences.size();
+  }
+
   private boolean allReferencesEqual(List<PageHistoryReference> r1, List<PageHistoryReference> r2) {
     for (int i=0; i<r1.size(); i++) {
       if (!r1.get(i).equals(r2.get(i)))
@@ -141,6 +146,11 @@ public class SuiteExecutionReport extends ExecutionReport {
         time == r.time &&
         testSummary.equals(r.testSummary) &&
         runTimeInMillis == r.runTimeInMillis;
+    }
+
+    @Override
+    public int hashCode() {
+      return pageName.hashCode();
     }
 
     public String getPageName() {

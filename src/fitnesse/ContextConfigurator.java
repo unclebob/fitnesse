@@ -218,8 +218,10 @@ public class ContextConfigurator {
         break;
       case PORT:
         port = Integer.parseInt(value);
+        break;
       default:
         properties.setProperty(parameter.getKey(), value);
+        break;
     }
     return this;
   }

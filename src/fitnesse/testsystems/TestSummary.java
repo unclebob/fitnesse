@@ -45,7 +45,7 @@ public class TestSummary {
   @Override
   public int hashCode() {
     assert false : "hashCode not designed";
-  return 42;
+    return 42;
   }
 
   public void tallyPageCounts(ExecutionResult result) {

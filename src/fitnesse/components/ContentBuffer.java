@@ -24,6 +24,7 @@ public class ContentBuffer {
 
   public ContentBuffer(String ext) throws IOException {
     tempFile = File.createTempFile("FitNesse-", ext);
+    tempFile.deleteOnExit();
   }
 
   private void open() throws FileNotFoundException {
@@ -92,9 +93,4 @@ public class ContentBuffer {
     tempFile.delete();
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    delete();
-    super.finalize();
-  }
 }

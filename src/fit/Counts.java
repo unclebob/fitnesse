@@ -19,6 +19,7 @@ public class Counts {
   public Counts() {
   }
 
+  @Override
   public String toString() {
     return
       right + " right, " +
@@ -34,6 +35,7 @@ public class Counts {
     exceptions += source.exceptions;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o == null || !(o instanceof Counts))
       return false;
@@ -42,6 +44,11 @@ public class Counts {
       wrong == other.wrong &&
       ignores == other.ignores &&
       exceptions == other.exceptions;
+  }
+
+  @Override
+  public int hashCode() {
+    return 42;
   }
 
   public void tallyPageCounts(Counts counts) {

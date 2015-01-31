@@ -64,8 +64,8 @@ public class ZipFileVersionsController implements VersionsController {
           versions[counter++] = version;
       }
       return versions;
-    } catch (Throwable th) {
-      throw new RuntimeException(th);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     } finally {
       try {
         if (zipFile != null) {

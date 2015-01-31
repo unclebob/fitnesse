@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable {
+public class WikiPagePath implements Comparable<Object>, Serializable {
   private static final long serialVersionUID = 1L;
 
   public enum Mode {
