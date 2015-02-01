@@ -163,44 +163,44 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     try {
       this.suiteName = getSuiteName(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.outputDir = getOutputDir(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.suiteFilter = getSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.suiteFilterAndStrategy = getSuiteFilterAndStrategy(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.debugMode = useDebugMode(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.context = createContext(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
   }
 

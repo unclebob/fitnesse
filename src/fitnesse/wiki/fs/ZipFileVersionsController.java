@@ -130,8 +130,8 @@ public class ZipFileVersionsController implements VersionsController {
       for (FileVersion fileVersion : fileVersions) {
         addToZip(fileVersion.getFile(), zos);
       }
-    } catch (Throwable th) {
-      throw new RuntimeException(th);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to make zip of current version", e);
     } finally {
       try {
         if (zos != null) {
@@ -189,8 +189,8 @@ public class ZipFileVersionsController implements VersionsController {
       try {
         contentIS = zipFile.getInputStream(contentEntry);
         return new ZipFileVersion(file, FileUtil.toString(contentIS), new Date(contentEntry.getTime()));
-      } catch (Throwable th) {
-        throw new RuntimeException(th);
+      } catch (Exception e) {
+        throw new RuntimeException("Unable to load content for file " + file + " from " + zipFile, e);
       } finally {
         try {
           if (contentIS != null) {
