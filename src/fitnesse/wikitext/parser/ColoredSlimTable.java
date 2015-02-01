@@ -126,11 +126,11 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
     }
 
     public SymbolType isApplicable(Translator translator){
-        String testSystem = null;
+        Maybe<String> testSystem = Maybe.noString;
         if(translator instanceof HtmlTranslator){
-            testSystem = ((HtmlTranslator)translator).getTestSystem();
+            testSystem = ((HtmlTranslator) translator).getParsingPage().findVariable("TEST_SYSTEM");
         }
-        if(testSystem == null || !testSystem.equals("slim")){
+        if(testSystem.isNothing() || !testSystem.getValue().equals("slim")){
             return baseSymbolType;
         }
         return this;

@@ -49,8 +49,7 @@ public class WikiTestPage implements TestPage {
     String content = getDecoratedContent();
     ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
     Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-    return new HtmlTranslator(parsingPage.getPage(), parsingPage, 
-            sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM)).translateTree(syntaxTree);
+    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
   }
 
   @Override
