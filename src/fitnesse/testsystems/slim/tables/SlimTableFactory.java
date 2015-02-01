@@ -73,7 +73,7 @@ public class SlimTableFactory {
     return tableType.contains(":");
   }
 
-  private Class<? extends SlimTable> getTableType(String tableType) {
+  public Class<? extends SlimTable> getTableType(String tableType) {
     if (hasColon(tableType)) {
       tableType = tableType.substring(0, tableType.indexOf(':') + 1);
     }
