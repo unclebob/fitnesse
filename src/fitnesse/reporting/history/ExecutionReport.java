@@ -1,7 +1,11 @@
 package fitnesse.reporting.history;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import fitnesse.reporting.CompositeExecutionLog;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
@@ -19,6 +23,7 @@ public abstract class ExecutionReport {
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   private long totalRunTimeInMillis = 0;
+  private List<ExecutionLogReport> executionLogs = new ArrayList<ExecutionLogReport>();
 
   protected ExecutionReport() {
     version = new FitNesseVersion().toString();
@@ -133,5 +138,95 @@ public abstract class ExecutionReport {
 	  
   public boolean hasRunTimes() {
     return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
+  }
+
+  public List<ExecutionLogReport> getExecutionLogs() {
+    return executionLogs;
+  }
+
+  public void addExecutionContext(String command, String testSystemName) {
+    executionLogs.add(new ExecutionLogReport(command, testSystemName));
+  }
+
+  private ExecutionLogReport executionLogReport() {
+    ExecutionLogReport log;
+    if (executionLogs.size() > 0) {
+      log = executionLogs.get(executionLogs.size() - 1);
+    } else {
+      log = new ExecutionLogReport("", "");
+      executionLogs.add(log);
+    }
+    return log;
+  }
+
+
+  public void addStdOut(String output) {
+    executionLogReport().addStdOut(output);
+  }
+
+  public void addStdErr(String output) {
+    executionLogReport().addStdErr(output);
+  }
+
+  public void exitCode(int exitCode) {
+    executionLogReport().exitCode(exitCode);
+  }
+
+  public void exceptionOccurred(Throwable e) {
+    executionLogReport().exceptionOccurred(e);
+  }
+
+  public static class ExecutionLogReport {
+    private final String command;
+    private final String testSystemName;
+    private StringBuffer stdOut = new StringBuffer();
+    private StringBuffer stdErr = new StringBuffer();
+    private int exitCode;
+    private List<Throwable> exceptions = new ArrayList<Throwable>();
+
+    public ExecutionLogReport(String command, String testSystemName) {
+      this.command = command;
+      this.testSystemName = testSystemName;
+    }
+
+    public String getCommand() {
+      return command;
+    }
+
+    public String getTestSystemName() {
+      return testSystemName;
+    }
+
+    public void addStdOut(String output) {
+      stdOut.append(output);
+    }
+
+    public String getStdOut() {
+      return stdOut.toString();
+    }
+
+    public void addStdErr(String output) {
+      stdErr.append(output);
+    }
+
+    public String getStdErr() {
+      return stdErr.toString();
+    }
+
+    public void exitCode(int exitCode) {
+      this.exitCode = exitCode;
+    }
+
+    public int getExitCode() {
+      return exitCode;
+    }
+
+    public void exceptionOccurred(Throwable e) {
+      exceptions.add(e);
+    }
+
+    public List<Throwable> getExceptions() {
+      return exceptions;
+    }
   }
 }

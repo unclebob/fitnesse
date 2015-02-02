@@ -220,7 +220,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(getSuiteHistoryFormatter());
+      SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
+      runner.addTestSystemListener(historyFormatter);
+      runner.addExecutionLogListener(historyFormatter);
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
@@ -361,18 +363,18 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   private static String getNotSuiteFilter(Request request) {
-    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+    return request != null ? request.getInput(NOT_FILTER_ARG) : null;
   }
 
   private static String getAndTagFilters(Request request) {
-    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
+    return request != null ? request.getInput(AND_FILTER_ARG) : null;
   }
 
 
   private static String getSuiteFirstTest(Request request, String suiteName) {
     String startTest = null;
     if (request != null) {
-      startTest = (String) request.getInput("firstTest");
+      startTest = request.getInput("firstTest");
     }
 
     if (startTest != null) {

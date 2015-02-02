@@ -196,6 +196,22 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     outputBuffer.append(output);
   }
 
+  public void addStdOut(String output) {
+    testResponse.addStdOut(output);
+  }
+
+  public void addStdErr(String output) {
+    testResponse.addStdErr(output);
+  }
+
+  public void exitCode(int exitCode) {
+    testResponse.exitCode(exitCode);
+  }
+
+  public void exceptionOccurred(Throwable e) {
+    testResponse.exceptionOccurred(e);
+  }
+
   public interface WriterFactory {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
   }

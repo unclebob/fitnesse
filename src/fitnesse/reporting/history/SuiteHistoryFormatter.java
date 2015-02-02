@@ -9,6 +9,7 @@ import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -22,7 +23,7 @@ import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
-public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
+public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
   private final FitNesseContext context;
@@ -138,5 +139,42 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   public SuiteExecutionReport getSuiteExecutionReport() {
     return suiteExecutionReport;
+  }
+
+  @Override
+  public void commandStarted(ExecutionContext context) {
+    suiteExecutionReport.addExecutionContext(context.getCommand(), context.getTestSystemName());
+  }
+
+  @Override
+  public void stdOut(String output) {
+    suiteExecutionReport.addStdOut(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.addStdOut(output);
+    }
+  }
+
+  @Override
+  public void stdErr(String output) {
+    suiteExecutionReport.addStdErr(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.addStdErr(output);
+    }
+  }
+
+  @Override
+  public void exitCode(int exitCode) {
+    suiteExecutionReport.exitCode(exitCode);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.exitCode(exitCode);
+    }
+  }
+
+  @Override
+  public void exceptionOccurred(Throwable e) {
+    suiteExecutionReport.exceptionOccurred(e);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.exceptionOccurred(e);
+    }
   }
 }

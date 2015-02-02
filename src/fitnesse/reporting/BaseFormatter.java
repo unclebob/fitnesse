@@ -66,6 +66,5 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
       errorOccurred(cause);
     }
   }
-
 }
 
