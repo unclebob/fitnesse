@@ -52,7 +52,19 @@
     #end
   </result>
   #end
-  #if($response.FinalCounts)
+#foreach ($log in $response.executionLogs)
+  <executionLog>
+    <testSystem>#escape($log.testSystemName)</testSystem>
+    <command>#escape($log.command)</command>
+    <exitCode>#escape($log.exitCode)</exitCode>
+    <stdOut>#escape($log.stdOut)</stdOut>
+    <stdErr>#escape($log.stdErr)</stdErr>
+#foreach( $exception in $log.exceptions)
+    <exception>#escape($exception.message)</exception>
+#end
+  </executionLog>
+#end
+#if($response.FinalCounts)
   <finalCounts>
     <right>$response.FinalCounts.Right</right>
     <wrong>$response.FinalCounts.Wrong</wrong>
@@ -60,7 +72,6 @@
     <exceptions>$response.FinalCounts.Exceptions</exceptions>
   </finalCounts>
   <totalRunTimeInMillis>$response.TotalRunTimeInMillis</totalRunTimeInMillis>
-  #end
-
+#end
 </testResults>
 

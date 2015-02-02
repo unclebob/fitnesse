@@ -144,13 +144,16 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   @Override
   public void commandStarted(ExecutionContext context) {
     suiteExecutionReport.addExecutionContext(context.getCommand(), context.getTestSystemName());
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.commandStarted(context);
+    }
   }
 
   @Override
   public void stdOut(String output) {
     suiteExecutionReport.addStdOut(output);
     if (testHistoryFormatter != null) {
-      testHistoryFormatter.addStdOut(output);
+      testHistoryFormatter.stdOut(output);
     }
   }
 
@@ -158,7 +161,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   public void stdErr(String output) {
     suiteExecutionReport.addStdErr(output);
     if (testHistoryFormatter != null) {
-      testHistoryFormatter.addStdErr(output);
+      testHistoryFormatter.stdErr(output);
     }
   }
 
