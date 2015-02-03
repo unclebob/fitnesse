@@ -16,6 +16,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.util.XmlUtil;
+import org.w3c.dom.NodeList;
 
 public abstract class ExecutionReport {
   private String version;
@@ -104,6 +105,37 @@ public abstract class ExecutionReport {
     Element historyDocument = xmlDoc.getDocumentElement();
     unpackCommonFields(historyDocument);
     unpackResults(historyDocument);
+    unpackExecutionLogs(historyDocument);
+  }
+
+  private void unpackExecutionLogs(Element historyDocument) {
+    NodeList logs = historyDocument.getElementsByTagName("executionLog");
+    if (logs == null) {
+      return;
+    }
+    for (int i = 0; i < logs.getLength(); i++) {
+      Element log = (Element) logs.item(i);
+      String commandLine = XmlUtil.getTextValue(log, "command");
+      String testSystemName = XmlUtil.getTextValue(log, "testSystem");
+      String exitCode = XmlUtil.getTextValue(log, "exitCode");
+      String stdOut = XmlUtil.getTextValue(log, "stdOut");
+      String stdErr = XmlUtil.getTextValue(log, "stdErr");
+
+      ExecutionLogReport report = new ExecutionLogReport(commandLine, testSystemName);
+      if (StringUtils.isNotBlank(exitCode)) {
+        report.exitCode(Integer.parseInt(exitCode));
+      }
+      report.setStdOut(stdOut);
+      report.setStdErr(stdErr);
+
+      NodeList exceptionNodes = log.getElementsByTagName("exception");
+      if (exceptionNodes != null) {
+        for (int k = 0; k < exceptionNodes.getLength(); k++) {
+          report.exceptionOccurred(new Exception(exceptionNodes.item(k).getTextContent()));
+        }
+      }
+      executionLogs.add(report);
+    }
   }
 
   protected abstract void unpackResults(Element testResults);
@@ -198,7 +230,11 @@ public abstract class ExecutionReport {
     }
 
     public void addStdOut(String output) {
-      stdOut.append(output);
+      stdOut.append(output).append("\n");
+    }
+
+    public void setStdOut(String output) {
+      this.stdOut.append(output);
     }
 
     public String getStdOut() {
@@ -206,7 +242,11 @@ public abstract class ExecutionReport {
     }
 
     public void addStdErr(String output) {
-      stdErr.append(output);
+      stdErr.append(output).append("\n");
+    }
+
+    public void setStdErr(String output) {
+      this.stdErr.append(output);
     }
 
     public String getStdErr() {
