@@ -76,7 +76,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  private boolean includeHtml = true;
+  protected boolean includeHtml = true;
   int exitCode;
   private CompositeExecutionLog log;
 
@@ -220,14 +220,18 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (!request.hasInput("nohistory")) {
-      SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
-      runner.addTestSystemListener(historyFormatter);
-      runner.addExecutionLogListener(historyFormatter);
+      addHistoryFormatter(runner);
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
+  }
+
+  protected void addHistoryFormatter(MultipleTestsRunner runner) {
+    SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
+    runner.addTestSystemListener(historyFormatter);
+    runner.addExecutionLogListener(historyFormatter);
   }
 
   private void createMainFormatter() {
@@ -248,7 +252,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return "testPage";
   }
 
-  BaseFormatter newXmlFormatter() {
+  protected BaseFormatter newXmlFormatter() {
     SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
     if (includeHtml)
       xmlFormatter.includeHtml();
@@ -355,9 +359,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     //request already confirmed not-null
     String orFilterString = null;
     if(request.getInput(OR_FILTER_ARG_1) != null){
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+      orFilterString = request.getInput(OR_FILTER_ARG_1);
     } else {
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+      orFilterString = request.getInput(OR_FILTER_ARG_2);
     }
     return orFilterString;
   }
@@ -413,8 +417,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
-
-  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+  private SuiteHistoryFormatter getSuiteHistoryFormatter() {
     if (suiteHistoryFormatter == null) {
       HistoryWriterFactory source = new HistoryWriterFactory();
       suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);
