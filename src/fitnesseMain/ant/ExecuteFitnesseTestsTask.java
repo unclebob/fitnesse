@@ -18,7 +18,6 @@ import org.apache.tools.ant.types.Reference;
 
 /**
  * Task to run fit tests. This task runs fitnesse tests and publishes the results.
- * <p/>
  * <pre>
  * Usage:
  * &lt;taskdef name=&quot;execute-fitnesse-tests&quot;
@@ -27,7 +26,7 @@ import org.apache.tools.ant.types.Reference;
  * OR
  * &lt;taskdef classpathref=&quot;classpath&quot;
  *             resource=&quot;tasks.properties&quot; /&gt;
- * <p/>
+ *
  * &lt;execute-fitnesse-tests
  *     suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot;
  *     fitnesseport=&quot;8082&quot;
