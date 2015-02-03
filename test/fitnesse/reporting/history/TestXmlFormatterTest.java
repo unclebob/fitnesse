@@ -136,9 +136,9 @@ public class TestXmlFormatterTest {
         return "testSystem";
       }
     });
-    formatter.stdOut("Command started\n");
+    formatter.stdOut("Command started");
     formatter.testStarted(testPage);
-    formatter.stdOut("After started\n");
+    formatter.stdOut("After started");
     clock.elapse(77L);
     formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
     formatter.exitCode(0);

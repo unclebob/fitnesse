@@ -84,9 +84,9 @@ public class SuiteHistoryFormatterTest {
         return "testSystem";
       }
     });
-    formatter.stdOut("Command started\n");
+    formatter.stdOut("Command started");
     formatter.testStarted(testPage);
-    formatter.stdOut("After started\n");
+    formatter.stdOut("After started");
     clock.elapse(elapsedTime);
     formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
     formatter.exitCode(0);
