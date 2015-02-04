@@ -4,6 +4,7 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 public abstract class MethodExecutor {
   public MethodExecutor() {
@@ -33,8 +34,8 @@ public abstract class MethodExecutor {
   }
 
   protected Object[] convertArgs(Method method, Object args[]) {
-    Class<?>[] argumentTypes = method.getParameterTypes();
-    return ConverterSupport.convertArgs(args, argumentTypes);
+    Type[] argumentParameterTypes = method.getGenericParameterTypes();
+    return ConverterSupport.convertArgs(args, argumentParameterTypes);
   }
 
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {

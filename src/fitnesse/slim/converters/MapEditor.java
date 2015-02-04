@@ -1,6 +1,7 @@
 package fitnesse.slim.converters;
 
 import fitnesse.html.HtmlTag;
+
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class MapEditor extends PropertyEditorSupport {
 
-  private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
-  private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
+  private static final String[] specialHtmlChars = new String[] { "&", "<", ">" };
+  private static final String[] specialHtmlEscapes = new String[] { "&amp;", "&lt;", "&gt;" };
 
   private NodeList nodes;
 
@@ -31,6 +32,7 @@ public class MapEditor extends PropertyEditorSupport {
   }
 
   @Override
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public String getAsText() {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     Map<Object, Object> hash = (Map) getValue();
@@ -145,6 +147,5 @@ public class MapEditor extends PropertyEditorSupport {
         result = result.replace(originalStrings[i], replacementStrings[i]);
     return result;
   }
-
 
 }
