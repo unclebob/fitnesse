@@ -455,19 +455,4 @@ public class PageHistoryResponderTest {
     FileUtil.createFile(resultFile, "JUNK");
   }
 
-
-  private TestExecutionReport makeBadDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
-    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.addResult(result);
-    result.right = "xx";
-    result.wrong = "22";
-    result.ignores = "33";
-    result.exceptions = "44";
-    result.relativePageName = "relativePageName";
-    result.content = "wad of HTML content";
-    return testResponse;
-  }
-
 }

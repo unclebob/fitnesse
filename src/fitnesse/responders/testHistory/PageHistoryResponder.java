@@ -80,7 +80,7 @@ public class PageHistoryResponder implements SecureResponder {
 
   private Response tryToMakeTestExecutionReport(Request request) {
     Date resultDate;
-    String date = (String) request.getInput("resultDate");
+    String date = request.getInput("resultDate");
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {

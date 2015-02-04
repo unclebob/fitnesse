@@ -125,8 +125,12 @@ public abstract class ExecutionReport {
       if (StringUtils.isNotBlank(exitCode)) {
         report.exitCode(Integer.parseInt(exitCode));
       }
-      report.setStdOut(stdOut);
-      report.setStdErr(stdErr);
+      if (stdOut != null) {
+        report.setStdOut(stdOut);
+      }
+      if (stdErr != null) {
+        report.setStdErr(stdErr);
+      }
 
       NodeList exceptionNodes = log.getElementsByTagName("exception");
       if (exceptionNodes != null) {
