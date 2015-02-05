@@ -124,6 +124,7 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
+    page.put("resultDate", dateFormat.format(report.getDate()));
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
@@ -134,6 +135,9 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
+    if (!report.getExecutionLogs().isEmpty()) {
+      page.put("resultDate", dateFormat.format(report.getDate()));
+    }
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
     page.setErrorNavTemplate("errorNavigator");

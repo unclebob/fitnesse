@@ -3,6 +3,7 @@
   <tr>
     <td>$testExecutionReport.Date</td>
     <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
+    #if( $resultDate )<td><a href="?executionLog&resultDate=$resultDate">Execution Log</a></td>#end
   </tr>
 </table>
 

@@ -5,6 +5,7 @@
   <tr>
     <td>$suiteExecutionReport.getDate()</td>
     <td class="meta">FitNesse Version: $suiteExecutionReport.Version</td>
+    <td><a href="?executionLog&resultDate=$resultDate">Execution Log</a></td>
   </tr>
 </table>
 <hr/>
