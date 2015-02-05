@@ -135,14 +135,13 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   public String executionStatus(CompositeExecutionLog log) {
-    String errorLogPageName = log.getErrorLogPageName();
     if (log.exceptionCount() != 0)
-      return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.ERROR);
+      return makeExecutionStatusLink(ExecutionStatus.ERROR);
 
     if (log.hasCapturedOutput())
-      return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OUTPUT);
+      return makeExecutionStatusLink(ExecutionStatus.OUTPUT);
 
-    return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
+    return makeExecutionStatusLink(ExecutionStatus.OK);
   }
 
   private String initErroMetadata() {
@@ -150,8 +149,8 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
     return init.html();
   }
 
-  public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
-    HtmlTag status = HtmlUtil.makeLink(linkHref, executionStatus.getMessage());
+  public static String makeExecutionStatusLink(ExecutionStatus executionStatus) {
+    HtmlTag status = HtmlUtil.makeLink("?executionLog", executionStatus.getMessage());
     status.addAttribute("class", executionStatus.getStyle());
     return status.html();
   }

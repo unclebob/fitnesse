@@ -288,7 +288,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       runner.executeTestPages();
     } finally {
       runningTestingTracker.removeEndedProcess(testRunId);
-      log.publish(context.pageFactory);
     }
   }
 

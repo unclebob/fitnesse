@@ -16,6 +16,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.reporting.history.ExecutionReport;
 import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.responders.ErrorResponder;
@@ -63,7 +64,11 @@ public class ExecutionLogResponder implements SecureResponder {
     String content = FileUtil.getFileContent(testResultRecord.getFile());
     ExecutionReport report = ExecutionReport.makeReport(content);
     HtmlPage page = context.pageFactory.newPage();
-    PageTitle pageTitle = new PageTitle("Execution Log", PathParser.parse(request.getResource()), "" /* tags */);
+    String tags = "";
+    if (report instanceof TestExecutionReport) {
+      tags = ((TestExecutionReport) report).getResults().get(0).getTags();
+    }
+    PageTitle pageTitle = new PageTitle("Execution Log", PathParser.parse(request.getResource()), tags);
     page.setPageTitle(pageTitle);
     page.setTitle("Execution Log");
     page.setNavTemplate("viewNav");

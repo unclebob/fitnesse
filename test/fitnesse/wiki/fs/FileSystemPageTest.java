@@ -206,14 +206,6 @@ public class FileSystemPageTest {
   }
 
   @Test
-  public void testDefaultAttributesForErrorLogsPageName() throws Exception {
-    WikiPage errorLogsPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    PageData data = errorLogsPage.getData();
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
   public void testDefaultAttributesForSuiteSetUpPageNames() throws Exception {
     WikiPage suiteSetupPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
     PageData data = suiteSetupPage.getData();

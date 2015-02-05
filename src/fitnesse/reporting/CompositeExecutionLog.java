@@ -16,43 +16,14 @@ import fitnesse.util.Clock;
 
 public class CompositeExecutionLog implements ExecutionLogListener {
 
-  private final WikiPage testPage;
   private final String testPagePath;
-  private WikiPagePath errorLogPagePath;
   private ExecutionLog executionLog;
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
   private long startTime;
 
   public CompositeExecutionLog(WikiPage testPage) {
-    this.testPage = testPage;
     PageCrawler crawler = testPage.getPageCrawler();
     testPagePath = "." + crawler.getFullPath();
-    errorLogPagePath = crawler.getFullPath().addNameToFront(WikiPage.ErrorLogName);
-
-  }
-
-  public void publish(PageFactory pageFactory) {
-    String content = buildLogContent(pageFactory);
-    PageCrawler crawler = testPage.getPageCrawler();
-    WikiPage root = crawler.getRoot();
-
-    WikiPage errorLogPage = WikiPageUtil.addPage(root, errorLogPagePath);
-    PageData data = errorLogPage.getData();
-
-    if(root != null) {
-      WikiPagePath wpp = new WikiPagePath(errorLogPagePath.getRest());
-      WikiPage wikiPage = root.getPageCrawler().getPage(wpp);
-      if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();
-        String tags = pageData.getAttribute(PageData.PropertySUITES);
-        if(tags != null && !"".equals(tags)){
-          data.setAttribute(PageData.PropertySUITES,tags);
-        }
-      }
-    }
-
-    data.setContent(content);
-    errorLogPage.commit(data);
   }
 
   String buildLogContent(PageFactory pageFactory) {
@@ -63,10 +34,6 @@ public class CompositeExecutionLog implements ExecutionLogListener {
     context.put("logs", logs);
 
     return pageFactory.render(context, "executionLog.vm");
-  }
-
-  public String getErrorLogPageName() {
-    return PathParser.render(errorLogPagePath);
   }
 
   public int exceptionCount() {
