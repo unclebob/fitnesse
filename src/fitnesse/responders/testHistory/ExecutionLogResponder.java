@@ -73,6 +73,8 @@ public class ExecutionLogResponder implements SecureResponder {
     page.setTitle("Execution Log");
     page.setNavTemplate("viewNav");
     page.put("currentDate", resultDate);
+    page.put("resultDate", dateFormat.format(resultDate));
+    page.put("version", report.getVersion());
     page.put("viewLocation", request.getResource());
     page.put("runTime", report.getTotalRunTimeInMillis() / 1000);
     page.put("logs", report.getExecutionLogs());

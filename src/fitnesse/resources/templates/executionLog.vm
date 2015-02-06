@@ -1,9 +1,14 @@
 #foreach( $log in $logs )
-<h3>${log.testSystemName}</h3>
 <table>
  <tr>
-  <th>Date</th><td>$currentDate</td>
+  <td>$currentDate</td>
+  <td class="meta">FitNesse Version: $version</td>
+  <td><a href="?pageHistory&resultDate=$resultDate">Page History</a></td>
  </tr>
+</table>
+
+<h3>${log.testSystemName}</h3>
+<table>
  <tr>
   <th>Test page:</th><td>$viewLocation</td>
  </tr>
