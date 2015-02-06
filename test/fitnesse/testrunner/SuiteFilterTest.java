@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -155,6 +155,19 @@ public class SuiteFilterTest {
   @Test
   public void testChecksNotMatchFilterSuite() throws Exception {
     SuiteFilter filter = new SuiteFilter(null, "bad", null,  null);
+
+    WikiPage failSuite = addTestPage(root, "FailSuite", "Bad Test");
+    PageData data = failSuite.getData();
+    data.setAttribute(PageData.PropertySUITES, "bad");
+    data.setAttribute("Suite");
+    failSuite.commit(data);
+
+    assertFalse(filter.getFilterForTestsInSuite(failSuite).hasMatchingTests());
+  }
+
+  @Test
+  public void testChecksNotMatchFilterWithInvalidTagSuite() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, "bad, notsobad", "",  null);
 
     WikiPage failSuite = addTestPage(root, "FailSuite", "Bad Test");
     PageData data = failSuite.getData();

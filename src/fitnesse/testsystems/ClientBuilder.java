@@ -1,11 +1,12 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
-
-import fitnesse.wiki.ReadOnlyPageData;
+import java.util.regex.Pattern;
 
 public abstract class ClientBuilder<T> {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
@@ -104,7 +105,15 @@ public abstract class ClientBuilder<T> {
   }
 
   private String[] parseCommandLine(String commandLine) {
-    return commandLine.split(" ");
+		Collection<String> result = new ArrayList<String>();
+		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
+		Matcher m = p.matcher(commandLine);
+		while(m.find())
+		{
+		  String token = (m.group(1)==null) ? m.group(0) : m.group(1);   
+		  result.add(token);
+		}
+		return result.toArray(new String[result.size()]); 
   }
 
   public Map<String, String> createClasspathEnvironment(String classPath) {
@@ -117,7 +126,7 @@ public abstract class ClientBuilder<T> {
   }
 
   public String getClassPath() {
-    return descriptor.getClassPath();
+    return descriptor.getClassPath().toString();
   }
 
   public boolean isDebug() {
@@ -152,6 +161,9 @@ public abstract class ClientBuilder<T> {
       if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
         return pathEntry;
       }
+      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d-standalone.jar")) {
+        return pathEntry;
+      }
     }
 
     return "fitnesse.jar";
@@ -166,7 +178,7 @@ public abstract class ClientBuilder<T> {
       result = javaHome + separator + "bin" + separator + "java"; 
       if (wrapInQuotes) {
     	  result = "\"" + result + "\"";
-      };
+      }
     }
     return result;
   }

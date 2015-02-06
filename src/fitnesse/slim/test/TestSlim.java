@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TestSlim implements TestSlimInterface {
+  public static final int HUGE_MESSAGE_SIZE = 999999 + 10;
   private boolean niladWasCalled = false;
   private String stringArg;
   private int intArg;
@@ -70,6 +71,14 @@ public class TestSlim implements TestSlimInterface {
 
   public int returnInt() {
     return 7;
+  }
+
+  public String returnHugeString() {
+    StringBuilder builder = new StringBuilder(HUGE_MESSAGE_SIZE);
+    for (int i = 0; i < HUGE_MESSAGE_SIZE; i++) {
+      builder.append('x');
+    }
+    return builder.toString();
   }
 
   public void setString(String arg) {

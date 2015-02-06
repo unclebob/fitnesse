@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -13,7 +14,8 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.Utils;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +39,7 @@ public class PropertiesResponder implements SecureResponder {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
@@ -64,16 +66,27 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private JSONObject makeJson() {
-    response.setContentType("text/json");
+    response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
     String attributes[] = new String[] { TEST.toString(), PropertySEARCH,
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
-        PropertySECURE_TEST };
+        PropertySECURE_TEST, PropertyFILES };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
-
+    if (pageData.hasAttribute(PropertyHELP)) {
+      jsonObject.put(PropertyHELP, pageData.getAttribute(PropertyHELP));
+    }
+    if (pageData.hasAttribute(PropertySUITES)) {
+      JSONArray tags = new JSONArray();
+      for(String tag : pageData.getAttribute(PropertySUITES).split(",")) {
+        if (StringUtils.isNotBlank(tag)) {
+          tags.put(tag.trim());
+        }
+      }
+      jsonObject.put(PropertySUITES, tags);
+    }
     return jsonObject;
   }
 
@@ -135,7 +148,6 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makePageTypeRadiosHtml(PageData pageData) {
     html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
-    String pt = getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES);
     html.put("selectedPageType", getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES));
   }
 
@@ -174,7 +186,7 @@ public class PropertiesResponder implements SecureResponder {
       String link = symLinksProperty.get(name);
 
       String path = makePathForSymbolicLink(link);
-      symlinks.add(new Symlink(name, Utils.escapeHTML(link), path));
+      symlinks.add(new Symlink(name, HtmlUtil.escapeHTML(link), path));
     }
     html.put("symlinks", symlinks);
   }

@@ -1,5 +1,15 @@
 !define TEST_SYSTEM {slim}
 
-Deal with Versions Controllers and the versions whey store
+Deal with Versions Controllers and the versions they store
 
-!contents -R2 -g -p -f -h
+!* Technical Note
+ This suite demonstrates the use of [[symbolic links ][.FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.SymbolicLinks]] to test two different implementations against the same requirements.
+ The requirements must only be written ones!
+
+ The suite also uses variable expressions to handle ambiguity in the different implementations.
+  
+*!
+
+!define Create_backup_for_initial_page_version (0)
+
+!contents -R3 -g -p -f -h

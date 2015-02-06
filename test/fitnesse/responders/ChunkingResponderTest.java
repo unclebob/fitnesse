@@ -29,7 +29,7 @@ public class ChunkingResponderTest {
 
  @Before
  public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
@@ -45,7 +45,7 @@ public class ChunkingResponderTest {
   @Test
   public void chunkingShouldBeTurnedOffIfnochunkParameterIsPresent() throws Exception {
     MockRequest request = new MockRequest();
-    request.addInput("nochunk", null);
+    request.addInput("nochunk", "");
     response = (ChunkedResponse)responder.makeResponse(context, request);
     assertTrue(response.isChunkingTurnedOff());
   }

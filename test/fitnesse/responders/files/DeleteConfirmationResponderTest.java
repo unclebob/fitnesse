@@ -19,7 +19,7 @@ public class DeleteConfirmationResponderTest {
   @Before
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test

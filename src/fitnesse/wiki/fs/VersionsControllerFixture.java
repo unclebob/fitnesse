@@ -30,7 +30,7 @@ public class VersionsControllerFixture {
   }
 
   public void createWikiRoot() {
-    rootPage = pageFactory.makeRootPage(TEST_DIR, "RooT");
+    rootPage = pageFactory.makePage(new File(TEST_DIR, "RooT"), "RooT", null, new SystemVariableSource());
   }
 
   public WikiPage getRootPage() {
@@ -59,11 +59,34 @@ public class VersionsControllerFixture {
     return versions.size();
   }
 
+  public String getVersionInfos() {
+	String result = new String();    
+	Collection<VersionInfo> versions = lastUsedPage.getVersions();
+	for (VersionInfo version : versions){
+		result = result  + version.getName() +"-" + version.getAuthor() + "-" + version.getCreationTime() + "\n";
+	}
+	return result;
+  }
+
   public String contentForRevision(int n) {
     List<VersionInfo> versions = new ArrayList<VersionInfo>(lastUsedPage.getVersions());
-    PageData data = lastUsedPage.getDataVersion(versions.get(versions.size() - 1 - n).getName());
-    return data.getContent();
+    WikiPage page = lastUsedPage.getVersion(versions.get(versions.size() - 1 - n).getName());
+    return page.getData().getContent();
   }
+
+  public String contentForRevisionFromPage(int n, String pageName) {
+	    final PageCrawler pageCrawler = rootPage.getPageCrawler();
+	    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
+	    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
+	    else return contentForRevision(n);
+  }
+
+  public String contentFromPage(String pageName) {
+	    final PageCrawler pageCrawler = rootPage.getPageCrawler();
+	    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
+	    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
+	    else return lastUsedPage.getData().getContent();
+}
 
   public boolean initialiseGitRepository() throws GitAPIException {
     FileUtil.createDir(TEST_DIR);

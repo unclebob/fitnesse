@@ -6,7 +6,6 @@ import static util.RegexTestCase.assertSubString;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
@@ -15,7 +14,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,8 +30,9 @@ public class AddChildPageResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
+
     crawler = root.getPageCrawler();
     WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     childName = "ChildPage";
@@ -43,7 +43,6 @@ public class AddChildPageResponderTest {
     request.addInput("pageName", childName);
     request.addInput("pageContent", childContent);
     request.addInput("pageType", pagetype);
-    context = FitNesseUtil.makeTestContext(root);
     responder = new AddChildPageResponder();
     path = PathParser.parse("TestPage.ChildPage");
   }
@@ -79,6 +78,15 @@ public class AddChildPageResponderTest {
   }
 
   @Test
+  public void noPageIsMadeIfPageAlreadyExists() throws Exception {
+    WikiPageUtil.addPage(root, PathParser.parse("TestPage." + childName), "");
+
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertTrue(response.getStatus() == 409);
+    assertSubString("Child page already exists", response.getContent());
+  }
+
+  @Test
   public void givesAInvalidNameErrorForAInvalidName() throws Exception {
     request = makeInvalidRequest("");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -89,7 +97,7 @@ public class AddChildPageResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 
-    request = makeInvalidRequest("1man1mission");
+    request = makeInvalidRequest("1man+1mission");
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertSubString("Invalid Child Name", response.getContent());
 
@@ -194,7 +202,7 @@ public class AddChildPageResponderTest {
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
     request.addInput(NewPageResponder.PAGE_TEMPLATE, ".TemplatePage");
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     WikiPage newPage = root.getChildPage("TestChildPage");
     assertNotNull(newPage);

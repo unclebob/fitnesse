@@ -11,7 +11,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TraverseDirectiveTest {
 
@@ -19,8 +19,7 @@ public class TraverseDirectiveTest {
   
   @Before
   public void setUp() {
-    WikiPage root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     context.pageFactory.getVelocityEngine().loadDirective(TraverseDirective.class.getName());
   }
   

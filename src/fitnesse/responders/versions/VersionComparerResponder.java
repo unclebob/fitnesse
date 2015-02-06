@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import fitnesse.FitNesseContext;
@@ -41,7 +42,7 @@ public class VersionComparerResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
     String resource = request.getResource();
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -53,20 +54,20 @@ public class VersionComparerResponder implements Responder {
       String message = String.format("Compare Failed because no Input Files were given. Select one or two please.");
       return makeErrorResponse(context, request, message);
     }
-    PageData firstVersionData = page.getDataVersion(firstVersion);
-    PageData secondVersionData;
+    WikiPage firstVersionPage = page.getVersion(firstVersion);
+    WikiPage secondVersionPage;
     if (secondVersion.equals(""))
-      secondVersionData = page.getData();
+      secondVersionPage = page;
     else
-      secondVersionData = page.getDataVersion(secondVersion);
-    comparer.compare(firstVersion, firstVersionData.getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionData.getContent());
+      secondVersionPage = page.getVersion(secondVersion);
+    comparer.compare(firstVersion, firstVersionPage.getData().getContent(), secondVersion.equals("") ? "latest" : secondVersion, secondVersionPage.getData().getContent());
     return makeValidResponse(request);
   }
 
   private boolean getVersionsFromRequest(Request request) {
     firstVersion = "";
     secondVersion = "";
-    Map<String, Object> inputs = request.getMap();
+    Map<String, String> inputs = request.getMap();
     Set<String> keys = inputs.keySet();
     return setFileNames(keys);
   }
@@ -117,9 +118,9 @@ public class VersionComparerResponder implements Responder {
   private PageTitle makePageTitle(String resource) {
 
     String tags="";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

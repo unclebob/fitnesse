@@ -18,10 +18,11 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -33,11 +34,11 @@ public class VersionResponder implements SecureResponder {
 
   public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
-    version = (String) request.getInput("version");
+    version = request.getInput("version");
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage(request.getMap()).getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -53,10 +54,10 @@ public class VersionResponder implements SecureResponder {
   }
 
   private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
-    PageData pageData = page.getDataVersion(version);
+    WikiPage pageVersion = page.getVersion(version);
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
-    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
+    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageVersion.getData().getAttribute(PageData.PropertySUITES)));
     // TODO: subclass actions for specific rollback behaviour.
     html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);
@@ -71,7 +72,7 @@ public class VersionResponder implements SecureResponder {
     html.put("previousVersion", previousVersion);
 
     html.setMainTemplate("wikiPage");
-    html.put("content", new VersionRenderer(pageData));
+    html.put("content", new VersionRenderer(pageVersion));
     return html;
   }
 
@@ -100,27 +101,20 @@ public class VersionResponder implements SecureResponder {
   }
 
   public class VersionRenderer {
-    private PageData pageData;
+    private WikiPage page;
 
-    public VersionRenderer(PageData pageData) {
+    public VersionRenderer(WikiPage page) {
       super();
-      this.pageData = pageData;
+      this.page = page;
     }
 
     public String render() {
-      ReadOnlyPageData data;
-      if (isTestPage(pageData)) {
-        WikiTestPage testPage = new WikiTestPage(pageData);
-        data = testPage.getDecoratedData();
+      if (WikiTestPage.isTestPage(page)) {
+        WikiTestPage testPage = new WikiTestPage(page);
+        return WikiTestPageUtil.makePageHtml(testPage);
       } else {
-        data = pageData;
+        return WikiPageUtil.makePageHtml(page);
       }
-      return WikiPageUtil.makePageHtml(data);
-
-    }
-
-    private boolean isTestPage(PageData pageData) {
-      return pageData.hasAttribute("Test");
     }
   }
 }

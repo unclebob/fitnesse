@@ -4,12 +4,12 @@ package fitnesse.fixtures;
 
 import fit.ColumnFixture;
 import fitnesse.FitNesseExpediter;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.Utils;
 
 public class ResponseRequester extends ColumnFixture {
   public String uri;
@@ -32,7 +32,7 @@ public class ResponseRequester extends ColumnFixture {
 
     request.parseRequestUri("/" + uri);
     WikiPagePath path = PathParser.parse(request.getResource()); // uri;
-    FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(path);
+    FitnesseFixtureContext.page = FitnesseFixtureContext.context.getRootPage().getPageCrawler().getPage(path);
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
     FitnesseFixtureContext.response = expediter.createGoodResponse(request);
     FitnesseFixtureContext.sender = new MockResponseSender();
@@ -45,7 +45,7 @@ public class ResponseRequester extends ColumnFixture {
   }
 
   public String contents() throws Exception {
-    return "<pre>" + Utils.escapeHTML(FitnesseFixtureContext.sender.sentData()) + "</pre>";
+    return "<pre>" + HtmlUtil.escapeHTML(FitnesseFixtureContext.sender.sentData()) + "</pre>";
   }
 
   public String html() throws Exception {

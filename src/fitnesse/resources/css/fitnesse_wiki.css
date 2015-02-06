@@ -87,6 +87,42 @@ table {
 	border: 1px solid #EEEEEE;
 	border-collapse:collapse;
 }
+
+/* Table coloring */
+tr.slimRowTitle {
+	background-color: #f5f5f5;
+}
+tr.slimRowColor0 {
+	background-color: #F5FEFF;
+}
+tr.slimRowColor1 {
+	background-color: #F5FFF7;
+}
+tr.slimRowColor2 {
+	background-color: #F9F5FA;
+}
+tr.slimRowColor3 {
+	background-color: #FDF9FB;
+}
+tr.slimRowColor4 {
+	background-color: #FCFAF7;
+}
+tr.slimRowColor5 {
+	background-color: #F7FCFA;
+}
+tr.slimRowColor6 {
+	background-color: #F7F7F9;
+}
+tr.slimRowColor7 {
+	background-color: #FFFAFA;
+}
+tr.slimRowColor8 {
+	background-color: #FBF9FF;
+}
+tr.slimRowColor9 {
+	background-color: #FDFCF9;
+}
+
 td, th {
 	padding: 0.25em 0.5em;
 }

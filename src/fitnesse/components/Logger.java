@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 // TODO: Convert to java.util.logging.Formatter
 public class Logger {
@@ -85,7 +84,7 @@ public class Logger {
     try {
       outputStream = new FileOutputStream(file);
     } catch (FileNotFoundException e) {
-      System.err.println("Unable to open log file. falling back to stderr");
+      System.err.println("Unable to open log file. Falling back to stderr");
       e.printStackTrace(System.err);
       outputStream = System.err;
     }
@@ -103,6 +102,7 @@ public class Logger {
     return tmpFormat.format(calendar.getTime());
   }
 
+  @Override
   public String toString() {
     return getDirectory().getAbsolutePath();
   }

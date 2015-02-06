@@ -10,22 +10,19 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
 public class HtmlUtilTest {
 
-  private WikiPage root;
   private FitNesseContext context;
 
   @Before
   public void setUp() {
-    root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
@@ -62,7 +59,7 @@ public class HtmlUtilTest {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -70,14 +67,24 @@ public class HtmlUtilTest {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
+  }
+
+  @Test
+  public void shouldEscapeOnlyXmlCharacters() {
+    assertEquals("ab&amp;cd&lt;ef&gt;", HtmlUtil.escapeHTML("ab&cd<ef>"));
+  }
+
+  @Test
+  public void shouldEscapeMultipleOccurencesOfTheSameCharacter() {
+    assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
   }
 
   private String getActionsHtml(String pageName) {
-    WikiPageUtil.addPage(root, PathParser.parse(pageName), "");
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setNavTemplate("wikiNav.vm");
-    htmlPage.put("actions", new WikiPageActions(root.getChildPage(pageName)));
+    htmlPage.put("actions", new WikiPageActions(context.getRootPage().getChildPage(pageName)));
     return htmlPage.html();
   }
 

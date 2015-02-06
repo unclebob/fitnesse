@@ -23,6 +23,7 @@ public class SlimServer implements SocketServer {
   public static final String COULD_NOT_INVOKE_CONSTRUCTOR = "COULD_NOT_INVOKE_CONSTRUCTOR";
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
+  public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
   private StreamReader reader;
   private BufferedWriter writer;
@@ -71,20 +72,19 @@ public class SlimServer implements SocketServer {
   }
 
   private String getInstructionsFromClient() throws IOException {
-    String data = reader.read(6);
-    int instructionLength;
-    try {
-      instructionLength = Integer.parseInt(data);
-    } catch (NumberFormatException e) {
-      System.err.println("Number format error: " + data);
-      throw e;
-    }
-    String colon = reader.read(1);
-    if (!":".equals(colon)) {
-      throw new SlimError("protocol error: expected colon after message length field: " + colon);
-    }
+    int instructionLength = getLengthToRead();
     String instructions = reader.read(instructionLength);
     return instructions;
+  }
+
+  private int getLengthToRead() throws IOException  {
+    String lengthField = reader.readUpTo(":");
+    try {
+      return Integer.parseInt(lengthField);
+    }
+    catch (NumberFormatException e){
+      throw new IOException("Stream Read Failure. Can't read length of message from the client.  Last thing read: " + lengthField);
+    }
   }
 
   private boolean processTheInstructions(String instructions) throws IOException {

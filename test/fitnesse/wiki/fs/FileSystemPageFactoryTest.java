@@ -4,7 +4,6 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,8 +22,8 @@ public class FileSystemPageFactoryTest {
     @Before
     public void SetUp() throws Exception {
         fileSystem = new MemoryFileSystem();
-        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController(), new SystemVariableSource());
-        rootPage = fileSystemPageFactory.makeRootPage(".", "somepath") ;
+        fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController());
+        rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null, new SystemVariableSource()) ;
     }
 
     @Test
@@ -63,7 +62,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
-        assertEquals("MyfilE", child.getName());
+        assertEquals("myfile", child.getName());
     }
 
     @Test
@@ -72,7 +71,7 @@ public class FileSystemPageFactoryTest {
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
         WikiPage child = page.getChildren().get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());
-        assertEquals("SubsuitE", child.getName());
+        assertEquals("subsuite", child.getName());
     }
 
   @Test
@@ -89,7 +88,6 @@ public class FileSystemPageFactoryTest {
 
     VersionsController defaultRevisionController = fileSystemPageFactory.getVersionsController();
     assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
-    assertEquals(14, ((NullVersionsController) defaultRevisionController).getHistoryDepth());
   }
 
   @Test
@@ -105,14 +103,11 @@ public class FileSystemPageFactoryTest {
   }
 
   public static class NullVersionsController implements VersionsController {
-    private int historyDepth;
 
-    public NullVersionsController() {
-    }
+    private final int historyDepth;
 
-    @Override
-    public void setHistoryDepth(int historyDepth) {
-      this.historyDepth = historyDepth;
+    public NullVersionsController(Properties properties) {
+      historyDepth = Integer.valueOf(properties.getProperty(ConfigurationParameter.VERSIONS_CONTROLLER_DAYS.getKey(), "0"));
     }
 
     public int getHistoryDepth() {

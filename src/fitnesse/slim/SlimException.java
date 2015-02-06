@@ -78,8 +78,10 @@ public class SlimException extends Exception {
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    if (getCause() != null && getCause().getClass().toString().contains("StopTest")) {
+    if (isStopTestException(getCause())) {
       sb.append(SlimServer.EXCEPTION_STOP_TEST_TAG);
+    } else if (isStopSuiteException(getCause())) {
+        sb.append(SlimServer.EXCEPTION_STOP_SUITE_TAG);
     } else {
       sb.append(SlimServer.EXCEPTION_TAG);
     }
@@ -110,5 +112,13 @@ public class SlimException extends Exception {
     }
 
     return sb.toString();
+  }
+
+  public static boolean isStopTestException(Throwable t) {
+    return t != null && t.getClass().toString().contains("StopTest");
+  }
+
+  public static boolean isStopSuiteException(Throwable t) {
+    return t != null && t.getClass().toString().contains("StopSuite");
   }
 }

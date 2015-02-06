@@ -8,14 +8,6 @@ import java.util.Date;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.history.PageHistory;
-import fitnesse.reporting.history.SuiteExecutionReport;
-import fitnesse.reporting.history.SuiteHistoryFormatter;
-import fitnesse.reporting.history.TestExecutionReport;
-import fitnesse.reporting.history.TestHistory;
-import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -28,6 +20,7 @@ import org.xml.sax.SAXException;
  */
 public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
 
+  private final FitNesseContext context;
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
   private boolean includeHtml;
@@ -35,7 +28,8 @@ public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
   private TestHistory testHistory;
 
   public SuiteXmlReformatter(FitNesseContext context, WikiPage page, Writer writer, SuiteHistoryFormatter historyFormatter) {
-    super(context, page);
+    super(page);
+    this.context = context;
     this.writer = writer;
     this.historyFormatter = historyFormatter;
   }

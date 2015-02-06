@@ -1,16 +1,15 @@
 
-.wysiwyg {
-    border: 1px solid #d7d7d7;
-    display: block;
-}
 textarea#pageContent {
     border: 1px solid #d7d7d7;
 }
 
 .wysiwyg {
+    border: 1px solid #d7d7d7;
+    display: block;
     clear: both;
     overflow: scroll;
     padding: 0 4px;
+    outline: none;
 }
 
 .wysiwyg:focus {
@@ -31,9 +30,9 @@ textarea#pageContent {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-	margin-bottom: 4px;
 }
-.wysiwyg-toolbar ul, .wysiwyg-toolbar li {
+.wysiwyg-toolbar ul,
+.wysiwyg-toolbar li {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
@@ -44,74 +43,63 @@ textarea#pageContent {
     float: left;
     margin-right: 8px;
 }
+.wysiwyg-toolbar li {
+    display: inline-block;
+    background: white;
+    border: 1px solid #adadad;
+    border-right: none;
+    border-left-color: lightgray;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.wysiwyg-toolbar svg {
+    vertical-align: bottom;
+}
+
+.wysiwyg-toolbar li a {
+    display: inline-block;
+    padding: 1px 8px;
+    cursor: default;
+}
+
+.wysiwyg-toolbar li:first-child,
+.wysiwyg-toolbar li:first-child a {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-left-color: #adadad;
+}
+.wysiwyg-toolbar li:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-right: 1px solid #adadad;
+}
+.wysiwyg-toolbar li:last-child a {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.wysiwyg-toolbar li a:hover,
+.wysiwyg-toolbar li a:active,
+.wysiwyg-toolbar li.selected a {
+    background: #ebebeb;
+}
+
 .wysiwyg-toolbar ul#wm-style a {
-	border-radius: 2px;
-	padding: 0;
+    border-radius: 2px;
+    padding: 0;
 }
 .wysiwyg-toolbar ul#wm-style .wysiwyg-menu a {
     background-image: none;
-    width: auto;
-    height: auto;
     border: none;
-    background: white; /* Old browsers */
-    background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
-    background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
-}
-.wysiwyg-toolbar li {
-    display: block;
-    float: left;
-    background: white; /* Old browsers */
-	background: -moz-linear-gradient(top, white 0%, #eee 100%); /* FF3.6+ */
-	background: -webkit-linear-gradient(top, white 0%, #eee 100%); /* Chrome10+,Safari5.1+ */
-}
-.wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
-    background: transparent url(menusprite.png) no-repeat;
-    border: 1px solid gray;
-    border-right: none;
-    border-left-color: lightgray;
-    cursor: default;
-    width: 32px;
-    height: 20px;
-    display: block;
-    padding: 0 3px;
-}
-.wysiwyg-toolbar li:first-child,
-.wysiwyg-toolbar li:first-child a {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-.wysiwyg-toolbar li:first-child a {
-    padding-left: 5px;
-    border-left-color: gray;
-}
-.wysiwyg-toolbar li:last-child,
-.wysiwyg-toolbar li:last-child a {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-.wysiwyg-toolbar li:last-child a {
-    padding-right: 5px;
-    border-right: 1px solid gray;
-}
-.wysiwyg-toolbar li a:hover, .wysiwyg-toolbar li.selected a:hover {
-	background-color: #EEE;
-}
-.wysiwyg-toolbar li a:active, .wysiwyg-toolbar li.selected a:active {
-	border: 1px inset gray;
-	width: 30px;
-	height: 18px;
 }
 
 .wysiwyg-toolbar li a#wt-style {
     width: 78px;
     white-space: nowrap;
     overflow-x: hidden;
-    line-height: 1.5;
-    padding-left: 2px;
-    padding-right: 2px;
-    background-position: 51px -594px;
+    vertical-align: middle;
+    padding: 1px 5px;
 }
-.wysiwyg-toolbar li a#wt-style:active, .wysiwyg-toolbar li.selected a#wt-style:active {
+.wysiwyg-toolbar li a#wt-style:active {
 	border: none;
 }
 
@@ -131,37 +119,6 @@ textarea#pageContent {
 .wysiwyg-toolbar li.wysiwyg-menu-code      a#wt-style span.wysiwyg-menu-code {
     display: inline;
 }
-
-.wysiwyg-toolbar li a#wt-table    { background-position: 3px -2px; }
-.wysiwyg-toolbar li a#wt-remove   { background-position: 3px -222px; }
-.wysiwyg-toolbar li a#wt-strong   { background-position: 5px -242px; }
-.wysiwyg-toolbar li a#wt-em       { background-position: 3px -262px; }
-.wysiwyg-toolbar li a#wt-strike   { background-position: 3px -282px; }
-.wysiwyg-toolbar li a#wt-link     { background-position: 5px -302px; }
-.wysiwyg-toolbar li a#wt-unlink   { background-position: 3px -322px; }
-.wysiwyg-toolbar li a#wt-hr       { background-position: 3px -342px; }
-.wysiwyg-toolbar li a#wt-ul       { background-position: 5px -362px; }
-.wysiwyg-toolbar li a#wt-indent   { background-position: 3px -382px; }
-.wysiwyg-toolbar li a#wt-outdent  { background-position: 3px -402px; }
-.wysiwyg-toolbar li a#wt-escape   { background-position: 3px -422px; }
-.wysiwyg-toolbar li a#wt-unescape { background-position: 3px -485px; }
-
-.wysiwyg-toolbar li a#wt-collapsible-closed { background-position: 5px -442px; }
-.wysiwyg-toolbar li a#wt-collapsible-open   { background-position: 3px -462px; }
-.wysiwyg-toolbar li a#wt-collapsible-hidden { background-position: 3px -482px; }
-.wysiwyg-toolbar li a#wt-remove-collapsible { background-position: 3px -502px; }
-
-.wysiwyg-toolbar li a#wt-add-table          { background-position: 3px -2px; }
-.wysiwyg-toolbar li a#wt-remove-table       { background-position: 3px -22px; }
-.wysiwyg-toolbar li a#wt-insert-row-after   { background-position: 3px -42px; }
-.wysiwyg-toolbar li a#wt-insert-row-before  { background-position: 3px -62px; }
-.wysiwyg-toolbar li a#wt-insert-col-after   { background-position: 3px -82px; }
-.wysiwyg-toolbar li a#wt-insert-col-before  { background-position: 3px -102px; }
-.wysiwyg-toolbar li a#wt-insert-cell-after  { background-position: 3px -122px; }
-.wysiwyg-toolbar li a#wt-insert-cell-before { background-position: 5px -142px; }
-.wysiwyg-toolbar li a#wt-delete-row         { background-position: 3px -162px; }
-.wysiwyg-toolbar li a#wt-delete-col         { background-position: 3px -182px; }
-.wysiwyg-toolbar li a#wt-delete-cell        { background-position: 3px -202px; }
 
 .wysiwyg-menu {
     border: 1px solid #d7d7d7;
@@ -183,6 +140,7 @@ textarea#pageContent {
 .wysiwyg-menu blockquote.citation {
     margin: 4px 0 0;
     border: none;
+    background: none;
 }
 .wysiwyg-menu ul, .wysiwyg-menu li {
     list-style-type: none;
@@ -191,7 +149,6 @@ textarea#pageContent {
     padding: 0px;
 }
 .wysiwyg-menu :link, .wysiwyg-menu :visited {
-    display: block;
     padding: 1px;
     border: 1px solid #fff;
     color: #000;
@@ -208,4 +165,78 @@ textarea#pageContent {
 
 .wysiwyg-toolbar .in-table {
 	display: none;
+}
+
+.image-selector {
+    position: absolute;
+    background-color: white;
+    margin-top: 30px;
+    border:1px solid red;
+    z-index: 999;
+    width: 300px;
+    left: calc(50% - 150px);
+}
+
+
+.modal-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99999;
+    opacity:0;
+    /*-webkit-transition: opacity 400ms ease-in;*/
+    /*-moz-transition: opacity 400ms ease-in;*/
+    /*transition: opacity 400ms ease-in;*/
+    pointer-events: none;
+}
+
+.modal-dialog:target {
+    opacity:1;
+    pointer-events: auto;
+}
+
+.modal-dialog > div {
+    width: 400px;
+    position: relative;
+    margin: 5% auto;
+    padding: 5px 20px 13px 20px;
+    border: 1px solid #984D00
+    border-radius: 3px;
+    background: #fff;
+    /*background: -moz-linear-gradient(#fff, #999);*/
+    /*background: -webkit-linear-gradient(#fff, #999);*/
+    /*background: -o-linear-gradient(#fff, #999);*/
+}
+
+.modal-dialog ul {
+    border: 1px solid #eee;
+    padding-left: 28px;
+    height: 15em;
+    overflow: auto;
+    width: 370px;
+}
+.modal-dialog li {
+    list-style: none outside;
+    padding: 2px;
+    cursor: pointer;
+}
+.modal-dialog li:nth-child(odd) {
+    background: #fff
+}
+.modal-dialog li:nth-child(even) {
+    background: #efefef
+}
+.modal-dialog li:hover {
+    background: #dbeaf9;
+}
+
+.modal-dialog .directory {
+    list-style-image: url('../images/folder.gif');
+}
+
+.modal-dialog .url {
+    width: 100%
 }

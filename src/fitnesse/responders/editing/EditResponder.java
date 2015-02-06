@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -17,7 +18,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
@@ -48,12 +48,12 @@ public class EditResponder implements SecureResponder {
   }
 
   protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) {
-    initializeResponder(context.root, request);
+    initializeResponder(context.getRootPage(), request);
 
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = root.getPageCrawler();
 
     page = crawler.getPage(path, new MockingPageCrawler());
     pageData = page.getData();
@@ -84,7 +84,7 @@ public class EditResponder implements SecureResponder {
 
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.setMainTemplate("editPage");
-    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(context));
+    makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(page));
 
     return html.html();
   }
@@ -95,7 +95,7 @@ public class EditResponder implements SecureResponder {
     html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
 
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
-      String redirectUrl = request.getHeader("Referer").toString();
+      String redirectUrl = request.getHeader("Referer");
       int questionMarkIndex = redirectUrl.indexOf("?");
       if (questionMarkIndex > 0)
         redirectUrl = redirectUrl.substring(0, questionMarkIndex);
@@ -106,8 +106,7 @@ public class EditResponder implements SecureResponder {
     html.put(HELP_TEXT, pageData.getAttribute(PageData.PropertyHELP));
     html.put(TEMPLATE_MAP, TemplateUtil.getTemplateMap(page));
     html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
-    html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-
+    html.put(CONTENT_INPUT_NAME, HtmlUtil.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
   public SecureOperation getSecureOperation() {

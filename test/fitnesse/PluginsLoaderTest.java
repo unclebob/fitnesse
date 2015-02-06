@@ -16,7 +16,8 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.testrunner.TestSystemFactoryRegistrar;
+import fitnesse.testrunner.MultipleTestSystemFactory;
+import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
@@ -30,6 +31,9 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wikitext.parser.ParseSpecification;
 import fitnesse.wikitext.parser.ScanString;
@@ -38,6 +42,7 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolStream;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
+import fitnesse.wikitext.parser.VariableSource;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
@@ -47,7 +52,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -56,31 +60,51 @@ import static org.mockito.Mockito.verify;
 public class PluginsLoaderTest {
   private Properties testProperties;
   private PluginsLoader loader;
+  private ResponderFactory responderFactory;
   private SymbolProvider testProvider;
+  private WikiPageFactoryRegistry testWikiPageFactoryRegistry;
+  private SlimTableFactory testSlimTableFactory;
+  private CustomComparatorRegistry testCustomComparatorsRegistry;
+  private MultipleTestSystemFactory testTestSystemFactory;
 
   @Before
   public void setUp() throws Exception {
     testProperties = new Properties();
+    responderFactory = new ResponderFactory(".");
     testProvider = new SymbolProvider(new SymbolType[] {});
-    loader = new PluginsLoader(new ComponentFactory(testProperties), testProperties);
+    testWikiPageFactoryRegistry = new FileSystemPageFactory();
+    testSlimTableFactory = new SlimTableFactory();
+    testCustomComparatorsRegistry = new CustomComparatorRegistry();
+    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
+
+    assertSymbolTypeMatch("!today", false);
   }
 
   @Test
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    ResponderFactory responderFactory = new ResponderFactory(".");
-
-    assertMatch("!today", false);
-
-    loader.loadPlugins(responderFactory, testProvider);
+    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
+            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
-    assertMatch("!today", true);
+    assertSymbolTypeMatch("!today", true);
   }
 
-  private void assertMatch(String input, boolean expected) {
+  @Test
+  public void shouldHandleInstanceMethods() throws Exception {
+    testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
+    testProperties.setProperty("responderName", "instanceTest");
+
+    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
+            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
+
+    assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("instanceTest"));
+  }
+
+  private void assertSymbolTypeMatch(String input, boolean expected) {
     SymbolMatch match = new ParseSpecification().provider(testProvider).findMatch(new ScanString(input, 0), 0, new SymbolStream());
     assertEquals(match.isMatch(), expected);
   }
@@ -90,7 +114,6 @@ public class PluginsLoaderTest {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
 
-    ResponderFactory responderFactory = new ResponderFactory(".");
     loader.loadResponders(responderFactory);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
@@ -104,7 +127,7 @@ public class PluginsLoaderTest {
 
     loader.loadSymbolTypes(testProvider);
 
-    assertMatch("!today", true);
+    assertSymbolTypeMatch("!today", true);
   }
 
   @Test
@@ -165,6 +188,15 @@ public class PluginsLoaderTest {
   }
 
   @Test
+  public void testWikiPageFactoryCreation() throws Exception {
+    testProperties.setProperty(ConfigurationParameter.WIKI_PAGE_FACTORIES.getKey(), FooWikiPageFactory.class.getName());
+
+    FileSystemPageFactory wikiPageFactory = mock(FileSystemPageFactory.class);
+    loader.loadWikiPageFactories(wikiPageFactory);
+    verify(wikiPageFactory).registerWikiPageFactory(any(FooWikiPageFactory.class));
+  }
+
+  @Test
   public void testSlimTablesCreation() throws PluginException {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
@@ -200,7 +232,7 @@ public class PluginsLoaderTest {
   @Test
   public void testTestSystemCreation() throws PluginException {
     testProperties.setProperty(ConfigurationParameter.TEST_SYSTEMS.getKey(), "foo:" + FooTestSystemFactory.class.getName());
-    TestSystemFactoryRegistrar registrar = mock(TestSystemFactoryRegistrar.class);
+    TestSystemFactoryRegistry registrar = mock(TestSystemFactoryRegistry.class);
     loader.loadTestSystems(registrar);
 
     verify(registrar).registerTestSystemFactory(eq("foo"), any(TestSystemFactory.class));
@@ -227,7 +259,7 @@ public class PluginsLoaderTest {
     }
   }
 
-  static class DummyPlugin {
+  static public class DummyPlugin {
 
     public static void registerResponders(ResponderFactory factory) {
       factory.addResponder("custom1", WikiPageResponder.class);
@@ -237,6 +269,20 @@ public class PluginsLoaderTest {
     public static void registerSymbolTypes(SymbolProvider provider) {
       provider.add(new Today());
     }
+  }
+
+  static public class InstantiableDummyPlugin {
+
+    public final ComponentFactory componentFactory;
+
+    public InstantiableDummyPlugin(ComponentFactory componentFactory) {
+      this.componentFactory = componentFactory;
+    }
+
+    public void registerResponders(ResponderFactory factory) {
+      factory.addResponder(componentFactory.getProperty("responderName"), WikiPageResponder.class);
+    }
+
   }
 
   public static class TestSlimTable extends SlimTable {
@@ -267,6 +313,19 @@ public class PluginsLoaderTest {
     @Override
     public TestSystem create(Descriptor descriptor) throws IOException {
       return null;
+    }
+  }
+
+  public static class FooWikiPageFactory implements WikiPageFactory {
+
+    @Override
+    public WikiPage makePage(File path, String pageName, WikiPage parent, VariableSource variableSource) {
+      return null;
+    }
+
+    @Override
+    public boolean supports(File path) {
+      return false;
     }
   }
 }

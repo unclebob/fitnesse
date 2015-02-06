@@ -2,19 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
-import static fitnesse.wiki.PageData.ErrorLogName;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.MockCommandRunner;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
@@ -27,18 +25,18 @@ public class CompositeExecutionLogTest {
 
   @Test
   public void testNoErrorLogPageToBeginWith() throws Exception {
-    assertFalse(root.hasChildPage(ErrorLogName));
+    assertFalse(root.hasChildPage(WikiPage.ErrorLogName));
   }
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     WikiPage testPage = root.addChildPage("TestPage");
     PageData data = testPage.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
-    context = FitNesseUtil.makeTestContext(root);
     log = new CompositeExecutionLog(testPage);
   }
 
@@ -47,7 +45,7 @@ public class CompositeExecutionLogTest {
     addTestSystemRun("testSystem1");
     addTestSystemRun("testSystem2");
     log.publish(context.pageFactory);
-    WikiPage errorLogPage = root.getChildPage(ErrorLogName);
+    WikiPage errorLogPage = root.getChildPage(WikiPage.ErrorLogName);
     assertNotNull(errorLogPage);
     WikiPage testErrorLog = errorLogPage.getChildPage("TestPage");
     assertNotNull(testErrorLog);

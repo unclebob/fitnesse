@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
-import util.Maybe;
 
 public class Collapsible extends SymbolType implements Rule, Translation {
 
@@ -54,19 +53,13 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         return generateHtml(option, title, body);
     }
 
-    private String makeInvisibleSection(String body) {
-        HtmlTag section = new HtmlTag("div", body);
-        section.addAttribute("class", "invisible");
-        return section.html();
-    }
-
     public static String generateHtml(String state, String titleText, String bodyText) {
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapsible" + state);
         
         outerBlock.add(new RawHtml("<ul>" +
-        		"<li><a href='#' class='expandall'>Expand All</a></li>" +
-        		"<li><a href='#' class='collapseall'>Collapse All</a></li>" +
+        		"<li><a href='#' class='expandall'>Expand</a></li>" +
+        		"<li><a href='#' class='collapseall'>Collapse</a></li>" +
         		"</ul>"));
 
       	HtmlTag title = new HtmlTag("p", titleText);

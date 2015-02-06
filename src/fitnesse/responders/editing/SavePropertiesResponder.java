@@ -24,14 +24,16 @@ public class SavePropertiesResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
     PageData data = page.getData();
     saveAttributes(request, data);
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Current-Version", commitRecord.getName());
-    context.recentChanges.updateRecentChanges(data);
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
+    context.recentChanges.updateRecentChanges(page);
     response.redirect(context.contextRoot, resource);
 
     return response;

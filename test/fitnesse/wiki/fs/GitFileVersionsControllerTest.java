@@ -43,19 +43,23 @@ public class GitFileVersionsControllerTest {
   public void shouldReadRecentChangesOnEmptyRepository() {
     GitFileVersionsController versionsController = new GitFileVersionsController();
     WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
-
     assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith("Unable to read history: "));
+   
   }
 
   @Test
   public void shouldReadRecentChanges() {
-    fixture.savePageWithContent("TestPage", "content");
+	// make sure the content is different otherwise GIT will not save any change and nothing is in the history  
+	fixture.savePageWithContent("TestPage", "content");
+    fixture.savePageWithContent("TestPage2", "more content");
+    fixture.savePageWithContent("TestPage", "different content");
 
     GitFileVersionsController versionsController = new GitFileVersionsController();
     WikiPage recentChanges = versionsController.toWikiPage(fixture.getRootPage());
+    System.out.println("###"+ recentChanges.getData().getContent() + "###");
     String expected = "|[FitNesse] Updated files: TestDir/RooT/TestPage/content.txt and TestDir/RooT/TestPage/properties.xml.|";
     expected = expected.replace("/", File.separator);
-    assertTrue(recentChanges.getData().getContent(), recentChanges.getData().getContent().startsWith(expected));
+    assertTrue("..." + recentChanges.getData().getContent() + "...", recentChanges.getData().getContent().startsWith(expected));
   }
 
   @Test

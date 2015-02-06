@@ -8,7 +8,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -153,6 +153,8 @@ public class PageReferenceRenamerTest {
     WikiPage target = WikiPageUtil.addPage(source, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(root, target, "RenamedPage");
     renamer.renameReferences();
+
+    source = root.getChildPage("SourcePage");
     String updatedSourceContent = source.getData().getContent();
     assertEquals("gunk >RenamedPage gunk", updatedSourceContent);
   }

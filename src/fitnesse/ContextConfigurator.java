@@ -1,5 +1,6 @@
 package fitnesse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -14,8 +15,10 @@ import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
@@ -39,10 +42,10 @@ public class ContextConfigurator {
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
 
   /** Some properties are stored in typed fields: */
-  private WikiPage root;
+  private WikiPageFactory wikiPageFactory;
   private Integer port;
-  private String rootPath;
-  private String rootDirectoryName;
+  private String rootPath = DEFAULT_PATH;
+  private String rootDirectoryName = DEFAULT_ROOT;
   private String contextRoot;
   private Logger logger;
   private Authenticator authenticator;
@@ -84,28 +87,26 @@ public class ContextConfigurator {
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
     ComponentFactory componentFactory = new ComponentFactory(properties);
 
-    WikiPageFactory wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
-
     if (port == null) {
       port = getPort();
     }
 
+    FitNesseVersion version = new FitNesseVersion();
+
+    updateFitNesseProperties(version);
+
+    if (wikiPageFactory == null) {
+      wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+    }
+
     if (versionsController == null) {
-      versionsController = (VersionsController) componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-      Integer versionDays = getVersionDays();
-      if (versionDays != null) {
-        versionsController.setHistoryDepth(versionDays);
-      }
+      versionsController = componentFactory.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
     }
     if (recentChanges == null) {
-      recentChanges = (RecentChanges) componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
+      recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
     }
 
-    if (root == null) {
-      root = wikiPageFactory.makeRootPage(rootPath, rootDirectoryName);
-    }
-
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, properties);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
 
     if (logger == null) {
       logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
@@ -118,11 +119,9 @@ public class ContextConfigurator {
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
-    FitNesseVersion version = new FitNesseVersion();
-    addBackwardsCompatibleProperties(version);
 
     FitNesseContext context = new FitNesseContext(version,
-          root,
+          wikiPageFactory,
           rootPath,
           rootDirectoryName,
           contextRoot,
@@ -137,8 +136,10 @@ public class ContextConfigurator {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider);
+    WikiPageFactoryRegistry wikiPageFactoryRegistry = (WikiPageFactoryRegistry) wikiPageFactory;
+    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider, wikiPageFactoryRegistry, testSystemFactory, slimTableFactory, customComparatorRegistry);
     pluginsLoader.loadResponders(context.responderFactory);
+    pluginsLoader.loadWikiPageFactories(wikiPageFactory);
     pluginsLoader.loadTestSystems(testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
@@ -153,7 +154,7 @@ public class ContextConfigurator {
     return context;
   }
 
-  private void addBackwardsCompatibleProperties(FitNesseVersion version) {
+  private void updateFitNesseProperties(FitNesseVersion version) {
     // Those variables are defined so they can be looked up for as wiki variables.
     if (rootPath != null) {
       properties.setProperty("FITNESSE_ROOTPATH", rootPath);
@@ -181,11 +182,6 @@ public class ContextConfigurator {
     } else {
       return port;
     }
-  }
-
-  public ContextConfigurator withRoot(WikiPage root) {
-    this.root = root;
-    return this;
   }
 
   public ContextConfigurator withRootPath(String rootPath) {
@@ -222,14 +218,21 @@ public class ContextConfigurator {
         break;
       case PORT:
         port = Integer.parseInt(value);
+        break;
       default:
         properties.setProperty(parameter.getKey(), value);
+        break;
     }
     return this;
   }
 
   public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
     this.rootDirectoryName = rootDirectoryName;
+    return this;
+  }
+
+  public ContextConfigurator withWikiPageFactory(WikiPageFactory wikiPageFactory) {
+    this.wikiPageFactory = wikiPageFactory;
     return this;
   }
 
@@ -266,10 +269,5 @@ public class ContextConfigurator {
       default:
         return properties.getProperty(parameter.getKey());
     }
-  }
-
-  public Integer getVersionDays() {
-    String days = get(VERSIONS_CONTROLLER_DAYS);
-    return days == null ? null : Integer.parseInt(days);
   }
 }

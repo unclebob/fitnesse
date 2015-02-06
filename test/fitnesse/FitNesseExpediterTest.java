@@ -18,7 +18,7 @@ import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.MockSocket;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,16 +32,18 @@ public class FitNesseExpediterTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    WikiPage root = context.getRootPage();
     root.addChildPage("FrontPage");
     socket = new MockSocket();
-    context = FitNesseUtil.makeTestContext(root);
     expediter = new FitNesseExpediter(socket, context);
   }
 
   @Test
   public void testAuthenticationGetsCalled() throws Exception {
-    context = FitNesseUtil.makeTestContext(context.root, new StoneWallAuthenticator());
+    context = FitNesseUtil.makeTestContext(new StoneWallAuthenticator());
+    WikiPage root = context.getRootPage();
+    root.addChildPage("FrontPage");
     expediter = new FitNesseExpediter(socket, context);
     MockRequest request = new MockRequest();
     Response response = expediter.createGoodResponse(request);

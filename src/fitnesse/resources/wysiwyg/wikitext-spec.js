@@ -1044,6 +1044,32 @@ describe("parser and formatter", function () {
         generateFragment(dom, "| '''''' | '''bold''' |");
     });
 
+    it("table with newline in cell", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", "first line", element("tt", {'class': 'escape'}, br()), "next line"))
+                )
+            )
+        );
+
+        generateWikitext(dom, "| first line!-\n-!next line |");
+    });
+
+    it("table preserves newline", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", element("i", "first line", br(), "next line")))
+                )
+            )
+        );
+
+        generateWikitext(dom, "| ''first line!-\n-!next line'' |");
+    });
+
     it("table with links", function() {
         var dom = fragment(
             element("table",
@@ -1149,7 +1175,9 @@ describe("parser and formatter", function () {
             "   1 item 1.1",
             "",
             "!define def {dt dd}",
-            "| cell 1 | cell 2 |",
+            "| cell!-",
+            "-!1 | cell!-",
+            "-!2 |",
             "" ].join("\n"));
     });
 
@@ -1430,5 +1458,34 @@ describe("parser and formatter", function () {
             "-!}}}|",
             ""].join("\n"));
     });
+
+    it("renders images", function () {
+        var dom = fragment(
+            element("p", "blah ",
+                element("img", { src: "./files/some/path"})
+            ));
+
+        generateFragment(dom, "blah !img http://files/some/path   \n");
+    });
+
+    it("renders images with parameters", function () {
+        var dom = fragment(
+            element("p",
+                element("img", { src: "./files/some/path", style: "width: 200px; border: 2px; margin: 10px;"}),
+                br()
+            ));
+
+        generateFragment(dom, "!img -w 200 -b 2 -m 10 http://files/some/path");
+    });
+
+    it("parses images", function () {
+        var dom = fragment(
+            element("p",
+                element("img", { src: "./files/some/path", style: "width: 200px; border: 2px; margin: 10px;"})
+            ));
+
+        generateWikitext(dom, "!img -b 2 -m 10 -w 200 http://files/some/path");
+    });
+
 
 });

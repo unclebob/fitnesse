@@ -11,8 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import util.Clock;
-import util.DateAlteringClock;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
 
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestSummary;
@@ -37,7 +37,7 @@ public class TestTextFormatterTest {
 
   @Test
   public void testCompleteShouldAddPageAndSummaryAndTimingToResponse() throws Exception {
-    WikiTestPage page = new WikiTestPage(new WikiPageDummy("page", "content"));
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("page", "content", null));
     TestSummary summary = new TestSummary(1, 2, 3, 4);
 
     ChunkedResponse response = mock(ChunkedResponse.class);

@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,21 +13,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
+import fitnesse.util.Clock;
 
 public class WikiPagePropertiesTest {
   private WikiPageProperties properties;
 
   static final String endl = System.getProperty("line.separator");
-  static final String tab = "\t";
+  static final String tab = "";
   static final String sampleXml =
-    "<?xml version=\"1.0\"?>" + endl +
+    "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + endl +
       "<properties>" + endl +
       tab + "<Edit/>" + endl +
       tab + "<ParentOne>" + endl +
@@ -86,7 +87,7 @@ public class WikiPagePropertiesTest {
   public void testToXml() throws Exception {
     String xml = properties.toXml();
     for (String fragment : sampleXmlFragments) {
-      assertTrue(fragment, xml.contains(fragment));
+      assertTrue(format("'%s' not found in '%s'", fragment, xml), xml.contains(fragment));
     }
   }
 
@@ -116,7 +117,7 @@ public class WikiPagePropertiesTest {
 
   @Test
   public void testLastModificationTime() throws Exception {
-    SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+    DateFormat format = WikiPageProperty.getTimeFormat();
     WikiPageProperties props = new WikiPageProperties();
     assertEquals(format.format(Clock.currentDate()), format.format(props.getLastModificationTime()));
     Date date = format.parse("20040101000001");

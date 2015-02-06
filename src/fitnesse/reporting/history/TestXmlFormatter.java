@@ -18,7 +18,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class TestXmlFormatter extends BaseFormatter implements Closeable {
-  private WriterFactory writerFactory;
+  private final FitNesseContext context;
+  private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
@@ -36,7 +37,8 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-    super(context, page);
+    super(page);
+    this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
     testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
@@ -44,7 +46,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   public long startedAt() {
-    return currentTestStartTime.startedAt();
+    return totalTimeMeasurement.startedAt();
   }
 
   public long runTime() {
@@ -92,7 +94,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
         expectationResult.col = Integer.toString(cell.getCol());
         expectationResult.row = Integer.toString(cell.getRow());
       }
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with test result " + testResult, e);
     }
   }
@@ -114,7 +116,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
       expectationResult.type = expectation.getClass().getSimpleName();
       expectationResult.evaluationMessage = exceptionResult.getMessage();
       expectationResult.status = exceptionResult.getExecutionResult().toString();
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with exception result " + exceptionResult, e);
     }
   }
@@ -136,7 +138,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getSourcePage().readOnlyData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
     currentResult.getInstructions().addAll(instructionResults);
     instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
 

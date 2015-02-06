@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +16,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+import static java.util.Arrays.asList;
 
 public class CommandRunner {
   private static final String DEFAULT_CHARSET_NAME = "UTF-8";
@@ -56,6 +57,9 @@ public class CommandRunner {
   public void asynchronousStart() throws IOException {
     ProcessBuilder processBuilder = new ProcessBuilder(command);
     processBuilder.environment().putAll(determineEnvironment());
+    if (LOG.isLoggable(Level.FINE)) {
+      LOG.fine("Starting process " + asList(command));
+    }
     process = processBuilder.start();
 
     OutputStream stdin = process.getOutputStream();
@@ -84,7 +88,7 @@ public class CommandRunner {
     executionLogListener.commandStarted(new ExecutionLogListener.ExecutionContext() {
       @Override
       public String getCommand() {
-        return StringUtil.join(Arrays.asList(command), " ");
+        return StringUtils.join(asList(command), " ");
       }
 
       @Override
@@ -199,6 +203,7 @@ public class CommandRunner {
       this.writer = writer;
     }
 
+    @Override
     public void run() {
       try {
         String s;

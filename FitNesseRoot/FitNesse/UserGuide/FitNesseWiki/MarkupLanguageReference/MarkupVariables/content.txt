@@ -60,6 +60,12 @@ IMPORTANT: If the variables used in the expression change than also the result c
 If a variable is expressed on a page, but is not found, then its parent pages are searched in order.
 If the variable is not found in any ancestor pages, FitNesse will inspect System.properties.
 
+!3 Defining Variables In URL Input
+You can define variables in the URL input by using the format of ''key''=''value'' (''key'' as variable name & ''value'' as variable value).  ''key'' and ''value'' can be any string values.  Multiple variables can be specified separated by ''&''.
+Variable values specified in the URL input are given precedence over variables defined on the page or in System.properties for the same key.
+
+See [[Restful Services][<UserGuide.AdministeringFitNesse.RestfulServices]]
+
 !3 Variables on [[included pages][MarkupPageInclude]]
  * if you include a sub page into a  main page than you can use the variables define on the main page also in the included pages.
  * If you modify a variable on the sub page then the main page will also have the modified value.

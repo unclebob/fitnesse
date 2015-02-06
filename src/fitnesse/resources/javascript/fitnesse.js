@@ -46,7 +46,22 @@ $(document)
 		section.find('.collapsible, .scenario').andSelf().addClass('closed');
 		section.find('.scenario').addClass('closed').next().hide();
 		return false;
-	});
+    })
+    .on('click', '.page-actions .expandall', function () {
+        $(document.body).find('.collapsible').andSelf().removeClass('closed');
+        $(document.body).find('.scenario').removeClass('closed').next().show();
+        return false;
+	})
+    .on('click', '.page-actions .collapseall', function () {
+        $(document.body).find('.collapsible, .scenario').andSelf().addClass('closed');
+        $(document.body).find('.scenario').addClass('closed').next().hide();
+        return false;
+    })
+    .ready(function () {
+        if ($(document.body).find('.collapsible, .scenario').length > 0) {
+            $('.page-actions').show();
+        }
+    });
 
 /**
  * Hide/show passed tests
@@ -110,48 +125,48 @@ $(document).ready(function() {
 
 	$('input.wikiword').keyup(function () {
 		validateField.apply(this,
-				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
-		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
+				[/^\w[\w-]*$/,
+		         "<p class='validationerror'>The page name is not valid.</p>"]);
 	});
 
 	$('input.wikipath').keyup(function () {
 		validateField.apply(this,
-				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
-				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
+				[/^[<>^\.]?\w[\w-]*(\.\w[\w-]+)*$/,
+				 "<p class='validationerror'>The page path is not valid.</p>"]);
 	});
 
 
 });
 
 function initErrorMetadata() {
-	var errors = $("table span.fail, table span.error, table td.fail, table tr.exception, table td.error")
-	                    .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
+    var errors = $(".alternating_block .fail, .alternating_block .error, .alternating_block .exception")
+        .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
 
-	$("#error-nav-max").text(errors.length);
+    $("#error-nav-max").text(errors.length);
 
-	function validIndex(index) {
-		return index > 0 && index <= errors.length;
-	}
+    function validIndex(index) {
+        return index > 0 && index <= errors.length;
+    }
 
-	function getCurrentErrorNavIndex() {
-		return parseInt($("#error-nav-text").val());
-	}
+    function getCurrentErrorNavIndex() {
+        return parseInt($("#error-nav-text").val());
+    }
 
-	function setCurrentErrorNavIndex(index) {
-		$("#error-nav-text").val(index);
-	}
+    function setCurrentErrorNavIndex(index) {
+        $("#error-nav-text").val(index);
+    }
 
-	function incrementErrorNavIndex(offset) {
-		var currentErrorNavIndex = getCurrentErrorNavIndex();
-		currentErrorNavIndex += offset;
-		if (isNaN(currentErrorNavIndex) || currentErrorNavIndex > errors.length) {
-			currentErrorNavIndex = 1;
-	    } else if (currentErrorNavIndex < 1) {
-	        currentErrorNavIndex = errors.length;
-		}
-		setCurrentErrorNavIndex(currentErrorNavIndex);
-		navigateToCurrentError();
-	}
+    function incrementErrorNavIndex(offset) {
+        var currentErrorNavIndex = getCurrentErrorNavIndex();
+        currentErrorNavIndex += offset;
+        if (isNaN(currentErrorNavIndex) || currentErrorNavIndex > errors.length) {
+            currentErrorNavIndex = 1;
+        } else if (currentErrorNavIndex < 1) {
+            currentErrorNavIndex = errors.length;
+        }
+        setCurrentErrorNavIndex(currentErrorNavIndex);
+        navigateToCurrentError();
+    }
 
     function unfoldErrors(element) {
         element.parents('.scenario-detail').removeClass('closed-detail').prev().removeClass('closed');
@@ -160,14 +175,15 @@ function initErrorMetadata() {
     }
 
     var highlight;
-	function navigateToCurrentError() {
-		var currentErrorNavIndex = getCurrentErrorNavIndex();
+
+    function navigateToCurrentError() {
+        var currentErrorNavIndex = getCurrentErrorNavIndex();
 
         if (highlight) {
-             highlight.removeClass("selected-error");
+            highlight.removeClass("selected-error");
         }
 
-		highlight = $(errors[currentErrorNavIndex - 1]);
+        highlight = $(errors[currentErrorNavIndex - 1]);
         unfoldErrors(highlight);
         highlight.addClass("selected-error");
         $('html, body').animate({
@@ -177,24 +193,27 @@ function initErrorMetadata() {
         $('html, body').animate({
             scrollLeft: highlight.offset().left - 200
         }, 500);
-	}
+    }
 
-	$("#error-nav-prev").click(function () {
-		incrementErrorNavIndex(-1);
-	});
+    $("#error-nav-prev").click(function () {
+        incrementErrorNavIndex(-1);
+    });
 
-	$("#error-nav-next").click(function () {
-		incrementErrorNavIndex(1);
-	});
+    $("#error-nav-next").click(function () {
+        incrementErrorNavIndex(1);
+    });
 
-	$("#error-nav-text").change(function (){
-	    incrementErrorNavIndex(0);
-	});
+    $("#error-nav-text").change(function () {
+        incrementErrorNavIndex(0);
+    });
 
     /**
      * Open scenario's and collapsed sections which contain failed or errorous tests
      */
-    unfoldErrors($('.fail,.error'));
+    if (errors.length > 0) {
+        unfoldErrors($('.fail,.error'));
+        $("#error-nav").removeClass("hidden");
+    }
 }
 
 /** Backwards compatibility */

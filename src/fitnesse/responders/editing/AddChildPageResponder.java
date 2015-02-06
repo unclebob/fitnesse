@@ -10,7 +10,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
@@ -21,6 +20,8 @@ public class AddChildPageResponder implements SecureResponder {
   private String helpText;
   private String suites;
   private WikiPage pageTemplate;
+  private String user;
+
 
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
@@ -32,16 +33,19 @@ public class AddChildPageResponder implements SecureResponder {
       return notFoundResponse(context, request);
     else if (nameIsInvalid(childName))
       return errorResponse(context, request);
+    else if (pageAlreadyExists(childName))
+      return alreadyExistsResponse(context, request);
 
     return createChildPageAndMakeResponse(context);
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
+	  user = request.getAuthorizationUsername();
     childName = (String) request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     WikiPagePath currentPagePath = PathParser.parse(request.getResource());
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     currentPage = pageCrawler.getPage(currentPagePath);
     if (request.hasInput(NewPageResponder.PAGE_TEMPLATE)) {
       pageTemplate = pageCrawler.getPage(PathParser.parse((String) request.getInput(NewPageResponder.PAGE_TEMPLATE)));
@@ -58,7 +62,7 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private Response createChildPageAndMakeResponse(FitNesseContext context) {
-    createChildPage();
+    createChildPage(context);
     SimpleResponse response = new SimpleResponse();
     WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
     response.redirect(context.contextRoot, fullPathOfCurrentPage.toString());
@@ -68,12 +72,18 @@ public class AddChildPageResponder implements SecureResponder {
   private boolean nameIsInvalid(String name) {
     if (name.equals(""))
       return true;
-    return !WikiWordPath.isSingleWikiWord(name);
+    return !PathParser.isSingleWikiWord(name);
   }
 
-  private void createChildPage() {
+  private boolean pageAlreadyExists(String childName) {
+    return currentPage.getPageCrawler().pageExists(PathParser.parse(childName));
+  }
+
+  private void createChildPage(FitNesseContext context) {
     WikiPage childPage = WikiPageUtil.addPage(currentPage, childPath, childContent);
     setAttributes(childPage);
+    context.recentChanges.updateRecentChanges(childPage);
+
   }
 
   private void setAttributes(WikiPage childPage) {
@@ -90,11 +100,16 @@ public class AddChildPageResponder implements SecureResponder {
     }
     childPageData.setAttribute(PageData.PropertyHELP, helpText);
     childPageData.setAttribute(PageData.PropertySUITES, suites);
+    childPageData.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
     childPage.commit(childPageData);
   }
 
   private Response errorResponse(FitNesseContext context, Request request) {
     return new ErrorResponder("Invalid Child Name").makeResponse(context, request);
+  }
+
+  private Response alreadyExistsResponse(FitNesseContext context, Request request) {
+    return new ErrorResponder("Child page already exists", 409).makeResponse(context, request);
   }
 
   private Response notFoundResponse(FitNesseContext context, Request request) {

@@ -13,17 +13,17 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
 public class WhereUsedResponderTest {
-  private WikiPage root;
+  private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    WikiPage root = context.getRootPage();
     WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "PageOne");
     WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "PageOne");
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
@@ -35,7 +35,7 @@ public class WhereUsedResponderTest {
     request.setResource("PageOne");
     WhereUsedResponder responder = new WhereUsedResponder();
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     response.sendTo(sender);
 

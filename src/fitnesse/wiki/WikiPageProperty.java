@@ -3,14 +3,16 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -30,7 +32,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   public void setValue(String value) {
-    this.value = StringUtil.trimNonNullString(value);
+    this.value = StringUtils.trim(value);
   }
 
   public void set(String name, WikiPageProperty child) {
@@ -98,8 +100,14 @@ public class WikiPageProperty implements Serializable {
     return children != null && children.size() > 0;
   }
 
-  public static SimpleDateFormat getTimeFormat() {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("yyyyMMddHHmmss");
+  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<DateFormat>();
+
+  public static DateFormat getTimeFormat() {
+    DateFormat format = timeFormat.get();
+    if (format == null) {
+      format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ROOT);
+      timeFormat.set(format);
+    }
+    return format;
   }
 }

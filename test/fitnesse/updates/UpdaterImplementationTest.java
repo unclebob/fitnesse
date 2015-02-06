@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import fitnesse.FitNesseContext;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.FileSystemPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;
@@ -46,9 +47,9 @@ public class UpdaterImplementationTest {
 
   private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPageFactory().makeRootPage(testDir, name);
+    context = FitNesseUtil.makeTestContext(new FileSystemPageFactory(), testDir, name, 80);
+    root = context.getRootPage();
     root.commit(root.getData());
-    context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 
   private void createFakeUpdateListFiles() {

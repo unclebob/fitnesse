@@ -11,13 +11,12 @@ import fitnesse.testutil.FitNesseUtil;
 
 /**
  * Task to stop fitnesse.
- * <p/>
  * <pre>
  * Usage:
  * &lt;taskdef name=&quot;stop-fitnesse&quot; classname=&quot;fitnesse.ant.StopFitnesseTask&quot; classpathref=&quot;classpath&quot; /&gt;
  * OR
  * &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
- * <p/>
+ *
  * &lt;stop-fitnesse fitnesseport=&quot;8082&quot; /&gt;
  * </pre>
  */
@@ -26,7 +25,7 @@ public class StopFitnesseTask extends Task {
 
   @Override
   public void execute() throws BuildException {
-    FitNesseContext context = FitNesseUtil.makeTestContext(null, null, null, fitnessePort);
+    FitNesseContext context = FitNesseUtil.makeTestContext(fitnessePort);
     try {
       new FitNesse(context).stop();
       log("Sucessfully stoped Fitnesse on port " + fitnessePort);

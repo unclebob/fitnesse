@@ -1,0 +1,10 @@
+!help 
+!| script  |
+| Given a wiki page with history |
+| When the page is again updated |
+| Then the history size is ${= ${Create_backup_for_initial_page_version} +2 =}|
+| Then the current version can be retrieved|
+| Then the first version can be retrieved|
+| Then the second version can be retrieved| 
+
+

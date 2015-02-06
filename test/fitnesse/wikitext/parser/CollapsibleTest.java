@@ -32,8 +32,8 @@ public class CollapsibleTest {
     private String sectionWithClass(String sectionClasses, String content) {
         return "<div class=\"" + sectionClasses + "\">" +
         "<ul>" +
-        "<li><a href='#' class='expandall'>Expand All</a></li>" +
-        "<li><a href='#' class='collapseall'>Collapse All</a></li>" +
+        "<li><a href='#' class='expandall'>Expand</a></li>" +
+        "<li><a href='#' class='collapseall'>Collapse</a></li>" +
         "</ul>"  + HtmlElement.endl +
         "\t<p class=\"title\">Some title</p>" + HtmlElement.endl +
         "\t<div>" + content + "</div>" + HtmlElement.endl +

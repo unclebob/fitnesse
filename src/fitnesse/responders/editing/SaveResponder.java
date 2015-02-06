@@ -19,6 +19,7 @@ public class SaveResponder implements SecureResponder {
   private String savedContent;
   private String helpText;
   private String suites;
+  private WikiPage page;
   private PageData data;
   private long editTimeStamp;
 
@@ -27,7 +28,7 @@ public class SaveResponder implements SecureResponder {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
-    WikiPage page = getPage(resource, context);
+    page = getPage(resource, context);
     data = page.getData();
     user = request.getAuthorizationUsername();
 
@@ -46,8 +47,10 @@ public class SaveResponder implements SecureResponder {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
-    response.addHeader("Current-Version", commitRecord.getName());
-    context.recentChanges.updateRecentChanges(data);
+    if (commitRecord != null) {
+      response.addHeader("Current-Version", commitRecord.getName());
+    }
+    context.recentChanges.updateRecentChanges(page);
 
     if (request.hasInput("redirect"))
       response.redirect("", request.getInput("redirect").toString());
@@ -58,7 +61,7 @@ public class SaveResponder implements SecureResponder {
   }
 
   private boolean editsNeedMerge() {
-    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
+    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, page);
   }
 
   private long getTicketId(Request request) {
@@ -77,10 +80,10 @@ public class SaveResponder implements SecureResponder {
 
   private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
-      page = WikiPageUtil.addPage(context.root, PathParser.parse(resource));
+      page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(resource));
     return page;
   }
 
@@ -88,7 +91,7 @@ public class SaveResponder implements SecureResponder {
     data.setContent(savedContent);
     data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
-    SaveRecorder.pageSaved(data, ticketId);
+    SaveRecorder.pageSaved(page, ticketId);
     
     data.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
   }

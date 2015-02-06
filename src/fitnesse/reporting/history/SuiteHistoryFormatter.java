@@ -14,25 +14,26 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
-  private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
-  private SuiteExecutionReport suiteExecutionReport;
+  private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
-  private TestXmlFormatter.WriterFactory writerFactory;
+  private final FitNesseContext context;
+  private final TestXmlFormatter.WriterFactory writerFactory;
+  private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   private TimeMeasurement suiteTime;
   private TestXmlFormatter testHistoryFormatter;
 
   public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, TestXmlFormatter.WriterFactory source) {
-    super(context, page);
+    super(page);
+    this.context = context;
     writerFactory = source;
     suiteExecutionReport = new SuiteExecutionReport(context.version, getPage().getPageCrawler().getFullPath().toString());
     totalTimeMeasurement = new TimeMeasurement().start();
@@ -51,7 +52,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testStarted(WikiTestPage test) {
-    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath());
+    String pageName = test.getFullPath();
     testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
     testHistoryFormatter.testStarted(test);
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
@@ -59,7 +60,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testOutputChunk(String output) {
-    testHistoryFormatter.testOutputChunk(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.testOutputChunk(output);
+    }
   }
 
   @Override

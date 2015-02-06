@@ -14,23 +14,33 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
+
 public class ZipFileVersionsController implements VersionsController {
   private static final Logger LOG = Logger.getLogger(ZipFileVersionsController.class.getName());
 
   public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
 
-  private int daysTillVersionsExpire = 14;
+  private final int daysTillVersionsExpire;
 
   private VersionsController persistence;
 
+  public ZipFileVersionsController(Properties properties) {
+    this(getVersionDays(properties));
+  }
   public ZipFileVersionsController() {
+    this(14);
+  }
+
+  public ZipFileVersionsController(int versionDays) {
+    this.daysTillVersionsExpire = versionDays;
     // Fix on Disk file system, since that's what ZipFileVersionsController can deal with.
     persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
-  @Override
-  public void setHistoryDepth(int historyDepth) {
-    daysTillVersionsExpire = historyDepth;
+  private static int getVersionDays(Properties properties) {
+    String days = properties.getProperty(VERSIONS_CONTROLLER_DAYS.getKey());
+    return days == null ? 14 : Integer.parseInt(days);
   }
 
   @Override
@@ -54,8 +64,8 @@ public class ZipFileVersionsController implements VersionsController {
           versions[counter++] = version;
       }
       return versions;
-    } catch (Throwable th) {
-      throw new RuntimeException(th);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     } finally {
       try {
         if (zipFile != null) {
@@ -120,8 +130,8 @@ public class ZipFileVersionsController implements VersionsController {
       for (FileVersion fileVersion : fileVersions) {
         addToZip(fileVersion.getFile(), zos);
       }
-    } catch (Throwable th) {
-      throw new RuntimeException(th);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to make zip of current version", e);
     } finally {
       try {
         if (zos != null) {
@@ -179,8 +189,8 @@ public class ZipFileVersionsController implements VersionsController {
       try {
         contentIS = zipFile.getInputStream(contentEntry);
         return new ZipFileVersion(file, FileUtil.toString(contentIS), new Date(contentEntry.getTime()));
-      } catch (Throwable th) {
-        throw new RuntimeException(th);
+      } catch (Exception e) {
+        throw new RuntimeException("Unable to load content for file " + file + " from " + zipFile, e);
       } finally {
         try {
           if (contentIS != null) {
@@ -192,20 +202,6 @@ public class ZipFileVersionsController implements VersionsController {
       }
     }
     return null;
-  }
-
-  private Collection<VersionInfo> loadVersions(final FileSystemPage page) {
-    final File dir = new File(page.getFileSystemPath());
-    final File[] files = dir.listFiles();
-    final Set<VersionInfo> versions = new HashSet<VersionInfo>();
-    if (files != null) {
-      for (final File file : files) {
-        if (isVersionFile(file)) {
-          versions.add(ZipFileVersionInfo.makeVersionInfo(file));
-        }
-      }
-    }
-    return versions;
   }
 
   private File makeVersionFileName(final File file, final String name) {

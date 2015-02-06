@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import fitnesse.wiki.VersionInfo;
-
 /**
  * Represents a file under version control.
  */

@@ -4,7 +4,6 @@ package fitnesse.updates;
 
 import org.junit.Test;
 
-import fitnesse.testutil.FitNesseUtil;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -14,15 +13,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class ReplacingFileUpdateTest extends UpdateTestCase {
-  public final String sourceFilename = "classes/testFile";
-  public final File sourceFile = new File(sourceFilename);
+  public final File sourceFile = new File("classes", "testFile");
 
   public final String destDirName = "subDir";
-  public final String destPath = FitNesseUtil.base + "/" + destDirName + "/testFile";
-  public final File destFile = new File(destPath);
+  public File destFile;
 
   public void setUp() throws Exception {
     super.setUp();
+    destFile = new File(new File(testDir.getPath(), destDirName), "testFile");
     sourceFile.createNewFile();
   }
 

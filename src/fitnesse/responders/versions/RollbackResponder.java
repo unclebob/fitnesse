@@ -11,7 +11,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -26,14 +25,14 @@ public class RollbackResponder implements SecureResponder {
       return new ErrorResponder("Missing version.").makeResponse(context, request);
 
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
-    PageData data = page.getDataVersion(version);
+    WikiPage rollbackPage = page.getVersion(version);
 
-    page.commit(data);
+    page.commit(rollbackPage.getData());
 
-    context.recentChanges.updateRecentChanges(data);
+    context.recentChanges.updateRecentChanges(rollbackPage);
     response.redirect(context.contextRoot, resource);
 
     return response;

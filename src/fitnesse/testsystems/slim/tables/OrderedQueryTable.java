@@ -6,8 +6,6 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.SortedSet;
 
 public class OrderedQueryTable extends QueryTable {
   private int lastMatchedRow = -1;
@@ -17,7 +15,7 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   @Override
-  protected ExecutionResult markRows(QueryResults queryResults, PriorityQueue<MatchedResult> potentialMatchesByScore) {
+  protected ExecutionResult markRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore) {
     int rowCount = table.getRowCount();
     List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
 
@@ -32,10 +30,12 @@ public class OrderedQueryTable extends QueryTable {
       }
     }
 
-    return markSurplusRows(queryResults, unmatchedResultRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
-  private MatchedResult takeBestMatch(PriorityQueue<MatchedResult> potentialMatchesByScore, int tableRow) {
+  private MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore, int tableRow) {
     for (MatchedResult bestResult : potentialMatchesByScore) {
       if (bestResult.tableRow == tableRow) {
         removeOtherwiseMatchedResults(potentialMatchesByScore, bestResult);

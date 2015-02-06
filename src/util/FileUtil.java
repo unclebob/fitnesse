@@ -4,10 +4,6 @@ package util;
 
 import java.io.*;
 import java.util.*;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 public class FileUtil {
 
@@ -16,7 +12,7 @@ public class FileUtil {
   }
 
   public static File createFile(String path, InputStream content) {
-    String names[] = path.split("/");
+    String[] names = path.split("/");
     if (names.length == 1)
       return createFile(new File(path), content);
     else {
@@ -142,10 +138,6 @@ public class FileUtil {
     }
   }
 
-  public static LinkedList<String> getFileLines(String filename) throws IOException {
-    return getFileLines(new File(filename));
-  }
-
   public static LinkedList<String> getFileLines(File file) throws IOException {
     LinkedList<String> lines = new LinkedList<String>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -205,7 +197,15 @@ public class FileUtil {
   }
 
   public static String buildPath(String[] parts) {
-    return StringUtil.join(Arrays.asList(parts), System.getProperty("file.separator"));
+    String separator = System.getProperty("file.separator");
+    StringBuilder builder = new StringBuilder();
+    for (String part: parts) {
+      if (builder.length() > 0) {
+        builder.append(separator);
+      }
+      builder.append(part);
+    }
+    return builder.toString();
   }
 
   public static List<String> breakFilenameIntoParts(String fileName) {

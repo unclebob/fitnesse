@@ -134,31 +134,6 @@ public class StackTraceEnricher {
       return location;
     }
 
-    public String getClassName() {
-      return className;
-    }
-
-    public String getFile() {
-      return file;
-    }
-
-    private static ClassLoader getClassLoader(Class<?> clazz, ClassLoader defaultClassLoader) {
-      ClassLoader classLoader = defaultClassLoader;
-      if (clazz != null) {
-        if (clazz.getClassLoader() != null) {
-          classLoader = clazz.getClassLoader();
-        } else if ((clazz.getProtectionDomain() != null) && (clazz.getProtectionDomain().getClassLoader() != null)) {
-          classLoader = clazz.getProtectionDomain().getClassLoader();
-        }
-      }
-
-      if (classLoader == null) {
-        classLoader = ClassLoader.getSystemClassLoader();
-      }
-
-      return classLoader;
-    }
-
     private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
       if (className == null || className.length() == 0) {
         throw new ClassNotFoundException("Unable to load a class with an empty or null name.");

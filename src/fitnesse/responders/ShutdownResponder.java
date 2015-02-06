@@ -5,7 +5,6 @@ package fitnesse.responders;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -18,20 +19,18 @@ import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
-import fitnesse.testsystems.slim.SlimTestSystem;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
+import fitnesse.wiki.fs.InMemoryPage;
+import org.apache.commons.collections.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
-import util.ListUtility;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static util.ListUtility.list;
 
 public class ScriptTableExtensionTest {
   private WikiPage root;
@@ -87,19 +86,18 @@ public class ScriptTableExtensionTest {
 
   private ScriptTable makeScriptTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     SlimTestContextImpl testContext = new SlimTestContextImpl();
     return new HtmlScriptTable(t, "id", testContext);
   }
 
-  private void assertScriptResults(String scriptStatements, List<List<?>> scriptResults, String table) throws Exception {
+  private void assertScriptResults(String scriptStatements, List<List<String>> scriptResults, String table) throws Exception {
     buildInstructionsFor(scriptStatements);
-    List<List<?>> resultList = ListUtility.<List<?>>list(list("htmlScriptTable_id_0", "OK"));
-    resultList.addAll(scriptResults);
+    List<List<?>> resultList = ListUtils.union(asList(asList("htmlScriptTable_id_0", "OK")), scriptResults);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
+    assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
   }
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {
@@ -121,7 +119,7 @@ public class ScriptTableExtensionTest {
   public void startStatement() throws Exception {
     buildInstructionsFor("|start|Bob|\n");
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -131,7 +129,7 @@ public class ScriptTableExtensionTest {
   public void scriptWithActor() throws Exception {
     buildInstructionsForWholeTable("|script|Bob|\n");
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "Bob")
       );
     assertEquals(expectedInstructions, instructions());
@@ -141,7 +139,7 @@ public class ScriptTableExtensionTest {
   public void startStatementWithArguments() throws Exception {
     buildInstructionsFor("|start|Bob martin|x|y|\n");
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -151,7 +149,7 @@ public class ScriptTableExtensionTest {
   public void scriptStatementWithArguments() throws Exception {
     buildInstructionsForWholeTable("|script|Bob martin|x|y|\n");
     List<MakeInstruction> expectedInstructions =
-      list(
+      asList(
               new MakeInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "BobMartin", new Object[]{"x", "y"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -161,7 +159,7 @@ public class ScriptTableExtensionTest {
   public void simpleFunctionCall() throws Exception {
     buildInstructionsFor("|function|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function")
       );
     assertEquals(expectedInstructions, instructions());
@@ -171,7 +169,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithOneArgument() throws Exception {
     buildInstructionsFor("|function|arg|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -181,7 +179,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithOneArgumentAndTrailingName() throws Exception {
     buildInstructionsFor("|function|arg|trail|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -191,7 +189,7 @@ public class ScriptTableExtensionTest {
   public void complexFunctionCallWithManyArguments() throws Exception {
     buildInstructionsFor("|eat|3|meals with|12|grams protein|3|grams fat |\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "eatMealsWithGramsProteinGramsFat", new Object[]{"3", "12", "3"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -201,7 +199,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithSequentialArgumentProcessingAndOneArgument() throws Exception {
     buildInstructionsFor("|function;|arg0|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg0"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -211,7 +209,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithSequentialArgumentProcessingAndMultipleArguments() throws Exception {
     buildInstructionsFor("|function;|arg0|arg1|arg2|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg0", "arg1", "arg2"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -221,7 +219,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithSequentialArgumentProcessingEmbedded() throws Exception {
     buildInstructionsFor("|set name|Marisa|department and title;|QA|Tester|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "setNameDepartmentAndTitle", new Object[]{"Marisa", "QA", "Tester"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -231,7 +229,7 @@ public class ScriptTableExtensionTest {
   public void functionCallWithSequentialArgumentProcessingEmbedded2() throws Exception {
     buildInstructionsFor("|set name|Marisa|department|QA|title and length of employment;|Tester|2 years|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", new Object[]{"Marisa", "QA", "Tester", "2 years"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -241,7 +239,7 @@ public class ScriptTableExtensionTest {
   public void checkWithFunction() throws Exception {
     buildInstructionsFor("|check|function|arg|result|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -251,7 +249,7 @@ public class ScriptTableExtensionTest {
   public void checkNotWithFunction() throws Exception {
     buildInstructionsFor("|check not|function|arg|result|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -261,7 +259,7 @@ public class ScriptTableExtensionTest {
   public void checkWithFunctionAndTrailingName() throws Exception {
     buildInstructionsFor("|check|function|arg|trail|result|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "functionTrail", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -271,7 +269,7 @@ public class ScriptTableExtensionTest {
   public void rejectWithFunctionCall() throws Exception {
     buildInstructionsFor("|reject|function|arg|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -281,7 +279,7 @@ public class ScriptTableExtensionTest {
   public void ensureWithFunctionCall() throws Exception {
     buildInstructionsFor("|ensure|function|arg|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -291,7 +289,7 @@ public class ScriptTableExtensionTest {
   public void showWithFunctionCall() throws Exception {
     buildInstructionsFor("|show|function|arg|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -301,7 +299,7 @@ public class ScriptTableExtensionTest {
   public void setSymbol() throws Exception {
     buildInstructionsFor("|$V=|function|arg|\n");
     List<CallAndAssignInstruction> expectedInstructions =
-      list(
+      asList(
               new CallAndAssignInstruction("htmlScriptTable_id_0", "V", "htmlScriptTableActor", "function", new Object[]{"arg"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -311,7 +309,7 @@ public class ScriptTableExtensionTest {
   public void useSymbol() throws Exception {
     buildInstructionsFor("|function|$V|\n");
     List<CallInstruction> expectedInstructions =
-      list(
+      asList(
               new CallInstruction("htmlScriptTable_id_0", "htmlScriptTableActor", "function", new Object[]{"$V"})
       );
     assertEquals(expectedInstructions, instructions());
@@ -348,8 +346,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void voidActionHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", VoidConverter.VOID_TAG)
+            asList(
+                    asList("htmlScriptTable_id_0", VoidConverter.VOID_TAG)
             ),
             "[[Script], [func]]"
     );
@@ -358,8 +356,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void actionReturningNullHasNoEffectOnColor() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "null")
+            asList(
+                    asList("htmlScriptTable_id_0", "null")
             ),
       "[[Script], [func]]"
     );
@@ -368,8 +366,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void trueActionPasses() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [pass(func)]]"
     );
@@ -378,8 +376,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void falseActionFails() throws Exception {
     assertScriptResults("|func|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [fail(func)]]"
     );
@@ -388,8 +386,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void checkPasses() throws Exception {
     assertScriptResults("|check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "3")
+            asList(
+                    asList("htmlScriptTable_id_0", "3")
             ),
       "[[Script], [check, func, pass(3)]]"
     );
@@ -398,8 +396,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void checkNotFails() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "3")
+            asList(
+                    asList("htmlScriptTable_id_0", "3")
             ),
       "[[Script], [check not, func, fail(3)]]"
     );
@@ -408,8 +406,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void checkFails() throws Exception {
     assertScriptResults("|check|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "4")
+            asList(
+                    asList("htmlScriptTable_id_0", "4")
             ),
       "[[Script], [check, func, fail(a=4;e=3)]]"
     );
@@ -418,8 +416,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void checkNotPasses() throws Exception {
     assertScriptResults("|check not|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "4")
+            asList(
+                    asList("htmlScriptTable_id_0", "4")
             ),
       "[[Script], [check not, func, pass(a=4;e=3)]]"
     );
@@ -428,8 +426,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void ensurePasses() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [pass(ensure), func, 3]]"
     );
@@ -438,8 +436,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void ensureFails() throws Exception {
     assertScriptResults("|ensure|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [fail(ensure), func, 3]]"
     );
@@ -448,8 +446,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void rejectPasses() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.FALSE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.FALSE)
             ),
       "[[Script], [pass(reject), func, 3]]"
     );
@@ -458,8 +456,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void rejectFails() throws Exception {
     assertScriptResults("|reject|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", BooleanConverter.TRUE)
+            asList(
+                    asList("htmlScriptTable_id_0", BooleanConverter.TRUE)
             ),
       "[[Script], [fail(reject), func, 3]]"
     );
@@ -468,8 +466,8 @@ public class ScriptTableExtensionTest {
   @Test
   public void show() throws Exception {
     assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "kawabunga")
+            asList(
+                    asList("htmlScriptTable_id_0", "kawabunga")
             ),
       "[[Script], [show, func, 3, kawabunga]]"
     );
@@ -479,8 +477,8 @@ public class ScriptTableExtensionTest {
   public void showDoesNotEscape() throws Exception {
     String ahref = "<a href=\"http://myhost/turtle.html\">kawabunga</a>";
     assertScriptResults("|show|func|3|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", ahref)
+            asList(
+                    asList("htmlScriptTable_id_0", ahref)
             ),
             "[[Script], [show, func, 3, " + ahref + "]]"
     );
@@ -495,9 +493,9 @@ public class ScriptTableExtensionTest {
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V|$V|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "3"),
-                    list("htmlScriptTable_id_1", "3")
+            asList(
+                    asList("htmlScriptTable_id_0", "3"),
+                    asList("htmlScriptTable_id_1", "3")
             ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]"
     );
@@ -508,9 +506,9 @@ public class ScriptTableExtensionTest {
     assertScriptResults(
       "|$V=|function|\n" +
         "|check|funcion|$V $V|$V|\n",
-            ListUtility.<List<?>>list(
-                    list("htmlScriptTable_id_0", "3"),
-                    list("htmlScriptTable_id_1", "3")
+            asList(
+                    asList("htmlScriptTable_id_0", "3"),
+                    asList("htmlScriptTable_id_1", "3")
             ),
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3] $V->[3], pass($V->[3])]]"
     );

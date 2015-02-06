@@ -1,8 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -53,8 +50,7 @@ public class TestSourcePage implements SourcePage {
         return includedPage != null ? new Maybe<SourcePage>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
     }
 
-    public Collection<SourcePage> getAncestors() { return new ArrayList<SourcePage>(); }
-    public Collection<SourcePage> getChildren() { return null; }
+  public Collection<SourcePage> getChildren() { return null; }
 
     public boolean hasProperty(String propertyKey) {
         return properties.containsKey(propertyKey);

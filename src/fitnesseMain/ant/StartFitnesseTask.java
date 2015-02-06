@@ -9,13 +9,12 @@ import fitnesseMain.FitNesseMain;
 
 /**
  * Task to start fitnesse.
- * <p/>
  * <pre>
  *    Usage:
  *    &lt;taskdef name=&quot;start-fitnesse&quot; classname=&quot;fitnesse.ant.StartFitnesseTask&quot; classpathref=&quot;classpath&quot; /&gt;
  *    OR
  *    &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
- * <p/>
+ *
  *    &lt;start-fitnesse wikidirectoryrootpath=&quot;.&quot; fitnesseport=&quot;8082&quot; /&gt;
  * </pre>
  */

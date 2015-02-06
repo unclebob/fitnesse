@@ -6,21 +6,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.FitNesseContext;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,8 +47,7 @@ public class HtmlSlimResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     request = new MockRequest();
     customComparatorRegistry = new CustomComparatorRegistry();
 
@@ -63,7 +55,7 @@ public class HtmlSlimResponderTest {
     responder.setFastTest(true);
     // Enforce the test runner here, to make sure we're talking to the right
     // system
-    testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+    testPage = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("TestPage"),
             "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
     SlimClientBuilder.clearSlimPortOffset();
   }
@@ -71,21 +63,6 @@ public class HtmlSlimResponderTest {
   protected SlimResponder getSlimResponder(CustomComparatorRegistry customComparatorRegistry) {
     return new HtmlSlimResponder(customComparatorRegistry);
   }
-
-  @Test
-  public void slimResponderStartsAndQuitsSlim() throws Exception {
-    responder.setFastTest(false);
-    request.setResource("TestPage");
-    responder.makeResponse(context, request);
-    assertTrue(!responder.slimOpen());
-  }
-
-//  @Test
-//  public void verboseOutputIfSlimFlagSet() throws Exception {
-//    getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-//    assertTrue(responder.getCommandLine().contains(
-//        "fitnesse.slim.SlimService -v"));
-//  }
 
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
@@ -209,7 +186,7 @@ public class HtmlSlimResponderTest {
   public void tableWithBadConstructorHasException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|badArgument|\n"
         + "|returnConstructorArgument?|\n" + "|3|\n");
-    TableScanner ts = new HtmlTableScanner(testPage.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(testPage.getHtml());
     ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }
@@ -268,7 +245,7 @@ public class HtmlSlimResponderTest {
   }
 
   private String unescape(String x) {
-    return Utils.unescapeWiki(Utils.unescapeHTML(x));
+    return HtmlUtil.unescapeWiki(HtmlUtil.unescapeHTML(x));
   }
 
   @Test
@@ -408,36 +385,6 @@ public class HtmlSlimResponderTest {
     @Override
     public boolean matches(String actual, String expected) {
       throw new RuntimeException("exception message");
-    }
-  }
-	  
-  private static class DummyListener implements TestSystemListener {
-    @Override
-    public void testSystemStarted(TestSystem testSystem) {
-    }
-
-    @Override
-    public void testOutputChunk(String output) {
-    }
-
-    @Override
-    public void testStarted(TestPage testPage) {
-    }
-
-    @Override
-    public void testComplete(TestPage testPage, TestSummary testSummary) {
-    }
-
-    @Override
-    public void testSystemStopped(TestSystem testSystem, Throwable throwable) {
-    }
-
-    @Override
-    public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    }
-
-    @Override
-    public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     }
   }
 }

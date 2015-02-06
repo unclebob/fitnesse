@@ -161,7 +161,11 @@ public class StackTraceEnricherTest {
       if (testLocation.endsWith("/")) {
         testLocation = testLocation.substring(0, testLocation.length() - 1);
       }
-      assertTrue("Location of unit test (" + testLocation + ") not found on the classpath.",
+      // Under Windows a path with a SPACE has "%20" in the testLocation and " " in the classpath
+      // Fix this before the test
+      testLocation = testLocation.replace("%20", " ");
+      
+      assertTrue("Location of unit test (" + testLocation + ") not found on the classpath (" + classPath + ").",
           classPath.contains(testLocation));
     } else {
       // TODO Find a way to test this if the unit test is executed from a jar.

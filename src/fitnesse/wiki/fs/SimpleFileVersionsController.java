@@ -7,13 +7,9 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import fitnesse.wiki.VersionInfo;
 
 public class SimpleFileVersionsController implements VersionsController {
-  private static final Logger LOG = Logger.getLogger(SimpleFileVersionsController.class.getName());
 
   private final FileSystem fileSystem;
 
@@ -21,9 +17,8 @@ public class SimpleFileVersionsController implements VersionsController {
     this.fileSystem = fileSystem;
   }
 
-  @Override
-  public void setHistoryDepth(int historyDepth) {
-    // Just one file, no history
+  public SimpleFileVersionsController() {
+    this(new DiskFileSystem());
   }
 
   @Override

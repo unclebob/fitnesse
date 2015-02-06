@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import util.Maybe;
 
 public class Link extends SymbolType implements Rule, Translation {
     public static final Link symbolType = new Link();
@@ -57,7 +56,7 @@ public class Link extends SymbolType implements Rule, Translation {
         public Reference(String reference) { this.reference = reference; }
 
         public boolean isImage() {
-            return reference.toLowerCase().endsWith(".jpg") || reference.toLowerCase().endsWith(".gif");
+            return reference.toLowerCase().endsWith(".jpg") || reference.toLowerCase().endsWith(".gif") || reference.toLowerCase().endsWith(".png");
         }
 
         public String makeUrl(String prefix) {

@@ -1,18 +1,14 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import util.Maybe;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
-    private static final Logger LOG = Logger.getLogger(WikiSourcePage.class.getName());
-
     private WikiPage page;
 
     public WikiSourcePage(WikiPage page) { this.page = page; }
@@ -55,7 +51,7 @@ public class WikiSourcePage implements SourcePage {
         WikiPage ancestor = crawler.findAncestorWithName(target);
         if (ancestor != null) {
             pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
-            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+          return "." + StringUtils.join(Arrays.asList(pathElements), ".");
         }
         return "." + targetName;
     }
@@ -64,30 +60,22 @@ public class WikiSourcePage implements SourcePage {
         PageCrawler crawler = page.getPageCrawler();
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
-          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.\n");
+          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.");
         }
 
         WikiPage includedPage = crawler.getSiblingPage(pagePath);
         if (includedPage == null) {
-            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
+            return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.");
         }
         else if (isParentOf(includedPage))
-           return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
+           return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").");
         else {
             return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
         }
     }
 
-    public Collection<SourcePage> getAncestors() {
-        ArrayList<SourcePage> ancestors = new ArrayList<SourcePage>();
-        for (WikiPage ancestor = page.getParent(); ancestor != null && ancestor != page; ancestor = ancestor.getParent()) {
-            ancestors.add(new WikiSourcePage(ancestor));
-            if (ancestor.isRoot()) break;
-        }
-        return ancestors;
-    }
 
-    public Collection<SourcePage> getChildren() {
+  public Collection<SourcePage> getChildren() {
         ArrayList<SourcePage> children = new ArrayList<SourcePage>();
         for (WikiPage child: page.getChildren()) {
             children.add(new WikiSourcePage(child));
@@ -102,6 +90,13 @@ public class WikiSourcePage implements SourcePage {
     public String getProperty(String propertyKey) {
         String propertyValue = page.getData().getAttribute(propertyKey);
         return propertyValue != null ? propertyValue.trim() : "";
+    }
+
+    public boolean hasSymbolicLinkChild(String childName){
+        if(page.getData().getProperties().has(SymbolicPage.PROPERTY_NAME)){
+             return page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME).keySet().contains(childName);
+        }
+        return false;
     }
 
     public String makeUrl(String wikiWordPath) {

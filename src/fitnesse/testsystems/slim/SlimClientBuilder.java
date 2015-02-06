@@ -3,25 +3,20 @@ package fitnesse.testsystems.slim;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketFactory;
 
-import fitnesse.slim.JavaSlimFactory;
-import fitnesse.slim.SlimService;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
-import util.StringUtil;
-
-import static util.StringUtil.combineArrays;
+import org.apache.commons.lang.ArrayUtils;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
+  private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
@@ -42,7 +37,21 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout());
+
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
+  }
+
+  public double getSlimVersion() {
+    double version = SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION;
+    try {
+      String slimVersion = getVariable(SLIM_VERSION);
+      if (slimVersion != null) {
+        version = Double.valueOf(slimVersion);
+      }
+    } catch (NumberFormatException e) {
+      // stick with default
+    }
+    return version;
   }
 
   @Override
@@ -53,7 +62,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   protected String[] buildCommand() {
     String[] slimArguments = buildArguments();
     String[] slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
-    return combineArrays(slimCommandPrefix, slimArguments);
+    return (String[]) ArrayUtils.addAll(slimCommandPrefix, slimArguments);
   }
 
   protected String[] buildArguments() {
@@ -90,9 +99,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
+      int port = offset + base;
       offset = (offset + 1) % poolSize;
       slimPortOffset.set(offset);
-      return offset + base;
+      // is port available??
+      return port;
     }
   }
 

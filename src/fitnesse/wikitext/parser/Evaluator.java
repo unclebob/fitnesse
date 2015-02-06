@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 public class Evaluator extends SymbolType implements Rule, Translation {
     public static final Evaluator symbolType = new Evaluator();
     

@@ -3,12 +3,12 @@ package fitnesse.junit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import fitnesse.junit.FitNesseSuite.DebugMode;
-import fitnesse.junit.FitNesseSuite.ExcludeSuiteFilter;
-import fitnesse.junit.FitNesseSuite.FitnesseDir;
+import fitnesse.junit.FitNesseRunner.DebugMode;
+import fitnesse.junit.FitNesseRunner.ExcludeSuiteFilter;
+import fitnesse.junit.FitNesseRunner.FitnesseDir;
 import fitnesse.junit.FitNesseSuite.Name;
-import fitnesse.junit.FitNesseSuite.OutputDir;
-import fitnesse.junit.FitNesseSuite.SuiteFilter;
+import fitnesse.junit.FitNesseRunner.OutputDir;
+import fitnesse.junit.FitNesseRunner.SuiteFilter;
 
 
 @RunWith(FitNesseSuite.class)

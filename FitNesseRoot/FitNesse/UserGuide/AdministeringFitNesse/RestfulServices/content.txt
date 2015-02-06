@@ -39,6 +39,7 @@
 | files | | Displays a directory in the ''files'' section.  The ''resource'' is the directory to be displayed. |
 | getPage | | View the selected page |
 | | dontCreatePage | if present, will prevent the responder from attempting to create a page if it doesn't exist. |
+| | ''key''=''value'' | If present creates a markup variable with ''key'' as name & ''value'' as value.  ''key'' and ''value'' can be any string values.  Multiple pairs can be specified.  | 
 | import | | Imports a page hierarchy from a foreign !-FitNesse-! |
 | | remoteUsername | The user name to log in as (optional) |
 | | remotePassword | The password to use (optional) |
@@ -102,6 +103,7 @@
 | | firstTest | if present, only tests whose full path names are lexigraphically greater (later in alphabetical order) will be run.  This is of questionable use since tests are not guaranteed to be run in any particular order. |
 | | nohistory | Do not generate test history files when running the suite.  Don't use this with format=xml since xml reports depend upon history. |
 | | includehtml | If format=xml then this will cause the XML to contain a 'content' tag that holds the HTML of the tested page.  Beware, this can lead to OutOfMemory errors for large suites. |
+| | ''key''=''value'' | If present creates a markup variable with ''key'' as name & ''value'' as value.  ''key'' and ''value'' can be any string values.  Multiple pairs can be specified.| 
 | symlink | | Creates a symbolic link between pages in the same !-FitNesse-! |
 | | removal | If present is the name of a symbolic link to be removed. |
 | | rename | If present is the name of a symbolic link to be renamed. |
@@ -112,6 +114,7 @@
 | | format=xml | Returns results in XML.  See RestfulTests |
 | | debug | (Only works for Java fixtures.) Attempts to run the test in the same JVM that !-FitNesse-! is running in.  Allows you to attach a debugger to your fixtures before you run the test. | |
 | | remote_debug | Causes the REMOTE_DEBUG_COMMAND and REMOTE_DEBUG_RUNNER variables to be used in place of COMMAND_PATTERN and TEST_RUNNER when creating the command to execute the test.  See CustomizingTestExecution for defaults |
+| | ''key''=''value'' | If present creates a markup variable with ''key'' as name & ''value'' as value.  ''key'' and ''value'' can be any string values.  Multiple pairs can be specified.  | 
 | testHistory | | Displays the current test history below the selected page, or all history if no page is selected. |
 | | format=xml | Returns an XML report of test history. See >TestHistoryXml |
 | upload | | Upload a new file into the files section.  The ''resource'' is the directory into which the new file will be stored. |

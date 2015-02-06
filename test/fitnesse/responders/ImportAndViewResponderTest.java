@@ -25,7 +25,7 @@ public class ImportAndViewResponderTest {
     testData.createRemoteRoot();
     testData.createLocalRoot();
 
-    FitNesseUtil.startFitnesse(testData.remoteRoot);
+    FitNesseUtil.startFitnesseWithContext(testData.remoteContext);
 
     responder = new ImportAndViewResponder();
   }
@@ -44,10 +44,9 @@ public class ImportAndViewResponderTest {
   }
 
   private Response getResponse() throws Exception {
-    FitNesseContext context = FitNesseUtil.makeTestContext(testData.localRoot);
     MockRequest request = new MockRequest();
     request.setResource("PageTwo");
-    return responder.makeResponse(context, request);
+    return responder.makeResponse(testData.localContext, request);
   }
 
   @Test

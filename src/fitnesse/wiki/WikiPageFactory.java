@@ -1,5 +1,12 @@
 package fitnesse.wiki;
 
-public interface WikiPageFactory {
-  WikiPage makeRootPage(String path, String pageName);
+import java.io.File;
+
+import fitnesse.wikitext.parser.VariableSource;
+
+public interface WikiPageFactory<T extends WikiPage> {
+
+  WikiPage makePage(File path, String pageName, T parent, VariableSource variableSource);
+
+  boolean supports(File path);
 }

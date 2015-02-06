@@ -3,8 +3,10 @@ package fitnesse.responders.refactoring;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
+import fitnesse.Responder;
+import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,23 +16,21 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 
-public class SearchReplaceResponderTest {
-  private WikiPage root;
-  private SearchReplaceResponder responder;
-  private MockRequest request;
-  private FitNesseContext context;
+public class SearchReplaceResponderTest extends ResponderTestCase {
   private WikiPagePath pagePath;
   private WikiPage somePage;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    super.setUp();
     pagePath = PathParser.parse("SomePage");
     somePage = WikiPageUtil.addPage(root, pagePath, "has something in it");
-    responder = new SearchReplaceResponder();
-    request = new MockRequest();
     request.setResource("SomePage");
-    context = FitNesseUtil.makeTestContext(root);
+  }
+
+  @Override
+  protected Responder responderInstance() {
+    return new SearchReplaceResponder();
   }
 
   @Test

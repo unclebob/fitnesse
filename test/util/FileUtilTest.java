@@ -5,11 +5,7 @@ package util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import static util.RegexTestCase.*;
-
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class FileUtilTest {
   @Test

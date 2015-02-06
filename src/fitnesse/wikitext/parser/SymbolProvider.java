@@ -10,7 +10,7 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
-            Link.symbolType, new Table(),
+            Link.symbolType, new ColoredSlimTable(new Table()),
             new HashTable(),  new HeaderLine(), Literal.symbolType, Nesting.symbolType, new Collapsible(),
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
@@ -22,14 +22,14 @@ public class SymbolProvider {
             Evaluator.symbolType, SymbolType.CloseEvaluator, Variable.symbolType, Preformat.symbolType,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket, SymbolType.CloseNesting,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
-            SymbolType.Bold,
+            SymbolType.Bold, SymbolType.DateFormatOption,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
 
     public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            new SymbolType[] {SymbolType.CloseBracket, SymbolType.Whitespace, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider linkTargetProvider = new SymbolProvider(
             new SymbolType[] {Literal.symbolType, Variable.symbolType});

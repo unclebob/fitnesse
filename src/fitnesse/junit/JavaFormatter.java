@@ -15,8 +15,6 @@ import java.util.Map;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -84,7 +82,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       }
     }
   }
-  
+
   public static class FolderResultsRepository implements ResultsRepository {
     private String outputPath;
     private TestResultPage testResultPage;
@@ -94,14 +92,17 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       copyAssets();
     }
 
+    @Override
     public void close() throws IOException {
       testResultPage.finish();
     }
 
+    @Override
     public void open(String testName) throws IOException {
       testResultPage = new TestResultPage(outputPath, testName);
     }
 
+    @Override
     public void write(String content) throws IOException {
       testResultPage.appendResultChunk(content);
     }
@@ -130,20 +131,17 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private TestSummary totalSummary = new TestSummary();
 
-  public String getFullPath(final WikiPage wikiPage) {
-    return new WikiPagePath(wikiPage).toString();
-  }
-
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
   public void testStarted(WikiTestPage test) throws IOException {
-    resultsRepository.open(getFullPath(test.getSourcePage()));
+    resultsRepository.open(test.getFullPath());
   }
 
+  @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
-    String fullPath = getFullPath(test.getSourcePage());
+    String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));
@@ -202,6 +200,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       this.testSummary = testSummary;
     }
 
+    @Override
     public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
@@ -237,6 +236,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       return new TestResultsSummaryTableRow(testName, testSummary).toString();
     }
 
+    @Override
     public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append(SUMMARY_HEADER);

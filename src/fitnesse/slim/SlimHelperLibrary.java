@@ -27,4 +27,9 @@ public class SlimHelperLibrary implements StatementExecutorConsumer {
     Object actor = fixtureStack.pop();
     statementExecutor.setInstance(ACTOR_INSTANCE_NAME, actor);
   }
+  
+  // The following functions are used to manipulate Symbols from the Slim Tables
+  public Object cloneSymbol(Object master){
+	  return master;
+  }
 }

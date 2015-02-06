@@ -2,24 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.File;
+import java.util.Map;
+import java.util.Properties;
+
 import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
-import fitnesse.testrunner.MultipleTestSystemFactory;
-import fitnesse.testsystems.TestSystemFactory;
-import fitnesse.testsystems.TestSystemListener;
-import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.wiki.RecentChanges;
 import fitnesse.html.template.PageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.testrunner.RunningTestingTracker;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
+import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
-
-import java.io.File;
-import java.util.Properties;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class FitNesseContext {
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
@@ -28,26 +27,26 @@ public class FitNesseContext {
 
   public final FitNesseVersion version;
   public final FitNesse fitNesse;
-  public final WikiPage root;
 
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
-  public final RunningTestingTracker runningTestingTracker;
 
   public final int port;
-  private final String rootPath;
+  private final WikiPageFactory wikiPageFactory;
+  public final String rootPath;
   private final String rootDirectoryName;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
   public final PageFactory pageFactory;
 
+  public final SystemVariableSource variableSource;
   public final VersionsController versionsController;
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
   private final Properties properties;
 
-  protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
+  protected FitNesseContext(FitNesseVersion version, WikiPageFactory wikiPageFactory, String rootPath,
                             String rootDirectoryName, String contextRoot, VersionsController versionsController,
                             RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
@@ -55,7 +54,7 @@ public class FitNesseContext {
                             Properties properties) {
     super();
     this.version = version;
-    this.root = root;
+    this.wikiPageFactory = wikiPageFactory;
     this.rootPath = rootPath;
     this.rootDirectoryName = rootDirectoryName;
     this.contextRoot = contextRoot;
@@ -67,12 +66,24 @@ public class FitNesseContext {
     this.testSystemFactory = testSystemFactory;
     this.testSystemListener = testSystemListener;
     this.properties = properties;
-    runningTestingTracker = new RunningTestingTracker();
     responderFactory = new ResponderFactory(getRootPagePath());
+    variableSource = new SystemVariableSource(properties);
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
   }
 
+  public WikiPage getRootPage() {
+    return getRootPage(variableSource);
+  }
+
+  public WikiPage getRootPage(Map<String, String> customProperties) {
+    return getRootPage(new UrlPathVariableSource(variableSource, customProperties));
+  }
+
+  private WikiPage getRootPage(VariableSource variableSource) {
+    return wikiPageFactory.makePage(new File(rootPath, rootDirectoryName), rootDirectoryName, null, variableSource);
+
+  }
   public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
   }
@@ -90,6 +101,6 @@ public class FitNesseContext {
   }
 
   public String getProperty(String name) {
-    return new SystemVariableSource(properties).getProperty(name);
+    return variableSource.getProperty(name);
   }
 }

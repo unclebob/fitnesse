@@ -95,19 +95,19 @@ public class JUnitHelper {
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       return Arrays.asList(suiteRoot);
     }
-    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+    return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.getRootPage()).getAllPagesToRunForThisSuite();
   }
 
   private WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     return crawler.getPage(path);
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;
   }

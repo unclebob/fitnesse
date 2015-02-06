@@ -49,9 +49,10 @@ public class NewPageResponder implements Responder {
     html.put("isNewPage", true);
     html.put(EditResponder.HELP_TEXT, "");
 
-    html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(getParentWikiPage(context, request)));
+    WikiPage parentWikiPage = getParentWikiPage(context, request);
+    html.put(EditResponder.TEMPLATE_MAP, TemplateUtil.getTemplateMap(parentWikiPage));
     if (request.hasInput(PAGE_TEMPLATE)) {
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       String pageTemplate = (String) request.getInput(PAGE_TEMPLATE);
       WikiPage template = crawler.getPage(PathParser.parse(pageTemplate));
       html.put(EditResponder.CONTENT_INPUT_NAME, template.getData().getContent());
@@ -62,15 +63,15 @@ public class NewPageResponder implements Responder {
       // Validate page type:
       PageType.fromString(pageType);
       html.put(EditResponder.PAGE_TYPE, pageType);
-      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(context));
+      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(parentWikiPage));
     } else {
       html.put(PAGE_TYPES, PAGE_TYPE_ATTRIBUTES);
-      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(context));
+      html.put(EditResponder.CONTENT_INPUT_NAME, getDefaultContent(parentWikiPage));
     }
   }
 
-  public static String getDefaultContent(FitNesseContext context) {
-    String content = context.getProperty(DEFAULT_PAGE_CONTENT_PROPERTY);
+  public static String getDefaultContent(WikiPage page) {
+    String content = page.getVariable(DEFAULT_PAGE_CONTENT_PROPERTY);
     if (content == null) {
       content = DEFAULT_PAGE_CONTENT;
     }
@@ -82,7 +83,7 @@ public class NewPageResponder implements Responder {
     WikiPagePath parentPath = PathParser.parse(request.getResource());
 
     //we need a pageBuilder to get the page from the path. The root has a pageBuilder we can use.
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     WikiPage page = crawler.getPage(parentPath);
     return page;
   }

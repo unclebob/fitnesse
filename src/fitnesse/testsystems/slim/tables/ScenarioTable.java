@@ -20,12 +20,12 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
-  private static final String underscorePattern = "\\W_(?:\\W|$)";
+  private static final String underscorePattern = "\\W_(?=\\W|$)";
   private String name;
   private List<String> inputs = new ArrayList<String>();
   private Set<String> outputs = new HashSet<String>();
@@ -76,28 +76,36 @@ public class ScenarioTable extends SlimTable {
     for (int inputCol = 2; inputCol < colsInHeader; inputCol += 2) {
       String argName = table.getCellContents(inputCol, 0);
 
-      if (argName.endsWith("?")) {
-        String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
-          0, argName.length()));
+      splitInputAndOutputArguments(argName);
+    }
+  }
+
+private void splitInputAndOutputArguments(String argName) {
+	argName = argName.trim();
+	if (argName.endsWith("?")) {
+        String disgracedArgName = Disgracer.disgraceMethodName(argName);
         outputs.add(disgracedArgName);
       } else {
         String disgracedArgName = Disgracer.disgraceMethodName(argName);
         inputs.add(disgracedArgName);
       }
-    }
-  }
+}
 
   private void getArgumentsForParameterizedName() {
     String argumentString = table.getCellContents(2, 0);
     String[] arguments = argumentString.split(",");
 
     for (String argument : arguments) {
-      addInput(Disgracer.disgraceMethodName(argument.trim()));
+        splitInputAndOutputArguments(argument);
     }
   }
 
   protected void addInput(String argument) {
     inputs.add(argument);
+  }
+
+  protected void addOutput(String argument) {
+    outputs.add(argument);
   }
 
   public String getScenarioName() {
@@ -147,7 +155,7 @@ public class ScenarioTable extends SlimTable {
   }
 
   public Set<String> getOutputs() {
-    return outputs;
+    return new HashSet<String>(outputs);
   }
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
@@ -159,8 +167,8 @@ public class ScenarioTable extends SlimTable {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {
             String argument = scenarioArguments.get(arg);
-            content = StringUtil.replaceAll(content, "@" + arg, argument);
-            content = StringUtil.replaceAll(content, "@{" + arg + "}", argument);
+            content = StringUtils.replace(content, "@" + arg, argument);
+            content = StringUtils.replace(content, "@{" + arg + "}", argument);
           } else {
             throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
           }
@@ -169,17 +177,31 @@ public class ScenarioTable extends SlimTable {
       }
     });
     ScenarioTestContext testContext = new ScenarioTestContext(parentTable.getTestContext());
-    ScriptTable t = createChild(testContext, newTable);
+    ScriptTable t = createChild(testContext, parentTable, newTable);
     parentTable.addChildTable(t, row);
     List<SlimAssertion> assertions = t.getAssertions();
     assertions.add(makeAssertion(Instruction.NOOP_INSTRUCTION, new ScenarioExpectation(t, row)));
     return assertions;
   }
 
-  protected ScriptTable createChild(SlimTestContext testContext, Table newTable) {
-    ScriptTable scriptTable = new ScriptTable(newTable, id, testContext);
+  protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
+    ScriptTable scriptTable;
+    if (parentTable instanceof ScriptTable && !parentTable.getClass().equals(ScriptTable.class)) {
+      scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
+    } else {
+      scriptTable = new ScriptTable(newTable, id, testContext);
+    }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
+  }
+
+  protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
+    Class<? extends ScriptTable> parentTableClass = parentScriptTable.getClass();
+    try {
+      return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to create child table of type: " + parentTableClass.getName(), e);
+    }
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
@@ -261,7 +283,12 @@ public class ScenarioTable extends SlimTable {
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
-      parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
+      if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
+    	  // if the scenario has no output parameters 
+    	  // or the scenario failed
+    	  // then the whole line should be flagged
+    	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
+      }
       return null;
     }
 
@@ -273,7 +300,7 @@ public class ScenarioTable extends SlimTable {
 
   // This context is mainly used to determine if the scenario table evaluated successfully
   // This determines the execution result for the "calling" table row.
-  final class ScenarioTestContext implements SlimTestContext {
+  protected final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;
     private final TestSummary testSummary = new TestSummary();

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.List;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

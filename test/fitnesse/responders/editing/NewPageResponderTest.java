@@ -3,26 +3,28 @@ package fitnesse.responders.editing;
 import static org.junit.Assert.assertEquals;
 import static util.RegexTestCase.assertSubString;
 
+import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
 public class NewPageResponderTest {
 
+  private FitNesseContext context;
   private WikiPage root;
   private MockRequest request;
   private NewPageResponder responder;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
     responder = new NewPageResponder();
   }
@@ -31,8 +33,7 @@ public class NewPageResponderTest {
   public void testResponse() throws Exception {
     request.setResource("root");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
-        request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -42,7 +43,7 @@ public class NewPageResponderTest {
     assertSubString("name=\"responder\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("type=\"submit\"", body);
-    assertSubString("textarea class=\"wikitext no_wrap\"", body);
+    assertSubString("textarea class=\"wikitext no_wrap mousetrap\"", body);
   }
 
   @Test
@@ -55,8 +56,7 @@ public class NewPageResponderTest {
 
     request.setResource("ChildPage");
 
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
-        request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -69,7 +69,7 @@ public class NewPageResponderTest {
     assertSubString("option value=\"" + ".TemplateLibrary.TemplateOne" + "\"", body);
     assertSubString("option value=\"" + ".TemplateLibrary.TemplateTwo" + "\"", body);
     assertSubString("type=\"submit\"", body);
-    assertSubString("textarea class=\"wikitext no_wrap\"", body);
+    assertSubString("textarea class=\"wikitext no_wrap mousetrap\"", body);
   }
 
   @Test
@@ -77,8 +77,7 @@ public class NewPageResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("FancyTemplate"), "template page");
     request.setResource("");
     request.addInput(NewPageResponder.PAGE_TEMPLATE, ".FancyTemplate");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root),
-            request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();

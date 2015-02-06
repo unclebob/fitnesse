@@ -5,12 +5,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import fitnesse.testrunner.WikiTestPage;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class TestTextFormatter extends BaseFormatter implements Closeable {
   private ChunkedResponse response;
@@ -34,10 +32,6 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
     timeMeasurement = new TimeMeasurement().start();
   }
 
-  private String getPath(WikiPage page) {
-    return PathParser.render(page.getPageCrawler().getFullPath());
-  }
-
   @Override
   public void testOutputChunk(String output) {
   }
@@ -48,7 +42,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
     updateCounters(summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
-      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), getPath(page.getSourcePage()), timeMeasurement.elapsedSeconds()));
+      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), page.getFullPath(), timeMeasurement.elapsedSeconds()));
   }
 
   private void updateCounters(TestSummary summary) {

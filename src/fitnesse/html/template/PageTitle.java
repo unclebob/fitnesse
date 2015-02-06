@@ -114,6 +114,10 @@ public class PageTitle {
     this.pageTags = pageTags;
   }   
 
+  public String[] getPageTagsArray() {
+    return pageTags != null ? pageTags.trim().split("\\s*,\\s*") : new String[] {};
+  }
+
   public class BreadCrumb {
     private String name;
     private String link;

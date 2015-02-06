@@ -34,7 +34,7 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
     return callMethod("getInstance", new Object[] {instanceName});
   }
 
-  public void setVariable(String name, Object value) {
+  public void assign(String name, Object value) {
     callMethod("setVariable", new Object[] {name, value});
   }
 

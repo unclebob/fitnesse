@@ -14,13 +14,13 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 
 public class StopTestResponderTest {
 
-  private Request request = null;
-  private FitNesseContext context = null;
+  private Request request;
+  private FitNesseContext context;
   private StoppedRecorder stoppableA = new StoppedRecorder();
   private StoppedRecorder stoppableB = new StoppedRecorder();
 
@@ -28,13 +28,13 @@ public class StopTestResponderTest {
   public void setUp() throws Exception {
 
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
   public void testStopAll() throws Exception {
-    context.runningTestingTracker.addStartedProcess(stoppableA);
-    context.runningTestingTracker.addStartedProcess(stoppableB);
+    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
+    SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
 
     StopTestResponder stopResponder = new StopTestResponder();
     String response = runResponder(stopResponder);
@@ -49,8 +49,8 @@ public class StopTestResponderTest {
 
   @Test
   public void testStopB() throws Exception {
-    context.runningTestingTracker.addStartedProcess(stoppableA);
-    final String bId = context.runningTestingTracker.addStartedProcess(stoppableB);
+    SuiteResponder.runningTestingTracker.addStartedProcess("1", stoppableA);
+    final String bId = SuiteResponder.runningTestingTracker.addStartedProcess("2", stoppableB);
 
     request = new MockRequest() {
       @Override
@@ -59,7 +59,7 @@ public class StopTestResponderTest {
       }
 
       @Override
-      public Object getInput(String key) {
+      public String getInput(String key) {
         return bId;
       }
     };

@@ -49,6 +49,7 @@ public class FitNesseVersion {
     }
   }
 
+  @Override
   public String toString() {
     return version;
   }

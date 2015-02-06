@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import util.Clock;
+import fitnesse.util.Clock;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class SaveRecorder {
@@ -16,17 +15,16 @@ public class SaveRecorder {
   private static final Map<String, Long> ticketRegistry = new HashMap<String, Long>();
   private static final Map<String, Long> saveTime = new HashMap<String, Long>();
 
-  public static long pageSaved(PageData data, long ticketNumber) {
+  public static long pageSaved(WikiPage page, long ticketNumber) {
     long timeStamp = timeStamp();
-    WikiPage page = data.getWikiPage();
     String name = page.getPageCrawler().getFullPath().toString();
     ticketRegistry.put(name, ticketNumber);
     saveTime.put(name, timeStamp);
     return timeStamp;
   }
 
-  public static boolean changesShouldBeMerged(long thisEditTime, long ticket, PageData data) {
-    return new MergeDeterminer(thisEditTime, ticket, data).shouldMerge();
+  public static boolean changesShouldBeMerged(long thisEditTime, long ticket, WikiPage page) {
+    return new MergeDeterminer(thisEditTime, ticket, page).shouldMerge();
   }
 
   public static long timeStamp() {
@@ -49,10 +47,10 @@ public class SaveRecorder {
     private WikiPage page;
     private String fullPageName;
 
-    public MergeDeterminer(long thisEditTime, long ticket, PageData data) {
+    public MergeDeterminer(long thisEditTime, long ticket, WikiPage page) {
       this.thisEditTime = thisEditTime;
       this.ticket = ticket;
-      page = data.getWikiPage();
+      this.page = page;
       fullPageName = page.getPageCrawler().getFullPath().toString();
     }
 

@@ -5,30 +5,15 @@ package fitnesse.wiki;
 import static fitnesse.wiki.PageType.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsedPage;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.See;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
-import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Clock;
-import util.Maybe;
-import util.StringUtil;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class PageData implements ReadOnlyPageData, Serializable {
   private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
-  public static final String ErrorLogName = "ErrorLogs";
   private static final long serialVersionUID = 1L;
-
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -55,8 +40,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String[] NAVIGATION_ATTRIBUTES = {
       PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
 
-  public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
-      .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
+  public static final String[] NON_SECURITY_ATTRIBUTES = (String[]) ArrayUtils.addAll(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
 
   public static final String PropertySECURE_READ = "secure-read";
   public static final String PropertySECURE_WRITE = "secure-write";
@@ -70,86 +54,24 @@ public class PageData implements ReadOnlyPageData, Serializable {
 
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
-  private transient WikiPage wikiPage;
   private String content = "";
   private WikiPageProperties properties = new WikiPageProperties();
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
-
-  private transient ParsedPage parsedPage;
-  private VariableSource variableSource;
-
-  public PageData(WikiPage page) {
-    wikiPage = page;
-    initializeAttributes();
-  }
 
   public PageData(PageData data, String content) {
     this(data);
     setContent(content);
   }
 
-  public PageData(PageData data, VariableSource variableSource) {
-    this(data);
-    this.variableSource = variableSource;
-  }
-
   public PageData(PageData data) {
-    this.wikiPage = data.getWikiPage();
-    this.variableSource = data.variableSource;
     this.properties = new WikiPageProperties(data.properties);
     this.content = data.content;
-    this.parsedPage = data.parsedPage;
   }
 
-  public void initializeAttributes() {
-    if (!isErrorLogsPage()) { 
-      properties.set(PropertyEDIT);
-      properties.set(PropertyPROPERTIES);
-      properties.set(PropertyREFACTOR);
-    }
-    properties.set(PropertyWHERE_USED);
-    properties.set(PropertyRECENT_CHANGES);
-    properties.set(PropertyFILES);
-    properties.set(PropertyVERSIONS);
-    properties.set(PropertySEARCH);
-    properties.setLastModificationTime(Clock.currentDate());
-
-    initTestOrSuiteProperty();
-  }
-
-  private void initTestOrSuiteProperty() {
-    final String pageName = wikiPage.getName();
-    if (pageName == null) {
-      handleInvalidPageName();
-      return;
-    }
-
-    if (isErrorLogsPage())
-      return;
-
-    PageType pageType = PageType.getPageTypeForPageName(pageName);
-
-    if (STATIC.equals(pageType))
-      return;
-
-    properties.set(pageType.toString());
-  }
-
-  private boolean isErrorLogsPage() {
-    WikiPagePath pagePath = wikiPage.getPageCrawler().getFullPath();
-    return ErrorLogName.equals(pagePath.getFirst());
-  }
-
-  private void handleInvalidPageName() {
-    try {
-      String msg = "WikiPage " + wikiPage + " does not have a valid name!"
-          + wikiPage.getName();
-      LOG.warning(msg);
-      throw new RuntimeException(msg);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  public PageData(String content, WikiPageProperties properties) {
+    setContent(content);
+    setProperties(properties);
   }
 
   @Override
@@ -197,63 +119,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public void setContent(String content) {
-    this.content = StringUtil.stripCarriageReturns(content);
-  }
-
-  /* this is the public entry to page parse and translate */
-  @Override
-  public String getHtml() {
-      return getParsedPage().toHtml();
-  }
-
-  @Override
-  public String getVariable(String name) {
-    ParsingPage parsingPage = getParsingPage();
-    Maybe<String> variable = parsingPage.findVariable(name);
-    if (variable.isNothing()) return null;
-
-    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
-    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
-  }
-
-  public ParsedPage getParsedPage() {
-    if (parsedPage == null) parsedPage = new ParsedPage(new ParsingPage(new WikiSourcePage(wikiPage), variableSource), content);
-    return parsedPage;
-  }
-
-  private Symbol getSyntaxTree() {
-    return getParsedPage().getSyntaxTree();
-  }
-
-  private ParsingPage getParsingPage() {
-    return getParsedPage().getParsingPage();
-  }
-
-  public void setWikiPage(WikiPage page) {
-    wikiPage = page;
-  }
-
-  @Override
-  public WikiPage getWikiPage() {
-    return wikiPage;
-  }
-
-  @Override
-  public List<String> getXrefPages() {
-    final ArrayList<String> xrefPages = new ArrayList<String>();
-    getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return true;
-      }
-    });
-    return xrefPages;
+    this.content = StringUtils.remove(content, '\r');
   }
 
   public boolean isEmpty() {

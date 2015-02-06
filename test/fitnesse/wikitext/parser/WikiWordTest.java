@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,20 +47,6 @@ public class WikiWordTest {
     }
 
     @Test
-    public void testIsSingleWikiWord() throws Exception {
-      assertTrue(WikiWordPath.isSingleWikiWord("WikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("notWikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("NotSingle.WikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("WikiW\u00F0rd"));
-    }
-
-    @Test
-    public void testIsWikiWord() throws Exception {
-       assertEquals(true, WikiWordPath.isWikiWord("HelloThere"));
-       assertEquals(false, WikiWordPath.isWikiWord("not.a.wiki.word"));
-    }
-
-    @Test
     public void testBackwardSearchWidget() throws Exception {
       //todo: use TestRoot
       WikiPage top = addPage(root2, "TopPage");
@@ -77,7 +63,7 @@ public class WikiWordTest {
       PageData data = referer.getData();
       data.setContent("<TargetPage.SubTarget");
       referer.commit(data);
-      String renderedLink = referer.getData().getHtml();
+      String renderedLink = referer.getHtml();
       assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
     }
 

@@ -4,6 +4,7 @@ import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 import org.junit.runner.notification.Failure;
@@ -57,6 +58,7 @@ public class JUnitRunNotifierResultsListenerTest {
     WikiPage mock = mock(WikiPage.class);
     when(mock.isRoot()).thenReturn(true);
     when(mock.getName()).thenReturn("WikiPage");
+    when(mock.getPageCrawler()).thenReturn(new PageCrawlerImpl(mock));
     return new WikiTestPage(mock);
   }
 }

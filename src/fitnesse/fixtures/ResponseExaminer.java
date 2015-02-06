@@ -3,7 +3,7 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
 
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -22,7 +22,7 @@ public class ResponseExaminer extends ColumnFixture {
   // Content is escaped, since it's used by both FIT and SLiM.
   public String contents() throws Exception {
     String sentData = FitnesseFixtureContext.sender.sentData();
-    return Utils.escapeHTML(sentData);
+    return HtmlUtil.escapeHTML(sentData);
   }
 
   public String html() throws Exception {
@@ -32,7 +32,7 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public String fullContents() throws Exception {
-    return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
+    return HtmlUtil.escapeHTML(FitnesseFixtureContext.sender.sentData());
   }
 
     public boolean inOrder() throws Exception {
@@ -75,7 +75,7 @@ public class ResponseExaminer extends ColumnFixture {
   public void extractValueFromResponse() throws Exception {
     setValue(null);
     if (type.equals("contents"))
-      setValue(Utils.unescapeHTML(FitnesseFixtureContext.sender.sentData()));
+      setValue(HtmlUtil.unescapeHTML(FitnesseFixtureContext.sender.sentData()));
     else if (type.equals("fullContents"))
       setValue(fullContents());
     else if (type.equals("status"))
@@ -93,7 +93,7 @@ public class ResponseExaminer extends ColumnFixture {
 
   public String string() throws Exception {
     if (type.equals("contents")) {
-      return FitnesseFixtureContext.page.getData().getHtml();
+      return FitnesseFixtureContext.page.getHtml();
     } else if (type.equals("line")) {
       return getLine(number);
     } else {
@@ -103,7 +103,7 @@ public class ResponseExaminer extends ColumnFixture {
 
   private String getLine(int number) throws Exception {
     String value = null;
-    String pageContent = FitnesseFixtureContext.page.getData().getHtml();
+    String pageContent = FitnesseFixtureContext.page.getHtml();
     String lineizedContent = convertBreaksToLineSeparators(pageContent);
     StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
     for (int i = number; i != 0; i--)
@@ -135,7 +135,7 @@ public class ResponseExaminer extends ColumnFixture {
   public String wrappedHtml() throws Exception {
     String txt = FitnesseFixtureContext.sender.sentData();
     String txt2 = txt.replaceAll("(<br */?>)", "$1" + System.getProperty("line.separator"));
-    return "<pre>" + Utils.escapeHTML(txt2) + "</pre>";
+    return "<pre>" + HtmlUtil.escapeHTML(txt2) + "</pre>";
   }
 
   public void setType(String type) {

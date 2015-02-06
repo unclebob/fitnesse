@@ -1,7 +1,6 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.ExecutionLogListener;
 
 import java.io.IOException;
 import java.util.List;

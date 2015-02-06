@@ -2,23 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import util.XmlUtil;
-
 public class PageXmlizer {
-  private final SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+  private final DateFormat dateFormat = WikiPageProperty.getTimeFormat();
   private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
   public Document xmlize(WikiPage page) {
@@ -53,17 +52,14 @@ public class PageXmlizer {
   }
 
   public PageData deXmlizeData(Document document) {
-    PageData data = new PageData(new WikiPageDummy());
     Element dataElement = document.getDocumentElement();
 
     String content = XmlUtil.getLocalTextValue(dataElement, "content");
-    data.setContent(content);
 
     Element propertiesElement = XmlUtil.getLocalElementByTagName(dataElement, "properties");
     WikiPageProperties properties = new WikiPageProperties(propertiesElement);
-    data.setProperties(properties);
 
-    return data;
+    return new PageData(content, properties);
   }
 
   private void addPageXmlToElement(Element context, WikiPage page) {

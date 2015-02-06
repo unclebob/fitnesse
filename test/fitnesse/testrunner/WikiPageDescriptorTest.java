@@ -2,16 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.wiki.ClassPathBuilder;
 import fitnesse.testsystems.Descriptor;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +28,7 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!define TEST_SYSTEM {system}\n" +
                     "!define TEST_RUNNER {runner}\n");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("system", testSystemType);
   }
@@ -40,7 +38,7 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
             "!define TEST_SYSTEM {system:A}\n" +
                     "!define TEST_RUNNER {runner}\n");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), true, false, "");
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("system", testSystemType);
   }
@@ -49,13 +47,9 @@ public class WikiPageDescriptorTest {
   @Test
   public void buildTestSystemTypeIsFit() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
-    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage.readOnlyData(), false, false, new ClassPathBuilder().getClasspath(testPage));
+    WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, false, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
     Assert.assertEquals("fit", testSystemType);
-  }
-
-  private String getClassPath(WikiPage page) {
-    return new ClassPathBuilder().getClasspath(page);
   }
 
   private WikiPage makeTestPage(String pageText) {
@@ -69,7 +63,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("test.property", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page, false, false, "");
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
     assertEquals("bar", descriptor.getVariable("test.property"));
   }
@@ -80,7 +74,7 @@ public class WikiPageDescriptorTest {
     System.setProperty("TEST_PROPERTY", "bar");
     WikiPage page = makeTestPage(pageText);
 
-    Descriptor descriptor = new WikiPageDescriptor(page.readOnlyData(), false, false, getClassPath(page));
+    Descriptor descriptor = new WikiPageDescriptor(page, false, false, "");
     assertEquals("foo", descriptor.getVariable("TEST_PROPERTY"));
   }
 

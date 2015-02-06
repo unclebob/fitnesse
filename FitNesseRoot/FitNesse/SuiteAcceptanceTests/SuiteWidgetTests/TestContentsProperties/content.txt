@@ -5,6 +5,7 @@
 |Script|
 |start|Page Builder|
 |line|I'm the parent|
+|line|!-!define PROPERTY_CHARACTERS {ABCDE}-!|
 |line|!-!contents -p-!|
 |page|!-ParentPage-!|
 
@@ -18,8 +19,8 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|a href="ParentPage.FirstChild" class="suite">FirstChild \*\+</a|true|
-|contents|a href="ParentPage.SecondChild" class="static linked pruned">SecondChild @-</a|true|
+|contents|a href="ParentPage.FirstChild" class="suite">FirstChild AB</a|true|
+|contents|a href="ParentPage.SecondChild" class="static linked pruned">SecondChild CE</a|true|
 
 !3 Indirect via PROPERTY_TOC Variable
 '''First create the parent page.'''

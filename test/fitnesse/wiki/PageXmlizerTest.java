@@ -8,22 +8,22 @@ import static org.junit.Assert.assertNotSame;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import util.XmlUtil;
 
 public class PageXmlizerTest {
   private PageXmlizer xmlizer;
   private WikiPage root;
   private PageCrawler crawler;
-  private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+  private DateFormat format = WikiPageProperty.getTimeFormat();
 
   @Before
   public void setUp() throws Exception {
@@ -212,7 +212,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testXmlizingData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 
@@ -232,7 +232,7 @@ public class PageXmlizerTest {
 
   @Test
   public void testDeXmlizingPageData() throws Exception {
-    PageData data = new PageData(root);
+    PageData data = root.getData();
     data.setContent("this is some content.");
     WikiPageProperties properties = data.getProperties();
 

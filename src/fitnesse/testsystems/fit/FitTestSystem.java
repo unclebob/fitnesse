@@ -5,9 +5,7 @@ package fitnesse.testsystems.fit;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -44,7 +42,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   @Override
   public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
     processingQueue.addLast(pageToTest);
-    String html = pageToTest.getDecoratedData().getHtml();
+    String html = pageToTest.getHtml();
     try {
       if (html.length() == 0)
         client.send(EMPTY_PAGE_CONTENT);

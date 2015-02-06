@@ -8,9 +8,8 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.CompositeExecutionLogListener;
-import fitnesse.testsystems.ExecutionLogListener;
-import util.ListUtility;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import util.StreamReader;
 
 import java.io.BufferedWriter;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static util.ListUtility.list;
+import static java.util.Arrays.asList;
 
 public class SlimCommandRunningClient implements SlimClient {
   private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());
@@ -33,6 +32,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   private final CommandRunner slimRunner;
   private final int connectionTimeout;
+  private final double requiredSlimVersion;
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -41,16 +41,12 @@ public class SlimCommandRunningClient implements SlimClient {
   private String hostName;
   private int port;
 
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion) {
     this.slimRunner = slimRunner;
     this.hostName = hostName;
     this.port = port;
     this.connectionTimeout = connectionTimeout;
-  }
-
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port) {
-    this(slimRunner, hostName, port, 10);
+    this.requiredSlimVersion = requiredSlimVersion;
   }
 
   @Override
@@ -65,8 +61,8 @@ public class SlimCommandRunningClient implements SlimClient {
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
       throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
     }
-    else if (serverVersionNumber < MINIMUM_REQUIRED_SLIM_VERSION) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", MINIMUM_REQUIRED_SLIM_VERSION, serverVersionNumber));
+    else if (serverVersionNumber < requiredSlimVersion) {
+      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
@@ -152,30 +148,36 @@ public class SlimCommandRunningClient implements SlimClient {
       ToListExecutor executor = new ToListExecutor() {
         @Override
         public void addPath(String path) throws SlimException {
-          statementsAsList.add(list(instruction.getId(), ImportInstruction.INSTRUCTION, path));
+          statementsAsList.add(asList(instruction.getId(), ImportInstruction.INSTRUCTION, path));
         }
 
         @Override
         public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
-          List<Object> list = ListUtility.list((Object) instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName);
-          addArguments(list, arguments);
-          statementsAsList.add(list);
+          Object[] list = new Object[] { instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName };
+          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
           return null;
         }
 
         @Override
         public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
-          List<Object> list = ListUtility.list((Object) instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName);
-          addArguments(list, arguments);
-          statementsAsList.add(list);
+          Object[] list = new Object[] { instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName };
+          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
           return null;
         }
 
         @Override
         public void create(String instanceName, String className, Object... constructorArgs) throws SlimException {
-          List<Object> list = ListUtility.list((Object) instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className);
-          addArguments(list, constructorArgs);
-          statementsAsList.add(list);
+          Object[] list = new Object[] { instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className };
+          statementsAsList.add(asList(ArrayUtils.addAll(list, constructorArgs)));
+        }
+
+        @Override
+        public void assign(String symbolName, Object value) {
+          if (slimServerVersion < 0.4) {
+            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
+          }
+          Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
+          statementsAsList.add(asList(list));
         }
       };
 
@@ -184,23 +186,20 @@ public class SlimCommandRunningClient implements SlimClient {
     return statementsAsList;
   }
 
-  private static void addArguments(List<Object> list, Object[] arguments) {
-    for (Object arg: arguments) {
-      list.add(arg);
-    }
-  }
-
   private int getLengthToRead() throws IOException  {
-	String resultLength = reader.read(6);
-    reader.read(1);
-    int length = 0;
+    String length = reader.read(6);
     try {
-    	length = Integer.parseInt(resultLength);
+      Integer resultLength = Integer.parseInt(length);
+
+      String next;
+      while (StringUtils.isNumeric(next = reader.read(1)))
+        resultLength = resultLength * 10 + Integer.valueOf(next);
+
+      return resultLength;
     }
     catch (NumberFormatException e){
-    	throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + resultLength);
+      throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + length);
     }
-	return length;
   }
 
   protected void writeString(String string) throws IOException {
@@ -219,7 +218,7 @@ public class SlimCommandRunningClient implements SlimClient {
   public static Map<String, Object> resultToMap(List<?> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
-      List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);
+      List<Object> resultList = (List<Object>) aResult;
       map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;

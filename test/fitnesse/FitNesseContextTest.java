@@ -12,8 +12,8 @@ public class FitNesseContextTest {
 
   @Test
   public void testGetRootPagePath() {
-    FitNesseContext context = FitNesseUtil.makeTestContext(null);
-    assertEquals("." + File.separator + "TestDir", context.getRootPagePath());
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    assertEquals(context.rootPath + File.separator + FitNesseUtil.base, context.getRootPagePath());
   }
 
 }

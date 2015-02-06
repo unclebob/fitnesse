@@ -8,7 +8,7 @@ import static util.RegexTestCase.assertSubString;
 
 import java.util.List;
 
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class RecentChangesWikiPageTest {
   @Test
   public void testFirstRecentChange() throws Exception {
     assertEquals(false, rootPage.hasChildPage("RecentChanges"));
-    recentChangesWikiPage.updateRecentChanges(newPage.getData());
+    recentChangesWikiPage.updateRecentChanges(newPage);
     assertEquals(true, rootPage.hasChildPage("RecentChanges"));
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
@@ -41,8 +41,8 @@ public class RecentChangesWikiPageTest {
 
   @Test
   public void testTwoChanges() throws Exception {
-    recentChangesWikiPage.updateRecentChanges(page1.getData());
-    recentChangesWikiPage.updateRecentChanges(page2.getData());
+    recentChangesWikiPage.updateRecentChanges(page1);
+    recentChangesWikiPage.updateRecentChanges(page2);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(2, lines.size());
@@ -52,8 +52,8 @@ public class RecentChangesWikiPageTest {
 
   @Test
   public void testNoDuplicates() throws Exception {
-    recentChangesWikiPage.updateRecentChanges(page1.getData());
-    recentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1);
+    recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     assertEquals(1, lines.size());
@@ -67,7 +67,7 @@ public class RecentChangesWikiPageTest {
       for (int j = 0; j < i; j++)
         b.append("a");
       WikiPage page = rootPage.addChildPage(b.toString());
-      recentChangesWikiPage.updateRecentChanges(page.getData());
+      recentChangesWikiPage.updateRecentChanges(page);
     }
 
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
@@ -77,7 +77,7 @@ public class RecentChangesWikiPageTest {
 
   @Test
   public void testUsernameColumnWithoutUser() throws Exception {
-    recentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     String line = lines.get(0).toString();
@@ -90,7 +90,7 @@ public class RecentChangesWikiPageTest {
     data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
     page1.commit(data);
 
-    recentChangesWikiPage.updateRecentChanges(page1.getData());
+    recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
     String line = lines.get(0).toString();

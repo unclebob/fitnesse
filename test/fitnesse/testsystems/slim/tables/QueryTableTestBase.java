@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -20,14 +21,12 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
-import fitnesse.wikitext.Utils;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-import util.ListUtility;
 
-import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
 
 public abstract class QueryTableTestBase {
   private WikiPage root;
@@ -59,7 +58,7 @@ public abstract class QueryTableTestBase {
 
   private QueryTable makeQueryTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     testContext = new SlimTestContextImpl();
     return constructQueryTable(t);
@@ -72,13 +71,9 @@ public abstract class QueryTableTestBase {
   }
 
   @SuppressWarnings("unchecked")
-  protected void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {
+  protected void assertQueryResults(String queryRows, List<List<List<String>>> queryResults, String table) throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(list(
-            list("queryTable_id_0", "OK"),
-            list("queryTable_id_1", "blah"),
-            list("queryTable_id_2", queryResults)
-    ));
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(asList(asList("queryTable_id_0", "OK"), asList("queryTable_id_1", "blah"), asList("queryTable_id_2", queryResults)));
     evaluateResults(pseudoResults, table);
   }
 
@@ -86,11 +81,10 @@ public abstract class QueryTableTestBase {
   @SuppressWarnings("unchecked")
   public void instructionsForQueryTable() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader);
-    List<Instruction> expectedInstructions = list(
+    List<Instruction> expectedInstructions = asList(
             new MakeInstruction("queryTable_id_0", "queryTable_id", "fixture", new Object[]{"argument"}),
-            new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{list(list("n", "2n"))}),
-            new CallInstruction("queryTable_id_2", "queryTable_id", "query")
-    );
+            new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{asList(asList("n", "2n"))}),
+            new CallInstruction("queryTable_id_2", "queryTable_id", "query"));
     org.junit.Assert.assertEquals(expectedInstructions, instructions());
   }
 
@@ -100,7 +94,7 @@ public abstract class QueryTableTestBase {
 
   @Test
   public void nullResultsForNullTable() throws Exception {
-    assertQueryResults("", list(),
+    assertQueryResults("", new ArrayList<List<List<String>>>(),
       "[" +
         headRow +
         "[n, 2n]" +
@@ -111,9 +105,10 @@ public abstract class QueryTableTestBase {
   @Test
   public void oneRowThatMatches() throws Exception {
     assertQueryResults("|2|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4"))
-            ),
+            asList(
+                    asList(
+                            asList("n", "2"),
+                            asList("2n", "4"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -125,9 +120,10 @@ public abstract class QueryTableTestBase {
   @Test
   public void oneRowFirstCellMatchesSecondCellBlank() throws Exception {
     assertQueryResults("|2||\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "4"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -139,9 +135,10 @@ public abstract class QueryTableTestBase {
   @Test
   public void oneRowThatFails() throws Exception {
     assertQueryResults("|2|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "3"), list("2n", "5"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "3"),
+                             asList("2n", "5"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -154,9 +151,10 @@ public abstract class QueryTableTestBase {
   @Test
   public void oneRowWithPartialMatch() throws Exception {
     assertQueryResults("|2|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "5"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "5"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -170,10 +168,13 @@ public abstract class QueryTableTestBase {
     assertQueryResults(
       "|2|4|\n" +
         "|3|6|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4")),
-                    list(list("n", "3"), list("2n", "6"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "4")),
+                     asList(
+                             asList("n", "3"),
+                             asList("2n", "6"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -188,10 +189,13 @@ public abstract class QueryTableTestBase {
     assertQueryResults(
       "|3|6|\n" +
         "|99|99|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4")),
-                    list(list("n", "3"), list("2n", "6"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "4")),
+                     asList(
+                             asList("n", "3"),
+                             asList("2n", "6"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -207,10 +211,13 @@ public abstract class QueryTableTestBase {
     assertQueryResults(
       "|99|99|\n" +
         "|2|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4")),
-                    list(list("n", "3"), list("2n", "6"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "4")),
+                     asList(
+                             asList("n", "3"),
+                             asList("2n", "6"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -225,9 +232,7 @@ public abstract class QueryTableTestBase {
   public void fieldInMatchingRowDoesntExist() throws Exception {
     assertQueryResults(
       "|3|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "3"))
-            ),
+             asList(asList(asList("n", "3"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -242,9 +247,7 @@ public abstract class QueryTableTestBase {
   public void fieldInSurplusRowDoesntExist() throws Exception {
     assertQueryResults(
       "",
-            ListUtility.<Object>list(
-                    list(list("n", "3"))
-            ),
+             asList(asList(asList("n", "3"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -260,15 +263,13 @@ public abstract class QueryTableTestBase {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "4");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("queryTable_id_0", "OK"),
-                    list("queryTable_id_1", VoidConverter.VOID_TAG),
-                    list("queryTable_id_2",
-                            list(
-                                    list(list("n", "2"), list("2n", "4"))
-                            )
-                    )
-            )
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", VoidConverter.VOID_TAG),
+                    asList("queryTable_id_2", asList(
+                            asList(
+                                    asList("n", "2"),
+                                    asList("2n", "4")))))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
@@ -277,27 +278,57 @@ public abstract class QueryTableTestBase {
         "[n, 2n], " +
         "[pass(2), pass($V->[4])]" +
         "]",
-      Utils.unescapeWiki(qt.getTable().toString())
+      HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 
+  @Test
+  public void tableWithSetSymbol() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+        asList(
+            asList("queryTable_id_0", "OK"),
+            asList("queryTable_id_2", asList(asList(asList("n", "1"), asList("2n", "2"))))
+        )
+    );
+    evaluateResults(pseudoResults, "[" +
+        headRow +
+        "[n, 2n], " +
+        "[pass(1), ignore($A<-[2])]" + "]");
+
+    assertEquals("2", qt.getSymbol("A"));
+  }
+
+  @Test
+  public void tableWithSetSymbolReturnVariableInResult() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|1|$A=|\n");
+    QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
+    TestResult result = expectation.evaluateExpectation(asList(asList(asList("n", "1"), asList("2n", "2"))));
+
+    assertNotNull(result.getVariablesToStore());
+    assertEquals("2", result.getVariablesToStore().get("A"));
+  }
+
+  
   @Test
   public void commentColumn() throws Exception {
 	queryTableHeader =
 			      "|" + tableType() + ":fixture|argument|\n" +
 			        "|#comment1|n|#comment2|\n";
-	
-	
-	  assertQueryResults(
+
+
+    assertQueryResults(
 		      "|first|1|comment|\n"+
 		      "|second|2||\n"		  ,
-		            ListUtility.<Object>list(
-		            		// trying to ensure that the comment field does not participate in
-		            		// row matching
-		            		// if comments were not ignored, the best match would be set from the comment fields
-		                    list(list("#comment1", "second"), list("n", "1"), list("#comment2", "")),
-		                    list(list("#comment1", "first"), list("n", "2"), list("#comment2", "comment"))
-		            ),
+             asList(
+                     asList(
+                             asList("#comment1", "second"),
+                             asList("n", "1"),
+                             asList("#comment2", "")),
+                     asList(
+                             asList("#comment1", "first"),
+                             asList("n", "2"),
+                             asList("#comment2", "comment"))),
 		      "[" +
 		        headRow +
 		        "[#comment1, n, #comment2], " +
@@ -313,15 +344,14 @@ public abstract class QueryTableTestBase {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "5");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("queryTable_id_0", "OK"),
-                    list("queryTable_id_1", VoidConverter.VOID_TAG),
-                    list("queryTable_id_2",
-                            list(
-                                    list(list("n", "2"), list("2n", "4"))
-                            )
-                    )
-            )
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", VoidConverter.VOID_TAG),
+                    asList("queryTable_id_2",
+                            asList(
+                                    asList(
+                                            asList("n", "2"),
+                                            asList("2n", "4")))))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
     org.junit.Assert.assertEquals(
@@ -330,7 +360,7 @@ public abstract class QueryTableTestBase {
         "[n, 2n], " +
         "[pass(2), fail(a=4;e=$V->[5])]" +
         "]",
-      Utils.unescapeWiki(qt.getTable().toString())
+      HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 
@@ -339,14 +369,10 @@ public abstract class QueryTableTestBase {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|3|$V|\n");
     qt.setSymbol("V", "5");
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("queryTable_id_0", "OK"),
-                    list("queryTable_id_1", VoidConverter.VOID_TAG),
-                    list("queryTable_id_2",
-                            list(
-                            )
-                    )
-            )
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", VoidConverter.VOID_TAG),
+                    asList("queryTable_id_2", new ArrayList<Object>()))
     );
     evaluateResults(pseudoResults, "[" +
       headRow +
@@ -363,9 +389,10 @@ public abstract class QueryTableTestBase {
   @Test
   public void oneRowThatMatchesExpression() throws Exception {
     assertQueryResults("|<5|4|\n",
-            ListUtility.<Object>list(
-                    list(list("n", "2"), list("2n", "4"))
-            ),
+             asList(
+                     asList(
+                             asList("n", "2"),
+                             asList("2n", "4"))),
       "[" +
         headRow +
         "[n, 2n], " +
@@ -385,13 +412,12 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
-  public void anErrorShouldBeRegisteredIfQueryResultIsNull() throws Exception {
+  public void ShouldBeIgnoredIfQueryResultIsNull() throws Exception {
     makeQueryTableAndBuildInstructions("|a|\n|b|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
     TestResult result = expectation.evaluateExpectation(null);
 
-    assertEquals(ExecutionResult.ERROR, result.getExecutionResult());
-    assertEquals(1, testContext.getTestSummary().getExceptions());
+    assertEquals(ExecutionResult.IGNORE, result.getExecutionResult());
   }
 
 }

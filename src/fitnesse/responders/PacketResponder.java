@@ -32,7 +32,7 @@ public class PacketResponder implements SecureResponder {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
     String pageName = request.getResource();
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
     page = pageCrawler.getPage(resourcePath);
 
@@ -47,7 +47,7 @@ public class PacketResponder implements SecureResponder {
 
   private void buildPacket() {
     packet = new JSONObject();
-    String html = page.getData().getHtml();
+    String html = page.getHtml();
 
     TableScanner scanner = new HtmlTableScanner(html);
 
