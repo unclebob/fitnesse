@@ -7,6 +7,7 @@
  </tr>
 </table>
 
+#if( $log.testSystemName )
 <h3>${log.testSystemName}</h3>
 <table>
  <tr>
@@ -22,6 +23,9 @@
   <th>Time elapsed:</th><td>$runTime seconds</td>
  </tr>
 </table>
+#else
+<h3>This test ran as part of a suite.</h3>
+#end
 #set( $stdOut = $log.stdOut)
 #if( $stdOut != '' )
 <hr/>
