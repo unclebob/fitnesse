@@ -7,7 +7,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 
 public abstract class ResponderTestCase {
@@ -18,10 +18,10 @@ public abstract class ResponderTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
     responder = responderInstance();
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
   }
 
   // Return an instance of the Responder being tested.

@@ -5,14 +5,17 @@ package fit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ArrayUtils;
-import util.GracefulNamer;
 import fit.exception.FitFailureException;
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
+import util.GracefulNamer;
+
+import static java.util.Arrays.asList;
 
 public abstract class Binding {
   private static final Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
@@ -129,10 +132,10 @@ public abstract class Binding {
   }
 
   private static Field findField(Fixture fixture, String simpleName) {
-    Field[] fields = getAllDeclaredFields(fixture.getTargetClass());
+    List<Field> fields = getAllDeclaredFields(fixture.getTargetClass());
     Field field = null;
-    for (int i = 0; i < fields.length; i++) {
-      Field possibleField = fields[i];
+    for (int i = 0; i < fields.size(); i++) {
+      Field possibleField = fields.get(i);
       if (simpleName.equals(possibleField.getName().toLowerCase())) {
         field = possibleField;
         break;
@@ -141,11 +144,13 @@ public abstract class Binding {
     return field;
   }
 
-  private static Field[] getAllDeclaredFields(Class<?> clazz){
+  private static List<Field> getAllDeclaredFields(Class<?> clazz){
     if (clazz.getSuperclass() != null) {
-      return (Field[]) ArrayUtils.addAll(getAllDeclaredFields(clazz.getSuperclass()), clazz.getDeclaredFields());
+      List<Field> fields = getAllDeclaredFields(clazz.getSuperclass());
+      fields.addAll(asList(clazz.getDeclaredFields()));
+      return fields;
     } else {
-      return clazz.getDeclaredFields();
+      return new ArrayList(asList(clazz.getDeclaredFields()));
     }
   }
 

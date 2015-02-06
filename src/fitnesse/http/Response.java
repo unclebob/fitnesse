@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
-import util.Clock;
-
 public abstract class Response {
   public enum Format {
     XML("text/xml"),

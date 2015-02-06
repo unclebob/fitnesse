@@ -9,7 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,9 +24,8 @@ public class VersionComparerResponderTest {
   
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ComparedPage"), "original content");
+    context = FitNesseUtil.makeTestContext();
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("ComparedPage"), "original content");
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();
 

@@ -1,8 +1,8 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.FitNesseContext;
+import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
 
 /**
  * This class requires jGit to be available.
@@ -36,16 +39,25 @@ public class GitFileVersionsController implements VersionsController, RecentChan
 
   private final SimpleFileVersionsController persistence;
 
-  private int historyDepth;
+  private final int historyDepth;
 
-  public GitFileVersionsController() {
+  public GitFileVersionsController(Properties properties) {
+    this(getVersionDays(properties));
+  }
+
+  public GitFileVersionsController(int historyDepth) {
+    this.historyDepth = historyDepth;
     // Fix on Disk file system, since that's what GitFileVersionsController can deal with.
     persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
-  @Override
-  public void setHistoryDepth(int historyDepth) {
-    this.historyDepth = historyDepth;
+  public GitFileVersionsController() {
+    this(14);
+  }
+
+  private static int getVersionDays(Properties properties) {
+    String days = properties.getProperty(VERSIONS_CONTROLLER_DAYS.getKey());
+    return days == null ? 14 : Integer.parseInt(days);
   }
 
   @Override
@@ -225,7 +237,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   @Override
   public WikiPage toWikiPage(WikiPage root) {
     FileSystemPage fsPage = (FileSystemPage) root;
-    WikiPage recentChangesPage = InMemoryPage.createChildPage(RECENT_CHANGES, fsPage);
+    WikiPage recentChangesPage = createInMemoryRecentChangesPage(fsPage);
     PageData pageData = recentChangesPage.getData();
     try {
       pageData.setContent(convertToWikiText(history(fsPage.getFileSystemPath(), new LogCommandSpec() {
@@ -241,6 +253,11 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     pageData.setProperties(new WikiPageProperties());
     recentChangesPage.commit(pageData);
     return recentChangesPage;
+  }
+
+  private WikiPage createInMemoryRecentChangesPage(FileSystemPage parent) {
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return new FileSystemPage(new File(parent.getFileSystemPath(), RECENT_CHANGES), RECENT_CHANGES, parent, new MemoryVersionsController(fileSystem));
   }
 
   private String convertToWikiText(Collection<GitVersionInfo> history) {
@@ -329,6 +346,7 @@ public class GitFileVersionsController implements VersionsController, RecentChan
     public Date getLastModificationTime() {
       return lastModified;
     }
+
   }
 }
 

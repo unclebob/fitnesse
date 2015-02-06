@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import util.Clock;
+import fitnesse.util.Clock;
 
 public class WikiPageDummy implements WikiPage {
   private static final long serialVersionUID = 1L;

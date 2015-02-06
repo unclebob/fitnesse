@@ -16,7 +16,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.util.MockSocket;
 import org.junit.Before;
 import org.junit.Test;
-import util.TimeMeasurement;
+import fitnesse.util.TimeMeasurement;
 
 public class FitClientTest implements FitClientListener {
   private List<String> outputs = new ArrayList<String>();

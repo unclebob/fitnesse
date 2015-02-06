@@ -19,17 +19,15 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +44,7 @@ public class WikiImportingResponderTest {
     testData.createRemoteRoot();
     testData.createLocalRoot();
 
-    FitNesseUtil.startFitnesse(testData.remoteRoot);
+    FitNesseUtil.startFitnesseWithContext(testData.remoteContext);
     baseUrl = "http://localhost:" + FitNesseUtil.PORT + "/";
 
     createResponder();
@@ -115,13 +113,14 @@ public class WikiImportingResponderTest {
     checkProperties(testData.pageTwo, baseUrl, true, null);
 
     WikiPage importedPageOne = testData.pageTwo.getChildPage("PageOne");
-    checkProperties(importedPageOne, baseUrl + "PageOne", false, testData.remoteRoot.getChildPage("PageOne"));
+    WikiPage rootPage = testData.remoteContext.getRootPage();
+    checkProperties(importedPageOne, baseUrl + "PageOne", false, rootPage.getChildPage("PageOne"));
 
     WikiPage importedPageTwo = testData.pageTwo.getChildPage("PageTwo");
-    checkProperties(importedPageTwo, baseUrl + "PageTwo", false, testData.remoteRoot.getChildPage("PageTwo"));
+    checkProperties(importedPageTwo, baseUrl + "PageTwo", false, rootPage.getChildPage("PageTwo"));
 
     WikiPage importedChildOne = importedPageOne.getChildPage("ChildOne");
-    checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false, testData.remoteRoot.getChildPage("PageOne").getChildPage("ChildOne"));
+    checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false, rootPage.getChildPage("PageOne").getChildPage("ChildOne"));
   }
 
   private void checkProperties(WikiPage page, String source, boolean isRoot, WikiPage remotePage) throws Exception {
@@ -199,7 +198,7 @@ public class WikiImportingResponderTest {
   }
 
   private ChunkedResponse getResponse(MockRequest request) {
-    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(testData.localContext, request);
     response.turnOffChunking();
     return response;
   }
@@ -216,7 +215,7 @@ public class WikiImportingResponderTest {
   public void testMakeResponseImportingNonRootPage() throws Exception {
     MockRequest request = makeRequest(baseUrl + "PageOne");
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
+    Response response = responder.makeResponse(testData.localContext, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
@@ -239,13 +238,13 @@ public class WikiImportingResponderTest {
 
   @Test
   public void testErrorMessageForBadUrlProvided() throws Exception {
-    String remoteUrl = baseUrl + "blah";
+    String remoteUrl = baseUrl + "+blah";
     Response response = makeSampleResponse(remoteUrl);
 
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
-    assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
+    assertSubString("The URL's resource path, +blah, is not a valid WikiWord.", content);
   }
 
   @Test
@@ -287,7 +286,7 @@ public class WikiImportingResponderTest {
   public void testAutoUpdateSettingDisplayed() throws Exception {
 
     MockRequest request = makeRequest(baseUrl);
-    request.addInput("autoUpdate", true);
+    request.addInput("autoUpdate", "true");
     String content = simulateWebRequest(request);
 
     assertSubString("Automatic Update turned ON", content);
@@ -304,7 +303,6 @@ public class WikiImportingResponderTest {
 
   public void pageRenderingSetUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    PageCrawler crawler = root.getPageCrawler();
   }
 
   @Test

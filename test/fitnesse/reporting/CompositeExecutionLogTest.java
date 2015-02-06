@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
@@ -30,13 +30,13 @@ public class CompositeExecutionLogTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     WikiPage testPage = root.addChildPage("TestPage");
     PageData data = testPage.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
-    context = FitNesseUtil.makeTestContext(root);
     log = new CompositeExecutionLog(testPage);
   }
 

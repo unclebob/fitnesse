@@ -3,23 +3,11 @@
 package fitnesse.wiki;
 
 import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
-import static fitnesse.wiki.PageData.PropertyEDIT;
-import static fitnesse.wiki.PageData.PropertyFILES;
-import static fitnesse.wiki.PageData.PropertySEARCH;
-import static fitnesse.wiki.PageData.PropertyVERSIONS;
-import static fitnesse.wiki.PageData.SUITE_SETUP_NAME;
-import static fitnesse.wiki.PageData.SUITE_TEARDOWN_NAME;
-import static fitnesse.wiki.PageType.SUITE;
-import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 
-import java.util.List;
-
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -2,6 +2,7 @@ package fitnesse.testsystems;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -104,7 +105,7 @@ public abstract class ClientBuilder<T> {
   }
 
   private String[] parseCommandLine(String commandLine) {
-		ArrayList<String> result = new ArrayList<String>();
+		Collection<String> result = new ArrayList<String>();
 		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);
 		while(m.find())
@@ -125,7 +126,7 @@ public abstract class ClientBuilder<T> {
   }
 
   public String getClassPath() {
-    return descriptor.getClassPath();
+    return descriptor.getClassPath().toString();
   }
 
   public boolean isDebug() {
@@ -177,7 +178,7 @@ public abstract class ClientBuilder<T> {
       result = javaHome + separator + "bin" + separator + "java"; 
       if (wrapInQuotes) {
     	  result = "\"" + result + "\"";
-      };
+      }
     }
     return result;
   }

@@ -18,10 +18,11 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -30,16 +31,14 @@ import fitnesse.wiki.WikiPageUtil;
 public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
-  private FitNesseContext context;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
-    version = (String) request.getInput("version");
-    this.context = context;
+    version = request.getInput("version");
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage(request.getMap()).getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
@@ -111,8 +110,8 @@ public class VersionResponder implements SecureResponder {
 
     public String render() {
       if (WikiTestPage.isTestPage(page)) {
-        WikiTestPage testPage = new WikiTestPage(page, context.variableSource);
-        return WikiPageUtil.makePageHtml(testPage);
+        WikiTestPage testPage = new WikiTestPage(page);
+        return WikiTestPageUtil.makePageHtml(testPage);
       } else {
         return WikiPageUtil.makePageHtml(page);
       }

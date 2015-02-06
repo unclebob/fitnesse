@@ -20,7 +20,7 @@ Get the RSS!
 Let's have a look.
 |Response Examiner.|
 |type  |pattern|matches?|wrapped html?|
-|contents|<\?xml version="1.0"\?>|true||
+|contents|<\?xml version="1.0" encoding="UTF-8" standalone="no"\?>|true||
 
 Make sure it has all the right values.
 |Response Examiner.|

@@ -1,4 +1,12 @@
-!include -seamless .FitNesse.SuiteAcceptanceTests.SuiteVersionsControllerTests.SetUp
+| import |
+| fitnesse.wiki.fs |
 
-| script | versions controller fixture |
+
+First, make sure we start with a clean slate.
+
+!|Library|
+|versions controller fixture | fitnesse.wiki.fs.GitFileVersionsController |
+
+| script | 
+| clean up |
 | initialise git repository |

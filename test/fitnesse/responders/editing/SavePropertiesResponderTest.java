@@ -6,6 +6,8 @@ import static fitnesse.wiki.PageData.PropertyLAST_MODIFIED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -15,13 +17,14 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class SavePropertiesResponderTest {
   private static final String PAGE_NAME = "PageOne";
+  private FitNesseContext context;
   private WikiPage root;
   private MockRequest request;
   private WikiPage page;
@@ -29,7 +32,8 @@ public class SavePropertiesResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     responder = new SavePropertiesResponder();
   }
 
@@ -52,7 +56,7 @@ public class SavePropertiesResponderTest {
   public void testResponse() throws Exception {
     createRequest();
 
-    Response response = responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    Response response = responder.makeResponse(context, request);
 
     PageData data = page.getData();
     assertTrue(data.hasAttribute("Test"));
@@ -75,7 +79,7 @@ public class SavePropertiesResponderTest {
     request.addInput("Suites", "");
     request.addInput("HelpText", "");
     
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
     
     PageData data = page.getData();
     assertFalse("should not have help attribute", data.hasAttribute(PageData.PropertyHELP));
@@ -96,7 +100,7 @@ public class SavePropertiesResponderTest {
     setBooleanAttributesOnRequest(defaultData, PageData.NON_SECURITY_ATTRIBUTES);
     setBooleanAttributesOnRequest(defaultData, PageData.SECURITY_ATTRIBUTES);
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     PageData dataToSave = page.getData();
     // The LasModified Attribute is the only one that might be different, so fix it here

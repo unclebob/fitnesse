@@ -1,2 +1,2 @@
-| script | versions controller fixture |
+| script  |
 | clean up |

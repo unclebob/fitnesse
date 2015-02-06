@@ -16,10 +16,10 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
   }
 
   @Override
-  public void setTrackingId(String stopResponderId) {
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
     for (TestSystemListener listener : listeners())
       if (listener instanceof TestsRunnerListener)
-        ((TestsRunnerListener) listener).setTrackingId(stopResponderId);
+        ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
   }
 
   @Override

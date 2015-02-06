@@ -1,17 +1,17 @@
 package fitnesse.fixtures;
 
-import fitnesse.wikitext.Utils;
+import fitnesse.html.HtmlUtil;
 
 public class StringComparator {
   public boolean stringStartsWith(String it, String starts) {
-    return it.startsWith(Utils.escapeHTML(starts));
+    return it.startsWith(HtmlUtil.escapeHTML(starts));
   }
 
   public boolean stringEndsWith(String it, String ending) {
-    return it.endsWith(Utils.escapeHTML(ending));
+    return it.endsWith(HtmlUtil.escapeHTML(ending));
   }
 
   public boolean stringContains(String it, String part) {
-    return it.contains(Utils.escapeHTML(part));
+    return it.contains(HtmlUtil.escapeHTML(part));
   }
 }

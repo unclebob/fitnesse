@@ -4,34 +4,32 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
-import util.Maybe;
 
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
 
   private final WikiPage sourcePage;
-  private final VariableSource variableSource;
   private List<WikiPage> scenarioLibraries;
   private WikiPage setUp;
   private WikiPage tearDown;
 
-  public WikiTestPage(WikiPage sourcePage, VariableSource variableSource) {
+  public WikiTestPage(WikiPage sourcePage) {
     this.sourcePage = sourcePage;
-    this.variableSource = variableSource;
   }
 
   public static boolean isTestPage(WikiPage page) {
@@ -47,10 +45,18 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getHtml() {
-    String content = getDecoratedContent();
-    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(sourcePage), variableSource);
-    Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-    return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
+
+    // -AJM- Okay, this is not as clean as I'd like it to be, but for now it does the trick
+    if (sourcePage instanceof BaseWikiPage) {
+      String content = getDecoratedContent();
+      ParsingPage parsingPage = BaseWikiPage.makeParsingPage((BaseWikiPage) sourcePage);
+
+      Symbol syntaxTree = Parser.make(parsingPage, content).parse();
+
+      return new HtmlTranslator(new WikiSourcePage(sourcePage), parsingPage).translateTree(syntaxTree);
+    } else {
+      return sourcePage.getHtml();
+    }
   }
 
   @Override
@@ -63,6 +69,19 @@ public class WikiTestPage implements TestPage {
     return PathParser.render(sourcePage.getPageCrawler().getFullPath());
   }
 
+  @Override
+  public ClassPath getClassPath() {
+    return new ClassPath(new ClassPathBuilder().getClassPath(sourcePage), getPathSeparator());
+  }
+
+
+  protected String getPathSeparator() {
+    String separator = sourcePage.getVariable(PageData.PATH_SEPARATOR);
+    if (separator == null)
+      separator = System.getProperty("path.separator");
+    return separator;
+  }
+
   public WikiPage getSourcePage() {
     return sourcePage;
   }
@@ -71,11 +90,12 @@ public class WikiTestPage implements TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    decorate(getSetUp(), decoratedContent);
+    includePage(getSetUp(), "-setup", decoratedContent);
 
     addPageContent(decoratedContent);
 
-    decorate(getTearDown(), decoratedContent);
+    includePage(getTearDown(), "-teardown", decoratedContent);
+
     return decoratedContent.toString();
   }
 
@@ -85,18 +105,6 @@ public class WikiTestPage implements TestPage {
             .append("\n")
             .append(content)
             .append(content.endsWith("\n") ? "" : "\n");
-  }
-
-  protected void decorate(WikiPage wikiPage, StringBuilder decoratedContent) {
-    if (wikiPage == getSetUp()) {
-      includePage(wikiPage, "-setup", decoratedContent);
-    } else if (wikiPage == getTearDown()) {
-      includePage(wikiPage, "-teardown", decoratedContent);
-    } else if (getScenarioLibraries().contains(wikiPage)) {
-      includeScenarioLibrary(wikiPage, decoratedContent);
-    } else {
-      decoratedContent.append(wikiPage.getData().getContent());
-    }
   }
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {

@@ -18,11 +18,11 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
@@ -42,7 +42,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface Suite {
 
-    public String value();
+    public String value() default "";
+    public String systemProperty() default "";
   }
   /**
    * The <code>DebugMode</code> annotation specifies whether the test is run
@@ -62,7 +63,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface SuiteFilter {
 
-    public String value();
+    public String value() default "";
+    public String systemProperty() default "";
+    public boolean andStrategy() default false;
   }
   /**
    * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
@@ -141,6 +144,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private String suiteName;
   private String outputDir;
   private String suiteFilter;
+  private boolean suiteFilterAndStrategy;
   private String excludeSuiteFilter;
   private boolean debugMode;
   private FitNesseContext context;
@@ -159,38 +163,44 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     try {
       this.suiteName = getSuiteName(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.outputDir = getOutputDir(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.suiteFilter = getSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
+    }
+
+    try {
+      this.suiteFilterAndStrategy = getSuiteFilterAndStrategy(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.debugMode = useDebugMode(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.context = createContext(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
   }
 
@@ -208,7 +218,15 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (suiteAnnotation == null) {
       throw new InitializationError("There must be a @Suite annotation");
     }
-    return suiteAnnotation.value();
+
+    if (!"".equals(suiteAnnotation.value())) {
+      return suiteAnnotation.value();
+    }
+    if (!"".equals(suiteAnnotation.systemProperty())) {
+      return System.getProperty(suiteAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @Suite you have to specify either 'value' or 'systemProperty'");
   }
 
   protected String getOutputDir(Class<?> klass) throws InitializationError {
@@ -234,7 +252,22 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (suiteFilterAnnotation == null) {
       return null;
     }
-    return suiteFilterAnnotation.value();
+    if (!"".equals(suiteFilterAnnotation.value())) {
+      return suiteFilterAnnotation.value();
+    }
+    if (!"".equals(suiteFilterAnnotation.systemProperty())) {
+      return System.getProperty(suiteFilterAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @SuiteFilter you have to specify either 'value' or 'systemProperty'");
+  }
+
+  protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
+    SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
+    if (suiteFilterAnnotation == null) {
+      return false;
+    }
+    return suiteFilterAnnotation.andStrategy();
   }
 
   protected String getExcludeSuiteFilter(Class<?> klass)
@@ -348,11 +381,23 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.root).getAllPagesToRunForThisSuite();
+      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage()).getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
     return children;
+  }
+
+  private fitnesse.testrunner.SuiteFilter getSuiteFilter() {
+    return new fitnesse.testrunner.SuiteFilter(getOrSuiteFilter(), excludeSuiteFilter, getAndSuiteFilter(), null);
+  }
+
+  private String getOrSuiteFilter() {
+    return suiteFilterAndStrategy ? null : suiteFilter;
+  }
+
+  private String getAndSuiteFilter() {
+    return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
   static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
@@ -370,15 +415,15 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   private WikiPage getSuiteRootPage() {
     WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     return crawler.getPage(path);
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.runningTestingTracker,
-            context.testSystemFactory, context.variableSource);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
+            context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;
   }

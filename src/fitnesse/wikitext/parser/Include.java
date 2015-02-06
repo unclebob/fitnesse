@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
-import util.Maybe;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
@@ -20,8 +19,8 @@ public class Include extends SymbolType implements Rule, Translation {
         
         next = parser.moveNext(1);
         String option = "";
-        if (next.isType(SymbolType.Text) && next.getContent().startsWith("-")) {
-            option = next.getContent();
+        if ((next.isType(SymbolType.Text) && next.getContent().startsWith("-")) || next.isType(SymbolType.DateFormatOption)) {
+            option = next.getContent() + (next.isType(SymbolType.DateFormatOption) ? parser.moveNext(1).getContent() : "");
             next = parser.moveNext(1);
             if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
             next = parser.moveNext(1);

@@ -9,7 +9,7 @@ import java.util.Date;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -36,7 +36,7 @@ import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
   private PageHistory pageHistory;
   private HtmlPage page;
@@ -137,7 +137,6 @@ public class PageHistoryResponder implements SecureResponder {
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
     page.setErrorNavTemplate("errorNavigator");
-    page.put("errorNavOnDocumentReady", true);
     return makeResponse();
   }
 
@@ -167,9 +166,9 @@ public class PageHistoryResponder implements SecureResponder {
     page = context.pageFactory.newPage();
 
     String tags = "";    
-    if (context.root != null){
+    if (context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

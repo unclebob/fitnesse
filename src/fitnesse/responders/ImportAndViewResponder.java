@@ -39,7 +39,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
 
   protected void loadPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     page = crawler.getPage(path);
   }
 

@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
@@ -13,8 +14,6 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import static util.ListUtility.list;
 
 public class TableTable extends SlimTable {
 
@@ -29,8 +28,7 @@ public class TableTable extends SlimTable {
   public List<SlimAssertion> getAssertions() {
     SlimAssertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
-    String doTableId = doTable.getId();
-    return list(make, makeAssertion(doTable, new TableTableExpectation()));
+    return Arrays.asList(make, makeAssertion(doTable, new TableTableExpectation()));
   }
 
   public class TableTableExpectation implements SlimExpectation {
@@ -48,6 +46,7 @@ public class TableTable extends SlimTable {
         TestSummary testSummary = resizeTableAndEvaluateRows(tableReturn);
         getTestContext().increment(testSummary);
         testResult = new SlimTestResult(ExecutionResult.getExecutionResult(testSummary));
+        testResult.setVariables(getSymbolsToStore());
       }
       getTestContext().increment(testResult.getExecutionResult());
       return testResult;
@@ -102,34 +101,34 @@ public class TableTable extends SlimTable {
       String contents = table.getCellContents(col, tableRow);
       String result = (String) rowList.get(col);
       SlimTestResult testResult = getTestResult(result, replaceSymbolsWithFullExpansion(contents));
-      if (testResult != null) {
-        table.updateContent(col, tableRow, testResult);
-        testSummary.add(testResult.getExecutionResult());
-      }
+      table.updateContent(col, tableRow, testResult);
+      testSummary.add(testResult.getExecutionResult());
     }
   }
 
   private SlimTestResult getTestResult(String message, String content) {
     SlimTestResult result;
     if (message.equalsIgnoreCase("no change") || message.length() == 0)
-      return null; // do nothing
+      result = SlimTestResult.plain(content);
     else if (message.equalsIgnoreCase("pass"))
       result = SlimTestResult.pass(content);
     else if (message.equalsIgnoreCase("fail"))
       result = SlimTestResult.fail(content);
     else if (message.equalsIgnoreCase("ignore"))
-      result = SlimTestResult.ignore();
-    else if ((result = resultFromMessage(message)) == null)
-      result = SlimTestResult.fail(message);
+      result = SlimTestResult.ignore(content);
+    else
+      result = resultFromMessage(message, content);
     return result;
   }
 
-  private SlimTestResult resultFromMessage(String contents) {
-    int colon = contents.indexOf(":");
+  private SlimTestResult resultFromMessage(String codeAndMessage, String content) {
+    int colon = codeAndMessage.indexOf(":");
     if (colon == -1)
-      return null;
-    String code = contents.substring(0, colon);
-    String message = contents.substring(colon + 1);
+      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
+    String code = codeAndMessage.substring(0, colon);
+    String message = codeAndMessage.substring(colon + 1);
+
+    message = manageSymbolInContent(content, message);
 
     if (code.equalsIgnoreCase("error"))
       return SlimTestResult.error(message);
@@ -141,7 +140,16 @@ public class TableTable extends SlimTable {
       return SlimTestResult.ignore(message);
     else if (code.equalsIgnoreCase("report"))
       return SlimTestResult.plain(message);
-    else
-      return null;
+    else //not managed code 
+      return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
+  }
+
+  private String manageSymbolInContent(String content, String message) {
+    String symbolName = ifSymbolAssignment(content);
+    if (symbolName != null) {
+      setSymbol(symbolName, message, true);
+      message = String.format("$%s<-[%s]", symbolName, message);
+    }
+    return message;
   }
 }

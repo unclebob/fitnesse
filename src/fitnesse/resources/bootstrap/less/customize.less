@@ -19,6 +19,10 @@ table {
   .table-bordered;
   .table-condensed;
   width: auto;
+
+  &.hash_table {
+    margin-bottom: 0;
+  }
 }
 
 label {
@@ -92,6 +96,10 @@ input[type="checkbox"] {
     margin: 0 4px 0 0;
 }
 
+input[type="file"] {
+  display: inline;
+}
+
 // Reset .divider class to something we can work with
 .dropdown-menu .divider {
   *width: 100%;
@@ -103,6 +111,7 @@ input[type="checkbox"] {
 }
 
 .validationerror {
+  margin-top: 0;
   margin-left: 145px;
 }
 

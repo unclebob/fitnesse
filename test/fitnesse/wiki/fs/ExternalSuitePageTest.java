@@ -3,12 +3,9 @@ package fitnesse.wiki.fs;
 import java.io.File;
 
 import fitnesse.wiki.SystemVariableSource;
-import fitnesse.wiki.mem.MemoryFileSystem;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class ExternalSuitePageTest {
@@ -21,7 +18,7 @@ public class ExternalSuitePageTest {
   public void prepare() {
     fileSystem = new MemoryFileSystem();
     variableSource = new SystemVariableSource();
-    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), variableSource).makePage(null, "RooT", null);
+    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
   }
 
   @Test

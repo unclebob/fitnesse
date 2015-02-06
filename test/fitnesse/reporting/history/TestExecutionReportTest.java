@@ -8,19 +8,16 @@ import java.io.StringWriter;
 import java.util.List;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.reporting.history.TestExecutionReport;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.Expectation;
 import fitnesse.reporting.history.TestExecutionReport.InstructionResult;
-import fitnesse.reporting.history.TestExecutionReport.Row;
-import fitnesse.reporting.history.TestExecutionReport.Table;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestExecutionReportTest {
   private TestExecutionReport expected;
@@ -32,7 +29,7 @@ public class TestExecutionReportTest {
   public void setup() throws Exception {
     expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
     expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
+    context = FitNesseUtil.makeTestContext();
   }
 
   private String reportToXml(TestExecutionReport report) throws Exception {

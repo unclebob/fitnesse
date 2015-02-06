@@ -12,7 +12,7 @@ public abstract class SecurePageOperation implements SecureOperation {
 
   public boolean shouldAuthenticate(FitNesseContext context, Request request) {
     WikiPagePath path = PathParser.parse(request.getResource());
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     WikiPage page = crawler.getPage(path, new MockingPageCrawler());
     if (page == null)
       return false;

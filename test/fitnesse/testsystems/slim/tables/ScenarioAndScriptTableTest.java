@@ -15,12 +15,12 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static util.ListUtility.list;
 
 public class ScenarioAndScriptTableTest {
   private WikiPage root;
@@ -64,9 +64,7 @@ public class ScenarioAndScriptTableTest {
         "|myScenario|7|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"7"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -80,9 +78,7 @@ public class ScenarioAndScriptTableTest {
                     "|myScenario|7|\n"
     );
     List<CallInstruction> expectedInstructions =
-            list(
-                    new CallInstruction("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "localizedScriptTableActor", "function", new Object[]{"7"})
-            );
+            asList(new CallInstruction("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "localizedScriptTableActor", "function", new Object[]{"7"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -96,9 +92,7 @@ public class ScenarioAndScriptTableTest {
         "|f|1||2|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"1", "2"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"1", "2"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -113,10 +107,7 @@ public class ScenarioAndScriptTableTest {
         "|login|bill|password|yabba|pin|8892|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
-              new CallInstruction("scriptTable_id_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}), new CallInstruction("scriptTable_id_1/scriptTable_s_id_0", "scriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -131,9 +122,7 @@ public class ScenarioAndScriptTableTest {
                     "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("scriptTable_id_0/scriptTable_s_id_0", "7"))
     );
 
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -158,9 +147,7 @@ public class ScenarioAndScriptTableTest {
                     "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "7")
-            )
+            asList(asList("localizedScriptTable_id_0/localizedScriptTable_s_id_0", "7"))
     );
 
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -185,9 +172,7 @@ public class ScenarioAndScriptTableTest {
         "|echo|7|giving|8|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("scriptTable_id_0/scriptTable_s_id_0", "7"))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
@@ -212,10 +197,7 @@ public class ScenarioAndScriptTableTest {
         "|echo|$V|giving|$V|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("scriptTable_id_0", "7"),
-                    list("scriptTable_id_1/scriptTable_s_id_0", "7")
-            )
+            asList(asList("scriptTable_id_0", "7"), asList("scriptTable_id_1/scriptTable_s_id_0", "7"))
     );
 
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -236,9 +218,7 @@ public class ScenarioAndScriptTableTest {
         "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("scriptTable_id_0/scriptTable_s_id_0", "7"))
     );
 
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -259,9 +239,7 @@ public class ScenarioAndScriptTableTest {
         "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-            list(
-                    list("scriptTable_id_0/scriptTable_s_id_0", "7")
-            )
+            asList(asList("scriptTable_id_0/scriptTable_s_id_0", "7"))
     );
 
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
@@ -287,9 +265,7 @@ public class ScenarioAndScriptTableTest {
         "|Login user Bob with password xyzzy|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -303,9 +279,7 @@ public class ScenarioAndScriptTableTest {
         "|Login user Bob with password xyzzy|\n"
     );
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -329,9 +303,7 @@ public class ScenarioAndScriptTableTest {
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWith", new Object[]{"Bob", "xyzzy"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -355,9 +327,7 @@ public class ScenarioAndScriptTableTest {
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"}));
     assertEquals(expectedInstructions, instructions());
   }
 
@@ -382,9 +352,7 @@ public class ScenarioAndScriptTableTest {
     assertions.addAll(st2.getAssertions());
     assertions.addAll(script.getAssertions());
     List<CallInstruction> expectedInstructions =
-      list(
-              new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"})
-      );
+            asList(new CallInstruction("scriptTable_id_0/scriptTable_s2_id_0", "scriptTableActor", "loginWithUsernameAndPassword", new Object[]{"Bob", "xyzzy"}));
     assertEquals(expectedInstructions, instructions());
   }
 

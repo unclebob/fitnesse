@@ -8,7 +8,6 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystemListener;
-import fitnesse.wiki.WikiPagePath;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

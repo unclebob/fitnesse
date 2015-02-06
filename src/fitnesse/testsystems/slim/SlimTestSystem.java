@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.slim.SlimError;
+import fitnesse.slim.instructions.AssignInstruction;
+import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -25,7 +26,6 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
@@ -40,6 +40,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
+  private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
 
@@ -116,7 +117,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
     List<SlimAssertion> assertions = createAssertions(table);
     Map<String, Object> instructionResults;
-    if (!stopTestCalled) {
+    if (!stopTestCalled && !stopSuiteCalled) {
       // Okay, if this crashes, the test system is killed.
       // We're not gonna continue here, but instead declare our test system done.
       try {
@@ -138,43 +139,44 @@ public abstract class SlimTestSystem implements TestSystem {
     return assertions;
   }
 
-  static String translateExceptionMessage(String exceptionMessage) {
-    String tokens[] = exceptionMessage.split(" ");
-    if (tokens[0].equals(COULD_NOT_INVOKE_CONSTRUCTOR))
-      return "Could not invoke constructor for " + tokens[1];
-    else if (tokens[0].equals(NO_METHOD_IN_CLASS))
-      return String.format("Method %s not found in %s", tokens[1], tokens[2]);
-    else if (tokens[0].equals(NO_CONSTRUCTOR))
-      return String.format("Could not find constructor for %s", tokens[1]);
-    else if (tokens[0].equals(NO_CONVERTER_FOR_ARGUMENT_NUMBER))
-      return String.format("No converter for %s", tokens[1]);
-    else if (tokens[0].equals(NO_INSTANCE))
-      return String.format("The instance %s does not exist", tokens[1]);
-    else if (tokens[0].equals(NO_CLASS))
-      return String.format("Could not find class %s", tokens[1]);
-    else if (tokens[0].equals(MALFORMED_INSTRUCTION))
-      return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
-
-    return exceptionMessage;
-  }
-
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
     for (SlimAssertion a : assertions) {
       try {
         final String key = a.getInstruction().getId();
         final Object returnValue = instructionResults.get(key);
+        //Exception management
         if (returnValue != null && returnValue instanceof String && ((String)returnValue).startsWith(EXCEPTION_TAG)) {
           SlimExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
           if (exceptionResult.isStopTestException()) {
             stopTestCalled = true;
+          }
+          if (exceptionResult.isStopSuiteException()) {
+            stopTestCalled = stopSuiteCalled = true;
           }
           exceptionResult = a.getExpectation().evaluateException(exceptionResult);
           if (exceptionResult != null) {
             testExceptionOccurred(a, exceptionResult);
           }
         } else {
+          //Normal results
           TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
           testAssertionVerified(a, testResult);
+
+          //Retrieve variables set during expectation step
+          if (testResult != null) {
+            Map<String, ?> variables = testResult.getVariablesToStore();
+            if (variables != null) {
+              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              int i = 0;
+              for (Entry<String, ?> variable : variables.entrySet()) {
+                instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
+              }
+              //Store variables in context
+              if (i > 0) {
+                slimClient.invokeAndGetResponse(instructions);
+              }
+            }
+          }
         }
       } catch (Throwable ex) {
         exceptionOccurred(ex);

@@ -1,6 +1,8 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimService;
@@ -12,6 +14,7 @@ import fitnesse.testsystems.MockCommandRunner;
  * In-process version, mainly for testing FitNesse itself.
  */
 public class InProcessSlimClientBuilder extends SlimClientBuilder {
+  private static final Logger LOG = Logger.getLogger(InProcessSlimClientBuilder.class.getName());
 
   public InProcessSlimClientBuilder(Descriptor descriptor) {
     super(descriptor);
@@ -31,7 +34,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
       try {
         Thread.sleep(10);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        LOG.log(Level.WARNING, "Interrupted while waiting for Slim server to come on line", e);
       }
   }
 
@@ -43,7 +46,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
     } catch (IOException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.log(Level.WARNING, "Could not start async Slim service", e);
       return false;
     }
   }

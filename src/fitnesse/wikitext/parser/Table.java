@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 public class Table extends SymbolType implements Rule, Translation {
   public static final Table symbolType = new Table();
 
@@ -61,37 +59,37 @@ public class Table extends SymbolType implements Rule, Translation {
   }
 
   public String toTarget(Translator translator, Symbol symbol) {
-    HtmlWriter writer = new HtmlWriter();
-    writer.startTag("table");
-    if (symbol.hasProperty("class")) {
-      writer.putAttribute("class", symbol.getProperty("class"));
-    }
-    int longestRow = longestRow(symbol);
-    int rowCount = 0;
-    for (Symbol child : symbol.getChildren()) {
-      rowCount++;
-      writer.startTag("tr");
-      if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
-        writer.putAttribute("class", "hidden");
+      HtmlWriter writer = new HtmlWriter();
+      writer.startTag("table");
+      if (symbol.hasProperty("class")) {
+        writer.putAttribute("class", symbol.getProperty("class"));
       }
-      int extraColumnSpan = longestRow - rowLength(child);
-      int column = 1;
-      for (Symbol grandChild : child.getChildren()) {
-        String body = translateCellBody(translator, grandChild);
-        writer.startTag("td");
-        if (extraColumnSpan > 0 && column == rowLength(child))
-          writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
-        writer.putText(body);
+      int longestRow = longestRow(symbol);
+      int rowCount = 0;
+      for (Symbol child : symbol.getChildren()) {
+        rowCount++;
+        writer.startTag("tr");
+        if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
+          writer.putAttribute("class", "hidden");
+        }
+        int extraColumnSpan = longestRow - rowLength(child);
+        int column = 1;
+        for (Symbol grandChild : child.getChildren()) {
+          String body = translateCellBody(translator, grandChild);
+          writer.startTag("td");
+          if (extraColumnSpan > 0 && column == rowLength(child))
+            writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
+          writer.putText(body);
+          writer.endTag();
+          column++;
+        }
         writer.endTag();
-        column++;
       }
       writer.endTag();
+      return writer.toHtml();
     }
-    writer.endTag();
-    return writer.toHtml();
-  }
 
-  private String translateCellBody(Translator translator, Symbol cell) {
+  protected String translateCellBody(Translator translator, Symbol cell) {
     final String literalDelimiter = new String(new char[]{255, 1, 255});
     cell.walkPreOrder(new SymbolTreeWalker() {
       public boolean visit(Symbol node) {
@@ -108,7 +106,7 @@ public class Table extends SymbolType implements Rule, Translation {
     return translator.translate(cell).trim().replace(literalDelimiter, "");
   }
 
-  private int longestRow(Symbol table) {
+  protected int longestRow(Symbol table) {
     int longest = 0;
     for (Symbol row : table.getChildren()) {
       int length = rowLength(row);
@@ -117,7 +115,7 @@ public class Table extends SymbolType implements Rule, Translation {
     return longest;
   }
 
-  private int rowLength(Symbol row) {
+  protected int rowLength(Symbol row) {
     return row.getChildren().size();
   }
 }

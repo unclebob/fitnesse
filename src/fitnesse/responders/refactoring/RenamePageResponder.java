@@ -8,7 +8,6 @@ import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.WikiWordPath;
 
 public class RenamePageResponder extends PageMovementResponder {
   private String newName;
@@ -23,12 +22,12 @@ public class RenamePageResponder extends PageMovementResponder {
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
     newName = (String) request.getInput("newName");
-    return (newName != null && WikiWordPath.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
+    return (newName != null && PathParser.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
   }
 
   @Override
   protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
-    return new PageReferenceRenamer(context.root, oldRefactoredPage, getNewPageName());
+    return new PageReferenceRenamer(context.getRootPage(), oldRefactoredPage, getNewPageName());
   }
 
   @Override

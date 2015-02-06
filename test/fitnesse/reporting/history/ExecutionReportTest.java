@@ -17,12 +17,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import util.DateTimeUtil;
-import util.TimeMeasurement;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
@@ -30,8 +30,7 @@ public class ExecutionReportTest {
 
   @Before
   public void setup() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test

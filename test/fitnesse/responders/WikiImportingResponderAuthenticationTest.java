@@ -27,12 +27,10 @@ public class WikiImportingResponderAuthenticationTest {
   @Before
   public void setUp() throws Exception {
     testData = new WikiImporterTest();
-    testData.createRemoteRoot();
+    testData.createRemoteRoot(new OneUserAuthenticator("joe", "blow"));
     testData.createLocalRoot();
 
-    FitNesseContext context = FitNesseUtil.makeTestContext(testData.remoteRoot, new OneUserAuthenticator("joe", "blow"));
-
-    FitNesseUtil.startFitnesseWithContext(context);
+    FitNesseUtil.startFitnesseWithContext(testData.remoteContext);
     baseUrl = FitNesseUtil.URL;
 
     createResponder();
@@ -81,14 +79,14 @@ public class WikiImportingResponderAuthenticationTest {
   }
 
   private ChunkedResponse getResponse(MockRequest request) {
-    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(FitNesseUtil.makeTestContext(testData.localRoot), request);
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(testData.localContext, request);
     response.turnOffChunking();
     return response;
   }
 
   @Test
   public void testUnauthorizedResponse() throws Exception {
-    makeSecurePage(testData.remoteRoot);
+    makeSecurePage(testData.remoteContext.getRootPage());
 
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
@@ -99,7 +97,7 @@ public class WikiImportingResponderAuthenticationTest {
 
   @Test
   public void testUnauthorizedResponseFromNonRoot() throws Exception {
-    WikiPage childPage = testData.remoteRoot.getChildPage("PageOne");
+    WikiPage childPage = testData.remoteContext.getRootPage().getChildPage("PageOne");
     makeSecurePage(childPage);
 
     Response response = makeSampleResponse(baseUrl);
@@ -112,7 +110,7 @@ public class WikiImportingResponderAuthenticationTest {
 
   @Test
   public void testImportingFromSecurePageWithCredentials() throws Exception {
-    makeSecurePage(testData.remoteRoot);
+    makeSecurePage(testData.remoteContext.getRootPage());
 
     MockRequest request = makeRequest(baseUrl);
     request.addInput("remoteUsername", "joe");

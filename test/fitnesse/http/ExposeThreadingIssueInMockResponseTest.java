@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,17 +19,17 @@ import org.junit.Test;
 public class ExposeThreadingIssueInMockResponseTest {
   private WikiPage root;
   private MockRequest request;
-  private TestResponder responder;
+  private SuiteResponder responder;
   private FitNesseContext context;
   private String results;
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
-    responder = new TestResponder();
+    responder = new SuiteResponder();
     int port = 9123;
-    context = FitNesseUtil.makeTestContext(root, port);
+    context = FitNesseUtil.makeTestContext(port);
+    root = context.getRootPage();
   }
 
   public static void assertHasRegexp(String regexp, String output) {

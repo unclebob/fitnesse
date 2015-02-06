@@ -1,7 +1,6 @@
 !define PATHS {
 ${SUT_PATH}
 !define TEST_SYSTEM (slim)
-!define SLIM_PORT (9000)
 }
 
 !|script|

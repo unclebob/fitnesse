@@ -6,24 +6,20 @@ import fitnesse.reporting.history.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
-import util.XmlUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -44,10 +40,9 @@ public class SuiteHistoryFormatterTest {
     testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
     clock = new DateAlteringClock(testTime).freeze();
 
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    WikiPage suitePage = root.addChildPage("SuitePage");
-    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"), null);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
+    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<StringWriter>();
     formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override

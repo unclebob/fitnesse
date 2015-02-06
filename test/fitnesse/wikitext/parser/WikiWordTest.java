@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.mem.InMemoryPage;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,20 +44,6 @@ public class WikiWordTest {
     public void regracesWikiWords() throws Exception {
         root.setPageData(pageOne, "!define " + WikiWord.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWord.REGRACE_LINK + " {false}\n");
         assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
-    }
-
-    @Test
-    public void testIsSingleWikiWord() throws Exception {
-      assertTrue(WikiWordPath.isSingleWikiWord("WikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("notWikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("NotSingle.WikiWord"));
-      assertFalse(WikiWordPath.isSingleWikiWord("WikiW\u00F0rd"));
-    }
-
-    @Test
-    public void testIsWikiWord() throws Exception {
-       assertEquals(true, WikiWordPath.isWikiWord("HelloThere"));
-       assertEquals(false, WikiWordPath.isWikiWord("not.a.wiki.word"));
     }
 
     @Test

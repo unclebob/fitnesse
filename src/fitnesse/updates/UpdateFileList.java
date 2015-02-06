@@ -95,13 +95,21 @@ public class UpdateFileList {
 
   }
 
-  private void addFilePathsToList(String directoryPath) {
-    File directory = new File(directoryPath);
-    File[] files = FileUtil.getDirectoryListing(directory);
-    for (File childFile : files)
-      if (!isBackupFile(childFile))
-        addFilePathToAppropriateList(directoryPath, childFile);
-
+  private void addFilePathsToList(String path) {
+    File f = new File(path);
+    if (f.isDirectory()) {
+      File[] files = FileUtil.getDirectoryListing(f);
+      for (File childFile : files)
+        if (!isBackupFile(childFile))
+          addFilePathToAppropriateList(path, childFile);
+    } else if (f.isFile()) {
+      String parent = "";
+      int index = path.lastIndexOf('/');
+      if (index >= 0)
+        parent = path.substring(0, index);
+      if (!isBackupFile(f))
+        addFilePathToAppropriateList(parent, f);
+    }
   }
 
   private boolean isBackupFile(File childFile) {

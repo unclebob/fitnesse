@@ -6,7 +6,8 @@ public enum ExecutionResult {
   FAIL,
   IGNORE,
   PASS;
-  
+
+  @Override
   public String toString() {
 	  return this.name().toLowerCase();
   }
@@ -28,14 +29,14 @@ public enum ExecutionResult {
   }
   
   public static ExecutionResult getExecutionResult(TestSummary testSummary) {
-	if (testSummary.getWrong() > 0) {
-	  return FAIL;
+    if (testSummary.getWrong() > 0) {
+      return FAIL;
     } else if (testSummary.getExceptions() > 0) {
-	  return ERROR;
-	} else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0) {
-	  return IGNORE;
-	}
-	return PASS;
+      return ERROR;
+    } else if (testSummary.getRight() > 0) {
+      return PASS;
+    }
+    return IGNORE;
   }
   
   public static boolean isSuiteMetaPage(String relativeName) {

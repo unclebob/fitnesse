@@ -14,10 +14,16 @@ import java.util.Collections;
 public class ContentsItemBuilder {
     private Symbol contents;
     private int level;
+    private SourcePage page;
 
     public ContentsItemBuilder(Symbol contents, int level) {
+        this(contents, level, null);
+    }
+
+    public ContentsItemBuilder(Symbol contents, int level, SourcePage page) {
         this.contents = contents;
         this.level = level;
+        this.page = page;
     }
 
     public HtmlTag buildLevel(SourcePage page) {
@@ -33,7 +39,7 @@ public class ContentsItemBuilder {
         HtmlTag listItem = buildItem(child);
         if (child.getChildren().size() > 0) {
             if (level < getRecursionLimit()) {
-                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child));
+                listItem.add(new ContentsItemBuilder(contents, level + 1, child).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
                 listItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
@@ -115,11 +121,20 @@ public class ContentsItemBuilder {
     }
 
     private String getBooleanProperties(SourcePage sourcePage) {
+        String propChars = contents.getVariable(Contents.PROPERTY_CHARACTERS,
+                Contents.PROPERTY_CHARACTERS_DEFAULT).trim();
+        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){ 
+            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT; 
+        }
+
         String result = "";
-        if (sourcePage.hasProperty(PageType.SUITE.toString())) result += "*";
-        if (sourcePage.hasProperty(PageType.TEST.toString())) result += "+";
-        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += "@";
-        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += "-";
+        if (sourcePage.hasProperty(PageType.SUITE.toString())) result += propChars.charAt(0);
+        if (sourcePage.hasProperty(PageType.TEST.toString())) result += propChars.charAt(1);
+        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += propChars.charAt(2);
+        if (page != null && page instanceof WikiSourcePage){
+            if (((WikiSourcePage)page).hasSymbolicLinkChild(sourcePage.getName())) result += propChars.charAt(3);
+        }
+        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += propChars.charAt(4);
         return result;
     }
     private String getBooleanPropertiesClasses(SourcePage sourcePage) {

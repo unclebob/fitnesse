@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.Map;
+import java.util.Properties;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -14,26 +17,26 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.TestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    WikiPage page = loadPage(context, request.getResource());
+    WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
       return notFoundResponse(context, request);
     else
       return makePageResponse(context, page);
   }
 
-  protected WikiPage loadPage(FitNesseContext context, String pageName) {
+  protected WikiPage loadPage(FitNesseContext context, String pageName, Map<String,String> inputs) {
     WikiPage page;
     if (RecentChanges.RECENT_CHANGES.equals(pageName)) {
-      page = context.recentChanges.toWikiPage(context.root);
+      page = context.recentChanges.toWikiPage(context.getRootPage());
     } else {
       WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage(inputs).getPageCrawler();
       page = crawler.getPage(path);
     }
     return page;
@@ -46,7 +49,7 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private boolean dontCreateNonExistentPage(Request request) {
-    String dontCreate = (String) request.getInput("dontCreatePage");
+    String dontCreate = request.getInput("dontCreatePage");
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
@@ -78,7 +81,8 @@ public class WikiPageResponder implements SecureResponder {
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
     if (WikiTestPage.isTestPage(page)) {
-      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page, context.variableSource);
+      // Add test url inputs to context's variableSource.
+      WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiTestPageRenderer(testPage));
     } else {
       html.put("content", new WikiPageRenderer(page));
@@ -99,10 +103,10 @@ public class WikiPageResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public class WikiPageRenderer {
+  public static class WikiPageRenderer {
     private WikiPage page;
 
-    WikiPageRenderer(WikiPage page) {
+    public WikiPageRenderer(WikiPage page){
       this.page = page;
     }
 
@@ -111,22 +115,22 @@ public class WikiPageResponder implements SecureResponder {
     }
   }
 
-  public class WikiTestPageRenderer {
+  public static class WikiTestPageRenderer {
     private WikiTestPage page;
 
-    WikiTestPageRenderer(WikiTestPage page) {
+    public WikiTestPageRenderer(WikiTestPage page){
       this.page = page;
     }
 
     public String render() {
-      return WikiPageUtil.makePageHtml(page);
+      return WikiTestPageUtil.makePageHtml(page);
     }
   }
 
   public class WikiPageFooterRenderer {
     private WikiPage page;
 
-    WikiPageFooterRenderer(WikiPage page) {
+    public WikiPageFooterRenderer(WikiPage page){
       this.page = page;
     }
 

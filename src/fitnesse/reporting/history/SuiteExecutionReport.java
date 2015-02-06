@@ -1,19 +1,19 @@
 package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.DateTimeUtil;
-import util.StringUtil;
-import util.XmlUtil;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 
 import java.io.Writer;
 import java.text.SimpleDateFormat;
@@ -45,6 +45,11 @@ public class SuiteExecutionReport extends ExecutionReport {
         return allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences);
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return pageHistoryReferences.size();
   }
 
   private boolean allReferencesEqual(List<PageHistoryReference> r1, List<PageHistoryReference> r2) {
@@ -137,10 +142,15 @@ public class SuiteExecutionReport extends ExecutionReport {
       if (! (o instanceof PageHistoryReference))
         return false;
       PageHistoryReference r = (PageHistoryReference) o;
-      return StringUtil.stringsNullOrEqual(pageName, r.pageName) &&
+      return StringUtils.equals(pageName, r.pageName) &&
         time == r.time &&
         testSummary.equals(r.testSummary) &&
         runTimeInMillis == r.runTimeInMillis;
+    }
+
+    @Override
+    public int hashCode() {
+      return pageName.hashCode();
     }
 
     public String getPageName() {
@@ -168,7 +178,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(TestResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
       return pageHistoryFormatter.format(new Date(time));
     }
 

@@ -19,9 +19,9 @@ public class SlimAssertion implements Assertion {
   @Override
   public fitnesse.testsystems.Instruction getInstruction() {
     return new fitnesse.testsystems.Instruction() {
-       public String getId() {
-         return instruction.getId();
-       }
+      public String getId() {
+        return instruction.getId();
+      }
 
       public String toString() {
         return instruction.toString();
@@ -32,6 +32,10 @@ public class SlimAssertion implements Assertion {
   @Override
   public SlimExpectation getExpectation() {
     return expectation;
+  }
+
+  public String toString() {
+    return String.format("instruction: %s%nassertion: %s%n", instruction.toString(), expectation.toString());
   }
 
   /**

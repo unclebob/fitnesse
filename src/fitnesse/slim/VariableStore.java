@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VariableStore {
-  private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([a-zA-Z]\\w*)");
+  public static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([A-Za-z]\\w*)");
   private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
   private Matcher symbolMatcher;
 
@@ -17,11 +17,17 @@ public class VariableStore {
   }
 
   public Object getStored(String nameWithDollar) {
+    if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
+      return null;
+
     String name = nameWithDollar.substring(1);
+    if (!variables.containsKey(name)) {
+      return null;
+    }
     return variables.get(name).getObject();
   }
 
-  public boolean containsValueFor(String nameWithDollar) {
+  private boolean containsValueFor(String nameWithDollar) {
     return nameWithDollar != null && nameWithDollar.startsWith("$")
     && variables.containsKey(nameWithDollar.substring(1));
   }

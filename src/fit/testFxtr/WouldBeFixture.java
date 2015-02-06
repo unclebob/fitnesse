@@ -6,7 +6,7 @@ package fit.testFxtr;
  * This "fixture" intentionally does not extend a Fixture class.
  *
  * @author jbrains
- * @see HandleFixtureDoesNotExtendFixtureTest
+ * see test/fit/testFxtr/HandleFixtureDoesNotExtendFixtureTest
  */
 public class WouldBeFixture {
   public String go() {

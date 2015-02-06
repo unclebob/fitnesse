@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class FileSystemPageTest {
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
+    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
   }
 
   @After
@@ -94,13 +94,14 @@ public class FileSystemPageTest {
   public void testGetChidren() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("AaAa"), "A content");
     WikiPageUtil.addPage(root, PathParser.parse("BbBb"), "B content");
-    WikiPageUtil.addPage(root, PathParser.parse("CcCc"), "C content");
-    new File(defaultPath + "/root/someOtherDir").mkdir();
+    WikiPageUtil.addPage(root, PathParser.parse("c"), "C content");
+    new File(defaultPath + "/root/.someOtherDir").mkdir();
+    new File(defaultPath + "/root/someOther.SubDir").mkdir();
     List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
     for (WikiPage child : children) {
       String name = child.getName();
-      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "CcCc".equals(name);
+      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "c".equals(name);
       assertTrue("WikiPAge is not a valid one: " + name, isOk);
     }
   }
@@ -244,7 +245,7 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
+    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 

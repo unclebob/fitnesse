@@ -7,6 +7,7 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -16,7 +17,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.Utils;
 
 public class MergeResponder implements Responder {
   private Request request;
@@ -32,7 +32,7 @@ public class MergeResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     existingContent = page.getData().getContent();
     newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
@@ -48,7 +48,7 @@ public class MergeResponder implements Responder {
     page.setMainTemplate("mergePage");
     page.put("editTime", SaveRecorder.timeStamp());
     page.put("ticketId", SaveRecorder.newTicket());
-    page.put("oldContent", Utils.escapeHTML(existingContent));
+    page.put("oldContent", HtmlUtil.escapeHTML(existingContent));
     page.put("newContent", newContent);
     addHiddenAttributes(page);
     return page.html();

@@ -4,12 +4,10 @@ package fitnesse.slim.protocol;
 
 import java.util.List;
 
-import util.ListUtility;
-
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.
  * They will be recursively serialized.
- * <p/>
+ * <p>
  * Format:  [iiiiii:llllll:item...]
  * All lists (including lists within lists) begin with [ and end with ].  After the [ is the 6 digit number of items
  * in the list followed by a :.  Then comes each item which is composed of a 6 digit length a : and then the value
@@ -48,7 +46,7 @@ public class SlimSerializer {
     else if (o instanceof String)
       s = (String) o;
     else if (o instanceof List)
-      s = SlimSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
+      s = SlimSerializer.serialize((List<Object>) o);
     else
       s = o.toString();
     return s;

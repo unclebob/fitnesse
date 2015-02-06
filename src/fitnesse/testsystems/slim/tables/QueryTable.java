@@ -11,12 +11,9 @@ import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 
-import static util.ListUtility.list;
-
 public class QueryTable extends SlimTable {
   private static final String COMMENT_COLUMN_MARKER = "#";
   protected List<String> fieldNames = new ArrayList<String>();
-  private String queryId;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
@@ -54,9 +51,7 @@ public class QueryTable extends SlimTable {
             new SilentReturnExpectation(0, 0));
     SlimAssertion qi = makeAssertion(callFunction(getTableName(), "query"),
             new QueryTableExpectation());
-    String tableInstruction = ti.getInstruction().getId();
-    queryId = qi.getInstruction().getId();
-    return list(make, ti, qi);
+    return Arrays.asList(make, ti, qi);
   }
 
   private void assignColumns() {
@@ -70,12 +65,11 @@ public class QueryTable extends SlimTable {
     @Override
     public TestResult evaluateExpectation(Object queryReturn) {
       SlimTestResult testResult;
-      if (queryId == null || queryReturn == null) {
-        testResult = SlimTestResult.error("query method did not return a list");
-        table.updateContent(0, 0, testResult);
-        getTestContext().increment(testResult.getExecutionResult());
+      if (queryReturn == null) {
+        testResult = SlimTestResult.testNotRun();
       } else if (queryReturn instanceof List) {
         testResult = new SlimTestResult(scanRowsForMatches((List<List<List<Object>>>) queryReturn));
+        testResult.setVariables(getSymbolsToStore());
       } else {
         testResult = SlimTestResult.error(String.format("The query method returned: %s", queryReturn));
         table.updateContent(0, 0, testResult);
@@ -117,7 +111,9 @@ public class QueryTable extends SlimTable {
     }
 
     markMissingRows(unmatchedTableRows);
-    return markSurplusRows(queryResults, unmatchedResultRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return unmatchedTableRows.size() > 0 || unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
@@ -165,8 +161,7 @@ public class QueryTable extends SlimTable {
     getTestContext().increment(testResult.getExecutionResult());
   }
 
-  protected ExecutionResult markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
-    ExecutionResult result = ExecutionResult.PASS;
+  protected void markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
@@ -174,9 +169,7 @@ public class QueryTable extends SlimTable {
       table.updateContent(0, newTableRow, testResult);
       getTestContext().increment(ExecutionResult.FAIL);
       markMissingFields(surplusRow, newTableRow);
-      result = ExecutionResult.FAIL;
     }
-    return result;
   }
 
   private void markMissingFields(List<String> surplusRow, int newTableRow) {
@@ -213,19 +206,24 @@ public class QueryTable extends SlimTable {
     String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
     SlimTestResult testResult;
-    if (fieldName.startsWith(COMMENT_COLUMN_MARKER)) {
+    if (fieldName.startsWith(COMMENT_COLUMN_MARKER))
       testResult = SlimTestResult.plain();
-    }
     else if (actualValue == null)
       testResult = SlimTestResult.fail(String.format("field %s not present", fieldName), expectedValue);
     else if (expectedValue == null || expectedValue.length() == 0)
       testResult = SlimTestResult.ignore(actualValue);
     else {
-      testResult = matchMessage(actualValue, expectedValue);
-      if (testResult == null)
-        testResult = SlimTestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
-      else if (testResult.getExecutionResult() == ExecutionResult.PASS)
-        testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
+      String symbolName = ifSymbolAssignment(expectedValue);
+      if (symbolName != null) {
+        setSymbol(symbolName, actualValue, true);
+        testResult = SlimTestResult.ignore(String.format("$%s<-[%s]", symbolName, actualValue));
+      } else {
+        testResult = matchMessage(actualValue, expectedValue);
+        if (testResult == null)
+          testResult = SlimTestResult.fail(actualValue, replaceSymbolsWithFullExpansion(expectedValue));
+        else if (testResult.getExecutionResult() == ExecutionResult.PASS)
+          testResult = markMatch(tableRow, matchedRow, col, testResult.getMessage());
+      }
     }
     table.updateContent(col, tableRow, testResult);
     getTestContext().increment(testResult.getExecutionResult());

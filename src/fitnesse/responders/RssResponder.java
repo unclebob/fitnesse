@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -23,15 +22,14 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import util.XmlUtil;
-import util.XmlWriter;
+import fitnesse.util.XmlUtil;
 
 public class RssResponder implements SecureResponder {
   private RssFeed feed;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage contextPage = getContextPage(context, request.getResource());
-    WikiPage recentChangesPage = context.root.getChildPage(RecentChanges.RECENT_CHANGES);
+    WikiPage recentChangesPage = context.getRootPage().getChildPage(RecentChanges.RECENT_CHANGES);
 
     feed = new RssFeed(getConfiguredRssLinkPrefixFrom(contextPage));
 
@@ -41,7 +39,7 @@ public class RssResponder implements SecureResponder {
   }
 
   private WikiPage getContextPage(FitNesseContext context, String resource) throws Exception {
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(resource);
     return pageCrawler.getPage(resourcePath);
   }
@@ -96,7 +94,7 @@ public class RssResponder implements SecureResponder {
     }
 
     public SimpleResponse asResponse() throws Exception {
-      byte[] bytes = toByteArray(document);
+      String bytes = XmlUtil.xmlAsString(document);
       SimpleResponse response = new SimpleResponse();
       response.setContent(bytes);
       response.setContentType("text/xml");
@@ -127,24 +125,6 @@ public class RssResponder implements SecureResponder {
       rssDocumentElement.appendChild(channelElement);
       XmlUtil.addTextNode(channelElement, "title", "FitNesse:");
 
-      return rssDocument;
-    }
-
-    private static byte[] toByteArray(Document rssDocument) throws Exception {
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      XmlWriter writer = new XmlWriter(os);
-      writer.write(rssDocument);
-      writer.close();
-      return os.toByteArray();
-    }
-
-    private Document buildRssHeader() {
-      Document rssDocument = XmlUtil.newDocument();
-      Element rssDocumentElement = rssDocument.createElement("rss");
-      rssDocument.appendChild(rssDocumentElement);
-      channelElement = rssDocument.createElement("channel");
-      rssDocumentElement.setAttribute("version", "2.0");
-      rssDocumentElement.appendChild(channelElement);
       return rssDocument;
     }
   }

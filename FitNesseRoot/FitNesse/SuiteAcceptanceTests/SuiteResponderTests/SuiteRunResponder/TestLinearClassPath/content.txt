@@ -6,7 +6,6 @@ When you execute a test page, !-FitNesse-! gathers up the classpaths prior to ru
 
 !define PROPERTY_DISPLAY (
 &bang;define TEST_SYSTEM {slim}
-&bang;define SLIM_PORT {9900}
 !path classes
 !path fitnesse-standalone.jar
 

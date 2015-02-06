@@ -6,9 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 
-import util.XmlWriter;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -16,7 +16,6 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageXmlizer;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
@@ -55,14 +54,10 @@ public class SerializedPageResponder implements SecureResponder {
 
   private SimpleResponse makeResponseWithxml(Document doc) throws IOException {
     //TODO MdM Shoudl probably use a StreamedResponse
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    XmlWriter xmlWriter = new XmlWriter(output);
-    xmlWriter.write(doc);
-    xmlWriter.flush();
-    xmlWriter.close();
+    String output = XmlUtil.xmlAsString(doc);
     SimpleResponse response = new SimpleResponse();
     response.setContentType("text/xml");
-    response.setContent(output.toByteArray());
+    response.setContent(output);
     return response;
   }
 
@@ -83,7 +78,7 @@ public class SerializedPageResponder implements SecureResponder {
   private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     return page;
   }
 

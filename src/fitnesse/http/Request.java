@@ -14,17 +14,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Request {
-  private static final Pattern requestLinePattern = Pattern
-  .compile("(\\p{Upper}+?) ([^\\s]+)");
-  private static final Pattern requestUriPattern = Pattern
-  .compile("([^?]+)\\??(.*)");
-  private static final Pattern queryStringPattern = Pattern
-  .compile("([^=&]*)=?([^&]*)&?");
+  private static final Pattern requestLinePattern = Pattern.compile("(\\p{Upper}+?) ([^\\s]+)");
+  private static final Pattern requestUriPattern = Pattern.compile("([^?]+)\\??(.*)");
+  private static final Pattern queryStringPattern = Pattern.compile("([^=&]*)=?([^&]*)&?");
   private static final Pattern headerPattern = Pattern.compile("([^:]*): (.*)");
-  private static final Pattern boundaryPattern = Pattern
-  .compile("boundary=(.*)");
-  private static final Pattern multipartHeaderPattern = Pattern
-  .compile("([^ =]+)=\\\"([^\"]*)\\\"");
+  private static final Pattern boundaryPattern = Pattern.compile("boundary=(.*)");
+  private static final Pattern multipartHeaderPattern = Pattern.compile("([^ =]+)=\\\"([^\"]*)\\\"");
 
   private static final Collection<String> allowedMethods = buildAllowedMethodList();
 
@@ -36,8 +31,9 @@ public class Request {
   protected String requestURI;
   private String resource;
   protected String queryString;
-  protected Map<String, Object> inputs = new HashMap<String, Object>();
-  protected Map<String, Object> headers = new HashMap<String, Object>();
+  protected Map<String, String> inputs = new HashMap<String, String>();
+  protected Map<String, String> headers = new HashMap<String, String>();
+  protected Map<String, UploadedFile> uploadedFiles = new HashMap<String, UploadedFile>();
   protected String entityBody = "";
   protected String requestLine;
   protected String authorizationUsername;
@@ -78,8 +74,8 @@ public class Request {
     parseRequestUri(requestURI);
   }
 
-  private Map<String, Object> parseHeaders(StreamReader reader) throws IOException {
-    HashMap<String, Object> headers = new HashMap<String, Object>();
+  private Map<String, String> parseHeaders(StreamReader reader) throws IOException {
+    HashMap<String, String> headers = new HashMap<String, String>();
     String line = reader.readLine();
     while (!"".equals(line)) {
       Matcher match = headerPattern.matcher(line);
@@ -95,7 +91,7 @@ public class Request {
 
   private void parseEntityBody() throws IOException {
     if (hasHeader("Content-Length")) {
-      String contentType = (String) getHeader("Content-Type");
+      String contentType = getHeader("Content-Type");
       if (contentType != null && contentType.startsWith("multipart/form-data")) {
         Matcher match = boundaryPattern.matcher(contentType);
         match.find();
@@ -108,7 +104,7 @@ public class Request {
   }
 
   public int getContentLength() {
-    return Integer.parseInt((String) getHeader("Content-Length"));
+    return Integer.parseInt(getHeader("Content-Length"));
   }
 
   private void parseMultiPartContent(String boundary) throws IOException {
@@ -119,20 +115,20 @@ public class Request {
     input.readUpTo(boundary);
     while (numberOfBytesToRead - input.numberOfBytesConsumed() > 10) {
       input.readLine();
-      Map<String, Object> headers = parseHeaders(input);
-      String contentDisposition = (String) headers.get("content-disposition");
+      Map<String, String> headers = parseHeaders(input);
+      String contentDisposition = headers.get("content-disposition");
       Matcher matcher = multipartHeaderPattern.matcher(contentDisposition);
       while (matcher.find())
         headers.put(matcher.group(1), matcher.group(2));
 
-      String name = (String) headers.get("name");
-      Object value;
-      if (headers.containsKey("filename"))
-        value = createUploadedFile(headers, input, boundary);
-      else
-        value = input.readUpTo("\r\n" + boundary);
-
-      inputs.put(name, value);
+      String name = headers.get("name");
+      if (headers.containsKey("filename")) {
+        UploadedFile uploadedFile = createUploadedFile(headers, input, boundary);
+        uploadedFiles.put(name, uploadedFile);
+      } else {
+        String value = input.readUpTo("\r\n" + boundary);
+        inputs.put(name, value);
+      }
     }
   }
 
@@ -141,10 +137,10 @@ public class Request {
     input.resetNumberOfBytesConsumed();
   }
 
-  private Object createUploadedFile(Map<String, Object> headers,
+  private UploadedFile createUploadedFile(Map<String, String> headers,
       StreamReader reader, String boundary) throws IOException {
-    String filename = (String) headers.get("filename");
-    String contentType = (String) headers.get("content-type");
+    String filename = headers.get("filename");
+    String contentType = headers.get("content-type");
     File tempFile = File.createTempFile("FitNesse", ".uploadedFile");
     OutputStream output = null;
     try {
@@ -184,9 +180,9 @@ public class Request {
   }
 
   private void addUniqueInputString(String key, String value) {
-    Object existingItem = inputs.put(key, value);
+    String existingItem = inputs.put(key, value);
     if (itemExistAndMismatches(existingItem, value)) {
-      inputs.put(key, concatenateItems((String)existingItem, value));
+      inputs.put(key, concatenateItems(existingItem, value));
     }
   }
 
@@ -226,19 +222,23 @@ public class Request {
     return inputs.containsKey(key);
   }
 
-  public Object getInput(String key) {
+  public String getInput(String key) {
     return inputs.get(key);
   }
 
-  public Map<String,Object> getMap(){
+  public Map<String, String> getMap(){
     return inputs;
+  }
+
+  public UploadedFile getUploadedFile(String name) {
+    return uploadedFiles.get(name);
   }
 
   public boolean hasHeader(String key) {
     return headers.containsKey(key.toLowerCase());
   }
 
-  public Object getHeader(String key) {
+  public String getHeader(String key) {
     return headers.get(key.toLowerCase());
   }
 
@@ -273,11 +273,11 @@ public class Request {
     return buffer.toString();
   }
 
-  private void addMap(Map<String, Object> map, StringBuffer buffer) {
+  private void addMap(Map<String, String> map, StringBuffer buffer) {
     if (map.isEmpty()) {
       buffer.append("\tempty");
     }
-    for (Entry<String, Object> entry: map.entrySet()) {
+    for (Entry<String, String> entry: map.entrySet()) {
       String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
       buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
     }
@@ -312,7 +312,7 @@ public class Request {
     if (authorizationUsername != null)
       return;
     if (hasHeader("Authorization")) {
-      String authHeader = getHeader("Authorization").toString();
+      String authHeader = getHeader("Authorization");
       String userpass = getUserpass(authHeader);
       String[] values = userpass.split(":");
       if (values.length == 2) {

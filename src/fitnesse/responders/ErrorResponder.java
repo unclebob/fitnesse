@@ -4,28 +4,34 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 
 public class ErrorResponder implements Responder {
-  Exception exception;
+  private Exception exception;
   private String message;
+  private int statusCode;
 
   public ErrorResponder(Exception e) {
     exception = e;
+    statusCode = 400;
   }
 
   public ErrorResponder(String message) {
+    this(message, 400);
+  }
+
+  public ErrorResponder(String message, int statusCode) {
     this.message = message;
+    this.statusCode = statusCode;
   }
 
   public Response makeResponse(FitNesseContext context, Request request) {
-    SimpleResponse response = new SimpleResponse(400);
+    SimpleResponse response = new SimpleResponse(statusCode);
     HtmlPage html = context.pageFactory.newPage();
-    html.addTitles("Error Occured");
+    html.addTitles("Error Occurred");
     html.setMainTemplate("error");
     html.put("exception", exception);
     if (exception != null)

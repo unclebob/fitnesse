@@ -6,8 +6,6 @@ import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
 import org.junit.Test;
-import util.FileUtil;
-
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;

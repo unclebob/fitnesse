@@ -3,16 +3,13 @@ package fitnesseMain;
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
-import fitnesse.PluginException;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
-import fitnesse.reporting.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 
 import java.io.*;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -130,7 +127,7 @@ public class FitNesseMain {
     // (ConsoleHandler of JUL uses standard error output for all messages).
     System.out.println("Bootstrapping FitNesse, the fully integrated standalone wiki and acceptance testing framework.");
     
-    LOG.info("root page: " + context.root);
+    LOG.info("root page: " + context.getRootPage());
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);

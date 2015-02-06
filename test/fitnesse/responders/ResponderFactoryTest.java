@@ -26,6 +26,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
 import fitnesse.responders.run.StopTestResponder;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
@@ -75,6 +76,8 @@ public class ResponderFactoryTest {
     assertResponderType(WikiPageResponder.class);
     request.setResource("root");
     assertResponderType(WikiPageResponder.class);
+    request.setResource("custom_page");
+    assertResponderType(WikiPageResponder.class);
   }
 
   @Test
@@ -118,7 +121,7 @@ public class ResponderFactoryTest {
 
   @Test
   public void testSuiteResponder() throws Exception {
-    assertResponderTypeMatchesInput("suite", TestResponder.class);
+    assertResponderTypeMatchesInput("suite", SuiteResponder.class);
   }
 
   @Test
@@ -266,7 +269,7 @@ public class ResponderFactoryTest {
 
   @Test
   public void testNotFoundResponder() throws Exception {
-    request.setResource("somepage");
+    request.setResource("$$$");
     assertResponderType(NotFoundResponder.class);
   }
 

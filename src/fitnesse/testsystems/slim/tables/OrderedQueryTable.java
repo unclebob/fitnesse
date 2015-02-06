@@ -30,7 +30,9 @@ public class OrderedQueryTable extends QueryTable {
       }
     }
 
-    return markSurplusRows(queryResults, unmatchedResultRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   private MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore, int tableRow) {

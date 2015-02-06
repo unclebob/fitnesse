@@ -3,7 +3,6 @@ package fitnesse.testsystems.slim.tables;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 

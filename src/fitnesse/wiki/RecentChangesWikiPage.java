@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import util.Clock;
+import fitnesse.util.Clock;
 
 import fitnesse.FitNesseContext;
 

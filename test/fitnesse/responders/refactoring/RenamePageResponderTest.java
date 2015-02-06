@@ -160,6 +160,6 @@ public class RenamePageResponderTest extends ResponderTestCase {
     request.addInput("newName", toName);
     if (renameReferences)
       request.addInput("refactorReferences", "on");
-    return responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    return responder.makeResponse(context, request);
   }
 }

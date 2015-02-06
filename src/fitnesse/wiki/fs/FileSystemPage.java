@@ -19,7 +19,7 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 import static fitnesse.wiki.PageType.STATIC;

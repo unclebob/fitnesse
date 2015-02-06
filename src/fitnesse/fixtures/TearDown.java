@@ -7,13 +7,12 @@ import fit.Fixture;
 import java.io.File;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
-import util.Clock;
+import fitnesse.util.Clock;
 import util.FileUtil;
 
 public class TearDown extends Fixture {
   public TearDown() throws Exception {
     context.fitNesse.stop();
-    root = null;
     authenticator = null;
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
