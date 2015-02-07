@@ -111,8 +111,7 @@ class Option {
   protected String[] split(String value) {
     String[] tokens = value.split(" ");
     List<String> usableTokens = new LinkedList<String>();
-    for (int i = 0; i < tokens.length; i++) {
-      String token = tokens[i];
+    for (String token : tokens) {
       if (!token.isEmpty())
         usableTokens.add(token);
     }
