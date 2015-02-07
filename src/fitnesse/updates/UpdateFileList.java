@@ -127,7 +127,7 @@ private void addFilePathToAppropriateList(String directoryPath, File childFile) 
   }
 
   private String makePathLine(String path) {
-    if (baseDirectory != null && baseDirectory.length() > 0 && path.startsWith(baseDirectory))
+    if (baseDirectory != null && !baseDirectory.isEmpty() && path.startsWith(baseDirectory))
       path = path.replace(baseDirectory, "");
     if (path.startsWith("/"))
       path = path.substring(1);

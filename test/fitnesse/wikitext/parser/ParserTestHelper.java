@@ -39,7 +39,7 @@ public class ParserTestHelper {
       String name = current.getType().toString();
       result.append(name);
       String content = current.getContent();
-      if (content.length() > 0) result.append("=").append(content);
+      if (!content.isEmpty()) result.append("=").append(content);
     }
     assertEquals(expected, result.toString());
   }

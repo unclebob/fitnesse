@@ -50,7 +50,7 @@ public class WikiWordReference {
       if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
         String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
         String childPortionOfReference = pageToBeMoved.getName();
-        if (referenceTail.length() > 0)
+        if (!referenceTail.isEmpty())
           childPortionOfReference += referenceTail;
         String newQualifiedName;
         if ("".equals(newParentName))

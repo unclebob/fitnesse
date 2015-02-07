@@ -113,7 +113,7 @@ class Option {
     List<String> usableTokens = new LinkedList<String>();
     for (int i = 0; i < tokens.length; i++) {
       String token = tokens[i];
-      if (token.length() > 0)
+      if (!token.isEmpty())
         usableTokens.add(token);
     }
     return usableTokens.toArray(new String[]{});

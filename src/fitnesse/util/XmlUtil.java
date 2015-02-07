@@ -98,7 +98,7 @@ public class XmlUtil {
       return null;
     }
     String text = namedElement.getTextContent();
-    return (text.length() == 0) ? null : text;
+    return (text.isEmpty()) ? null : text;
   }
 
   public static void addTextNode(Element element, String tagName, String value) {

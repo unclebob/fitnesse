@@ -60,7 +60,7 @@ public class WikiPageUtil {
       current = context.addChildPage(first);
     } else
       current = context.getChildPage(first);
-    if (rest.size() == 0)
+    if (rest.isEmpty())
       return current;
     return getOrMakePage(current, rest);
   }

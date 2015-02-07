@@ -135,7 +135,7 @@ public class StackTraceEnricher {
     }
 
     private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-      if (className == null || className.length() == 0) {
+      if (className == null || className.isEmpty()) {
         throw new ClassNotFoundException("Unable to load a class with an empty or null name.");
       }
       Class<?> resolvedClass = null;

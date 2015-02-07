@@ -36,7 +36,7 @@ public class SlimDeserializer {
   private void checkSerializedStringIsValid() {
     if (serialized == null)
       throw new SyntaxError("Can't deserialize null");
-    else if (serialized.length() == 0)
+    else if (serialized.isEmpty())
       throw new SyntaxError("Can't deserialize empty string");
   }
 

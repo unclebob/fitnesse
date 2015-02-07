@@ -39,7 +39,7 @@ public class GracefulNamer {
     final char separator = '.';
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
-    if (disgracefulName.length() > 0)
+    if (!disgracefulName.isEmpty())
       namer.finalName.append(c = disgracefulName.charAt(0));
 
     boolean isGrabbingDigits = false;

@@ -113,7 +113,7 @@ public class QueryTable extends SlimTable {
     markMissingRows(unmatchedTableRows);
     markSurplusRows(queryResults, unmatchedResultRows);
 
-    return unmatchedTableRows.size() > 0 || unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
+    return !unmatchedTableRows.isEmpty() || !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
@@ -210,7 +210,7 @@ public class QueryTable extends SlimTable {
       testResult = SlimTestResult.plain();
     else if (actualValue == null)
       testResult = SlimTestResult.fail(String.format("field %s not present", fieldName), expectedValue);
-    else if (expectedValue == null || expectedValue.length() == 0)
+    else if (expectedValue == null || expectedValue.isEmpty())
       testResult = SlimTestResult.ignore(actualValue);
     else {
       String symbolName = ifSymbolAssignment(expectedValue);

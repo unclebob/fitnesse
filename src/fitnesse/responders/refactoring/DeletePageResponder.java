@@ -64,7 +64,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private void redirect(final WikiPagePath path, final SimpleResponse response) {
     String location = PathParser.render(path);
-    if (location == null || location.length() == 0) {
+    if (location == null || location.isEmpty()) {
       response.redirect(context.contextRoot, "root");
     } else {
       response.redirect(context.contextRoot, location);

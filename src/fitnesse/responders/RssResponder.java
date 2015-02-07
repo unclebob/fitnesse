@@ -65,7 +65,7 @@ public class RssResponder implements SecureResponder {
   }
 
   protected static boolean isNeitherNullNorBlank(String string) {
-    return string != null && string.length() > 0;
+    return string != null && !string.isEmpty();
   }
 
   public SecureOperation getSecureOperation() {

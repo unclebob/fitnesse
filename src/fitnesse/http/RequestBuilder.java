@@ -57,7 +57,7 @@ public class RequestBuilder {
     text.append(method).append(" ").append(resource);
     if (isGet()) {
       String inputString = inputString();
-      if (inputString.length() > 0)
+      if (!inputString.isEmpty())
         text.append("?").append(inputString);
     }
     text.append(" HTTP/1.1");

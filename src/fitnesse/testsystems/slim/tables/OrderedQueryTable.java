@@ -32,7 +32,7 @@ public class OrderedQueryTable extends QueryTable {
 
     markSurplusRows(queryResults, unmatchedResultRows);
 
-    return unmatchedResultRows.size() > 0 ? ExecutionResult.FAIL : ExecutionResult.PASS;
+    return !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   private MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore, int tableRow) {
