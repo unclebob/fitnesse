@@ -1,15 +1,21 @@
-package fitnesse;
+package fitnesse.plugins;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
+import fitnesse.ConfigurationParameter;
+import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
-import fitnesse.components.ComponentInstantiationException;
 import fitnesse.components.Logger;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
@@ -28,9 +34,11 @@ public class PluginsLoader {
   private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
+  private final List<PluginFeatureFactory> pluginFeatureFactories = new ArrayList<PluginFeatureFactory>();
 
   public PluginsLoader(ComponentFactory componentFactory) {
     this.componentFactory = componentFactory;
+    fillPluginFeatureFactories();
   }
 
   public void loadPlugins(ResponderFactory responderFactory,
@@ -73,13 +81,29 @@ public class PluginsLoader {
     }
   }
 
+  private void fillPluginFeatureFactories() {
+    pluginFeatureFactories.add(new PropertyBasedPluginFeatureFactory());
+
+    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {
+      pluginFeatureFactories.add(factory);
+    }
+
+    for (PluginFeatureFactory factory : pluginFeatureFactories) {
+      factory.setComponentFactory(componentFactory);
+    }
+  }
+
   public void loadResponders(final ResponderFactory responderFactory) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.RESPONDERS, new Registrar() {
-      @Override public void register(String key, Class clazz) {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      Map<String, Class<? extends Responder>> responderFactories = pff.getResponders();
+      for (Map.Entry<String, Class<? extends Responder>> rF : responderFactories.entrySet()) {
+        String key = rF.getKey();
+        Class<? extends Responder> clazz = rF.getValue();
+
         responderFactory.addResponder(key, clazz);
         LOG.info("Loaded responder " + key + ": " + clazz.getName());
       }
-    });
+    }
   }
 
   private String[] getListFromProperties(ConfigurationParameter propertyName) {
@@ -109,39 +133,47 @@ public class PluginsLoader {
   }
 
   public Authenticator getAuthenticator(Authenticator defaultAuthenticator) {
-    Authenticator authenticator = (Authenticator) componentFactory.createComponent(ConfigurationParameter.AUTHENTICATOR);
+    Authenticator authenticator = null;
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      authenticator = pff.getAuthenticator();
+      if (authenticator != null) {
+        break;
+      }
+    }
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
   public void loadSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
-    String[] symbolTypeNames = getListFromProperties(ConfigurationParameter.SYMBOL_TYPES);
-    if (symbolTypeNames != null) {
-      for (String symbolTypeName : symbolTypeNames) {
-        Class<SymbolType> symbolTypeClass = forName(symbolTypeName.trim());
-        symbolProvider.add(componentFactory.createComponent(symbolTypeClass));
-        LOG.info("Loaded SymbolType " + symbolTypeClass.getName());
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      for (SymbolType st : pff.getSymbolTypes()) {
+        symbolProvider.add(st);
+        LOG.info("Loaded SymbolType " + st.getClass().getName());
       }
     }
   }
 
   public void loadWikiPageFactories(WikiPageFactory wikiPageFactory) throws PluginException {
-    String[] factoryNames = getListFromProperties(ConfigurationParameter.WIKI_PAGE_FACTORIES);
-    if (factoryNames != null) {
-      if (!(wikiPageFactory instanceof WikiPageFactoryRegistry)) {
-        LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
-        return;
-      }
-      WikiPageFactoryRegistry registrar = (WikiPageFactoryRegistry) wikiPageFactory;
-      for (String factoryName : factoryNames) {
-        Class<WikiPageFactory> factory = forName(factoryName.trim());
-        registrar.registerWikiPageFactory(componentFactory.createComponent(factory));
-        LOG.info("Loaded WikiPageFactory " + factory.getName());
+    if (!(wikiPageFactory instanceof WikiPageFactoryRegistry)) {
+      LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
+      return;
+    }
+    WikiPageFactoryRegistry registrar = (WikiPageFactoryRegistry) wikiPageFactory;
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      for (WikiPageFactory factory : pff.getWikiPageFactories()) {
+        registrar.registerWikiPageFactory(factory);
+        LOG.info("Loaded WikiPageFactory " + factory.getClass().getName());
       }
     }
   }
 
   public ContentFilter loadContentFilter() {
-    ContentFilter filter = (ContentFilter) componentFactory.createComponent(ConfigurationParameter.CONTENT_FILTER);
+    ContentFilter filter = null;
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      filter = pff.getContentFilter();
+      if (filter != null) {
+        break;
+      }
+    }
     if (filter != null) {
       LOG.info("Content filter installed: " + filter.getClass().getName());
     }
@@ -149,51 +181,41 @@ public class PluginsLoader {
   }
 
   public void loadSlimTables(final SlimTableFactory slimTableFactory) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar<SlimTable>() {
-      @Override public void register(String key, Class<SlimTable> clazz) {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      Map<String, Class<? extends SlimTable>> tableFactories = pff.getSlimTables();
+      for (Map.Entry<String, Class<? extends SlimTable>> entry : tableFactories.entrySet()) {
+        String key = entry.getKey();
+        Class<? extends SlimTable> clazz = entry.getValue();
+
         slimTableFactory.addTableType(key, clazz);
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
-      }
-    });
-  }
-
-  public void loadCustomComparators(final CustomComparatorRegistry customComparatorRegistry) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar<CustomComparator>() {
-      @Override public void register(String key, Class<CustomComparator> clazz) {
-        customComparatorRegistry.addCustomComparator(key, componentFactory.createComponent(clazz));
-        LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
-      }
-    });
-  }
-
-  public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar<TestSystemFactory>() {
-      @Override public void register(String key, Class<TestSystemFactory> clazz) {
-        registrar.registerTestSystemFactory(key, componentFactory.createComponent(clazz));
-        LOG.info("Loaded test system " + key + ": " + clazz.getName());
-      }
-    });
-  }
-
-  private void forEachNamedObject(final ConfigurationParameter parameter, Registrar registrar) throws PluginException {
-    String[] propList = getListFromProperties(parameter);
-    if (propList != null) {
-      for (String entry : propList) {
-        entry = entry.trim();
-        int colonIndex = entry.lastIndexOf(':');
-        String prefix = entry.substring(0, colonIndex);
-        String className = entry.substring(colonIndex + 1, entry.length());
-
-        register(registrar, prefix, className);
       }
     }
   }
 
-  private void register(Registrar registrar, String prefix, String className) throws PluginException {
-    try {
-      registrar.register(prefix, forName(className));
-    } catch (ComponentInstantiationException e) {
-      throw new PluginException("Can not register plug in " + className, e);
+  public void loadCustomComparators(final CustomComparatorRegistry customComparatorRegistry) throws PluginException {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      Map<String, CustomComparator> comparators = pff.getCustomComparators();
+      for (Map.Entry<String, CustomComparator> entry : comparators.entrySet()) {
+        String key = entry.getKey();
+        CustomComparator customComparator = entry.getValue();
+
+        customComparatorRegistry.addCustomComparator(key, customComparator);
+        LOG.info("Loaded custom comparator " + key + ": " + customComparator);
+      }
+    }
+  }
+
+  public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      Map<String, TestSystemFactory> systemFactories = pff.getTestSystemFactories();
+      for (Map.Entry<String, TestSystemFactory> entry : systemFactories.entrySet()) {
+        String key = entry.getKey();
+        TestSystemFactory factory = entry.getValue();
+
+        registrar.registerTestSystemFactory(key, factory);
+        LOG.info("Loaded test system " + key + ": " + factory);
+      }
     }
   }
 
@@ -203,9 +225,5 @@ public class PluginsLoader {
     } catch (ClassNotFoundException e) {
       throw new PluginException("Unable to load class " + className, e);
     }
-  }
-
-  static private interface Registrar<T> {
-    void register(String key, Class<T> clazz);
   }
 }

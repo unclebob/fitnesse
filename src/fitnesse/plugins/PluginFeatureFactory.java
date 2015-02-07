@@ -1,0 +1,34 @@
+package fitnesse.plugins;
+
+import java.util.List;
+import java.util.Map;
+
+import fitnesse.Responder;
+import fitnesse.authentication.Authenticator;
+import fitnesse.components.ComponentFactory;
+import fitnesse.responders.editing.ContentFilter;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.slim.CustomComparator;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.SymbolType;
+
+public interface PluginFeatureFactory {
+  Map<String, Class<? extends Responder>> getResponders() throws PluginException;
+
+  Authenticator getAuthenticator();
+
+  List<SymbolType> getSymbolTypes() throws PluginException;
+
+  List<WikiPageFactory> getWikiPageFactories() throws PluginException;
+
+  ContentFilter getContentFilter();
+
+  Map<String, Class<? extends SlimTable>> getSlimTables() throws PluginException;
+
+  Map<String, CustomComparator> getCustomComparators() throws PluginException;
+
+  Map<String, TestSystemFactory> getTestSystemFactories() throws PluginException;
+
+  void setComponentFactory(ComponentFactory componentFactory);
+}

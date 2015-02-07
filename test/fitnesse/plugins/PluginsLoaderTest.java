@@ -1,12 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse;
+package fitnesse.plugins;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -54,8 +55,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class PluginsLoaderTest {
   private Properties testProperties;

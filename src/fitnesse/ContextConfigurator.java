@@ -1,12 +1,13 @@
 package fitnesse;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
+import fitnesse.plugins.PluginException;
+import fitnesse.plugins.PluginsLoader;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
@@ -15,8 +16,6 @@ import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.wiki.SystemVariableSource;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
