@@ -18,7 +18,6 @@ import fitnesse.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;

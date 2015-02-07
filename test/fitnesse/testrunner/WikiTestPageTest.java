@@ -12,7 +12,6 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
 

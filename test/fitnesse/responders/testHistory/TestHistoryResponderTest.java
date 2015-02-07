@@ -28,8 +28,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 public class TestHistoryResponderTest {

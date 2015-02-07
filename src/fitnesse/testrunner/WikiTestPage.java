@@ -16,7 +16,6 @@ import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 
 public class WikiTestPage implements TestPage {

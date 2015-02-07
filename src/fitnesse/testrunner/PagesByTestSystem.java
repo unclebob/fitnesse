@@ -10,7 +10,6 @@ import java.util.Map;
 
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 
 /**
  * Organize pages by test system in an appropriate order.

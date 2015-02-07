@@ -9,15 +9,10 @@ import fitnesse.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.MemoryFileSystem;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 import util.FileUtil;
 
 import java.io.File;

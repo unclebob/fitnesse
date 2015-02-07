@@ -17,7 +17,6 @@ import fitnesse.reporting.history.TestExecutionReport.InstructionResult;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 public class TestExecutionReportTest {
   private TestExecutionReport expected;
