@@ -244,6 +244,12 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
         '<li title="Delete column"><a id="wt-delete-col" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="2.5" x="7.5" y="4" /> <rect y="11.5" x="7.5" height="2.5" width="3" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg> </a></li>',
         '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
+        '</ul>',
+        '<ul class="in-hash-table">',
+        '<li title="Insert row above"><a id="wt-insert-row-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7.5 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="4"/> <rect y="4" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="4"/> </svg> </a></li>',
+        '<li title="Insert row below"><a id="wt-insert-row-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,10.5 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="11" /> <rect y="11" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="11"/> </svg></a></li>',
+        '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
+        '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
         '</ul>'];
     var div = d.createElement("div");
     div.className = "wysiwyg-toolbar";
@@ -549,6 +555,11 @@ Wysiwyg.prototype.execCommand = function (name, arg, selectionRange) {
     return this.contentDocument.execCommand(name, false, arg);
 };
 
+Wysiwyg.prototype.isHashTable = function (node) {
+    return node.tagName === "TABLE" && /hashtable/.test(node.className);
+};
+
+
 Wysiwyg.prototype.setupEditorEvents = function () {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var self = this;
@@ -662,7 +673,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
         case 28: // ctrl-"|"
             var range = self.getSelectionRange();
             var element = getSelfOrAncestor(range.startContainer, "table");
-            if (element &&
+            if (element && !self.isHashTable(element) &&
                     getSelfOrAncestor(range.endContainer, "table") === element &&
                     !getSelfOrAncestor(range.endContainer, /^(?:tt)/)) {
                 if (event.ctrlKey) {
@@ -1540,6 +1551,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     };
     var position = this.getSelectionPosition();
     var node, toolbarButtons, name;
+    var hashTable = false;
 
     if (position.start) {
         node = position.start === position.end ? position.start.firstChild : position.start.nextSibling;
@@ -1554,6 +1566,7 @@ Wysiwyg.prototype.selectionChanged = function () {
                 name = tagNameToKey[name];
             }
             status[name] = true;
+            hashTable |= this.isHashTable(node);
         }
         node = node.parentNode;
     }
@@ -1569,12 +1582,18 @@ Wysiwyg.prototype.selectionChanged = function () {
         }
     }
 
-    if (status["table"]) {
-    	$(".wysiwyg-toolbar .non-table").hide();
-    	$(".wysiwyg-toolbar .in-table").show();
+    if (hashTable) {
+        $(".wysiwyg-toolbar .non-table").hide();
+        $(".wysiwyg-toolbar .in-table").hide();
+        $(".wysiwyg-toolbar .in-hash-table").show();
+    } else if (status["table"]) {
+        $(".wysiwyg-toolbar .non-table").hide();
+        $(".wysiwyg-toolbar .in-table").show();
+        $(".wysiwyg-toolbar .in-hash-table").hide();
     } else {
-    	$(".wysiwyg-toolbar .in-table").hide();
-    	$(".wysiwyg-toolbar .non-table").show();
+        $(".wysiwyg-toolbar .non-table").show();
+        $(".wysiwyg-toolbar .in-table").hide();
+        $(".wysiwyg-toolbar .in-hash-table").hide();
     }
     $(window).resize();
     
