@@ -225,6 +225,7 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Outdent"><a id="wt-outdent" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M10 10H2v2h8v-2zm0-4H2v2h8V6zM2 16h14v-2H2v2zm14-3.5v-7L12.5 9l3.5 3.5zM2 2v2h14V2H2z"/></svg></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 2,9 14,0 0,0" id="path3180" style="fill:none;stroke:#000000;stroke-width:2.16024685;stroke-linecap:butt;stroke-opacity:1" /> </svg></a></li>',
         '<li title="Table"><a id="wt-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"><path style="stroke-width:2;stroke-opacity:1;marker-end:none;fill:none;stroke:#000000" d="M 3,3 3,15 15,15 15,3 z"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0"/></svg></a></li>',
+        '<li title="Hash table"><a id="wt-hash-table" href="#">{}</a></li>',
         '</ul>',
         '<ul class="non-table">',
         '<li title="Collapsible section (default closed)"><a id="wt-collapsible-closed" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-rule:nonzero" d="M 16,5.5 12.5,9 16,12.5 z"/> <path style="fill:#000000;fill-opacity:1;stroke:none" d="M 4.5,11.5 8,8 4.5,4.5 z" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="m 15.5,2.5 c -14,0 -13,0 -13,0 l 0,13" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,10.5 c 10,0 5.5,0 5.5,0" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
@@ -335,6 +336,8 @@ Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
             return [ self.insertImage ];
 		case "table":
 			return [ self.insertTable ];
+        case "hash-table":
+            return [ self.insertHashTable ];
 		case "insert-cell-before":
 			return [ self.ui_insertTableCell, false ];
 		case "insert-cell-after":
@@ -1038,7 +1041,6 @@ Wysiwyg.prototype.insertImage = function () {
     insertImageBox
         .on('click', 'span', function () {
             path = Array.prototype.slice.call($(this).data());
-            console.log('path', path);
             loadFiles();
         })
         .on('click', 'li.directory', function () {
@@ -1101,6 +1103,20 @@ Wysiwyg.prototype.insertTable = function () {
     this.insertHTML(this.tableHTML(id, 2, 2));
     var element = this.contentDocument.getElementById(id);
     if (element) {
+        this.selectNodeContents(element);
+    }
+    this.selectionChanged();
+};
+
+Wysiwyg.prototype.insertHashTable = function () {
+    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
+        return;
+    }
+    var id = this.generateDomId();
+    this.insertHTML(this.tableHTML(id, 2, 2));
+    var element = this.contentDocument.getElementById(id);
+    if (element) {
+        element.setAttribute('class', 'hashtable');
         this.selectNodeContents(element);
     }
     this.selectionChanged();
@@ -1220,12 +1236,13 @@ Wysiwyg.prototype.deleteTable = function () {
 
 Wysiwyg.prototype.spanTableColumns = function (table) {
     // Spanning columns fitnesse style.
-    var maxCells = Math.max.apply(Math, $.map($('tr', table), function (e) {
+    var rows = $('> tbody > tr', table);
+    var maxCells = Math.max.apply(Math, $.map(rows, function (e) {
         var tds = $('td', e);
         tds.removeAttr('colspan');
         return tds.size();
     }));
-    $('tr', table).each(function () {
+    rows.each(function () {
         var s = $('td', this).size();
         if (s < maxCells) {
             $('td:last', this).attr('colspan', maxCells - s + 1);
@@ -1588,11 +1605,12 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{");              // 5. code block (open)
     wikiInlineRules.push("\\}\\}\\}");              // 6. code block (close)
-    wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
-    wikiInlineRules.push("[->)\\]]!|\\}");          // 8. escaped (close)
+    wikiInlineRules.push("![-<(\\[]");              // 7. escaped (open)
+    wikiInlineRules.push("[->)\\]]!");              // 8. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
-    wikiInlineRules.push("\\${[^}]+}");             // 11. Variable
+    wikiInlineRules.push("\\${.+?}");               // 11. Variable
+    wikiInlineRules.push("!{(?:\\${.+?}|[^}])+}"); // 12. Hash table
 
     var wikiRules = [];
     // -1. header
@@ -1631,9 +1649,6 @@ Wysiwyg.prototype.normalizeLink = function (link) {
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }
-//    if (!/^[\w.+\-]+:/.test(link)) {
-//        link = link;
-//    }
     if (/^[^\"\']/.test(link) && /\s/.test(link)) {
         if (link.indexOf('"') === -1) {
             link = '"' + link + '"';
@@ -1923,6 +1938,29 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         holder.appendChild(contentDocument.createTextNode(value));
     }
 
+    function handleHashTable(value) {
+        var d = contentDocument;
+        var table = d.createElement("table");
+        var tbody = d.createElement("tbody");
+        table.setAttribute('class', 'hashtable');
+        table.appendChild(tbody);
+        var entries = value.substring(2, value.length-1).split(",");
+        for (var i = 0; i < entries.length; i++) {
+            var keyval = entries[i].split(':');
+            if (keyval.length === 2) {
+                var tr = d.createElement("tr");
+                var key = d.createElement("td");
+                var val = d.createElement("td");
+                key.appendChild(d.createTextNode(keyval[0].trim()));
+                val.appendChild(d.createTextNode(keyval[1].trim()));
+                tr.appendChild(key);
+                tr.appendChild(val);
+                tbody.appendChild(tr);
+            }
+        }
+        holder.appendChild(table);
+    }
+
     function handleImage(value) {
         openParagraph();
         var img = contentDocument.createElement("img");
@@ -2047,7 +2085,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function openEscapedText(value) {
         if (!inEscapedText()) {
             var element = contentDocument.createElement("tt");
-            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!{': 'hashtable', '!(': 'nested', '![': 'plaintexttable' }[value]);
+            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!(': 'nested', '![': 'plaintexttable' }[value]);
             holder.appendChild(element);
             holder = element;
         } else {
@@ -2059,7 +2097,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', '}': 'hashtable', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
+            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
                 holder = target.parentNode;
                 return;
             }
@@ -2277,6 +2315,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             case 11:    // Variable
                 handleVariable(matchText);
                 continue;
+            case 12:    // Hash table
+                if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleHashTable(matchText);
+                continue;
             case -1:    // header
                 currentHeader = handleHeader(matchText);
                 if (currentHeader) {
@@ -2474,6 +2516,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     var last = root;
     var listDepth = 0;
     var inCodeBlock = false;
+    var tableType;
     var skipNode = null;
 
     function tokenFromSpan(node) {
@@ -2648,12 +2691,19 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (token !== true) {
                 pushToken(token);
             }
+            // TODO: can move to switch statement?
             if (name === "table") {
-                if ($('tr', node).first().hasClass('hidden')) {
-                    _texts.push("-");
-                }
-                if ($(node).hasClass("escaped")) {
-                    _texts.push("!");
+                if ($(node).hasClass("hashtable")) {
+                    tableType = "hashtable";
+                    _texts.push("!{");
+                } else {
+                    tableType = "table";
+                    if ($('tr', node).first().hasClass('hidden')) {
+                        _texts.push("-");
+                    }
+                    if ($(node).hasClass("escaped")) {
+                        _texts.push("!");
+                    }
                 }
             }
         } else {
@@ -2733,6 +2783,19 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "tr":
+                if (tableType === "hashtable") {
+                    console.log('handling hash table row?' );
+                    var cells = $(node).find('td');
+                    skipNode = node;
+                    if (node !== node.parentNode.firstChild) {
+                        _texts.push(",");
+                    }
+                    text = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                    _texts.push(text);
+                    _texts.push(":");
+                    text = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                    _texts.push(text);
+                }
                 break;
             case "tt":
                 skipNode = node;
@@ -2741,7 +2804,6 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     var tags = {
                         'escape': [ "!-", "-!" ],
                         'htmlescape': [ "!<", ">!" ],
-                        'hashtable': [ "!{", "}" ],
                         'nested': [ "!(", ")!" ],
                         'plaintexttable': [ "![", "]!" ],
                         'inlinecode': [ "{{{", "}}}" ]
@@ -2864,7 +2926,11 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "table":
-                _texts.push("\n");
+                if ($(node).hasClass("hashtable")) {
+                    _texts.push("}");
+                } else {
+                    _texts.push("\n");
+                }
                 break;
             }
         }
@@ -3158,7 +3224,6 @@ if (window.getSelection) {
     Wysiwyg.prototype.getSelectionPosition = function () {
         var range = this.getNativeSelectionRange();
         var position = { start: null, end: null };
-        console.log('range', range);
         if (range) {
             position.start = range.startContainer;
             position.end = range.endContainer;

@@ -341,9 +341,15 @@ describe("parser and formatter", function () {
         generate(dom, wikitext);
     });
 
-    it("escape !{ .. } - hashtable", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'hashtable'}, "bar: val"), " baz");
-        var wikitext = "foo !{bar: val} baz";
+    it("hash table", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "bar"),
+                        element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
         generate(dom, wikitext);
     });
 
@@ -364,7 +370,14 @@ describe("parser and formatter", function () {
             element("tbody",
                 element("tr",
                     element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:id1,$contactId2:id2"), " "))));
+                    element("td", " ", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "id1")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), " "))));
 
         var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
         generate(dom, wikitext);
@@ -374,8 +387,14 @@ describe("parser and formatter", function () {
             element("tbody",
                 element("tr",
                     element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:${ID1},$contactId2:id2"), " "))));
-
+                    element("td", " ", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "${ID1}")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), " "))));
         var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
         generate(dom, wikitext);
     });
