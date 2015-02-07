@@ -14,6 +14,8 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolType;
 
 public interface PluginFeatureFactory {
+  List<Object> getPlugins() throws PluginException;
+
   Map<String, Class<? extends Responder>> getResponders() throws PluginException;
 
   Authenticator getAuthenticator();

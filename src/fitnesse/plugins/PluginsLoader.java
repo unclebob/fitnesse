@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import fitnesse.ConfigurationParameter;
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -47,11 +46,8 @@ public class PluginsLoader {
                           TestSystemFactoryRegistry testSystemFactoryRegistry,
                           SlimTableFactory slimTableFactory,
                           CustomComparatorRegistry customComparatorRegistry) throws PluginException {
-    String[] plugins = getListFromProperties(ConfigurationParameter.PLUGINS);
-    if (plugins != null) {
-      for (String pluginName : plugins) {
-        Class<?> pluginClass = forName(pluginName);
-        Object plugin = componentFactory.createComponent(pluginClass);
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      for (Object plugin : pff.getPlugins()) {
         register(plugin, "registerResponders", ResponderFactory.class, responderFactory);
         register(plugin, "registerSymbolTypes", SymbolProvider.class, symbolProvider);
         register(plugin, "registerWikiPageFactories", WikiPageFactoryRegistry.class, wikiPageFactoryRegistry);
@@ -104,14 +100,6 @@ public class PluginsLoader {
         LOG.info("Loaded responder " + key + ": " + clazz.getName());
       }
     }
-  }
-
-  private String[] getListFromProperties(ConfigurationParameter propertyName) {
-    String value = componentFactory.getProperty(propertyName.getKey());
-    if (value == null)
-      return null;
-    else
-      return value.split(",");
   }
 
   public Logger makeLogger(String logDirectory) {
@@ -216,14 +204,6 @@ public class PluginsLoader {
         registrar.registerTestSystemFactory(key, factory);
         LOG.info("Loaded test system " + key + ": " + factory);
       }
-    }
-  }
-
-  private <T> Class<T> forName(String className) throws PluginException {
-    try {
-      return (Class<T>) Class.forName(className);
-    } catch (ClassNotFoundException e) {
-      throw new PluginException("Unable to load class " + className, e);
     }
   }
 }

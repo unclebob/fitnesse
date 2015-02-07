@@ -20,6 +20,11 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   private ComponentFactory componentFactory;
 
   @Override
+  public List<Object> getPlugins() throws PluginException {
+    return createList();
+  }
+
+  @Override
   public Map<String, Class<? extends Responder>> getResponders() throws PluginException {
       return createMap();
   }

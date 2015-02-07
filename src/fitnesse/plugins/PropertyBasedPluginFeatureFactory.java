@@ -18,6 +18,10 @@ import fitnesse.wikitext.parser.SymbolType;
  * Determines which plugin features to load based on componentFactory's properties (e.g. plugins.properties).
  */
 public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase {
+  @Override
+  public List<Object> getPlugins() throws PluginException {
+    return allConfigured(ConfigurationParameter.PLUGINS);
+  }
 
   @Override
   public Map<String, Class<? extends Responder>> getResponders() throws PluginException {
