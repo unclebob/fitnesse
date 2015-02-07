@@ -38,7 +38,7 @@ public class DeletePageResponder implements SecureResponder {
   }
 
   private void tryToDeletePage(Request request) {
-    String confirmedString = (String) request.getInput("confirmed");
+    String confirmedString = request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
     } else {
