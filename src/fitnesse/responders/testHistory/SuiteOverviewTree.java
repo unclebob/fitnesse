@@ -231,7 +231,7 @@ public class SuiteOverviewTree {
         else {
           String branchName = itemPath[currentIndex];
           String branchFullName = fullName;
-          branchFullName += (!fullName.isEmpty()) ? "." + branchName : branchName;
+          branchFullName += fullName.isEmpty() ? branchName : "." + branchName;
           TreeItem branch = new TreeItem(branchName, branchFullName);
           branches.add(branch);
           branch.addItem(itemPath, ++currentIndex);

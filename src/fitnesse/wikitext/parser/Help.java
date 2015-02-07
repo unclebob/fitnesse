@@ -28,7 +28,7 @@ public class Help extends SymbolType implements Rule, Translation {
 
     public String toTarget(Translator translator, Symbol symbol) {
         String helpText = translator.getPage().getProperty(PageData.PropertyHELP);
-        String editText = !helpText.isEmpty() ? "edit" : "edit help text";
+        String editText = helpText.isEmpty() ? "edit help text" : "edit";
         if (symbol.hasProperty(editableOption)) {
           helpText += " <a href=\"" + translator.getPage().getFullPath() + "?properties\">(" + editText + ")</a>";
         }
