@@ -14,23 +14,23 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolType;
 
 public interface PluginFeatureFactory {
-  List<Object> getPlugins() throws PluginException;
+  List<? extends Object> getPlugins() throws PluginException;
 
   Map<String, Class<? extends Responder>> getResponders() throws PluginException;
 
   Authenticator getAuthenticator();
 
-  List<SymbolType> getSymbolTypes() throws PluginException;
+  List<? extends SymbolType> getSymbolTypes() throws PluginException;
 
-  List<WikiPageFactory> getWikiPageFactories() throws PluginException;
+  List<? extends WikiPageFactory> getWikiPageFactories() throws PluginException;
 
   ContentFilter getContentFilter();
 
   Map<String, Class<? extends SlimTable>> getSlimTables() throws PluginException;
 
-  Map<String, CustomComparator> getCustomComparators() throws PluginException;
+  Map<String, ? extends CustomComparator> getCustomComparators() throws PluginException;
 
-  Map<String, TestSystemFactory> getTestSystemFactories() throws PluginException;
+  Map<String, ? extends TestSystemFactory> getTestSystemFactories() throws PluginException;
 
   void setComponentFactory(ComponentFactory componentFactory);
 }

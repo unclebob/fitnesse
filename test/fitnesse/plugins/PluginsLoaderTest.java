@@ -4,6 +4,7 @@ package fitnesse.plugins;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
+import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
@@ -76,6 +78,10 @@ public class PluginsLoaderTest {
     testSlimTableFactory = new SlimTableFactory();
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
     testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
+
+    URL sampleUrl = new File("test/fitnesse/plugins").toURI().toURL();
+    PluginsClassLoader.addUrlToClasspath(sampleUrl);
+
     loader = new PluginsLoader(new ComponentFactory(testProperties));
 
     assertSymbolTypeMatch("!today", false);
@@ -128,6 +134,15 @@ public class PluginsLoaderTest {
     loader.loadSymbolTypes(testProvider);
 
     assertSymbolTypeMatch("!today", true);
+  }
+
+  @Test
+  public void testWikiWidgetPluginsViaFeatureFactory() throws Exception {
+    assertSymbolTypeMatch("!monthsFromToday2", false);
+
+    loader.loadSymbolTypes(testProvider);
+
+    assertSymbolTypeMatch("!monthsFromToday2", true);
   }
 
   @Test
@@ -214,6 +229,16 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
+    assertSame(TestSlimTable.class, slimTable.getClass());
+  }
+
+  @Test
+  public void testSlimTablesCreationViaFeatureFactory() throws Exception {
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    loader.loadSlimTables(slimTableFactory);
+
+    HtmlTable table = makeMockTable(DummyPluginFeatureFactory.SLIM_TABLE);
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }

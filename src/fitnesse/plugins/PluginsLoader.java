@@ -183,8 +183,8 @@ public class PluginsLoader {
 
   public void loadCustomComparators(final CustomComparatorRegistry customComparatorRegistry) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
-      Map<String, CustomComparator> comparators = pff.getCustomComparators();
-      for (Map.Entry<String, CustomComparator> entry : comparators.entrySet()) {
+      Map<String, ? extends CustomComparator> comparators = pff.getCustomComparators();
+      for (Map.Entry<String, ? extends CustomComparator> entry : comparators.entrySet()) {
         String key = entry.getKey();
         CustomComparator customComparator = entry.getValue();
 
@@ -196,8 +196,8 @@ public class PluginsLoader {
 
   public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
-      Map<String, TestSystemFactory> systemFactories = pff.getTestSystemFactories();
-      for (Map.Entry<String, TestSystemFactory> entry : systemFactories.entrySet()) {
+      Map<String, ? extends TestSystemFactory> systemFactories = pff.getTestSystemFactories();
+      for (Map.Entry<String, ? extends TestSystemFactory> entry : systemFactories.entrySet()) {
         String key = entry.getKey();
         TestSystemFactory factory = entry.getValue();
 

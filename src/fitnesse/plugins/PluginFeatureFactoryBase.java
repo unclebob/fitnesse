@@ -20,7 +20,7 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   private ComponentFactory componentFactory;
 
   @Override
-  public List<Object> getPlugins() throws PluginException {
+  public List<? extends Object> getPlugins() throws PluginException {
     return createList();
   }
 
@@ -35,12 +35,12 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   }
 
   @Override
-  public List<SymbolType> getSymbolTypes() throws PluginException {
+  public List<? extends SymbolType> getSymbolTypes() throws PluginException {
     return createList();
   }
 
   @Override
-  public List<WikiPageFactory> getWikiPageFactories() throws PluginException {
+  public List<? extends WikiPageFactory> getWikiPageFactories() throws PluginException {
     return createList();
   }
 
@@ -55,12 +55,12 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   }
 
   @Override
-  public Map<String, CustomComparator> getCustomComparators() throws PluginException {
+  public Map<String, ? extends CustomComparator> getCustomComparators() throws PluginException {
     return createMap();
   }
 
   @Override
-  public Map<String, TestSystemFactory> getTestSystemFactories() throws PluginException {
+  public Map<String, ? extends TestSystemFactory> getTestSystemFactories() throws PluginException {
     return createMap();
   }
 

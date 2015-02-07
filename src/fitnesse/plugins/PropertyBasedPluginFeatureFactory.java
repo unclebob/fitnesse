@@ -58,15 +58,15 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
   }
 
   @Override
-  public Map<String, CustomComparator> getCustomComparators() throws PluginException {
-    Map<String, CustomComparator> ccClasses = super.getCustomComparators();
+  public Map<String, ? extends CustomComparator> getCustomComparators() throws PluginException {
+    Map<String, ? extends CustomComparator> ccClasses = super.getCustomComparators();
     addEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, ccClasses);
     return ccClasses;
   }
 
   @Override
-  public Map<String, TestSystemFactory> getTestSystemFactories() throws PluginException {
-    Map<String, TestSystemFactory> tsClasses = super.getTestSystemFactories();
+  public Map<String, ? extends TestSystemFactory> getTestSystemFactories() throws PluginException {
+    Map<String, ? extends TestSystemFactory> tsClasses = super.getTestSystemFactories();
     addEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, tsClasses);
     return tsClasses;
   }
