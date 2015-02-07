@@ -160,16 +160,14 @@ public class Expression {
    */
   private double mul() {
     double ans = trig();
-    if (!s.isEmpty()) {
-      while (!s.isEmpty()) {
-        if (s.charAt(0) == '*') {
-          advance();
-          ans *= trig();
-        } else if (s.charAt(0) == '/') {
-          advance();
-          ans /= trig();
-        } else break;
-      }
+    while (!s.isEmpty()) {
+      if (s.charAt(0) == '*') {
+        advance();
+        ans *= trig();
+      } else if (s.charAt(0) == '/') {
+        advance();
+        ans /= trig();
+      } else break;
     }
     return ans;
   }
