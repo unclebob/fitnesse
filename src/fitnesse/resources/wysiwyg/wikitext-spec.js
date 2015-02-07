@@ -353,6 +353,21 @@ describe("parser and formatter", function () {
         generate(dom, wikitext);
     });
 
+    it("hash table, empty entries should be skipped", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", ""),
+                        element("td", "")),
+                element("tr",
+                    element("td", "bar"),
+                    element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
+        generateWikitext(dom, wikitext);
+    });
+
     it("escape !( .. )! - nested ", function() {
         var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
         var wikitext = "foo !(bar)! baz";

@@ -2536,6 +2536,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     var listDepth = 0;
     var inCodeBlock = false;
     var tableType;
+    var firstHashTableEntry = true;
     var skipNode = null;
 
     function tokenFromSpan(node) {
@@ -2697,10 +2698,6 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         return (value <= 0) ? "" : value.toString(2).replace(/1/g, source);
     }
 
-    function isHashTable(node) {
-        return node.tagName === "TABLE" && /hashtable/.test(node.className);
-    }
-
     function open(name, node) {
         if (skipNode !== null) {
             return;
@@ -2708,7 +2705,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         var _texts = texts;
         var token = wikiOpenTokens[name];
         if (token !== undefined) {
-            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling && !isHashTable(node))) {
+            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling) && !self.isHashTable(node)) {
                 _texts.push("\n");
             }
             if (token !== true) {
@@ -2718,7 +2715,8 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (name === "table") {
                 if ($(node).hasClass("hashtable")) {
                     tableType = "hashtable";
-                    _texts.push("!{");
+                    _texts.push("!{")
+                    firstHashTableEntry = true;
                 } else {
                     tableType = "table";
                     if ($('tr', node).first().hasClass('hidden')) {
@@ -2809,15 +2807,19 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 if (tableType === "hashtable") {
                     var cells = $(node).find('td');
                     skipNode = node;
+
                     if (cells.length >= 2) {
-                        if (node !== node.parentNode.firstChild) {
+                        if (!firstHashTableEntry) {
                             _texts.push(",");
                         }
-                        text = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
-                        _texts.push(text);
-                        _texts.push(":");
-                        text = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
-                        _texts.push(text);
+                        var key = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        var value = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        if (key && value) {
+                            _texts.push(key);
+                            _texts.push(":");
+                            _texts.push(value);
+                            firstHashTableEntry = false;
+                        }
                     }
                 }
                 break;
