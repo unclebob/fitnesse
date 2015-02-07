@@ -1100,7 +1100,7 @@ Wysiwyg.prototype.insertTable = function () {
         return;
     }
     var id = this.generateDomId();
-    this.insertHTML(this.tableHTML(id, 2, 2));
+    this.insertHTML(this.tableHTML(id, 2, 2, "wiki"));
     var element = this.contentDocument.getElementById(id);
     if (element) {
         this.selectNodeContents(element);
@@ -1113,7 +1113,7 @@ Wysiwyg.prototype.insertHashTable = function () {
         return;
     }
     var id = this.generateDomId();
-    this.insertHTML(this.tableHTML(id, 2, 2));
+    this.insertHTML(this.tableHTML(id, 2, 2, "hashtable"));
     var element = this.contentDocument.getElementById(id);
     if (element) {
         element.setAttribute('class', 'hashtable');
@@ -1122,10 +1122,10 @@ Wysiwyg.prototype.insertHashTable = function () {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype._tableHTML = function (row, col) {
+Wysiwyg.prototype._tableHTML = function (row, col, className) {
     var tr = "<tr>" + ((1 << col) - 1).toString(2).replace(/1/g, "<td></td>") + "</tr>";
     var html = [
-        '<table class="wiki">', '<tbody>',
+        '<table class="', className, '">', '<tbody>',
         ((1 << row) - 1).toString(2).replace(/1/g, tr),
         '</tbody>', '</table>' ];
     return html.join("");
@@ -3076,8 +3076,8 @@ if (window.getSelection) {
             }
         }
     };
-    Wysiwyg.prototype.tableHTML = function (id, row, col) {
-        var html = this._tableHTML(row, col);
+    Wysiwyg.prototype.tableHTML = function (id, row, col, className) {
+        var html = this._tableHTML(row, col, className);
         return html.replace(/<td><\/td>/g, '<td><br/></td>').replace(/<td>/, '<td id="' + id + '">');
     };
     Wysiwyg.prototype.insertTableCell = function (row, index) {
@@ -3270,8 +3270,8 @@ if (window.getSelection) {
         this.insertHTML("<br/>");
     };
     Wysiwyg.prototype.insertLineBreakOnShiftEnter = null;
-    Wysiwyg.prototype.tableHTML = function (id, row, col) {
-        var html = this._tableHTML(row, col);
+    Wysiwyg.prototype.tableHTML = function (id, row, col, className) {
+        var html = this._tableHTML(row, col, className);
         return html.replace(/<td>/, '<td id="' + id + '">');
     };
     Wysiwyg.prototype.insertTableCell = function (row, index) {
