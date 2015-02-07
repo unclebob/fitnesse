@@ -214,6 +214,7 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Escape"><a id="wt-escape" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 11,15.5 a 1.5,1.5 0 1 1 -3,0 1.5,1.5 0 1 1 3,0 z" transform="translate(-3.5,-1)" id="path4665" style="fill:#000000;fill-opacity:1;stroke:none" /> <path d="M 6,12 5,3 7,3 z" id="path4667" style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 10,8 c 4,0 4,0 4,0 l 0,0" id="path4669" style="fill:none;stroke:#000000;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
         '<li title="Remove format"><a id="wt-remove" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2.27 4.55L7.43 9.7 5 15h2.5l1.64-3.58L13.73 16 15 14.73 3.55 3.27 2.27 4.55zM5.82 3l2 2h1.76l-.55 1.21 1.71 1.71L12.08 5H16V3H5.82z"/></svg></a></li>',
         '<li title="Image"><a id="wt-image" href="#insert-image"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="M 16.086957,14.444444 V 3.5555556 C 16.086957,2.7 15.382609,2 14.521739,2 H 3.5652174 C 2.7043478,2 2,2.7 2,3.5555556 V 14.444444 C 2,15.3 2.7043478,16 3.5652174,16 H 14.521739 c 0.86087,0 1.565218,-0.7 1.565218,-1.555556 z M 6.3043478,10.166667 8.2608696,12.507778 11,9 14.521739,13.666667 H 3.5652174 l 2.7391304,-3.5 z" /> </svg></a></li>',
+        '<li title="Hash table"><a id="wt-hash-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" id="svg2985" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,15 c 6,0 1,-6 6,-6 M 10,3 c 6,0 1,6 6,6" /> <path d="M 8,15 C 2,15 7,9 2,9 M 8,3 C 2,3 7,9 2,9" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg></a></li>',
         '</ul>',
         '<ul>',
         '<li title="Link"><a id="wt-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M 11,1.75 C 9.8,1.75 8.675,2.2544118 7.85,2.975 8.45,3.1191176 8.975,3.3352941 9.425,3.6235294 9.875,3.3352941 10.4,3.1911765 11,3.1911765 c 1.65,0 3,1.2970588 3,2.8823529 v 3.6029412 c 0,1.5852944 -1.35,2.8823534 -3,2.8823534 -1.65,0 -3,-1.297059 -3,-2.8823534 V 7.1544118 C 7.625,6.7220588 7.1,6.4338235 6.5,6.4338235 V 9.6764706 C 6.5,12.054412 8.525,14 11,14 c 2.475,0 4.5,-1.945588 4.5,-4.3235294 V 6.0735294 C 15.5,3.6955882 13.475,1.75 11,1.75 z"/> <path d="m 6.5,16.161765 c 1.2,0 2.325,-0.504412 3.15,-1.225 -0.6,-0.144118 -1.125,-0.360294 -1.575,-0.64853 -0.45,0.288236 -0.975,0.432353 -1.575,0.432353 -1.65,0 -3,-1.297059 -3,-2.882353 V 8.2352941 C 3.5,6.65 4.85,5.3529412 6.5,5.3529412 c 1.65,0 3,1.2970588 3,2.8823529 v 2.5220589 c 0.375,0.432353 0.9,0.720588 1.5,0.720588 V 8.2352941 C 11,5.8573529 8.975,3.9117647 6.5,3.9117647 4.025,3.9117647 2,5.8573529 2,8.2352941 v 3.6029409 c 0,2.377941 2.025,4.32353 4.5,4.32353 z"/> </svg></a></li>',
@@ -225,7 +226,6 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Outdent"><a id="wt-outdent" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M10 10H2v2h8v-2zm0-4H2v2h8V6zM2 16h14v-2H2v2zm14-3.5v-7L12.5 9l3.5 3.5zM2 2v2h14V2H2z"/></svg></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 2,9 14,0 0,0" id="path3180" style="fill:none;stroke:#000000;stroke-width:2.16024685;stroke-linecap:butt;stroke-opacity:1" /> </svg></a></li>',
         '<li title="Table"><a id="wt-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"><path style="stroke-width:2;stroke-opacity:1;marker-end:none;fill:none;stroke:#000000" d="M 3,3 3,15 15,15 15,3 z"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0"/></svg></a></li>',
-        '<li title="Hash table"><a id="wt-hash-table" href="#">{}</a></li>',
         '</ul>',
         '<ul class="non-table">',
         '<li title="Collapsible section (default closed)"><a id="wt-collapsible-closed" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-rule:nonzero" d="M 16,5.5 12.5,9 16,12.5 z"/> <path style="fill:#000000;fill-opacity:1;stroke:none" d="M 4.5,11.5 8,8 4.5,4.5 z" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="m 15.5,2.5 c -14,0 -13,0 -13,0 l 0,13" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,10.5 c 10,0 5.5,0 5.5,0" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
@@ -1109,7 +1109,7 @@ Wysiwyg.prototype.insertTable = function () {
 };
 
 Wysiwyg.prototype.insertHashTable = function () {
-    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
+    if (this.selectionContainsTagName("pre")) {
         return;
     }
     var id = this.generateDomId();
@@ -2678,6 +2678,10 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         return (value <= 0) ? "" : value.toString(2).replace(/1/g, source);
     }
 
+    function isHashTable(node) {
+        return node.tagName === "TABLE" && /hashtable/.test(node.className);
+    }
+
     function open(name, node) {
         if (skipNode !== null) {
             return;
@@ -2685,7 +2689,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         var _texts = texts;
         var token = wikiOpenTokens[name];
         if (token !== undefined) {
-            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling)) {
+            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling && !isHashTable(node))) {
                 _texts.push("\n");
             }
             if (token !== true) {
@@ -2784,17 +2788,18 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 break;
             case "tr":
                 if (tableType === "hashtable") {
-                    console.log('handling hash table row?' );
                     var cells = $(node).find('td');
                     skipNode = node;
-                    if (node !== node.parentNode.firstChild) {
-                        _texts.push(",");
+                    if (cells.length >= 2) {
+                        if (node !== node.parentNode.firstChild) {
+                            _texts.push(",");
+                        }
+                        text = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        _texts.push(text);
+                        _texts.push(":");
+                        text = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        _texts.push(text);
                     }
-                    text = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
-                    _texts.push(text);
-                    _texts.push(":");
-                    text = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
-                    _texts.push(text);
                 }
                 break;
             case "tt":

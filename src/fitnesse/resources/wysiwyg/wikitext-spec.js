@@ -370,16 +370,16 @@ describe("parser and formatter", function () {
             element("tbody",
                 element("tr",
                     element("td", " test "),
-                    element("td", " ", element("table", {'class': 'hashtable'},
+                    element("td", " text", element("table", {'class': 'hashtable'},
                         element("tbody",
                             element("tr",
                                 element("td", "$contactId1"),
                                 element("td", "id1")),
                             element("tr",
                                 element("td", "$contactId2"),
-                                element("td", "id2")))), " "))));
+                                element("td", "id2")))), "trailer "))));
 
-        var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
+        var wikitext = "| test | text!{$contactId1:id1,$contactId2:id2}trailer |";
         generate(dom, wikitext);
     });
     it("hashtable with variable", function() {
