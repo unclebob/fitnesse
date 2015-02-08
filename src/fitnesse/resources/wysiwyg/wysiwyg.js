@@ -2809,12 +2809,12 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     skipNode = node;
 
                     if (cells.length >= 2) {
-                        if (!firstHashTableEntry) {
-                            _texts.push(",");
-                        }
                         var key = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
                         var value = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
                         if (key && value) {
+                            if (!firstHashTableEntry) {
+                                _texts.push(",");
+                            }
                             _texts.push(key);
                             _texts.push(":");
                             _texts.push(value);
@@ -2833,7 +2833,10 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                         'nested': [ "!(", ")!" ],
                         'plaintexttable': [ "![", "]!" ],
                         'inlinecode': [ "{{{", "}}}" ]
-                    }[node.getAttribute('class') || "escape"];
+                    }[node.className || "escape"];
+                    if (!tags) {
+                        console.log('No tags', node.innerHTML, node.className);
+                    }
                     text = tags[0] + value + tags[1];
                     pushTextWithDecorations(text, node);
                 }
