@@ -368,19 +368,33 @@ describe("parser and formatter", function () {
         generateWikitext(dom, wikitext);
     });
 
-    it("escape !( .. )! - nested ", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
-        var wikitext = "foo !(bar)! baz";
+    it("hash table with escaped multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", element("tt", { "class": "escape"}, "bc", br(), "def"))))));
+
+        var wikitext = "!{a:!-bc\ndef-!}";
         generate(dom, wikitext);
     });
 
-    it("escape ![ .. ]! - plain text table", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
-        var wikitext = "foo ![bar\nbaz]! bee";
-        generate(dom, wikitext);
+    it("hash table with multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", "bc", br(), "def")))));
+
+        var wikitext = "!{a:bc\ndef}";
+        var expectedWikitext = "!{a:bc!-\n-!def}";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
     });
 
-    it("hashtable in table", function() {
+    it("hash table in table", function() {
         var dom = element("table",
             element("tbody",
                 element("tr",
@@ -397,7 +411,8 @@ describe("parser and formatter", function () {
         var wikitext = "| test | text!{$contactId1:id1,$contactId2:id2}trailer |";
         generate(dom, wikitext);
     });
-    it("hashtable with variable", function() {
+
+    it("hash table with variable in table", function() {
         var dom = element("table",
             element("tbody",
                 element("tr",
@@ -411,6 +426,38 @@ describe("parser and formatter", function () {
                                 element("td", "$contactId2"),
                                 element("td", "id2")))), " "))));
         var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with multi-line content in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " text", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", element("tt", {"class": "escape"}, "id", br(), "1"))),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id", br(), "2")))), "trailer "))));
+
+        var wikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id\n2}trailer |";
+        var expectedWikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id!-\n-!2}trailer |";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
+    });
+
+    it("escape !( .. )! - nested ", function() {
+        var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
+        var wikitext = "foo !(bar)! baz";
+        generate(dom, wikitext);
+    });
+
+    it("escape ![ .. ]! - plain text table", function() {
+        var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
+        var wikitext = "foo ![bar\nbaz]! bee";
         generate(dom, wikitext);
     });
 

@@ -1629,7 +1629,10 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
     wikiInlineRules.push("\\${.+?}");               // 11. Variable
-    wikiInlineRules.push("!{(?:\\${.+?}|[^}])+}"); // 12. Hash table
+    wikiInlineRules.push("!{");                     // 12. Hash table open
+    wikiInlineRules.push(":");                      // 13. Hash table key-value separator
+    wikiInlineRules.push(",");                      // 14. Hash table entry separator
+    wikiInlineRules.push("}");                      // 15. Hash table close
 
     var wikiRules = [];
     // -1. header
@@ -1759,7 +1762,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function inDefinition() { return $(holder).parents().andSelf().filter("p.meta, p.comment").get(0); }
     function inTable() { return getSelfOrAncestor(holder, "table"); }
     function inEscapedTable() { return $(holder).parents().andSelf().filter("table.escaped").get(0); }
-    function inTableRow() { return getSelfOrAncestor(holder, "tr"); }
+    function inHashTable() { return $(holder).parents().andSelf().filter("table.hashtable").get(0); }
+    function inTableRow() { return getSelfOrAncestor(holder, "tr", "tbody"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
     function inEscapedText() { return getSelfOrAncestor(holder, "tt"); }
     function inCodeBlock() { return getSelfOrAncestor(holder, "pre"); }
@@ -1957,29 +1961,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         holder.appendChild(contentDocument.createTextNode(value));
     }
 
-    function handleHashTable(value) {
-        var d = contentDocument;
-        var table = d.createElement("table");
-        var tbody = d.createElement("tbody");
-        table.setAttribute('class', 'hashtable');
-        table.appendChild(tbody);
-        var entries = value.substring(2, value.length-1).split(",");
-        for (var i = 0; i < entries.length; i++) {
-            var keyval = entries[i].split(':');
-            if (keyval.length === 2) {
-                var tr = d.createElement("tr");
-                var key = d.createElement("td");
-                var val = d.createElement("td");
-                key.appendChild(d.createTextNode(keyval[0].trim()));
-                val.appendChild(d.createTextNode(keyval[1].trim()));
-                tr.appendChild(key);
-                tr.appendChild(val);
-                tbody.appendChild(tr);
-            }
-        }
-        holder.appendChild(table);
-    }
-
     function handleImage(value) {
         openParagraph();
         var img = contentDocument.createElement("img");
@@ -2124,11 +2105,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         holder.appendChild(contentDocument.createTextNode(value));
     }
 
-    function handleTableCell(action, escaped, hidden) {
+    function handleTableCell(action, tableClassName, rowClassName) {
+        // action: 1 = create, 2 = add cell to current row, -1 = close row
         var d = contentDocument;
         var h, table, tbody, cell;
 
-        if (!inTable()) {
+        if (!inTable() || tableClassName === "hashtable") {
             h = holder;
             
             // Just ensure you can type between to tables
@@ -2136,8 +2118,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             	h.appendChild(d.createElement('p'));
             }
             table = d.createElement("table");
-            if (escaped) {
-                table.className = "escaped";
+            if (tableClassName) {
+                table.className = tableClassName;
             }
             tbody = d.createElement("tbody");
             table.appendChild(tbody);
@@ -2156,11 +2138,13 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
         var row;
         switch (action) {
+        case 2:
+            return;
         case 1:
             row = d.createElement("tr");
             tbody.appendChild(row);
-            if (hidden) {
-                row.className = "hidden";
+            if (rowClassName) {
+                row.className = rowClassName;
             }
             break;
         case 0:
@@ -2181,7 +2165,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     }
 
     function closeTable() {
-        if (inTable()) {
+        if (inTable() || inHashTable()) {
             var target = getSelfOrAncestor(holder, "table");
 
             self.spanTableColumns(target);
@@ -2268,7 +2252,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             }
 
             if (((prevIndex === 0 && text) || (match && match.index === 0 && matchNumber > 0))
-                    && !inParagraph() && !inAnchor() && !inEscapedText() && !inCodeBlock() && !currentHeader) {
+                    && !inParagraph() && !inAnchor() && !inHashTable() && !inEscapedText() && !inCodeBlock() && !currentHeader) {
                 closeToFragment();
             }
 
@@ -2334,9 +2318,21 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             case 11:    // Variable
                 handleVariable(matchText);
                 continue;
-            case 12:    // Hash table
+            case 12:    // Hash table open
                 if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
-                handleHashTable(matchText);
+                handleTableCell(1, "hashtable");
+                continue;
+            case 13:    // Hash table key-value separator ':'
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleTableCell(0);
+                continue;
+            case 14:    // Hash table entry separator ','
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleTableCell(1);
+                continue;
+            case 15:    // Hash table close
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                closeTable();
                 continue;
             case -1:    // header
                 currentHeader = handleHeader(matchText);
@@ -2367,7 +2363,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 break;
             case -6:    // cell
                 if (inDefinition()) { break; }
-                if (inEscapedText() || inCodeBlock()) { 
+                if (inEscapedText() || inCodeBlock()) {
                     if (/^-!/.test(matchText)) {
                         closeEscapedText(matchText.substring(0, 2));
                         matchText = matchText.substring(2);
@@ -2382,7 +2378,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
+                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText) ? "escaped" : null, /^-/.test(matchText) ? "hidden" : null);
                 continue;
             case -7:    // collapsible section
                 if (inEscapedText()) { break; }
@@ -2402,7 +2398,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             }
         }
 
-        if (inEscapedText() || inCodeBlock()) {
+        if (inHashTable() || inEscapedText() || inCodeBlock()) {
             var element = contentDocument.createElement("br");
             holder.appendChild(element);
         } else if (inParagraph()) {
@@ -2436,7 +2432,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (currentHeader) {
             closeHeader();
         }
-        if (inTable() && !inEscapedText()) {
+        if (inTable() && !inEscapedText() && !inHashTable()) {
             handleTableCell(-1);
         }
         
@@ -3771,7 +3767,8 @@ if (document.defaultView) {
     };
 }
 
-Wysiwyg.getSelfOrAncestor = function (element, name) {
+// Find parent element of type 'name', stop if an element of type 'notName' is found.
+Wysiwyg.getSelfOrAncestor = function (element, name, notName) {
     var target = element;
     var d = element.ownerDocument;
     if (name instanceof RegExp) {
@@ -3794,6 +3791,8 @@ Wysiwyg.getSelfOrAncestor = function (element, name) {
             case 1: // element
                 if (target.tagName.toLowerCase() === name) {
                     return target;
+                } else if (target.tagName.toLowerCase() === notName) {
+                    return null;
                 }
                 break;
             case 11: // fragment
