@@ -101,8 +101,53 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
     );
     List<CallInstruction> expectedInstructions =
       asList(
-              new CallInstruction("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "function", new Object[]{"7"})
+              new CallInstruction("decisionTable_did_0/" + DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "function", new Object[]{"7"})
       );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
+  public void twoDecisionTablesDifferentScripts() throws Exception {
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    String tableText = "!|scenario|myScenario|input|\n"
+            + "|function|@input|\n"
+            + "\n"
+            + "!|" + SCRIPT_EXTENSION_NAME + "|\n"
+            + "\n"
+            + "!|DT:myScenario|\n"
+            + "|input|\n"
+            + "|7|\n"
+            + "\n"
+            + "!|script|\n"
+            + "\n"
+            + "!|DT:myScenario|\n"
+            + "|input|\n"
+            + "|6|\n";
+    WikiPageUtil.setPageContents(root, tableText);
+    TableScanner ts = new HtmlTableScanner(root.getHtml());
+    Table t = ts.getTable(0);
+    ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
+    t = ts.getTable(1);
+    DiffScriptTable2 dst = new DiffScriptTable2(t, "ds_id", testContext);
+    t = ts.getTable(2);
+    dt = new DecisionTable(t, "did", testContext);
+
+    t = ts.getTable(3);
+    ScriptTable sct = new ScriptTable(t, "sct_id", testContext);
+    t = ts.getTable(4);
+    DecisionTable dt2 = new DecisionTable(t, "did2", testContext);
+
+    assertions.addAll(st.getAssertions());
+    assertions.addAll(dst.getAssertions());
+    assertions.addAll(dt.getAssertions());
+    assertions.addAll(sct.getAssertions());
+    assertions.addAll(dt2.getAssertions());
+
+    List<CallInstruction> expectedInstructions =
+            asList(
+                    new CallInstruction("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "function", new Object[]{"7"}),
+                    new CallInstruction("decisionTable_did2_0/scriptTable_s_id_0", "scriptTableActor", "function", new Object[]{"6"})
+            );
     assertEquals(expectedInstructions, instructions());
   }
 
