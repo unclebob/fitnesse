@@ -23,9 +23,9 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class ScenarioAndDecisionTableExtensionTest {
-  private static final String SCEN_EXTENSION_NAME = "diffScriptScenario";
-  private static final String SCRIPT_EXTENSION_NAME = "diffScript";
+public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
+  private static final String SCRIPT_EXTENSION_NAME = "diffScript2";
+  private static final String DIFF_SCRIPT_TABLE2_TYPE = "diffScriptTable2";
 
   private WikiPage root;
   private List<SlimAssertion> assertions;
@@ -38,25 +38,28 @@ public class ScenarioAndDecisionTableExtensionTest {
   @Before
   public void setUp() throws Exception {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
-    slimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
-    slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
+    slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable2.class);
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
-    ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
     SlimTestContextImpl testContext = new SlimTestContextImpl();
-    String tableText = "!|" + SCEN_EXTENSION_NAME + "|" + scenarioText + "|\n"
+    String tableText = "!|scenario|" + scenarioText + "|\n"
+            + "\n"
+            + "!|" + SCRIPT_EXTENSION_NAME + "|\n"
             + "\n"
             + "!|DT:" + scriptText + "|\n";
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    ScenarioTable st = new ScenarioTableWithDifferentScript(t, "s_id", testContext);
+    ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
     t = ts.getTable(1);
+    DiffScriptTable2 dst = new DiffScriptTable2(t, "ds_id", testContext);
+    t = ts.getTable(2);
     dt = new DecisionTable(t, "did", testContext);
     assertions.addAll(st.getAssertions());
+    assertions.addAll(dst.getAssertions());
     assertions.addAll(dt.getAssertions());
     return testContext;
   }
@@ -72,14 +75,14 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             asList(
-                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+                    asList("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-      "[[diffScriptScenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
+      "[[scenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     assertEquals(1, testContext.getTestSummary().getRight());
     assertEquals(0, testContext.getTestSummary().getWrong());
@@ -98,7 +101,7 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     List<CallInstruction> expectedInstructions =
       asList(
-              new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_0", "diffScriptTableActor", "function", new Object[]{"7"})
+              new CallInstruction("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "function", new Object[]{"7"})
       );
     assertEquals(expectedInstructions, instructions());
   }
@@ -116,10 +119,10 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     List<CallInstruction> expectedInstructions =
       asList(
-              new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_0", "diffScriptTableActor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
-              new CallInstruction("decisionTable_did_0/diffScriptTable_s_id_1", "diffScriptTableActor", "currentUserProfileUrl", new Object[0]),
-              new CallInstruction("decisionTable_did_1/diffScriptTable_s_id_0", "diffScriptTableActor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"}),
-              new CallInstruction("decisionTable_did_1/diffScriptTable_s_id_1", "diffScriptTableActor", "currentUserProfileUrl", new Object[0])
+              new CallInstruction("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "loginWithPasswordAndPin", new Object[]{"bob", "xyzzy", "7734"}),
+              new CallInstruction("decisionTable_did_0/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_1", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "currentUserProfileUrl", new Object[0]),
+              new CallInstruction("decisionTable_did_1/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "loginWithPasswordAndPin", new Object[]{"bill", "yabba", "8892"}),
+              new CallInstruction("decisionTable_did_1/"+ DIFF_SCRIPT_TABLE2_TYPE + "_s_id_1", DIFF_SCRIPT_TABLE2_TYPE + "Actor", "currentUserProfileUrl", new Object[0])
       );
     assertEquals(expectedInstructions, instructions());
   }
@@ -135,14 +138,14 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             asList(
-                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+                    asList("decisionTable_did_0/" + DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-      "[[diffScriptScenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
+      "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     assertEquals(1, testContext.getTestSummary().getRight());
     assertEquals(0, testContext.getTestSummary().getWrong());
@@ -161,14 +164,14 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             asList(
-                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+                    asList("decisionTable_did_0/" + DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-      "[[diffScriptScenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
+      "[[scenario, echo, input, giving, output], [check, echo, 7, fail(a=7;e=8)]]";
     assertEquals(expectedScript, scriptTable);
     assertEquals(0, testContext.getTestSummary().getRight());
     assertEquals(1, testContext.getTestSummary().getWrong());
@@ -198,42 +201,27 @@ public class ScenarioAndDecisionTableExtensionTest {
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
             asList(
-                    asList("decisionTable_did_0/diffScriptTable_s_id_0", "7")
+                    asList("decisionTable_did_0/" + DIFF_SCRIPT_TABLE2_TYPE + "_s_id_0", "7")
             )
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
 
     String scriptTable = dt.getChildren().get(0).getTable().toString();
     String expectedScript =
-      "[[diffScriptScenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
+      "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-  }
-
-  /**
-   * ScenarioTable that does not make ScriptTables, but DiffScriptTables.
-   */
-  public static class ScenarioTableWithDifferentScript extends ScenarioTable {
-
-    public ScenarioTableWithDifferentScript(Table table, String tableId, SlimTestContext testContext) {
-      super(table, tableId, testContext);
-    }
-
-    @Override
-    protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
-      return new DiffScriptTable(newTable, id, testContext);
-    }
   }
 
   /**
    * Special script table.
    */
-  public static class DiffScriptTable extends ScriptTable {
+  public static class DiffScriptTable2 extends ScriptTable {
 
-    public DiffScriptTable(Table table, String tableId, SlimTestContext context) {
+    public DiffScriptTable2(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
     }
     protected String getTableType() {
-      return "diffScriptTable";
+      return DIFF_SCRIPT_TABLE2_TYPE;
     }
 
   }

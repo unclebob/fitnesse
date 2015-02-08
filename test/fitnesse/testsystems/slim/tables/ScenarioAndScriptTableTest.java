@@ -31,6 +31,7 @@ public class ScenarioAndScriptTableTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<SlimAssertion>();
+    ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {

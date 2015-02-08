@@ -20,6 +20,7 @@ public class ScriptTable extends SlimTable {
 
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
+    ScenarioTable.setDefaultChildClass(getClass());
   }
 
   protected String getTableType() {
