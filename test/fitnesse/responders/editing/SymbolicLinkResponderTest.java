@@ -21,7 +21,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.fs.MemoryFileSystem;
 import org.junit.After;
 import org.junit.Before;

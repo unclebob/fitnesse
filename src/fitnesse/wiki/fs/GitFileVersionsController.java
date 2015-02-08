@@ -1,7 +1,6 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.*;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;

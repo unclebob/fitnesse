@@ -3,7 +3,6 @@ package fitnesse.testrunner;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 
 public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
 

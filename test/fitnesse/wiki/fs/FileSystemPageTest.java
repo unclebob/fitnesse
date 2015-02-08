@@ -16,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageData.PropertyFILES;
-import static fitnesse.wiki.PageData.PropertyVERSIONS;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.*;

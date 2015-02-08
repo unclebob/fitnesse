@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 
 public class FitnesseFixtureContext {

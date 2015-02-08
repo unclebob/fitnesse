@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import java.util.Map;
-import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;

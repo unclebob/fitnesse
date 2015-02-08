@@ -13,13 +13,11 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.util.Clock;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;

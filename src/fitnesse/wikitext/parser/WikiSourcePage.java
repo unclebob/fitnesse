@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 public class WikiSourcePage implements SourcePage {
     private WikiPage page;

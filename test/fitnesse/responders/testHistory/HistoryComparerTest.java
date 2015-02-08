@@ -20,7 +20,6 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;

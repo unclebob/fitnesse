@@ -9,10 +9,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
