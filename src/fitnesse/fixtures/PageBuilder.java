@@ -20,6 +20,8 @@ public class PageBuilder extends Fixture {
   }
 
   public void line(String line) {
+    if (line == null)
+      line = "";
     if (line.startsWith("\\"))
       line = line.substring(1);
     line = line.replace("&bar;", "|");

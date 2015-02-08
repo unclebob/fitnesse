@@ -7,17 +7,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import fitnesse.util.StringUtils;
+
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
 public class DateConverter implements Converter<Date> {
-  public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+  public final static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
   public String toString(Date o) {
-    return dateFormat.format(o);
+    return o != null ? dateFormat.format(o) : NULL_VALUE;
   }
 
   public Date fromString(String arg) {
+    if (StringUtils.isBlank(arg))
+      return null;
     try {
       return dateFormat.parse(arg);
     } catch (ParseException e) {

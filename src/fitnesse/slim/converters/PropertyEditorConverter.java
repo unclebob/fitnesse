@@ -7,7 +7,7 @@ import fitnesse.slim.Converter;
 public class PropertyEditorConverter<T> implements Converter<T> {
   private PropertyEditor editor;
 
-  public PropertyEditorConverter(PropertyEditor editor ) {
+  public PropertyEditorConverter(PropertyEditor editor) {
     this.editor = editor;
   }
 

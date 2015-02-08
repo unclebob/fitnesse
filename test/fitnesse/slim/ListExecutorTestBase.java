@@ -139,7 +139,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {
     statements.add(Arrays.asList("id", "call", "testSlim", "echoString", ""));
-    respondsWith(Arrays.asList(Arrays.asList("id", (Object) "")));
+    respondsWith(Arrays.asList(Arrays.asList("id", null)));
   }
 
   @Test

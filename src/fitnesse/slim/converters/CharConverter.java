@@ -3,13 +3,15 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
+import fitnesse.util.StringUtils;
 
 public class CharConverter implements Converter<Character> {
+
   public String toString(Character o) {
-    return o.toString();
+    return o != null ? o.toString() : NULL_VALUE;
   }
 
   public Character fromString(String arg) {
-    return arg.toCharArray()[0];
+    return !StringUtils.isBlank(arg) ? arg.charAt(0) : null;
   }
 }
