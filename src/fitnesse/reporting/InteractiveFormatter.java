@@ -10,7 +10,6 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
@@ -70,11 +69,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   @Override
   public int getErrorCount() {
     return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
-  }
-
-  @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    super.testSystemStopped(testSystem, cause);
   }
 
   public boolean wasInterrupted() {
