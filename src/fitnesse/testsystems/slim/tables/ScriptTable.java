@@ -84,6 +84,7 @@ public class ScriptTable extends SlimTable {
 
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
