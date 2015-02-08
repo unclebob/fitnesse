@@ -29,6 +29,11 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
     return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
   }
 
+  @Override
+  protected int getNextSlimPort() {
+    return 0;
+  }
+
   void createSlimService(String[] args) throws IOException {
     while (!tryCreateSlimService(args))
       try {
@@ -41,7 +46,8 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
   private boolean tryCreateSlimService(String[] args) throws IOException {
     try {
       SlimService.Options options = SlimService.parseCommandLine(args);
-      SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
+      int actualPort = SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
+      setSlimPort(actualPort);
       return true;
     } catch (IOException e) {
       throw e;
