@@ -116,7 +116,7 @@ public class ScriptTable extends SlimTable {
       assertions = note(row);
     else if ((match = ifSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
-    else if (firstCell.length() == 0)
+    else if (firstCell.isEmpty())
       assertions = note(row);
     else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
       assertions = note(row);

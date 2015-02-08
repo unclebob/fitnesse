@@ -318,7 +318,7 @@ public class FitServerTest {
   private String readWholeResponse() throws Exception {
     StringBuffer buffer = new StringBuffer();
     String block = readFromFitServer();
-    while (block.length() > 0) {
+    while (!block.isEmpty()) {
       buffer.append(block);
       block = readFromFitServer();
     }

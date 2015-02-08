@@ -86,7 +86,7 @@ public class SocketService {
   }
 
   private void waitForServerThreads() throws InterruptedException {
-    while (threads.size() > 0) {
+    while (!threads.isEmpty()) {
       Thread t;
       synchronized (threads) {
         if (threads.size() < 1)

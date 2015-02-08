@@ -127,7 +127,7 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
-    if (statements.size() == 0)
+    if (statements.isEmpty())
       return new HashMap<String, Object>();
     String instructions = SlimSerializer.serialize(toList(statements));
     writeString(instructions);

@@ -62,7 +62,7 @@ public class PasswordFile {
   }
 
   private void loadCipher(LinkedList<String> lines) {
-    if (lines.size() > 0) {
+    if (!lines.isEmpty()) {
       String firstLine = lines.getFirst().toString();
       if (firstLine.startsWith("!")) {
         String cipherClassName = firstLine.substring(1);

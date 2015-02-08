@@ -44,7 +44,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     processingQueue.addLast(pageToTest);
     String html = pageToTest.getHtml();
     try {
-      if (html.length() == 0)
+      if (html.isEmpty())
         client.send(EMPTY_PAGE_CONTENT);
       else
         client.send(html);

@@ -108,7 +108,7 @@ public class TableTable extends SlimTable {
 
   private SlimTestResult getTestResult(String message, String content) {
     SlimTestResult result;
-    if (message.equalsIgnoreCase("no change") || message.length() == 0)
+    if (message.equalsIgnoreCase("no change") || message.isEmpty())
       result = SlimTestResult.plain(content);
     else if (message.equalsIgnoreCase("pass"))
       result = SlimTestResult.pass(content);

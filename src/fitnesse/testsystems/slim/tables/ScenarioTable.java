@@ -223,7 +223,7 @@ private void splitInputAndOutputArguments(String argName) {
 
     if (parameterized) {
       parameterizedName = table.getCellContents(1, 0);
-    } else if (this.inputs.size() > 0) {
+    } else if (!this.inputs.isEmpty()) {
       StringBuilder nameBuffer = new StringBuilder();
 
       for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)

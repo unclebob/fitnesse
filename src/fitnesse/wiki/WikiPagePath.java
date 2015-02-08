@@ -76,11 +76,11 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
   }
 
   public boolean isEmpty() {
-    return names.size() == 0;
+    return names.isEmpty();
   }
 
   public String last() {
-    return (names.size() == 0 ? null : names.get(names.size() - 1));
+    return (names.isEmpty() ? null : names.get(names.size() - 1));
   }
 
   public List<String> getNames() {
@@ -99,7 +99,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
   }
 
   public void removeNameFromEnd() {
-    if (names.size() > 0)
+    if (!names.isEmpty())
       names.removeLast();
   }
 

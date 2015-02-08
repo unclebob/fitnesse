@@ -215,7 +215,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   private void pruneVersions(Collection<ZipFileVersionInfo> versions) {
     List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
-    if (versions.size() > 0) {
+    if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
       for (ZipFileVersionInfo version : versionsList) {

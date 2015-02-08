@@ -17,24 +17,24 @@ public class Expression {
   private double term() {
     double ans = 0;
     StringBuffer temp = new StringBuffer();
-    while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+    while (!s.isEmpty() && Character.isDigit(s.charAt(0))) {
       temp.append(Integer.parseInt("" + s.charAt(0)));
       advance();
     }
-    if (s.length() > 0 && s.charAt(0) == '.') {
+    if (!s.isEmpty() && s.charAt(0) == '.') {
       temp.append('.');
       advance();
-      while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+      while (!s.isEmpty() && Character.isDigit(s.charAt(0))) {
         temp.append(Integer.parseInt("" + s.charAt(0)));
         advance();
       }
     }
-    if (s.length() > 0 && (s.charAt(0) == 'e' || s.charAt(0) == 'E')) {
+    if (!s.isEmpty() && (s.charAt(0) == 'e' || s.charAt(0) == 'E')) {
       temp.append('e');
       advance();
       temp.append(s.charAt(0));
       advance();
-      while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+      while (!s.isEmpty() && Character.isDigit(s.charAt(0))) {
         temp.append(Integer.parseInt("" + s.charAt(0)));
         advance();
       }
@@ -73,7 +73,7 @@ public class Expression {
       advance();
     }
     double result = paren();
-    while (s.length() > 0) {
+    while (!s.isEmpty()) {
       if (s.charAt(0) == '^') {
         result = exponentiate(result);
       } else
@@ -160,16 +160,14 @@ public class Expression {
    */
   private double mul() {
     double ans = trig();
-    if (s.length() > 0) {
-      while (s.length() > 0) {
-        if (s.charAt(0) == '*') {
-          advance();
-          ans *= trig();
-        } else if (s.charAt(0) == '/') {
-          advance();
-          ans /= trig();
-        } else break;
-      }
+    while (!s.isEmpty()) {
+      if (s.charAt(0) == '*') {
+        advance();
+        ans *= trig();
+      } else if (s.charAt(0) == '/') {
+        advance();
+        ans /= trig();
+      } else break;
     }
     return ans;
   }
@@ -179,7 +177,7 @@ public class Expression {
    */
   private double add() {
     double ans = mul();
-    while (s.length() > 0) {
+    while (!s.isEmpty()) {
       if (s.charAt(0) == '+') {
         advance();
         ans += mul();

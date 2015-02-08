@@ -19,7 +19,7 @@ public class FormattedExpression {
 
     public Maybe<String> evaluate() {
         parseFormat();
-        return expression.length() > 0 ? evaluateAndFormat() : new Maybe<String>("");
+        return !expression.isEmpty() ? evaluateAndFormat() : new Maybe<String>("");
     }
 
     private void parseFormat() {

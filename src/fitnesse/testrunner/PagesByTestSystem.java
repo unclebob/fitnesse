@@ -50,7 +50,7 @@ public class PagesByTestSystem {
   private Map<WikiPageIdentity, List<TestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem) {
     Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<WikiPageIdentity, List<TestPage>>(pagesByTestSystem.size());
 
-    if (pagesByTestSystem.size() > 0) {
+    if (!pagesByTestSystem.isEmpty()) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
       for (Map.Entry<WikiPageIdentity, List<WikiPage>> pages : pagesByTestSystem.entrySet())

@@ -123,6 +123,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public boolean isEmpty() {
-    return getContent() == null || getContent().length() == 0;
+    return getContent() == null || getContent().isEmpty();
   }
 }

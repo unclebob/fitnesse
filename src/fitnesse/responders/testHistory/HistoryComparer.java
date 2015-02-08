@@ -72,7 +72,7 @@ public class HistoryComparer {
   }
 
   private boolean thereAreEnoughMatches() {
-    return matchedTables.size() != 0 && matchedTables.size() == firstTableResults.size();
+    return !matchedTables.isEmpty() && matchedTables.size() == firstTableResults.size();
   }
 
   private boolean allMatchScoresAreHigh() {

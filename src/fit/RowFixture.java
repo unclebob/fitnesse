@@ -142,11 +142,11 @@ abstract public class RowFixture extends ColumnFixture {
   }
 
   protected void check(List<?> eList, List<?> cList) {
-    if (eList.size() == 0) {
+    if (eList.isEmpty()) {
       surplus.addAll(cList);
       return;
     }
-    if (cList.size() == 0) {
+    if (cList.isEmpty()) {
       missing.addAll(eList);
       return;
     }

@@ -73,7 +73,7 @@ public class SymbolicLinkResponder implements Responder {
     WikiPageProperties properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
     symLinks.remove(linkToRemove);
-    if (symLinks.keySet().size() == 0)
+    if (symLinks.keySet().isEmpty())
       properties.remove(SymbolicPage.PROPERTY_NAME);
     page.commit(data);
     setRedirect(resource);
