@@ -21,7 +21,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
-  private final int slimPort;
+  private int slimPort;
 
   public SlimClientBuilder(Descriptor descriptor) {
     super(descriptor);
@@ -77,6 +77,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return slimPort;
   }
 
+  protected void setSlimPort(int slimPort) {
+    this.slimPort = slimPort;
+  }
+
   private int findFreePort() {
     int port;
     try {
@@ -89,7 +93,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return port;
   }
 
-  private int getNextSlimPort() {
+  protected int getNextSlimPort() {
     final int base = getSlimPortBase();
     final int poolSize = getSlimPortPoolSize();
 
