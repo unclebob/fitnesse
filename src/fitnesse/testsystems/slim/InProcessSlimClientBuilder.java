@@ -26,7 +26,7 @@ public class InProcessSlimClientBuilder extends SlimClientBuilder {
     final String[] slimArguments = buildArguments();
     createSlimService(slimArguments);
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSSL(), determineHostSSLParameterClass());
   }
 
   void createSlimService(String[] args) throws IOException {

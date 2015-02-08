@@ -20,13 +20,19 @@ public class SocketService {
   private final LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan = false;
 
+  public SocketService(int port, boolean useHTTPS, SocketServer server, String sslParameterClassName ) throws IOException {
+	    this(port, useHTTPS, server, false, sslParameterClassName);
+}
   public SocketService(int port, SocketServer server) throws IOException {
-    this(port, server, false);
+    this(port, false, server, false, null);
   }
-
   public SocketService(int port, SocketServer server, boolean daemon) throws IOException {
+	  this(port, false, server, daemon, null);
+  }
+  
+  public SocketService(int port, boolean useHTTPS, SocketServer server, boolean daemon, String sslParameterClassName) throws IOException {
     this.server = server;
-    serverSocket = SocketFactory.tryCreateServerSocket(port);
+    serverSocket = SocketFactory.tryCreateServerSocket(port, useHTTPS, false,  sslParameterClassName);
     serviceThread = new Thread(
       new Runnable() {
         public void run() {
@@ -61,10 +67,14 @@ public class SocketService {
 
   private void serviceThread() {
     running = true;
-    everRan = true;
     while (running) {
       try {
         Socket s = serverSocket.accept();
+        if (!everRan){
+          // Print information about the first connection done
+          SocketFactory.printSocketInfo(s);
+        }
+        everRan = true;
         startServerThread(s);
       } catch (java.lang.OutOfMemoryError e) {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);

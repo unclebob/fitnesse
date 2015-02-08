@@ -56,7 +56,7 @@ public class FitNesse {
     }
     try {
       if (context.port > 0) {
-        theService = new SocketService(context.port, new FitNesseServer(context));
+        theService = new SocketService(context.port, context.useHTTPS, new FitNesseServer(context), context.sslParameterClassName);
       }
       return true;
     } catch (BindException e) {
