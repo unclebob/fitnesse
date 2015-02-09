@@ -45,10 +45,10 @@ public class WikiWordReference {
     public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
       WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
-      String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
+      String qualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
-      if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
-        String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
+      if (refersTo(reference, qualifiedNameOfPageToBeMoved)) {
+        String referenceTail = reference.substring(qualifiedNameOfPageToBeMoved.length());
         String childPortionOfReference = pageToBeMoved.getName();
         if (!referenceTail.isEmpty())
           childPortionOfReference += referenceTail;
