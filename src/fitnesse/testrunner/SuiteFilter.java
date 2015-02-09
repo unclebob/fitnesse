@@ -115,7 +115,7 @@ public class SuiteFilter {
 
     public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags, boolean andStrategy) {
       tagString = suiteTags;
-      if (suiteTags != null) {
+      if (StringUtils.isNotBlank(suiteTags)) {
         tags = Arrays.asList(suiteTags.split(LIST_SEPARATOR));
       }
       else {

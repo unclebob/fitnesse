@@ -246,6 +246,15 @@ public class SuiteResponderTest {
   }
 
   @Test
+  public void testEmptySuiteFilter() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=");
+    String results = runSuite();
+    assertSubString("href=\\\"#TestTwo3\\\"", results);
+    assertSubString("href=\\\"#TestThree2\\\"", results);
+  }
+
+  @Test
   public void testSecondMatchingSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke");
