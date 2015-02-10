@@ -19,6 +19,10 @@ import fitnesse.wikitext.parser.SymbolType;
 public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   private ComponentFactory componentFactory;
 
+  /**
+   * @deprecated Override one or more of the specific methods in the interface instead.
+   */
+  @Deprecated
   @Override
   public List<? extends Object> getPlugins() throws PluginException {
     return createList();

@@ -14,6 +14,10 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolType;
 
 public interface PluginFeatureFactory {
+  /**
+   * @deprecated Override one or more of the specific methods in this interface instead.
+   */
+  @Deprecated
   List<? extends Object> getPlugins() throws PluginException;
 
   Map<String, Class<? extends Responder>> getResponders() throws PluginException;
