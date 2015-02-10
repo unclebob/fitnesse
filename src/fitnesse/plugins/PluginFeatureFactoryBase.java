@@ -7,8 +7,6 @@ import java.util.Map;
 
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
-import fitnesse.components.ComponentFactory;
-import fitnesse.components.ComponentInstantiationException;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
@@ -17,8 +15,6 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolType;
 
 public class PluginFeatureFactoryBase implements PluginFeatureFactory {
-  private ComponentFactory componentFactory;
-
   /**
    * @deprecated Override one or more of the specific methods in the interface instead.
    */
@@ -66,23 +62,6 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   @Override
   public Map<String, ? extends TestSystemFactory> getTestSystemFactories() throws PluginException {
     return createMap();
-  }
-
-  public ComponentFactory getComponentFactory() {
-    return componentFactory;
-  }
-
-  @Override
-  public void setComponentFactory(ComponentFactory componentFactory) {
-    this.componentFactory = componentFactory;
-  }
-
-  protected <T> T createComponent(Class<T> typeClass) throws PluginException {
-    try {
-      return componentFactory.createComponent(typeClass);
-    } catch (ComponentInstantiationException e) {
-      throw new PluginException("Cannot create instance of " + typeClass.getName(), e);
-    }
   }
 
   private <T> Map<String, T> createMap() {

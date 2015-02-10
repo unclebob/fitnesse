@@ -7,6 +7,8 @@ import java.util.Map;
 import fitnesse.ConfigurationParameter;
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
+import fitnesse.components.ComponentFactory;
+import fitnesse.components.ComponentInstantiationException;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
@@ -18,6 +20,12 @@ import fitnesse.wikitext.parser.SymbolType;
  * Determines which plugin features to load based on componentFactory's properties (e.g. plugins.properties).
  */
 public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase {
+  private final ComponentFactory componentFactory;
+
+  public PropertyBasedPluginFeatureFactory(ComponentFactory componentFactory) {
+    this.componentFactory = componentFactory;
+  }
+
   @Override
   public List<Object> getPlugins() throws PluginException {
     return allConfigured(ConfigurationParameter.PLUGINS);
@@ -136,6 +144,18 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
       }
     }
     return result;
+  }
+
+  public ComponentFactory getComponentFactory() {
+    return componentFactory;
+  }
+
+  protected <T> T createComponent(Class<T> typeClass) throws PluginException {
+    try {
+      return componentFactory.createComponent(typeClass);
+    } catch (ComponentInstantiationException e) {
+      throw new PluginException("Cannot create instance of " + typeClass.getName(), e);
+    }
   }
 
   private <T> Class<T> forName(String className) throws PluginException {

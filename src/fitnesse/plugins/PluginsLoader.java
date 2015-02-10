@@ -78,14 +78,10 @@ public class PluginsLoader {
   }
 
   private void fillPluginFeatureFactories() {
-    pluginFeatureFactories.add(new PropertyBasedPluginFeatureFactory());
+    pluginFeatureFactories.add(new PropertyBasedPluginFeatureFactory(componentFactory));
 
     for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {
       pluginFeatureFactories.add(factory);
-    }
-
-    for (PluginFeatureFactory factory : pluginFeatureFactories) {
-      factory.setComponentFactory(componentFactory);
     }
   }
 

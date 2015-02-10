@@ -5,7 +5,6 @@ import java.util.Map;
 
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
-import fitnesse.components.ComponentFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
@@ -35,6 +34,4 @@ public interface PluginFeatureFactory {
   Map<String, ? extends CustomComparator> getCustomComparators() throws PluginException;
 
   Map<String, ? extends TestSystemFactory> getTestSystemFactories() throws PluginException;
-
-  void setComponentFactory(ComponentFactory componentFactory);
 }
