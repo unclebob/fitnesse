@@ -341,10 +341,112 @@ describe("parser and formatter", function () {
         generate(dom, wikitext);
     });
 
-    it("escape !{ .. } - hashtable", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'hashtable'}, "bar: val"), " baz");
-        var wikitext = "foo !{bar: val} baz";
+    it("hash table", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "bar"),
+                        element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
         generate(dom, wikitext);
+    });
+
+    it("hash table, empty entries should be skipped", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", ""),
+                        element("td", "")),
+                element("tr",
+                    element("td", "bar"),
+                    element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
+        generateWikitext(dom, wikitext);
+    });
+
+    it("hash table with escaped multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", element("tt", { "class": "escape"}, "bc", br(), "def"))))));
+
+        var wikitext = "!{a:!-bc\ndef-!}";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", "bc", br(), "def")))));
+
+        var wikitext = "!{a:bc\ndef}";
+        var expectedWikitext = "!{a:bc!-\n-!def}";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
+    });
+
+    it("hash table in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " text", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "id1")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), "trailer "))));
+
+        var wikitext = "| test | text!{$contactId1:id1,$contactId2:id2}trailer |";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with variable in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " ", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "${ID1}")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), " "))));
+        var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with multi-line content in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " text", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", element("tt", {"class": "escape"}, "id", br(), "1"))),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id", br(), "2")))), "trailer "))));
+
+        var wikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id\n2}trailer |";
+        var expectedWikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id!-\n-!2}trailer |";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
     });
 
     it("escape !( .. )! - nested ", function() {
@@ -356,27 +458,6 @@ describe("parser and formatter", function () {
     it("escape ![ .. ]! - plain text table", function() {
         var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
         var wikitext = "foo ![bar\nbaz]! bee";
-        generate(dom, wikitext);
-    });
-
-    it("hashtable in table", function() {
-        var dom = element("table",
-            element("tbody",
-                element("tr",
-                    element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:id1,$contactId2:id2"), " "))));
-
-        var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
-        generate(dom, wikitext);
-    });
-    it("hashtable with variable", function() {
-        var dom = element("table",
-            element("tbody",
-                element("tr",
-                    element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:${ID1},$contactId2:id2"), " "))));
-
-        var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
         generate(dom, wikitext);
     });
 
