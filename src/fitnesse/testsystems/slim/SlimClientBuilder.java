@@ -187,7 +187,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       if (useManualStart == null) {
         useManualStart = getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
       }
-      return useManualStart.equalsIgnoreCase("true");
+      return "true".equalsIgnoreCase(useManualStart);
     }
     return false;
   }

@@ -64,7 +64,7 @@ public class TestHistoryResponder implements SecureResponder {
 
   private boolean formatIsXML(Request request) {
     String format = request.getInput("format");
-    return format.equalsIgnoreCase("xml");
+    return "xml".equalsIgnoreCase(format);
   }
 
   public SecureOperation getSecureOperation() {
