@@ -75,12 +75,13 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   private boolean formatIsXML(Request request) {
-    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
+    String format = request.getInput("format");
+    return format.equalsIgnoreCase("xml");
   }
 
   private Response tryToMakeTestExecutionReport(Request request) {
     Date resultDate;
-    String date = (String) request.getInput("resultDate");
+    String date = request.getInput("resultDate");
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
