@@ -271,9 +271,9 @@ public class Fixture {
 
   public Object parse(String s, Class<?> type) throws Exception {
     if (type.equals(String.class)) {
-      if (s.equalsIgnoreCase("null"))
+      if ("null".equalsIgnoreCase(s))
         return null;
-      else if (s.equalsIgnoreCase("blank"))
+      else if ("blank".equalsIgnoreCase(s))
         return "";
       else
         return s;
