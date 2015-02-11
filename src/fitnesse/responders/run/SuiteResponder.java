@@ -27,6 +27,7 @@ import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
@@ -57,7 +58,6 @@ import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 public class SuiteResponder extends ChunkingResponder implements SecureResponder {
   private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
@@ -405,7 +405,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     String datePart = format.format(new Date(time));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }

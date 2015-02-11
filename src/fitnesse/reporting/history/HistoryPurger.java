@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.util.Clock;
 import util.FileUtil;
 
@@ -71,7 +70,7 @@ public class HistoryPurger {
   }
 
   private Date tryExtractDateFromTestHistoryName(String testHistoryName) throws ParseException {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     String dateString = testHistoryName.split("_")[0];
     return dateFormat.parse(dateString);
   }

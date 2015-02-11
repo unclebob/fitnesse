@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import org.junit.After;
@@ -103,7 +102,7 @@ public class HistoryPurgerTest {
   }
 
   private Date makeDate(String dateString) throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     Date date = format.parse(dateString);
     return date;
   }
