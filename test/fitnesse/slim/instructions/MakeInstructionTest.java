@@ -29,7 +29,6 @@ public class MakeInstructionTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFormatReturnValues() {
     MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[]{"arg1", "arg2"});
 
