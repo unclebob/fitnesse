@@ -3,6 +3,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -145,14 +146,14 @@ public class FixtureTest {
   public void testFixtureArgumentsWithEscapedSymbols() throws Exception {
     // "<", ">" are usually escaped (unless surrounded by !- .. -!)
     String[] args = getArgsForTableWith("<td>a &lt; 3 and b &gt; 1</td>");
-    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+    assertArrayEquals(new String[]{"a < 3 and b > 1"}, args);
   }
 
   @Test
   public void testFixtureArgumentsWithSpecialSymbols() throws Exception {
     // "<", ">" are usually escaped but may come in plan text from !- .. -!
     String[] args = getArgsForTableWith("<td>a < 3 and b > 1</td>");
-    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+    assertArrayEquals(new String[] {"a < 3 and b > 1"}, args);
   }
 
   @Test
