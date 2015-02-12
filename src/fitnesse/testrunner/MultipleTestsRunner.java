@@ -89,9 +89,15 @@ public class MultipleTestsRunner implements Stoppable {
         executeTestSystemPages(testSystemPages, testSystem);
         waitForTestSystemToSendResults();
       }
+    } catch (Exception e) {
+      formatters.testSystemStopped(testSystem, e);
     } finally {
       if (!isStopped && testSystem != null) {
-        testSystem.bye();
+        try {
+          testSystem.bye();
+        } catch (Exception e) {
+          executionLogListener.exceptionOccurred(e);
+        }
       }
     }
   }
