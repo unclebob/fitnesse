@@ -48,7 +48,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   public void deleteTestHistoryOlderThanDays(int days) {
-    new HistoryPurger(resultsDirectory).deleteTestHistoryOlderThanDays(days);
+    new HistoryPurger(resultsDirectory, days).deleteTestHistoryOlderThanDays();
   }
 
   private Integer getDaysInput(Request request) {

@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.util.Clock;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import util.FileUtil;
 
 import static java.lang.String.format;
@@ -16,20 +18,33 @@ public class HistoryPurger {
   private static final Logger LOG = Logger.getLogger(HistoryPurger.class.getName());
 
   private final File resultsDirectory;
+  private final Date expirationDate;
 
-  public HistoryPurger(File resultsDirectory) {
+  public HistoryPurger(File resultsDirectory, int days) {
     this.resultsDirectory = resultsDirectory;
+    this.expirationDate = getDateDaysAgo(days);
   }
 
-  public void deleteTestHistoryOlderThanDays(int days) {
-    Date expirationDate = getDateDaysAgo(days);
+  public void deleteTestHistoryOlderThanDays() {
     File[] files = FileUtil.getDirectoryListing(resultsDirectory);
-    deleteExpiredFiles(files, expirationDate);
+    deleteExpiredFiles(files);
   }
 
-  private void deleteExpiredFiles(File[] files, Date expirationDate) {
+  public void deleteTestHistoryOlderThanDays(WikiPagePath path) {
+    String pageName = path.toString();
+    String subPagePrefix = pageName + ".";
+    File[] files = FileUtil.getDirectoryListing(resultsDirectory);
+    for (File file : files) {
+      String fileName = file.getName();
+      if (fileName.equals(pageName) || fileName.startsWith(subPagePrefix)) {
+        deleteIfExpired(file);
+      }
+    }
+  }
+
+  private void deleteExpiredFiles(File[] files) {
     for (File file : files)
-      deleteIfExpired(file, expirationDate);
+      deleteIfExpired(file);
   }
 
   public Date getDateDaysAgo(int days) {
@@ -39,24 +54,24 @@ public class HistoryPurger {
     return daysEarlier;
   }
 
-  private void deleteIfExpired(File file, Date expirationDate) {
+  private void deleteIfExpired(File file) {
     if (file.isDirectory()) {
-      deleteDirectoryIfExpired(file, expirationDate);
+      deleteDirectoryIfExpired(file);
     } else
-      deleteFileIfExpired(file, expirationDate);
+      deleteFileIfExpired(file);
   }
 
-  private void deleteDirectoryIfExpired(File file, Date expirationDate) {
+  private void deleteDirectoryIfExpired(File file) {
     File[] files = FileUtil.getDirectoryListing(file);
-    deleteExpiredFiles(files, expirationDate);
+    deleteExpiredFiles(files);
     if (file.list().length == 0)
       FileUtil.deleteFileSystemDirectory(file);
   }
 
-  private void deleteFileIfExpired(File file, Date purgeOlder) {
+  private void deleteFileIfExpired(File file) {
     String name = file.getName();
     Date date = getDateFromPageHistoryFileName(name);
-    if (date.getTime() < purgeOlder.getTime())
+    if (date.getTime() < expirationDate.getTime())
       FileUtil.deleteFile(file);
   }
 
