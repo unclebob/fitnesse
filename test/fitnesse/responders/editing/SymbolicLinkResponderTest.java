@@ -229,8 +229,6 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testAddFailWhenLinkPathIsInvalid() throws Exception {
-    WikiPage symlink = WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"));
-
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageOne PageTwo");
     Response response = invokeResponder();
