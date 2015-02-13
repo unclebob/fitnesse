@@ -254,7 +254,7 @@ public class SymbolicLinkResponderTest {
 
   @Test
   public void testAddFailWhenPageAlreadyHasChild() throws Exception {
-    WikiPage symlink = WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"), "");
+    WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"), "");
 
     request.addInput("linkName", "SymLink");
     request.addInput("linkPath", "PageTwo");
