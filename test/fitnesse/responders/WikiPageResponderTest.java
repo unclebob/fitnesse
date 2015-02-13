@@ -68,7 +68,7 @@ public class WikiPageResponderTest {
   @Test
   public void testResponseWithNonWikiWordChildPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
-    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+    WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
 
     final MockRequest request = new MockRequest();
     request.setResource("page.child_page");
