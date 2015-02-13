@@ -99,7 +99,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem) {
+  private void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemListener.testSystemStarted(testSystem);
   }
 

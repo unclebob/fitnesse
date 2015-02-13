@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import fitnesse.reporting.CompositeExecutionLog;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;

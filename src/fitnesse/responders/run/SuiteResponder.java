@@ -22,7 +22,6 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -263,12 +262,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(page) {
-      @Override
-      protected void writeData(String output) {
-        addToResponse(output);
-      }
-    };
+    return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
   protected TestSystemListener newTestInProgressFormatter() {

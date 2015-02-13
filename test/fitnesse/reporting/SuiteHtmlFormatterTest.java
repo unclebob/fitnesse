@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
+import java.io.StringWriter;
 import java.util.Date;
 
 import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
@@ -29,19 +30,15 @@ import fitnesse.util.TimeMeasurement;
 
 public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
-  private StringBuffer pageBuffer = new StringBuffer();
+  private StringWriter pageBuffer = new StringWriter();
   private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    formatter = new SuiteHtmlFormatter(root) {
-      @Override
-      protected void writeData(String output) {
-        pageBuffer.append(output);
-      }
-    };
+    pageBuffer = new StringWriter();
+    formatter = new SuiteHtmlFormatter(root, pageBuffer);
   }
 
   @After
@@ -99,13 +96,15 @@ public class SuiteHtmlFormatterTest {
   }
 
   @Test
-  public void testCountsHtml() throws Exception {
+  public void testCountsRightHtml() throws Exception {
     formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
     assertSubString("<span class=\\\"results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
     assertSubString("<a href=\\\"#RelativePageName0\\\" class=\\\"link\\\">RelativePageName</a>", pageBuffer.toString());
+  }
 
-    pageBuffer.setLength(0);
+  @Test
+  public void testCountsWrongHtml() throws Exception {
     formatter.processTestResults("AnotherPageName", new TestSummary(0, 1, 0, 0));
 
     assertSubString("<span class=\\\"results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
@@ -156,7 +155,7 @@ public class SuiteHtmlFormatterTest {
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
     		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
     assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
-    pageBuffer.setLength(0);
+    pageBuffer.getBuffer().setLength(0);
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
     formatter.announceStartNewTest("RelativeName", "FullName");
@@ -164,7 +163,7 @@ public class SuiteHtmlFormatterTest {
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
         " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
     assertSubString("(2/20)", pageBuffer.toString());
-    pageBuffer.setLength(0);
+    pageBuffer.getBuffer().setLength(0);
 
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
