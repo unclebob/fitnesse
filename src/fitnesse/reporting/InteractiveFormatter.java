@@ -21,13 +21,10 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   private boolean wasInterrupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
-  private final CompositeExecutionLog log;
-
   private String relativeName;
 
-  protected InteractiveFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
+  protected InteractiveFormatter(WikiPage page) {
     super(page);
-    this.log = log;
   }
 
   protected abstract void writeData(String output);
@@ -121,7 +118,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   protected void AddLogLink() throws IOException {
-    writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
+    writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus()).html());
   }
 
   protected void maybeMakeErrorNavigatorVisible(){
@@ -134,12 +131,12 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 	return (assertionCounts.getExceptions() + assertionCounts.getWrong()) > 0;
   }
 
-  public String executionStatus(CompositeExecutionLog log) {
-    if (log.exceptionCount() != 0)
+  public String executionStatus() {
+    if (wasInterrupted)
       return makeExecutionStatusLink(ExecutionStatus.ERROR);
 
-    if (log.hasCapturedOutput())
-      return makeExecutionStatusLink(ExecutionStatus.OUTPUT);
+//    if (log.hasCapturedOutput())
+//      return makeExecutionStatusLink(ExecutionStatus.OUTPUT);
 
     return makeExecutionStatusLink(ExecutionStatus.OK);
   }

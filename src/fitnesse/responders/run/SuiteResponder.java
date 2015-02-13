@@ -78,8 +78,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private boolean remoteDebug = false;
   protected boolean includeHtml = true;
   int exitCode;
-  private CompositeExecutionLog log;
-
 
   public SuiteResponder() {
     this(new WikiImporter());
@@ -107,7 +105,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
-    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -261,12 +258,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return xmlFormatter;
   }
 
-  BaseFormatter newTextFormatter() {
+  protected BaseFormatter newTextFormatter() {
     return new TestTextFormatter(response);
   }
 
-  BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page, log) {
+  protected BaseFormatter newHtmlFormatter() {
+    return new SuiteHtmlFormatter(page) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
@@ -304,7 +301,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
-    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;

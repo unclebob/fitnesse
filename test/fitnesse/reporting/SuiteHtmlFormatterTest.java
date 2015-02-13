@@ -35,10 +35,8 @@ public class SuiteHtmlFormatterTest {
   @Before
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
-    FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    CompositeExecutionLog log = new CompositeExecutionLog(root);
-    formatter = new SuiteHtmlFormatter(context, root, log) {
+    formatter = new SuiteHtmlFormatter(root) {
       @Override
       protected void writeData(String output) {
         pageBuffer.append(output);

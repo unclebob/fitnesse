@@ -388,14 +388,6 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testExecutionStatusOutputCaptured() throws Exception {
-    debug = false;
-    doSimpleRun(outputWritingTable("blah"));
-    assertTrue(results.contains(">Output Captured<"));
-    assertTrue(results.contains("\\\"output\\\""));
-  }
-
-  @Test
   public void testExecutionStatusError() throws Exception {
     debug = false;
     doSimpleRun(crashFixtureTable());
@@ -508,7 +500,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertTrue(results.contains(">Output Captured<"));
+    assertTrue(results.contains(">Tests Executed OK<"));
     assertHasRegexp("\\?executionLog", results);
     assertSubString("Test Page tags", results);
 
