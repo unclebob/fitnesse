@@ -31,19 +31,22 @@ public class SocketService {
   }
   
   public SocketService(int port, boolean useHTTPS, SocketServer server, boolean daemon, String sslParameterClassName) throws IOException {
+    this(server, daemon, SocketFactory.tryCreateServerSocket(port, useHTTPS, false,  sslParameterClassName));
+  }
+
+  public SocketService(SocketServer server, boolean daemon, ServerSocket serverSocket) throws IOException {
     this.server = server;
-    serverSocket = SocketFactory.tryCreateServerSocket(port, useHTTPS, false,  sslParameterClassName);
+    this.serverSocket = serverSocket;
     serviceThread = new Thread(
-      new Runnable() {
-        public void run() {
-          serviceThread();
-        }
-      }
+            new Runnable() {
+              public void run() {
+                serviceThread();
+              }
+            }
     );
     serviceThread.setDaemon(daemon);
     serviceThread.start();
   }
-
   public int getPort() {
     return serverSocket.getLocalPort();
   }

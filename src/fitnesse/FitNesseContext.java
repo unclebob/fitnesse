@@ -19,6 +19,7 @@ import fitnesse.wiki.fs.VersionsController;
 public class FitNesseContext {
   private static final String WIKI_PROTOCOL_PROPERTY = "wiki.protocol";
   public static final String SSL_PARAMETER_CLASS_PROPERTY = "wiki.protocol.ssl.parameter.class";
+  public static final String SSL_CLIENT_AUTH_PROPERTY = "wiki.protocol.ssl.client.auth";
   public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
@@ -44,6 +45,7 @@ public class FitNesseContext {
   public final Authenticator authenticator;
   public final boolean useHTTPS;
   public String sslParameterClassName;
+  public final boolean sslClientAuth;
   private final Properties properties;
 
   protected FitNesseContext(FitNesseVersion version, WikiPage root, String rootPath,
@@ -72,6 +74,8 @@ public class FitNesseContext {
     pageFactory = new PageFactory(this);
     String protocol = variableSource.getProperty(WIKI_PROTOCOL_PROPERTY);
     this.useHTTPS = (protocol == null ?  false : (protocol.equalsIgnoreCase("https")));
+    String clientAuth = variableSource.getProperty(SSL_CLIENT_AUTH_PROPERTY);
+    this.sslClientAuth = (clientAuth == null) ? false : (protocol.equals("required"));
     this.sslParameterClassName = variableSource.getProperty(SSL_PARAMETER_CLASS_PROPERTY);
   }
 
