@@ -4,7 +4,6 @@ import java.io.File;
 
 public class SslParametersAgent extends SslParameters {
 
-
 	public SslParametersAgent() {
 		super("test" + File.separator + "fitnesse" + File.separator + "resources" +
 				File.separator + "ssl" + File.separator + "agent.jks",
@@ -13,5 +12,4 @@ public class SslParametersAgent extends SslParameters {
 						File.separator + "ssl" + File.separator + "agent_trust.jks");
 
 	}
-
 }

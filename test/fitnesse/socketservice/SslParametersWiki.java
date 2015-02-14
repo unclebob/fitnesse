@@ -3,7 +3,7 @@ package fitnesse.socketservice;
 import java.io.File;
 
 public class SslParametersWiki extends SslParameters {
-
+	
 	public SslParametersWiki() {
 		super();
 		String aPW = "wiki15";
@@ -14,5 +14,4 @@ public class SslParametersWiki extends SslParameters {
 				"resources" + File.separator + "ssl" + File.separator + "wiki_trust.jks");
 
 	}
-
 }
