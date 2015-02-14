@@ -172,7 +172,7 @@ public class PageDriver {
     if (textPosition == -1)
       return -1;
     String priorToContent = content.substring(0, textPosition);
-    String lines[] = priorToContent.split("\n");
+    String[] lines = priorToContent.split("\n");
     return lines.length;
   }
 
@@ -204,7 +204,7 @@ public class PageDriver {
                     new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
-    NodeFilter predicates[] = {
+    NodeFilter[] predicates = {
             new TagNameFilter(childTag),
             new HasAttributeFilter("class", tagClass)
     };
