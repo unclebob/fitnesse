@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -53,7 +54,7 @@ public class MemoryFileSystem implements FileSystem {
     @Override
     public String[] list(File file) {
         String path = file.getPath();
-        ArrayList<String> result = new ArrayList<String>();
+        Collection<String> result = new ArrayList<String>();
         for (String filePath: files.keySet()) {
             if (!filePath.startsWith(path)) continue;
             if (filePath.equals(path)) continue;

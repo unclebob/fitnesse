@@ -12,8 +12,8 @@ import java.util.List;
 
 public class UpdaterImplementation extends UpdaterBase {
 
-  private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
-  private ArrayList<String> updateList = new ArrayList<String>();
+  private List<String> updateDoNotCopyOver = new ArrayList<String>();
+  private List<String> updateList = new ArrayList<String>();
   private String fitNesseVersion;
 
   public UpdaterImplementation(FitNesseContext context) throws IOException {
@@ -73,7 +73,7 @@ public class UpdaterImplementation extends UpdaterBase {
     update.doUpdate();
   }
 
-  public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
+  public void tryToParseTheFileIntoTheList(File updateFileList, List<String> list) {
     if (!updateFileList.exists())
       throw new RuntimeException("Could Not Find UpdateList");
 
@@ -85,7 +85,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  private void parseTheFileContentToAList(File updateFileList, ArrayList<String> list) throws IOException {
+  private void parseTheFileContentToAList(File updateFileList, List<String> list) throws IOException {
     String content = FileUtil.getFileContent(updateFileList);
     String[] filePaths = content.split("\n");
     for (String path : filePaths)
@@ -93,6 +93,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
+  @Override
   public boolean update() throws IOException {
     if (shouldUpdate()) {
       LOG.info("Unpacking new version of FitNesse resources. Please be patient...");

@@ -16,8 +16,8 @@ public class PageHistory extends PageHistoryReader{
   private int maxAssertions = 0;
   private BarGraph barGraph;
   private String fullPageName;
-  private final HashMap<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
-  private HashMap<Date, File> pageFiles = new HashMap<Date,File>();
+  private final Map<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
+  private Map<Date, File> pageFiles = new HashMap<Date,File>();
 
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();

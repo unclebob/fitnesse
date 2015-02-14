@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class UpdateFileList {
@@ -14,7 +15,7 @@ public class UpdateFileList {
   private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
-  private HashSet<String> doNotReplaceFiles = new HashSet<String>();
+  private Set<String> doNotReplaceFiles = new HashSet<String>();
   private String baseDirectory = "";
   private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
