@@ -30,7 +30,7 @@ public class SslSlimServiceTest extends SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 1, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, true, "fitnesse.socketservice.SslParametersNarcissus");
+    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 1, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, true, "fitnesse.socketservice.SslParametersWiki");
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }

@@ -29,12 +29,10 @@ public class SslSlimClientBuilderTest {
 	    		SslSlimClientBuilderTest test = new SslSlimClientBuilderTest();
 	    		test.setUp();
 	    		System.out.println("----1 ---");
-	    		test.StartAndConnectToSlimClientWithSslNarcissus();
-	    		System.out.println("----2 ---");
 	    		test.StartAndConnectToSlimClientWithoutSsl();
-	    		System.out.println("----3 ---");
+	    		System.out.println("----2 ---");
 	    		test.StartAndConnectToSlimClientWithSslAgentWiki();
-	    		System.out.println("----4 ---");
+	    		System.out.println("----3 ---");
 	    	}catch (Exception e){
 	    		e.printStackTrace();
 	    		System.out.println("Haling test: " + e.getMessage());
@@ -51,13 +49,7 @@ public class SslSlimClientBuilderTest {
   public void StartAndConnectToSlimClientWithoutSsl() throws Exception {
 	  executeAndCheck(null, "false", null, "fitnesse.socketservice.SslParametersWiki");
   }
-  @Test
-  public void StartAndConnectToSlimClientWithSslNarcissus() throws Exception {
-	  //There is a limitation that the SSL Socket Factory will read the configuration only once per process
-	  // Therefore the following will fail as it is running in the same process
-	  //executeAndCheck("narcissus", "fitnesse.socketservice.SslParametersNarcissus", "narcissus", "fitnesse.socketservice.SslParametersNarcissus");
 
-  }
   @Test
   public void StartAndConnectToSlimClientWithSslWikiWiki() throws Exception {
 	  executeAndCheck("FitNesseWiki", "fitnesse.socketservice.SslParametersWiki", "FitNesseWiki", "fitnesse.socketservice.SslParametersWiki");
