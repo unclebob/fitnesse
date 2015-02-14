@@ -1,14 +1,16 @@
 package fitnesse.socketservice;
 
-public class SslParametersWiki extends SslParameters {
+import java.io.File;
 
+public class SslParametersWiki extends SslParameters {
+	
 	public SslParametersWiki() {
 		super();
 		String aPW = "wiki15";
-		setKeyStoreFilename("test\\fitnesse\\resources\\ssl\\wiki.jks");
+		setKeyStoreFilename("test" + File.separator + "fitnesse" + File.separator + "resources" +
+				File.separator + "ssl" + File.separator + "wiki.jks");
 		setKeyStorePassword(aPW);
-		setTrustStoreFilename("test\\fitnesse\\resources\\ssl\\wiki_trust.jks");
-
+		setTrustStoreFilename("test" + File.separator + "fitnesse" + File.separator +
+				"resources" + File.separator + "ssl" + File.separator + "wiki_trust.jks");
 	}
-
 }
