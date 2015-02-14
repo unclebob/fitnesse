@@ -35,7 +35,6 @@ public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
   private ResponseExaminer examiner = new ResponseExaminer();
-  private Map<String, String> hash;
 
   public void createPageWithContent(String pageName, String content) throws Exception {
     creator.pageName = pageName;
