@@ -33,7 +33,6 @@ public class Bowling {
     return frame < 9 ? frame * 2 + 1 : frame * 2 + 2;
   }
 
-  @SuppressWarnings("unchecked")
   private void rollBalls(List<List<String>> table) {
     List<String> rollRow = table.get(0);
     for (int frame = 0; frame < 10; frame++) {
