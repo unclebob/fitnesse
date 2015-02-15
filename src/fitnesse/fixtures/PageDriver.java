@@ -35,7 +35,6 @@ public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
   private ResponseExaminer examiner = new ResponseExaminer();
-  private Map<String, String> hash;
 
   public void createPageWithContent(String pageName, String content) throws Exception {
     creator.pageName = pageName;
@@ -172,7 +171,7 @@ public class PageDriver {
     if (textPosition == -1)
       return -1;
     String priorToContent = content.substring(0, textPosition);
-    String lines[] = priorToContent.split("\n");
+    String[] lines = priorToContent.split("\n");
     return lines.length;
   }
 
@@ -204,7 +203,7 @@ public class PageDriver {
                     new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
-    NodeFilter predicates[] = {
+    NodeFilter[] predicates = {
             new TagNameFilter(childTag),
             new HasAttributeFilter("class", tagClass)
     };

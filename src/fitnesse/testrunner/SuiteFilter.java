@@ -24,6 +24,7 @@ public class SuiteFilter {
   final private String startWithTest;
   
   public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
+    @Override
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
@@ -148,7 +149,7 @@ public class SuiteFilter {
     }
 
     private boolean testTagsMatchQueryTags(String testTagString) {
-      String testTags[] = testTagString.trim().split(LIST_SEPARATOR);
+      String[] testTags = testTagString.trim().split(LIST_SEPARATOR);
       if(andStrategy){
         return checkIfAllQueryTagsExist(testTags);
       } else {

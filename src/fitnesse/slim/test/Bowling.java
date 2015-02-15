@@ -72,7 +72,7 @@ public class Bowling {
   }
 
   private class Game {
-    int rolls[] = new int[21];
+    int[] rolls = new int[21];
     int currentRoll = 0;
 
     public void roll(int pins) {

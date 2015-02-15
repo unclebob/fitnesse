@@ -1,13 +1,14 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class WikiBuilder implements Translation {
     private interface WikiStringBuilder {
         void build(Translator translator, Symbol symbol, StringBuilder wikiString);
     }
 
-    private ArrayList<WikiStringBuilder> builders = new ArrayList<WikiStringBuilder>();
+    private Collection<WikiStringBuilder> builders = new ArrayList<WikiStringBuilder>();
 
     public WikiBuilder content() {
         builders.add(new WikiStringBuilder() {
