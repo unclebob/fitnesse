@@ -31,6 +31,7 @@ import static fitnesse.ConfigurationParameter.*;
  * Please call this only once: some features are registered on (static) factories.
  */
 public class ContextConfigurator {
+  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(ContextConfigurator.class.getName());
 
   private static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
@@ -135,10 +136,13 @@ public class ContextConfigurator {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    WikiPageFactoryRegistry wikiPageFactoryRegistry = (WikiPageFactoryRegistry) wikiPageFactory;
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider, wikiPageFactoryRegistry, testSystemFactory, slimTableFactory, customComparatorRegistry);
     pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadWikiPageFactories(wikiPageFactory);
+
+    if (wikiPageFactory instanceof WikiPageFactoryRegistry) {
+      pluginsLoader.loadWikiPageFactories((WikiPageFactoryRegistry) wikiPageFactory);
+    } else {
+      LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
+    }
     pluginsLoader.loadTestSystems(testSystemFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);

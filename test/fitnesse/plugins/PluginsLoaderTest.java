@@ -91,8 +91,14 @@ public class PluginsLoaderTest {
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
-            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
+
+    loader.loadResponders(responderFactory);
+    loader.loadSymbolTypes(testProvider);
+    loader.loadWikiPageFactories(testWikiPageFactoryRegistry);
+    loader.loadTestSystems(testTestSystemFactory);
+    loader.loadSlimTables(testSlimTableFactory);
+    loader.loadCustomComparators(testCustomComparatorsRegistry);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
@@ -103,9 +109,9 @@ public class PluginsLoaderTest {
   public void shouldHandleInstanceMethods() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
     testProperties.setProperty("responderName", "instanceTest");
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
 
-    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
-            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
+    loader.loadResponders(responderFactory);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("instanceTest"));
   }
@@ -119,6 +125,7 @@ public class PluginsLoaderTest {
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
 
     loader.loadResponders(responderFactory);
 
