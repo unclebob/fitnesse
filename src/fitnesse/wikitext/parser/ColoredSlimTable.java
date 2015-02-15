@@ -70,25 +70,33 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                     .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
                 for(String potentialClass: potentialClasses){
                     if(potentialClass.equals("fitnesse.testutil.CrashFixture")) continue;
-                    Object fixture;
                     Class<?> fixtureClazz;
                     try{
-                        if((fixtureClazz = Class.forName(potentialClass)) != null){
+                        fixtureClazz = Class.forName(potentialClass);
+                        while(fixtureClazz != null){
                             colorTable = true;
 
-                            // Attempt to instantiate class to get inheritance.
-                            fixture = fixtureClazz.newInstance();
-                            if(fixture instanceof fit.Comment){ isCommentFixture = true; }
-                            if(fixture instanceof fit.ImportFixture){ isImportFixture = true; }
-                            if(fixture instanceof fit.ActionFixture){
+                            if(fixtureClazz.getCanonicalName().equals("fit.Comment")){
+                                isCommentFixture = true;
+                                break;
+                            }
+                            if(fixtureClazz.getCanonicalName().equals("fit.ImportFixture")){
+                                isImportFixture = true;
+                                break;
+                            }
+                            if(fixtureClazz.getCanonicalName().equals("fit.ActionFixture")){
                                 isSecondRowTitle = true;
                                 isFirstColumnTitle = true;
+                                break;
                             }
-                            if(fixture instanceof fit.ColumnFixture){ isSecondRowTitle = true; }
+                            if(fixtureClazz.getCanonicalName().equals("fit.ColumnFixture")){
+                                isSecondRowTitle = true;
+                                break;
+                            }
+
+                            fixtureClazz = fixtureClazz.getSuperclass();
                         }
-                    }catch(ClassNotFoundException cnfe){ }
-                    catch(IllegalAccessException iae){ }
-                    catch(InstantiationException iae){ }
+                    } catch(ClassNotFoundException cnfe){ }
                     catch(NoClassDefFoundError ncdfe){ }
                 }
             }
