@@ -140,8 +140,8 @@ public class FitNesseMainTest {
     return response;
   }
 
-  private Answer fitNesseContextWith(final FitNesse fitNesse) {
-    return new Answer() {
+  private Answer<FitNesseContext> fitNesseContextWith(final FitNesse fitNesse) {
+    return new Answer<FitNesseContext>() {
       @Override
       public FitNesseContext answer(InvocationOnMock invocation) throws Throwable {
         FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();
