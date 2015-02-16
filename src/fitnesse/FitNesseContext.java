@@ -75,7 +75,7 @@ public class FitNesseContext {
     String protocol = variableSource.getProperty(WIKI_PROTOCOL_PROPERTY);
     this.useHTTPS = (protocol == null ?  false : (protocol.equalsIgnoreCase("https")));
     String clientAuth = variableSource.getProperty(SSL_CLIENT_AUTH_PROPERTY);
-    this.sslClientAuth = (clientAuth == null) ? false : (protocol.equals("required"));
+    this.sslClientAuth = (clientAuth == null) ? false : (clientAuth.equals("required"));
     this.sslParameterClassName = variableSource.getProperty(SSL_PARAMETER_CLASS_PROPERTY);
   }
 

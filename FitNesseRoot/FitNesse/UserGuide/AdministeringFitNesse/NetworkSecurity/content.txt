@@ -95,6 +95,19 @@ If you signed the ''certificates'' yourself your browser will give a security wa
 Accept this warning after you checked the certificate. Add a permanent exception for this certificate to your browser 
 to avoid that you get this warning each time in the future.
 
+!3 2.3 Client Authentication
+If users have certificates, client authentication may be required.  To enable client authentication set the following plugins.properties:
+
+!*  plugins.properties
+!-##-!
+!-#  Wiki Server uses https-!
+wiki.protocol=https
+wiki.protocol.ssl.parameter.class='''your.package.YourServerSslParameters'''
+wiki.protocol.ssl.client.auth='''required'''
+*!
+
+Authorization can be accomplished with client certificates with the creation of a custom Authenticator.  The Authenticator has access to the peer dn from the Request.  Access can be granted or denied based on the dn.
+
 !2 3. Secure Communication between  the Test System and the System Under Test
 
 This is currently only supported for the SLIM java client.
