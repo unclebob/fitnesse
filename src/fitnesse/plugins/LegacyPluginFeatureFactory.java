@@ -63,8 +63,8 @@ public class LegacyPluginFeatureFactory extends PluginFeatureFactoryBase {
     }
   }
 
-  protected Class<?> getPluginDescription() {
-    return plugin.getClass();
+  protected String getPluginDescription() {
+    return plugin.getClass().getName();
   }
 
   private <T> boolean register(Object plugin, String methodName, Class<T> registrarType, T registrar)
