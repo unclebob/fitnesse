@@ -138,7 +138,7 @@ public class TypeAdapter {
       return o.toString();
   }
 
-  /**
+  /*
    * Registers a delegate, a class that will handle parsing of other types of values.
    */
   public static void registerParseDelegate(Class<?> type, Class<?> parseDelegate) {
@@ -150,7 +150,7 @@ public class TypeAdapter {
     }
   }
 
-  /**
+  /*
    * Registers a delegate object that will handle parsing of other types of values.
    */
   public static void registerParseDelegate(Class<?> type, Object parseDelegate) {
