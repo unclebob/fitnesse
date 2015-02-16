@@ -7,10 +7,8 @@ import fitnesse.wikitext.parser.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
-  private static final Logger LOG = Logger.getLogger(WhereUsedPageFinder.class.getName());
 
   private WikiPage subjectPage;
   private TraversalListener<? super WikiPage> observer;
@@ -23,6 +21,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
     this.observer = observer;
   }
 
+  @Override
   public void process(WikiPage currentPage) {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
@@ -34,11 +33,13 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       syntaxTree.walkPreOrder(this);
   }
 
+  @Override
   public void search(WikiPage page) {
     hits.clear();
     page.getPageCrawler().traverse(this);
   }
 
+    @Override
     public boolean visit(Symbol node) {
       if (hits.contains(currentPage)) return true;
       if (node.isType(WikiWord.symbolType)) {
@@ -62,6 +63,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       return true;
     }
 
+    @Override
     public boolean visitChildren(Symbol node) {
       return true;
     }
