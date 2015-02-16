@@ -11,10 +11,11 @@ import fit.Parse;
 public abstract class RowEntryFixture extends ColumnFixture {
   public abstract void enterRow() throws Exception;
 
-  public final static String ERROR_INDICATOR = "Unable to enter last row: ";
+  public static final String ERROR_INDICATOR = "Unable to enter last row: ";
   public static final String RIGHT_STYLE = "pass";
   public static final String WRONG_STYLE = "fail";
 
+  @Override
   public void doRow(Parse row) {
     if (row.parts.body.contains(ERROR_INDICATOR))
       return;

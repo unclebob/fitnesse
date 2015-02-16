@@ -46,7 +46,7 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 
 public class ResponderFactory {
-  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
+  private static final Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
 
   private final String rootPath;
   private final Map<String, Class<? extends Responder>> responderMap;

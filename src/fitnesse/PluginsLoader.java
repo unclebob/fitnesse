@@ -25,7 +25,7 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
 public class PluginsLoader {
-  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
 
@@ -205,7 +205,7 @@ public class PluginsLoader {
     }
   }
 
-  static private interface Registrar<T> {
+  private static interface Registrar<T> {
     void register(String key, Class<T> clazz);
   }
 }
