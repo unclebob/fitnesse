@@ -10,6 +10,8 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 
 public class PluginFeatureFactoryBase implements PluginFeatureFactory {
+  protected final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(getClass().getName());
+
   @Override
   public Authenticator getAuthenticator() {
     return null;

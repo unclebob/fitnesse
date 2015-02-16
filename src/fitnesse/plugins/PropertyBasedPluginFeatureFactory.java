@@ -25,8 +25,7 @@ import fitnesse.wikitext.parser.SymbolType;
 /**
  * Determines which plugin features to load based on componentFactory's properties (e.g. plugins.properties).
  */
-public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
-  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PropertyBasedPluginFeatureFactory.class.getName());
+public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase {
   private final ComponentFactory componentFactory;
 
   public static Collection<PluginFeatureFactory> loadFromProperties(ComponentFactory componentFactory) throws PluginException {
