@@ -1,17 +1,20 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse;
+package fitnesse.plugins;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
+import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
@@ -54,8 +57,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class PluginsLoaderTest {
   private Properties testProperties;
@@ -76,6 +78,10 @@ public class PluginsLoaderTest {
     testSlimTableFactory = new SlimTableFactory();
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
     testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
+
+    URL sampleUrl = new File("test/fitnesse/plugins").toURI().toURL();
+    PluginsClassLoader.addUrlToClasspath(sampleUrl);
+
     loader = new PluginsLoader(new ComponentFactory(testProperties));
 
     assertSymbolTypeMatch("!today", false);
@@ -85,8 +91,14 @@ public class PluginsLoaderTest {
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
-            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
+
+    loader.loadResponders(responderFactory);
+    loader.loadSymbolTypes(testProvider);
+    loader.loadWikiPageFactories(testWikiPageFactoryRegistry);
+    loader.loadTestSystems(testTestSystemFactory);
+    loader.loadSlimTables(testSlimTableFactory);
+    loader.loadCustomComparators(testCustomComparatorsRegistry);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
@@ -97,9 +109,9 @@ public class PluginsLoaderTest {
   public void shouldHandleInstanceMethods() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
     testProperties.setProperty("responderName", "instanceTest");
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
 
-    loader.loadPlugins(responderFactory, testProvider, testWikiPageFactoryRegistry,
-            testTestSystemFactory, testSlimTableFactory, testCustomComparatorsRegistry);
+    loader.loadResponders(responderFactory);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("instanceTest"));
   }
@@ -113,6 +125,7 @@ public class PluginsLoaderTest {
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
+    loader = new PluginsLoader(new ComponentFactory(testProperties));
 
     loader.loadResponders(responderFactory);
 
@@ -128,6 +141,15 @@ public class PluginsLoaderTest {
     loader.loadSymbolTypes(testProvider);
 
     assertSymbolTypeMatch("!today", true);
+  }
+
+  @Test
+  public void testWikiWidgetPluginsViaFeatureFactory() throws Exception {
+    assertSymbolTypeMatch("!monthsFromToday2", false);
+
+    loader.loadSymbolTypes(testProvider);
+
+    assertSymbolTypeMatch("!monthsFromToday2", true);
   }
 
   @Test
@@ -214,6 +236,16 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
+    assertSame(TestSlimTable.class, slimTable.getClass());
+  }
+
+  @Test
+  public void testSlimTablesCreationViaFeatureFactory() throws Exception {
+    SlimTableFactory slimTableFactory = new SlimTableFactory();
+    loader.loadSlimTables(slimTableFactory);
+
+    HtmlTable table = makeMockTable(DummyPluginFeatureFactory.SLIM_TABLE);
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }

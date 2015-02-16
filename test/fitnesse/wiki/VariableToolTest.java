@@ -29,7 +29,7 @@ package fitnesse.wiki;
 import java.io.IOException;
 import java.util.Properties;
 
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
