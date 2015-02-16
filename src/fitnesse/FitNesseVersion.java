@@ -65,6 +65,7 @@ public class FitNesseVersion {
   /**
    * Compare this instance's version against the specified one.
    * Note: the suffixes are ignored when comparing versions
+   * @param requiredVersion minimum required version
    * @return true if this version is not younger than the specified one, suffix excluded
    **/
   public boolean isAtLeast(String requiredVersion) {

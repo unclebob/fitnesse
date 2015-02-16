@@ -19,7 +19,7 @@ import fitnesse.testrunner.WikiTestPage;
 /**
  * Used to run tests from a JUnit test suite.
  *
- * @see {@link fitnesse.junit.FitNesseSuite}
+ * @see fitnesse.junit.FitNesseSuite
  */
 public class JavaFormatter extends BaseFormatter implements Closeable {
 

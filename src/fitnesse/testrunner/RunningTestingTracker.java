@@ -22,7 +22,8 @@ public class RunningTestingTracker {
   }
 
   /**
-   * @param process
+   * @param ticket String
+   * @param process Stoppable process
    * @return id used to identify this process for use with the stop responder
    */
   public synchronized String addStartedProcess(String ticket, Stoppable process) {

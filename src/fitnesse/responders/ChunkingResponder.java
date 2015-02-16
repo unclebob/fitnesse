@@ -102,7 +102,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   /**
    * Performs the actual chunk sending in a separate thread.
    * 
-   * @throws Exception
+   * @throws Exception exception thrown
    */
   protected abstract void doSending() throws Exception;
 }
