@@ -1,14 +1,13 @@
 package fitnesse.slim.converters;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import fitnesse.slim.Converter;
 import fitnesse.slim.test.AnEnum;
 import fitnesse.slim.test.AnotherEnum;
@@ -99,7 +98,8 @@ public class ConverterRegistryTest {
   @SuppressWarnings("rawtypes")
   public void getConverterForClass_should_return_a_collection_of_typed_object_with_converter_when_value_is_a_typed_list() throws SecurityException, NoSuchMethodException {
     Class<List> clazz = List.class;
-    ParameterizedType typedClass = ParameterizedTypeImpl.make(List.class, new Type[] { Integer.class }, null);
+
+    ParameterizedType typedClass = (ParameterizedType) new ArrayList<Integer>() {} .getClass().getGenericSuperclass();
 
     Converter<List> converter = ConverterRegistry.getConverterForClass(clazz, typedClass);
     Object current = converter.fromString("[1]").get(0);
@@ -113,7 +113,8 @@ public class ConverterRegistryTest {
   @SuppressWarnings("rawtypes")
   public void getConverterForClass_should_return_a_collection_of_typed_object_without_converter_when_value_is_a_typed_list() throws SecurityException, NoSuchMethodException {
     Class<List> clazz = List.class;
-    ParameterizedType typedClass = ParameterizedTypeImpl.make(List.class, new Type[] { Object.class }, null);
+
+    ParameterizedType typedClass = (ParameterizedType) new ArrayList<Object>() {} .getClass().getGenericSuperclass();
 
     Converter<List> converter = ConverterRegistry.getConverterForClass(clazz, typedClass);
     Object current = converter.fromString("[1]").get(0);

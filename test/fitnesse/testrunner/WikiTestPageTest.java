@@ -31,7 +31,7 @@ public class WikiTestPageTest {
     WikiPage subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
     WikiPageUtil.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
-    WikiPage subTestPage = WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
+    WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
     WikiPageUtil.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
   }
 

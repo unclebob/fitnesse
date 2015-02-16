@@ -1,9 +1,10 @@
 package fitnesse.wikitext.parser;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class WikiTranslator extends Translator {
-    private static final HashMap<SymbolType, Translation> translations;
+    private static final Map<SymbolType, Translation> translations;
 
     static {
         translations = new HashMap<SymbolType, Translation>();

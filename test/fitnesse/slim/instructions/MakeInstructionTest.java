@@ -1,6 +1,5 @@
 package fitnesse.slim.instructions;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,14 +9,8 @@ import static org.mockito.Mockito.*;
 
 public class MakeInstructionTest {
   private static final String ID = "id_1";
-  private static final String RESULT = "OK";
 
-  private InstructionExecutor executor;
-
-  @Before
-  public void setUp() throws Exception {
-    executor = mock(InstructionExecutor.class);
-  }
+  private final InstructionExecutor executor = mock(InstructionExecutor.class);
 
   @Test
   public void shouldDelegateCallToExecutor() throws Exception {
@@ -29,7 +22,6 @@ public class MakeInstructionTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFormatReturnValues() {
     MakeInstruction instruction = new MakeInstruction(ID, "instance", "class", new Object[]{"arg1", "arg2"});
 

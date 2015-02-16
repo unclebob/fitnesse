@@ -11,10 +11,6 @@ import java.util.TreeMap;
 
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileVersion;
-import fitnesse.wiki.fs.SimpleFileVersionsController;
-import fitnesse.wiki.fs.VersionsController;
 
 public class MemoryVersionsController implements VersionsController {
 
@@ -89,7 +85,7 @@ public class MemoryVersionsController implements VersionsController {
     }
 
     public Collection<VersionInfo> history() {
-      LinkedList<VersionInfo> set = new LinkedList<VersionInfo>();
+      Collection<VersionInfo> set = new LinkedList<VersionInfo>();
       for (Map.Entry<String, FileVersion[]> entry : versions.entrySet()) {
         set.add(makeVersionInfo(entry.getValue()[0], entry.getKey()));
       }

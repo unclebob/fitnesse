@@ -14,18 +14,14 @@ import java.util.Properties;
 import java.io.UnsupportedEncodingException;
 
 /**
- * HTTP SPNEGO (GSSAPI Negotiate) authenticator.
- * <p>
- * <strong>How to enable for Kerberos/Active Directory</strong>
- * <p>
- * Enable this plugin by editing plugins.properties and adding the line:
- * <p>
+ * <p>HTTP SPNEGO (GSSAPI Negotiate) authenticator.</p>
+ * <p><strong>How to enable for Kerberos/Active Directory</strong></p>
+ * <p>Enable this plugin by editing plugins.properties and adding the line:</p>
  * <pre>
  * Authenticator = fitnesse.authentication.NegotiateAuthenticator
  * </pre>
- * <p>
- * If using Kerberos on Unix, create a jaas-krb5.conf file with these contents:
- * <p>
+ *
+ * <p>If using Kerberos on Unix, create a jaas-krb5.conf file with these contents:</p>
  * <pre>
  * com.sun.security.jgss.accept  {
  *       com.sun.security.auth.module.Krb5LoginModule required
@@ -37,16 +33,15 @@ import java.io.UnsupportedEncodingException;
  *       ;
  *    };
  * </pre>
- * <p>
- * Next, define these system properties when running the FitNesse server:
- * <p>
+ *
+ * <p>Next, define these system properties when running the FitNesse server:</p>
  * <pre>
  * -Djavax.security.auth.useSubjectCredsOnly=false
  * -Djava.security.auth.login.config=/path/to/jaas-krb5.conf
  * -Dsun.security.krb5.debug=true
  * </pre>
- * <p>
- * You can remove the krb5.debug property later, when you know it's working.
+ *
+ * <p>You can remove the krb5.debug property later, when you know it's working.</p>
  *
  * @author David Leonard Released into the Public domain, 2009. No warranty:
  *         Provided as-is.

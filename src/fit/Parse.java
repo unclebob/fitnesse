@@ -31,17 +31,17 @@ public class Parse {
     this.more = more;
   }
 
-  public static final String tags[] = {"table", "tr", "td"};
+  public static final String[] tags = {"table", "tr", "td"};
 
   public Parse(String text) throws FitParseException {
     this(text, tags, 0, 0);
   }
 
-  public Parse(String text, String tags[]) throws FitParseException {
+  public Parse(String text, String[] tags) throws FitParseException {
     this(text, tags, 0, 0);
   }
 
-  public Parse(String text, String tags[], int level, int offset) throws FitParseException {
+  public Parse(String text, String[] tags, int level, int offset) throws FitParseException {
     String lc = text.toLowerCase();
     int startTag = lc.indexOf("<" + tags[level]);
     int endTag = lc.indexOf(">", startTag) + 1;
@@ -142,24 +142,6 @@ public class Parse {
     }
     return s;
   }
-
-//	public static String unescape(String s)
-//	{
-//		int i = -1, j;
-//		while((i = s.indexOf('&', i + 1)) >= 0)
-//		{
-//			if((j = s.indexOf(';', i + 1)) > 0)
-//			{
-//				String from = s.substring(i + 1, j).toLowerCase();
-//				String to = null;
-//				if((to = replacement(from)) != null)
-//				{
-//					s = s.substring(0, i) + to + s.substring(j + 1);
-//				}
-//			}
-//		}
-//		return s;
-//	}
 
   public static String unescape(String s) {
     StringBuilder sb = new StringBuilder(s);

@@ -42,7 +42,7 @@ public class PageHistoryReader {
   }
   
   private TestResultRecord buildTestResultRecord(File file) throws ParseException {
-    String parts[] = file.getName().split("_|\\.");
+    String[] parts = file.getName().split("_|\\.");
     Date date = dateFormat.parse(parts[0]);
     TestResultRecord testResultRecord = new TestResultRecord(
       file,

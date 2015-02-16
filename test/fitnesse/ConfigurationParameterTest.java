@@ -24,7 +24,7 @@ public class ConfigurationParameterTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void shouldFailOnOddNumberOfArguments() {
-    Properties properties = ConfigurationParameter.makeProperties(ConfigurationParameter.PORT, 8001,
+    ConfigurationParameter.makeProperties(ConfigurationParameter.PORT, 8001,
             ConfigurationParameter.ROOT_PATH);
   }
 

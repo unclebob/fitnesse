@@ -36,14 +36,14 @@ public class FitServer {
   public FitServer() {
   }
 
-  public static void main(String argv[]) throws Exception {
+  public static void main(String[] argv) throws Exception {
     FitServer fitServer = new FitServer();
     fitServer.run(argv);
     if (!fitServer.noExit)
       System.exit(fitServer.exitCode());
   }
 
-  public void run(String argv[]) throws Exception {
+  public void run(String[] argv) throws Exception {
     args(argv);
     File sentinelFile = null;
     if (sentinel) {

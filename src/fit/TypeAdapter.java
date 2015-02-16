@@ -104,8 +104,7 @@ public class TypeAdapter {
   }
 
   public Object invoke() throws IllegalAccessException, InvocationTargetException {
-    Object params[] =
-      {};
+    Object[] params = {};
     return method.invoke(target, params);
   }
 
@@ -139,7 +138,7 @@ public class TypeAdapter {
       return o.toString();
   }
 
-  /**
+  /*
    * Registers a delegate, a class that will handle parsing of other types of values.
    */
   public static void registerParseDelegate(Class<?> type, Class<?> parseDelegate) {
@@ -151,7 +150,7 @@ public class TypeAdapter {
     }
   }
 
-  /**
+  /*
    * Registers a delegate object that will handle parsing of other types of values.
    */
   public static void registerParseDelegate(Class<?> type, Object parseDelegate) {
@@ -170,36 +169,42 @@ public class TypeAdapter {
   // Subclasses ///////////////////////////////
 
   static class ByteAdapter extends ClassByteAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setByte(target, ((Byte) i).byteValue());
     }
   }
 
   static class ClassByteAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Byte(Byte.parseByte(s));
     }
   }
 
   static class ShortAdapter extends ClassShortAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setShort(target, ((Short) i).shortValue());
     }
   }
 
   static class ClassShortAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Short(Short.parseShort(s));
     }
   }
 
   static class IntAdapter extends ClassIntegerAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setInt(target, ((Integer) i).intValue());
     }
   }
 
   static class ClassIntegerAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Integer(Integer.parseInt(s));
     }
@@ -212,22 +217,26 @@ public class TypeAdapter {
   }
 
   static class ClassLongAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Long(Long.parseLong(s));
     }
   }
 
   static class FloatAdapter extends ClassFloatAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setFloat(target, ((Number) i).floatValue());
     }
 
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Float(Float.parseFloat(s));
     }
   }
 
   static class ClassFloatAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Float(Float.parseFloat(s));
     }

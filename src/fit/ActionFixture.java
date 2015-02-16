@@ -13,10 +13,12 @@ import fit.exception.NoSuchMethodFitFailureException;
 public class ActionFixture extends Fixture {
   protected Parse cells;
   private Fixture actor;
+  //TODO(code review): Would placing the array designator on the type make this harder or easier to read?
   protected static final Class<?> empty[] = {};
 
   // Traversal ////////////////////////////////
 
+  @Override
   public void doCells(Parse cells) {
     this.cells = cells;
     try {
@@ -91,10 +93,9 @@ public class ActionFixture extends Fixture {
   protected Method method(String test, int args) throws NoSuchMethodException {
     if (actor == null)
       throw new FitFailureException("You must start a fixture using the 'start' keyword.");
-    Method methods[] = actor.getClass().getMethods();
+    Method[] methods = actor.getClass().getMethods();
     Method result = null;
-    for (int i = 0; i < methods.length; i++) {
-      Method m = methods[i];
+    for (Method m : methods) {
       if (m.getName().equals(test) && m.getParameterTypes().length == args) {
         if (result == null) {
           result = m;

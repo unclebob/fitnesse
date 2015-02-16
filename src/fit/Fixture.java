@@ -48,6 +48,7 @@ public class Fixture {
 
     long elapsed = 0;
 
+    @Override
     public String toString() {
       elapsed = System.currentTimeMillis() - start;
       if (elapsed > 600000) {
@@ -270,9 +271,9 @@ public class Fixture {
 
   public Object parse(String s, Class<?> type) throws Exception {
     if (type.equals(String.class)) {
-      if (s.toLowerCase().equals("null"))
+      if ("null".equalsIgnoreCase(s))
         return null;
-      else if (s.toLowerCase().equals("blank"))
+      else if ("blank".equalsIgnoreCase(s))
         return "";
       else
         return s;
