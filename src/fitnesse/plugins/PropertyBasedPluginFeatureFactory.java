@@ -31,10 +31,10 @@ public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
 
   public static Collection<PluginFeatureFactory> loadFromProperties(ComponentFactory componentFactory) throws PluginException {
     PropertyBasedPluginFeatureFactory propBased = new PropertyBasedPluginFeatureFactory(componentFactory);
-    Collection<PluginFeatureFactory> legacy = loadLegacyPlugins(componentFactory);
-    List<PluginFeatureFactory> all = new ArrayList<PluginFeatureFactory>(legacy.size() + 1);
+    Collection<PluginFeatureFactory> legacyWrappers = createWrappersForLegacyPlugins(componentFactory);
+    List<PluginFeatureFactory> all = new ArrayList<PluginFeatureFactory>(legacyWrappers.size() + 1);
     all.add(propBased);
-    all.addAll(legacy);
+    all.addAll(legacyWrappers);
     return all;
   }
 
@@ -150,7 +150,7 @@ public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
     }
   }
 
-  private static Collection<PluginFeatureFactory> loadLegacyPlugins(ComponentFactory componentFactory) throws PluginException {
+  private static Collection<PluginFeatureFactory> createWrappersForLegacyPlugins(ComponentFactory componentFactory) throws PluginException {
     String[] pluginNames = getListFromProperties(componentFactory, ConfigurationParameter.PLUGINS);
     if (pluginNames == null) {
       return Collections.emptyList();
