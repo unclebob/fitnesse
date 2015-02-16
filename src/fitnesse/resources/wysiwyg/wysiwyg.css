@@ -186,7 +186,7 @@ textarea#pageContent {
     left: 0;
     background: rgba(0,0,0,0.4);
     z-index: 99999;
-    opacity:0;
+    display: none;
     /*-webkit-transition: opacity 400ms ease-in;*/
     /*-moz-transition: opacity 400ms ease-in;*/
     /*transition: opacity 400ms ease-in;*/
@@ -194,7 +194,7 @@ textarea#pageContent {
 }
 
 .modal-dialog:target {
-    opacity:1;
+    display: block;
     pointer-events: auto;
 }
 

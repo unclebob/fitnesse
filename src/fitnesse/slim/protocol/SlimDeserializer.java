@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class SlimDeserializer {
-  private ArrayList<Object> result;
+  private List<Object> result;
 
   public static List<Object> deserialize(String serialized) {
     return new SlimDeserializer(serialized).deserialize();

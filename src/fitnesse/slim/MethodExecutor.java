@@ -14,7 +14,7 @@ public abstract class MethodExecutor {
   public abstract MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable;
 
   protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
-    Method methods[] = k.getMethods();
+    Method[] methods = k.getMethods();
 
     for (Method method : methods) {
       boolean hasMatchingName = method.getName().equals(methodName);
@@ -27,13 +27,13 @@ public abstract class MethodExecutor {
   }
 
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
-    Object convertedArgs[] = convertArgs(method, args);
+    Object[] convertedArgs = convertArgs(method, args);
     Object retval = callMethod(instance, method, convertedArgs);
     Class<?> retType = method.getReturnType();
     return new MethodExecutionResult(retval, retType);
   }
 
-  protected Object[] convertArgs(Method method, Object args[]) {
+  protected Object[] convertArgs(Method method, Object[] args) {
     Type[] argumentParameterTypes = method.getGenericParameterTypes();
     return ConverterSupport.convertArgs(args, argumentParameterTypes);
   }

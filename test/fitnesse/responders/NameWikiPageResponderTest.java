@@ -134,7 +134,7 @@ public class NameWikiPageResponderTest {
     return s.split("\r\n|\r|\n").length;
   }
   
-  private WikiPage createTestPageTree() throws Exception {
+  private void createTestPageTree() throws Exception {
 	// FrontPage
 	// + PageOne
 	// | + PageTwo (hello)
@@ -156,8 +156,6 @@ public class NameWikiPageResponderTest {
     assertEquals(helloTag,    pageTwo.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(worldTag,    pageThree.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(fitnesseTag, pageFive.getData().getAttribute(PageData.PropertySUITES));
-
-    return frontPage;
   }
 
   private void setTag(WikiPage page, String tag) {
@@ -168,7 +166,7 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void canBeUsedRecursively() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
@@ -185,7 +183,7 @@ public class NameWikiPageResponderTest {
  
   @Test
   public void canReportOnlyLeaves() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
@@ -197,7 +195,7 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void canShowTags() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");

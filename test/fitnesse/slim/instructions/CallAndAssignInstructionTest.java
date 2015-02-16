@@ -49,7 +49,6 @@ public class CallAndAssignInstructionTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldReturnExecutionResults() {
     CallAndAssignInstruction instruction = new CallAndAssignInstruction("id_1", "symbol", "instance", "method",
         new Object[] {"arg1", "arg2"}, nameTranslator);

@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
@@ -17,7 +18,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
   private final CommandRunningFitClient client;
-  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private Deque<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
 
   public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient) {

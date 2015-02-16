@@ -134,9 +134,8 @@ public abstract class Binding {
   private static Field findField(Fixture fixture, String simpleName) {
     List<Field> fields = getAllDeclaredFields(fixture.getTargetClass());
     Field field = null;
-    for (int i = 0; i < fields.size(); i++) {
-      Field possibleField = fields.get(i);
-      if (simpleName.equals(possibleField.getName().toLowerCase())) {
+    for (Field possibleField : fields) {
+      if (simpleName.equalsIgnoreCase(possibleField.getName())) {
         field = possibleField;
         break;
       }
@@ -157,9 +156,8 @@ public abstract class Binding {
   private static Method findMethod(Fixture fixture, String simpleName) {
     Method[] methods = fixture.getTargetClass().getMethods();
     Method method = null;
-    for (int i = 0; i < methods.length; i++) {
-      Method possibleMethod = methods[i];
-      if (simpleName.equals(possibleMethod.getName().toLowerCase())) {
+    for (Method possibleMethod : methods) {
+      if (simpleName.equalsIgnoreCase(possibleMethod.getName())) {
         method = possibleMethod;
         break;
       }

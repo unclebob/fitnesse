@@ -98,7 +98,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().whitespace());
 
     private String name;
-    private ArrayList<Matcher> wikiMatchers =  new ArrayList<Matcher>(1);
+    private List<Matcher> wikiMatchers =  new ArrayList<Matcher>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
 

@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import fit.RowFixture;
 
@@ -17,7 +18,7 @@ public class PrimeFactorsFixture extends RowFixture {
 
   public Object[] query() {
     int n = Integer.parseInt(args[0]);
-    ArrayList<Factor> factors = new ArrayList<Factor>();
+    Collection<Factor> factors = new ArrayList<Factor>();
     for (int f = 2; n > 1; f++)
       for (; n % f == 0; n /= f)
         factors.add(new Factor(f));

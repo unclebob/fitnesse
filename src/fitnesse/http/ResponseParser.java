@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +16,7 @@ import util.StreamReader;
 public class ResponseParser {
   private int status;
   private String body;
-  private HashMap<String, String> headers = new HashMap<String, String>();
+  private Map<String, String> headers = new HashMap<String, String>();
   private StreamReader input;
 
   private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");
@@ -35,7 +35,7 @@ public class ResponseParser {
 
   private boolean isChuncked() {
     String encoding = getHeader("Transfer-Encoding");
-    return encoding != null && "chunked".equals(encoding.toLowerCase());
+    return "chunked".equalsIgnoreCase(encoding);
   }
 
   private void parseStatusLine() throws IOException {
@@ -99,7 +99,7 @@ public class ResponseParser {
   }
 
   public String getHeader(String key) {
-    return (String) headers.get(key);
+    return headers.get(key);
   }
 
   public boolean hasHeader(String key) {
@@ -110,8 +110,7 @@ public class ResponseParser {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Status: ").append(status).append("\n");
     buffer.append("Headers: ").append("\n");
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
+    for (String key : headers.keySet()) {
       buffer.append("\t").append(key).append(": ").append(headers.get(key)).append("\n");
 
     }
