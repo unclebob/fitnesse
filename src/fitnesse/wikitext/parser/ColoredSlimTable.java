@@ -65,39 +65,20 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                     }
                 }
 
-                // If table has valid class declaration then color table and choose coloring scheme.
-                List<String> potentialClasses = new FixtureName(tableName)
-                    .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
-                for(String potentialClass: potentialClasses){
-                    if(potentialClass.equals("fitnesse.testutil.CrashFixture")) continue;
-                    Class<?> fixtureClazz;
-                    try{
-                        fixtureClazz = Class.forName(potentialClass);
-                        while(fixtureClazz != null){
+                // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
+                if(!colorTable) {
+                    List<String> potentialClasses = new FixtureName(tableName)
+                        .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
+                    for(String potentialClass: potentialClasses){
+                        Class<?> fixtureClazz;
+                        try{
+                            fixtureClazz = Class.forName(potentialClass);
+                            if(fixtureClazz == null){ continue; }
                             colorTable = true;
-
-                            if(fixtureClazz.getCanonicalName().equals("fit.Comment")){
-                                isCommentFixture = true;
-                                break;
-                            }
-                            if(fixtureClazz.getCanonicalName().equals("fit.ImportFixture")){
-                                isImportFixture = true;
-                                break;
-                            }
-                            if(fixtureClazz.getCanonicalName().equals("fit.ActionFixture")){
-                                isSecondRowTitle = true;
-                                isFirstColumnTitle = true;
-                                break;
-                            }
-                            if(fixtureClazz.getCanonicalName().equals("fit.ColumnFixture")){
-                                isSecondRowTitle = true;
-                                break;
-                            }
-
-                            fixtureClazz = fixtureClazz.getSuperclass();
-                        }
-                    } catch(ClassNotFoundException cnfe){ }
-                    catch(NoClassDefFoundError ncdfe){ }
+                            isSecondRowTitle = true;
+                        }catch(ClassNotFoundException cnfe){ }
+                        catch(NoClassDefFoundError ncdfe){ }
+                    }
                 }
             }
 
