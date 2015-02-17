@@ -3,6 +3,13 @@
 <script src="${contextRoot}files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/codemirror.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldcode.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/simple.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/fitnesse/fitnesse.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/addon/foldgutter.css" media="screen" />
 
 <form method="post" action="$resource" name="f" class="mousetrap">
 #if($!editTime)
@@ -67,7 +74,7 @@
 <script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
-
+return;
   var editors = Wysiwyg.initialize();
   if (editors) {
     var editor = editors[0];
@@ -128,6 +135,18 @@ $(function () {
      	return false; 
     });
 
+});
+
+</script>
+
+<script type="text/javascript">
+
+var editor = CodeMirror.fromTextArea($("#pageContent")[0], {
+  height: "150px",
+  mode: "fitnesse",
+  lineNumbers: true,
+  foldGutter: true,
+  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
 });
 
 </script>

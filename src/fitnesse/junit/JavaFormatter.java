@@ -69,8 +69,11 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       currentWriter
         .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
           + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
+          + "<link rel='stylesheet' type='text/css' href='css/codemirror.css'/>"
           + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
-          + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
+          + "<script src='javascript/codemirror.js' type='text/javascript'></script>"
+          + "<script src='javascript/fitnesse.js' type='text/javascript'></script>"
+          + "</head><body><header><h2>");
       currentWriter.write(testName);
       currentWriter.write("</h2></header><article>");
     }
@@ -126,6 +129,12 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       String imagesDir = base + "images/";
       addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
       addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
+      String codeMirrorDir = base + "codemirror/";
+      addFile(codeMirrorDir + "codemirror.css", "codemirror/codemirror.css");
+      addFile(codeMirrorDir + "/addon/simple.js", "addon/simple.js");
+//      addFile(codeMirrorDir + "/addon/foldgutter.js", "addon/foldgutter.js");
+      addFile(codeMirrorDir + "/addon/foldgutter.css", "addon/foldgutter.css");
+      addFile(codeMirrorDir + "/fitnesse/fitnesse.js", "fitnesse/fitnesse.js");
     }
   }
 
