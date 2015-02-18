@@ -48,10 +48,10 @@ public class SuiteExecutionReport extends ExecutionReport {
   }
 
   @Override
-  public int hashCode()  {
-      return pageHistoryReferences.size():
+  public int hashCode() {
+      return pageHistoryReferences.size();
   }
-  
+
   private boolean allReferencesEqual(List<PageHistoryReference> r1, List<PageHistoryReference> r2) {
     for (int i=0; i<r1.size(); i++) {
       if (!r1.get(i).equals(r2.get(i)))
@@ -67,7 +67,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
   private String pageHistoryReferencesToString() {
     StringBuilder builder = new StringBuilder();
-    if (pageHistoryReferences.size() > 0) {
+    if (pageHistoryReferences.isEmpty()) {
       for (PageHistoryReference reference : pageHistoryReferences) {
         builder.append(reference.toString());
         builder.append(",");
@@ -150,7 +150,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
     @Override
     public int hashCode() {
-        return pageName.hashCode():
+        return pageName.hashCode();
     }
 
     public String getPageName() {
