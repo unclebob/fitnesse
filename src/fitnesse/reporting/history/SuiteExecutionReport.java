@@ -48,8 +48,7 @@ public class SuiteExecutionReport extends ExecutionReport {
   }
 
   @Override
-  public int hashCode()
-  {
+  public int hashCode()  {
       return pageHistoryReferences.size():
   }
   
@@ -150,9 +149,8 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     @Override
-    public int hashCode()
-    {
-        return pageName.size():
+    public int hashCode() {
+        return pageName.hashCode():
     }
 
     public String getPageName() {
