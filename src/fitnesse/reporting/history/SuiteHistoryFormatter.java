@@ -46,11 +46,6 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    super.testSystemStopped(testSystem, cause);
-  }
-
-  @Override
   public void testStarted(WikiTestPage test) {
     String pageName = test.getFullPath();
     testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
