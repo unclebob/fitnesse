@@ -41,7 +41,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
+    testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString(), "" + context.port);
     resetTimer();
   }
 
@@ -94,7 +94,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
         expectationResult.col = Integer.toString(cell.getCol());
         expectationResult.row = Integer.toString(cell.getRow());
       }
-    } catch (Exception e) {
+    } catch (Throwable e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with test result " + testResult, e);
     }
   }
@@ -116,7 +116,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
       expectationResult.type = expectation.getClass().getSimpleName();
       expectationResult.evaluationMessage = exceptionResult.getMessage();
       expectationResult.status = exceptionResult.getExecutionResult().toString();
-    } catch (Exception e) {
+    } catch (Throwable e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with exception result " + exceptionResult, e);
     }
   }

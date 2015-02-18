@@ -35,7 +35,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
     super(page);
     this.context = context;
     writerFactory = source;
-    suiteExecutionReport = new SuiteExecutionReport(context.version, getPage().getPageCrawler().getFullPath().toString());
+    suiteExecutionReport = new SuiteExecutionReport(context.version, getPage().getPageCrawler().getFullPath().toString(), "" + context.port);
     totalTimeMeasurement = new TimeMeasurement().start();
   }
 
@@ -43,6 +43,11 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   public void testSystemStarted(TestSystem testSystem) {
     if (suiteTime == null)
       suiteTime = new TimeMeasurement().start();
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
   }
 
   @Override

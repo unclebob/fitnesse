@@ -29,8 +29,8 @@ public class SuiteExecutionReport extends ExecutionReport {
     unpackXml(xmlDocument);
   }
 
-  public SuiteExecutionReport(FitNesseVersion version, String rootPath) {
-    super(version, rootPath);
+  public SuiteExecutionReport(FitNesseVersion version, String rootPath, String port) {
+    super(version, rootPath, port);
   }
 
   @Override
@@ -45,11 +45,6 @@ public class SuiteExecutionReport extends ExecutionReport {
         return allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences);
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return pageHistoryReferences.size();
   }
 
   private boolean allReferencesEqual(List<PageHistoryReference> r1, List<PageHistoryReference> r2) {
@@ -67,7 +62,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
   private String pageHistoryReferencesToString() {
     StringBuilder builder = new StringBuilder();
-    if (!pageHistoryReferences.isEmpty()) {
+    if (pageHistoryReferences.size() > 0) {
       for (PageHistoryReference reference : pageHistoryReferences) {
         builder.append(reference.toString());
         builder.append(",");
@@ -146,11 +141,6 @@ public class SuiteExecutionReport extends ExecutionReport {
         time == r.time &&
         testSummary.equals(r.testSummary) &&
         runTimeInMillis == r.runTimeInMillis;
-    }
-
-    @Override
-    public int hashCode() {
-      return pageName.hashCode();
     }
 
     public String getPageName() {

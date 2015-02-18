@@ -23,8 +23,8 @@ import java.util.List;
 public class TestExecutionReport extends ExecutionReport {
   private List<TestResult> results = new ArrayList<TestResult>();
 
-  public TestExecutionReport(FitNesseVersion version, String rootPath) {
-    super(version, rootPath);
+  public TestExecutionReport(FitNesseVersion version, String rootPath, String port) {
+    super(version, rootPath, port);
   }
 
   public TestExecutionReport(InputStream input) throws IOException, SAXException {
