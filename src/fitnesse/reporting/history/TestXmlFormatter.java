@@ -94,7 +94,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
         expectationResult.col = Integer.toString(cell.getCol());
         expectationResult.row = Integer.toString(cell.getRow());
       }
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with test result " + testResult, e);
     }
   }
@@ -116,7 +116,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
       expectationResult.type = expectation.getClass().getSimpleName();
       expectationResult.evaluationMessage = exceptionResult.getMessage();
       expectationResult.status = exceptionResult.getExecutionResult().toString();
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with exception result " + exceptionResult, e);
     }
   }
