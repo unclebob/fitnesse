@@ -16,6 +16,7 @@ import fitnesse.util.XmlUtil;
 public abstract class ExecutionReport {
   private String version;
   private String rootPath;
+  private String port;
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   private long totalRunTimeInMillis = 0;
@@ -24,9 +25,10 @@ public abstract class ExecutionReport {
     version = new FitNesseVersion().toString();
   }
 
-  public ExecutionReport(FitNesseVersion version, String rootPath) {
+  public ExecutionReport(FitNesseVersion version, String rootPath, String port) {
     this.version = version == null ? "null" : version.toString();
     this.rootPath = rootPath;
+    this.port = port;
   }
 
   public void tallyPageCounts(ExecutionResult result) {
@@ -47,6 +49,8 @@ public abstract class ExecutionReport {
       return false;
     else if (!StringUtils.equals(version, e.version))
       return false;
+    else if (!StringUtils.equals(port, e.port))
+        return false;
     else if (!DateTimeUtil.datesNullOrEqual(date, e.date))
       return false;
     else if(!finalCounts.equals(e.finalCounts))
@@ -69,6 +73,7 @@ public abstract class ExecutionReport {
   }
 
   protected void unpackCommonFields(Element documentElement) {
+    port = XmlUtil.getTextValue(documentElement, "FitNessePort");
     version = XmlUtil.getTextValue(documentElement, "FitNesseVersion");
     rootPath = XmlUtil.getTextValue(documentElement, "rootPath");
     String dateString = XmlUtil.getTextValue(documentElement, "date");
@@ -109,6 +114,10 @@ public abstract class ExecutionReport {
 
   public String getVersion() {
     return version;
+  }
+
+  public String getPort() {
+    return port;
   }
 
   public long getTotalRunTimeInMillis() {

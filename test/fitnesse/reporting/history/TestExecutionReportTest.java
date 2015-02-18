@@ -26,7 +26,7 @@ public class TestExecutionReportTest {
 
   @Before
   public void setup() throws Exception {
-    expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
+    expected = new TestExecutionReport(new FitNesseVersion("version"), "rootPath", "port");
     expected.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     context = FitNesseUtil.makeTestContext();
   }

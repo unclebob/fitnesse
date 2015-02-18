@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <testResults>
   <FitNesseVersion>$response.Version</FitNesseVersion>
+  <FitNessePort>$response.Port</FitNessePort>
   <rootPath>$response.RootPath</rootPath>
   #foreach ($result in $response.Results)
   <result>

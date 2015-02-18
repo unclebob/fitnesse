@@ -22,24 +22,24 @@ public class SuiteExecutionReportTest {
 
    @Before
   public void setUp() throws Exception {
-    report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
-    report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
+    report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath", "port");
+    report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath", "port");
   }
 
   @Test
   public void degeneratesShouldBeEqual() throws Exception {
-    assertEquals(new SuiteExecutionReport(new FitNesseVersion("version"), "here"),
-            new SuiteExecutionReport(new FitNesseVersion("version"), "here"));
+    assertEquals(new SuiteExecutionReport(new FitNesseVersion("version"), "here", "port"),
+            new SuiteExecutionReport(new FitNesseVersion("version"), "here", "port"));
   }
   @Test
   public void shouldNotBeEqualIfDifferentTypes() throws Exception {
-    assertFalse(new SuiteExecutionReport(new FitNesseVersion("version"), "here").equals(new Integer(0)));
+    assertFalse(new SuiteExecutionReport(new FitNesseVersion("version"), "here", "port").equals(new Integer(0)));
   }
 
   @Test
   public void shouldNotBeEqualWithDifferentRootPaths()throws Exception  {
-    SuiteExecutionReport report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "here");
-    SuiteExecutionReport report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "there");
+    SuiteExecutionReport report1 = new SuiteExecutionReport(new FitNesseVersion("version"), "here", "port");
+    SuiteExecutionReport report2 = new SuiteExecutionReport(new FitNesseVersion("version"), "there", "port");
     assertFalse(report1.equals(report2));
   }
 
@@ -63,8 +63,8 @@ public class SuiteExecutionReportTest {
 
   @Test
   public void shouldNotBeEqualIfVersionIsDifferent() throws Exception {
-    report1 = new SuiteExecutionReport(new FitNesseVersion("x"), "rootPath");
-    report2 = new SuiteExecutionReport(new FitNesseVersion("y"), "rootPath");
+    report1 = new SuiteExecutionReport(new FitNesseVersion("x"), "rootPath", "port");
+    report2 = new SuiteExecutionReport(new FitNesseVersion("y"), "rootPath", "port");
     assertFalse(report1.equals(report2));
   }
 

@@ -3,6 +3,7 @@
   <tr>
     <td>$testExecutionReport.Date</td>
     <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
+    <td class="meta">FitNesse Port: $testExecutionReport.Port</td>
   </tr>
 </table>
 

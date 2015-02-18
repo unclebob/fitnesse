@@ -335,7 +335,7 @@ public class PageHistoryResponderTest {
   }
 
   private void addDummySuiteResult(File resultFile) throws Exception {
-    SuiteExecutionReport report = new SuiteExecutionReport(fitNesseVersion, "SuitePage");
+    SuiteExecutionReport report = new SuiteExecutionReport(fitNesseVersion, "SuitePage", "port");
     report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
     report.getFinalCounts().add(new TestSummary(4,5,6,7));
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
@@ -382,7 +382,7 @@ public class PageHistoryResponderTest {
   }
 
   private TestExecutionReport makeDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
+    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath", "port");
     testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     testResponse.addResult(result);

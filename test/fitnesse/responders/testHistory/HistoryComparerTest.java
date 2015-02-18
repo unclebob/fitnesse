@@ -285,7 +285,7 @@ public class HistoryComparerTest {
   }
 
   private String getContentWith(String passOrFail) throws Exception {
-    TestExecutionReport report = new TestExecutionReport(null, null);
+    TestExecutionReport report = new TestExecutionReport(null, null, null);
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
     result.right = "2";
     result.wrong = "0";
