@@ -1,3 +1,4 @@
+<h1>Test history</h1>
 #set($noHistory = true)
 <div>
  <a class="button" href="?responder=overview">View as Overview</a>

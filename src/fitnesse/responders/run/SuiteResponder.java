@@ -27,6 +27,8 @@ import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.HistoryPurger;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
@@ -50,6 +52,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+import org.apache.commons.lang.StringUtils;
 
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
@@ -57,7 +60,6 @@ import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 public class SuiteResponder extends ChunkingResponder implements SecureResponder {
   private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
@@ -101,6 +103,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return response;
   }
 
+  @Override
   protected void doSending() throws Exception {
     debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
@@ -117,6 +120,16 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     }
 
     closeHtmlResponse(exitCode);
+
+    cleanHistoryForSuite();
+  }
+
+  private void cleanHistoryForSuite() {
+    String testHistoryDays = context.getProperty("test.history.days");
+    if (withSuiteHistoryFormatter() && StringUtils.isNumeric(testHistoryDays)) {
+      new HistoryPurger(context.getTestHistoryDirectory(), Integer.parseInt(testHistoryDays))
+              .deleteTestHistoryOlderThanDays(path);
+    }
   }
 
   public void doExecuteTests() {
@@ -218,13 +231,17 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
-    if (!request.hasInput("nohistory")) {
+    if (withSuiteHistoryFormatter()) {
       runner.addTestSystemListener(getSuiteHistoryFormatter());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
+  }
+
+  private boolean withSuiteHistoryFormatter() {
+    return !request.hasInput("nohistory");
   }
 
   private void createMainFormatter() {
@@ -405,7 +422,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     String datePart = format.format(new Date(time));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
