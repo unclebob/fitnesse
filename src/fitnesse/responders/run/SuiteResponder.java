@@ -38,6 +38,7 @@ import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
@@ -215,7 +216,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
-    if (!request.hasInput("nohistory")) {
+    if (request.hasInput("nohistory")) {
+      runner.addExecutionLogListener(new ConsoleExecutionLogListener());
+    } else {
       addHistoryFormatter(runner);
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
