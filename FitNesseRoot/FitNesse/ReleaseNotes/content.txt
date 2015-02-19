@@ -1,3 +1,21 @@
+!2 Next release
+ * Fixed lot's of code style issues ([[588][https://github.com/unclebob/fitnesse/pull/588]], [[618][https://github.com/unclebob/fitnesse/pull/618]], [[619][https://github.com/unclebob/fitnesse/pull/619]][[628][https://github.com/unclebob/fitnesse/pull/628]], [[632][https://github.com/unclebob/fitnesse/pull/632]], [[634][https://github.com/unclebob/fitnesse/pull/634]])
+ * Table coloring for Slim tables ([[569][https://github.com/unclebob/fitnesse/pull/569]])
+ * Improved extensibility of Slim tables ([[620][https://github.com/unclebob/fitnesse/pull/620]])
+ * Allow graceful names for Slim decision table output columns, when used in conjunction with scenario tables ([[595][https://github.com/unclebob/fitnesse/pull/595]])
+ * Image support for rich text editor ([[597][https://github.com/unclebob/fitnesse/pull/597]], [[606][https://github.com/unclebob/fitnesse/pull/606]], [[611][https://github.com/unclebob/fitnesse/pull/611]], [[629][https://github.com/unclebob/fitnesse/pull/629]])
+ * Hash table editing support for rich text editor ([[622][https://github.com/unclebob/fitnesse/pull/622]])
+ * Rich editor icons are now SVG images ([[568][https://github.com/unclebob/fitnesse/pull/568]])
+ * Improved Slim Converters ([[613][https://github.com/unclebob/fitnesse/pull/613]])
+ * Issues fixed:
+   * Fixed errors that occurred when a different XML !-TransformerFactory-! was loaded ([[598][https://github.com/unclebob/fitnesse/pull/598]])
+   * Empty ''suiteFilter'' argument on ''?suite'' responder will be ignored ([[625][https://github.com/unclebob/fitnesse/pull/625]])
+   * Test/Suite button is search results works from sub-wiki's
+   * Allow Symlink rename/replace on existing Symlink ([[610][https://github.com/unclebob/fitnesse/pull/610]])
+   * Prevent port conflicts for Slim runner when run in-process ([[621][https://github.com/unclebob/fitnesse/pull/621]])
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=10&state=closed.
+
 !2 20150114
  * Big cleanup. Removed classes:
    * !-util.StringUtil-!, use !-org.apache.commons.lang.StringUtils-! instead.
