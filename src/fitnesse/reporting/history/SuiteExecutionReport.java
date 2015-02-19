@@ -29,8 +29,8 @@ public class SuiteExecutionReport extends ExecutionReport {
     unpackXml(xmlDocument);
   }
 
-  public SuiteExecutionReport(FitNesseVersion version, String rootPath) {
-    super(version, rootPath);
+  public SuiteExecutionReport(FitNesseVersion version, String rootPath, String port) {
+    super(version, rootPath, port);
   }
 
   @Override

@@ -41,7 +41,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
+    testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString(), "" + context.port);
     resetTimer();
   }
 

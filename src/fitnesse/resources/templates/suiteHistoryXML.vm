@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <suiteResults>
   <FitNesseVersion>$suiteExecutionReport.version</FitNesseVersion>
+  <FitNessePort>$suiteExecutionReport.port</FitNessePort>
   <rootPath>#escape($suiteExecutionReport.rootPath)</rootPath>
   #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <pageHistoryReference>
