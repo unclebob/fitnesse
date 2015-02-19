@@ -70,7 +70,7 @@
  * Request the page.
 |Response Requester.|
 |uri   |valid?|
-|!-ErrorLogs.TestPage-!|true|
+|!-TestPage?executionLog-!|true|
 
  * Examine the requested page to be sure the tags are displayed.
 |Response Examiner.|

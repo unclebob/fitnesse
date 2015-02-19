@@ -22,7 +22,6 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -41,6 +40,7 @@ import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
@@ -77,10 +77,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  private boolean includeHtml = true;
+  protected boolean includeHtml = true;
   int exitCode;
-  private CompositeExecutionLog log;
-
 
   public SuiteResponder() {
     this(new WikiImporter());
@@ -109,7 +107,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
-    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -232,7 +229,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
     if (withSuiteHistoryFormatter()) {
-      runner.addTestSystemListener(getSuiteHistoryFormatter());
+      addHistoryFormatter(runner);
+    } else {
+      runner.addExecutionLogListener(new ConsoleExecutionLogListener());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
@@ -242,6 +241,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean withSuiteHistoryFormatter() {
     return !request.hasInput("nohistory");
+  }
+
+  protected void addHistoryFormatter(MultipleTestsRunner runner) {
+    SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
+    runner.addTestSystemListener(historyFormatter);
+    runner.addExecutionLogListener(historyFormatter);
   }
 
   private void createMainFormatter() {
@@ -262,7 +267,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return "testPage";
   }
 
-  BaseFormatter newXmlFormatter() {
+  protected BaseFormatter newXmlFormatter() {
     SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
     if (includeHtml)
       xmlFormatter.includeHtml();
@@ -271,17 +276,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return xmlFormatter;
   }
 
-  BaseFormatter newTextFormatter() {
+  protected BaseFormatter newTextFormatter() {
     return new TestTextFormatter(response);
   }
 
-  BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page, log) {
-      @Override
-      protected void writeData(String output) {
-        addToResponse(output);
-      }
-    };
+  protected BaseFormatter newHtmlFormatter() {
+    return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -298,7 +298,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       runner.executeTestPages();
     } finally {
       runningTestingTracker.removeEndedProcess(testRunId);
-      log.publish(context.pageFactory);
     }
   }
 
@@ -315,7 +314,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
-    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;
@@ -369,26 +367,26 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     //request already confirmed not-null
     String orFilterString = null;
     if(request.getInput(OR_FILTER_ARG_1) != null){
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+      orFilterString = request.getInput(OR_FILTER_ARG_1);
     } else {
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+      orFilterString = request.getInput(OR_FILTER_ARG_2);
     }
     return orFilterString;
   }
 
   private static String getNotSuiteFilter(Request request) {
-    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+    return request != null ? request.getInput(NOT_FILTER_ARG) : null;
   }
 
   private static String getAndTagFilters(Request request) {
-    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
+    return request != null ? request.getInput(AND_FILTER_ARG) : null;
   }
 
 
   private static String getSuiteFirstTest(Request request, String suiteName) {
     String startTest = null;
     if (request != null) {
-      startTest = (String) request.getInput("firstTest");
+      startTest = request.getInput("firstTest");
     }
 
     if (startTest != null) {
@@ -427,8 +425,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
-
-  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+  private SuiteHistoryFormatter getSuiteHistoryFormatter() {
     if (suiteHistoryFormatter == null) {
       HistoryWriterFactory source = new HistoryWriterFactory();
       suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);
