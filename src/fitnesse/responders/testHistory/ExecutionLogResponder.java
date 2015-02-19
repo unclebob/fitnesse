@@ -65,7 +65,7 @@ public class ExecutionLogResponder implements SecureResponder {
     ExecutionReport report = ExecutionReport.makeReport(content);
     HtmlPage page = context.pageFactory.newPage();
     String tags = "";
-    if (report instanceof TestExecutionReport) {
+    if (report instanceof TestExecutionReport && !((TestExecutionReport) report).getResults().isEmpty()) {
       tags = ((TestExecutionReport) report).getResults().get(0).getTags();
     }
     PageTitle pageTitle = new PageTitle("Execution Log", PathParser.parse(request.getResource()), tags);

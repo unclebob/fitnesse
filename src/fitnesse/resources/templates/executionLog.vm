@@ -1,4 +1,3 @@
-#foreach( $log in $logs )
 <table>
  <tr>
   <td>$currentDate</td>
@@ -7,6 +6,10 @@
  </tr>
 </table>
 
+#if( $logs.empty )
+<p>No execution log available.</p>
+#end
+#foreach( $log in $logs )
 #if( $log.testSystemName )
 <h3>${log.testSystemName}</h3>
 <table>
