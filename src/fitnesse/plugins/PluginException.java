@@ -1,4 +1,4 @@
-package fitnesse;
+package fitnesse.plugins;
 
 /**
  * Problems with plugins...
