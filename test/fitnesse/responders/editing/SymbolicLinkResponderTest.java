@@ -7,6 +7,7 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
@@ -41,7 +42,7 @@ public class SymbolicLinkResponderTest {
     context = FitNesseUtil.makeTestContext(fileSystem);
     root = context.getRootPage();          //#  root
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");       //#    |--PageOne
-    WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");   //#    |    `--ChildOne
+    WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "ChildOne");   //#    |    `--ChildOne
     WikiPage pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
     childTwo = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "");   //#         |--ChildTwo
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildThree"), ""); //#         `--ChildThree
@@ -194,6 +195,15 @@ public class SymbolicLinkResponderTest {
   }
 
   @Test
+  public void testRenameFailWhenNonSym() throws Exception {
+    prepareSymlinkOnPageOne();
+    request.addInput("newname", "ChildOne");
+    Response response = invokeResponder();
+
+    assertEquals(412, response.getStatus());
+  }
+
+  @Test
   public void linkNameShouldBeAValidWikiWordWhenRenaming() throws Exception {
     prepareSymlinkOnPageOne();
     request.addInput("newname", "New+link");
@@ -251,7 +261,7 @@ public class SymbolicLinkResponderTest {
   }
 
   @Test
-  public void testAddFailWhenPageAlreadyHasChild() throws Exception {
+  public void testAddFailWhenPageAlreadyHasNonSymChild() throws Exception {
     WikiPageUtil.addPage(pageOne, PathParser.parse("SymLink"), "");
 
     request.addInput("linkName", "SymLink");
@@ -264,6 +274,23 @@ public class SymbolicLinkResponderTest {
     assertSubString("Error Occurred", content);
   }
 
+  @Test
+  public void testReplaceAllowedOnSymChild() throws Exception {
+    request.addInput("linkName", "SymLink");
+    request.addInput("linkPath", "PageTwo");
+    Response response = invokeResponder();
+
+    request.addInput("linkName", "SymLink");
+    request.addInput("linkPath", ">ChildOne");
+    response = invokeResponder();
+
+    checkPageOneRedirectToProperties(response);
+
+    WikiPage symLink = pageOne.getChildPage("SymLink");
+    assertNotNull(symLink);
+    assertEquals(SymbolicPage.class, symLink.getClass());
+    assertTrue(symLink.getHtml().contains("ChildOne"));
+}
 
   @Test
   public void testSubmitFormForLinkToExternalRoot() throws Exception {
