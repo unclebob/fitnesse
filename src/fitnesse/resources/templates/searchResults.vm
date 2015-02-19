@@ -20,21 +20,18 @@
 
  #set( $hits = 0 )
  #traverse( $resultResponder )
+  #set( $pagePath = $result.getPageCrawler().getFullPath().toString() )
   <tr>
    <td>
    #if($result.getData().hasAttribute("Suite"))
-    <a href="$page.getPageCrawler().getRelativeName($result)?suite">
-     Suite
-    </a>
+    <a href="$pagePath?suite">Suite</a>
    #end
    #if($result.getData().hasAttribute("Test"))
-    <a href="$page.getPageCrawler().getRelativeName($result)?test">
-     Test
-    </a>
+    <a href="$pagePath?test">Test</a>
    #end
    </td>
    <td>
-    <a href="$result.getPageCrawler().getFullPath().toString()">$result.getPageCrawler().getFullPath().toString()</a>
+    <a href="$pagePath">$pagePath</a>
    </td>
    <td style="text-align: right;">
    #set ( $tags = $result.getData().getAttribute("Suites") )
