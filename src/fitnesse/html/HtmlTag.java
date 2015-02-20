@@ -44,7 +44,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
   }
 
   private boolean hasChildren() {
-    return childTags.size() > 0;
+    return !childTags.isEmpty();
   }
 
   public void add(String s) {

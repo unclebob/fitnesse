@@ -37,11 +37,11 @@ public class Link extends SymbolType implements Rule, Translation {
             tag = new HtmlTag("img");
             tag.addAttribute("src", reference.makeUrl(prefix));
             String imageClass = link.getProperty(Link.ImageProperty);
-            if (imageClass.length() > 0) tag.addAttribute("class", imageClass);
+            if (!imageClass.isEmpty()) tag.addAttribute("class", imageClass);
             String width = link.getProperty(Link.WidthProperty);
-            if (width.length() > 0) tag.addAttribute("width", width);
+            if (!width.isEmpty()) tag.addAttribute("width", width);
             String style = link.getProperty(Link.StyleProperty);
-            if (style.length() > 0) tag.addAttribute("style", style);
+            if (!style.isEmpty()) tag.addAttribute("style", style);
         }
         else {
             tag = new HtmlTag("a", body);

@@ -26,7 +26,7 @@ public class Today extends SymbolType implements Rule, Translation {
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.DateFormatOption});
-        if (lookAhead.size() != 0 ) {
+        if (!lookAhead.isEmpty()) {
             String option = lookAhead.get(1).getContent();
             if (isDateFormatOption(option)) {
                 current.putProperty(Today.Format, option);
@@ -35,7 +35,7 @@ public class Today extends SymbolType implements Rule, Translation {
         }
         else {
             lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.OpenParenthesis});
-            if (lookAhead.size() != 0) {
+            if (!lookAhead.isEmpty()) {
                 parser.moveNext(2);
                 Maybe<String> format = parser.parseToAsString(SymbolType.CloseParenthesis);
                 if (format.isNothing())  return Symbol.nothing;
@@ -43,7 +43,7 @@ public class Today extends SymbolType implements Rule, Translation {
             }
         }
         lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Delta});
-        if (lookAhead.size() != 0) {
+        if (!lookAhead.isEmpty()) {
             String increment = lookAhead.get(1).getContent();
             current.putProperty(Increment, increment);
             parser.moveNext(2);
@@ -77,7 +77,7 @@ public class Today extends SymbolType implements Rule, Translation {
         return
             format.equals("-t") ? "dd MMM, yyyy HH:mm" :
             format.equals("-xml") ? "yyyy-MM-dd'T'HH:mm:ss" :
-            format.length() == 0 ? "dd MMM, yyyy" :
+                    format.isEmpty() ? "dd MMM, yyyy" :
                 format;
     }
 }

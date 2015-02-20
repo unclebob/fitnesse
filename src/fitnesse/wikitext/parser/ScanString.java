@@ -24,7 +24,7 @@ public class ScanString {
     public void markStart(int markStartOffset) { this.markStartOffset = markStartOffset; }
 
     public boolean matches(String match, int startsAt) {
-        if (match.length() == 0) return false;
+        if (match.isEmpty()) return false;
         if (offset + startsAt + match.length() > input.length()) return false;
         return input.regionMatches(offset + startsAt, match, 0, match.length());
     }

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import fitnesse.responders.run.SuiteResponder;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -35,7 +34,6 @@ public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
   private ResponseExaminer examiner = new ResponseExaminer();
-  private Map<String, String> hash;
 
   public void createPageWithContent(String pageName, String content) throws Exception {
     creator.pageName = pageName;
@@ -172,7 +170,7 @@ public class PageDriver {
     if (textPosition == -1)
       return -1;
     String priorToContent = content.substring(0, textPosition);
-    String lines[] = priorToContent.split("\n");
+    String[] lines = priorToContent.split("\n");
     return lines.length;
   }
 
@@ -193,7 +191,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(fitnesse.reporting.history.PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     return dateFormat.format(date);
   }
 
@@ -204,7 +202,7 @@ public class PageDriver {
                     new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
-    NodeFilter predicates[] = {
+    NodeFilter[] predicates = {
             new TagNameFilter(childTag),
             new HasAttributeFilter("class", tagClass)
     };

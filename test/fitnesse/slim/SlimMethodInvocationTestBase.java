@@ -137,10 +137,12 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void convertArrayOfIntegersThrowsExceptionIfNotInteger() throws Exception {
     try {
-      Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
+      caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
       fail("Converted array with non-integers to an integer array.");
     } catch (SlimException e) {
-      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_INTEGER_LIST>>"));
+      System.out.println(e.getMessage());
+      assertTrue(e.getMessage().contains("NumberFormatException"));
+      assertTrue(NumberFormatException.class.isInstance(e.getCause()));
     }
   }
 
@@ -159,10 +161,12 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void convertArrayOfDoublesThrowsExceptionIfNotInteger() throws Exception {
     try {
-      Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
+      caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
       fail("Converted array with non-doubles to a double array.");
     } catch (SlimException e) {
-      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>"));
+      System.out.println(e.getMessage());
+      assertTrue(e.getMessage().contains("NumberFormatException"));
+      assertTrue(NumberFormatException.class.isInstance(e.getCause()));
     }
   }
 

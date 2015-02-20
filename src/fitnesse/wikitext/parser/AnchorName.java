@@ -13,7 +13,7 @@ public class AnchorName extends SymbolType implements Rule {
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> tokens = parser.moveNext(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
-        if (tokens.size() == 0) return Symbol.nothing;
+        if (tokens.isEmpty()) return Symbol.nothing;
 
         String anchor = tokens.get(1).getContent();
         if (!ScanString.isWord(anchor)) return Symbol.nothing;

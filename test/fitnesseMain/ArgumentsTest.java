@@ -8,7 +8,7 @@ import java.util.Properties;
 import static org.junit.Assert.*;
 
 import fitnesse.ContextConfigurator;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import org.junit.Test;
 
 public class ArgumentsTest {

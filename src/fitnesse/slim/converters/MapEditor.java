@@ -1,6 +1,7 @@
 package fitnesse.slim.converters;
 
 import fitnesse.html.HtmlTag;
+
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class MapEditor extends PropertyEditorSupport {
 
-  private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
-  private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
+  private static final String[] specialHtmlChars = new String[] { "&", "<", ">" };
+  private static final String[] specialHtmlEscapes = new String[] { "&amp;", "&lt;", "&gt;" };
 
   private NodeList nodes;
 
@@ -31,6 +32,7 @@ public class MapEditor extends PropertyEditorSupport {
   }
 
   @Override
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public String getAsText() {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     Map<Object, Object> hash = (Map) getValue();
@@ -54,7 +56,7 @@ public class MapEditor extends PropertyEditorSupport {
   }
 
   public Object fromString(String possibleTable) {
-    HashMap<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<String, String>();
     if (tableIsValid(possibleTable))
       extractRowsIntoMap(map, tables);
 
@@ -80,23 +82,23 @@ public class MapEditor extends PropertyEditorSupport {
     return nodes != null;
   }
 
-  private void extractRowsIntoMap(HashMap<String, String> map, NodeList tables) {
+  private void extractRowsIntoMap(Map<String, String> map, NodeList tables) {
     extractRows(map, getRows(tables));
   }
 
-  private void extractRows(HashMap<String, String> map, NodeList rows) {
+  private void extractRows(Map<String, String> map, NodeList rows) {
     for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
       extractRow(map, rows, rowIndex);
     }
   }
 
-  private void extractRow(HashMap<String, String> map, NodeList rows, int rowIndex) {
+  private void extractRow(Map<String, String> map, NodeList rows, int rowIndex) {
     Node row = rows.elementAt(rowIndex);
     if (row != null)
       extractColumns(map, row);
   }
 
-  private void extractColumns(HashMap<String, String> map, Node row) {
+  private void extractColumns(Map<String, String> map, Node row) {
     TagNameFilter tdFilter = new TagNameFilter("td");
     if (row.getChildren() != null) {
       NodeList cols = row.getChildren().extractAllNodesThatMatch(tdFilter);
@@ -105,7 +107,7 @@ public class MapEditor extends PropertyEditorSupport {
     }
   }
 
-  private void addColsToMap(HashMap<String, String> map, NodeList cols) {
+  private void addColsToMap(Map<String, String> map, NodeList cols) {
     String key = getText(cols.elementAt(0));
     String value = getText(cols.elementAt(1));
     map.put(key, value);
@@ -145,6 +147,5 @@ public class MapEditor extends PropertyEditorSupport {
         result = result.replace(originalStrings[i], replacementStrings[i]);
     return result;
   }
-
 
 }

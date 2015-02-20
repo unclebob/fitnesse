@@ -15,13 +15,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;

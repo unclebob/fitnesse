@@ -44,7 +44,7 @@ public class HtmlPage {
    * Define main (article) template for the file. This file is also set as the default class
    * on the body tag (bodyClass).
    *
-   * @param mainTemplate
+   * @param mainTemplate main (article) template
    */
   public void setMainTemplate(String mainTemplate) {
     setBodyClass(mainTemplate);
@@ -89,7 +89,7 @@ public class HtmlPage {
   /**
    * Set title and pageTitle properties.
    *
-   * @param title
+   * @param title Value for title property
    */
   public void addTitles(String title) {
     setTitle(title);

@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
@@ -17,7 +18,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
   private final CommandRunningFitClient client;
-  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private Deque<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
 
   public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient) {
@@ -44,7 +45,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     processingQueue.addLast(pageToTest);
     String html = pageToTest.getHtml();
     try {
-      if (html.length() == 0)
+      if (html.isEmpty())
         client.send(EMPTY_PAGE_CONTENT);
       else
         client.send(html);
@@ -99,7 +100,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem) {
+  private void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemListener.testSystemStarted(testSystem);
   }
 

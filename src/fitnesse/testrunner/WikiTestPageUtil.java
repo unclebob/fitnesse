@@ -1,6 +1,5 @@
 package fitnesse.testrunner;
 
-import fitnesse.http.Request;
 import fitnesse.wiki.WikiPageUtil;
 
 public class WikiTestPageUtil {

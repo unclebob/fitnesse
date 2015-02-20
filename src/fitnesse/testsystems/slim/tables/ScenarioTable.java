@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
+  private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<String>();
   private Set<String> outputs = new HashSet<String>();
@@ -186,22 +187,33 @@ private void splitInputAndOutputArguments(String argName) {
 
   protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
     ScriptTable scriptTable;
-    if (parentTable instanceof ScriptTable && !parentTable.getClass().equals(ScriptTable.class)) {
+    if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = new ScriptTable(newTable, id, testContext);
+      scriptTable = createChild(defaultChildClass, newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
   }
 
   protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
-    Class<? extends ScriptTable> parentTableClass = parentScriptTable.getClass();
+    return createChild(parentScriptTable.getClass(), newTable, testContext);
+  }
+
+  protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) {
     try {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
     } catch (Exception e) {
       throw new RuntimeException("Unable to create child table of type: " + parentTableClass.getName(), e);
     }
+  }
+
+  public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
+    ScenarioTable.defaultChildClass = defaultChildClass;
+  }
+
+  public static Class<? extends ScriptTable> getDefaultChildClass() {
+    return defaultChildClass;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
@@ -223,7 +235,7 @@ private void splitInputAndOutputArguments(String argName) {
 
     if (parameterized) {
       parameterizedName = table.getCellContents(1, 0);
-    } else if (this.inputs.size() > 0) {
+    } else if (!this.inputs.isEmpty()) {
       StringBuilder nameBuffer = new StringBuilder();
 
       for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)

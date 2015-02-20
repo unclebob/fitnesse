@@ -2,6 +2,7 @@ package fitnesse;
 
 import java.io.IOException;
 
+import fitnesse.plugins.PluginException;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

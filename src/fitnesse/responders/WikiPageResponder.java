@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import java.util.Map;
-import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -50,7 +49,7 @@ public class WikiPageResponder implements SecureResponder {
 
   private boolean dontCreateNonExistentPage(Request request) {
     String dontCreate = request.getInput("dontCreatePage");
-    return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
+    return dontCreate != null && (dontCreate.isEmpty() || Boolean.parseBoolean(dontCreate));
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {

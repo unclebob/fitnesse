@@ -5,13 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fitnesse.responders.run.SuiteResponder;
-
 import util.FileUtil;
 
 public class PageHistoryReader {
 
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
   
   void readHistoryFromPageDirectory(File pageDirectory) throws ParseException {
@@ -42,7 +40,7 @@ public class PageHistoryReader {
   }
   
   private TestResultRecord buildTestResultRecord(File file) throws ParseException {
-    String parts[] = file.getName().split("_|\\.");
+    String[] parts = file.getName().split("_|\\.");
     Date date = dateFormat.parse(parts[0]);
     TestResultRecord testResultRecord = new TestResultRecord(
       file,

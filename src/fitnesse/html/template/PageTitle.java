@@ -18,11 +18,11 @@ public class PageTitle {
     pagePath = pagePath.copy();
     List<String> names = pagePath.getNames();
     link = PathParser.render(pagePath);
-    if (names.size() > 0) {
+    if (!names.isEmpty()) {
       title = names.get(names.size() - 1);
       
       pagePath.removeNameFromEnd();
-      while (pagePath.getNames().size() > 0) {
+      while (!pagePath.getNames().isEmpty()) {
         names = pagePath.getNames();
         BreadCrumb crumb = new BreadCrumb(names.get(names.size() - 1), PathParser.render(pagePath));
         breadCrumbs.add(crumb);

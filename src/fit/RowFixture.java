@@ -7,6 +7,7 @@
 package fit;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,10 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 abstract public class RowFixture extends ColumnFixture {
 
-  public Object results[];
+  public Object[] results;
   public List<Object> missing = new LinkedList<Object>();
   public List<Object> surplus = new LinkedList<Object>();
 
+  @Override
   public void doRows(Parse rows) {
     try {
       bind(rows.parts);
@@ -49,8 +51,7 @@ abstract public class RowFixture extends ColumnFixture {
       Map<Object, Object> eMap = eSort(expected, col);
       Map<Object, Object> cMap = cSort(computed, col);
       Set<Object> keys = union(eMap.keySet(), cMap.keySet());
-      for (Iterator<Object> i = keys.iterator(); i.hasNext();) {
-        Object key = i.next();
+      for (Object key : keys) {
         List<?> eList = (List<?>) eMap.get(key);
         List<?> cList = (List<?>) cMap.get(key);
         if (eList == null) {
@@ -77,17 +78,15 @@ abstract public class RowFixture extends ColumnFixture {
 
   protected List<Object> list(Object[] rows) {
     List<Object> result = new LinkedList<Object>();
-    for (int i = 0; i < rows.length; i++) {
-      result.add(rows[i]);
-    }
+    Collections.addAll(result, rows);
     return result;
   }
 
   protected Map<Object, Object> eSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
     Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
-    for (Iterator<?> i = list.iterator(); i.hasNext();) {
-      Parse row = (Parse) i.next();
+    for (Object o : list) {
+      Parse row = (Parse) o;
       Parse cell = row.parts.at(col);
       try {
         Object key = a.parse(cell.text());
@@ -106,8 +105,7 @@ abstract public class RowFixture extends ColumnFixture {
   protected Map<Object, Object> cSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
     Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
-    for (Iterator<?> i = list.iterator(); i.hasNext();) {
-      Object row = i.next();
+    for (Object row : list) {
       try {
         a.target = row;
         Object key = a.get();
@@ -142,11 +140,11 @@ abstract public class RowFixture extends ColumnFixture {
   }
 
   protected void check(List<?> eList, List<?> cList) {
-    if (eList.size() == 0) {
+    if (eList.isEmpty()) {
       surplus.addAll(cList);
       return;
     }
-    if (cList.size() == 0) {
+    if (cList.isEmpty()) {
       missing.addAll(eList);
       return;
     }
@@ -185,8 +183,8 @@ abstract public class RowFixture extends ColumnFixture {
   protected Parse buildRows(Object[] rows) {
     Parse root = new Parse(null, null, null, null);
     Parse next = root;
-    for (int i = 0; i < rows.length; i++) {
-      next = next.more = new Parse("tr", null, buildCells(rows[i]), null);
+    for (Object row : rows) {
+      next = next.more = new Parse("tr", null, buildCells(row), null);
     }
     return root.more;
   }
@@ -199,9 +197,9 @@ abstract public class RowFixture extends ColumnFixture {
     }
     Parse root = new Parse(null, null, null, null);
     Parse next = root;
-    for (int i = 0; i < columnBindings.length; i++) {
+    for (Binding columnBinding : columnBindings) {
       next = next.more = new Parse("td", "&nbsp;", null, null);
-      TypeAdapter a = columnBindings[i].adapter;
+      TypeAdapter a = columnBinding.adapter;
       if (a == null) {
         ignore(next);
       } else {

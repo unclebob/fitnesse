@@ -214,6 +214,7 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Escape"><a id="wt-escape" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 11,15.5 a 1.5,1.5 0 1 1 -3,0 1.5,1.5 0 1 1 3,0 z" transform="translate(-3.5,-1)" id="path4665" style="fill:#000000;fill-opacity:1;stroke:none" /> <path d="M 6,12 5,3 7,3 z" id="path4667" style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 10,8 c 4,0 4,0 4,0 l 0,0" id="path4669" style="fill:none;stroke:#000000;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
         '<li title="Remove format"><a id="wt-remove" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2.27 4.55L7.43 9.7 5 15h2.5l1.64-3.58L13.73 16 15 14.73 3.55 3.27 2.27 4.55zM5.82 3l2 2h1.76l-.55 1.21 1.71 1.71L12.08 5H16V3H5.82z"/></svg></a></li>',
         '<li title="Image"><a id="wt-image" href="#insert-image"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="M 16.086957,14.444444 V 3.5555556 C 16.086957,2.7 15.382609,2 14.521739,2 H 3.5652174 C 2.7043478,2 2,2.7 2,3.5555556 V 14.444444 C 2,15.3 2.7043478,16 3.5652174,16 H 14.521739 c 0.86087,0 1.565218,-0.7 1.565218,-1.555556 z M 6.3043478,10.166667 8.2608696,12.507778 11,9 14.521739,13.666667 H 3.5652174 l 2.7391304,-3.5 z" /> </svg></a></li>',
+        '<li title="Hash table"><a id="wt-hash-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" id="svg2985" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,15 c 6,0 1,-6 6,-6 M 10,3 c 6,0 1,6 6,6" /> <path d="M 8,15 C 2,15 7,9 2,9 M 8,3 C 2,3 7,9 2,9" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg></a></li>',
         '</ul>',
         '<ul>',
         '<li title="Link"><a id="wt-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M 11,1.75 C 9.8,1.75 8.675,2.2544118 7.85,2.975 8.45,3.1191176 8.975,3.3352941 9.425,3.6235294 9.875,3.3352941 10.4,3.1911765 11,3.1911765 c 1.65,0 3,1.2970588 3,2.8823529 v 3.6029412 c 0,1.5852944 -1.35,2.8823534 -3,2.8823534 -1.65,0 -3,-1.297059 -3,-2.8823534 V 7.1544118 C 7.625,6.7220588 7.1,6.4338235 6.5,6.4338235 V 9.6764706 C 6.5,12.054412 8.525,14 11,14 c 2.475,0 4.5,-1.945588 4.5,-4.3235294 V 6.0735294 C 15.5,3.6955882 13.475,1.75 11,1.75 z"/> <path d="m 6.5,16.161765 c 1.2,0 2.325,-0.504412 3.15,-1.225 -0.6,-0.144118 -1.125,-0.360294 -1.575,-0.64853 -0.45,0.288236 -0.975,0.432353 -1.575,0.432353 -1.65,0 -3,-1.297059 -3,-2.882353 V 8.2352941 C 3.5,6.65 4.85,5.3529412 6.5,5.3529412 c 1.65,0 3,1.2970588 3,2.8823529 v 2.5220589 c 0.375,0.432353 0.9,0.720588 1.5,0.720588 V 8.2352941 C 11,5.8573529 8.975,3.9117647 6.5,3.9117647 4.025,3.9117647 2,5.8573529 2,8.2352941 v 3.6029409 c 0,2.377941 2.025,4.32353 4.5,4.32353 z"/> </svg></a></li>',
@@ -242,6 +243,12 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Delete cell (Ctrl-|)"><a id="wt-delete-cell" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg> </a></li>',
         '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
         '<li title="Delete column"><a id="wt-delete-col" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="2.5" x="7.5" y="4" /> <rect y="11.5" x="7.5" height="2.5" width="3" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg> </a></li>',
+        '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
+        '</ul>',
+        '<ul class="in-hash-table">',
+        '<li title="Insert row above"><a id="wt-insert-row-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7.5 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="4"/> <rect y="4" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="4"/> </svg> </a></li>',
+        '<li title="Insert row below"><a id="wt-insert-row-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,10.5 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="11" /> <rect y="11" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="11"/> </svg></a></li>',
+        '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
         '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
         '</ul>'];
     var div = d.createElement("div");
@@ -335,6 +342,8 @@ Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
             return [ self.insertImage ];
 		case "table":
 			return [ self.insertTable ];
+        case "hash-table":
+            return [ self.insertHashTable ];
 		case "insert-cell-before":
 			return [ self.ui_insertTableCell, false ];
 		case "insert-cell-after":
@@ -546,6 +555,11 @@ Wysiwyg.prototype.execCommand = function (name, arg, selectionRange) {
     return this.contentDocument.execCommand(name, false, arg);
 };
 
+Wysiwyg.prototype.isHashTable = function (node) {
+    return node.tagName === "TABLE" && /hashtable/.test(node.className);
+};
+
+
 Wysiwyg.prototype.setupEditorEvents = function () {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var self = this;
@@ -659,7 +673,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
         case 28: // ctrl-"|"
             var range = self.getSelectionRange();
             var element = getSelfOrAncestor(range.startContainer, "table");
-            if (element &&
+            if (element && !self.isHashTable(element) &&
                     getSelfOrAncestor(range.endContainer, "table") === element &&
                     !getSelfOrAncestor(range.endContainer, /^(?:tt)/)) {
                 if (event.ctrlKey) {
@@ -1038,7 +1052,6 @@ Wysiwyg.prototype.insertImage = function () {
     insertImageBox
         .on('click', 'span', function () {
             path = Array.prototype.slice.call($(this).data());
-            console.log('path', path);
             loadFiles();
         })
         .on('click', 'li.directory', function () {
@@ -1098,7 +1111,7 @@ Wysiwyg.prototype.insertTable = function () {
         return;
     }
     var id = this.generateDomId();
-    this.insertHTML(this.tableHTML(id, 2, 2));
+    this.insertHTML(this.tableHTML(id, 2, 2, "wiki"));
     var element = this.contentDocument.getElementById(id);
     if (element) {
         this.selectNodeContents(element);
@@ -1106,10 +1119,24 @@ Wysiwyg.prototype.insertTable = function () {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype._tableHTML = function (row, col) {
+Wysiwyg.prototype.insertHashTable = function () {
+    if (this.selectionContainsTagName("pre")) {
+        return;
+    }
+    var id = this.generateDomId();
+    this.insertHTML(this.tableHTML(id, 2, 2, "hashtable"));
+    var element = this.contentDocument.getElementById(id);
+    if (element) {
+        element.setAttribute('class', 'hashtable');
+        this.selectNodeContents(element);
+    }
+    this.selectionChanged();
+};
+
+Wysiwyg.prototype._tableHTML = function (row, col, className) {
     var tr = "<tr>" + ((1 << col) - 1).toString(2).replace(/1/g, "<td></td>") + "</tr>";
     var html = [
-        '<table class="wiki">', '<tbody>',
+        '<table class="', className, '">', '<tbody>',
         ((1 << row) - 1).toString(2).replace(/1/g, tr),
         '</tbody>', '</table>' ];
     return html.join("");
@@ -1220,12 +1247,13 @@ Wysiwyg.prototype.deleteTable = function () {
 
 Wysiwyg.prototype.spanTableColumns = function (table) {
     // Spanning columns fitnesse style.
-    var maxCells = Math.max.apply(Math, $.map($('tr', table), function (e) {
+    var rows = $('> tbody > tr', table);
+    var maxCells = Math.max.apply(Math, $.map(rows, function (e) {
         var tds = $('td', e);
         tds.removeAttr('colspan');
         return tds.size();
     }));
-    $('tr', table).each(function () {
+    rows.each(function () {
         var s = $('td', this).size();
         if (s < maxCells) {
             $('td:last', this).attr('colspan', maxCells - s + 1);
@@ -1523,6 +1551,7 @@ Wysiwyg.prototype.selectionChanged = function () {
     };
     var position = this.getSelectionPosition();
     var node, toolbarButtons, name;
+    var hashTable = false;
 
     if (position.start) {
         node = position.start === position.end ? position.start.firstChild : position.start.nextSibling;
@@ -1537,6 +1566,7 @@ Wysiwyg.prototype.selectionChanged = function () {
                 name = tagNameToKey[name];
             }
             status[name] = true;
+            hashTable |= this.isHashTable(node);
         }
         node = node.parentNode;
     }
@@ -1552,12 +1582,18 @@ Wysiwyg.prototype.selectionChanged = function () {
         }
     }
 
-    if (status["table"]) {
-    	$(".wysiwyg-toolbar .non-table").hide();
-    	$(".wysiwyg-toolbar .in-table").show();
+    if (hashTable) {
+        $(".wysiwyg-toolbar .non-table").hide();
+        $(".wysiwyg-toolbar .in-table").hide();
+        $(".wysiwyg-toolbar .in-hash-table").show();
+    } else if (status["table"]) {
+        $(".wysiwyg-toolbar .non-table").hide();
+        $(".wysiwyg-toolbar .in-table").show();
+        $(".wysiwyg-toolbar .in-hash-table").hide();
     } else {
-    	$(".wysiwyg-toolbar .in-table").hide();
-    	$(".wysiwyg-toolbar .non-table").show();
+        $(".wysiwyg-toolbar .non-table").show();
+        $(".wysiwyg-toolbar .in-table").hide();
+        $(".wysiwyg-toolbar .in-hash-table").hide();
     }
     $(window).resize();
     
@@ -1588,11 +1624,15 @@ Wysiwyg.prototype.selectionChanged = function () {
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{");              // 5. code block (open)
     wikiInlineRules.push("\\}\\}\\}");              // 6. code block (close)
-    wikiInlineRules.push("![-<{(\\[]");             // 7. escaped (open)
-    wikiInlineRules.push("[->)\\]]!|\\}");          // 8. escaped (close)
+    wikiInlineRules.push("![-<(\\[]");              // 7. escaped (open)
+    wikiInlineRules.push("[->)\\]]!");              // 8. escaped (close)
     wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
-    wikiInlineRules.push("\\${[^}]+}");             // 11. Variable
+    wikiInlineRules.push("\\${.+?}");               // 11. Variable
+    wikiInlineRules.push("!{");                     // 12. Hash table open
+    wikiInlineRules.push(":");                      // 13. Hash table key-value separator
+    wikiInlineRules.push(",");                      // 14. Hash table entry separator
+    wikiInlineRules.push("}");                      // 15. Hash table close
 
     var wikiRules = [];
     // -1. header
@@ -1631,9 +1671,6 @@ Wysiwyg.prototype.normalizeLink = function (link) {
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }
-//    if (!/^[\w.+\-]+:/.test(link)) {
-//        link = link;
-//    }
     if (/^[^\"\']/.test(link) && /\s/.test(link)) {
         if (link.indexOf('"') === -1) {
             link = '"' + link + '"';
@@ -1725,7 +1762,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function inDefinition() { return $(holder).parents().andSelf().filter("p.meta, p.comment").get(0); }
     function inTable() { return getSelfOrAncestor(holder, "table"); }
     function inEscapedTable() { return $(holder).parents().andSelf().filter("table.escaped").get(0); }
-    function inTableRow() { return getSelfOrAncestor(holder, "tr"); }
+    function inHashTable() { return $(holder).parents().andSelf().filter("table.hashtable").get(0); }
+    function inTableRow() { return getSelfOrAncestor(holder, "tr", "tbody"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
     function inEscapedText() { return getSelfOrAncestor(holder, "tt"); }
     function inCodeBlock() { return getSelfOrAncestor(holder, "pre"); }
@@ -2047,7 +2085,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function openEscapedText(value) {
         if (!inEscapedText()) {
             var element = contentDocument.createElement("tt");
-            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!{': 'hashtable', '!(': 'nested', '![': 'plaintexttable' }[value]);
+            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!(': 'nested', '![': 'plaintexttable' }[value]);
             holder.appendChild(element);
             holder = element;
         } else {
@@ -2059,7 +2097,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', '}': 'hashtable', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
+            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
                 holder = target.parentNode;
                 return;
             }
@@ -2067,11 +2105,12 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         holder.appendChild(contentDocument.createTextNode(value));
     }
 
-    function handleTableCell(action, escaped, hidden) {
+    function handleTableCell(action, tableClassName, rowClassName) {
+        // action: 1 = create, 2 = add cell to current row, -1 = close row
         var d = contentDocument;
         var h, table, tbody, cell;
 
-        if (!inTable()) {
+        if (!inTable() || tableClassName === "hashtable") {
             h = holder;
             
             // Just ensure you can type between to tables
@@ -2079,8 +2118,8 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             	h.appendChild(d.createElement('p'));
             }
             table = d.createElement("table");
-            if (escaped) {
-                table.className = "escaped";
+            if (tableClassName) {
+                table.className = tableClassName;
             }
             tbody = d.createElement("tbody");
             table.appendChild(tbody);
@@ -2099,11 +2138,13 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
         var row;
         switch (action) {
+        case 2:
+            return;
         case 1:
             row = d.createElement("tr");
             tbody.appendChild(row);
-            if (hidden) {
-                row.className = "hidden";
+            if (rowClassName) {
+                row.className = rowClassName;
             }
             break;
         case 0:
@@ -2124,7 +2165,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     }
 
     function closeTable() {
-        if (inTable()) {
+        if (inTable() || inHashTable()) {
             var target = getSelfOrAncestor(holder, "table");
 
             self.spanTableColumns(target);
@@ -2211,7 +2252,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             }
 
             if (((prevIndex === 0 && text) || (match && match.index === 0 && matchNumber > 0))
-                    && !inParagraph() && !inAnchor() && !inEscapedText() && !inCodeBlock() && !currentHeader) {
+                    && !inParagraph() && !inAnchor() && !inHashTable() && !inEscapedText() && !inCodeBlock() && !currentHeader) {
                 closeToFragment();
             }
 
@@ -2277,6 +2318,22 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             case 11:    // Variable
                 handleVariable(matchText);
                 continue;
+            case 12:    // Hash table open
+                if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleTableCell(1, "hashtable");
+                continue;
+            case 13:    // Hash table key-value separator ':'
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleTableCell(0);
+                continue;
+            case 14:    // Hash table entry separator ','
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                handleTableCell(1);
+                continue;
+            case 15:    // Hash table close
+                if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
+                closeTable();
+                continue;
             case -1:    // header
                 currentHeader = handleHeader(matchText);
                 if (currentHeader) {
@@ -2306,7 +2363,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 break;
             case -6:    // cell
                 if (inDefinition()) { break; }
-                if (inEscapedText() || inCodeBlock()) { 
+                if (inEscapedText() || inCodeBlock()) {
                     if (/^-!/.test(matchText)) {
                         closeEscapedText(matchText.substring(0, 2));
                         matchText = matchText.substring(2);
@@ -2321,7 +2378,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText), /^-/.test(matchText));
+                handleTableCell(inTableRow() ? 0 : 1, /^-?!/.test(matchText) ? "escaped" : null, /^-/.test(matchText) ? "hidden" : null);
                 continue;
             case -7:    // collapsible section
                 if (inEscapedText()) { break; }
@@ -2341,7 +2398,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
             }
         }
 
-        if (inEscapedText() || inCodeBlock()) {
+        if (inHashTable() || inEscapedText() || inCodeBlock()) {
             var element = contentDocument.createElement("br");
             holder.appendChild(element);
         } else if (inParagraph()) {
@@ -2375,7 +2432,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (currentHeader) {
             closeHeader();
         }
-        if (inTable() && !inEscapedText()) {
+        if (inTable() && !inEscapedText() && !inHashTable()) {
             handleTableCell(-1);
         }
         
@@ -2474,6 +2531,8 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     var last = root;
     var listDepth = 0;
     var inCodeBlock = false;
+    var tableType;
+    var firstHashTableEntry = true;
     var skipNode = null;
 
     function tokenFromSpan(node) {
@@ -2642,18 +2701,26 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         var _texts = texts;
         var token = wikiOpenTokens[name];
         if (token !== undefined) {
-            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling)) {
+            if (wikiBlockTags[name] && self.isInlineNode(node.previousSibling) && !self.isHashTable(node)) {
                 _texts.push("\n");
             }
             if (token !== true) {
                 pushToken(token);
             }
+            // TODO: can move to switch statement?
             if (name === "table") {
-                if ($('tr', node).first().hasClass('hidden')) {
-                    _texts.push("-");
-                }
-                if ($(node).hasClass("escaped")) {
-                    _texts.push("!");
+                if ($(node).hasClass("hashtable")) {
+                    tableType = "hashtable";
+                    _texts.push("!{")
+                    firstHashTableEntry = true;
+                } else {
+                    tableType = "table";
+                    if ($('tr', node).first().hasClass('hidden')) {
+                        _texts.push("-");
+                    }
+                    if ($(node).hasClass("escaped")) {
+                        _texts.push("!");
+                    }
                 }
             }
         } else {
@@ -2733,6 +2800,24 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "tr":
+                if (tableType === "hashtable") {
+                    var cells = $(node).find('td');
+                    skipNode = node;
+
+                    if (cells.length >= 2) {
+                        var key = self.domToWikitext(cells[0], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        var value = self.domToWikitext(cells[1], $.extend(options, { escapeNewLines: true})).replace(/^ +| +$/g, "").replace(/\n$/, "");
+                        if (key && value) {
+                            if (!firstHashTableEntry) {
+                                _texts.push(",");
+                            }
+                            _texts.push(key);
+                            _texts.push(":");
+                            _texts.push(value);
+                            firstHashTableEntry = false;
+                        }
+                    }
+                }
                 break;
             case "tt":
                 skipNode = node;
@@ -2741,11 +2826,13 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     var tags = {
                         'escape': [ "!-", "-!" ],
                         'htmlescape': [ "!<", ">!" ],
-                        'hashtable': [ "!{", "}" ],
                         'nested': [ "!(", ")!" ],
                         'plaintexttable': [ "![", "]!" ],
                         'inlinecode': [ "{{{", "}}}" ]
-                    }[node.getAttribute('class') || "escape"];
+                    }[node.className || "escape"];
+                    if (!tags) {
+                        console.log('No tags', node.innerHTML, node.className);
+                    }
                     text = tags[0] + value + tags[1];
                     pushTextWithDecorations(text, node);
                 }
@@ -2864,7 +2951,11 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 }
                 break;
             case "table":
-                _texts.push("\n");
+                if ($(node).hasClass("hashtable")) {
+                    _texts.push("}");
+                } else {
+                    _texts.push("\n");
+                }
                 break;
             }
         }
@@ -3005,8 +3096,8 @@ if (window.getSelection) {
             }
         }
     };
-    Wysiwyg.prototype.tableHTML = function (id, row, col) {
-        var html = this._tableHTML(row, col);
+    Wysiwyg.prototype.tableHTML = function (id, row, col, className) {
+        var html = this._tableHTML(row, col, className);
         return html.replace(/<td><\/td>/g, '<td><br/></td>').replace(/<td>/, '<td id="' + id + '">');
     };
     Wysiwyg.prototype.insertTableCell = function (row, index) {
@@ -3158,7 +3249,6 @@ if (window.getSelection) {
     Wysiwyg.prototype.getSelectionPosition = function () {
         var range = this.getNativeSelectionRange();
         var position = { start: null, end: null };
-        console.log('range', range);
         if (range) {
             position.start = range.startContainer;
             position.end = range.endContainer;
@@ -3200,8 +3290,8 @@ if (window.getSelection) {
         this.insertHTML("<br/>");
     };
     Wysiwyg.prototype.insertLineBreakOnShiftEnter = null;
-    Wysiwyg.prototype.tableHTML = function (id, row, col) {
-        var html = this._tableHTML(row, col);
+    Wysiwyg.prototype.tableHTML = function (id, row, col, className) {
+        var html = this._tableHTML(row, col, className);
         return html.replace(/<td>/, '<td id="' + id + '">');
     };
     Wysiwyg.prototype.insertTableCell = function (row, index) {
@@ -3677,7 +3767,8 @@ if (document.defaultView) {
     };
 }
 
-Wysiwyg.getSelfOrAncestor = function (element, name) {
+// Find parent element of type 'name', stop if an element of type 'notName' is found.
+Wysiwyg.getSelfOrAncestor = function (element, name, notName) {
     var target = element;
     var d = element.ownerDocument;
     if (name instanceof RegExp) {
@@ -3700,6 +3791,8 @@ Wysiwyg.getSelfOrAncestor = function (element, name) {
             case 1: // element
                 if (target.tagName.toLowerCase() === name) {
                     return target;
+                } else if (target.tagName.toLowerCase() === notName) {
+                    return null;
                 }
                 break;
             case 11: // fragment

@@ -84,6 +84,7 @@ public class ScriptTable extends SlimTable {
 
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
@@ -116,7 +117,7 @@ public class ScriptTable extends SlimTable {
       assertions = note(row);
     else if ((match = ifSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
-    else if (firstCell.length() == 0)
+    else if (firstCell.isEmpty())
       assertions = note(row);
     else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
       assertions = note(row);

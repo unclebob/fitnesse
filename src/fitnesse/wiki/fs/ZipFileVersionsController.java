@@ -168,9 +168,15 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private void addToZip(final File file, final ZipOutputStream zos) throws IOException {
+    final FileInputStream is;
+    try {
+      is = new FileInputStream(file);
+    } catch (FileNotFoundException e) {
+      LOG.warning("File " + file.getAbsolutePath() + " not found. It can not be saved in this version.");
+      return;
+    }
     final ZipEntry entry = new ZipEntry(file.getName());
     zos.putNextEntry(entry);
-    final FileInputStream is = new FileInputStream(file);
     final int size = (int) file.length();
     final byte[] bytes = new byte[size];
     is.read(bytes);
@@ -215,7 +221,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   private void pruneVersions(Collection<ZipFileVersionInfo> versions) {
     List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
-    if (versions.size() > 0) {
+    if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
       for (ZipFileVersionInfo version : versionsList) {

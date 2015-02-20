@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import java.io.IOException;
+
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
@@ -14,7 +16,6 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +27,9 @@ public class SearchResponderTest {
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
-    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
+    WikiPage somePage = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
+    WikiPageUtil.addPage(somePage, PathParser.parse("SomeTest"), "test page content");
+    WikiPageUtil.addPage(somePage, PathParser.parse("SomeSuite"), "suite page content");
     request = new MockRequest();
     request.addInput("searchString", "blah");
     request.addInput("searchType", "blah");
@@ -78,7 +81,7 @@ public class SearchResponderTest {
     assertSubString("!+-<&>", content);
   }
 
-  private String getResponseContentUsingSearchString(String searchString) throws Exception {
+  private String getResponseContentUsingSearchString(String searchString) throws IOException {
     request.addInput("searchString", searchString);
     request.addInput(Request.NOCHUNK, "");
     Response response = responder.makeResponse(context, request);
@@ -88,7 +91,7 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void testTitle() throws Exception {
+  public void testTitle() {
     request.addInput("searchType", "something with the word title in it");
     responder.setRequest(request);
     String title = responder.getTitle();
@@ -99,4 +102,19 @@ public class SearchResponderTest {
     assertSubString("Content Search Results", title);
   }
 
+  @Test
+  public void testLinkShouldContainFullPagePath() throws IOException {
+    request.setResource("SomePage");
+    String searchPageContent = getResponseContentUsingSearchString("test page");
+
+    assertSubString("<a href=\"SomePage.SomeTest?test\">Test</a>", searchPageContent);
+  }
+
+  @Test
+  public void suiteLinkShouldContainFullPagePath() throws IOException {
+    request.setResource("SomePage");
+    String searchPageContent = getResponseContentUsingSearchString("suite page");
+
+    assertSubString("<a href=\"SomePage.SomeSuite?suite\">Suite</a>", searchPageContent);
+  }
 }

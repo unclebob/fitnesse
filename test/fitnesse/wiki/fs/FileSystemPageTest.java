@@ -16,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageData.PropertyFILES;
-import static fitnesse.wiki.PageData.PropertyVERSIONS;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.*;
@@ -203,14 +201,6 @@ public class FileSystemPageTest {
     PageData data = suitePage3.getData();
     assertFalse(data.hasAttribute(TEST.toString()));
     assertTrue(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
-  public void testDefaultAttributesForErrorLogsPageName() throws Exception {
-    WikiPage errorLogsPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    PageData data = errorLogsPage.getData();
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
   }
 
   @Test

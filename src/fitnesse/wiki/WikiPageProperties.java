@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import fitnesse.html.HtmlUtil;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

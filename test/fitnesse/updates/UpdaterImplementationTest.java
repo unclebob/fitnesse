@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import org.junit.After;

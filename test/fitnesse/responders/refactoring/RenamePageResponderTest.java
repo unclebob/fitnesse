@@ -13,7 +13,6 @@ import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;

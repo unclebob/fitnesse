@@ -33,7 +33,7 @@ public class VariableStore {
   }
 
   public Object[] replaceSymbols(Object[] args) {
-    Object result[] = new Object[args.length];
+    Object[] result = new Object[args.length];
     for (int i = 0; i < args.length; i++)
       result[i] = replaceSymbol(args[i]);
 

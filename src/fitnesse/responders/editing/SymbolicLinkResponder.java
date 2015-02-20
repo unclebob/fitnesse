@@ -73,7 +73,7 @@ public class SymbolicLinkResponder implements Responder {
     WikiPageProperties properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
     symLinks.remove(linkToRemove);
-    if (symLinks.keySet().size() == 0)
+    if (symLinks.keySet().isEmpty())
       properties.remove(SymbolicPage.PROPERTY_NAME);
     page.commit(data);
     setRedirect(resource);
@@ -83,10 +83,11 @@ public class SymbolicLinkResponder implements Responder {
     String linkToRename = (String) request.getInput("rename"),
     newName = (String) request.getInput("newname");
 
-    if (isValidWikiPageName(newName)) {
-      PageData data = page.getData();
-      WikiPageProperties properties = data.getProperties();
-      WikiPageProperty symLinks = getSymLinkProperty(properties);
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty symLinks = getSymLinkProperty(properties);
+
+    if (isValidWikiPageName(newName, symLinks)) {
       String currentPath = symLinks.get(linkToRename);
       symLinks.remove(linkToRename);
       symLinks.set(newName, currentPath);
@@ -99,18 +100,18 @@ public class SymbolicLinkResponder implements Responder {
     String linkName = StringUtils.trim((String) request.getInput("linkName"));
     String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
 
-    if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName)) {
-      PageData data = page.getData();
-      WikiPageProperties properties = data.getProperties();
-      WikiPageProperty symLinks = getSymLinkProperty(properties);
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty symLinks = getSymLinkProperty(properties);
+    if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName, symLinks)) {
       symLinks.set(linkName, linkPath);
       page.commit(data);
       setRedirect(resource);
     }
   }
 
-  private boolean isValidWikiPageName(String linkName) {
-    if (page.hasChildPage(linkName)) {
+  private boolean isValidWikiPageName(String linkName, WikiPageProperty symLinks) {
+    if (page.hasChildPage(linkName) && !symLinks.has(linkName)) {
       response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
       response.setStatus(412);
       return false;
