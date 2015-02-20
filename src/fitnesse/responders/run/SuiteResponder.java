@@ -27,6 +27,7 @@ import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.JunitReFormatter;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
@@ -39,19 +40,18 @@ import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
@@ -233,6 +233,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
       mainFormatter = newTextFormatter();
+    } else if (response.isJunitFormat()) {
+      mainFormatter = newJunitFormatter();
     } else {
       mainFormatter = newHtmlFormatter();
     }
@@ -259,6 +261,11 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return new TestTextFormatter(response);
   }
 
+  BaseFormatter newJunitFormatter() {
+	  JunitReFormatter xmlFormatter = new JunitReFormatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
+	  return xmlFormatter;
+  }
+
   BaseFormatter newHtmlFormatter() {
     return new SuiteHtmlFormatter(context, page, log) {
       @Override
@@ -268,7 +275,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     };
   }
 
-  protected TestSystemListener newTestInProgressFormatter() {
+  protected TestSystemListener<WikiTestPage> newTestInProgressFormatter() {
     return new PageInProgressFormatter(context);
   }
 

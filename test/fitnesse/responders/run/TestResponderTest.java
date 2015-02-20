@@ -25,7 +25,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -864,6 +863,16 @@ public class TestResponderTest {
       assertEquals(wrong, XmlUtil.getTextValue(counts, "wrong"));
       assertEquals(ignores, XmlUtil.getTextValue(counts, "ignores"));
       assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
+    }
+  }
+  public static class JunitTestUtilities {
+      public static Document getXmlDocumentFromResults(String results) throws Exception {
+        String endOfXml = "</testsuite>";
+        String startOfXml = "<?xml";
+        int xmlStartIndex = results.indexOf(startOfXml);
+        int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
+        String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
+        return XmlUtil.newDocument(xmlString);
     }
   }
 }
