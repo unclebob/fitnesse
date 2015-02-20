@@ -4,6 +4,8 @@ import fitnesse.slim.instructions.InstructionExecutor;
 
 public interface StatementExecutorInterface extends InstructionExecutor {
 
+  public abstract Object getSymbol(String symbolName);
+	
   public abstract Object getInstance(String instanceName);
 
   public abstract boolean stopHasBeenRequested();

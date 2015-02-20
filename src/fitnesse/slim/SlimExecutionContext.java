@@ -27,6 +27,10 @@ public class SlimExecutionContext {
         variables.setSymbol(name, value);
     }
 
+    public MethodExecutionResult getVariable(String name) {
+        return variables.getSymbol(name);
+    }
+    
     public void setVariable(String name, Object value) {
         setVariable(name, new MethodExecutionResult(value, Object.class));
     }

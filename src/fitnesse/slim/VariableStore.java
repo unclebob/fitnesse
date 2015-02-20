@@ -16,6 +16,10 @@ public class VariableStore {
     variables.put(name, value);
   }
 
+  public MethodExecutionResult getSymbol(String name) {
+	return variables.get(name);
+  }
+  
   public Object getStored(String nameWithDollar) {
     if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
       return null;
