@@ -21,8 +21,8 @@ import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wikitext.parser.VariableSource;
 
 public class FitNesseContext {
-  public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
-  public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
+  public static final String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
+  public static final String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
 
   public final FitNesseVersion version;

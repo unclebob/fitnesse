@@ -140,7 +140,7 @@ public class StreamReader {
     bytesConsumed = 0;
   }
 
-  private static abstract class State {
+  private abstract static class State {
     public void read(InputStream input) throws IOException {
     }
 
@@ -166,6 +166,7 @@ public class StreamReader {
   };
 
   private final State READCOUNT_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       byte[] bytes = new byte[readGoal - readStatus];
       int bytesRead = input.read(bytes);
@@ -180,12 +181,14 @@ public class StreamReader {
       }
     }
 
+    @Override
     public boolean finished() {
       return readStatus >= readGoal;
     }
   };
 
   private final State READUPTO_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       int b = input.read();
       if (b == -1) {

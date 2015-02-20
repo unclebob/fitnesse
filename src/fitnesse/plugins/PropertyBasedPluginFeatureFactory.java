@@ -172,7 +172,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     }
   }
 
-  static private interface Registrar<T> {
+  private static interface Registrar<T> {
     void register(String key, Class<T> clazz);
   }
 }

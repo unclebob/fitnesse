@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-abstract public class RowFixture extends ColumnFixture {
+public abstract class RowFixture extends ColumnFixture {
 
   public Object[] results;
   public List<Object> missing = new LinkedList<Object>();
@@ -38,9 +38,9 @@ abstract public class RowFixture extends ColumnFixture {
     }
   }
 
-  abstract public Object[] query() throws Exception;  // get rows to be compared
+  public abstract Object[] query() throws Exception;  // get rows to be compared
 
-  abstract public Class<?> getTargetClass();             // get expected type of row
+  public abstract Class<?> getTargetClass();             // get expected type of row
 
   protected void match(List<?> expected, List<?> computed, int col) {
     if (col >= columnBindings.length) {

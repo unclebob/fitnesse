@@ -22,7 +22,7 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 
 public class PluginsLoader {
-  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
   private final Collection<PluginFeatureFactory> pluginFeatureFactories;
@@ -33,7 +33,7 @@ public class PluginsLoader {
   }
 
   private Collection<PluginFeatureFactory> findPluginFeatureFactories() throws PluginException {
-    List<PluginFeatureFactory> factories = new ArrayList();
+    List<PluginFeatureFactory> factories = new ArrayList<PluginFeatureFactory>();
     factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
     for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {

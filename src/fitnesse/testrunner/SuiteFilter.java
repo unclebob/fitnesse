@@ -17,11 +17,11 @@ import fitnesse.wiki.WikiPagePath;
 import org.apache.commons.lang.StringUtils;
 
 public class SuiteFilter {
-  public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
 
-  final private SuiteTagMatcher notMatchTags;
-  final private SuiteTagMatcher matchTags;
-  final private String startWithTest;
+  private final SuiteTagMatcher notMatchTags;
+  private final SuiteTagMatcher matchTags;
+  private final String startWithTest;
   
   public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
     @Override
@@ -109,10 +109,10 @@ public class SuiteFilter {
   
   private class SuiteTagMatcher {
     private static final String LIST_SEPARATOR = "\\s*,\\s*";
-    final private List<String> tags;
+    private final List<String> tags;
     final String tagString;
-    final private boolean matchIfNoTags;
-    final private boolean andStrategy;
+    private final boolean matchIfNoTags;
+    private final boolean andStrategy;
 
     public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags, boolean andStrategy) {
       tagString = suiteTags;

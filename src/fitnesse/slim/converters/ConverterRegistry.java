@@ -13,7 +13,7 @@ import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
-  private final static Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+  private static final Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
 
   static {
     addStandardConverters();
