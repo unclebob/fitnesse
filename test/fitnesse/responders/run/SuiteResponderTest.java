@@ -156,20 +156,6 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSuiteWithEmptyPage() throws Exception {
-    suite = WikiPageUtil.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
-    addTestPage(suite, "TestThatIsEmpty", "");
-    request.setResource("SuiteWithEmptyPage");
-    runSuite();
-
-    WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.SuiteWithEmptyPage");
-    WikiPage errorLog = root.getPageCrawler().getPage(errorLogPath);
-    PageData data = errorLog.getData();
-    String errorLogContent = data.getContent();
-    assertNotSubString("Exception", errorLogContent);
-  }
-
-  @Test
   public void testSuiteWithOneTestWithoutTable() throws Exception {
     addTestToSuite("TestWithoutTable", "This test has not table");
     addTestToSuite("TestTwo", fitPassFixture);

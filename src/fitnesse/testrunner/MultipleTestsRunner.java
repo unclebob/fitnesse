@@ -188,7 +188,7 @@ public class MultipleTestsRunner implements Stoppable {
 
   private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
     @Override
-    public void testSystemStarted(TestSystem testSystem) {
+    public void testSystemStarted(TestSystem testSystem) throws IOException {
       formatters.testSystemStarted(testSystem);
     }
 

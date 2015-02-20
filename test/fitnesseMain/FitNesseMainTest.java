@@ -16,7 +16,7 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;

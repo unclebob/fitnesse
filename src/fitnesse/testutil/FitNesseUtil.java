@@ -5,7 +5,7 @@ package fitnesse.testutil;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;

@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
@@ -94,6 +95,7 @@ public class ResponderFactory {
     addResponder("packet", PacketResponder.class);
     addResponder("testHistory", TestHistoryResponder.class);
     addResponder("pageHistory", PageHistoryResponder.class);
+    addResponder("executionLog", ExecutionLogResponder.class);
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
