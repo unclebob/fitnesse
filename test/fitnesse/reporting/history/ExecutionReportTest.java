@@ -119,6 +119,13 @@ public class ExecutionReportTest {
     assertEquals("Fancy exception", log.getExceptions().get(0).getMessage());
   }
 
+  @Test
+  public void testHashCode() {
+    TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
+
+    assertEquals(-836274316, original.hashCode());
+  }
+
   private ExecutionReport executionReportWithVersion(final String theVersion) {
     return new ExecutionReport() {
       @Override

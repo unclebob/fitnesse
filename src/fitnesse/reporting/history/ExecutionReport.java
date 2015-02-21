@@ -6,6 +6,7 @@ import java.util.List;
 
 import fitnesse.testsystems.ExecutionResult;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -58,6 +59,11 @@ public abstract class ExecutionReport {
     else if(totalRunTimeInMillis != e.totalRunTimeInMillis)
       return false;
     return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(rootPath).append(version).append(date).hashCode();
   }
 
   public static ExecutionReport makeReport(String xmlString) throws Exception {
