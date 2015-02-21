@@ -60,12 +60,12 @@ public class VersionsControllerFixture {
   }
 
   public String getVersionInfos() {
-	String result = "";
-	Collection<VersionInfo> versions = lastUsedPage.getVersions();
-	for (VersionInfo version : versions){
-		result = result  + version.getName() +"-" + version.getAuthor() + "-" + version.getCreationTime() + "\n";
-	}
-	return result;
+    String result = "";
+    Collection<VersionInfo> versions = lastUsedPage.getVersions();
+    for (VersionInfo version : versions){
+      result = result  + version.getName() +"-" + version.getAuthor() + "-" + version.getCreationTime() + "\n";
+    }
+    return result;
   }
 
   public String contentForRevision(int n) {
@@ -75,17 +75,17 @@ public class VersionsControllerFixture {
   }
 
   public String contentForRevisionFromPage(int n, String pageName) {
-	    final PageCrawler pageCrawler = rootPage.getPageCrawler();
-	    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
-	    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
-	    else return contentForRevision(n);
+    final PageCrawler pageCrawler = rootPage.getPageCrawler();
+    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
+    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
+    else return contentForRevision(n);
   }
 
   public String contentFromPage(String pageName) {
-	    final PageCrawler pageCrawler = rootPage.getPageCrawler();
-	    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
-	    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
-	    else return lastUsedPage.getData().getContent();
+    final PageCrawler pageCrawler = rootPage.getPageCrawler();
+    lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
+    if (lastUsedPage == null) return "[Error: Page doesn't exists]";
+    else return lastUsedPage.getData().getContent();
 }
 
   public boolean initialiseGitRepository() throws GitAPIException {
