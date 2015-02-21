@@ -115,6 +115,6 @@ class Option {
       if (!token.isEmpty())
         usableTokens.add(token);
     }
-    return usableTokens.toArray(new String[]{});
+    return usableTokens.toArray(new String[usableTokens.size()]);
   }
 }
