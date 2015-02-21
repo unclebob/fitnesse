@@ -246,7 +246,7 @@ public abstract class SlimTable {
     }
 
     private boolean nameHasDollars() {
-      return name.indexOf("$") != -1;
+      return name.contains("$");
     }
 
     private String disgraceClassName() {
@@ -341,10 +341,12 @@ public abstract class SlimTable {
       return exceptionResult;
     }
 
+    @Override
     public int getCol() {
       return col;
     }
 
+    @Override
     public int getRow() {
       return row;
     }

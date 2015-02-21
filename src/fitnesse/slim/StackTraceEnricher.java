@@ -215,7 +215,7 @@ public class StackTraceEnricher {
 
     private static String removeParentDirectories(String path, String separator) {
       String parsedPath = path;
-      if (path.indexOf(separator) > -1 && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
+      if (path.contains(separator) && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
           (separator))) {
         parsedPath = parsedPath.substring(parsedPath.indexOf(separator) + 1);
         parsedPath = removeParentDirectories(parsedPath, separator);

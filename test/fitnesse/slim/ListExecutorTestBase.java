@@ -68,8 +68,7 @@ public abstract class ListExecutorTestBase {
   private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimCommandRunningClient.resultToMap(executor.execute(statements));
     SlimException result = (SlimException) results.get(returnTag);
-    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().indexOf
-        (message) != -1);
+    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().contains(message));
   }
 
   @Test
