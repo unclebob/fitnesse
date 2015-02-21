@@ -5,7 +5,6 @@ import java.io.Writer;
 
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;

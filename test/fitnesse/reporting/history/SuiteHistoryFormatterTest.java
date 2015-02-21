@@ -20,7 +20,6 @@ import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringWriter;

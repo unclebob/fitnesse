@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.util.Clock;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import util.FileUtil;
 

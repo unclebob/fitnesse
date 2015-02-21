@@ -20,7 +20,6 @@ import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wiki.PathParser;
 import util.FileUtil;
 

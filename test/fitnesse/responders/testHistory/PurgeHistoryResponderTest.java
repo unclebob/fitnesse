@@ -4,12 +4,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.reporting.history.PageHistory;
-import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 
-import fitnesse.util.DateAlteringClock;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -17,10 +13,6 @@ import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PurgeHistoryResponderTest {
   private File resultsDirectory;

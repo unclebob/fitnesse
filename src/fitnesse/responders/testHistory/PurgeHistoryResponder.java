@@ -1,9 +1,6 @@
 package fitnesse.responders.testHistory;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -14,9 +11,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.reporting.history.HistoryPurger;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.util.Clock;
-import util.FileUtil;
 
 public class PurgeHistoryResponder implements SecureResponder {
   private File resultsDirectory;

@@ -1,14 +1,9 @@
 package fitnesse.plugins;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
-import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
 
 public class DummyPluginFeatureFactory extends PluginFeatureFactoryBase {
