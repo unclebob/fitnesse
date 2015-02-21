@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
 import util.FileUtil;
 
 public class PasswordFile {
-  private File passwordFile;
+  private final File passwordFile;
   private Map<String, String> passwordMap = new HashMap<String, String>();
   private PasswordCipher cipher = new TransparentCipher();
 
@@ -52,8 +51,7 @@ public class PasswordFile {
   }
 
   private void loadPasswords(LinkedList<String> lines) {
-    for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
-      String line = iterator.next();
+    for (String line : lines) {
       if (!"".equals(line)) {
         String[] tokens = line.split(":");
         passwordMap.put(tokens[0], tokens[1]);
@@ -63,7 +61,7 @@ public class PasswordFile {
 
   private void loadCipher(LinkedList<String> lines) {
     if (!lines.isEmpty()) {
-      String firstLine = lines.getFirst().toString();
+      String firstLine = lines.getFirst();
       if (firstLine.startsWith("!")) {
         String cipherClassName = firstLine.substring(1);
         try {
@@ -84,9 +82,8 @@ public class PasswordFile {
   private void savePasswords() throws FileNotFoundException {
     List<String> lines = new LinkedList<String>();
     lines.add("!" + cipher.getClass().getName());
-    for (Iterator<String> iterator = passwordMap.keySet().iterator(); iterator.hasNext();) {
-      Object user = iterator.next();
-      Object password = passwordMap.get(user);
+    for (String user : passwordMap.keySet()) {
+      String password = passwordMap.get(user);
       lines.add(user + ":" + password);
     }
     FileUtil.writeLinesToFile(passwordFile, lines);
