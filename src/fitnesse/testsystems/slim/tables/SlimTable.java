@@ -636,8 +636,8 @@ public abstract class SlimTable {
             } else {
               message = SlimTestResult.fail(expectedString + " doesn't match " + actual);
             }
-          } catch (Throwable t) {
-            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + t.getMessage());
+          } catch (Exception e) {
+            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + e.getMessage());
           }
         }
       }
