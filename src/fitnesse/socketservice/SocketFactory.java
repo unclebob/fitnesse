@@ -84,22 +84,31 @@ public final class SocketFactory {
   }
 
   public static String peerName(Socket theSocket){
-	  if(isSSLSocket(theSocket)){
-		  SSLSession ss = ((SSLSocket)theSocket).getSession();
-	      try {
-			return new X500Name(ss.getPeerPrincipal().getName()).getCommonName();
-		} catch (SSLPeerUnverifiedException e) {
-			LOG.log(Level.FINEST, "Could not get Peer Name: not verified: " + e.getMessage());
-			return null;
-		} catch (IOException e) {
-			LOG.log(Level.FINEST, "Could not get Peer Name: " + e.getMessage());
-			return null;
-		}
-	  }
-	  else{
+	  String peerDn = peerDn(theSocket);
+	  if (peerDn == null) {
 		  return null;
+	  } else {
+		  try {
+			  return new X500Name(peerDn).getCommonName();
+		  } catch (IOException e) {
+			  LOG.log(Level.FINEST, "Could not get Peer Name: " + e.getMessage());
+			  return null;		  }
 	  }
   }
+
+	public static String peerDn(Socket theSocket) {
+		if (isSSLSocket(theSocket)) {
+			SSLSession ss = ((SSLSocket)theSocket).getSession();
+			try {
+				return ss.getPeerPrincipal().getName();
+			} catch (SSLPeerUnverifiedException e) {
+				LOG.log(Level.FINEST, "Could not get Peer Name: not verified: " + e.getMessage());
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
 
   public static String myName(Socket theSocket){
 	  if(isSSLSocket(theSocket)){

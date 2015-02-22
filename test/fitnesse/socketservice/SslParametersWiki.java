@@ -12,5 +12,6 @@ public class SslParametersWiki extends SslParameters {
 		setKeyStorePassword(aPW);
 		setTrustStoreFilename("test" + File.separator + "fitnesse" + File.separator +
 				"resources" + File.separator + "ssl" + File.separator + "wiki_trust.jks");
+
 	}
 }

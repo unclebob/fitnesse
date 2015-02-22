@@ -10,5 +10,6 @@ public class SslParametersAgent extends SslParameters {
 				"james007",
 				"test" + File.separator + "fitnesse" + File.separator + "resources" +
 						File.separator + "ssl" + File.separator + "agent_trust.jks");
+
 	}
 }

@@ -6,6 +6,7 @@ import fitnesse.http.MockRequestBuilder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
+import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +58,8 @@ public class FitNesse {
     }
     try {
       if (context.port > 0) {
-        theService = new SocketService(context.port, context.useHTTPS, new FitNesseServer(context), context.sslParameterClassName);
+        ServerSocket serverSocket = SocketFactory.tryCreateServerSocket(context.port, context.useHTTPS, context.sslClientAuth, context.sslParameterClassName);
+        theService = new SocketService(new FitNesseServer(context), false, serverSocket);
       }
       return true;
     } catch (BindException e) {
