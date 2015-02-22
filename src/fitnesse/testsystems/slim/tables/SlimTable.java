@@ -246,7 +246,7 @@ public abstract class SlimTable {
     }
 
     private boolean nameHasDollars() {
-      return name.indexOf("$") != -1;
+      return name.contains("$");
     }
 
     private String disgraceClassName() {
@@ -534,8 +534,8 @@ public abstract class SlimTable {
 
 	    @Override
 	    public TestResult evaluateExpectation(Object returnValue) {
-		  returnValue = getSymbol(this.symbolName);
-	      return super.evaluateExpectation(returnValue);
+        String value = getSymbol(this.symbolName);
+	      return super.evaluateExpectation(value);
 	    }
 	    
 	    @Override
