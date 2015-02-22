@@ -63,8 +63,6 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void addTestResult(TestResultRecord record, Date date) {
-    Date keyDate = trimMilliseconds(date);
-
     testResultMap.put(date, record);
   }
 
