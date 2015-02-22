@@ -68,9 +68,8 @@ public class SlimService {
   // For testing only -- for now
   public static synchronized int startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
-      System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
       service.interrupt();
-      throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
     final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
     int actualPort = slimservice.getPort();
@@ -79,7 +78,7 @@ public class SlimService {
         try {
           slimservice.accept();
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          throw new SlimError(e);
         }
       }
     };
@@ -161,7 +160,7 @@ public class SlimService {
           try {
             handle(socket);
           } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SlimError(e);
           }
         }
       });
@@ -189,7 +188,7 @@ public class SlimService {
     try {
       return (Class<DefaultInteraction>) Class.forName(interactionClassName);
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+      throw new SlimError(e);
     }
   }
 
