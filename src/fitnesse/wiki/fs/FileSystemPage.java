@@ -25,7 +25,6 @@ import util.FileUtil;
 import static fitnesse.wiki.PageType.STATIC;
 
 public class FileSystemPage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
 
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
