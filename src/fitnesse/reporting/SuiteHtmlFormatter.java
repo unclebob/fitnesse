@@ -89,8 +89,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   private String getProgressHtml(String relativeName) {
-    float percentFinished = (currentTest - 1) * 1000 / totalTests;
-    percentFinished = percentFinished / 10;
+    float percentFinished = (currentTest - 1) * 100f / totalTests;
 
     String text = "Running tests ... (" + currentTest + "/" + totalTests + ")";
     text = text.replaceAll(" ", "&nbsp;");
