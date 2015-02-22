@@ -7,15 +7,13 @@ import static fitnesse.wiki.WikiPagePath.Mode.BACKWARD_SEARCH;
 import static fitnesse.wiki.WikiPagePath.Mode.RELATIVE;
 import static fitnesse.wiki.WikiPagePath.Mode.SUB_PAGE;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class WikiPagePath implements Comparable<Object>, Serializable {
-  private static final long serialVersionUID = 1L;
+public class WikiPagePath implements Comparable<Object> {
 
   public enum Mode {
     ABSOLUTE, SUB_PAGE, BACKWARD_SEARCH, RELATIVE
