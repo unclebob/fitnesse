@@ -3,7 +3,6 @@
 
 package fitnesse.wiki;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
