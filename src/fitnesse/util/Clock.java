@@ -5,8 +5,8 @@ package fitnesse.util;
 import java.util.Date;
 
 public abstract class Clock {
-  protected static final SystemClock SYSTEM_CLOCK = new SystemClock();
-  protected static Clock instance;
+  static final SystemClock SYSTEM_CLOCK = new SystemClock();
+  static Clock instance;
   static {
     restoreDefaultClock();
   }
