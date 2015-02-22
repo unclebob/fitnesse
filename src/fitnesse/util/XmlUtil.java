@@ -98,7 +98,7 @@ public class XmlUtil {
       return null;
     }
     String text = namedElement.getTextContent();
-    return (text.length() == 0) ? null : text;
+    return (text.isEmpty()) ? null : text;
   }
 
   public static void addTextNode(Element element, String tagName, String value) {
@@ -120,7 +120,6 @@ public class XmlUtil {
 
   public static String xmlAsString(Document doc) throws IOException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    transformerFactory.setAttribute("indent-number", new Integer(2));
 
     StringWriter sw = new StringWriter();
     try {
@@ -134,7 +133,7 @@ public class XmlUtil {
       StreamResult result =  new StreamResult(sw);
       transformer.transform(source, result);
     } catch (TransformerException e) {
-      throw new RuntimeException("Arjan should catch this", e);
+      throw new RuntimeException("Unable to serialize XML", e);
     }
 
     return sw.toString();

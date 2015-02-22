@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
-import util.CommandLine;
-
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
@@ -13,7 +10,9 @@ import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.socketservice.SocketFactory;
+import util.CommandLine;
 
 import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
@@ -77,23 +76,24 @@ public class SlimService {
   }
 
   // For testing only -- for now
-  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
+  public static synchronized int startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
-      System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
       service.interrupt();
-      throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
     final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon, options.useSSL, options.sslParameterClassName);
+    int actualPort = slimservice.getPort();
     service = new Thread() {
       public void run() {
         try {
           slimservice.accept();
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          throw new SlimError(e);
         }
       }
     };
     service.start();
+    return actualPort;
   }
 
   // For testing, mainly.
@@ -142,6 +142,10 @@ public class SlimService {
     }
   }
 
+  public int getPort() {
+    return serverSocket.getLocalPort();
+  }
+
   public void accept() throws IOException {
     try {
       if (daemon) {
@@ -168,7 +172,7 @@ public class SlimService {
           try {
             handle(socket);
           } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SlimError(e);
           }
         }
       });
@@ -196,7 +200,7 @@ public class SlimService {
     try {
       return (Class<DefaultInteraction>) Class.forName(interactionClassName);
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+      throw new SlimError(e);
     }
   }
 

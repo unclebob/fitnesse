@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class PathParser {
   public static final String PATH_SEPARATOR = ".";
+  public static final String ROOT_PAGE_NAME = "root";
 
   private static final Pattern WIKI_WORD_PATTERN = Pattern.compile("\\w[\\w-]*");
   private static final Pattern WIKI_PATH_PATTERN = Pattern.compile("[<>^\\.]?\\w[\\w-]*(\\.\\w[\\w-]+)*");
@@ -18,7 +19,7 @@ public class PathParser {
   private static WikiPagePath makePath(String pathName, WikiPagePath path) {
     if (pathName.equals("")) {
       return path;
-    } else if (pathName.equals("root") || pathName.equals(PATH_SEPARATOR) || pathName.equals("/")) {
+    } else if (pathName.equals(ROOT_PAGE_NAME) || pathName.equals(PATH_SEPARATOR) || pathName.equals("/")) {
       path.makeAbsolute();
       return path;
     } else {
@@ -51,7 +52,7 @@ public class PathParser {
   public static boolean isSingleWikiWord(String name) {
     return WIKI_WORD_PATTERN.matcher(name).matches()
             && !"files".equals(name)
-            && !"root".equals(name);
+            && !ROOT_PAGE_NAME.equals(name);
   }
 
   public static boolean isWikiPath(String name) {
@@ -65,6 +66,9 @@ public class PathParser {
     else if (path.isBackwardSearchPath())
       renderedPath.append("<");
     else if (path.isAbsolute()) {
+      if (path.isEmpty()) {
+        return ROOT_PAGE_NAME;
+      }
       renderedPath.append(".");
     }
 

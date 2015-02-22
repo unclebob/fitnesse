@@ -18,13 +18,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 
 public class HistoryComparerResponderTest {
   public HistoryComparerResponder responder;
   public FitNesseContext context;
-  public WikiPage root;
   public MockRequest request;
   public HistoryComparer mockedComparer;
   private String firstFilePath = "./TestDir/files/testResults/TestFolder/firstFakeFile"
@@ -34,7 +31,7 @@ public class HistoryComparerResponderTest {
 
   @Before
   public void setup() throws Exception {
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     firstFilePath = context.getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile"
             .replace('/', File.separatorChar);
     secondFilePath = context.getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile"
@@ -65,7 +62,6 @@ public class HistoryComparerResponderTest {
         "firstFile");
     FileUtil.createFile(context.getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile",
         "secondFile");
-    root = InMemoryPage.makeRoot("RooT");
   }
 
   @Test

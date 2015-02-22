@@ -27,7 +27,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -46,8 +45,8 @@ public class PropertiesResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
   }
 
@@ -306,8 +305,6 @@ public class PropertiesResponderTest {
 
   @Test
   public void testPageTypePropertiesHtml() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SomePage"));
-    PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -323,7 +320,7 @@ public class PropertiesResponderTest {
     PageData data = page.getData();
     data.setAttribute("Suite");
     page.commit(data);
-    assertEquals(page, context.root.getPageCrawler().getPage(PathParser.parse(".SomePage")));
+    assertEquals(page, context.getRootPage().getPageCrawler().getPage(PathParser.parse(".SomePage")));
     request.setResource(page.getPageCrawler().getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();

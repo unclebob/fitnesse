@@ -12,7 +12,7 @@ public class Variable extends SymbolType implements Rule, Translation {
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Maybe<String> name = parser.parseToAsString(SymbolType.CloseBrace);
-        if (name.isNothing() || name.getValue().length() == 0) return Symbol.nothing;
+        if (name.isNothing() || name.getValue().isEmpty()) return Symbol.nothing;
         String variableName = name.getValue();
         if (!ScanString.isVariableName(variableName)) return Symbol.nothing;
 

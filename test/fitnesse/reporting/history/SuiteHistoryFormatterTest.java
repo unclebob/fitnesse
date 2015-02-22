@@ -3,10 +3,10 @@ package fitnesse.reporting.history;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.reporting.history.SuiteExecutionReport.PageHistoryReference;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +20,7 @@ import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,10 +41,9 @@ public class SuiteHistoryFormatterTest {
     testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
     clock = new DateAlteringClock(testTime).freeze();
 
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    WikiPage suitePage = root.addChildPage("SuitePage");
-    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"), null);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
+    testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<StringWriter>();
     formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override
@@ -72,9 +72,23 @@ public class SuiteHistoryFormatterTest {
 
   private void performTest(long elapsedTime) throws Exception {
     formatter.testSystemStarted(null);
+    formatter.commandStarted(new ExecutionLogListener.ExecutionContext() {
+      @Override
+      public String getCommand() {
+        return "commandLine";
+      }
+
+      @Override
+      public String getTestSystemName() {
+        return "testSystem";
+      }
+    });
+    formatter.stdOut("Command started");
     formatter.testStarted(testPage);
+    formatter.stdOut("After started");
     clock.elapse(elapsedTime);
     formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
+    formatter.exitCode(0);
     formatter.close();
   }
 
@@ -114,6 +128,20 @@ public class SuiteHistoryFormatterTest {
     
     assertEquals(String.valueOf(13L),
         XmlUtil.getTextValue(suiteResultsElement, "totalRunTimeInMillis"));
+  }
+
+  @Test
+  public void shouldCaptureExecutionLogInformation() throws Exception {
+    performTest(13);
+
+    String output = suiteOutputAsString();
+    Document document = XmlUtil.newDocument(output);
+    Element suiteResultsElement = document.getDocumentElement();
+    assertEquals("suiteResults", suiteResultsElement.getNodeName());
+    Element executionLog = XmlUtil.getElementByTagName(suiteResultsElement, "executionLog");
+    Element stdOut = XmlUtil.getElementByTagName(executionLog, "stdOut");
+
+    assertEquals(output, "Command started\nAfter started\n", stdOut.getTextContent());
   }
 
   private String suiteOutputAsString() {

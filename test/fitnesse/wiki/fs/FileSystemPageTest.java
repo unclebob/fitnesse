@@ -16,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageData.PropertyFILES;
-import static fitnesse.wiki.PageData.PropertyVERSIONS;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
 import static org.junit.Assert.*;
@@ -36,7 +34,7 @@ public class FileSystemPageTest {
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
+    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
   }
 
   @After
@@ -206,14 +204,6 @@ public class FileSystemPageTest {
   }
 
   @Test
-  public void testDefaultAttributesForErrorLogsPageName() throws Exception {
-    WikiPage errorLogsPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    PageData data = errorLogsPage.getData();
-    assertFalse(data.hasAttribute(TEST.toString()));
-    assertFalse(data.hasAttribute(SUITE.toString()));
-  }
-
-  @Test
   public void testDefaultAttributesForSuiteSetUpPageNames() throws Exception {
     WikiPage suiteSetupPage = WikiPageUtil.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
     PageData data = suiteSetupPage.getData();
@@ -245,7 +235,7 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null);
+    WikiPage newRoot = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 

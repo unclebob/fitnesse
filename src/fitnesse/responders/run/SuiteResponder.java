@@ -22,11 +22,12 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CompositeExecutionLog;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.HistoryPurger;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
@@ -39,18 +40,19 @@ import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+import org.apache.commons.lang.StringUtils;
 
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
@@ -58,7 +60,6 @@ import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 public class SuiteResponder extends ChunkingResponder implements SecureResponder {
   private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
@@ -76,10 +77,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  private boolean includeHtml = true;
+  protected boolean includeHtml = true;
   int exitCode;
-  private CompositeExecutionLog log;
-
 
   public SuiteResponder() {
     this(new WikiImporter());
@@ -102,12 +101,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return response;
   }
 
+  @Override
   protected void doSending() throws Exception {
     debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
-    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -118,6 +117,16 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     }
 
     closeHtmlResponse(exitCode);
+
+    cleanHistoryForSuite();
+  }
+
+  private void cleanHistoryForSuite() {
+    String testHistoryDays = context.getProperty("test.history.days");
+    if (withSuiteHistoryFormatter() && StringUtils.isNumeric(testHistoryDays)) {
+      new HistoryPurger(context.getTestHistoryDirectory(), Integer.parseInt(testHistoryDays))
+              .deleteTestHistoryOlderThanDays(path);
+    }
   }
 
   public void doExecuteTests() {
@@ -177,7 +186,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     htmlPage.put("headerContent", new WikiPageHeaderRenderer());
     htmlPage.put("footerContent", new WikiPageFooterRenderer());
     htmlPage.setErrorNavTemplate("errorNavigator");
-    htmlPage.put("errorNavOnDocumentReady", false);
     htmlPage.put("multipleTestsRun", isMultipleTestsRun());
     WikiImportingResponder.handleImportProperties(htmlPage, page);
 
@@ -195,7 +203,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageHeaderRenderer {
 
     public String render() {
-      return WikiPageUtil.getHeaderPageHtml(page,request);
+      return WikiPageUtil.getHeaderPageHtml(page);
     }
 
   }
@@ -203,7 +211,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public class WikiPageFooterRenderer {
 
     public String render() {
-        return WikiPageUtil.getFooterPageHtml(page,request);
+        return WikiPageUtil.getFooterPageHtml(page);
     }
 
   }
@@ -220,13 +228,25 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
-    if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(getSuiteHistoryFormatter());
+    if (withSuiteHistoryFormatter()) {
+      addHistoryFormatter(runner);
+    } else {
+      runner.addExecutionLogListener(new ConsoleExecutionLogListener());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
+  }
+
+  private boolean withSuiteHistoryFormatter() {
+    return !request.hasInput("nohistory");
+  }
+
+  protected void addHistoryFormatter(MultipleTestsRunner runner) {
+    SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
+    runner.addTestSystemListener(historyFormatter);
+    runner.addExecutionLogListener(historyFormatter);
   }
 
   private void createMainFormatter() {
@@ -247,7 +267,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return "testPage";
   }
 
-  BaseFormatter newXmlFormatter() {
+  protected BaseFormatter newXmlFormatter() {
     SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
     if (includeHtml)
       xmlFormatter.includeHtml();
@@ -256,17 +276,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return xmlFormatter;
   }
 
-  BaseFormatter newTextFormatter() {
+  protected BaseFormatter newTextFormatter() {
     return new TestTextFormatter(response);
   }
 
-  BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page, log) {
-      @Override
-      protected void writeData(String output) {
-        addToResponse(output);
-      }
-    };
+  protected BaseFormatter newHtmlFormatter() {
+    return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
   protected TestSystemListener newTestInProgressFormatter() {
@@ -283,7 +298,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       runner.executeTestPages();
     } finally {
       runningTestingTracker.removeEndedProcess(testRunId);
-      log.publish(context.pageFactory);
     }
   }
 
@@ -295,13 +309,11 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root,
-            new UrlPathVariableSource(context.variableSource, request.getMap()));
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, root);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
-    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;
@@ -355,26 +367,26 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     //request already confirmed not-null
     String orFilterString = null;
     if(request.getInput(OR_FILTER_ARG_1) != null){
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+      orFilterString = request.getInput(OR_FILTER_ARG_1);
     } else {
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+      orFilterString = request.getInput(OR_FILTER_ARG_2);
     }
     return orFilterString;
   }
 
   private static String getNotSuiteFilter(Request request) {
-    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+    return request != null ? request.getInput(NOT_FILTER_ARG) : null;
   }
 
   private static String getAndTagFilters(Request request) {
-    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
+    return request != null ? request.getInput(AND_FILTER_ARG) : null;
   }
 
 
   private static String getSuiteFirstTest(Request request, String suiteName) {
     String startTest = null;
     if (request != null) {
-      startTest = (String) request.getInput("firstTest");
+      startTest = request.getInput("firstTest");
     }
 
     if (startTest != null) {
@@ -408,13 +420,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     String datePart = format.format(new Date(time));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
-
-  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+  private SuiteHistoryFormatter getSuiteHistoryFormatter() {
     if (suiteHistoryFormatter == null) {
       HistoryWriterFactory source = new HistoryWriterFactory();
       suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);

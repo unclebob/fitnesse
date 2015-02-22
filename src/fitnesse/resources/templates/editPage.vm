@@ -130,6 +130,21 @@ $(function () {
 
 });
 
-
-
 </script>
+
+<div id="insert-image" class="modal-dialog">
+ <div>
+  <h2>Insert image</h2>
+  <fieldset>
+  <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
+  <pre></pre>
+  <ul></ul>
+  </fieldset>
+  <fieldset>
+  <p>2. Provide a URL:</p>
+  <input class="url" type="text" value=""></input><br/>
+  <button value="Add">Add</button>
+  </fieldset>
+  <a href="#" class="button">Cancel</a>
+ </div>
+</div>

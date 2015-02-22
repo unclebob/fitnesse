@@ -25,7 +25,7 @@ public class RenameFileResponderTest {
   @Before
   public void setUp() {
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
     FileUtil.makeDir(context.getRootPagePath());
   }
 

@@ -6,6 +6,7 @@ import java.io.File;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -32,8 +33,8 @@ public abstract class UpdateTestCase {
   @Before
   public void setUp() throws Exception {
     testDir = testRoot.newFolder("TestDir");
-    root = new FileSystemPageFactory().makePage(testDir, rootName, null);
-    context = FitNesseUtil.makeTestContext(root, testRoot.getRoot().getPath(), testDir.getName(), 0);
+    root = new FileSystemPageFactory().makePage(testDir, rootName, null, new SystemVariableSource());
+    context = FitNesseUtil.makeTestContext(new FileSystemPageFactory(), testRoot.getRoot().getPath(), testDir.getName(), 0);
 
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "some content");
     pageTwo = WikiPageUtil.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");

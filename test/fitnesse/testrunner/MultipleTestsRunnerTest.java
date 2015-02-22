@@ -14,7 +14,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -23,7 +22,6 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
 public class MultipleTestsRunnerTest {
-  private WikiPage root;
   private WikiPage suite;
   private FitNesseContext context;
 
@@ -36,9 +34,8 @@ public class MultipleTestsRunnerTest {
     testSystem = mock(TestSystem.class);
     when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
 
-    root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
-    suite = WikiPageUtil.addPage(root, PathParser.parse("SuitePage"), "This is the test suite\n");
+    context = FitNesseUtil.makeTestContext();
+    suite = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SuitePage"), "This is the test suite\n");
  }
 
   @Test
@@ -46,7 +43,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.root, null);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage1, testPage2), context.getRootPage());
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
 
     runner.executeTestPages();
@@ -60,7 +57,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.root, null);
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(asList(testPage), context.getRootPage());
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();

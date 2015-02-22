@@ -4,7 +4,6 @@ package fitnesse.reporting;
 
 public class ExecutionStatus {
   public static final ExecutionStatus OK = new ExecutionStatus("Tests Executed OK", "ok");
-  public static final ExecutionStatus OUTPUT = new ExecutionStatus("Output Captured", "output");
   public static final ExecutionStatus ERROR = new ExecutionStatus("Errors Occurred", "error");
 
   private String message;

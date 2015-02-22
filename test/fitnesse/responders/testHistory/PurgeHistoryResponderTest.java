@@ -9,6 +9,7 @@ import fitnesse.reporting.history.TestHistory;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testutil.FitNesseUtil;
 
+import fitnesse.util.DateAlteringClock;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -23,7 +24,6 @@ import java.util.Date;
 
 public class PurgeHistoryResponderTest {
   private File resultsDirectory;
-  private TestHistory history;
   private FitNesseContext context;
   private PurgeHistoryResponder responder;
   private MockRequest request;
@@ -34,7 +34,6 @@ public class PurgeHistoryResponderTest {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
-    history = new TestHistory();
     responder = new PurgeHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
     context = FitNesseUtil.makeTestContext();
@@ -50,61 +49,6 @@ public class PurgeHistoryResponderTest {
   private void removeResultsDirectory() {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
-  }
-
-  private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
-    File testResultFile = new File(pageDirectory, testResultFileName + ".xml");
-    testResultFile.createNewFile();
-    return testResultFile;
-  }
-
-  private File addPageDirectory(String pageName) {
-    File pageDirectory = new File(resultsDirectory, pageName);
-    pageDirectory.mkdir();
-    return pageDirectory;
-  }
-
-  @Test
-  public void shouldBeAbleToSubtractDaysFromDates() throws Exception {
-    Date date = makeDate("20090616171615");
-    responder.setTodaysDate(date);
-    Date resultDate = responder.getDateDaysAgo(10);
-    Date tenDaysEarlier = makeDate("20090606171615");
-    assertEquals(tenDaysEarlier, resultDate);
-  }
-
-  private Date makeDate(String dateString) throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
-    Date date = format.parse(dateString);
-    return date;
-  }
-
-  @Test
-  public void shouldBeAbleToDeleteSomeTestHistory() throws Exception {
-    responder.setTodaysDate(makeDate("20090616000000"));
-    File pageDirectory = addPageDirectory("SomePage");
-    addTestResult(pageDirectory, "20090614000000_1_0_0_0");
-    addTestResult(pageDirectory, "20090615000000_1_0_0_0");
-
-    history.readHistoryDirectory(resultsDirectory);
-    PageHistory pageHistory = history.getPageHistory("SomePage");
-    assertEquals(2, pageHistory.size());
-    responder.deleteTestHistoryOlderThanDays(1);
-    history.readHistoryDirectory(resultsDirectory);
-    pageHistory = history.getPageHistory("SomePage");
-    assertEquals(1, pageHistory.size());
-    assertNotNull(pageHistory.get(makeDate("20090615000000")));
-    assertNull(pageHistory.get(makeDate("20090614000000")));
-  }
-
-  @Test
-  public void shouldDeletePageHistoryDirectoryIfEmptiedByPurge() throws Exception {
-    responder.setTodaysDate(makeDate("20090616000000"));
-    File pageDirectory = addPageDirectory("SomePage");
-    addTestResult(pageDirectory, "20090614000000_1_0_0_0");
-    responder.deleteTestHistoryOlderThanDays(1);
-    String[] files = resultsDirectory.list();
-    assertEquals(0, files.length);
   }
 
   @Test

@@ -5,7 +5,6 @@ import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
@@ -26,13 +25,11 @@ import java.util.Properties;
 public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, WikiPageFactoryRegistry {
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
-  private final VariableSource variableSource;
   private final List<WikiPageFactory> wikiPageFactories = new ArrayList<WikiPageFactory>();
 
   public FileSystemPageFactory() {
     fileSystem = new DiskFileSystem();
     versionsController = new ZipFileVersionsController();
-    variableSource = new SystemVariableSource(new Properties());
     initializeWikiPageFactories();
   }
 
@@ -40,20 +37,18 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
     fileSystem = new DiskFileSystem();
     versionsController = new ComponentFactory(properties).createComponent(
             ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    variableSource = new SystemVariableSource(properties);
     initializeWikiPageFactories();
   }
 
-  public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController, VariableSource variableSource) {
+  public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController) {
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
-    this.variableSource = variableSource;
     initializeWikiPageFactories();
   }
 
   private void initializeWikiPageFactories() {
     registerWikiPageFactory(this);
-    registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem, variableSource));
+    registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem));
   }
 
   @Override
@@ -70,31 +65,17 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   }
 
   @Override
-  public FileSystemPage makePage(File path, String pageName, FileSystemPage parent) {
+  public FileSystemPage makePage(File path, String pageName, FileSystemPage parent, VariableSource variableSource) {
     if (parent != null) {
       return new FileSystemPage(path, pageName, parent);
     } else {
       Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
-      return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(new File(rootPath.getValue())), variableSource);
+      return new FileSystemPage(path, pageName, versionsController, new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), variableSource), variableSource);
     }
   }
 
   VersionsController getVersionsController() {
     return versionsController;
-  }
-
-  private WikiPage makeChildPage(File path, String childName, FileSystemPage page) {
-    for (WikiPageFactory factory : wikiPageFactories) {
-      if (factory.supports(path)) {
-        return factory.makePage(path, childName, page);
-      }
-    }
-    // Fall back:
-    if (fileIsValid(path)) {
-      // Empty directories that have Wiki format are considered pages as well.
-      return makePage(path, childName, page);
-    }
-    return null;
   }
 
   private boolean fileIsValid(final File path) {
@@ -104,9 +85,11 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
   protected class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
 
     private final File rootPath;
+    private final VariableSource variableSource;
 
-    public FileSystemSubWikiPageFactory(File rootPath) {
+    public FileSystemSubWikiPageFactory(File rootPath, VariableSource variableSource) {
       this.rootPath = rootPath;
+      this.variableSource = variableSource;
     }
 
     public List<WikiPage> getChildren(FileSystemPage page) {
@@ -153,6 +136,21 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       }
       return childPage;
     }
+
+    private WikiPage makeChildPage(File path, String childName, FileSystemPage page) {
+      for (WikiPageFactory factory : wikiPageFactories) {
+        if (factory.supports(path)) {
+          return factory.makePage(path, childName, page, variableSource);
+        }
+      }
+      // Fall back:
+      if (fileIsValid(path)) {
+        // Empty directories that have Wiki format are considered pages as well.
+        return makePage(path, childName, page, variableSource);
+      }
+      return null;
+    }
+
 
     private WikiPage createSymbolicPage(BaseWikiPage page, String linkName) {
       WikiPageProperty symLinkProperty = page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME);

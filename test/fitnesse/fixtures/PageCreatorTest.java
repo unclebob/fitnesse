@@ -6,9 +6,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +16,12 @@ public class PageCreatorTest {
 
   @Before
   public void setUp() throws Exception {
-    FitnesseFixtureContext.root = InMemoryPage.makeRoot("root");
+    new SetUp();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    new TearDown();
   }
 
   @Test
@@ -34,7 +39,7 @@ public class PageCreatorTest {
     creator.setPageContents(pageContent);
     creator.setPageAttributes(pageAttributes);
     assertTrue(creator.valid());
-    WikiPage testPage = FitnesseFixtureContext.root.getChildPage("TestPage");
+    WikiPage testPage = FitnesseFixtureContext.context.getRootPage().getChildPage("TestPage");
     return testPage;
   }
 

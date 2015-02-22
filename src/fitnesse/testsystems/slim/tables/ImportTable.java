@@ -28,7 +28,7 @@ public class ImportTable extends SlimTable {
 
     for (int row = 1; row < rows; row++) {
       String importString = table.getCellContents(0, row);
-      if (importString.length() > 0) {
+      if (!importString.isEmpty()) {
         Instruction importInstruction = new ImportInstruction(makeInstructionTag(), importString);
         instructions.add(makeAssertion(importInstruction, new ImportExpectation(0, row)));
       }

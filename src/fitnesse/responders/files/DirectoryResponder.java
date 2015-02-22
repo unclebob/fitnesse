@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -19,7 +21,8 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
-public class DirectoryResponder implements SecureResponder {
+// This responder is called from FileResponder in case
+class DirectoryResponder implements SecureResponder {
   private String resource;
   private File requestedDirectory;
   private FitNesseContext context;
@@ -30,32 +33,55 @@ public class DirectoryResponder implements SecureResponder {
     requestedDirectory = requestedFile;
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
 
+    if (!resource.endsWith("/")) {
+      return setRedirectForDirectory(request.getQueryString());
+    } else if ("json".equals(request.getInput("format"))) {
+      return makeDirectoryListingJsonPage();
+    } else {
+      return makeDirectoryListingPage();
+    }
+  }
+
+  private Response setRedirectForDirectory(String queryString) {
     SimpleResponse simpleResponse = new SimpleResponse();
-    if (!resource.endsWith("/"))
-      setRedirectForDirectory(simpleResponse);
-    else
-      simpleResponse.setContent(makeDirectoryListingPage());
+    simpleResponse.redirect(context.contextRoot, resource + "/" + (queryString != null ? "?" + queryString : ""));
     return simpleResponse;
   }
 
-  private void setRedirectForDirectory(Response response) {
-    response.redirect(context.contextRoot, resource + "/");
-  }
-
-  private String makeDirectoryListingPage() {
+  private Response makeDirectoryListingPage() {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.setPageTitle(new PageTitle("Files Section", resource, "/"));
     page.put("fileInfoList", makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory)));
     page.setMainTemplate("directoryPage");
-    return page.html();
+    SimpleResponse simpleResponse = new SimpleResponse();
+    simpleResponse.setContent(page.html());
+    return simpleResponse;
   }
 
+  private Response makeDirectoryListingJsonPage() {
+    JSONArray listing = new JSONArray();
+    for (FileInfo fileInfo : makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory))) {
+      JSONObject fiObject = new JSONObject();
+      fiObject.put("name", fileInfo.getName());
+      fiObject.put("size", fileInfo.getSize());
+      fiObject.put("date", fileInfo.getDate());
+      fiObject.put("directory", fileInfo.isDirectory());
+      listing.put(fiObject);
+    }
 
+    SimpleResponse simpleResponse = new SimpleResponse();
+    simpleResponse.setContentType(Response.Format.JSON);
+    simpleResponse.setContent(listing.toString());
+    return simpleResponse;
+  }
+
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }
@@ -85,11 +111,7 @@ public class DirectoryResponder implements SecureResponder {
     }
 
     public String getName() {
-      String name = file.getName();
-      if (file.isDirectory()) {
-        name += "/";
-      }
-      return name;
+      return file.getName();
     }
 
     public String getSize() {

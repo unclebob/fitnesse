@@ -14,11 +14,10 @@ import java.util.List;
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
-import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
@@ -163,44 +162,44 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     try {
       this.suiteName = getSuiteName(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.outputDir = getOutputDir(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.suiteFilter = getSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.suiteFilterAndStrategy = getSuiteFilterAndStrategy(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.excludeSuiteFilter = getExcludeSuiteFilter(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.debugMode = useDebugMode(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
 
     try {
       this.context = createContext(suiteClass);
-    } catch (Throwable t) {
-      errors.add(t);
+    } catch (Exception e) {
+      errors.add(e);
     }
   }
 
@@ -381,7 +380,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.root).getAllPagesToRunForThisSuite();
+      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage()).getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
@@ -415,12 +414,12 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   private WikiPage getSuiteRootPage() {
     WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.root.getPageCrawler();
+    PageCrawler crawler = context.getRootPage().getPageCrawler();
     return crawler.getPage(path);
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.root, context.variableSource);
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
             context.testSystemFactory);

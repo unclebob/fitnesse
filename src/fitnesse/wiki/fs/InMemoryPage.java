@@ -25,8 +25,17 @@ public class InMemoryPage {
   }
 
   public static WikiPage makeRoot(String name, Properties properties, MemoryFileSystem fileSystem) {
-    WikiPageFactory factory = new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem), new SystemVariableSource(properties));
-    FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null);
+    WikiPageFactory factory = newInstance(fileSystem);
+    FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null, new SystemVariableSource(properties));
     return page;
+  }
+
+  public static WikiPageFactory newInstance() {
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return newInstance(fileSystem);
+  }
+
+  public static WikiPageFactory newInstance(FileSystem fileSystem) {
+    return new FileSystemPageFactory(fileSystem, new MemoryVersionsController(fileSystem));
   }
 }

@@ -9,7 +9,6 @@ import fitnesse.slim.protocol.SlimSerializer;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.TestRoot;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -42,10 +41,10 @@ public class PerformanceTest {
         long start = System.currentTimeMillis();
         WikiPage page = new TestRoot().makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), null), input).parse();
+        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
         System.out.println(System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
-        /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page), null)).translateTree(list);
+        /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

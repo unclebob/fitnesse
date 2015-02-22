@@ -19,7 +19,7 @@ public abstract class Clock {
     if (setAsInstance) instance = this;
   }
 
-  abstract protected long currentClockTimeInMillis() ;
+  protected abstract long currentClockTimeInMillis() ;
 
   protected Date currentClockDate() {
     return new Date(currentClockTimeInMillis());

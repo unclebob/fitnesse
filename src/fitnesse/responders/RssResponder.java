@@ -29,7 +29,7 @@ public class RssResponder implements SecureResponder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage contextPage = getContextPage(context, request.getResource());
-    WikiPage recentChangesPage = context.root.getChildPage(RecentChanges.RECENT_CHANGES);
+    WikiPage recentChangesPage = context.getRootPage().getChildPage(RecentChanges.RECENT_CHANGES);
 
     feed = new RssFeed(getConfiguredRssLinkPrefixFrom(contextPage));
 
@@ -39,7 +39,7 @@ public class RssResponder implements SecureResponder {
   }
 
   private WikiPage getContextPage(FitNesseContext context, String resource) throws Exception {
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(resource);
     return pageCrawler.getPage(resourcePath);
   }
@@ -65,7 +65,7 @@ public class RssResponder implements SecureResponder {
   }
 
   protected static boolean isNeitherNullNorBlank(String string) {
-    return string != null && string.length() > 0;
+    return string != null && !string.isEmpty();
   }
 
   public SecureOperation getSecureOperation() {

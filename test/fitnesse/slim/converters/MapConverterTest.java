@@ -59,43 +59,20 @@ public class MapConverterTest {
 
   @Test
   public void fromTableWithMoreThanTwoColumns_shouldCreateEmptyMap() throws Exception {
-    makeMap(
-      "<table>" +
-        "<tr>" +
-        "  <td>0</td>" +
-        "  <td>0</td>" +
-        "  <td>0</td>" +
-        "</tr>" +
-        "</table>");
+    makeMap("<table>" + "<tr>" + "  <td>0</td>" + "  <td>0</td>" + "  <td>0</td>" + "</tr>" + "</table>");
     assertEquals(0, result.size());
   }
 
   @Test
   public void fromTableWithTwoColumnsAndOneRow_shouldCreateMapWithOneEntry() throws Exception {
-    makeMap(
-      "<table>" +
-        "<tr>" +
-        "  <td>name</td>" +
-        "  <td>Bob</td>" +
-        "</tr>" +
-        "</table>");
+    makeMap("<table>" + "<tr>" + "  <td>name</td>" + "  <td>Bob</td>" + "</tr>" + "</table>");
     assertEquals(1, result.size());
     assertEquals("Bob", result.get("name"));
   }
 
   @Test
   public void fromTableWithTwoColumnsAndTwoRows_shouldCreateMapWithTwoEntries() throws Exception {
-    makeMap(
-      "<table>" +
-        "<tr>" +
-        "  <td>name</td>" +
-        "  <td>Bob</td>" +
-        "</tr>" +
-        "<tr>" +
-        "  <td>address</td>" +
-        "  <td>here</td>" +
-        "</tr>" +
-        "</table>");
+    makeMap("<table>" + "<tr>" + "  <td>name</td>" + "  <td>Bob</td>" + "</tr>" + "<tr>" + "  <td>address</td>" + "  <td>here</td>" + "</tr>" + "</table>");
     assertEquals(2, result.size());
     assertEquals("Bob", result.get("name"));
     assertEquals("here", result.get("address"));
@@ -103,19 +80,7 @@ public class MapConverterTest {
 
   @Test
   public void fromTwoValidTables_shouldCreateEmptyMap() throws Exception {
-    makeMap(
-      "<table>" +
-        "<tr>" +
-        "  <td>name</td>" +
-        "  <td>Bob</td>" +
-        "</tr>" +
-        "</table>" +
-        "<table>" +
-        "<tr>" +
-        "  <td>name</td>" +
-        "  <td>Bob</td>" +
-        "</tr>" +
-        "</table>");
+    makeMap("<table>" + "<tr>" + "  <td>name</td>" + "  <td>Bob</td>" + "</tr>" + "</table>" + "<table>" + "<tr>" + "  <td>name</td>" + "  <td>Bob</td>" + "</tr>" + "</table>");
     assertEquals(0, result.size());
   }
 
@@ -124,21 +89,12 @@ public class MapConverterTest {
     MapEditor editor = new MapEditor();
     editor.setValue(aMap());
 
-    assertEquals(StringUtils.join(Arrays.asList(
-            "<table class=\"hash_table\">",
-            "\t<tr class=\"hash_row\">",
-            "\t\t<td class=\"hash_key\">a</td>",
-            "\t\t<td class=\"hash_value\">b</td>",
-            "\t</tr>",
-            "\t<tr class=\"hash_row\">",
-            "\t\t<td class=\"hash_key\">c</td>",
-            "\t\t<td class=\"hash_value\">d</td>",
-            "\t</tr>",
-            "</table>"), HtmlTag.endl), editor.getAsText());
+    assertEquals(StringUtils.join(Arrays.asList("<table class=\"hash_table\">", "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">a</td>", "\t\t<td class=\"hash_value\">b</td>", "\t</tr>",
+        "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.getAsText());
   }
 
-  private Object aMap() {
-    Map map = new TreeMap();
+  private Map<String, String> aMap() {
+    Map<String, String> map = new TreeMap<String, String>();
     map.put("a", "b");
     map.put("c", "d");
     return map;

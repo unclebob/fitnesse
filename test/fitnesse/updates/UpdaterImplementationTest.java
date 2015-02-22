@@ -45,9 +45,9 @@ public class UpdaterImplementationTest {
 
   private void setTheContext(String name) {
     FileUtil.makeDir(testDir);
-    root = new FileSystemPageFactory().makePage(new File(testDir), name, null);
+    context = FitNesseUtil.makeTestContext(new FileSystemPageFactory(), testDir, name, 80);
+    root = context.getRootPage();
     root.commit(root.getData());
-    context = FitNesseUtil.makeTestContext(root, testDir, name, 80);
   }
 
   private void createFakeUpdateListFiles() {

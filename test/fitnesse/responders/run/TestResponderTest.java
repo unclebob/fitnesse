@@ -17,6 +17,8 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
@@ -25,7 +27,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,6 @@ public class TestResponderTest {
   private MockResponseSender sender;
   private WikiPage testPage;
   private String results;
-  private WikiPage errorLogsParentPage;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
   private boolean debug;
@@ -67,11 +67,10 @@ public class TestResponderTest {
     File testDir = new File("TestDir");
     testDir.mkdir();
     Properties properties = new Properties();
-    root = InMemoryPage.makeRoot("Root", properties);
-    errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     request = new MockRequest();
     responder = new TestResponder();
-    context = FitNesseUtil.makeTestContext(root);
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
     new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
@@ -146,9 +145,7 @@ public class TestResponderTest {
     sender.doSending(response);
     sender.sentData();
 
-    WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.EmptyTestPage");
-    WikiPage errorLogPage = root.getPageCrawler().getPage(errorLogPath);
-    String errorLogContent = errorLogPage.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertNotSubString("Exception", errorLogContent);
   }
 
@@ -189,10 +186,13 @@ public class TestResponderTest {
     sender.doSending(response);
     String results = sender.sentData();
 
-    assertHasRegexp("ErrorLog", results);
+    assertHasRegexp("\\?executionLog", results);
 
-    WikiPage errorLog = errorLogsParentPage.getChildPage(testPage.getName());
-    return errorLog.getData().getContent();
+    return getExecutionLog();
+  }
+
+  private String getExecutionLog() {
+    return ((SimpleResponse) new ExecutionLogResponder().makeResponse(context, request)).getContent();
   }
 
   @Test
@@ -245,7 +245,7 @@ public class TestResponderTest {
     sender.doSending(response);
 
     String results = sender.sentData();
-    assertSubString("ErrorLog", results);
+    assertSubString("?executionLog", results);
   }
 
   @Test
@@ -387,14 +387,6 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testExecutionStatusOutputCaptured() throws Exception {
-    debug = false;
-    doSimpleRun(outputWritingTable("blah"));
-    assertTrue(results.contains(">Output Captured<"));
-    assertTrue(results.contains("\\\"output\\\""));
-  }
-
-  @Test
   public void testExecutionStatusError() throws Exception {
     debug = false;
     doSimpleRun(crashFixtureTable());
@@ -507,12 +499,11 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertTrue(results.contains(">Output Captured<"));
-    assertHasRegexp("ErrorLog", results);
+    assertTrue(results.contains(">Tests Executed OK<"));
+    assertHasRegexp("\\?executionLog", results);
     assertSubString("Test Page tags", results);
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);
     assertHasRegexp("Output of TestPage", errorLogContent);
     assertHasRegexp("Output of SuiteTearDown", errorLogContent);
@@ -534,8 +525,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }
@@ -556,8 +546,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
   }
@@ -580,8 +569,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }

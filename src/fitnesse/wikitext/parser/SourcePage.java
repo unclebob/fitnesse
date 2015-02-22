@@ -12,7 +12,7 @@ public interface SourcePage extends Comparable<SourcePage> {
     String makeFullPathOfTarget(String wikiWordPath);
     String findParentPath(String targetName);
     Maybe<SourcePage> findIncludedPage(String pageName);
-    Collection<SourcePage> getAncestors();
+
     Collection<SourcePage> getChildren();
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);

@@ -15,13 +15,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;
@@ -40,11 +38,12 @@ public class FileResponderTest {
   @Before
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
     SampleFileUtility.makeSampleFiles(context.getRootPagePath());
     response = null;
     saveLocale = Locale.getDefault();
     FitNesseUtil.makeTestContext();
+    responder = new FileResponder();
   }
 
   @After
@@ -57,7 +56,6 @@ public class FileResponderTest {
   @Test
   public void testFileContent() throws Exception {
     request.setResource("files/testFile1");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     assertEquals(InputStreamResponse.class, response.getClass());
     MockResponseSender sender = new MockResponseSender();
@@ -68,7 +66,6 @@ public class FileResponderTest {
   @Test
   public void testClasspathResourceContent() throws Exception {
     request.setResource("files/fitnesse/testresource.txt");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -78,14 +75,15 @@ public class FileResponderTest {
   @Test
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
+    responder = new FileResponder();
+    responder.makeResponse(context, request);
     assertEquals(context.getRootPagePath() + File.separator + "files" + File.separator + "test File With Spaces In Name", responder.requestedFile.getPath());
   }
 
   @Test
   public void testUrlEncodedSpacesInFileName() throws Exception {
     request.setResource("files/file4%20with%20spaces%32.txt");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
+    responder.makeResponse(context, request);
     assertEquals("files/file4 with spaces2.txt", responder.resource);
   }
 
@@ -93,7 +91,6 @@ public class FileResponderTest {
   public void testLastModifiedHeader() throws Exception {
     Locale.setDefault(Locale.US);
     request.setResource("files/testFile1");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     String lastModifiedHeader = response.getHeader("Last-Modified");
     assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
@@ -103,7 +100,6 @@ public class FileResponderTest {
   public void testLastModifiedHeaderForClasspathResources() throws Exception {
     Locale.setDefault(Locale.US);
     request.setResource("files/fitnesse/css/fitnesse.css");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     String lastModifiedHeader = response.getHeader("Last-Modified");
     assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
@@ -119,13 +115,11 @@ public class FileResponderTest {
 
     request.setResource(resource);
     request.addHeader("If-Modified-Since", yesterday);
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
     request.setResource(resource);
     request.addHeader("If-Modified-Since", tomorrow);
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(304, notModifiedResponse.getStatus());
     assertEquals("", notModifiedResponse.getContent());
@@ -148,7 +142,6 @@ public class FileResponderTest {
   public void testRecoverFromUnparseableDateInIfNotModifiedHeader() throws Exception {
     request.setResource("files/testFile1");
     request.addHeader("If-Modified-Since", "Unparseable Date");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
   }
@@ -156,17 +149,15 @@ public class FileResponderTest {
   @Test
   public void testNotFoundFile() throws Exception {
     request.setResource("files/something/that/aint/there");
-    Responder notFoundResponder = FileResponder.makeResponder(request, context.getRootPagePath());
-    SimpleResponse response = (SimpleResponse) notFoundResponder.makeResponse(context, request);
+    Response response = responder.makeResponse(context, request);
     assertEquals(404, response.getStatus());
-    assertHasRegexp("files/something/that/aint/there", response.getContent());
+    assertHasRegexp("files/something/that/aint/there", ((SimpleResponse) response).getContent());
   }
 
   @Test
   public void testCssMimeType() throws Exception {
     SampleFileUtility.addFile(context.getRootPagePath(), "/files/fitnesse.css", "body{color: red;}");
     request.setResource("files/fitnesse.css");
-    responder = (FileResponder) FileResponder.makeResponder(request, context.getRootPagePath());
     response = responder.makeResponse(context, request);
     assertEquals("text/css", response.getContentType());
   }
@@ -174,8 +165,6 @@ public class FileResponderTest {
   @Test
   public void testNavigationBackToFrontPage() throws Exception {
     request.setResource("files/");
-    DirectoryResponder responder = (DirectoryResponder) FileResponder.makeResponder(request, FitNesseUtil.base);
-    response = responder.makeResponse(context, request);
     response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -194,18 +183,14 @@ public class FileResponderTest {
   @Test
   public void shouldNotDealWithDirectoryOutsideFilesFolder() throws Exception {
     request.setResource("/files/../../");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     Response response = responder.makeResponse(context, request);
-    assertTrue(responder instanceof ErrorResponder);
     assertEquals(400, response.getStatus());
   }
 
   @Test
   public void shouldNotDealWithEscapedDirectoryOutsideFilesFolder() throws Exception {
     request.setResource("/files/..%2f/");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
     Response response = responder.makeResponse(context, request);
-    assertTrue(responder instanceof ErrorResponder);
     assertEquals(400, response.getStatus());
   }
 

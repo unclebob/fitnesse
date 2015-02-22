@@ -29,7 +29,7 @@ public class ExternalTestPageTest {
   public void prepare() {
     fileSystem = new MemoryFileSystem();
     variableSource = new SystemVariableSource();
-    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), variableSource).makePage(null, "RooT", null);
+    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
   }
 
 
@@ -66,7 +66,7 @@ public class ExternalTestPageTest {
     FileSystem fileSystem = new MemoryFileSystem();
     File path = new File(directory, name);
     fileSystem.makeFile(path, content);
-    FileSystemPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem), new SystemVariableSource()).makePage(null, "RooT", null);
+    FileSystemPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
     return new ExternalTestPage(path, name, rootPage, fileSystem, variableSource);
   }
 }

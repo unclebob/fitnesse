@@ -20,12 +20,10 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;
   public FitNesseContext context;
-  public WikiPage root;
   public String firstContent;
   public String secondContent;
 
@@ -41,8 +39,7 @@ public class HistoryComparerTest {
           return null;
       }
     };
-    context = FitNesseUtil.makeTestContext(root);
-    root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
     firstContent = getContentWith("pass");
     secondContent = getContentWith("fail");
     HistoryComparer.resultContent = new ArrayList<String>();
@@ -282,7 +279,7 @@ public class HistoryComparerTest {
         "|NewTable|\n" +
         "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
-    WikiPage myPage = WikiPageUtil.addPage(root, PathParser.parse("MyPage"), pageText);
+    WikiPage myPage = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("MyPage"), pageText);
     String html = myPage.getHtml();
     return html;
   }

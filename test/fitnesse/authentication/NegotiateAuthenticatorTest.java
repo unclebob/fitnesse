@@ -1,25 +1,29 @@
 package fitnesse.authentication;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.util.Base64;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import org.ietf.jgss.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import fitnesse.util.Base64;
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSManager;
+import org.ietf.jgss.GSSName;
+import org.ietf.jgss.Oid;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static util.RegexTestCase.assertSubString;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 public class NegotiateAuthenticatorTest {
   private GSSManager manager;
@@ -60,8 +64,7 @@ public class NegotiateAuthenticatorTest {
 
   @Test
   public void negotiationErrorScreenForFailureToComplete() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
     Request request = new MockRequest();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -73,8 +76,7 @@ public class NegotiateAuthenticatorTest {
 
   @Test
   public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
     String content = response.getContent();

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.reporting.history.PageHistory;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -28,7 +28,7 @@ import fitnesse.wiki.WikiPagePath;
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(
-      SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;
@@ -91,7 +91,7 @@ public class HistoryComparerResponder implements Responder {
   private boolean getFileNameFromRequest(Request request) {
     firstFileName = "";
     secondFileName = "";
-    Map<String, Object> inputs = request.getMap();
+    Map<String, String> inputs = request.getMap();
     Set<String> keys = inputs.keySet();
     return setFileNames(keys);
   }
@@ -148,9 +148,9 @@ public class HistoryComparerResponder implements Responder {
   private PageTitle makePageTitle(String resource) {
 
     String tags="";
-    if(context.root != null){
+    if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      PageCrawler crawler = context.root.getPageCrawler();
+      PageCrawler crawler = context.getRootPage().getPageCrawler();
       WikiPage wikiPage = crawler.getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();

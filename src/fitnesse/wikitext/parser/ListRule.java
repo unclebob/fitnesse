@@ -30,7 +30,7 @@ public class ListRule implements Rule {
     }
 
     private Symbol makeListBody(Parser parser) {
-        while (parser.peek(new SymbolType[] {SymbolType.Whitespace}).size() > 0) {
+        while (!parser.peek(new SymbolType[]{SymbolType.Whitespace}).isEmpty()) {
             parser.moveNext(1);
         }
         return parser.parseTo(SymbolType.Newline, 1);

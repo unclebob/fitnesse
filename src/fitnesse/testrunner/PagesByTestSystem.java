@@ -10,7 +10,6 @@ import java.util.Map;
 
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 
 /**
  * Organize pages by test system in an appropriate order.
@@ -18,11 +17,9 @@ import fitnesse.wikitext.parser.VariableSource;
 public class PagesByTestSystem {
   private final WikiPage root;
   private final Map<WikiPageIdentity, List<TestPage>> pagesByTestSystem;
-  private final VariableSource variableSource;
 
-  public PagesByTestSystem(List<WikiPage> pages, WikiPage root, VariableSource variableSource) {
+  public PagesByTestSystem(List<WikiPage> pages, WikiPage root) {
     this.root = root;
-    this.variableSource = variableSource;
     this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown(pages));
   }
 
@@ -52,7 +49,7 @@ public class PagesByTestSystem {
   private Map<WikiPageIdentity, List<TestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem) {
     Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<WikiPageIdentity, List<TestPage>>(pagesByTestSystem.size());
 
-    if (pagesByTestSystem.size() > 0) {
+    if (!pagesByTestSystem.isEmpty()) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
 
       for (Map.Entry<WikiPageIdentity, List<WikiPage>> pages : pagesByTestSystem.entrySet())
@@ -64,7 +61,8 @@ public class PagesByTestSystem {
   private List<TestPage> asTestPages(List<WikiPage> wikiPages) {
     List<TestPage> testPages = new ArrayList<TestPage>(wikiPages.size());
     for (WikiPage page : wikiPages) {
-      testPages.add(new WikiTestPage(page, variableSource));
+      // TODO: find the appropriate type of test page for this test system
+      testPages.add(new WikiTestPage(page));
     }
     return testPages;
   }

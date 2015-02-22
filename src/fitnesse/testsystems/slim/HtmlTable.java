@@ -158,7 +158,7 @@ public class HtmlTable implements Table {
 
     rowNodes.add(childRow.rowNode);
 
-    while (tempStack.size() > 0) {
+    while (!tempStack.isEmpty()) {
       rowNodes.add(tempStack.pop());
     }
   }

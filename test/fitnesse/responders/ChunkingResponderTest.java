@@ -10,32 +10,23 @@ import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import org.junit.Before;
 import org.junit.Test;
 
 public class ChunkingResponderTest {
 
+  private final FitNesseContext context = FitNesseUtil.makeTestContext();
+
   private Exception exception;
-  private ChunkedResponse response;
-  private FitNesseContext context;
-  private WikiPage root = new WikiPageDummy();
   private ChunkingResponder responder = new ChunkingResponder() {
     protected void doSending() throws Exception {
       throw exception;
     }
   };
 
- @Before
- public void setUp() throws Exception {
-    context = FitNesseUtil.makeTestContext(root);
-  }
-
   @Test
   public void testException() throws Exception {
     exception = new Exception("test exception");
-    response = (ChunkedResponse)responder.makeResponse(context, new MockRequest());
+    ChunkedResponse response = (ChunkedResponse)responder.makeResponse(context, new MockRequest());
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String responseSender = sender.sentData();
@@ -45,8 +36,8 @@ public class ChunkingResponderTest {
   @Test
   public void chunkingShouldBeTurnedOffIfnochunkParameterIsPresent() throws Exception {
     MockRequest request = new MockRequest();
-    request.addInput("nochunk", null);
-    response = (ChunkedResponse)responder.makeResponse(context, request);
+    request.addInput("nochunk", "");
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(context, request);
     assertTrue(response.isChunkingTurnedOff());
   }
 }

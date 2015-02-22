@@ -6,36 +6,31 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.Responder;
-import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.FitNesseUtil;
+import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RefactorPageResponderTest {
-  WikiPage root;
-  private MockRequest request;
-  private Responder responder;
+public class RefactorPageResponderTest extends ResponderTestCase {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
+    super.setUp();
     String childPage = "ChildPage";
     WikiPageUtil.addPage(root, PathParser.parse(childPage));
-
-    request = new MockRequest();
     request.setResource(childPage);
-    responder = new RefactorPageResponder();
+  }
+
+  @Override
+  protected Responder responderInstance() {
+    return new RefactorPageResponder();
   }
 
   @Test
   public void testHtml() throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(200, response.getStatus());
 
     String content = response.getContent();

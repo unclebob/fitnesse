@@ -78,7 +78,7 @@ public class SerializedPageResponder implements SecureResponder {
   private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     return page;
   }
 

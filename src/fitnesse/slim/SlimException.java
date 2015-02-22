@@ -89,12 +89,12 @@ public class SlimException extends Exception {
       sb.append(PRETTY_PRINT_TAG_START);
     }
 
-    if (tag != null && tag.length() > 0) {
+    if (tag != null && !tag.isEmpty()) {
       sb.append(tag).append(" ");
     }
 
     String msg = getMessage();
-    if (msg != null && msg.length() > 0) {
+    if (msg != null && !msg.isEmpty()) {
       sb.append(msg);
     }
     if (this.prettyPrint) {

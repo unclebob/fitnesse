@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
 
-  public static final String ErrorLogName = "ErrorLogs";
-
   WikiPage getParent();
 
   boolean isRoot();

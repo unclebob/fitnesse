@@ -25,7 +25,7 @@ public class WikiPagePropertiesTest {
   private WikiPageProperties properties;
 
   static final String endl = System.getProperty("line.separator");
-  static final String tab = "  ";
+  static final String tab = "";
   static final String sampleXml =
     "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + endl +
       "<properties>" + endl +

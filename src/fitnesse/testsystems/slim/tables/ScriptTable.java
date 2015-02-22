@@ -84,6 +84,7 @@ public class ScriptTable extends SlimTable {
 
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
@@ -116,7 +117,7 @@ public class ScriptTable extends SlimTable {
       assertions = note(row);
     else if ((match = ifSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
-    else if (firstCell.length() == 0)
+    else if (firstCell.isEmpty())
       assertions = note(row);
     else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
       assertions = note(row);
@@ -153,7 +154,8 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
+    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
+            actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
@@ -376,7 +378,7 @@ public class ScriptTable extends SlimTable {
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       try {
         table.addColumnToRow(getRow(), actual);
-      } catch (Throwable e) {
+      } catch (Exception e) {
         return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();

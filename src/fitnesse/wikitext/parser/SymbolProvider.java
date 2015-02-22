@@ -10,7 +10,7 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
-            Link.symbolType, new Table(),
+            Link.symbolType, new ColoredSlimTable(new Table()),
             new HashTable(),  new HeaderLine(), Literal.symbolType, Nesting.symbolType, new Collapsible(),
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
@@ -50,10 +50,10 @@ public class SymbolProvider {
     static final SymbolProvider preformatProvider = new SymbolProvider(
           new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
 
-  private static final char defaultMatch = '\0';
+    private static final char defaultMatch = '\0';
 
-  private HashMap<Character, ArrayList<Matchable>> currentDispatch;
-    private ArrayList<SymbolType> symbolTypes;
+    private Map<Character, ArrayList<Matchable>> currentDispatch;
+    private Collection<SymbolType> symbolTypes;
     private SymbolProvider parent = null;
 
     public SymbolProvider(Iterable<SymbolType> types) {
@@ -93,7 +93,7 @@ public class SymbolProvider {
         return this;
     }
 
-    private ArrayList<Matchable> getMatchTypes(Character match) {
+    private List<Matchable> getMatchTypes(Character match) {
         if (currentDispatch.containsKey(match)) return currentDispatch.get(match);
         return currentDispatch.get(defaultMatch);
     }

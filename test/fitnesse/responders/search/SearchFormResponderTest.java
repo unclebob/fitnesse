@@ -11,8 +11,6 @@ import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 
@@ -21,8 +19,7 @@ public class SearchFormResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     SearchFormResponder responder = new SearchFormResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
     content = response.getContent();

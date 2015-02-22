@@ -22,7 +22,7 @@ public class VersionSelectionResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(path);
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 

@@ -3,11 +3,10 @@
   <tr>
     <td>$testExecutionReport.Date</td>
     <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
+    #if( $resultDate )<td><a href="?executionLog&resultDate=$resultDate">Execution Log</a></td>#end
   </tr>
 </table>
-
 #foreach($testResult in $testExecutionReport.Results)
-<hr/>
 #set($counts = $testResult.TestSummary)
 <div id="test-summary" class="$ExecutionResult.getExecutionResult($testResult.RelativePageName, $counts)">
     <strong>$testResult.RelativePageName:</strong>
@@ -18,6 +17,10 @@
     ($testResult.runTimeInMillis ms)
 </div>
 
-<div>$testResult.Content</div>
+<div class="alternating_block">$testResult.Content</div>
+
+<script type="text/javascript">
+ $(initErrorMetadata)
+</script>
 #end
 #end

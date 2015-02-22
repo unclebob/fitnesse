@@ -107,9 +107,9 @@ public abstract class StatementExecutorTestBase {
   @Test
   public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest()
       throws Exception {
+    createAnnotatedFixture();
     try {
-      createAnnotatedFixture();
-      String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
+      statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
       fail("Executed non-existing method.");
     } catch (SlimException e) {
       String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,

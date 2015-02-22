@@ -11,7 +11,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -40,7 +39,8 @@ public class AuthenticatorTest {
   
   @Before
   public void setUp() {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext();
+    WikiPage root = context.getRootPage();
     WikiPage frontpage = root.addChildPage("FrontPage");
     makeReadSecure(frontpage);
     authenticator = new SimpleAuthenticator();
@@ -48,7 +48,6 @@ public class AuthenticatorTest {
 
     request = new MockRequest();
     request.setResource("FrontPage");
-    context = FitNesseUtil.makeTestContext(root);
   }
 
   private void makeReadSecure(WikiPage frontpage) {

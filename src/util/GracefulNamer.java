@@ -39,7 +39,7 @@ public class GracefulNamer {
     final char separator = '.';
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
-    if (disgracefulName.length() > 0)
+    if (!disgracefulName.isEmpty())
       namer.finalName.append(c = disgracefulName.charAt(0));
 
     boolean isGrabbingDigits = false;
@@ -77,46 +77,55 @@ public class GracefulNamer {
   }
 
   private class InWordState implements GracefulNameState {
+    @Override
     public void letter(char c) {
       finalName.append(c);
     }
 
+    @Override
     public void digit(char c) {
       finalName.append(c);
       currentState = new InNumberState();
     }
 
+    @Override
     public void other(char c) {
       currentState = new OutOfWordState();
     }
   }
 
   private class InNumberState implements GracefulNameState {
+    @Override
     public void letter(char c) {
       finalName.append(Character.toUpperCase(c));
       currentState = new InWordState();
     }
 
+    @Override
     public void digit(char c) {
       finalName.append(c);
     }
 
+    @Override
     public void other(char c) {
       currentState = new OutOfWordState();
     }
   }
 
   private class OutOfWordState implements GracefulNameState {
+    @Override
     public void letter(char c) {
       finalName.append(Character.toUpperCase(c));
       currentState = new InWordState();
     }
 
+    @Override
     public void digit(char c) {
       finalName.append(c);
       currentState = new InNumberState();
     }
 
+    @Override
     public void other(char c) {
     }
   }

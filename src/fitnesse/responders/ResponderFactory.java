@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
@@ -46,7 +47,7 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 
 public class ResponderFactory {
-  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
+  private static final Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
 
   private final String rootPath;
   private final Map<String, Class<? extends Responder>> responderMap;
@@ -94,6 +95,7 @@ public class ResponderFactory {
     addResponder("packet", PacketResponder.class);
     addResponder("testHistory", TestHistoryResponder.class);
     addResponder("pageHistory", PageHistoryResponder.class);
+    addResponder("executionLog", ExecutionLogResponder.class);
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
@@ -139,7 +141,7 @@ public class ResponderFactory {
     if (usingResponderKey(responderKey)) {
       responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
     } else if (resource.startsWith("files/") || resource.equals("files")) {
-      responder = wrapWithFilters("files", FileResponder.makeResponder(request, rootPath));
+      responder = wrapWithFilters("files", new FileResponder());
     } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else {

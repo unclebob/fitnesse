@@ -26,7 +26,6 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,8 +35,8 @@ public class WikiPageResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
   }
 
   @Test
@@ -69,7 +68,7 @@ public class WikiPageResponderTest {
   @Test
   public void testResponseWithNonWikiWordChildPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
-    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+    WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
 
     final MockRequest request = new MockRequest();
     request.setResource("page.child_page");

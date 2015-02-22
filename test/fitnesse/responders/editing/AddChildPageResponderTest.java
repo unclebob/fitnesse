@@ -14,7 +14,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +29,9 @@ public class AddChildPageResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
+
     crawler = root.getPageCrawler();
     WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     childName = "ChildPage";
@@ -42,7 +42,6 @@ public class AddChildPageResponderTest {
     request.addInput("pageName", childName);
     request.addInput("pageContent", childContent);
     request.addInput("pageType", pagetype);
-    context = FitNesseUtil.makeTestContext(root);
     responder = new AddChildPageResponder();
     path = PathParser.parse("TestPage.ChildPage");
   }
@@ -202,7 +201,7 @@ public class AddChildPageResponderTest {
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
     request.addInput(NewPageResponder.PAGE_TEMPLATE, ".TemplatePage");
 
-    responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    responder.makeResponse(context, request);
 
     WikiPage newPage = root.getChildPage("TestChildPage");
     assertNotNull(newPage);

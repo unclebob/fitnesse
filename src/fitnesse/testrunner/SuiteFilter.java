@@ -17,14 +17,14 @@ import fitnesse.wiki.WikiPagePath;
 import org.apache.commons.lang.StringUtils;
 
 public class SuiteFilter {
-  public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
 
-  final private SuiteTagMatcher notMatchTags;
-  final private SuiteTagMatcher matchTags;
-  final private boolean andStrategy;
-  final private String startWithTest;
+  private final SuiteTagMatcher notMatchTags;
+  private final SuiteTagMatcher matchTags;
+  private final String startWithTest;
   
   public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
+    @Override
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
@@ -35,19 +35,16 @@ public class SuiteFilter {
   public SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
     if(andTags != null) {
-      matchTags = new SuiteTagMatcher(andTags, true);
-      andStrategy = true;
+      matchTags = new SuiteTagMatcher(andTags, true, true);
     } else {
-      matchTags = new SuiteTagMatcher(orTags, true);
-      andStrategy = false;
+      matchTags = new SuiteTagMatcher(orTags, true, false);
     }
-    notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false);
+    notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false, false);
   }
 
   public SuiteFilter(String suiteFilter, String excludeSuiteFilter) {
-    matchTags = new SuiteTagMatcher(suiteFilter, true);
-    notMatchTags = new SuiteTagMatcher(excludeSuiteFilter, false);
-    andStrategy = false;
+    matchTags = new SuiteTagMatcher(suiteFilter, true, false);
+    notMatchTags = new SuiteTagMatcher(excludeSuiteFilter, false, false);
     startWithTest = null;
   }
 
@@ -92,7 +89,7 @@ public class SuiteFilter {
     List<String> criterias = new LinkedList<String>();
     
     if (matchTags.isFiltering()) {
-      if(andStrategy){
+      if(matchTags.andStrategy){
         criterias.add("matches all of '" + matchTags.tagString + "'");
       } else {
         criterias.add("matches '" + matchTags.tagString + "'");
@@ -112,19 +109,21 @@ public class SuiteFilter {
   
   private class SuiteTagMatcher {
     private static final String LIST_SEPARATOR = "\\s*,\\s*";
-    final private List<String> tags;
+    private final List<String> tags;
     final String tagString;
-    final private boolean matchIfNoTags;
-    
-    public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags) {
+    private final boolean matchIfNoTags;
+    private final boolean andStrategy;
+
+    public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags, boolean andStrategy) {
       tagString = suiteTags;
-      if (suiteTags != null) {
+      if (StringUtils.isNotBlank(suiteTags)) {
         tags = Arrays.asList(suiteTags.split(LIST_SEPARATOR));
       }
       else {
         tags = null;
       }
       this.matchIfNoTags = matchIfNoTags;
+      this.andStrategy = andStrategy;
     }
     
     boolean isFiltering() {
@@ -150,7 +149,7 @@ public class SuiteFilter {
     }
 
     private boolean testTagsMatchQueryTags(String testTagString) {
-      String testTags[] = testTagString.trim().split(LIST_SEPARATOR);
+      String[] testTags = testTagString.trim().split(LIST_SEPARATOR);
       if(andStrategy){
         return checkIfAllQueryTagsExist(testTags);
       } else {

@@ -84,7 +84,7 @@ public class Logger {
     try {
       outputStream = new FileOutputStream(file);
     } catch (FileNotFoundException e) {
-      System.err.println("Unable to open log file. falling back to stderr");
+      System.err.println("Unable to open log file. Falling back to stderr");
       e.printStackTrace(System.err);
       outputStream = System.err;
     }
@@ -102,6 +102,7 @@ public class Logger {
     return tmpFormat.format(calendar.getTime());
   }
 
+  @Override
   public String toString() {
     return getDirectory().getAbsolutePath();
   }

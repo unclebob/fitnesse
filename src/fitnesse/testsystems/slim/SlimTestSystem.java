@@ -178,7 +178,7 @@ public abstract class SlimTestSystem implements TestSystem {
             }
           }
         }
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         exceptionOccurred(ex);
       }
     }

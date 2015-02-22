@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class UpdateFileList {
@@ -14,7 +15,7 @@ public class UpdateFileList {
   private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
-  private HashSet<String> doNotReplaceFiles = new HashSet<String>();
+  private Set<String> doNotReplaceFiles = new HashSet<String>();
   private String baseDirectory = "";
   private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
@@ -95,13 +96,21 @@ public class UpdateFileList {
 
   }
 
-  private void addFilePathsToList(String directoryPath) {
-    File directory = new File(directoryPath);
-    File[] files = FileUtil.getDirectoryListing(directory);
-    for (File childFile : files)
-      if (!isBackupFile(childFile))
-        addFilePathToAppropriateList(directoryPath, childFile);
-
+  private void addFilePathsToList(String path) {
+    File f = new File(path);
+    if (f.isDirectory()) {
+      File[] files = FileUtil.getDirectoryListing(f);
+      for (File childFile : files)
+        if (!isBackupFile(childFile))
+          addFilePathToAppropriateList(path, childFile);
+    } else if (f.isFile()) {
+      String parent = "";
+      int index = path.lastIndexOf('/');
+      if (index >= 0)
+        parent = path.substring(0, index);
+      if (!isBackupFile(f))
+        addFilePathToAppropriateList(parent, f);
+    }
   }
 
   private boolean isBackupFile(File childFile) {
@@ -119,7 +128,7 @@ private void addFilePathToAppropriateList(String directoryPath, File childFile) 
   }
 
   private String makePathLine(String path) {
-    if (baseDirectory != null && baseDirectory.length() > 0 && path.startsWith(baseDirectory))
+    if (baseDirectory != null && !baseDirectory.isEmpty() && path.startsWith(baseDirectory))
       path = path.replace(baseDirectory, "");
     if (path.startsWith("/"))
       path = path.substring(1);

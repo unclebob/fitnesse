@@ -74,7 +74,7 @@ public class SlimExceptionResult implements ExceptionResult {
   }
 
   private String translateExceptionMessage(String exceptionMessage) {
-    String tokens[] = exceptionMessage.split(" ");
+    String[] tokens = exceptionMessage.split(" ");
     if (tokens[0].equals(COULD_NOT_INVOKE_CONSTRUCTOR))
       return "Could not invoke constructor for " + tokens[1];
     else if (tokens[0].equals(NO_METHOD_IN_CLASS))

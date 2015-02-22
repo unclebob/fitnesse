@@ -166,6 +166,19 @@ public class SuiteFilterTest {
   }
 
   @Test
+  public void testChecksNotMatchFilterWithInvalidTagSuite() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, "bad, notsobad", "",  null);
+
+    WikiPage failSuite = addTestPage(root, "FailSuite", "Bad Test");
+    PageData data = failSuite.getData();
+    data.setAttribute(PageData.PropertySUITES, "bad");
+    data.setAttribute("Suite");
+    failSuite.commit(data);
+
+    assertFalse(filter.getFilterForTestsInSuite(failSuite).hasMatchingTests());
+  }
+
+  @Test
   public void testFilterDescription() throws Exception {
     SuiteFilter filter = new SuiteFilter("good", "bad", null, "FirstTest");
     assertEquals("matches 'good' & doesn't match 'bad' & starts with test 'FirstTest'", filter.toString());

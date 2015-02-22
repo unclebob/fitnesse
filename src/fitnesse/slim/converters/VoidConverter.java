@@ -5,6 +5,7 @@ package fitnesse.slim.converters;
 import fitnesse.slim.Converter;
 
 public class VoidConverter implements Converter<Void> {
+
   public static final String VOID_TAG = "/__VOID__/";
 
   public String toString(Void v) {

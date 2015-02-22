@@ -11,7 +11,7 @@ package fit;
 public class ScientificDouble extends Number implements Comparable<Number> {
   private static final long serialVersionUID = 1L;
 
-  protected double value;
+  protected final double value;
   protected double precision;
 
   public ScientificDouble(double value) {
@@ -52,6 +52,12 @@ public class ScientificDouble extends Number implements Comparable<Number> {
     return compareTo((Number) obj) == 0;
   }
 
+  @Override
+  public int hashCode() {
+    return (int) value;
+  }
+
+  @Override
   public int compareTo(Number obj) {
     double other = obj.doubleValue();
     double diff = value - other;
@@ -63,6 +69,7 @@ public class ScientificDouble extends Number implements Comparable<Number> {
     return 0;
   }
 
+  @Override
   public String toString() {
     return Double.toString(value);
   }

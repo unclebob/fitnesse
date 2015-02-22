@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.reporting.history.MostRecentPageHistoryReader;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wiki.WikiPage;
 import util.GracefulNamer;
 
@@ -85,7 +85,7 @@ public class SuiteOverviewTree {
     
   }
   
-  private SimpleDateFormat dateFormatter = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
 
   public class TreeItem
   {
@@ -231,7 +231,7 @@ public class SuiteOverviewTree {
         else {
           String branchName = itemPath[currentIndex];
           String branchFullName = fullName;
-          branchFullName += (fullName.length() > 0) ? "." + branchName : branchName;
+          branchFullName += fullName.isEmpty() ? branchName : "." + branchName;
           TreeItem branch = new TreeItem(branchName, branchFullName);
           branches.add(branch);
           branch.addItem(itemPath, ++currentIndex);
@@ -244,7 +244,7 @@ public class SuiteOverviewTree {
     }
     
     public boolean isTest() {
-      return (branches.size() == 0);
+      return (branches.isEmpty());
     }
     
     public String getCssClass() {

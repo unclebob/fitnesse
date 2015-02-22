@@ -80,10 +80,10 @@ public class SaveResponder implements SecureResponder {
 
   private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPage page = pageCrawler.getPage(path);
     if (page == null)
-      page = WikiPageUtil.addPage(context.root, PathParser.parse(resource));
+      page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(resource));
     return page;
   }
 

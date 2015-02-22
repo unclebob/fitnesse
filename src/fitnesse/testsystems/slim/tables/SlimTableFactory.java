@@ -35,7 +35,7 @@ public class SlimTableFactory {
     addTableType("library", LibraryTable.class);
   }
 
-  protected SlimTableFactory(HashMap<String, Class<? extends SlimTable>> tableTypes, HashMap<String, String> tableTypeArrays) {
+  protected SlimTableFactory(Map<String, Class<? extends SlimTable>> tableTypes, Map<String, String> tableTypeArrays) {
     this.tableTypes = tableTypes;
     this.tableTypeArrays = tableTypeArrays;
   }
@@ -73,7 +73,7 @@ public class SlimTableFactory {
     return tableType.contains(":");
   }
 
-  private Class<? extends SlimTable> getTableType(String tableType) {
+  public Class<? extends SlimTable> getTableType(String tableType) {
     if (hasColon(tableType)) {
       tableType = tableType.substring(0, tableType.indexOf(':') + 1);
     }

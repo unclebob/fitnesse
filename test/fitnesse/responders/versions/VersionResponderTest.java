@@ -20,7 +20,6 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Test;
 
 public class VersionResponderTest {
@@ -28,9 +27,8 @@ public class VersionResponderTest {
   private SimpleResponse response;
 
   private void makeTestResponse(String pageName) throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse(pageName), "original content ${requestParam}");
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "original content ${requestParam}");
     PageData data = page.getData();
     
     WikiPageProperties properties = data.getProperties();

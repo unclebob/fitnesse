@@ -38,7 +38,7 @@ public class UploadedFile {
   }
 
   public boolean isUsable() {
-    return (name != null && name.length() > 0);
+    return (name != null && !name.isEmpty());
   }
 
   public void delete() {

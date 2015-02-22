@@ -11,7 +11,6 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,11 +24,11 @@ public class ExposeThreadingIssueInMockResponseTest {
 
   @Before
   public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
     request = new MockRequest();
     responder = new SuiteResponder();
     int port = 9123;
-    context = FitNesseUtil.makeTestContext(root, port);
+    context = FitNesseUtil.makeTestContext(port);
+    root = context.getRootPage();
   }
 
   public static void assertHasRegexp(String regexp, String output) {

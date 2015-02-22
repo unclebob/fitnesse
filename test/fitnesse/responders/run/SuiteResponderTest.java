@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Properties;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
@@ -17,7 +16,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,14 +45,12 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
-  private Properties properties;
 
   @Before
   public void setUp() throws Exception {
     String suitePageName = "SuitePage";
-    properties = new Properties();
-    root = InMemoryPage.makeRoot("Root", properties);
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
+    root = context.getRootPage();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
     root.commit(data);
@@ -160,20 +156,6 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSuiteWithEmptyPage() throws Exception {
-    suite = WikiPageUtil.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
-    addTestPage(suite, "TestThatIsEmpty", "");
-    request.setResource("SuiteWithEmptyPage");
-    runSuite();
-
-    WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.SuiteWithEmptyPage");
-    WikiPage errorLog = root.getPageCrawler().getPage(errorLogPath);
-    PageData data = errorLog.getData();
-    String errorLogContent = data.getContent();
-    assertNotSubString("Exception", errorLogContent);
-  }
-
-  @Test
   public void testSuiteWithOneTestWithoutTable() throws Exception {
     addTestToSuite("TestWithoutTable", "This test has not table");
     addTestToSuite("TestTwo", fitPassFixture);
@@ -247,6 +229,15 @@ public class SuiteResponderTest {
     assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
     assertSubString("href=\\\"#TestTwo1\\\"", results);
     assertDoesntHaveRegexp(".*href=\\\"#TestThree.*", results);
+  }
+
+  @Test
+  public void testEmptySuiteFilter() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=");
+    String results = runSuite();
+    assertSubString("href=\\\"#TestTwo3\\\"", results);
+    assertSubString("href=\\\"#TestThree2\\\"", results);
   }
 
   @Test

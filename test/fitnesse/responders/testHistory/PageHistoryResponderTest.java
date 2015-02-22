@@ -16,7 +16,6 @@ import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -35,13 +34,11 @@ import fitnesse.reporting.history.SuiteExecutionReport;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
@@ -56,8 +53,7 @@ public class PageHistoryResponderTest {
     history = new TestHistory();
     responder = new PageHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
   }
 
   @After
@@ -68,8 +64,7 @@ public class PageHistoryResponderTest {
   private void makeResponse() throws Exception {
     request = new MockRequest();
     request.setResource("TestPage");
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
   private void removeResultsDirectory() {
@@ -425,8 +420,7 @@ public class PageHistoryResponderTest {
     request = new MockRequest();
     request.setResource("TestPage");
     request.addInput("format", "xml");
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals("text/xml", response.getContentType());
   }
 
@@ -435,8 +429,7 @@ public class PageHistoryResponderTest {
     request = new MockRequest();
     request.setResource("TestPage");
     request.addInput("format", "XMl");
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals("text/xml", response.getContentType());
   }
 
@@ -457,21 +450,6 @@ public class PageHistoryResponderTest {
 
   private void addBadDummyTestResult(File resultFile) throws Exception {
     FileUtil.createFile(resultFile, "JUNK");
-  }
-
-
-  private TestExecutionReport makeBadDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
-    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.addResult(result);
-    result.right = "xx";
-    result.wrong = "22";
-    result.ignores = "33";
-    result.exceptions = "44";
-    result.relativePageName = "relativePageName";
-    result.content = "wad of HTML content";
-    return testResponse;
   }
 
 }

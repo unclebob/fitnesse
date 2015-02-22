@@ -4,6 +4,7 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class TestXmlFormatter extends BaseFormatter implements Closeable {
+public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
   private final FitNesseContext context;
   private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
@@ -94,7 +95,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
         expectationResult.col = Integer.toString(cell.getCol());
         expectationResult.row = Integer.toString(cell.getRow());
       }
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with test result " + testResult, e);
     }
   }
@@ -116,7 +117,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
       expectationResult.type = expectation.getClass().getSimpleName();
       expectationResult.evaluationMessage = exceptionResult.getMessage();
       expectationResult.status = exceptionResult.getExecutionResult().toString();
-    } catch (Throwable e) {
+    } catch (Exception e) {
       LOG.log(Level.WARNING, "Unable to process assertion " + assertion + " with exception result " + exceptionResult, e);
     }
   }
@@ -191,9 +192,35 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   private void appendHtmlToBuffer(String output) {
-    if (outputBuffer == null)
+    if (outputBuffer == null) {
       outputBuffer = new StringBuilder();
+    }
     outputBuffer.append(output);
+  }
+
+  @Override
+  public void commandStarted(ExecutionContext context) {
+    testResponse.addExecutionContext(context.getCommand(), context.getTestSystemName());
+  }
+
+  @Override
+  public void stdOut(String output) {
+    testResponse.addStdOut(output);
+  }
+
+  @Override
+  public void stdErr(String output) {
+    testResponse.addStdErr(output);
+  }
+
+  @Override
+  public void exitCode(int exitCode) {
+    testResponse.exitCode(exitCode);
+  }
+
+  @Override
+  public void exceptionOccurred(Throwable e) {
+    testResponse.exceptionOccurred(e);
   }
 
   public interface WriterFactory {

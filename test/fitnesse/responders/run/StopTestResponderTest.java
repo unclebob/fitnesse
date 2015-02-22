@@ -14,13 +14,12 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 
 public class StopTestResponderTest {
 
-  private Request request = null;
-  private FitNesseContext context = null;
+  private Request request;
+  private FitNesseContext context;
   private StoppedRecorder stoppableA = new StoppedRecorder();
   private StoppedRecorder stoppableB = new StoppedRecorder();
 
@@ -28,7 +27,7 @@ public class StopTestResponderTest {
   public void setUp() throws Exception {
 
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
+    context = FitNesseUtil.makeTestContext();
   }
 
   @Test
@@ -59,7 +58,7 @@ public class StopTestResponderTest {
       }
 
       @Override
-      public Object getInput(String key) {
+      public String getInput(String key) {
         return bId;
       }
     };

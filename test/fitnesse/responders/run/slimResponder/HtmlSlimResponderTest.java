@@ -9,11 +9,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +45,7 @@ public class HtmlSlimResponderTest {
 
   @Before
   public void setUp() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext();
     request = new MockRequest();
     customComparatorRegistry = new CustomComparatorRegistry();
 
@@ -56,7 +53,7 @@ public class HtmlSlimResponderTest {
     responder.setFastTest(true);
     // Enforce the test runner here, to make sure we're talking to the right
     // system
-    testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+    testPage = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("TestPage"),
             "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
     SlimClientBuilder.clearSlimPortOffset();
   }

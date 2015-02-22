@@ -45,7 +45,7 @@ public class AddChildPageResponder implements SecureResponder {
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     WikiPagePath currentPagePath = PathParser.parse(request.getResource());
-    PageCrawler pageCrawler = context.root.getPageCrawler();
+    PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     currentPage = pageCrawler.getPage(currentPagePath);
     if (request.hasInput(NewPageResponder.PAGE_TEMPLATE)) {
       pageTemplate = pageCrawler.getPage(PathParser.parse((String) request.getInput(NewPageResponder.PAGE_TEMPLATE)));

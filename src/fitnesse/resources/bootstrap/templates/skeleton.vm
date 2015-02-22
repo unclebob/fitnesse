@@ -37,14 +37,14 @@
     </div>
 
     #parse( $navTemplate )
+    #if( $!errorNavTemplate )
+     #parse( $errorNavTemplate )
+    #end
+
    </div>
    #parse( 'breadcrumb.vm' )
   </nav>
 
-  #if( $!errorNavTemplate )
-   #parse( $errorNavTemplate )
-  #end
-  
   <header>
    #parse( $headerTemplate )
   </header>

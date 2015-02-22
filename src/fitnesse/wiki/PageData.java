@@ -5,13 +5,11 @@ package fitnesse.wiki;
 import static fitnesse.wiki.PageType.*;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class PageData implements ReadOnlyPageData, Serializable {
-  private static final Logger LOG = Logger.getLogger(PageData.class.getName());
 
   private static final long serialVersionUID = 1L;
 
@@ -123,6 +121,6 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public boolean isEmpty() {
-    return getContent() == null || getContent().length() == 0;
+    return getContent() == null || getContent().isEmpty();
   }
 }

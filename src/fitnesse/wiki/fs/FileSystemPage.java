@@ -181,20 +181,15 @@ public class FileSystemPage extends BaseWikiPage {
 
   public WikiPageProperties defaultPageProperties() {
     WikiPageProperties properties = new WikiPageProperties();
-    if (!isErrorLogsPage()) {
-      properties.set(PageData.PropertyEDIT);
-      properties.set(PageData.PropertyPROPERTIES);
-      properties.set(PageData.PropertyREFACTOR);
-    }
+    properties.set(PageData.PropertyEDIT);
+    properties.set(PageData.PropertyPROPERTIES);
+    properties.set(PageData.PropertyREFACTOR);
     properties.set(PageData.PropertyWHERE_USED);
     properties.set(PageData.PropertyRECENT_CHANGES);
     properties.set(PageData.PropertyFILES);
     properties.set(PageData.PropertyVERSIONS);
     properties.set(PageData.PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
-
-    if (isErrorLogsPage())
-      return properties;
 
     PageType pageType = PageType.getPageTypeForPageName(getName());
 
@@ -203,11 +198,6 @@ public class FileSystemPage extends BaseWikiPage {
 
     properties.set(pageType.toString());
     return properties;
-  }
-
-  private boolean isErrorLogsPage() {
-    WikiPagePath pagePath = getPageCrawler().getFullPath();
-    return ErrorLogName.equals(pagePath.getFirst());
   }
 
   @Override

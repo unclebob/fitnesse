@@ -33,7 +33,7 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
   }
 
   @Override
@@ -66,6 +66,5 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
       errorOccurred(cause);
     }
   }
-
 }
 

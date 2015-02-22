@@ -16,7 +16,7 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
   }
 
   @Override
-  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
     for (TestSystemListener listener : listeners())
       if (listener instanceof TestsRunnerListener)
         ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);

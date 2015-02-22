@@ -24,7 +24,7 @@ public class DirectoryResponderTest {
   @Before
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = FitNesseUtil.makeTestContext(null);
+    context = FitNesseUtil.makeTestContext();
     SampleFileUtility.makeSampleFiles(context.getRootPagePath());
   }
 
@@ -36,7 +36,7 @@ public class DirectoryResponderTest {
   @Test
   public void testDirectotyListing() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
+    Responder responder = new FileResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("testDir", response.getContent());
     assertHasRegexp("testFile2", response.getContent());
@@ -47,7 +47,7 @@ public class DirectoryResponderTest {
   @Test
   public void testButtons() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
+    Responder responder = new FileResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertHasRegexp("Upload", response.getContent());
@@ -57,7 +57,7 @@ public class DirectoryResponderTest {
   @Test
   public void testHtml() throws Exception {
     request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
+    Responder responder = new FileResponder();
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("/files/", response.getContent());
   }
@@ -65,9 +65,19 @@ public class DirectoryResponderTest {
   @Test
   public void testRedirectForDirectory() throws Exception {
     request.setResource("files/testDir");
-    Responder responder = FileResponder.makeResponder(request, context.getRootPagePath());
+    Responder responder = new FileResponder();
     Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));
+  }
+
+  @Test
+  public void testRedirectForDirectoryWithQueryParameters() throws Exception {
+    request.setResource("files/testDir");
+    request.setQueryString("responder=files&format=json");
+    Responder responder = new FileResponder();
+    Response response = responder.makeResponse(context, request);
+    assertEquals(303, response.getStatus());
+    assertEquals("/files/testDir/?responder=files&format=json", response.getHeader("Location"));
   }
 }

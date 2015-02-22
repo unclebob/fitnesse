@@ -502,7 +502,7 @@ public abstract class SlimTable {
         testResult = SlimTestResult.fail("null", replacedExpected); //todo can't be right message.
       else if (actual.equals(replacedExpected))
         testResult = SlimTestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
-      else if (replacedExpected.length() == 0)
+      else if (replacedExpected.isEmpty())
         testResult = SlimTestResult.ignore(actual);
       else {
         testResult = new Comparator(replacedExpected, actual, expected).evaluate();
@@ -514,7 +514,7 @@ public abstract class SlimTable {
     }
 
     private String announceBlank(String originalValue) {
-      return originalValue.length() == 0 ? "BLANK" : originalValue;
+      return originalValue.isEmpty() ? "BLANK" : originalValue;
     }
 
   }
@@ -636,8 +636,8 @@ public abstract class SlimTable {
             } else {
               message = SlimTestResult.fail(expectedString + " doesn't match " + actual);
             }
-          } catch (Throwable t) {
-            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + t.getMessage());
+          } catch (Exception e) {
+            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + e.getMessage());
           }
         }
       }
