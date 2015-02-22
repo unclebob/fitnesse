@@ -52,7 +52,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   private Integer getDaysInput(Request request) {
-    String daysInput = request.getInput("days").toString();
+    String daysInput = request.getInput("days");
     return parseInt(daysInput);
   }
 

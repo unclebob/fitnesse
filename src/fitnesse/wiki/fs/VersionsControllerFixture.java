@@ -60,7 +60,7 @@ public class VersionsControllerFixture {
   }
 
   public String getVersionInfos() {
-	String result = new String();    
+	String result = "";
 	Collection<VersionInfo> versions = lastUsedPage.getVersions();
 	for (VersionInfo version : versions){
 		result = result  + version.getName() +"-" + version.getAuthor() + "-" + version.getCreationTime() + "\n";

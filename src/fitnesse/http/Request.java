@@ -257,7 +257,7 @@ public class Request {
   }
 
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("--- Request Start ---\n");
     buffer.append("Request URI:  ").append(requestURI).append('\n');
     buffer.append("Resource:     ").append(resource).append('\n');
@@ -273,13 +273,17 @@ public class Request {
     return buffer.toString();
   }
 
-  private void addMap(Map<String, String> map, StringBuffer buffer) {
+  private void addMap(Map<String, String> map, StringBuilder buffer) {
     if (map.isEmpty()) {
       buffer.append("\tempty");
     }
     for (Entry<String, String> entry: map.entrySet()) {
-      String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
-      buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
+      String value = entry.getValue() == null ? null : escape(entry.getValue());
+      buffer.append("\t")
+              .append(escape(entry.getKey()))
+              .append(" \t-->\t ")
+              .append(value)
+              .append("\n");
     }
   }
 

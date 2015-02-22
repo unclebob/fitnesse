@@ -63,7 +63,7 @@ public class PasswordFile {
 
   private void loadCipher(LinkedList<String> lines) {
     if (!lines.isEmpty()) {
-      String firstLine = lines.getFirst().toString();
+      String firstLine = lines.getFirst();
       if (firstLine.startsWith("!")) {
         String cipherClassName = firstLine.substring(1);
         try {
@@ -84,8 +84,7 @@ public class PasswordFile {
   private void savePasswords() throws FileNotFoundException {
     List<String> lines = new LinkedList<String>();
     lines.add("!" + cipher.getClass().getName());
-    for (Iterator<String> iterator = passwordMap.keySet().iterator(); iterator.hasNext();) {
-      Object user = iterator.next();
+    for (String user : passwordMap.keySet()) {
       Object password = passwordMap.get(user);
       lines.add(user + ":" + password);
     }
