@@ -5,6 +5,8 @@ package fitnesse.slim.protocol;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.slim.SlimVersion;
+
 /**
  * Uses Slim Serialization.  See SlimSerializer for details.  Will deserialize lists of lists recursively.
  */
@@ -106,6 +108,7 @@ public class SlimDeserializer {
   private void checkForColon(String itemType) {
     if (getChar() != ':')
       throw new SyntaxError(itemType + " in serialized list not terminated by colon.");
+    
   }
 
   private char getChar() {
@@ -121,7 +124,7 @@ public class SlimDeserializer {
   }
 
   private int tryGetLength() {
-    int lengthSize = 6;
+    int lengthSize = SlimVersion.MINIMUM_NUMBER_LENGTH;
     String lengthString = serialized.substring(index, index + lengthSize);
     int length = Integer.parseInt(lengthString);
     index += lengthSize;
@@ -142,4 +145,5 @@ public class SlimDeserializer {
     } else
       return null;
   }
+ 
 }

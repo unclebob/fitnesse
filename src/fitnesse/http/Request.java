@@ -41,6 +41,11 @@ public class Request {
   private volatile boolean hasBeenParsed;
   private long bytesParsed = 0;
 
+  /**
+   * If SSL is being used the DN of the peer certificate, otherwise null.
+   */
+  private String peerDn;
+
   public static Set<String> buildAllowedMethodList() {
     Set<String> methods = new HashSet<String>(20);
     methods.add("GET");
@@ -332,6 +337,14 @@ public class Request {
 
   public String getAuthorizationPassword() {
     return authorizationPassword;
+  }
+
+  public String getPeerDn() {
+    return peerDn;
+  }
+
+  public void setPeerDn(String peerDn) {
+    this.peerDn = peerDn;
   }
 
   public long numberOfBytesParsed() {

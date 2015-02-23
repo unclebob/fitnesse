@@ -3,6 +3,8 @@ package fitnesse.testsystems;
 public class ConsoleExecutionLogListener implements ExecutionLogListener {
   @Override
   public void commandStarted(ExecutionContext context) {
+	    System.out.println(context.getTestSystemName());
+	    System.out.println(context.getCommand());
   }
 
   @Override
