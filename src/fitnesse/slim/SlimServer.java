@@ -8,9 +8,11 @@ import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
 import util.StreamReader;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
@@ -27,8 +29,8 @@ public class SlimServer implements SocketServer {
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
-  private StreamReader reader;
-  private BufferedOutputStream writer;
+  private SlimStreamReader reader;
+  private OutputStream writer;
   private ListExecutor executor;
   private boolean verbose;
   private SlimFactory slimFactory;
@@ -58,11 +60,11 @@ public class SlimServer implements SocketServer {
   }
 
   private void initialize(Socket s) throws IOException {
-	SocketFactory.printSocketInfo(s);
-	reader = SocketFactory.getReader(s);
-    writer = SocketFactory.getByteWriter(s);
+    SocketFactory.printSocketInfo(s);
+    reader = SlimStreamReader.getReader(s);
+    writer = SlimStreamReader.getByteWriter(s);
     executor = slimFactory.getListExecutor(verbose);
-    StreamReader.sendSlimHeader(writer, String.format(SlimVersion.SLIM_HEADER + SlimVersion.VERSION+ "\n"));
+    SlimStreamReader.sendSlimHeader(writer, String.format(SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n"));
   }
 
   private boolean processOneSetOfInstructions() throws IOException {
@@ -71,12 +73,12 @@ public class SlimServer implements SocketServer {
     if (instructions == null) return true;
     // We are done Bye Bye message received
     if (instructions.equalsIgnoreCase(SlimVersion.BYEMESSAGE)) {
-    	return false;
-    } 
-    
+      return false;
+    }
+
     // Do some real work
     String resultString = executeInstructions(instructions);
-    StreamReader.sendSlimMessage(writer, resultString);
+    SlimStreamReader.sendSlimMessage(writer, resultString);
     return true;
   }
 
@@ -84,7 +86,7 @@ public class SlimServer implements SocketServer {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
     List<Object> results = executor.execute(statements);
     String resultString = SlimSerializer.serialize(results);
-    return  resultString;
+    return resultString;
   }
 
   private void close() {
@@ -95,5 +97,5 @@ public class SlimServer implements SocketServer {
 
     }
   }
-  
+
 }

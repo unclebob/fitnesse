@@ -80,15 +80,6 @@ public final class SocketFactory {
 	return (theSocket instanceof SSLSocket);
   }
 
-	
-  public static BufferedOutputStream getByteWriter(Socket socket) throws IOException {
-	  return new BufferedOutputStream(socket.getOutputStream());
-  }
-
-  public static StreamReader getReader(Socket socket) throws IOException {
-	  return new StreamReader(new BufferedInputStream(socket.getInputStream()));
-  }
-
   public static String peerName(Socket theSocket){
 	  String peerDn = peerDn(theSocket);
 	  if (peerDn == null) {

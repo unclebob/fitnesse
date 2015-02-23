@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import fitnesse.slim.SlimVersion;
-
 public class StreamReader {
+  public static final String CHARENCODING = "UTF-8";
+
   private InputStream input;
   private State state;
 
@@ -20,16 +19,16 @@ public class StreamReader {
 
   private int readGoal;
   private int readStatus;
-  
+
   // timeout limit in milli seconds
   // 0 = wait forever, never timeout
   private int timeoutLimit = 0;
 
   private boolean eof = false;
   private boolean isTimeout = false;
-  private int retryCounter=0;
+  private int retryCounter = 0;
   private int sleepStep = 10;
-  
+
   private byte[] boundary;
   private int boundaryLength;
   private int matchingBoundaryIndex;
@@ -41,37 +40,23 @@ public class StreamReader {
     this.input = input;
   }
 
-  public static void sendSlimMessage(BufferedOutputStream writer, String message) throws IOException {
-	byte[] msgChars = message.getBytes(SlimVersion.CHARENCODING);
-	byte[] msgLength = String.format(SlimVersion.LENGTH_FORMAT, msgChars.length).getBytes(SlimVersion.CHARENCODING);
-    writer.write(msgLength, 0, msgLength.length);
-	writer.write(msgChars, 0, msgChars.length);
-	writer.flush();
-  }
 
-  public static void sendSlimHeader(BufferedOutputStream writer, String header) throws IOException {
-	// The Header has no length information as prefix
-	byte[] msgChars = header.getBytes(SlimVersion.CHARENCODING);
-	writer.write(msgChars, 0, msgChars.length);
-	writer.flush();
-  }
- 
-  
   public void close() throws IOException {
     input.close();
   }
-  
-  public void setTimeoutLimit(int timeout)  {
+
+  public void setTimeoutLimit(int timeout) {
     timeoutLimit = timeout;
   }
- 
-  public int timeoutLimit()  {
-	    return timeoutLimit;
-	  }
-  public boolean isTimeout(){
-	  return isTimeout;
+
+  public int timeoutLimit() {
+    return timeoutLimit;
   }
-  
+
+  public boolean isTimeout() {
+    return isTimeout;
+  }
+
   public String readLine() throws IOException {
     return bytesToString(readLineBytes());
   }
@@ -141,33 +126,32 @@ public class StreamReader {
   }
 
   private void readUntilFinished() throws IOException {
-	  isTimeout = false;
-	  
-	  if(timeoutLimit >0){
-		  retryCounter = timeoutLimit / sleepStep;
-	  }
-	  else{
-		  retryCounter = 0;
-	  }
-	  while (!state.finished())
-		  //TODO remove the true or make it used only for non SSL streams
-		  // Note: SSL sockets don't support the input.available() function :(
-		  if(timeoutLimit == 0 || input.available() !=0 ){
-			state.read(input);
-			  
-		  }else{
-			try {
-				Thread.sleep(sleepStep);
-			} catch (InterruptedException e) {
-				// Ignore
-				//e.printStackTrace();
-			}
-			retryCounter--;
-			if (retryCounter <= 0){
-			  isTimeout = true;
-			  changeState(FINAL_STATE);
-			}
-		  }
+    isTimeout = false;
+
+    if (timeoutLimit > 0) {
+      retryCounter = timeoutLimit / sleepStep;
+    } else {
+      retryCounter = 0;
+    }
+    while (!state.finished())
+      //TODO remove the true or make it used only for non SSL streams
+      // Note: SSL sockets don't support the input.available() function :(
+      if (timeoutLimit == 0 || input.available() != 0) {
+        state.read(input);
+
+      } else {
+        try {
+          Thread.sleep(sleepStep);
+        } catch (InterruptedException e) {
+          // Ignore
+          //e.printStackTrace();
+        }
+        retryCounter--;
+        if (retryCounter <= 0) {
+          isTimeout = true;
+          changeState(FINAL_STATE);
+        }
+      }
   }
 
   private void clearBuffer() {
@@ -183,7 +167,7 @@ public class StreamReader {
   }
 
   private String bytesToString(byte[] bytes) throws UnsupportedEncodingException {
-    return new String(bytes, SlimVersion.CHARENCODING);
+    return new String(bytes, CHARENCODING);
   }
 
   private void changeState(State state) {
@@ -281,29 +265,5 @@ public class StreamReader {
       return true;
     }
   };
-  
-  private int getLengthToRead() throws IOException  {
-	    String length = read(SlimVersion.MINIMUM_NUMBER_LENGTH);
 
-	      //Continue to read up to the ":"
-	      String next;
-	      while (!":".equals(next = read(1)) && !eof && !isTimeout)
-   	        length = length + next;
-
-	      if(eof) throw new IOException("Stream Read Failure. Can't read length of message, EOF reached.  Possibly test aborted.  Last things read: " + length);
-	      if(isTimeout) throw new IOException("Stream Read Failure. Can't read length of message, Timeout reached.  Possibly test aborted.  Last things read: " + length);
-	      
-		try {
-		  Integer resultLength = Integer.parseInt(length);
-	      return resultLength;
-	    }
-	    catch (NumberFormatException e){
-	      throw new IOException("Stream Read Failure. Can't read length of message, not a number.  Possibly test aborted.  Last things read: " + length);
-	    }
-	  }
-
-  public String getSlimMessage() throws IOException {
-    int resultLength = getLengthToRead();
-    return  read(resultLength);
-  }
 }
