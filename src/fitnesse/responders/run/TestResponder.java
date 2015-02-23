@@ -6,7 +6,6 @@ import java.util.List;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testsystems.TestSummary;

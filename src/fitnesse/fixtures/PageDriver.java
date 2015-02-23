@@ -4,7 +4,6 @@ package fitnesse.fixtures;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;

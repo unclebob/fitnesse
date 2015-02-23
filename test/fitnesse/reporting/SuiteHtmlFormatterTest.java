@@ -12,11 +12,9 @@ import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
-import fitnesse.FitNesseContext;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.fs.InMemoryPage;

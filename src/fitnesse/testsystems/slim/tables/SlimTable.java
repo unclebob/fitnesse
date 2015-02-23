@@ -341,10 +341,12 @@ public abstract class SlimTable {
       return exceptionResult;
     }
 
+    @Override
     public int getCol() {
       return col;
     }
 
+    @Override
     public int getRow() {
       return row;
     }
