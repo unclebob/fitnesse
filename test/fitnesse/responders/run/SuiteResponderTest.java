@@ -9,25 +9,26 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.TestResponderTest.JunitTestUtilities;
+import fitnesse.responders.run.TestResponderTest.XmlTestUtilities;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
-
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
 import static org.junit.Assert.*;
 import static util.RegexTestCase.*;
 
@@ -342,7 +343,7 @@ public class SuiteResponderTest {
     request.addInput("format", "xml");
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
-    Document testResultsDocument = getXmlDocumentFromResults(results);
+    Document testResultsDocument = XmlTestUtilities.getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     NodeList resultList = testResultsElement.getElementsByTagName("result");
@@ -354,15 +355,42 @@ public class SuiteResponderTest {
       String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
       assertSubString(pageName + "?pageHistory&resultDate=", XmlUtil.getTextValue(testResult, "pageHistoryLink"));
       if ("SlimTest".equals(pageName)) {
-        assertCounts(testResult, "1", "0", "0", "0");
+    	  XmlTestUtilities.assertCounts(testResult, "1", "0", "0", "0");
       } else if ("TestOne".equals(pageName)) {
-        assertCounts(testResult, "1", "0", "0", "0");
+    	  XmlTestUtilities.assertCounts(testResult, "1", "0", "0", "0");
       } else {
         fail(pageName);
       }
     }
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
-    assertCounts(finalCounts, "2", "0", "0", "0");
+    XmlTestUtilities.assertCounts(finalCounts, "2", "0", "0", "0");
+  }
+
+  @Test
+  public void junitFormat() throws Exception {
+    responder.turnOffChunking();
+    request.addInput("format", "junit");
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    String results = runSuite();
+    Document testResultsDocument = JunitTestUtilities.getXmlDocumentFromResults(results);
+    Element testResultsElement = testResultsDocument.getDocumentElement();
+    assertEquals("testsuite", testResultsElement.getNodeName());
+    assertEquals("SuitePage",testResultsElement.getAttribute("name"));
+    assertEquals("2",testResultsElement.getAttribute("tests"));
+    assertEquals("0",testResultsElement.getAttribute("failures"));
+    assertEquals("0",testResultsElement.getAttribute("disabled"));
+    assertEquals("0",testResultsElement.getAttribute("errors"));
+    
+    NodeList resultList = testResultsElement.getElementsByTagName("testcase");
+    assertEquals(2, resultList.getLength());
+    Element testResult;
+
+    for (int elementIndex = 0; elementIndex < 2; elementIndex++) {
+      testResult = (Element) resultList.item(elementIndex);
+      String pageName = testResult.getAttribute("name");
+      assertSubString(pageName + "?pageHistory&resultDate=", XmlUtil.getTextValue(testResult,"system-out"));
+      assertEquals("1",testResult.getAttribute("assertions"));
+    }
   }
 
   @Test

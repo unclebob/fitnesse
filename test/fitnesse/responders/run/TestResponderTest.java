@@ -854,4 +854,14 @@ public class TestResponderTest {
       assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
     }
   }
+  public static class JunitTestUtilities {
+      public static Document getXmlDocumentFromResults(String results) throws Exception {
+        String endOfXml = "</testsuite>";
+        String startOfXml = "<?xml";
+        int xmlStartIndex = results.indexOf(startOfXml);
+        int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
+        String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
+        return XmlUtil.newDocument(xmlString);
+    }
+  }
 }

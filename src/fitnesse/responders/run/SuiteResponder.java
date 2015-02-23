@@ -26,6 +26,7 @@ import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.JunitReFormatter;
 import fitnesse.reporting.history.HistoryPurger;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
@@ -40,6 +41,7 @@ import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
@@ -53,7 +55,6 @@ import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.commons.lang.StringUtils;
-
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
@@ -254,6 +255,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
       mainFormatter = newTextFormatter();
+    } else if (response.isJunitFormat()) {
+      mainFormatter = newJunitFormatter();
     } else {
       mainFormatter = newHtmlFormatter();
     }
@@ -280,11 +283,16 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return new TestTextFormatter(response);
   }
 
+  protected BaseFormatter newJunitFormatter() {
+	  JunitReFormatter xmlFormatter = new JunitReFormatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
+	  return xmlFormatter;
+  }
+
   protected BaseFormatter newHtmlFormatter() {
     return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
-  protected TestSystemListener newTestInProgressFormatter() {
+  protected TestSystemListener<WikiTestPage> newTestInProgressFormatter() {
     return new PageInProgressFormatter(context);
   }
 
