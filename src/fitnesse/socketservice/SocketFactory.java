@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -14,16 +13,23 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
-import sun.security.x509.X500Name;
 import util.StreamReader;
+
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public final class SocketFactory {
   private static final Logger LOG = Logger.getLogger(SocketFactory.class.getName());
+
+  public static final String COMMONNAME = "CN";
+
   private SocketFactory() {
     
   }
@@ -88,11 +94,7 @@ public final class SocketFactory {
 	  if (peerDn == null) {
 		  return null;
 	  } else {
-		  try {
-			  return new X500Name(peerDn).getCommonName();
-		  } catch (IOException e) {
-			  LOG.log(Level.FINEST, "Could not get Peer Name: " + e.getMessage());
-			  return null;		  }
+		  return getRdnByNameFromDn(peerDn, COMMONNAME);
 	  }
   }
 
@@ -113,18 +115,34 @@ public final class SocketFactory {
   public static String myName(Socket theSocket){
 	  if(isSSLSocket(theSocket)){
 		  SSLSession ss = ((SSLSocket)theSocket).getSession();
-	      try {
-			return new X500Name(ss.getLocalPrincipal().getName()).getCommonName();
-		} catch (IOException e) {
-			LOG.log(Level.FINEST, "Could not get my name: " + e.getMessage());
-			return null;
-		}
+		  
+	      String dn =  ss.getLocalPrincipal().getName();
+		  return getRdnByNameFromDn(dn, COMMONNAME);
 	  }
 	  else{
 		  return null;
 	  }
   }
 
+  public static String getRdnByNameFromDn(String dn, String rdnType){
+	  if (dn == null) {
+		  return null;
+	  } else {
+		  try {
+			  LdapName ldapDN = new LdapName(dn);
+			  for(Rdn rdn: ldapDN.getRdns()) {
+				  if (rdn.getType().equalsIgnoreCase(rdnType)) return rdn.getValue().toString();
+			  }
+			  LOG.log(Level.FINEST, "Could not find RDN Type '" + rdnType +  "' in DN '" + dn + "'");
+			  return null;
+		  } catch (InvalidNameException e) {
+			  LOG.log(Level.FINEST, "Invalid DN '" + dn + "' :" + e.getMessage());
+			  return null;		  
+		}
+	  }
+  }
+
+  
   public static void printSocketInfo(Socket theSocket) {
 	
 	
