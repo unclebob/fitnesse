@@ -7,10 +7,12 @@
  * Hash table editing support for rich text editor ([[622][https://github.com/unclebob/fitnesse/pull/622]])
  * Rich editor icons are now SVG images ([[568][https://github.com/unclebob/fitnesse/pull/568]])
  * Improved Slim Converters ([[613][https://github.com/unclebob/fitnesse/pull/613]])
- * Test execution log is stored in page history. It's no longer stored in !-ErrorLogs-! pages ([[627][https://github.com/unclebob/fitnesse/pull/627]])
+ * Test execution log is stored in page history. It's no longer stored in !-ErrorLogs-! pages ([[627][https://github.com/unclebob/fitnesse/pull/627]])
  * ''?suite'' and ''?test'' responders can now automatically clean up the test history ([[636][https://github.com/unclebob/fitnesse/pull/636]])
+ * Added JUnit output format for suite runs: ''?suite&format=junit'' ([[642][https://github.com/unclebob/fitnesse/pull/642]])
  * Issues fixed:
    * Fixed errors that occurred when a different XML !-TransformerFactory-! was loaded ([[598][https://github.com/unclebob/fitnesse/pull/598]])
+   * Fixed failure navigator in test history pages ([[580][https://github.com/unclebob/fitnesse/pull/580]])
    * Empty ''suiteFilter'' argument on ''?suite'' responder will be ignored ([[625][https://github.com/unclebob/fitnesse/pull/625]])
    * Test/Suite button is search results works from sub-wiki's
    * Allow Symlink rename/replace on existing Symlink ([[610][https://github.com/unclebob/fitnesse/pull/610]])
