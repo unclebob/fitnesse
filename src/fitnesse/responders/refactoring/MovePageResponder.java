@@ -12,7 +12,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 
-public class MovePageResponder extends PageMovementResponder implements SecureResponder {
+public class MovePageResponder extends PageMovementResponder {
 
   private String newParentName;
 

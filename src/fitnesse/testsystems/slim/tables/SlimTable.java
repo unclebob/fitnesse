@@ -246,7 +246,7 @@ public abstract class SlimTable {
     }
 
     private boolean nameHasDollars() {
-      return name.indexOf("$") != -1;
+      return name.contains("$");
     }
 
     private String disgraceClassName() {
@@ -341,10 +341,12 @@ public abstract class SlimTable {
       return exceptionResult;
     }
 
+    @Override
     public int getCol() {
       return col;
     }
 
+    @Override
     public int getRow() {
       return row;
     }
@@ -534,8 +536,8 @@ public abstract class SlimTable {
 
 	    @Override
 	    public TestResult evaluateExpectation(Object returnValue) {
-		  returnValue = getSymbol(this.symbolName);
-	      return super.evaluateExpectation(returnValue);
+        String value = getSymbol(this.symbolName);
+	      return super.evaluateExpectation(value);
 	    }
 	    
 	    @Override
@@ -636,8 +638,8 @@ public abstract class SlimTable {
             } else {
               message = SlimTestResult.fail(expectedString + " doesn't match " + actual);
             }
-          } catch (Throwable t) {
-            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + t.getMessage());
+          } catch (Exception e) {
+            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + e.getMessage());
           }
         }
       }

@@ -6,17 +6,17 @@ import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.Writer;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.util.TimeMeasurement;
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
+public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private TestSummary pageCounts = new TestSummary();
@@ -30,8 +30,8 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
   private TimeMeasurement totalTimeMeasurement;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, CompositeExecutionLog log) {
-    super(context, page, log);
+  public SuiteHtmlFormatter(WikiPage page, Writer writer) {
+    super(page, writer);
     totalTimeMeasurement = new TimeMeasurement().start();
     testBasePathName = PathParser.render(page.getPageCrawler().getFullPath());
   }
@@ -42,7 +42,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     totalTests = (testsToRun != 0) ? testsToRun : 1;
   }
 
-  public void announceStartNewTest(String relativeName, String fullPathName) {
+  public void announceStartNewTest(String relativeName, String fullPathName) throws IOException {
     currentTest++;
     updateSummaryDiv(getProgressHtml(relativeName));
 
@@ -50,7 +50,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     writeTestOutputDiv(relativeName, fullPathName);
   }
 
-  private void writeTestOutputDiv(String relativeName, String fullPathName) {
+  private void writeTestOutputDiv(String relativeName, String fullPathName) throws IOException {
     if (!testBasePathName.equals(fullPathName)) {
       HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
       HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
@@ -68,7 +68,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     writeData("<div class=\"alternating_block\">");
   }
 
-  private void maybeWriteTestSystem() {
+  private void maybeWriteTestSystem() throws IOException {
     if (testSystemName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
       writeData(systemTitle.html());
@@ -78,7 +78,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
   }
 
   @Override
-  public void testStarted(WikiTestPage testPage) {
+  public void testStarted(WikiTestPage testPage) throws IOException {
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
@@ -88,8 +88,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
   }
 
   private String getProgressHtml(String relativeName) {
-    float percentFinished = (currentTest - 1) * 1000 / totalTests;
-    percentFinished = percentFinished / 10;
+    float percentFinished = (currentTest - 1) * 100f / totalTests;
 
     String text = "Running tests ... (" + currentTest + "/" + totalTests + ")";
     text = text.replaceAll(" ", "&nbsp;");
@@ -126,7 +125,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
     writeData(insertScript.html());
   }
 
-  private void finishOutputForTest() {
+  private void finishOutputForTest() throws IOException {
     writeData("</div>" + HtmlTag.endl);
   }
 
@@ -162,7 +161,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter implements
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
     String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);

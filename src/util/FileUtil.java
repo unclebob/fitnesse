@@ -142,10 +142,12 @@ public class FileUtil {
     LinkedList<String> lines = new LinkedList<String>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
-    while ((line = reader.readLine()) != null)
-      lines.add(line);
-
-    reader.close();
+    try {
+      while ((line = reader.readLine()) != null)
+        lines.add(line);
+    } finally {
+      reader.close();
+    }
     return lines;
   }
 

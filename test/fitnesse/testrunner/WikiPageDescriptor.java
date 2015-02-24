@@ -15,6 +15,7 @@ public class WikiPageDescriptor implements Descriptor {
   private final boolean inProcess;
   private final boolean remoteDebug;
   private final ClassPath classPath;
+  private final CompositeExecutionLogListener executionLogListener;
 
   public WikiPageDescriptor(WikiPage data, boolean inProcess, boolean remoteDebug, String classPath) {
     this.page = data;
@@ -22,6 +23,7 @@ public class WikiPageDescriptor implements Descriptor {
     // Debug property should move to ClientBuilder
     this.remoteDebug = remoteDebug;
     this.classPath = new ClassPath(classPath, ",");
+    this.executionLogListener = new CompositeExecutionLogListener();
   }
 
   @Override
@@ -59,8 +61,8 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
-  public ExecutionLogListener getExecutionLogListener() {
-    return new CompositeExecutionLogListener();
+  public CompositeExecutionLogListener getExecutionLogListener() {
+    return executionLogListener;
   }
 
 }

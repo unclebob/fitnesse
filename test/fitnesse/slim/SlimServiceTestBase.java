@@ -41,7 +41,7 @@ public abstract class SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION);
+    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, false, null);
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }

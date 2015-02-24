@@ -22,7 +22,6 @@ public class WikiWordBuilder {
     }
 
     public static String expandPrefix(WikiPage wikiPage, String theWord) {
-      PageCrawler crawler = wikiPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = wikiPage.getName();
         return String.format("%s.%s", prefix, theWord.substring(1));

@@ -96,6 +96,7 @@
 | | id | If present, is the process id of the test to stop.  Otherwise stops ''all'' running tests. |
 | suite | | Runs a suite of tests.  The tests run are all those below the wiki page that are marked as tests.  Returns a suite report. |
 | | format=xml | See >RestfulSuiteXmlFormat |
+| | format=junit | Produces simple jUnit XML format|
 | | debug | See test |
 | | remote_debug | See test | |
 | | suiteFilter | A comma separated list of tags.  If present only tests that one or more of these tags will be run. |

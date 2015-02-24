@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -24,7 +22,7 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 
 public class PluginsLoader {
-  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
   private final Collection<PluginFeatureFactory> pluginFeatureFactories;
@@ -35,38 +33,13 @@ public class PluginsLoader {
   }
 
   private Collection<PluginFeatureFactory> findPluginFeatureFactories() throws PluginException {
-    List<PluginFeatureFactory> factories = new ArrayList();
-    factories.add(new PropertyBasedPluginFeatureFactory(componentFactory));
+    List<PluginFeatureFactory> factories = new ArrayList<PluginFeatureFactory>();
+    factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
-    factories.addAll(loadLegacyPlugins());
     for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {
       factories.add(factory);
     }
     return factories;
-  }
-
-  private Collection<PluginFeatureFactory> loadLegacyPlugins() throws PluginException {
-    String value = componentFactory.getProperty(ConfigurationParameter.PLUGINS.getKey());
-    if (value == null) {
-      return Collections.emptyList();
-    } else {
-      String[] pluginNames = value.split(",");
-      List<PluginFeatureFactory> providers = new ArrayList<PluginFeatureFactory>(pluginNames.length);
-      for (String pluginName : pluginNames) {
-        Class<?> pluginClass = forName(pluginName);
-        Object plugin = componentFactory.createComponent(pluginClass);
-        providers.add(new LegacyPluginFeatureFactory(plugin));
-      }
-      return providers;
-    }
-  }
-
-  private <T> Class<T> forName(String className) throws PluginException {
-    try {
-      return (Class<T>) Class.forName(className);
-    } catch (ClassNotFoundException e) {
-      throw new PluginException("Unable to load class " + className, e);
-    }
   }
 
   public void loadResponders(final ResponderFactory responderFactory) throws PluginException {

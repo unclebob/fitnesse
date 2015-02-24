@@ -16,7 +16,8 @@ public abstract class Response {
     XML("text/xml"),
     HTML("text/html; charset=utf-8"),
     TEXT("text/text"),
-    JSON("text/json");
+    JSON("text/json"),
+    JUNIT("text/junit");
     
     private final String contentType;
     
@@ -52,6 +53,8 @@ public abstract class Response {
       format = Format.HTML;
     } else if ("xml".equalsIgnoreCase(formatString)) {
       format = Format.XML;
+    } else if ("junit".equalsIgnoreCase(formatString)) {
+      format = Format.JUNIT;
     } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
     } else {
@@ -77,6 +80,10 @@ public abstract class Response {
     return Format.TEXT.contentType.equals(contentType);
   }
   
+  public boolean isJunitFormat() {
+	    return Format.JUNIT.contentType.equals(contentType);
+  }
+	  
   public boolean hasContent() {
     return contentType != null;
   }

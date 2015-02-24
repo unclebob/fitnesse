@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlUtil;
-import fitnesse.util.Expression;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;

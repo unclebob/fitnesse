@@ -19,7 +19,7 @@ public class StopTestResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     
     if (request.hasInput("id")) {
-      testId = request.getInput("id").toString();
+      testId = request.getInput("id");
     }
     
     response.setContent(html(context));

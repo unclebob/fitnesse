@@ -178,7 +178,7 @@ public abstract class SlimTestSystem implements TestSystem {
             }
           }
         }
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         exceptionOccurred(ex);
       }
     }
@@ -204,9 +204,13 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void exceptionOccurred(Throwable e) {
     try {
       slimClient.kill();
-    } catch (IOException e1) {
-      LOG.log(Level.WARNING, "Failed to kill SLiM client", e);
+    } catch (IOException killException) {
+      LOG.log(Level.WARNING, "Failed to kill SLiM client", killException);
     }
+    // We print this here as it is not displayed on the wiki at the current state 
+    LOG.severe("Killing slim clint as exception occured:" + e );
+    e.printStackTrace() ;
+    
     testSystemStopped(e);
   }
 

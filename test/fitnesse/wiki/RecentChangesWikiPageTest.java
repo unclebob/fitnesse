@@ -80,7 +80,7 @@ public class RecentChangesWikiPageTest {
     recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
-    String line = lines.get(0).toString();
+    String line = lines.get(0);
     assertSubString("|PageOne||", line);
   }
 
@@ -93,7 +93,7 @@ public class RecentChangesWikiPageTest {
     recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
-    String line = lines.get(0).toString();
+    String line = lines.get(0);
     assertSubString("|PageOne|Aladdin|", line);
   }
 }

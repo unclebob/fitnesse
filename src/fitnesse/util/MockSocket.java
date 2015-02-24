@@ -27,8 +27,6 @@ public class MockSocket extends Socket {
   public MockSocket() {
     try {
       PipedInputStream serverInput = new PipedInputStream();
-      @SuppressWarnings("unused")
-      PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
       PipedInputStream clientInput = new PipedInputStream();
       PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
       input = serverInput;

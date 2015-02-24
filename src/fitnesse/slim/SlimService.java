@@ -17,7 +17,7 @@ import util.CommandLine;
 import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
-  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] port";
+  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
   static Class<? extends DefaultInteraction> interactionClass = DefaultInteraction.class;
 
   public static class Options {
@@ -29,13 +29,17 @@ public class SlimService {
      */
     final boolean daemon;
     final Integer statementTimeout;
+    final boolean useSSL;
+	final String sslParameterClassName;
 
-    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, Integer statementTimeout) {
+    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
       this.verbose = verbose;
       this.port = port;
       this.interactionClass = interactionClass;
       this.daemon = daemon;
       this.statementTimeout = statementTimeout;
+      this.useSSL = useSSL;
+      this.sslParameterClassName = sslParameterClassName;
     }
   }
 
@@ -48,7 +52,13 @@ public class SlimService {
   public static void main(String[] args) throws IOException {
     Options options = parseCommandLine(args);
     if (options != null) {
-      startWithFactory(createJavaSlimFactory(options), options);
+    	try{
+    		startWithFactory(createJavaSlimFactory(options), options);
+    	}catch (Exception e){
+    		e.printStackTrace();
+    		System.out.println("Exiting as exception occured: " + e.getMessage());
+    		System.exit(98);
+    	}
     } else {
       parseCommandLineFailed(args);
     }
@@ -61,25 +71,24 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon, options.useSSL, options.sslParameterClassName);
     slimservice.accept();
   }
 
   // For testing only -- for now
   public static synchronized int startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
-      System.err.println("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
       service.interrupt();
-      throw new RuntimeException("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon);
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon, options.useSSL, options.sslParameterClassName);
     int actualPort = slimservice.getPort();
     service = new Thread() {
       public void run() {
         try {
           slimservice.accept();
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          throw new SlimError(e);
         }
       }
     };
@@ -107,18 +116,20 @@ public class SlimService {
       String statementTimeoutString = commandLine.getOptionArgument("s", "statementTimeout");
       Integer statementTimeout = (statementTimeoutString == null) ? null : Integer.parseInt(statementTimeoutString);
       boolean daemon = commandLine.hasOption("d");
-      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon, statementTimeout);
+      String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
+      boolean useSSL = commandLine.hasOption("ssl");
+      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
     }
     return null;
   }
 
-  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon) throws IOException {
+  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
     SlimService.interactionClass = interactionClass;
     this.daemon = daemon;
     this.slimServer = slimServer;
 
     try {
-      serverSocket = SocketFactory.tryCreateServerSocket(port);
+      serverSocket = SocketFactory.tryCreateServerSocket(port, useSSL, useSSL, sslParameterClassName);
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
       e.printStackTrace();
@@ -161,7 +172,7 @@ public class SlimService {
           try {
             handle(socket);
           } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SlimError(e);
           }
         }
       });
@@ -189,7 +200,7 @@ public class SlimService {
     try {
       return (Class<DefaultInteraction>) Class.forName(interactionClassName);
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+      throw new SlimError(e);
     }
   }
 

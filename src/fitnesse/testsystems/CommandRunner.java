@@ -145,6 +145,12 @@ public class CommandRunner {
     }
   }
 
+  public boolean isDead() {
+	  if (process !=null) return isDead(process);
+	  //if there is or was never a process due to a remote / manual start then it is alive!
+	  return false;
+  }
+
   public void kill() {
     if (process != null) {
       process.destroy();

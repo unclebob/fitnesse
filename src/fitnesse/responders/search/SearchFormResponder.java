@@ -22,11 +22,11 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageType;
 
 public class SearchFormResponder implements Responder {
-  public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
+  static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
     PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED };
-  public static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
-  public static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
-  public static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
+  static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
+  static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
+  static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
 
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();

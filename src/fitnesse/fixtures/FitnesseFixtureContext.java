@@ -9,9 +9,9 @@ import fitnesse.http.Response;
 import fitnesse.wiki.WikiPage;
 
 public class FitnesseFixtureContext {
-  public static WikiPage page;
-  public static Response response;
-  public static MockResponseSender sender;
-  public static Authenticator authenticator;
-  public static FitNesseContext context;
+  static WikiPage page;
+  static Response response;
+  static MockResponseSender sender;
+  static Authenticator authenticator;
+  static FitNesseContext context;
 }

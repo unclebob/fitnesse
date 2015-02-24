@@ -3,9 +3,7 @@ package fitnesse.plugins;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import fitnesse.authentication.Authenticator;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -15,7 +13,7 @@ import fitnesse.wikitext.parser.SymbolProvider;
 /**
  * Wraps old-style plugins in the new PluginFeatureFactory service.
  */
-public class LegacyPluginFeatureFactory implements PluginFeatureFactory {
+public class LegacyPluginFeatureFactory extends PluginFeatureFactoryBase {
 
   private final Object plugin;
 
@@ -24,54 +22,59 @@ public class LegacyPluginFeatureFactory implements PluginFeatureFactory {
   }
 
   @Override
-  public Authenticator getAuthenticator() {
-    return null;
-  }
-
-  @Override
-  public ContentFilter getContentFilter() {
-    return null;
-  }
-
-  @Override
   public void registerResponders(ResponderFactory responderFactory) throws PluginException {
-    register(plugin, "registerResponders", ResponderFactory.class, responderFactory);
+    if (register(plugin, "registerResponders", ResponderFactory.class, responderFactory)) {
+      LOG.info("Registered responders from: " + getPluginDescription());
+    }
   }
 
   @Override
   public void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
-    register(plugin, "registerSymbolTypes", SymbolProvider.class, symbolProvider);
+    if (register(plugin, "registerSymbolTypes", SymbolProvider.class, symbolProvider)) {
+      LOG.info("Registered Symbol types from: " + getPluginDescription());
+    }
   }
 
   @Override
   public void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException {
-    register(plugin, "registerWikiPageFactories", WikiPageFactoryRegistry.class, wikiPageFactoryRegistry);
+    if (register(plugin, "registerWikiPageFactories", WikiPageFactoryRegistry.class, wikiPageFactoryRegistry)) {
+      LOG.info("Registered wiki page factories from: " + getPluginDescription());
+    }
   }
 
   @Override
   public void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException {
-    register(plugin, "registerTestSystemFactories", TestSystemFactoryRegistry.class, testSystemFactoryRegistry);
-
+    if (register(plugin, "registerTestSystemFactories", TestSystemFactoryRegistry.class, testSystemFactoryRegistry)) {
+      LOG.info("Registered test system factories from: " + getPluginDescription());
+    }
   }
 
   @Override
   public void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException {
-    register(plugin, "registerSlimTableFactories", SlimTableFactory.class, slimTableFactory);
+    if (register(plugin, "registerSlimTableFactories", SlimTableFactory.class, slimTableFactory)) {
+      LOG.info("Registered Slim table factories from: " + getPluginDescription());
+    }
   }
 
   @Override
   public void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException {
-    register(plugin, "registerCustomComparatorRegistries", CustomComparatorRegistry.class, customComparatorRegistry);
+    if (register(plugin, "registerCustomComparatorRegistries", CustomComparatorRegistry.class, customComparatorRegistry)) {
+      LOG.info("Registered custom comparator registries from: " + getPluginDescription());
+    }
   }
 
-  private <T> void register(Object plugin, String methodName, Class<T> registrarType, T registrar)
+  protected String getPluginDescription() {
+    return plugin.getClass().getName();
+  }
+
+  private <T> boolean register(Object plugin, String methodName, Class<T> registrarType, T registrar)
           throws PluginException {
     Method method;
     try {
       method = plugin.getClass().getMethod(methodName, registrarType);
     } catch (NoSuchMethodException e) {
       // ok, no widgets to register in this plugin
-      return;
+      return false;
     }
 
     try {
@@ -81,5 +84,6 @@ public class LegacyPluginFeatureFactory implements PluginFeatureFactory {
     } catch (IllegalAccessException e) {
       throw new PluginException("Unable to execute method " + methodName, e);
     }
+    return true;
   }
 }

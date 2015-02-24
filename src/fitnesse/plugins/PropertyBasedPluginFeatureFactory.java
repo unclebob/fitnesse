@@ -1,5 +1,10 @@
 package fitnesse.plugins;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
@@ -20,11 +25,19 @@ import fitnesse.wikitext.parser.SymbolType;
 /**
  * Determines which plugin features to load based on componentFactory's properties (e.g. plugins.properties).
  */
-public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
-  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PropertyBasedPluginFeatureFactory.class.getName());
+public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase {
   private final ComponentFactory componentFactory;
 
-  public PropertyBasedPluginFeatureFactory(ComponentFactory componentFactory) {
+  public static Collection<PluginFeatureFactory> loadFromProperties(ComponentFactory componentFactory) throws PluginException {
+    PropertyBasedPluginFeatureFactory propBased = new PropertyBasedPluginFeatureFactory(componentFactory);
+    Collection<PluginFeatureFactory> legacyWrappers = createWrappersForLegacyPlugins(componentFactory);
+    List<PluginFeatureFactory> all = new ArrayList<PluginFeatureFactory>(legacyWrappers.size() + 1);
+    all.add(propBased);
+    all.addAll(legacyWrappers);
+    return all;
+  }
+
+  private PropertyBasedPluginFeatureFactory(ComponentFactory componentFactory) {
     this.componentFactory = componentFactory;
   }
 
@@ -39,6 +52,10 @@ public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
   }
 
   private String[] getListFromProperties(ConfigurationParameter propertyName) {
+    return getListFromProperties(componentFactory, propertyName);
+  }
+
+  private static String[] getListFromProperties(ComponentFactory componentFactory, ConfigurationParameter propertyName) {
     String value = componentFactory.getProperty(propertyName.getKey());
     if (value == null)
       return null;
@@ -132,7 +149,22 @@ public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
     }
   }
 
-  private <T> Class<T> forName(String className) throws PluginException {
+  private static Collection<PluginFeatureFactory> createWrappersForLegacyPlugins(ComponentFactory componentFactory) throws PluginException {
+    String[] pluginNames = getListFromProperties(componentFactory, ConfigurationParameter.PLUGINS);
+    if (pluginNames == null) {
+      return Collections.emptyList();
+    } else {
+      List<PluginFeatureFactory> providers = new ArrayList<PluginFeatureFactory>(pluginNames.length);
+      for (String pluginName : pluginNames) {
+        Class<?> pluginClass = forName(pluginName);
+        Object plugin = componentFactory.createComponent(pluginClass);
+        providers.add(new LegacyPluginFeatureFactory(plugin));
+      }
+      return providers;
+    }
+  }
+
+  private static <T> Class<T> forName(String className) throws PluginException {
     try {
       return (Class<T>) Class.forName(className);
     } catch (ClassNotFoundException e) {
@@ -140,7 +172,7 @@ public class PropertyBasedPluginFeatureFactory implements PluginFeatureFactory {
     }
   }
 
-  static private interface Registrar<T> {
+  private static interface Registrar<T> {
     void register(String key, Class<T> clazz);
   }
 }

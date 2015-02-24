@@ -68,7 +68,7 @@ public class SerializedPageResponder implements SecureResponder {
     } else if ("meat".equals(request.getInput("type"))) {
       WikiPage originalPage = page;
       if (request.hasInput("version"))
-        originalPage = page.getVersion((String) request.getInput("version"));
+        originalPage = page.getVersion(request.getInput("version"));
       object = originalPage.getData();
     } else
       throw new RuntimeException("Improper use of proxy retrieval");

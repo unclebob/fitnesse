@@ -20,4 +20,4 @@ Check the status message.
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|<a href=\\"ErrorLogs.TestPage\\" class=\\"${EXPECTED_STYLE}\\">${EXPECTED_STATUS_MESSAGE}</a>|true|
+|contents|<a href=\\"\?executionLog\\" class=\\"${EXPECTED_STYLE}\\">${EXPECTED_STATUS_MESSAGE}</a>|true|

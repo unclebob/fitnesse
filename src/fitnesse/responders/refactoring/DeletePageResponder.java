@@ -75,16 +75,15 @@ public class DeletePageResponder implements SecureResponder {
     HtmlPage html = context.pageFactory.newPage();
     
     String tags = "";
-    if(root!=null){
-      WikiPagePath path = PathParser.parse(qualifiedPageName);
-      PageCrawler crawler = root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(path);
-      if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();
-        tags = pageData.getAttribute(PageData.PropertySUITES);
-      }
+
+    WikiPagePath path = PathParser.parse(qualifiedPageName);
+    PageCrawler crawler = root.getPageCrawler();
+    WikiPage wikiPage = crawler.getPage(path);
+    if(wikiPage != null) {
+      PageData pageData = wikiPage.getData();
+      tags = pageData.getAttribute(PageData.PropertySUITES);
     }
-      
+
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", PathParser.parse(qualifiedPageName), tags));
 

@@ -4,14 +4,18 @@ package fitnesse.slim;
 
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
 import util.StreamReader;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
+
 
 public class SlimServer implements SocketServer {
   public static final String MALFORMED_INSTRUCTION = "MALFORMED_INSTRUCTION";
@@ -25,8 +29,8 @@ public class SlimServer implements SocketServer {
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
-  private StreamReader reader;
-  private BufferedWriter writer;
+  private SlimStreamReader reader;
+  private OutputStream writer;
   private ListExecutor executor;
   private boolean verbose;
   private SlimFactory slimFactory;
@@ -56,62 +60,33 @@ public class SlimServer implements SocketServer {
   }
 
   private void initialize(Socket s) throws IOException {
+    SocketFactory.printSocketInfo(s);
+    reader = SlimStreamReader.getReader(s);
+    writer = SlimStreamReader.getByteWriter(s);
     executor = slimFactory.getListExecutor(verbose);
-    reader = new StreamReader(s.getInputStream());
-    writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
-    writer.write(String.format("Slim -- V%s\n", SlimVersion.VERSION));
-    writer.flush();
+    SlimStreamReader.sendSlimHeader(writer, String.format(SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n"));
   }
 
   private boolean processOneSetOfInstructions() throws IOException {
-    String instructions = getInstructionsFromClient();
-    if (instructions != null) {
-      return processTheInstructions(instructions);
+    String instructions = reader.getSlimMessage();
+    // Not sure why this is need but we keep it.
+    if (instructions == null) return true;
+    // We are done Bye Bye message received
+    if (instructions.equalsIgnoreCase(SlimVersion.BYEMESSAGE)) {
+      return false;
     }
+
+    // Do some real work
+    String resultString = executeInstructions(instructions);
+    SlimStreamReader.sendSlimMessage(writer, resultString);
     return true;
   }
 
-  private String getInstructionsFromClient() throws IOException {
-    int instructionLength = getLengthToRead();
-    String instructions = reader.read(instructionLength);
-    return instructions;
-  }
-
-  private int getLengthToRead() throws IOException  {
-    String lengthField = reader.readUpTo(":");
-    try {
-      return Integer.parseInt(lengthField);
-    }
-    catch (NumberFormatException e){
-      throw new IOException("Stream Read Failure. Can't read length of message from the client.  Last thing read: " + lengthField);
-    }
-  }
-
-  private boolean processTheInstructions(String instructions) throws IOException {
-    if (instructions.equalsIgnoreCase("bye")) {
-      return false;
-    } else {
-      List<Object> results = executeInstructions(instructions);
-      // TODO: -AJM- Move sendResultsToClient() call to processOneSetOfInstructions()
-      // Put I/O in one location.
-      sendResultsToClient(results);
-      return true;
-    }
-  }
-
-  private List<Object> executeInstructions(String instructions) {
+  private String executeInstructions(String instructions) {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
-    // TODO: -AJM- Statements to instructions, then execute those.
-    // Returns: List of InstructionResult (id, String/list<Object>)
-    // ListExecutor becomes InstructionExecutor?
     List<Object> results = executor.execute(statements);
-    return results;
-  }
-
-  private void sendResultsToClient(List<Object> results) throws IOException {
     String resultString = SlimSerializer.serialize(results);
-    writer.write(String.format("%06d:%s", resultString.getBytes("UTF-8").length, resultString));
-    writer.flush();
+    return resultString;
   }
 
   private void close() {
@@ -122,4 +97,5 @@ public class SlimServer implements SocketServer {
 
     }
   }
+
 }

@@ -378,7 +378,7 @@ public class ScriptTable extends SlimTable {
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       try {
         table.addColumnToRow(getRow(), actual);
-      } catch (Throwable e) {
+      } catch (Exception e) {
         return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();

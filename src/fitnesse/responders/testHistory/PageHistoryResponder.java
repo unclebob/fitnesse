@@ -9,7 +9,6 @@ import java.util.Date;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -36,7 +35,7 @@ import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
   private PageHistory pageHistory;
   private HtmlPage page;
@@ -125,6 +124,7 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
+    page.put("resultDate", dateFormat.format(report.getDate()));
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
@@ -135,6 +135,9 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
+    if (!report.getExecutionLogs().isEmpty()) {
+      page.put("resultDate", dateFormat.format(report.getDate()));
+    }
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
     page.setErrorNavTemplate("errorNavigator");

@@ -53,7 +53,7 @@ public class RequestBuilder {
   }
 
   private String buildRequestLine() throws UnsupportedEncodingException {
-    StringBuffer text = new StringBuffer();
+    StringBuilder text = new StringBuilder();
     text.append(method).append(" ").append(resource);
     if (isGet()) {
       String inputString = inputString();
@@ -95,7 +95,7 @@ public class RequestBuilder {
       for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
         String name = iterator.next();
         Object value = inputs.get(name);
-        StringBuffer partBuffer = new StringBuffer();
+        StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
         partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
         if (value instanceof InputStreamPart) {
@@ -114,7 +114,7 @@ public class RequestBuilder {
           addBodyPart(partBuffer.toString());
         }
       }
-      StringBuffer tail = new StringBuffer();
+      StringBuilder tail = new StringBuilder();
       tail.append("--").append(getBoundary()).append("--").append("\r\n");
       addBodyPart(tail.toString());
     }
@@ -122,7 +122,7 @@ public class RequestBuilder {
   }
 
   private void addBodyPart(String input) throws UnsupportedEncodingException {
-    byte[] bytes = input.toString().getBytes("UTF-8");
+    byte[] bytes = input.getBytes("UTF-8");
     bodyParts.add(new ByteArrayInputStream(bytes));
     bodyLength += bytes.length;
   }
@@ -151,7 +151,7 @@ public class RequestBuilder {
   }
 
   public String inputString() throws UnsupportedEncodingException {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     boolean first = true;
     for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
       String key = iterator.next();

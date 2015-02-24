@@ -50,7 +50,7 @@ public class DateConverterTest extends AbstractConverterTest<Date, DateConverter
    * PRIVATE
    */
   private static Date getDate(String dateStr) throws ParseException {
-    return DateConverter.dateFormat.parse(dateStr);
+    return DateConverter.DATE_FORMAT.parse(dateStr);
   }
 
 }
