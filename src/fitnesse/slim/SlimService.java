@@ -11,6 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.socketservice.SocketFactory;
 import util.CommandLine;
 
@@ -18,12 +19,12 @@ import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
   public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
-  static DefaultInteraction interaction = new DefaultInteraction();
+  static FixtureInteraction interaction = getInteraction(null);
 
   public static class Options {
     final boolean verbose;
     final int port;
-    final DefaultInteraction interaction;
+    final FixtureInteraction interaction;
     /**
      * daemon mode: keep accepting new connections indefinitely.
      */
@@ -32,7 +33,7 @@ public class SlimService {
     final boolean useSSL;
 	final String sslParameterClassName;
 
-    public Options(boolean verbose, int port, DefaultInteraction interaction, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
+    public Options(boolean verbose, int port, FixtureInteraction interaction, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
       this.verbose = verbose;
       this.port = port;
       this.interaction = interaction;
@@ -123,7 +124,7 @@ public class SlimService {
     return null;
   }
 
-  public SlimService(SlimServer slimServer, int port, DefaultInteraction interaction, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
+  public SlimService(SlimServer slimServer, int port, FixtureInteraction interaction, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
     SlimService.interaction = interaction;
     this.daemon = daemon;
     this.slimServer = slimServer;
@@ -193,18 +194,18 @@ public class SlimService {
   }
 
   @SuppressWarnings("unchecked")
-  private static DefaultInteraction getInteraction(String interactionClassName) {
+  private static FixtureInteraction getInteraction(String interactionClassName) {
     if (interactionClassName == null) {
       return new DefaultInteraction();
     }
     try {
-      return ((Class<DefaultInteraction>) Class.forName(interactionClassName)).newInstance();
+      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
     } catch (Exception e) {
       throw new SlimError(e);
     }
   }
 
-  public static DefaultInteraction getInteraction() {
+  public static FixtureInteraction getInteraction() {
     return interaction;
   }
 }
