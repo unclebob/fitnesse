@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 
 import fitnesse.slim.converters.ConverterRegistry;
 
-class ConverterSupport {
+public class ConverterSupport {
 
   public static Object[] convertArgs(Object[] args, Type[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];

@@ -1,10 +1,11 @@
 package fitnesse.slim;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
-import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SlimExecutionContext {
     private Map<String, Object> instances = new HashMap<String, Object>();
@@ -40,7 +41,7 @@ public class SlimExecutionContext {
         } else {
             String replacedClassName = variables
                     .replaceSymbolsInString(className);
-            Object instance = createInstanceOfConstructor(
+            Object instance = SlimService.getInteraction().createInstance(paths,
                     replacedClassName, replaceSymbols(args));
             addToInstancesOrLibrary(instanceName, instance);
         }
@@ -83,64 +84,6 @@ public class SlimExecutionContext {
         return instanceName.startsWith("library");
     }
 
-    private Object createInstanceOfConstructor(String className, Object[] args)
-            throws IllegalArgumentException, InstantiationException,
-            IllegalAccessException, InvocationTargetException {
-        Class<?> k = searchPathsForClass(className);
-        Constructor<?> constructor = getConstructor(k.getConstructors(), args);
-        if (constructor == null) {
-            throw new SlimError(String.format("message:<<%s %s>>",
-                    SlimServer.NO_CONSTRUCTOR, className));
-        }
-
-        return newInstance(args, constructor);
-    }
-
-    private Object newInstance(Object[] args, Constructor<?> constructor)
-            throws IllegalAccessException, InstantiationException,
-            InvocationTargetException {
-        Object[] initargs = ConverterSupport.convertArgs(args,
-                constructor.getParameterTypes());
-
-        FixtureInteraction interaction = SlimService.getInteractionClass()
-                .newInstance();
-        return interaction.newInstance(constructor, initargs);
-    }
-
-    private Class<?> searchPathsForClass(String className) {
-        Class<?> k = getClass(className);
-        if (k != null) {
-            return k;
-        }
-        List<String> reversedPaths = new ArrayList<String>(paths);
-        Collections.reverse(reversedPaths);
-        for (String path : reversedPaths) {
-            k = getClass(path + "." + className);
-            if (k != null) {
-                return k;
-            }
-        }
-        throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CLASS, className));
-    }
-
-    private Class<?> getClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-
-    private Constructor<?> getConstructor(Constructor<?>[] constructors,
-            Object[] args) {
-        for (Constructor<?> constructor : constructors) {
-            Class<?> arguments[] = constructor.getParameterTypes();
-            if (arguments.length == args.length) {
-                return constructor;
-            }
-        }
-        return null;
-    }
 
     public Object[] replaceSymbols(Object[] args) {
         return variables.replaceSymbols(args);
