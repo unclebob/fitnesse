@@ -36,7 +36,7 @@ public class DefaultInteraction implements FixtureInteraction {
     return newInstance(constructor, initargs);
   }
 
-  private Class<?> searchPathsForClass(List<String> paths, String className) {
+  protected Class<?> searchPathsForClass(List<String> paths, String className) {
     Class<?> k = getClass(className);
     if (k != null) {
       return k;
