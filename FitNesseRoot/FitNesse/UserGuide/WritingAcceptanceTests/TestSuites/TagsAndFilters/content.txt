@@ -10,7 +10,7 @@ If you put a comma separated list of tags into the !style_code(Tags) input box, 
 Using these tools, you can easily tag some tests as "smoke" tests, or "critical", or "fast".  You can find all the "smoke" tests and run them, etc.
 
 !3 Using tags to select which tests to run.
-The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (using TestRunner).
+The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (see [[!-ControllingFitNesseFromTheCommandLine-!][<FitNesse.FullReferenceGuide.UserGuide.AdministeringFitNesse.ControllingFitNesseFromTheCommandLine]]).
 You can execute the tests that match a tag (or comma separated list of tags) by using the !style_code(runTestsMatchingAnyTag) query parameter with a suite url like this:
 !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&runTestsMatchingAnyTag=smoke,critical-!)
 
