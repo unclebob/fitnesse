@@ -208,9 +208,8 @@ public abstract class SlimTestSystem implements TestSystem {
       LOG.log(Level.WARNING, "Failed to kill SLiM client", killException);
     }
     // We print this here as it is not displayed on the wiki at the current state 
-    LOG.severe("Killing slim clint as exception occured:" + e );
-    e.printStackTrace() ;
-    
+    LOG.severe("Killing slim client as exception occurred:" + e );
+
     testSystemStopped(e);
   }
 
