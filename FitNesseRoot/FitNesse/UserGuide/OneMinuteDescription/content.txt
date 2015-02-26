@@ -17,7 +17,7 @@ From another perspective, !-FitNesse-! is a lightweight, open-source framework t
  * Run those tests and see the results (see [[Two Minute Example][TwoMinuteExample]]).
 
 !3 !-FitNesse-! is a wiki.
- * You can ''easily'' create and edit pages. (See [[Editing Pages][EditingFitNessePages]].)
+ * You can ''easily'' create and edit pages. (See [[Editing Pages][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.EditingFitNessePages]].)
 
 !3 !-FitNesse-! is a web server.
  * It requires '''no configuration or setup'''.

@@ -36,7 +36,7 @@ Notice also the comparisons.  22/7 is approximately equal (~=) to 3.14.  9/3 is 
 !3 Creating the Table
 How did we put that test table on this page in the first place? Well, we used !-FitNesse-! itself to do it!
 
-!-FitNesse-! is a [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]], which is a style of web server that allows any visitor to make any edits, including changing existing pages and creating new pages. A simple markup language lets you easily create headings, make text bold, underline, and italic, create bulleted lists, and do other kinds of simple formatting. You can read more about it on [[editing fitNesse pages][<UserGuide.FitNesseWiki.EditingFitNessePages]].
+!-FitNesse-! is a [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]], which is a style of web server that allows any visitor to make any edits, including changing existing pages and creating new pages. A simple markup language lets you easily create headings, make text bold, underline, and italic, create bulleted lists, and do other kinds of simple formatting. You can read more about it on [[Editing FitNesse Pages][<UserGuide.FitNesseWiki.EditingFitNessePages]].
 
 Once you download !-FitNesse-! to your own computer, you can edit any page simply by clicking on the Edit button on the left (just below the Test button). If you are reading this page on your own copy of !-FitNesse-! on your own machine, you can click the Edit button and see for yourself.
 
@@ -48,20 +48,20 @@ The wiki markup for our table above (with some omissions) looks like this:{{{|eg
 
 Note that if you don't like mucking about with a markup language at all, you can create your test tables in a spreadsheet such as Excel, copy them to the clipboard, and use the '''Spreadsheet to Fitnesse''' button on the Edit page to have FitNesse format your table properly for you.
 
-'''Note''' also that if you change "eg.Division" to any other name, you may need to use a ! before the fixture to avoid confusing FitNesse with [[!-WikiWord-!][WikiWord]]s (see MarkupTable)
+'''Note''' also that if you change "eg.Division" to any other name, you may need to use a ! before the fixture to avoid confusing FitNesse with [[!-WikiWord-!][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.WikiWord]]s (see [[Markup Table][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupTable]])
 
 !3 Organizing Tests
-FitNesse test tables live on test pages (such as this one). There are several TestTableStyles. As your sets of test pages grows, you can organize them into hierarchical TestSuites.
+FitNesse test tables live on test pages (such as this one). There are several [[Test Table Styles][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.FitFramework.TestTableStyles]]. As your sets of test pages grows, you can organize them into hierarchical [[Test Suites][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.TestSuites]].
 
 !2 Learning More
 !3 You Have Choices!
 How shall you spend the next few minutes? It's up to you.
 
 !3 More Technical Detail...
-If you are more interested in learning how to create the code that makes test tables work, see FixtureCode. If you want to start diving into installing and running FitNesse, check out [[fitnesse.org][http://fitnesse.org/FitNesseDownload]].
+If you are more interested in learning how to create the code that makes test tables work, see [[Fixture Code][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.FixtureCode]]. If you want to start diving into installing and running FitNesse, check out [[fitnesse.org][http://fitnesse.org/FitNesseDownload]].
 
 !3 More Usage Detail...
-If you are more interested in why and how to get teams to use FitNesse, see AcceptanceTests.  If you want to learn how to create and run FitNesse tests, check out EditingFitNessePages, CreatingTestTables, and TestTableStyles.
+If you are more interested in why and how to get teams to use FitNesse, see AcceptanceTests.  If you want to learn how to create and run FitNesse tests, check out [[Editing FitNesse Pages][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.EditingFitNessePages]], [[Creating Test Tables][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests]], and [[Test Table Styles][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.FitFramework.TestTableStyles]].
 
 !3 Or Take Your Own Path
 Finally, if you want to zoom back out and look at all of the FitNesse topics, check out the table of contents on the <UserGuide.
