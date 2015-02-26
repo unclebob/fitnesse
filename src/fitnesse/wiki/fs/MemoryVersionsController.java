@@ -19,7 +19,7 @@ public class MemoryVersionsController implements VersionsController {
 
   private VersionsController persistence;
 
-  MemoryVersionsController(FileSystem fileSystem) {
+  public MemoryVersionsController(FileSystem fileSystem) {
     this.persistence = new SimpleFileVersionsController(fileSystem);
   }
 
