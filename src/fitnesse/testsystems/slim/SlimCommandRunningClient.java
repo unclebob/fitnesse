@@ -160,13 +160,17 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
-    if (statements.isEmpty())
-      return new HashMap<String, Object>();
-    String instructions = SlimSerializer.serialize(toList(statements));
-    SlimStreamReader.sendSlimMessage(writer, instructions);
-    String results = reader.getSlimMessage();
-    List<Object> resultList = SlimDeserializer.deserialize(results);
-    return resultToMap(resultList);
+    try {
+      if (statements.isEmpty())
+        return new HashMap<String, Object>();
+      String instructions = SlimSerializer.serialize(toList(statements));
+      SlimStreamReader.sendSlimMessage(writer, instructions);
+      String results = reader.getSlimMessage();
+      List<Object> resultList = SlimDeserializer.deserialize(results);
+      return resultToMap(resultList);
+    } catch (SocketTimeoutException e) {
+      throw new SlimTimeout(String.format("Connection timed out, Slim server did not respond in %d seconds", connectionTimeout), e);
+    }
   }
 
   private interface ToListExecutor extends InstructionExecutor {
