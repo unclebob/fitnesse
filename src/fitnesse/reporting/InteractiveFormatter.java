@@ -79,6 +79,11 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   @Override
   public void errorOccurred(Throwable cause) {
     wasInterrupted = true;
+    try {
+      writeData(String.format("<span class=\"error\">Could not complete testing: %s</span>", cause.toString()));
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to write response to output: " + cause.toString(), e);
+    }
     super.errorOccurred(cause);
   }
 
@@ -132,9 +137,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   public String executionStatus() {
     if (wasInterrupted)
       return makeExecutionStatusLink(ExecutionStatus.ERROR);
-
-//    if (log.hasCapturedOutput())
-//      return makeExecutionStatusLink(ExecutionStatus.OUTPUT);
 
     return makeExecutionStatusLink(ExecutionStatus.OK);
   }
