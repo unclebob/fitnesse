@@ -37,7 +37,7 @@ public final class SocketFactory {
   public static ServerSocket tryCreateServerSocket(int port, boolean useSSL, boolean needClientAuth, String sslParameterClassName) throws IOException {
     ServerSocket socket;
     if (!useSSL) {
-      LOG.log(Level.FINER, "Creating none SSL socket on port: " + port);
+      LOG.log(Level.FINER, "Creating plain socket on port: " + port);
       socket = new ServerSocket(port);
     } else {
       LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
@@ -54,7 +54,7 @@ public final class SocketFactory {
 
   public static Socket tryCreateClientSocket(String hostName, int port, boolean useSSL, String sslParameterClassName) throws IOException {
     if (!useSSL) {
-      LOG.log(Level.FINER, "Creating none SSL client: " + hostName + ":" + port);
+      LOG.log(Level.FINER, "Creating plain client: " + hostName + ":" + port);
       return new Socket(hostName, port);
     } else {
       LOG.log(Level.FINER, "Creating SSL client: " + hostName + ":" + port);
