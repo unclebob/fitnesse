@@ -138,8 +138,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     try {
       performExecution();
     } catch (Exception e) {
-      // Is this necessary? Or is the exception already handled by stopTestSystem?
-      mainFormatter.errorOccurred(e);
       LOG.log(Level.WARNING, "error registered in test system", e);
     }
 
