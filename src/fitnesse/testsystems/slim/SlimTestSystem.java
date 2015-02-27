@@ -84,12 +84,13 @@ public abstract class SlimTestSystem implements TestSystem {
   public void bye() throws IOException {
     try {
       slimClient.bye();
-      testSystemStopped(null);
     } catch (IOException e) {
       exceptionOccurred(e);
       throw e;
     } catch (Exception e) {
       exceptionOccurred(e);
+    } finally {
+      testSystemStopped(null);
     }
   }
 
