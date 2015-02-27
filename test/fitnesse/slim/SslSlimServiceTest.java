@@ -23,7 +23,7 @@ public class SslSlimServiceTest extends SlimServiceTestBase {
   }
 
   protected void startSlimService() throws IOException {
-    SlimService.Options options = SlimService.parseCommandLine(new String[]{ "-v", "-ssl", "fitnesse.socketservice.SslParametersWiki", "8099"});
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{ /* "-v", */ "-ssl", "fitnesse.socketservice.SslParametersWiki", "8099"});
     SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
   }
 
