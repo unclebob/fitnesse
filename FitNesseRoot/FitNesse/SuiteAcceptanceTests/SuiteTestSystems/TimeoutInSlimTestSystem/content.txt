@@ -7,7 +7,7 @@ If the server is not responding in time, we should raise an error.
 #!define slim.timeout {2}
 #
 #|fitnesse.fixtures.Sleep|20000|
-#
+
 !| script                        |
 |given page|TestPage|with content|${SUT_PATH} !-
 !define TEST_SYSTEM {slim}
@@ -15,6 +15,6 @@ If the server is not responding in time, we should raise an error.
 
 |fitnesse.fixtures.Sleep|20000|
 -! |
-|test results for page|TestPage             |should contain|Error occurred during test execution: fitnesse.testsystems.slim.SlimTimeout: Connection timed out, Slim server did not respond in 2 seconds|
-|page                 |TestPage?executionLog|should contain|Connection timed out, Slim server did not respond in 2 seconds                                                                             |
+|test results for page|TestPage             |should contain|Could not complete testing: fitnesse.testsystems.slim.SlimTimeout: Connection timed out, Slim server did not respond in 2 seconds|
+|page                 |TestPage?executionLog|should contain|Connection timed out, Slim server did not respond in 2 seconds                                                                   |
 
