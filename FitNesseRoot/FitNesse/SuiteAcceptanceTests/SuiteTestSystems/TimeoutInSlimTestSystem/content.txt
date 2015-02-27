@@ -1,0 +1,20 @@
+The default timeout is 10 seconds. 
+
+For this test to perform we reduce the timeout to 2 seconds.
+If the server is not responding in time, we should raise an error.
+
+#!define TEST_SYSTEM {slim:timeout}
+#!define slim.timeout {2}
+#
+#|fitnesse.fixtures.Sleep|20000|
+#
+!| script                        |
+|given page|TestPage|with content|${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+!define slim.timeout {2}
+
+|fitnesse.fixtures.Sleep|20000|
+-! |
+|test results for page|TestPage             |should contain|Error occurred during test execution: fitnesse.testsystems.slim.SlimTimeout: Connection timed out, Slim server did not respond in 2 seconds|
+|page                 |TestPage?executionLog|should contain|Connection timed out, Slim server did not respond in 2 seconds                                                                             |
+
