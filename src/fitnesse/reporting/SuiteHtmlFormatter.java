@@ -155,12 +155,6 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void errorOccurred(Throwable cause) {
-    latestTestTime = null;
-    super.errorOccurred(cause);
-  }
-
-  @Override
   public void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
