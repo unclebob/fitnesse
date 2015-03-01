@@ -22,6 +22,7 @@ public interface WikiPage extends Comparable<Object> {
 
   /**
    * Get child pages for this wiki page
+   *
    * @return children, an empty list if there are none.
    */
   List<WikiPage> getChildren();
@@ -32,6 +33,7 @@ public interface WikiPage extends Comparable<Object> {
 
   /**
    * Get a list/set of version info
+   *
    * @return a collection, never null.
    */
   Collection<VersionInfo> getVersions();
@@ -42,7 +44,8 @@ public interface WikiPage extends Comparable<Object> {
 
   /**
    * Commit new content
-   * @param data
+   *
+   * @param data PageData to commit
    * @return version information about this new data version, may be null.
    */
   VersionInfo commit(PageData data);
