@@ -11,13 +11,16 @@ import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
+
 import org.apache.commons.lang.ArrayUtils;
+
 import util.StreamReader;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,24 +114,23 @@ public class SlimCommandRunningClient implements SlimClient {
 
     reader = SlimStreamReader.getReader(client);
     writer = SlimStreamReader.getByteWriter(client);
-    client.setSoTimeout(connectionTimeout * 1000);
     validateConnection(useSSL);
-    client.setSoTimeout(connectionTimeout * 1000);
   }
 
   private void validateConnection(boolean isSslConnection) throws IOException {
     // Convert seconds to milliseconds
     int waittime = connectionTimeout * 1000;
-    //SSL sockets don't support timeout :(
-    if (isSslConnection) waittime = 0;
-    reader.setTimeoutLimit(waittime);
-    slimServerVersionMessage = reader.readLine();
-    reader.setTimeoutLimit(0);
-
-    LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
-    if (reader.isTimeout()) {
-      throw new SlimError("Timeout while reading slim header from client. Read the following: " + slimServerVersionMessage);
+    int oldTimeout = client.getSoTimeout();
+    client.setSoTimeout(waittime);
+    try{
+    	slimServerVersionMessage = reader.readLine();
+    }catch (SocketTimeoutException e){
+    	throw new SlimError("Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
+    }finally{
+    	// restore previous value
+    	client.setSoTimeout(oldTimeout);
     }
+    LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
     if (!isConnected()) {
       throw new SlimError("Got invalid slim header from client. Read the following: " + slimServerVersionMessage);
     }
