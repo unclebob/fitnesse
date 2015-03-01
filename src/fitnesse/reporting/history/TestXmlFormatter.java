@@ -14,6 +14,7 @@ import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -134,6 +135,14 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     addCountsToResult(currentResult, testSummary);
     currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      testResponse.tallyPageCounts(ExecutionResult.ERROR);
+    }
   }
 
   protected TestExecutionReport.TestResult newTestResult() {

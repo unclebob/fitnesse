@@ -53,6 +53,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
     super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      suiteExecutionReport.tallyPageCounts(ExecutionResult.ERROR);
+    }
     if (testHistoryFormatter != null) {
       try {
         testHistoryFormatter.close();
