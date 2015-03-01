@@ -11,6 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.socketservice.SocketFactory;
 import util.CommandLine;
 
@@ -18,12 +19,12 @@ import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
   public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
-  static Class<? extends DefaultInteraction> interactionClass = DefaultInteraction.class;
+  static FixtureInteraction interaction = getInteraction(null);
 
   public static class Options {
     final boolean verbose;
     final int port;
-    final Class<? extends DefaultInteraction> interactionClass;
+    final FixtureInteraction interaction;
     /**
      * daemon mode: keep accepting new connections indefinitely.
      */
@@ -32,10 +33,10 @@ public class SlimService {
     final boolean useSSL;
 	final String sslParameterClassName;
 
-    public Options(boolean verbose, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
+    public Options(boolean verbose, int port, FixtureInteraction interaction, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
       this.verbose = verbose;
       this.port = port;
-      this.interactionClass = interactionClass;
+      this.interaction = interaction;
       this.daemon = daemon;
       this.statementTimeout = statementTimeout;
       this.useSSL = useSSL;
@@ -71,7 +72,7 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon, options.useSSL, options.sslParameterClassName);
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     slimservice.accept();
   }
 
@@ -81,7 +82,7 @@ public class SlimService {
       service.interrupt();
       throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interactionClass, options.daemon, options.useSSL, options.sslParameterClassName);
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     int actualPort = slimservice.getPort();
     service = new Thread() {
       public void run() {
@@ -118,13 +119,13 @@ public class SlimService {
       boolean daemon = commandLine.hasOption("d");
       String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
       boolean useSSL = commandLine.hasOption("ssl");
-      return new Options(verbose, port, getInteractionClass(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
+      return new Options(verbose, port, getInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
     }
     return null;
   }
 
-  public SlimService(SlimServer slimServer, int port, Class<? extends DefaultInteraction> interactionClass, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
-    SlimService.interactionClass = interactionClass;
+  public SlimService(SlimServer slimServer, int port, FixtureInteraction interaction, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
+    SlimService.interaction = interaction;
     this.daemon = daemon;
     this.slimServer = slimServer;
 
@@ -193,18 +194,18 @@ public class SlimService {
   }
 
   @SuppressWarnings("unchecked")
-  private static Class<DefaultInteraction> getInteractionClass(String interactionClassName) {
+  private static FixtureInteraction getInteraction(String interactionClassName) {
     if (interactionClassName == null) {
-      return DefaultInteraction.class;
+      return new DefaultInteraction();
     }
     try {
-      return (Class<DefaultInteraction>) Class.forName(interactionClassName);
-    } catch (ClassNotFoundException e) {
+      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
+    } catch (Exception e) {
       throw new SlimError(e);
     }
   }
 
-  public static Class<? extends DefaultInteraction> getInteractionClass() {
-    return interactionClass;
+  public static FixtureInteraction getInteraction() {
+    return interaction;
   }
 }
