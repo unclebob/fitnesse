@@ -4,7 +4,6 @@ package fitnesse.responders.refactoring;
 
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
 import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;

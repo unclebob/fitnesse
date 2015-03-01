@@ -6,11 +6,7 @@ import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
-import util.StreamReader;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
