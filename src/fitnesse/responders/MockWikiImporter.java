@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import java.util.Iterator;
 
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
