@@ -73,7 +73,10 @@ public class StatementExecutor implements StatementExecutorInterface {
   
   @Override
   public Object getSymbol(String symbolName) {
-	MethodExecutionResult result = context.getVariable(symbolName);
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
     return result.returnValue();
   }
 
