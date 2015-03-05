@@ -20,21 +20,21 @@ public class PageListSetUpTearDownSurrounder {
   }
 
   public List<WikiPage> surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiPage> pageList) {
-    Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups = createPageSetUpTearDownGroups(pageList);
+    Map<String, List<WikiPage>> pageSetUpTearDownGroups = createPageSetUpTearDownGroups(pageList);
     return reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
   }
 
-  private Map<String, LinkedList<WikiPage>> createPageSetUpTearDownGroups(List<WikiPage> pageList) {
-    Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<WikiPage>>();
+  private Map<String, List<WikiPage>> createPageSetUpTearDownGroups(List<WikiPage> pageList) {
+    Map<String, List<WikiPage>> pageSetUpTearDownGroups = new HashMap<String, List<WikiPage>>();
     for (WikiPage page : pageList) {
       makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
     }
     return pageSetUpTearDownGroups;
   }
 
-  private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) {
+  private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
     String group = getSetUpTearDownGroup(page);
-    LinkedList<WikiPage> pageGroup;
+    List<WikiPage> pageGroup;
     if (pageSetUpTearDownGroups.get(group) != null) {
       pageGroup = pageSetUpTearDownGroups.get(group);
       pageGroup.add(page);
@@ -59,15 +59,15 @@ public class PageListSetUpTearDownSurrounder {
     return path;
   }
 
-  private List<WikiPage> reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) {
+  private List<WikiPage> reinsertPagesViaSetUpTearDownGroups(Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
     List<WikiPage> pageList = new LinkedList<WikiPage>();
-    for (Map.Entry<String, LinkedList<WikiPage>> entry : pageSetUpTearDownGroups.entrySet()) {
+    for (Map.Entry<String, List<WikiPage>> entry : pageSetUpTearDownGroups.entrySet()) {
       pageList.addAll(insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue()));
     }
     return pageList;
   }
 
-  private List<WikiPage> insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<WikiPage> pageGroup) {
+  private List<WikiPage> insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, List<WikiPage> pageGroup) {
     List<WikiPage> pageList = new LinkedList<WikiPage>();
     pageList.addAll(setUpForThisGroup(setUpAndTearDownGroupKey));
     pageList.addAll(pageGroup);
@@ -76,7 +76,6 @@ public class PageListSetUpTearDownSurrounder {
   }
 
   private List<WikiPage> setUpForThisGroup(String setUpAndTearDown) {
-
     String setUpPath = setUpAndTearDown.split(",")[0];
     WikiPage setUpPage = root.getPageCrawler().getPage(PathParser.parse(setUpPath));
     return setUpPage != null ? asList(setUpPage) : Collections.<WikiPage>emptyList();

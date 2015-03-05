@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import org.junit.Test;
-
 import java.io.IOException;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class SlimServiceTest extends SlimServiceTestBase {
 
@@ -37,13 +35,13 @@ public class SlimServiceTest extends SlimServiceTestBase {
   @Test
   public void nullInteractionService_returnsDefaultClass() {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interactionClass.getName());
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
   }
 
   @Test
   public void definedInteractionService_returnsCorrectClass() {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interactionClass.getName());
+    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interaction.getClass().getName());
   }
 
   @Test

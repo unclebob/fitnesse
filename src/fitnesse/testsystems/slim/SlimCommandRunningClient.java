@@ -14,9 +14,6 @@ import fitnesse.testsystems.CommandRunner;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import util.StreamReader;
-
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;

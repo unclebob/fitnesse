@@ -89,7 +89,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (InvocationTargetException e) {
       checkExceptionForStop(e.getTargetException());
       throw new SlimException(e.getTargetException(), true);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -99,7 +99,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   public Object call(String instanceName, String methodName, Object... args) throws SlimException {
     try {
       return getMethodExecutionResult(instanceName, methodName, args).returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -111,7 +111,7 @@ public class StatementExecutor implements StatementExecutorInterface {
       MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
       context.setVariable(variable, result);
       return result.returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
