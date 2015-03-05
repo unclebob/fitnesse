@@ -41,14 +41,14 @@ By default FitNesse makes backups of pages (as zip files). This property can be 
 
 ''motivation:'' If you have a custom versions controller installed, it's nice to see those changes on the recent changes page
 
-By default FitNesse maintains a page ([[RecentChanges][.RecentChanges]]) that keeps track of changes made to the wiki. If you're using Git versioning, it's much more convenient to just list the changes from the SCM, instead of the ones maintained in the files (let alone the potential merge conflicts). For Git, !-fitnesse.wiki.fs.GitFileVersionsController-! supports the !-fitnesse.wiki.RecentChanges-! interface, so changes of the repository can be displayed, instead of the ones maintained in the !-RecentChanges-! file.
+By default FitNesse maintains a page ([[!-RecentChanges-!][.RecentChanges]]) that keeps track of changes made to the wiki. If you're using Git versioning, it's much more convenient to just list the changes from the SCM, instead of the ones maintained in the files (let alone the potential merge conflicts). For Git, !-fitnesse.wiki.fs.GitFileVersionsController-! supports the !-fitnesse.wiki.RecentChanges-! interface, so changes of the repository can be displayed, instead of the ones maintained in the !-RecentChanges-! file.
 
 !3 Responders
 ''required property:'' '''!-Responders-! = <key:class name>[,<key:class name>]'''
 
 ''motivation:'' Allows functional customization.  With this plugin you can customize the way FitNesse responds to HTTP requests.
 
-The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to generate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the .RecentChanges page.
+The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to generate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the [[!-RecentChanges-!][.RecentChanges]] page.
 
 !4 Disabled Responder
 The !-DisabledResponder-! is provided as a way to turn off at a very deep level other responders.  Using the Responders property in the !style_code(plugins.properties), you can disable any existing responder by defining it to use the !-DisabledResponder-! instead.  For example, the following line, will disable the addChild and new responders.

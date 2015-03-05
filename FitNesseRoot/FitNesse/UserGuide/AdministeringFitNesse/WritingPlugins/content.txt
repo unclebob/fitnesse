@@ -1,4 +1,4 @@
-FitNesse is extensible. It can be extended via components configured in the ConfigurationFile. Since version 20150226 FitNesse also has another mechanism: service providers. It's using the Java [[ServiceLoader][https://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html]] functionality to load services dynamically.
+FitNesse is extensible. It can be extended via components configured in the ConfigurationFile. Since version 20150226 FitNesse also has another mechanism: service providers. It's using the Java [[!-ServiceLoader-!][http://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html]] functionality to load services dynamically.
 
 !2 How does it help me?
 Previously, to install a plugin you had to download the plugin and load it alongside FitNesse (either from the plugins folder or by using a build tool such as Ant or Maven to launch FitNesse) '''and''' you had to configure the plugin in the ConfigurationFile. When a plugin has a service provider it is no longer needed to also define it in the configuration file. Just put the plugin  jar on the FitNesse class path or in the plugins folder and it will be configured automatically.
