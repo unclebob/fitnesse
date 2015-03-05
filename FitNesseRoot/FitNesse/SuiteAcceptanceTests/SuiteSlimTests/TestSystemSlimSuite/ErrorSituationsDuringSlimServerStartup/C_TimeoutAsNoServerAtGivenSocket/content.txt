@@ -1,5 +1,3 @@
-!include -c .FitNesse.SuiteAcceptanceTests.SuiteTestSystems.SetUp
-
 !2 Trying to connect to a socket where no slim server is running should fail quickly.
 
 To test this we run in debug mode and request to start the slim server ourselfs. But we never start one :)
@@ -23,5 +21,3 @@ Required Improvement: also the timeout is set to 1 second the detection takes 20
 |ensure |content contains |Error connecting to SLiM server on localhost:|
 |ensure | content matches  | Time elapsed:.* seconds |
 |# show | content |
-
-!include -c .FitNesse.SuiteAcceptanceTests.TearDown

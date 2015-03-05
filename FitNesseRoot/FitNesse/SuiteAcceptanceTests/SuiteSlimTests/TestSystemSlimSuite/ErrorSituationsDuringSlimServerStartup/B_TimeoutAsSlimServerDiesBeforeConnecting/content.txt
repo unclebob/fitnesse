@@ -1,5 +1,3 @@
-!include -c .FitNesse.SuiteAcceptanceTests.SuiteTestSystems.SetUp
-
 !2 Identify if the Slim Server process dies during startup
  
 If a slim server process dies before a connection has been established this should be identified quickly and the test aborted.
@@ -17,5 +15,3 @@ We use a test runner class which doesn't exists. This ensures the slim server di
 | check | request page | TestPage?executionLog| 200 |
 |ensure |content contains |Error SLiM server died before a conection could be established.|
 | #show | content |
-
-!include -c .FitNesse.SuiteAcceptanceTests.TearDown
