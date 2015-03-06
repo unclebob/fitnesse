@@ -4,6 +4,7 @@ import util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,8 @@ import java.util.logging.Logger;
 
 public class UpdateFileList {
   private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
+
+  private final static List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
   private List<String> mainDirectories;
   private String updateListContent;
@@ -101,20 +104,21 @@ public class UpdateFileList {
     if (f.isDirectory()) {
       File[] files = FileUtil.getDirectoryListing(f);
       for (File childFile : files)
-        if (!isBackupFile(childFile))
+        if (isWikiFile(childFile))
           addFilePathToAppropriateList(path, childFile);
     } else if (f.isFile()) {
       String parent = "";
       int index = path.lastIndexOf('/');
       if (index >= 0)
         parent = path.substring(0, index);
-      if (!isBackupFile(f))
+      if (isWikiFile(f))
         addFilePathToAppropriateList(parent, f);
     }
   }
 
-  private boolean isBackupFile(File childFile) {
-	return childFile.getName().endsWith(".zip");
+  private boolean isWikiFile(File childFile) {
+    String name = childFile.getName();
+    return childFile.isDirectory() || VALID_FILE_NAMES.contains(name);
   }
 
 private void addFilePathToAppropriateList(String directoryPath, File childFile) {
