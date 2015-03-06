@@ -20,4 +20,4 @@ Don't include a page that already includes the page that you are including from.
 
 !3 Including Test snippets
 It is often useful to include portions of test tables into your tests. You do this to bring in common setup data or common test sequences (possibly modified with variables).  A convenient way to do this is to use the Backwards Search notation as follows:{{{!include <UtilityPage.MyUtility}}}
-This will hunt up the parent change until !-UtilityPage-! is found, and then its child !-MyUtility-! will be included.
+This will hunt up the parent chain until !-UtilityPage-! is found, and then its child !-MyUtility-! will be included.
