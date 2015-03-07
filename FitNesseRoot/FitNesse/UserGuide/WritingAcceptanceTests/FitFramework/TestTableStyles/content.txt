@@ -11,7 +11,7 @@ Here we point you to pages that describe each of the styles of FitNesse test tab
 !2 Less Frequently-Used Table/Fixture Styles
 |RowEntryFixture|''A special case of ColumnFixture for processing rows of data.''|
 |TableFixture|''A fixture style that lets you create completely custom test table formats, and process them however you like.''|
-|!-SummaryFixture-!|''A fixture that generates a report of all the tests on a page.''|
+|SummaryFixture|''A fixture that generates a report of all the tests on a page.''|
 
 !2 Some Table and Fixture Examples
 |PayrollTests|''An example using ColumnFixture''|
