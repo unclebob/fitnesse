@@ -1,4 +1,4 @@
-The name of a ''fitnesse test page'' begins with '''"Test"''', or has the '''Test''' attribute set.  See [[Page Attributes][PageProperties]].  This makes sure that the page will have a '''Test''' button.
+The name of a ''fitnesse test page'' begins with '''"Test"''', or has the '''Test''' attribute set.  See [[Page Attributes][<UserGuide.FitNesseWiki.PageProperties]].  This makes sure that the page will have a '''Test''' button.
 
 ''Fitnesse tests'' are written in ''Fit'' format (http://fit.c2.com ).  This format is very simple.  The page can contain any text at all.  Any tables that exist on the page will be interpreted by ''Fit''.
 
@@ -17,10 +17,9 @@ The rest of the rows in a ''Fit'' table have formats that are determined by the 
 |SymbolsInTestTables|''Allows you to store outputs fromm one fixture and use them as inputs to another.''|
 |KeywordsInTestTables|''There are certain keywords that can be used in fixtures. I.e. null and blank''|
 |DataTypesInFixtures|''There are several data types that can be used in fixtures.''|
-|[[Graceful Names][GracefulName]]|''Managing the names of fixtures, packages, and variables''|
+|[[Graceful Names][<UserGuide.WritingAcceptanceTests.GracefulName]]|''Managing the names of fixtures, packages, and variables''|
 |[[Comment Tables][CommentTables]]|''Sometimes you want a table in a test, that is not part of the test, but is just a comment''|
 |.|
 |[[Payroll Example][PayrollTests]]|''An example using ColumnFixture''|
 |^BowlingGameProject|''A simple example of some custom acceptance tests.''|
-
 

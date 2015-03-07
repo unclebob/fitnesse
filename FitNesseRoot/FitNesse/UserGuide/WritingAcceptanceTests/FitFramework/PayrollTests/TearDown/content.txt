@@ -1,3 +1,3 @@
-Then we delete the test database so that other tests won't be confused by our test data. (This table is in the <UserGuide.PayrollTests.TearDown so that it happens after every test.)
+Then we delete the test database so that other tests won't be confused by our test data. (This table is in the [[!-TearDown-!][<UserGuide.WritingAcceptanceTests.FitFramework.PayrollTests.TearDown]] so that it happens after every test.)
 
 |!-payrollTest.CleanUp-!|
