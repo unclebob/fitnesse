@@ -34,4 +34,12 @@ public class SeeTest {
         root.makePage("PageTwo", "hi");
         ParserTestHelper.assertTranslatesTo(page, "<b>See: <a href=\"PageTwo\">page 2</a></b>");
 	}
+
+  @Test
+  public void handlesMalformedAlias() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage page = root.makePage("PageOne", "!see [[looks like alias but is not");
+        root.makePage("PageTwo", "hi");
+        ParserTestHelper.assertTranslatesTo(page, "!see [[looks like alias but is not");
+  }
 }

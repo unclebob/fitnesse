@@ -47,4 +47,12 @@ public class WikiPageUtilTest {
     assertEquals("XrefPage", xrefs.get(0));
   }
 
+  @Test
+  public void testGetCrossReferencesWithMalformedAlias() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see [[starts like alias but is not\r\n");
+    List<?> xrefs = WikiPageUtil.getXrefPages(page);
+    assertEquals(0, xrefs.size());
+  }
+
 }
