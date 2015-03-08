@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
@@ -94,7 +95,13 @@ public class WikiPageUtil {
       ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
         @Override
         public boolean visit(Symbol node) {
-          if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
+          if (node.isType(See.symbolType)) {
+            if(node.childAt(0).isType(Alias.symbolType)) {
+              xrefPages.add(node.childAt(0).lastChild().childAt(0).getContent());
+            } else {
+              xrefPages.add(node.childAt(0).getContent());
+            }
+          }
           return true;
         }
 
