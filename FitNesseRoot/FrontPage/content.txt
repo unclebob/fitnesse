@@ -2,7 +2,7 @@
 !3 ''The fully integrated stand-alone acceptance testing framework and wiki.''
 # Here is a good place to add your first page (WikiWord). For example, MyTopLevelApplicationPage
 
-To add your first "page", click the [[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.FitNesseWiki.WikiWord]] to the page.
+To add your first "page", click the [[Edit][.FrontPage?edit]] button and add a [[!-WikiWord-!][.FitNesse.UserGuide.FitNesseWiki.WikiWord]] to the page.
 
 | '''To Learn More...''' |
 | [[A One-Minute Description][.FitNesse.UserGuide.OneMinuteDescription]] | ''What is FitNesse Start here.'' |
