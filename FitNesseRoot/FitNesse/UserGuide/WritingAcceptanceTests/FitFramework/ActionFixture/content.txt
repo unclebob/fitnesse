@@ -40,7 +40,7 @@ You can used !-TimedActionFixture-! if you want to see visual feedback on how lo
 
 This !-DelayedCountFixture-! example simply adds a random delay to the ''count'' function.
 
-!-TimedActionFixture-! does not give you a means of testing the time or the ''split''.  It simply displays them for visual inspection. Also note that the TimedActionFixture-! does not report any delays that are less than one second.  We don't know why Ward (inventor of the FitFramework) decided to impose this lower limit.  Perhaps he'll remove it one day.
+!-TimedActionFixture-! does not give you a means of testing the time or the ''split''.  It simply displays them for visual inspection. Also note that the TimedActionFixture does not report any delays that are less than one second.  We don't know why Ward (inventor of the [[!-FitFramework-!][<UserGuide.WritingAcceptanceTests.FitFramework]]) decided to impose this lower limit.  Perhaps he'll remove it one day.
 
 !2 Learning More
 To see an example of the fixture code for the ActionFixture test table style, check out ActionFixtureCode. Also check out the other TestTableStyles.
