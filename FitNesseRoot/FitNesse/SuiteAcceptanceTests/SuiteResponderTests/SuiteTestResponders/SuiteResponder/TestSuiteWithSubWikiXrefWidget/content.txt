@@ -1,18 +1,22 @@
 When you execute a suite page, !-FitNesse-! tests all the pages mentioned in !-!see-! cross reference widgets.
-''Note: the classpath for the cross referenced pages is not determined by the referencing page, it is determined by the referenced pages.''
+This test ensures that any !-!see-! cross references that are references to test in a different sub-wiki also work as expected.
 
 ----
-Create a simple test page
+Create a hierarchy of pages
+
+|script|Page Builder|
+|line|Top-level page forming sub-wiki|
+|page|!-TopPage-!|
 
 |script|Page Builder|
 |line|${SUT_PATH}|
 |line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
-|page|!-TestPage-!|
+|page|!-TopPage.TestPage-!|
 
 Create a Suite page that mentions the test page in a !-!see-! widget
 
 |script|Page Builder|
-|line|!-!see TestPage-!|
+|line|!-!see .TopPage.TestPage-!|
 |page|!-SuitePage-!|
 
 |Response Requester.|
@@ -22,6 +26,12 @@ Create a Suite page that mentions the test page in a !-!see-! widget
 |Response Examiner.|
 |contents?|
 ||
+
+Check the suite page has the !-!see-! reference on it.
+
+|Response Examiner.|
+|type  |pattern|matches?|
+|contents|!-\.TopPage\.TestPage-!|true|
 
 Now run the suite page.
 
@@ -37,7 +47,7 @@ The suite should report the !-TestPage-! and should show no errors.
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|!-TestPage-!|true|
+|contents|!-TopPage\.TestPage-!|true|
 |contents|Test Pages:.*1 right|true|
 
 The error log page should not have any errors
