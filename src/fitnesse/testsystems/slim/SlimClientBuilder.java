@@ -2,15 +2,17 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fitnesse.FitNesseContext;
 import fitnesse.socketservice.SocketFactory;
-
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
+
 import org.apache.commons.lang.ArrayUtils;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
@@ -92,9 +94,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     	arguments = ArrayUtils.add(arguments, "-ssl");
     	arguments = ArrayUtils.add(arguments, useSSL);
     }    	
-    String slimFlags = getSlimFlags();
-    if (!"".equals(slimFlags))
-    	arguments = ArrayUtils.add(arguments, slimFlags);
+    String slimFlags[] = getSlimFlags();
+    if (slimFlags != null)
+    	for (String flag : slimFlags)
+    		arguments = ArrayUtils.add(arguments, flag);
     
 	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
 
@@ -179,12 +182,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return slimHost == null ? "localhost" : slimHost;
   }
 
-  protected String getSlimFlags() {
+  protected String[] getSlimFlags() {
     String slimFlags = getVariable("slim.flags");
     if (slimFlags == null) {
       slimFlags = getVariable(SLIM_FLAGS);
     }
-    return slimFlags == null ? "" : slimFlags;
+    return slimFlags == null ? new String[] {} : parseCommandLine(slimFlags);
   }
 
   protected int determineTimeout() {
