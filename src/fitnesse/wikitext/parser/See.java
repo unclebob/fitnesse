@@ -16,9 +16,9 @@ public class See extends SymbolType implements Rule {
             return new Maybe<Symbol>(current.add(next));
         }
         if (next.isType(Alias.symbolType)) {
-            Maybe<Symbol> maybe = next.getType().getWikiRule().parse(next, parser);
-            if (maybe!=null && maybe.getValue()!=null)
-              return new Maybe<Symbol>(current.add(maybe.getValue()));
+            Maybe<Symbol> alias = next.getType().getWikiRule().parse(next, parser);
+            if (!alias.isNothing())
+              return new Maybe<Symbol>(current.add(alias.getValue()));
         }
         return Symbol.nothing;
     }
