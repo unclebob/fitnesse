@@ -104,7 +104,7 @@ public abstract class ClientBuilder<T> {
     return DEFAULT_COMMAND_PATTERN;
   }
 
-  private String[] parseCommandLine(String commandLine) {
+  protected String[] parseCommandLine(String commandLine) {
 		Collection<String> result = new ArrayList<String>();
 		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);

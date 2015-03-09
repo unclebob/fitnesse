@@ -187,7 +187,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (slimFlags == null) {
       slimFlags = getVariable(SLIM_FLAGS);
     }
-    return slimFlags == null ? new String[] {} : slimFlags.trim().split("\\s");
+    return slimFlags == null ? new String[] {} : parseCommandLine(slimFlags);
   }
 
   protected int determineTimeout() {
