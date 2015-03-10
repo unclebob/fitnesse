@@ -59,7 +59,7 @@ describe("SpreadsheetTranslator", function () {
 
     it("testSetupFixture", function() {
         var input = "fit.Setup";
-        var expected = "!|fit.Setup|";
+        var expected = "|fit.Setup|";
 
         verifySpreadsheetToFitnesse(input, expected);
     });
@@ -73,7 +73,7 @@ describe("SpreadsheetTranslator", function () {
             "Suffix Comment\r\n";
         var expected = "Prefix comment\n" +
             "\n" +
-            "!|package.Class|\n" +
+            "|package.Class|\n" +
             "\n" +
             "Suffix Comment\n";
 
@@ -96,7 +96,7 @@ describe("SpreadsheetTranslator", function () {
             "input1\tinput2\toutput()\r\n" +
             "1\t2\t3\r\n" +
             "1\t2\t";
-        var expected = "!|fit.OneTest|\n" +
+        var expected = "|fit.OneTest|\n" +
             "|input1|input2|output()|\n" +
             "|1|2|3|\n" +
             "|1|2||";
@@ -133,7 +133,7 @@ describe("SpreadsheetTranslator", function () {
     it("testPlainTable", function() {
         var input = "1\t2\t3\r\n" +
             "1\t2\t";
-        var expected = "!|1|2|3|\n" +
+        var expected = "|1|2|3|\n" +
             "|1|2|";
 
         verifySpreadsheetToFitnesse(input, expected);
@@ -157,7 +157,7 @@ describe("SpreadsheetTranslator", function () {
         var input = "One Test\t\r\n" +
             "input1\toutput()\r\n" +
             "1\t3";
-        var expected = "!|One Test|\n" +
+        var expected = "|One Test|\n" +
             "|input1|output()|\n" +
             "|1|3|";
 
@@ -182,7 +182,7 @@ describe("SpreadsheetTranslator", function () {
             "\tinput1\tinput2\toutput()\r\n" +
             "\t1\t2\t3\r\n" +
             "\t1\t2\t";
-        var expected = "!|fit.OneTest|\n" +
+        var expected = "|fit.OneTest|\n" +
             "|input1|input2|output()|\n" +
             "|1|2|3|\n" +
             "|1|2||";
@@ -190,5 +190,26 @@ describe("SpreadsheetTranslator", function () {
         verifySpreadsheetToFitnesse(input, expected);
     });
 
+    it("testHiddenOneColumnnTable", function() {
+        var input = "-\tAdd Rows\t\t\r\n" +
+            "\tone\t\t\r\n" +
+            "\ttwo\t\t\r\n";
+        var expected = "-|Add Rows|\n" +
+            "|one|\n" +
+            "|two|\n";
+
+        verifySpreadsheetToFitnesse(input, expected);
+    });
+
+    it("testHiddenExplicitOneColumnnTable", function() {
+        var input = "-!\tSome Rows\t\t\r\n" +
+            "\tx\t\t\r\n" +
+            "\ty\t\t\r\n";
+        var expected = "-!|Some Rows|\n" +
+            "|x|\n" +
+            "|y|\n";
+
+        verifySpreadsheetToFitnesse(input, expected);
+    });
 
 });
