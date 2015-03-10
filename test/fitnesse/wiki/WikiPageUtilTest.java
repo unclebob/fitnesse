@@ -31,13 +31,28 @@ public class WikiPageUtilTest {
     assertThat(WikiPageUtil.resolveFileUri("jiberish:/tmp/someFile", new File(".")), equalTo(new File (new File(".").getCanonicalFile(), "/tmp/someFile")));
   }
 
-
   @Test
   public void testGetCrossReferences() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
     List<?> xrefs = WikiPageUtil.getXrefPages(page);
     assertEquals("XrefPage", xrefs.get(0));
+  }
+
+  @Test
+  public void testGetCrossReferencesWithAlias() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see [[xref page][XrefPage]]\r\n");
+    List<?> xrefs = WikiPageUtil.getXrefPages(page);
+    assertEquals("XrefPage", xrefs.get(0));
+  }
+
+  @Test
+  public void testGetCrossReferencesWithMalformedAlias() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageName"), "!see [[starts like alias but is not\r\n");
+    List<?> xrefs = WikiPageUtil.getXrefPages(page);
+    assertEquals(0, xrefs.size());
   }
 
 }

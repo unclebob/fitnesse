@@ -12,8 +12,14 @@ public class See extends SymbolType implements Rule {
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
-        if (!next.isType(WikiWord.symbolType)) return Symbol.nothing;
-
-        return new Maybe<Symbol>(current.add(next));
+        if (next.isType(WikiWord.symbolType)) {
+            return new Maybe<Symbol>(current.add(next));
+        }
+        if (next.isType(Alias.symbolType)) {
+            Maybe<Symbol> alias = next.getType().getWikiRule().parse(next, parser);
+            if (!alias.isNothing())
+              return new Maybe<Symbol>(current.add(alias.getValue()));
+        }
+        return Symbol.nothing;
     }
 }
