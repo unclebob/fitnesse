@@ -96,7 +96,11 @@ public class FitNesseContext {
 
   }
   public File getTestHistoryDirectory() {
-    return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
+    String testHistoryPath = getProperty("test.history.path");
+    if (testHistoryPath == null) {
+      testHistoryPath = String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName);
+    }
+    return new File(testHistoryPath);
   }
 
   public String getTestProgressPath() {

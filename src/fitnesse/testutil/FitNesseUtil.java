@@ -42,6 +42,11 @@ public class FitNesseUtil {
     return makeTestContext(InMemoryPage.newInstance(), properties);
   }
 
+
+  public static FitNesseContext makeTestContext(Properties properties) {
+    return makeTestContext(InMemoryPage.newInstance(), properties);
+  }
+
   public static FitNesseContext makeTestContext(WikiPageFactory wikiPageFactory, Properties properties) {
     File temporaryFolder = createTemporaryFolder();
     return makeTestContext(wikiPageFactory, temporaryFolder.getPath(), FitNesseUtil.base, PORT, new PromiscuousAuthenticator(), properties);

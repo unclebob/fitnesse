@@ -34,7 +34,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
-  private File resultsDirectory;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
   private PageHistory pageHistory;
@@ -49,7 +48,7 @@ public class PageHistoryResponder implements SecureResponder {
     if (request.hasInput("resultDate")) {
       return tryToMakeTestExecutionReport(request);
     } else if (formatIsXML(request)) {
-      return makePageHistoryXmlResponse(request);
+      return makePageHistoryXmlResponse();
     } else {
       return makePageHistoryResponse(request);
     }
@@ -64,7 +63,7 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
   
-  private Response makePageHistoryXmlResponse(Request request) {
+  private Response makePageHistoryXmlResponse() {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
 
@@ -161,8 +160,7 @@ public class PageHistoryResponder implements SecureResponder {
 
   private void prepareResponse(Request request) {
     response = new SimpleResponse();
-    if (resultsDirectory == null)
-      resultsDirectory = context.getTestHistoryDirectory();
+    File resultsDirectory = context.getTestHistoryDirectory();
     TestHistory history = new TestHistory();
     String pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
@@ -183,11 +181,6 @@ public class PageHistoryResponder implements SecureResponder {
     pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
     page.setPageTitle(pageTitle);
   }
-
-  public void setResultsDirectory(File resultsDirectory) {
-    this.resultsDirectory = resultsDirectory;
-  }
-
 
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
