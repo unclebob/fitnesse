@@ -63,11 +63,7 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
         return true;
       }
     });
-    try {
-      getWithTimeout(submit);
-    } catch (TimeoutException e) {
-      throw new SlimException("timed out creating instance, instanceName : " + instanceName + ", classname : " + className + ", statementTimeout : " + timeout + " seconds");
-    }
+    getWithTimeout(submit);
   }
 
   @Override
@@ -78,11 +74,7 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
         return inner.callAndAssign(symbolName, instanceName, methodsName, arguments);
       }
     });
-    try {
-      return getWithTimeout(submit);
-    } catch (TimeoutException e) {
-      throw new SlimException("timed out in callAndAssign, symbolName : " + symbolName + ", instanceName : " + instanceName + ", methodsName : " + methodsName + ", statementTimeout : " + timeout + " seconds");
-    }
+    return getWithTimeout(submit);
   }
 
   @Override
@@ -93,16 +85,14 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
         return inner.call(instanceName, methodName, arguments);
       }
     });
-    try {
-      return getWithTimeout(submit);
-    } catch (TimeoutException e) {
-      throw new SlimException("timed out in call, instanceName : " + instanceName + ", methodName : " + methodName + ", statementTimeout : " + timeout + " seconds");
-    }
+    return getWithTimeout(submit);
   }
 
-  private <T> T getWithTimeout(Future<T> submit) throws SlimException, TimeoutException {
+  private <T> T getWithTimeout(Future<T> submit) throws SlimException {
     try {
       return submit.get(timeout, SECONDS);
+    } catch (TimeoutException e) {
+      throw new SlimException(Integer.toString(timeout), SlimServer.TIMED_OUT, true);
     } catch (InterruptedException e) {
       throw new SlimException(e);
     } catch (ExecutionException e) {

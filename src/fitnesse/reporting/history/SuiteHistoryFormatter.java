@@ -4,6 +4,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPage;
@@ -24,6 +26,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
+  private final static Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
+
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
   private final FitNesseContext context;
@@ -44,6 +48,22 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   public void testSystemStarted(TestSystem testSystem) {
     if (suiteTime == null)
       suiteTime = new TimeMeasurement().start();
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      suiteExecutionReport.tallyPageCounts(ExecutionResult.ERROR);
+    }
+    if (testHistoryFormatter != null) {
+      try {
+        testHistoryFormatter.close();
+      } catch (IOException e) {
+        LOG.log(Level.SEVERE, "Unable to close test history formatter", e);
+      }
+      testHistoryFormatter = null;
+    }
   }
 
   @Override
@@ -83,14 +103,6 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     testHistoryFormatter.testExceptionOccurred(assertion, exceptionResult);
     super.testExceptionOccurred(assertion, exceptionResult);
-  }
-
-  @Override
-  public void errorOccurred(Throwable cause) {
-    if (testHistoryFormatter != null) {
-      testHistoryFormatter.errorOccurred(cause);
-    }
-    super.errorOccurred(cause);
   }
 
   @Override

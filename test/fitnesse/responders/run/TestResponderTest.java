@@ -147,6 +147,7 @@ public class TestResponderTest {
 
     String errorLogContent = getExecutionLog();
     assertNotSubString("Exception", errorLogContent);
+    assertSubString("No execution log available.", errorLogContent);
   }
 
   @Test

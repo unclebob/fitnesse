@@ -89,7 +89,7 @@ public class SlimCommandRunningClient implements SlimClient {
     int maxTries = connectionTimeout * 1000 / sleepStep;
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
-        throw new SlimError("Error SLiM server died before a conection could be established.");
+        throw new SlimError("Error SLiM server died before a connection could be established.");
       }
       LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout + " remaining retries: " + maxTries);
       try {

@@ -4,7 +4,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -59,7 +62,7 @@ public class TestXmlFormatterTest {
   
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
-    FitNesseContext context = mock(FitNesseContext.class);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null));
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
@@ -68,6 +71,10 @@ public class TestXmlFormatterTest {
       @Override
       protected TestResult newTestResult() {
         return testResult;
+      }
+
+      @Override
+      protected void writeResults() throws IOException {
       }
     };
     final long startTime = clock.currentClockTimeInMillis();
@@ -80,7 +87,9 @@ public class TestXmlFormatterTest {
 
     TestSummary summary = new TestSummary(9,8,7,6);
     formatter.testComplete(page, summary);
-    assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0,1,0,0)));
+    formatter.close();
+
+    assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0, 1, 0, 0)));
     assertThat(formatter.testResponse.getResults().size(), is(1));
     assertThat(formatter.testResponse.getResults().get(0), is(testResult));
     assertThat(testResult.startTime, is(startTime));
@@ -105,6 +114,7 @@ public class TestXmlFormatterTest {
       }
     };
 
+    formatter.testStarted(new WikiTestPage(page));
     clock.elapse(77L);
     formatter.close();
     assertThat(formatter.testResponse.getTotalRunTimeInMillis(), is(77L));

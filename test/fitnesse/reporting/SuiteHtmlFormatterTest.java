@@ -184,7 +184,6 @@ public class SuiteHtmlFormatterTest {
 
   @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
-    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null));

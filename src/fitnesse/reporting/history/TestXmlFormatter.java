@@ -14,6 +14,7 @@ import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -35,7 +36,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
   protected final TestExecutionReport testResponse;
-  public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
+  private TestExecutionReport.TestResult currentResult;
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(page);
@@ -55,9 +56,13 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(WikiTestPage testPage) {
     resetTimer();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
+    currentResult = newTestResult();
+    testResponse.addResult(currentResult);
+    currentResult.relativePageName = testPage.getName();
+    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
   }
 
   @Override
@@ -73,7 +78,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     Instruction instruction = assertion.getInstruction();
     Expectation expectation = assertion.getExpectation();
     TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-    instructionResults.add(instructionResult);
+    currentResult.addInstruction(instructionResult);
 
     String id = instruction.getId();
 
@@ -105,7 +110,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     Instruction instruction = assertion.getInstruction();
     Expectation expectation = assertion.getExpectation();
     TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-    instructionResults.add(instructionResult);
+    currentResult.addInstruction(instructionResult);
 
     String id = instruction.getId();
 
@@ -126,23 +131,18 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
     super.testComplete(test, testSummary);
-    processTestResults(test, testSummary);
+    currentResult.startTime = currentTestStartTime.startedAt();
+    addCountsToResult(currentResult, testSummary);
+    currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
   }
 
-  public void processTestResults(final WikiTestPage testPage, TestSummary testSummary) {
-    TestExecutionReport.TestResult currentResult = newTestResult();
-    testResponse.addResult(currentResult);
-    currentResult.startTime = currentTestStartTime.startedAt();
-    currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
-    outputBuffer = null;
-    addCountsToResult(currentResult, testSummary);
-    currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
-    currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
-    currentResult.getInstructions().addAll(instructionResults);
-    instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
-
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      testResponse.tallyPageCounts(ExecutionResult.ERROR);
+    }
   }
 
   protected TestExecutionReport.TestResult newTestResult() {
@@ -152,6 +152,11 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   @Override
   public void close() throws IOException {
     setTotalRunTimeOnReport(totalTimeMeasurement);
+
+    if (currentResult != null) {
+      currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
+      outputBuffer = null;
+    }
     writeResults();
   }
 
