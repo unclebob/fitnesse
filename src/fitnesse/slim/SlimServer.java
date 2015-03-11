@@ -21,6 +21,7 @@ public class SlimServer implements SocketServer {
   public static final String NO_CONSTRUCTOR = "NO_CONSTRUCTOR";
   public static final String NO_METHOD_IN_CLASS = "NO_METHOD_IN_CLASS";
   public static final String COULD_NOT_INVOKE_CONSTRUCTOR = "COULD_NOT_INVOKE_CONSTRUCTOR";
+  public static final String TIMED_OUT = "TIMED_OUT";
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
