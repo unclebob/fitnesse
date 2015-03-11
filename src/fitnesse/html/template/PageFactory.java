@@ -13,7 +13,7 @@ import java.util.Properties;
 
 public class PageFactory {
   public static final String THEME_PROPERTY = "Theme";
-  public static final String DEFAULT_THEME = "fitnesse_straight";
+  public static final String DEFAULT_THEME = "bootstrap";
 
   private final String theme;
   private final String contextRoot;

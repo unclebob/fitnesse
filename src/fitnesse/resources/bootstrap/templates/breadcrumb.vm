@@ -8,8 +8,9 @@
  <li><a href="${contextRoot}$breadCrumb.Link">$breadCrumb.Name</a></li>
 #end
 #if($pageTitle.Link)
- <li><a href="/$pageTitle.Link">$pageTitle.Title</a></li>
+ <li><a href="/$pageTitle.Link">$pageTitle.Title</a>#if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">$tag</span>#end#end</li>
 #else
- <li>$pageTitle.Title #if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">$tag</span>#end#end</li>
+ <li>$pageTitle.Title#if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">$tag</span>#end#end</li>
 #end
+
 </ol>
