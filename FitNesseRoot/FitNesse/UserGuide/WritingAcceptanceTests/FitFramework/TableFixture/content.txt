@@ -1,5 +1,5 @@
 !1 Custom Test Table Styles: !-TableFixture-!
-Sometimes, none of the existing TestTableStyles is exactly what you need to represent your various inputs and outputs properly. In thise case, programmers can use the TableFixture style of FixtureCode to create custom test tables, by accessing and processing the cells in a table individually by row and column, and doing whatever needs doing with them.
+Sometimes, none of the existing TestTableStyles is exactly what you need to represent your various inputs and outputs properly. In thise case, programmers can use the TableFixture style of [[!-FixtureCode-!][<UserGuide.WritingAcceptanceTests.FixtureCode]] to create custom test tables, by accessing and processing the cells in a table individually by row and column, and doing whatever needs doing with them.
 
 You can use TableFixture to devise any manner of custom tables, representing test inputs and outputs however you like. While this involves custom programming, it can be quite a powerful way to represent tests in a way that software development team members can all easily understand.
 
@@ -37,7 +37,7 @@ And then finally, the sort of game you might ordinarily see. Well, I see it all 
 |!-eg.bowling.fixtures.FinalScore-!|
 |5|7|9|10|4|3|0|8|10|6|7|9||||||||||91|
 
-!3 The FixtureCode for !-FinalScore-!
+!3 The !-FixtureCode-! for !-FinalScore-!
 The fixture code for the above custom table style is as follows. It examines each of the input cells of the above table individually, as frame scores, and calculates the score for the game: {{{public class FinalScore extends TableFixture
 {
   private BowlingGame game;
