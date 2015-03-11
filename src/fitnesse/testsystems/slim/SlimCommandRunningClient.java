@@ -89,7 +89,7 @@ public class SlimCommandRunningClient implements SlimClient {
     int maxTries = connectionTimeout * 1000 / sleepStep;
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
-        throw new SlimError("Error SLiM server died before a conection could be established.");
+        throw new SlimError("Error SLiM server died before a connection could be established.");
       }
       LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout + " remaining retries: " + maxTries);
       try {
@@ -160,17 +160,13 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
-    try {
-      if (statements.isEmpty())
-        return new HashMap<String, Object>();
-      String instructions = SlimSerializer.serialize(toList(statements));
-      SlimStreamReader.sendSlimMessage(writer, instructions);
-      String results = reader.getSlimMessage();
-      List<Object> resultList = SlimDeserializer.deserialize(results);
-      return resultToMap(resultList);
-    } catch (SocketTimeoutException e) {
-      throw new SlimTimeout(String.format("Connection timed out, Slim server did not respond in %d seconds", connectionTimeout), e);
-    }
+    if (statements.isEmpty())
+      return new HashMap<String, Object>();
+    String instructions = SlimSerializer.serialize(toList(statements));
+    SlimStreamReader.sendSlimMessage(writer, instructions);
+    String results = reader.getSlimMessage();
+    List<Object> resultList = SlimDeserializer.deserialize(results);
+    return resultToMap(resultList);
   }
 
   private interface ToListExecutor extends InstructionExecutor {
