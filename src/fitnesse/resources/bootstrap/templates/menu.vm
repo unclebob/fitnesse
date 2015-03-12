@@ -62,7 +62,7 @@
 
             #if( $actions.testPage || $actions.suitePage )
                 <li#group(4)><a href="?testHistory">Test History</a></li>
-                <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
+                <li#group(4)><a href="$localPath?pageHistory" accesskey="h">Page History</a></li>
             #end
             #if( $actions.testPage )
                 <li#group(4)><a href="?test&amp;remote_debug">Remote Debug</a></li>
