@@ -13,7 +13,7 @@ public class FileUpdateTest extends UpdateTestCase {
   public final File testFile = new File("classes/testFile");
 
   protected Update makeUpdate() throws Exception {
-    return new FileUpdate("testFile", context.getRootPagePath() + File.separator + "files"+File.separator+"images");
+    return new FileUpdate("testFile", new File(new File(context.getRootPagePath(), "files"), "images"));
   }
 
   public void setUp() throws Exception {
@@ -44,7 +44,7 @@ public class FileUpdateTest extends UpdateTestCase {
 
   @Test(expected = Exception.class)
   public void testFileMissing() throws Exception {
-    update = new FileUpdate("images/missingFile", updater.context.getRootPagePath() + "/files/images");
+    update = new FileUpdate("images/missingFile", new File(updater.context.getRootPagePath(), "files/images"));
       update.doUpdate();
   }
 }

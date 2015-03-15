@@ -76,12 +76,12 @@ public class UpdaterImplementationTest {
 
   @Test
   public void shouldBeAbleToGetThePathOfJustTheParent() throws Exception {
-    String filePath = updater.getCorrectPathForTheDestination("classes/files/moreFiles/TestFile");
-    assertSubString(portablePath("classes/files/moreFiles"), filePath);
+    File filePath = updater.getCorrectPathForTheDestination("classes/files/moreFiles/TestFile");
+    assertSubString(portablePath("classes/files/moreFiles"), filePath.getPath());
   }
 
   private String portablePath(String path) {
-    return FileUtil.buildPath(path.split("/"));
+    return path.replace("/", System.getProperty("file.separator"));
   }
 
   @Test
@@ -92,8 +92,7 @@ public class UpdaterImplementationTest {
 
   @Test
   public void shouldCreateSomeFilesInTheRooTDirectory() throws Exception {
-    for (Update update : updater.updates) {
-//      if (update.getClass() == ReplacingFileUpdate.class || update.getClass() == FileUpdate.class)
+    for (Update update : updater.getUpdates()) {
         update.doUpdate();
     }
     File testFile = new File(context.getRootPagePath(), "files/TestFile");
@@ -112,8 +111,8 @@ public class UpdaterImplementationTest {
     String filePath = "FitNesseRoot/someFolder/someFile";
     setTheContext("MyNewRoot");
     updater = new UpdaterImplementation(context);
-    String updatedPath = updater.getCorrectPathForTheDestination(filePath);
-    assertEquals(portablePath("testDir/MyNewRoot/someFolder"), updatedPath);
+    File updatedPath = updater.getCorrectPathForTheDestination(filePath);
+    assertEquals(portablePath("testDir/MyNewRoot/someFolder"), updatedPath.getPath());
   }
 
   @Test
@@ -125,9 +124,9 @@ public class UpdaterImplementationTest {
     FileUtil.deleteFile(propertiesFile);
     assertFalse(propertiesFile.exists());
 
-    updater.updates = new Update[]{
+    updater.setUpdates(new Update[]{
       new UpdateSpy()
-    };
+    });
     updater.update();
     assertTrue(updateDone);
     assertTrue(propertiesFile.exists());
@@ -144,9 +143,9 @@ public class UpdaterImplementationTest {
     updater.setFitNesseVersion(version);
     Properties properties = updater.getProperties();
     properties.put("Version", version);
-    updater.updates = new Update[]{
+    updater.setUpdates(new Update[]{
       new UpdateSpy()
-    };
+    });
     updater.update();
     assertFalse(updateDone);
   }
