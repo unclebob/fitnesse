@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html.template;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
@@ -19,7 +21,9 @@ public class HtmlPageTest {
 
   @Before
   public void setUp() throws Exception {
-    FitNesseContext context = FitNesseUtil.makeTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("Theme", "fitnesse_straight");
+    FitNesseContext context = FitNesseUtil.makeTestContext(properties);
     page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme", "/");
     html = page.html();
   }

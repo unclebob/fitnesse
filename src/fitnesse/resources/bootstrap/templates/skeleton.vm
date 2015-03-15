@@ -2,6 +2,8 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
   <title>$title</title>
   ## Deal with HTML 5 element in older IE browsers
   <!--[if lt IE 9]>
@@ -25,6 +27,7 @@
   <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
 
   <script src="${contextRoot}files/fitnesse/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap/js/respond.js" type="text/javascript"></script>
 
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end>

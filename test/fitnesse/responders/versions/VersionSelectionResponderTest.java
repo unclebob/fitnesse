@@ -44,6 +44,6 @@ public class VersionSelectionResponderTest {
     assertSubString("<a", content);
     assertSubString("?responder=viewVersion", content);
     assertNotSubString("$version", content);
-    assertSubString("<h5> Page One tags</h5>", content);
+    assertSubString("<span class=\"tag\">Page One tags</span>", content);
   }
 }
