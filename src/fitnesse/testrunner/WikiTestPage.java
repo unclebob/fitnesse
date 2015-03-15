@@ -1,5 +1,6 @@
 package fitnesse.testrunner;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class WikiTestPage implements TestPage {
   protected String getPathSeparator() {
     String separator = sourcePage.getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
-      separator = System.getProperty("path.separator");
+      separator = File.pathSeparator;
     return separator;
   }
 

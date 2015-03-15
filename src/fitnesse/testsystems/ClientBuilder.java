@@ -1,5 +1,6 @@
 package fitnesse.testsystems;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,7 @@ public abstract class ClientBuilder<T> {
   static final String[] DEFAULT_COMMAND_PATTERN = {
           javaExecutable(),
           "-cp",
-          fitnesseJar(System.getProperty("java.class.path")) + System.getProperty("path.separator") + "%p",
+          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
           "%m" };
   static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
           javaExecutable(),
@@ -149,8 +150,8 @@ public abstract class ClientBuilder<T> {
   }
 
   protected static String fitnesseJar(String classpath) {
-    for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
-      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
+    for (String pathEntry: classpath.split(File.pathSeparator)) {
+      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(File.separator));
       String jarFile = paths[paths.length-1];
       if ("fitnesse-standalone.jar".equals(jarFile)) {
         return pathEntry;
@@ -174,7 +175,7 @@ public abstract class ClientBuilder<T> {
     String result = "java";
     if (javaHome != null) {
       boolean wrapInQuotes = javaHome.contains(" "); 
-      String separator = System.getProperty("file.separator");
+      String separator = File.separator;
       result = javaHome + separator + "bin" + separator + "java"; 
       if (wrapInQuotes) {
     	  result = "\"" + result + "\"";
