@@ -61,7 +61,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public boolean isSuccessfullyStarted() {
-    return true;
+    return !testSystemIsStopped;
   }
 
   @Override
