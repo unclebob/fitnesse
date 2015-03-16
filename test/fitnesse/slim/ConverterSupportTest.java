@@ -76,6 +76,16 @@ public class ConverterSupportTest {
     }
   }
 
+  @Test
+  public void should_throw_SlimError_if_value_cannot_be_converted() {
+    String errorMessage = "no error";
+    try {
+      ConverterSupport.convertArgs(new Object[]{"val"}, new Type[]{ Runnable.class });
+    } catch (SlimError e) {
+      errorMessage = e.getMessage();
+    }
+    assertEquals("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER java.lang.Runnable.>>", errorMessage);
+  }
 
   /*
    * PRIVATE

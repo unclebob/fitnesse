@@ -1,5 +1,6 @@
 package fitnesse.slim.converters;
 
+import fitnesse.slim.SlimError;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -37,4 +38,17 @@ public class DoubleConverterTest extends AbstractConverterTest<Double, DoubleCon
 
     assertEquals(Double.valueOf(value), current);
   }
+
+  @Test
+  public void fromString_should_throw_Exception_when_value_is_not_a_double() {
+    String value = "foo";
+    String errorMessage = "no error";
+    try {
+      converter.fromString(value);
+    } catch (SlimError e) {
+      errorMessage = e.getMessage();
+    }
+    assertEquals("message:<<Can't convert foo to double.>>", errorMessage);
+  }
+
 }

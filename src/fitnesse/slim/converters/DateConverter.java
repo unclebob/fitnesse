@@ -7,10 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fitnesse.util.StringUtils;
-
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
+import fitnesse.util.StringUtils;
 
 public class DateConverter implements Converter<Date> {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
@@ -27,7 +26,7 @@ public class DateConverter implements Converter<Date> {
     try {
       return DATE_FORMAT.parse(arg);
     } catch (ParseException e) {
-      throw new SlimError("Can't parse date " + arg, e);
+      throw new SlimError(String.format("message:<<Can't convert %s to date.>>", arg), e);
     }
   }
 }

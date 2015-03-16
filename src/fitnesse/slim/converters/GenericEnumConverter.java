@@ -1,5 +1,6 @@
 package fitnesse.slim.converters;
 
+import fitnesse.slim.SlimError;
 import fitnesse.util.StringUtils;
 
 import fitnesse.slim.Converter;
@@ -30,7 +31,7 @@ public class GenericEnumConverter<T extends Enum<T>> implements Converter<T> {
           return value;
         }
       }
-      throw e;
+      throw new SlimError(String.format("message:<<Can't convert %s to enum value of type %s.>>", name, enumClass.getName()), e);
     }
   }
 }
