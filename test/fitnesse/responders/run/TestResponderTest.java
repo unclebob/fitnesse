@@ -252,7 +252,7 @@ public class TestResponderTest {
   @Test
   public void testResultsIncludeActions() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<nav>", results);
+    assertSubString("<nav", results);
   }
 
   @Test

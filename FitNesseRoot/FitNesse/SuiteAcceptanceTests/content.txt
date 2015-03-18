@@ -36,3 +36,5 @@ Use a non-default port number, so SLIM tests systems can be run as well:
 !2 Collapse Set Up and Tear Down
 !define COLLAPSE_SETUP {true}
 !define COLLAPSE_TEARDOWN {true}
+
+!define TITLE_TAG {li}
