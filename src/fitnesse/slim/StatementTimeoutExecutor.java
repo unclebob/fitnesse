@@ -28,6 +28,11 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
   public void assign(final String name, final Object value) {
     inner.assign(name, value);
   }
+  
+  @Override
+  public Object getSymbol(String symbolName) {
+    return inner.getSymbol(symbolName);
+  }
 
   @Override
   public Object getInstance(String instanceName) {

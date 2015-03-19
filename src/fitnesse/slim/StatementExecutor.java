@@ -70,6 +70,15 @@ public class StatementExecutor implements StatementExecutorInterface {
   public void assign(String name, Object value) {
     context.setVariable(name, value);
   }
+  
+  @Override
+  public Object getSymbol(String symbolName) {
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
+    return result.returnValue();
+  }
 
   @Override
   public void create(String instanceName, String className, Object... args) throws SlimException {
