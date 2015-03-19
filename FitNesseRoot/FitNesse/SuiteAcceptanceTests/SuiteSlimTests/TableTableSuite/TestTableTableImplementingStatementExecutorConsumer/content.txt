@@ -1,5 +1,3 @@
-!path fitnesse-slimtest.jar
-
 |import|
 |fitnesse.slim.test|
 
@@ -30,3 +28,7 @@
 
 |script|test slim|$Z|
 |check|return Constructor Arg|101|
+
+!1 Known Limitations
+
+See sub-page about [[known limitations][TestTableTableImplementingStatementExecutorConsumer.TestKnownLimitations]].
