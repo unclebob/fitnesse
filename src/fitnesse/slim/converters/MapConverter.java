@@ -1,7 +1,10 @@
 package fitnesse.slim.converters;
 
-import fitnesse.html.HtmlTag;
+import java.util.HashMap;
+import java.util.Map;
 
+import fitnesse.html.HtmlTag;
+import fitnesse.slim.Converter;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -9,11 +12,7 @@ import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-import java.beans.PropertyEditorSupport;
-import java.util.HashMap;
-import java.util.Map;
-
-public class MapEditor extends PropertyEditorSupport {
+public class MapConverter implements Converter<Map> {
 
   private static final String[] specialHtmlChars = new String[] { "&", "<", ">" };
   private static final String[] specialHtmlEscapes = new String[] { "&amp;", "&lt;", "&gt;" };
@@ -22,23 +21,12 @@ public class MapEditor extends PropertyEditorSupport {
 
   private NodeList tables;
 
-  public String toString(Object o) {
-    return "TILT";
-  }
-
   @Override
-  public void setAsText(String s) throws IllegalArgumentException {
-    setValue(fromString(s));
-  }
-
-  @Override
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public String getAsText() {
+  public String toString(Map hash) {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
-    Map<Object, Object> hash = (Map) getValue();
     HtmlTag table = new HtmlTag("table");
     table.addAttribute("class", "hash_table");
-    for (Map.Entry<Object, Object> entry : hash.entrySet()) {
+    for (Map.Entry<?, ?> entry : ((Map<?, ?>) hash).entrySet()) {
       HtmlTag row = new HtmlTag("tr");
       row.addAttribute("class", "hash_row");
       table.add(row);
@@ -55,7 +43,8 @@ public class MapEditor extends PropertyEditorSupport {
     return table.html().trim();
   }
 
-  public Object fromString(String possibleTable) {
+  @Override
+  public Map<String, String> fromString(String possibleTable) {
     Map<String, String> map = new HashMap<String, String>();
     if (tableIsValid(possibleTable))
       extractRowsIntoMap(map, tables);

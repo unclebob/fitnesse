@@ -12,13 +12,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class MapConverterTest {
-  private MapEditor converter;
+  private MapConverter converter;
   private Map<String, String> result;
 
   @Before
   public void setup() {
 
-    converter = new MapEditor();
+    converter = new MapConverter();
   }
 
   @Test
@@ -29,8 +29,7 @@ public class MapConverterTest {
 
   @SuppressWarnings("unchecked")
   private void makeMap(String inputString) {
-    converter.setAsText(inputString);
-    result = (Map<String, String>) converter.getValue();
+    result = converter.fromString(inputString);
   }
 
   @Test
@@ -86,15 +85,14 @@ public class MapConverterTest {
 
   @Test
   public void shouldRenderTableAsHtml() {
-    MapEditor editor = new MapEditor();
-    editor.setValue(aMap());
+    MapConverter editor = new MapConverter();
 
     assertEquals(StringUtils.join(Arrays.asList("<table class=\"hash_table\">", "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">a</td>", "\t\t<td class=\"hash_value\">b</td>", "\t</tr>",
-        "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.getAsText());
+        "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.toString(aMap()));
   }
 
-  private Map<String, String> aMap() {
-    Map<String, String> map = new TreeMap<String, String>();
+  private Map<Object, Object> aMap() {
+    Map<Object, Object> map = new TreeMap<Object, Object>();
     map.put("a", "b");
     map.put("c", "d");
     return map;
