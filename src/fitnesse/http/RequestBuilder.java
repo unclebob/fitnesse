@@ -19,6 +19,8 @@ import java.util.Random;
 import util.StreamReader;
 import fitnesse.util.Base64;
 
+import static util.FileUtil.CHARENCODING;
+
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();
   private static final Random RANDOM_GENERATOR = new SecureRandom();
@@ -69,7 +71,7 @@ public class RequestBuilder {
   }
 
   public void send(OutputStream output) throws IOException {
-    output.write(buildRequestLine().getBytes("UTF-8"));
+    output.write(buildRequestLine().getBytes(CHARENCODING));
     output.write(ENDL);
     buildBody();
     sendHeaders(output);
@@ -81,14 +83,14 @@ public class RequestBuilder {
     addHostHeader();
     for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
       String key = iterator.next();
-      output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
+      output.write((key + ": " + headers.get(key)).getBytes(CHARENCODING));
       output.write(ENDL);
     }
   }
 
   private void buildBody() throws IOException {
     if (!isMultipart) {
-      byte[] bytes = inputString().getBytes("UTF-8");
+      byte[] bytes = inputString().getBytes(CHARENCODING);
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
@@ -122,7 +124,7 @@ public class RequestBuilder {
   }
 
   private void addBodyPart(String input) throws UnsupportedEncodingException {
-    byte[] bytes = input.getBytes("UTF-8");
+    byte[] bytes = input.getBytes(CHARENCODING);
     bodyParts.add(new ByteArrayInputStream(bytes));
     bodyLength += bytes.length;
   }
@@ -158,7 +160,7 @@ public class RequestBuilder {
       String value = (String) inputs.get(key);
       if (!first)
         buffer.append("&");
-      buffer.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
+      buffer.append(key).append("=").append(URLEncoder.encode(value, CHARENCODING));
       first = false;
     }
     return buffer.toString();

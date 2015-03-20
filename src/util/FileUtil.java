@@ -24,6 +24,8 @@ import java.util.TreeSet;
 
 public class FileUtil {
 
+  public static final String CHARENCODING = "UTF-8";
+
   public static File createFile(String path, String content) {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
@@ -46,7 +48,7 @@ public class FileUtil {
 
   public static File createFile(File file, String content) {
     try {
-      return createFile(file, content.getBytes("UTF-8"));
+      return createFile(file, content.getBytes(CHARENCODING));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
@@ -139,7 +141,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input), "UTF-8");
+    return new String(getFileBytes(input), CHARENCODING);
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
@@ -185,7 +187,7 @@ public class FileUtil {
 
   public static String toString(InputStream input) throws IOException {
     String result = "";
-    Scanner s = new Scanner(input, "UTF-8");
+    Scanner s = new Scanner(input, CHARENCODING);
     s.useDelimiter("\\A");
     result = s.hasNext() ? s.next() : "";
     s.close();

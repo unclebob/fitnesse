@@ -55,6 +55,8 @@ import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.commons.lang.StringUtils;
+import util.FileUtil;
+
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
@@ -414,7 +416,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
         resultDirectory.mkdirs();
       }
       File resultFile = new File(resultDirectory, resultPath.getName());
-      return new PrintWriter(resultFile, "UTF-8");
+      return new PrintWriter(resultFile, FileUtil.CHARENCODING);
     }
   }
 

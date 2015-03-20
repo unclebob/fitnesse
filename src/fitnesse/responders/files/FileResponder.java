@@ -16,6 +16,7 @@ import java.util.Date;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.util.Clock;
+import util.FileUtil;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
 import fitnesse.http.InputStreamResponse;
@@ -39,7 +40,7 @@ public class FileResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     String rootPath = context.getRootPagePath();
     try {
-      resource = URLDecoder.decode(request.getResource(), "UTF-8");
+      resource = URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       return new ErrorResponder(e).makeResponse(context, request);
     }
@@ -175,7 +176,7 @@ public class FileResponder implements SecureResponder {
       @Override
       public boolean shouldAuthenticate(FitNesseContext context, Request request) {
         try {
-          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), "UTF-8")).isDirectory();
+          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
         } catch (UnsupportedEncodingException e) {
           throw new RuntimeException("Invalid URL encoding", e);
         }

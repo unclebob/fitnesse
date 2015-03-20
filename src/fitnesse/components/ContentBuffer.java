@@ -35,7 +35,7 @@ public class ContentBuffer {
   }
 
   public ContentBuffer append(String value) throws IOException {
-    byte[] bytes = value.getBytes("UTF-8");
+    byte[] bytes = value.getBytes(FileUtil.CHARENCODING);
     return append(bytes);
   }
 

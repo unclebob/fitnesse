@@ -4,6 +4,8 @@ package fitnesse.util;
 
 import java.io.UnsupportedEncodingException;
 
+import util.FileUtil;
+
 public class Base64 {
   private static final byte[] base64Alphabet =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
@@ -19,7 +21,7 @@ public class Base64 {
   }}
 
   public static String decode(String value) throws UnsupportedEncodingException {
-    return new String(decode(value.getBytes("UTF-8")));
+    return new String(decode(value.getBytes(FileUtil.CHARENCODING)));
   }
 
   public static byte[] decode(byte[] bytes) {

@@ -9,8 +9,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 public class StreamReader {
-  public static final String CHARENCODING = "UTF-8";
-
   private InputStream input;
   private State state;
 
@@ -167,7 +165,7 @@ public class StreamReader {
   }
 
   private String bytesToString(byte[] bytes) throws UnsupportedEncodingException {
-    return new String(bytes, CHARENCODING);
+    return new String(bytes, FileUtil.CHARENCODING);
   }
 
   private void changeState(State state) {

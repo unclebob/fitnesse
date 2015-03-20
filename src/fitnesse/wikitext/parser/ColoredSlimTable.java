@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import fit.FixtureLoader;
 import fit.FixtureName;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import util.StreamReader;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
