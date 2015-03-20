@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import util.FileUtil;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -33,7 +34,7 @@ public class PageFactory {
 
   public String render(VelocityContext context, String templateName) {
     Writer writer = new StringWriter();
-    Template template = getVelocityEngine().getTemplate(templateName);
+    Template template = getVelocityEngine().getTemplate(templateName, FileUtil.CHARENCODING);
     template.merge(context, writer);
     return writer.toString();
   }
@@ -52,6 +53,9 @@ public class PageFactory {
 
   private VelocityEngine newVelocityEngine(FitNesseContext context, String theme) {
     Properties properties = new Properties();
+
+    properties.setProperty(VelocityEngine.INPUT_ENCODING, FileUtil.CHARENCODING);
+    properties.setProperty(VelocityEngine.OUTPUT_ENCODING, FileUtil.CHARENCODING);
 
     properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
 
