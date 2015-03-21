@@ -59,7 +59,7 @@ public class ConverterSupportTest {
 
     Object current = convertSingleValue(value, clazz);
 
-    assertNull(value, current);
+    assertEquals(value, current);
   }
 
   @Test
