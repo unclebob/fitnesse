@@ -21,13 +21,19 @@ public class ScriptTable extends SlimTable {
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
   }
-
+  /**
+   * Template method to provide the keyword that identifies the table type.
+   *
+   * @return table type
+   */
   protected String getTableType() {
     return "scriptTable";
   }
 
   /**
    * Template method to provide the keyword that identifies the table type.
+   *
+   * @return keyword for script table
    */
   protected String getTableKeyword() {
     return "script";
@@ -35,6 +41,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code start} action.
+   *
+   * @return keyword for {@code start} action
    */
   protected String getStartKeyword() {
     return "start";
@@ -42,6 +50,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code check} action.
+   *
+   * @return keyword for {@code check} action
    */
   protected String getCheckKeyword() {
     return "check";
@@ -49,6 +59,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code checkNot} action.
+   *
+   * @return keyword for {@code checkNot} action
    */
   protected String getCheckNotKeyword() {
     return "check not";
@@ -56,6 +68,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code reject} action.
+   *
+   * @return keyword for {@code reject} action
    */
   protected String getRejectKeyword() {
     return "reject";
@@ -63,6 +77,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code ensure} action.
+   *
+   * @return keyword for {@code ensure} action
    */
   protected String getEnsureKeyword() {
     return "ensure";
@@ -70,6 +86,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code show} action.
+   *
+   * @return keyword for {@code show} action
    */
   protected String getShowKeyword() {
     return "show";
@@ -77,6 +95,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code note} action.
+   *
+   * @return keyword for {@code note} action
    */
   protected String getNoteKeyword() {
     return "note";
@@ -378,7 +398,7 @@ public class ScriptTable extends SlimTable {
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       try {
         table.addColumnToRow(getRow(), actual);
-      } catch (Throwable e) {
+      } catch (Exception e) {
         return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();

@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 
+import util.FileUtil;
 import util.StreamReader;
 
 public class FitProtocol {
   public static final DecimalFormat format = new DecimalFormat("0000000000");
 
   public static void writeData(String data, OutputStream output) throws IOException {
-    byte[] bytes = data.getBytes("UTF-8");
+    byte[] bytes = data.getBytes(FileUtil.CHARENCODING);
     writeData(bytes, output);
   }
 

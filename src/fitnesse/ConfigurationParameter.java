@@ -81,9 +81,14 @@ public enum ConfigurationParameter {
     if (propertiesStream != null) {
       try {
         properties.load(propertiesStream);
-        propertiesStream.close();
       } catch (IOException e) {
         LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
+      } finally {
+        try {
+          propertiesStream.close();
+        } catch (IOException e) {
+          LOG.severe("Unable to close properties file.");
+        }
       }
     }
 

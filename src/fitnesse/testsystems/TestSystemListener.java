@@ -5,7 +5,7 @@ package fitnesse.testsystems;
 import java.io.IOException;
 
 public interface TestSystemListener<PageType extends TestPage> {
-  void testSystemStarted(TestSystem testSystem);
+  void testSystemStarted(TestSystem testSystem) throws IOException;
 
   void testOutputChunk(String output) throws IOException;
 

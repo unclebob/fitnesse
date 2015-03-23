@@ -8,47 +8,47 @@ public interface TestSystem {
 
   /**
    * Get the test system name identifier, as it was provided by the user.
-   * @return
+   * @return returns the test system name identifier
    */
   String getName();
 
   /**
    * Start the test system.
-   * @throws IOException
+   * @throws IOException throws IOException
    */
   void start() throws IOException;
 
   /**
    * Close the test system. This is typically performed from the test execution thread.
-   * @throws IOException
-   * @throws InterruptedException
+   * @throws IOException throws IOException
+   * @throws InterruptedException throws InterruptedException
    */
   void bye() throws IOException, InterruptedException;
 
   /**
    * Kill the test system. This is typically invoked asynchronously.
-   * @throws IOException
+   * @throws IOException throws IOException
    */
   void kill() throws IOException;
 
   /**
    * Run a collection of tests.
-   * @param pageToTest
-   * @throws IOException
-   * @throws InterruptedException
+   * @param pageToTest TestPage to run
+   * @throws IOException throws IOException
+   * @throws InterruptedException throws InterruptedException
    */
   void runTests(TestPage pageToTest) throws IOException, InterruptedException;
 
   /**
    * System is up and running.
-   * @return
+   * @return returns boolean
    */
   boolean isSuccessfullyStarted();
 
   /**
    * Add a listener for test system events. During test execution the listeners will be kept
    * informed about the status of the test execution.
-   * @param listener
+   * @param listener TestSystemListener
    */
   void addTestSystemListener(TestSystemListener listener);
 }

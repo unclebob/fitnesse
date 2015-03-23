@@ -15,7 +15,7 @@ public class SplitFixture {
     List<Object> table = new ArrayList<Object>();
     for (String lineContent : lines) {
       List<Object> line = new ArrayList<Object>();
-      String words[] = lineContent.split(",");
+      String[] words = lineContent.split(",");
       for (int i = 0; i < words.length; i++) {
         String word = words[i];
         line.add(Arrays.asList(Integer.toString(i+1), word));

@@ -29,11 +29,8 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
     return page;
   }
 
-  public void errorOccurred(Throwable cause) {
-  }
-
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
   }
 
   @Override
@@ -62,10 +59,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    if (cause != null) {
-      errorOccurred(cause);
-    }
   }
-
 }
 

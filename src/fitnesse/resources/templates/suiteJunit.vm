@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<testsuite name="#escape($suiteExecutionReport.rootPath)" tests="$suiteExecutionReport.pageHistoryReferences.size()" failures="$suiteExecutionReport.finalCounts.wrong" disabled="$suiteExecutionReport.finalCounts.ignores" errors="$suiteExecutionReport.finalCounts.exceptions" time="$suiteExecutionReport.totalRunTimeInMillis">
+  #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
+    #set($classname = $formatter.getClassName($reference))    
+    <testcase name="#escape($reference.pageName)" assertions="$reference.testSummary.right" time="$reference.RunTimeInMillis">
+	#if($reference.testSummary.exceptions > 0)
+	  <error message="$reference.testSummary.exceptions exceptions"/>
+	#end
+	#if($reference.testSummary.wrong > 0)
+	  <failure message="$reference.testSummary.wrong errors"/>
+	#end
+      <system-out>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</system-out>
+    </testcase>
+  #end
+</testsuite>

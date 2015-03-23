@@ -90,6 +90,11 @@ But for that you should look at SymbolsInTables and ValueComparisons
 
 When exceptions occur in a decision table, they're displayed in line.
 
+| should I buy milk |
+| cash in wallet | credit card | pints of milk remaining | go to store? |
+| 0 | yes | 1 | no |
+| 0 | yes | one | no |
+
 |decision table all done wrong|
 | foo     | bar     | baz?    |
 | -       |         | /       |

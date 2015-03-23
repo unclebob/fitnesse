@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import fit.FixtureLoader;
 import fit.FixtureName;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import util.StreamReader;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
@@ -65,31 +67,20 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                     }
                 }
 
-                // If table has valid class declaration then color table and choose coloring scheme.
-                List<String> potentialClasses = new FixtureName(tableName)
-                    .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
-                for(String potentialClass: potentialClasses){
-                    if(potentialClass.equals("fitnesse.testutil.CrashFixture")) continue;
-                    Object fixture;
-                    Class<?> fixtureClazz;
-                    try{
-                        if((fixtureClazz = Class.forName(potentialClass)) != null){
+                // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
+                if(!colorTable) {
+                    List<String> potentialClasses = new FixtureName(tableName)
+                        .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
+                    for(String potentialClass: potentialClasses){
+                        Class<?> fixtureClazz;
+                        try{
+                            fixtureClazz = Class.forName(potentialClass);
+                            if(fixtureClazz == null){ continue; }
                             colorTable = true;
-
-                            // Attempt to instantiate class to get inheritance.
-                            fixture = fixtureClazz.newInstance();
-                            if(fixture instanceof fit.Comment){ isCommentFixture = true; }
-                            if(fixture instanceof fit.ImportFixture){ isImportFixture = true; }
-                            if(fixture instanceof fit.ActionFixture){
-                                isSecondRowTitle = true;
-                                isFirstColumnTitle = true;
-                            }
-                            if(fixture instanceof fit.ColumnFixture){ isSecondRowTitle = true; }
-                        }
-                    }catch(ClassNotFoundException cnfe){ }
-                    catch(IllegalAccessException iae){ }
-                    catch(InstantiationException iae){ }
-                    catch(NoClassDefFoundError ncdfe){ }
+                            isSecondRowTitle = true;
+                        }catch(ClassNotFoundException cnfe){ }
+                        catch(NoClassDefFoundError ncdfe){ }
+                    }
                 }
             }
 

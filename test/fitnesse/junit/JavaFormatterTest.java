@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
 import fitnesse.util.TimeMeasurement;
@@ -16,9 +15,8 @@ public class JavaFormatterTest {
 
   private final String nestedPageName = "ParentTest.ChildTest";
   private final String suiteName="MySuite";
-  JavaFormatter jf;
-  JavaFormatter.ResultsRepository mockResultsRepository;
-  private VariableSource variableSource = null;
+  private JavaFormatter jf;
+  private JavaFormatter.ResultsRepository mockResultsRepository;
 
   @Before
   public void prepare(){

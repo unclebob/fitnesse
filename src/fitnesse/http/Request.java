@@ -4,6 +4,7 @@ package fitnesse.http;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.util.Base64;
+import util.FileUtil;
 import util.StreamReader;
 
 import java.io.*;
@@ -40,6 +41,11 @@ public class Request {
   protected String authorizationPassword;
   private volatile boolean hasBeenParsed;
   private long bytesParsed = 0;
+
+  /**
+   * If SSL is being used the DN of the peer certificate, otherwise null.
+   */
+  private String peerDn;
 
   public static Set<String> buildAllowedMethodList() {
     Set<String> methods = new HashSet<String>(20);
@@ -257,7 +263,7 @@ public class Request {
   }
 
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("--- Request Start ---\n");
     buffer.append("Request URI:  ").append(requestURI).append('\n');
     buffer.append("Resource:     ").append(resource).append('\n');
@@ -273,13 +279,17 @@ public class Request {
     return buffer.toString();
   }
 
-  private void addMap(Map<String, String> map, StringBuffer buffer) {
+  private void addMap(Map<String, String> map, StringBuilder buffer) {
     if (map.isEmpty()) {
       buffer.append("\tempty");
     }
     for (Entry<String, String> entry: map.entrySet()) {
-      String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
-      buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
+      String value = entry.getValue() == null ? null : escape(entry.getValue());
+      buffer.append("\t")
+              .append(escape(entry.getKey()))
+              .append(" \t-->\t ")
+              .append(value)
+              .append("\n");
     }
   }
 
@@ -289,7 +299,7 @@ public class Request {
 
   public static String decodeContent(String content) {
     try {
-      return URLDecoder.decode(content, "UTF-8");
+      return URLDecoder.decode(content, FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       return "URLDecoder Error";
     }
@@ -328,6 +338,14 @@ public class Request {
 
   public String getAuthorizationPassword() {
     return authorizationPassword;
+  }
+
+  public String getPeerDn() {
+    return peerDn;
+  }
+
+  public void setPeerDn(String peerDn) {
+    this.peerDn = peerDn;
   }
 
   public long numberOfBytesParsed() {

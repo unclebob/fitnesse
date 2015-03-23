@@ -7,6 +7,8 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static util.FileUtil.CHARENCODING;
+
 public class StackTraceEnricher {
   private Map<String, ClassMetaInformation> elementInformation;
 
@@ -23,7 +25,7 @@ public class StackTraceEnricher {
   }
 
   public void printStackTrace(Throwable throwable, OutputStream stream) throws IOException {
-    stream.write(getStackTraceAsString(throwable).getBytes());
+    stream.write(getStackTraceAsString(throwable).getBytes(CHARENCODING));
     stream.flush();
   }
 
@@ -215,7 +217,7 @@ public class StackTraceEnricher {
 
     private static String removeParentDirectories(String path, String separator) {
       String parsedPath = path;
-      if (path.indexOf(separator) > -1 && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
+      if (path.contains(separator) && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
           (separator))) {
         parsedPath = parsedPath.substring(parsedPath.indexOf(separator) + 1);
         parsedPath = removeParentDirectories(parsedPath, separator);

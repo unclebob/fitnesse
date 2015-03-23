@@ -7,15 +7,13 @@ import static fitnesse.wiki.WikiPagePath.Mode.BACKWARD_SEARCH;
 import static fitnesse.wiki.WikiPagePath.Mode.RELATIVE;
 import static fitnesse.wiki.WikiPagePath.Mode.SUB_PAGE;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class WikiPagePath implements Comparable<Object>, Serializable {
-  private static final long serialVersionUID = 1L;
+public class WikiPagePath implements Comparable<Object> {
 
   public enum Mode {
     ABSOLUTE, SUB_PAGE, BACKWARD_SEARCH, RELATIVE
@@ -28,8 +26,9 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
   }
 
   public WikiPagePath(String[] names) {
-    for (int i = 0; i < names.length; i++)
-      addNameToEnd(names[i]);
+    for (String name : names) {
+      addNameToEnd(name);
+    }
   }
 
   public WikiPagePath copy() {
@@ -57,7 +56,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
   }
 
   public String getFirst() {
-    return isEmpty() ? null : (String) names.get(0);
+    return isEmpty() ? null : names.get(0);
   }
 
   public WikiPagePath addNameToEnd(String name) {
@@ -87,6 +86,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
     return names;
   }
 
+  @Override
   public String toString() {
     String prefix = "";
     if (mode == ABSOLUTE)
@@ -118,6 +118,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
     mode = ABSOLUTE;
   }
 
+  @Override
   public int hashCode() {
     return StringUtils.join(names, "").hashCode();
   }
@@ -131,6 +132,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
       return this;
   }
 
+  @Override
   public int compareTo(Object o) {
     if (o instanceof WikiPagePath) {
       WikiPagePath p = (WikiPagePath) o;
@@ -141,6 +143,7 @@ public class WikiPagePath implements Comparable<Object>, Serializable {
     return 1; // we are greater because we are the right type.
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof WikiPagePath) {
       WikiPagePath that = (WikiPagePath) o;

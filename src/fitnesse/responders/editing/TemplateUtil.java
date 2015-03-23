@@ -29,7 +29,7 @@ public class TemplateUtil {
   }
 
   /**
-   * @param page
+   * @param page WikiPage
    * @return A set of pages that apply for template page snippets.
    */
   public static Map<String, String> getTemplateMap(WikiPage page){
@@ -37,7 +37,7 @@ public class TemplateUtil {
   }
 
   /**
-   * @param page
+   * @param page WikiPage
    * @return A map {name: path} of pages that apply for "New pages"
    */
   public static Map<String, String> getTemplatePageMap(WikiPage page){

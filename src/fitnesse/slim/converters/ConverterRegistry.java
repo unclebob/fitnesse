@@ -13,7 +13,7 @@ import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
-  private final static Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+  private static final Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
 
   static {
     addStandardConverters();
@@ -36,10 +36,16 @@ public class ConverterRegistry {
 
     addConverter(Boolean.class, new BooleanConverter());
     addConverter(boolean.class, new PrimitiveBooleanConverter());
+
+    try {
+      addConverter(Map.class, new MapConverter());
+    } catch (NoClassDefFoundError e) {
+      System.err.println("Slim  Map converter not loaded: could not find class " + e.getMessage());
+    }
   }
 
   public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
-    Converter<T> converter = (Converter<T>) getConverterForClass(clazz, null);
+    Converter<T> converter = getConverterForClass(clazz, null);
     return converter;
   }
 

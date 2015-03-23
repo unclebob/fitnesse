@@ -4,10 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeUtil {
-  private final static String dateFormatString = "MM/dd/yyyy HH:mm:ss";
+  private static final String DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
 
   public static long getTimeFromString(String time) {
-    SimpleDateFormat format = new SimpleDateFormat(dateFormatString);
+    SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     try {
       Date date = format.parse(time);
       return date.getTime();
@@ -17,7 +17,7 @@ public class DateTimeUtil {
   }
 
   public static Date getDateFromString(String dateString) {
-    SimpleDateFormat format = new SimpleDateFormat(dateFormatString);
+    SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     try {
       Date date = format.parse(dateString);
       return date;
@@ -27,7 +27,7 @@ public class DateTimeUtil {
   }
 
   public static String formatDate(Date date) {
-    SimpleDateFormat format = new SimpleDateFormat(dateFormatString);
+    SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     return format.format(date);
   }
 

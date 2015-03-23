@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -39,7 +39,7 @@ import fitnesse.testutil.FitNesseUtil;
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
@@ -53,8 +53,9 @@ public class PageHistoryResponderTest {
     resultsDirectory.mkdir();
     history = new TestHistory();
     responder = new PageHistoryResponder();
-    responder.setResultsDirectory(resultsDirectory);
-    context = FitNesseUtil.makeTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    context = FitNesseUtil.makeTestContext(properties);
   }
 
   @After
@@ -451,21 +452,6 @@ public class PageHistoryResponderTest {
 
   private void addBadDummyTestResult(File resultFile) throws Exception {
     FileUtil.createFile(resultFile, "JUNK");
-  }
-
-
-  private TestExecutionReport makeBadDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
-    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.addResult(result);
-    result.right = "xx";
-    result.wrong = "22";
-    result.ignores = "33";
-    result.exceptions = "44";
-    result.relativePageName = "relativePageName";
-    result.content = "wad of HTML content";
-    return testResponse;
   }
 
 }

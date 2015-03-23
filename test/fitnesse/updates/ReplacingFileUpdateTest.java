@@ -30,7 +30,7 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
   }
 
   protected Update makeUpdate() throws Exception {
-    return new ReplacingFileUpdate("testFile", context.getRootPagePath() + "/" + destDirName);
+    return new ReplacingFileUpdate("testFile", new File(context.getRootPagePath(), destDirName));
   }
 
   @Test

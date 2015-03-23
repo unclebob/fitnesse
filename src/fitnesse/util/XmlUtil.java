@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import util.FileUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -55,7 +56,7 @@ public class XmlUtil {
 
   public static Document newDocument(File input) throws IOException, SAXException {
     try {
-      return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), "UTF-8")));
+      return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), FileUtil.CHARENCODING)));
     } catch (SAXParseException e) {
       throw new SAXException(String.format("SAXParseException at %s:%d,%d: %s", input.getCanonicalPath(), e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
     }
@@ -124,7 +125,7 @@ public class XmlUtil {
     StringWriter sw = new StringWriter();
     try {
       Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.setOutputProperty(OutputKeys.ENCODING, FileUtil.CHARENCODING);
       transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 

@@ -21,11 +21,11 @@ public class FileRunner {
   public Fixture fixture = new Fixture();
   public PrintWriter output;
 
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     new FileRunner().run(argv);
   }
 
-  public void run(String argv[]) {
+  public void run(String[] argv) {
     args(argv);
     process();
     exit();
@@ -61,10 +61,13 @@ public class FileRunner {
   }
 
   protected String read(File input) throws IOException {
-    char chars[] = new char[(int) (input.length())];
+    char[] chars = new char[(int) (input.length())];
     FileReader in = new FileReader(input);
-    in.read(chars);
-    in.close();
+    try {
+      in.read(chars);
+    } finally {
+      in.close();
+    }
     return new String(chars);
   }
 

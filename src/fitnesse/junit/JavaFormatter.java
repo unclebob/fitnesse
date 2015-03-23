@@ -15,11 +15,12 @@ import java.util.Map;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
+import util.FileUtil;
 
 /**
  * Used to run tests from a JUnit test suite.
  *
- * @see {@link fitnesse.junit.FitNesseSuite}
+ * @see fitnesse.junit.FitNesseSuite
  */
 public class JavaFormatter extends BaseFormatter implements Closeable {
 
@@ -37,16 +38,21 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   public static class FileCopier {
     public static void copy(String src, File dst) throws IOException {
-      InputStream in = FileCopier.class.getResourceAsStream(src);
-      OutputStream out = new FileOutputStream(dst);
-      // Transfer bytes from in to out
-      byte[] buf = new byte[1024];
-      int len;
-      while ((len = in.read(buf)) > 0) {
-        out.write(buf, 0, len);
+      InputStream in = null;
+      OutputStream out = null;
+      try {
+        in = FileCopier.class.getResourceAsStream(src);
+        out = new FileOutputStream(dst);
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+          out.write(buf, 0, len);
+        }
+      } finally {
+        if (in != null) in.close();
+        if (out != null) out.close();
       }
-      in.close();
-      out.close();
     }
   }
 
@@ -55,7 +61,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     public TestResultPage(String outputPath, String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
-      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), FileUtil.CHARENCODING);
       writeHeaderFor(testName);
     }
 
@@ -67,7 +73,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       currentWriter.write("<html><head><title>");
       currentWriter.write(testName);
       currentWriter
-        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=" + FileUtil.CHARENCODING + "'/>"
           + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
           + "<link rel='stylesheet' type='text/css' href='css/codemirror.css'/>"
           + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"

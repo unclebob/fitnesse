@@ -17,7 +17,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.util.Clock;
 
 public class ExternalSuitePage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
   public static final String HTML = ".html";
 
   private File path;

@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {slim}
 !2 Wiki pages should display page tags within the header.
 
 !3 Page with tags specified - should include tags in header.
@@ -12,9 +13,9 @@
 |!-PageWithTags-!|true|
 
  * Examine the requested page to be sure the tags are displayed.
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|<h5> Tags For The Page</h5>|true|
+!|Response Examiner.                                         |
+|type    |pattern                                   |matches?|
+|contents|<span class="tag">Tags For The Page</span>|true    |
 
 
 !3 Page with no tags specified - should not include blank H5 html element in header.
@@ -41,13 +42,13 @@
 |!-PageWithTags-!?refactor&type=move|true|
 
  * Examine the requested page to be sure the tags are displayed.
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|<h5> Tags For The Page</h5>|true|
+!|Response Examiner.                                         |
+|type    |pattern                                   |matches?|
+|contents|<span class="tag">Tags For The Page</span>|true    |
 
 
 !3 Test results page with tags specified - should include tags in header.
-!define TEST_SYSTEM {slim}
+
  * Create a simple test page
 |script|Page Builder|
 |attributes|Suites=Tags On Test Page|
@@ -70,9 +71,9 @@
  * Request the page.
 |Response Requester.|
 |uri   |valid?|
-|!-ErrorLogs.TestPage-!|true|
+|!-TestPage?executionLog-!|true|
 
  * Examine the requested page to be sure the tags are displayed.
-|Response Examiner.|
-|type  |pattern|matches?|
-|contents|<h5> Tags On Test Page</h5>|true|
+|Response Examiner.                                          |
+|type    |pattern                                   |matches?|
+|contents|<span class="tag">Tags On Test Page</span>|true    |

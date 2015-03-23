@@ -62,13 +62,13 @@ public class WikiPageResponderTest {
     assertSubString("child content", body);
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
-    assertSubString("<h5> Wiki Page tags</h5>", body);
+    assertSubString("<span class=\"tag\">Wiki Page tags</span>", body);
   }
 
   @Test
   public void testResponseWithNonWikiWordChildPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
-    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+    WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
 
     final MockRequest request = new MockRequest();
     request.setResource("page.child_page");

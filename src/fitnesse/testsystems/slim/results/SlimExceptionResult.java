@@ -56,6 +56,7 @@ public class SlimExceptionResult implements ExceptionResult {
   public boolean isStopTestException() {
     return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG);
   }
+
   public boolean isStopSuiteException() {
     return exceptionValue.contains(EXCEPTION_STOP_SUITE_TAG);
   }
@@ -74,7 +75,7 @@ public class SlimExceptionResult implements ExceptionResult {
   }
 
   private String translateExceptionMessage(String exceptionMessage) {
-    String tokens[] = exceptionMessage.split(" ");
+    String[] tokens = exceptionMessage.split(" ");
     if (tokens[0].equals(COULD_NOT_INVOKE_CONSTRUCTOR))
       return "Could not invoke constructor for " + tokens[1];
     else if (tokens[0].equals(NO_METHOD_IN_CLASS))
@@ -89,7 +90,8 @@ public class SlimExceptionResult implements ExceptionResult {
       return String.format("Could not find class %s", tokens[1]);
     else if (tokens[0].equals(MALFORMED_INSTRUCTION))
       return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
-
+    else if (tokens[0].equals(TIMED_OUT))
+      return String.format("The instruction timed out after %s seconds", tokens[1]);
     return exceptionMessage;
   }
 }

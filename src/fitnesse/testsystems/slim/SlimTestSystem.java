@@ -61,7 +61,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public boolean isSuccessfullyStarted() {
-    return true;
+    return !testSystemIsStopped;
   }
 
   @Override
@@ -84,12 +84,13 @@ public abstract class SlimTestSystem implements TestSystem {
   public void bye() throws IOException {
     try {
       slimClient.bye();
-      testSystemStopped(null);
     } catch (IOException e) {
       exceptionOccurred(e);
       throw e;
     } catch (Exception e) {
       exceptionOccurred(e);
+    } finally {
+      testSystemStopped(null);
     }
   }
 
@@ -178,7 +179,7 @@ public abstract class SlimTestSystem implements TestSystem {
             }
           }
         }
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         exceptionOccurred(ex);
       }
     }
@@ -204,8 +205,8 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void exceptionOccurred(Throwable e) {
     try {
       slimClient.kill();
-    } catch (IOException e1) {
-      LOG.log(Level.WARNING, "Failed to kill SLiM client", e);
+    } catch (IOException killException) {
+      LOG.log(Level.WARNING, "Failed to kill SLiM client", killException);
     }
     testSystemStopped(e);
   }

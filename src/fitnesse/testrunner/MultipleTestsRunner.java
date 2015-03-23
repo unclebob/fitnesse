@@ -89,8 +89,6 @@ public class MultipleTestsRunner implements Stoppable {
         executeTestSystemPages(testSystemPages, testSystem);
         waitForTestSystemToSendResults();
       }
-    } catch (Exception e) {
-      formatters.testSystemStopped(testSystem, e);
     } finally {
       if (!isStopped && testSystem != null) {
         try {
@@ -122,7 +120,7 @@ public class MultipleTestsRunner implements Stoppable {
       @Override
       public ClassPath getClassPath() {
         if (classPath == null) {
-          ArrayList<ClassPath> paths = new ArrayList<ClassPath>();
+          List<ClassPath> paths = new ArrayList<ClassPath>();
           for (TestPage testPage: testPages) {
             paths.add(testPage.getClassPath());
           }
@@ -188,7 +186,7 @@ public class MultipleTestsRunner implements Stoppable {
 
   private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
     @Override
-    public void testSystemStarted(TestSystem testSystem) {
+    public void testSystemStarted(TestSystem testSystem) throws IOException {
       formatters.testSystemStarted(testSystem);
     }
 

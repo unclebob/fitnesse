@@ -4,7 +4,6 @@ package fitnesse.responders.refactoring;
 
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
 import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
@@ -12,7 +11,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 
-public class MovePageResponder extends PageMovementResponder implements SecureResponder {
+public class MovePageResponder extends PageMovementResponder {
 
   private String newParentName;
 

@@ -16,7 +16,7 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -140,8 +140,8 @@ public class FitNesseMainTest {
     return response;
   }
 
-  private Answer fitNesseContextWith(final FitNesse fitNesse) {
-    return new Answer() {
+  private Answer<FitNesseContext> fitNesseContextWith(final FitNesse fitNesse) {
+    return new Answer<FitNesseContext>() {
       @Override
       public FitNesseContext answer(InvocationOnMock invocation) throws Throwable {
         FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();

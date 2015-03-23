@@ -13,7 +13,7 @@
  * [[Writing Acceptance Tests][>WritingAcceptanceTests]] (jump directly to [[Fit][>WritingAcceptanceTests.FitFramework]] or [[Slim][>WritingAcceptanceTests.SliM]])
  * [[Administering FitNesse][>AdministeringFitNesse]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
- * [[Full Reference Guide][FullReferenceGuide]] (takes some time to load)
+ * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
 
 !2 Introduction
 
@@ -47,7 +47,7 @@ The goal is for !-FitNesse-! to operate at a level just ''below'' the user inter
 Before you start editing content, you might be interested in some background on why !-FitNesse-! has been built
 
 | [[Project Death by Requirements][>ProjectDeathByRequirements]] | ''Why use automated acceptance tests? What goes wrong when we don't use them?'' |
-| [[Acceptance Tests][>WritingAcceptanceTests]] | ''What are the advantages of ''!-FitNesse-!'' automated acceptance tests?'' |
+| [[Acceptance Tests][>AcceptanceTests]] | ''What are the advantages of ''!-FitNesse-!'' automated acceptance tests?'' |
 | [[Delivering the Right System][>DeliveringTheRightSystem]] | How Teams Can Use FitNesse: an Introduction |
 
 Convinced? [[Download and install][http://fitnesse.org/FitNesseDownload]] on your machine, if you haven't done so already.

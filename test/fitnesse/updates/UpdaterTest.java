@@ -22,7 +22,7 @@ public class UpdaterTest extends UpdateTestCase {
   public void testProperties() throws Exception {
     File file = new File(testDir, "properties");
     assertFalse(file.exists());
-    updater.updates = new Update[]{};
+    updater.setUpdates(new Update[]{});
     updater.update();
     assertTrue(file.exists());
   }

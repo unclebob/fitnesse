@@ -51,18 +51,18 @@
 | names | | Displays a list of the pages at the current level.  If no page name is supplied, then the list is all the pages at the top level.  Otherwise it is the list of direct children (not grandchildren) of the supplied page. |
 | | format=json | returns the list as a JSON array |
 | | Recursive | prints also child, grand-child, ... pages |
-| | LeafOnly | in combination with the "Recursive" option prints only leaf pages that don't have further children |
-| | ShowTags | prints the tags associated with a page in []-brackets, e.g., [hello][world] |
+| | !-LeafOnly-! | in combination with the "Recursive" option prints only leaf pages that don't have further children |
+| | !-ShowTags-! | prints the tags associated with a page in []-brackets, e.g., [hello][world] |
 | | !-ShowChildCount-! | adds the count of children to each page name after a space. |
 | new | | Like ''edit'', but used for new pages. |
 | | pageTemplate | Define a page to use as a template for the to be created page  |
 | | pageType | If present must be {Test, Suite, Static} and sets the page type accordingly.  Otherwise page type is set based on the name of the page as usual. This option does nothing if the ''pageTemplate'' option is set. |
-| packet | | Returns a json packet containing all the tables on the page.  See: RestfulPackets |
-| | jsonp=function | Wraps the json packet into a function call for JSONP, see: RestfulPackets |
+| packet | | Returns a json packet containing all the tables on the page.  See: [[!-RestfulPackets-!][<UserGuide.AdministeringFitNesse.RestfulServices.RestfulPackets]] |
+| | jsonp=function | Wraps the json packet into a function call for JSONP, see: [[!-RestfulPackets-!][<UserGuide.AdministeringFitNesse.RestfulServices.RestfulPackets]] |
 | pageData | | Returns the raw wiki-text of the page. |
 | pageHistory | | Displays the test history of the specified page. |
 | | resultDate | if present the date (yyyyMMddHHmmss) of the test to show, or the word "latest".  Otherwise show a list of all dates for this page. | |
-| | format=xml | Returns an XML report.  See: >PageHistoryXml and RestfulTests |
+| | format=xml | Returns an XML report.  See: >PageHistoryXml and [[!-RestfulTests-!][<UserGuide.WritingAcceptanceTests.RestfulTests]] |
 | properties | | Displays the properties form for the selected page. |
 | | format=json | shows the properties in JSON format   See >JsonProperties |
 | purgeHistory | | Purges old test history files |
@@ -76,7 +76,7 @@
 | | newName | The new name for the page.  Must be a simple wiki word without any dots.  You can't use this responder to move a page! |
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
-| rss | | Returns an rss feed for the current page and all it's children.  See <UserGuide.RssFeed |
+| rss | | Returns an rss feed for the current page and all it's children.  See [[!-RssFeed-!][<UserGuide.AdministeringFitNesse.RestfulServices.RssFeed]] |
 | saveData | | Saves the data for a wiki page.  Usually called by the ''edit'' responder.  Usually invoked as a POST.  If the ''ticketId'' and ''saveTime'' suggest that a merge is needed, this responder will return the merge form without doing a save. |
 | | pageContent | The content to be saved into the page. |
 | | editTime | The time (in milliseconds) that the page was fetched for this edit.  Used to determine whether or not a merge is needed.  (Optional) |
@@ -96,13 +96,14 @@
 | | id | If present, is the process id of the test to stop.  Otherwise stops ''all'' running tests. |
 | suite | | Runs a suite of tests.  The tests run are all those below the wiki page that are marked as tests.  Returns a suite report. |
 | | format=xml | See >RestfulSuiteXmlFormat |
+| | format=junit | Produces simple jUnit XML format|
 | | debug | See test |
 | | remote_debug | See test | |
 | | suiteFilter | A comma separated list of tags.  If present only tests that one or more of these tags will be run. |
 | | excludeSuiteFilter | a comma separated list of tags.  If present only test that DO NOT have any of these tags will be run. |
 | | firstTest | if present, only tests whose full path names are lexigraphically greater (later in alphabetical order) will be run.  This is of questionable use since tests are not guaranteed to be run in any particular order. |
 | | nohistory | Do not generate test history files when running the suite.  Don't use this with format=xml since xml reports depend upon history. |
-| | includehtml | If format=xml then this will cause the XML to contain a 'content' tag that holds the HTML of the tested page.  Beware, this can lead to OutOfMemory errors for large suites. |
+| | includehtml | If format=xml then this will cause the XML to contain a 'content' tag that holds the HTML of the tested page.  Beware, this can lead to !-OutOfMemory-! errors for large suites. |
 | | ''key''=''value'' | If present creates a markup variable with ''key'' as name & ''value'' as value.  ''key'' and ''value'' can be any string values.  Multiple pairs can be specified.| 
 | symlink | | Creates a symbolic link between pages in the same !-FitNesse-! |
 | | removal | If present is the name of a symbolic link to be removed. |
@@ -111,9 +112,9 @@
 | | linkName | If present is the name of a new symbolic link to be added to the page named by the ''resource''. |
 | | linkPath | The path that the link refers to. |
 | test | | runs a test on the specified page, returns result in html |
-| | format=xml | Returns results in XML.  See RestfulTests |
+| | format=xml | Returns results in XML.  See [[!-RestfulTests-!][<UserGuide.WritingAcceptanceTests.RestfulTests]] |
 | | debug | (Only works for Java fixtures.) Attempts to run the test in the same JVM that !-FitNesse-! is running in.  Allows you to attach a debugger to your fixtures before you run the test. | |
-| | remote_debug | Causes the REMOTE_DEBUG_COMMAND and REMOTE_DEBUG_RUNNER variables to be used in place of COMMAND_PATTERN and TEST_RUNNER when creating the command to execute the test.  See CustomizingTestExecution for defaults |
+| | remote_debug | Causes the REMOTE_DEBUG_COMMAND and REMOTE_DEBUG_RUNNER variables to be used in place of COMMAND_PATTERN and TEST_RUNNER when creating the command to execute the test.  See [[!-CustomizingTestExecution-!][<UserGuide.WritingAcceptanceTests.CustomizingTestExecution]] for defaults |
 | | ''key''=''value'' | If present creates a markup variable with ''key'' as name & ''value'' as value.  ''key'' and ''value'' can be any string values.  Multiple pairs can be specified.  | 
 | testHistory | | Displays the current test history below the selected page, or all history if no page is selected. |
 | | format=xml | Returns an XML report of test history. See >TestHistoryXml |

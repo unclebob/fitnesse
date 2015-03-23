@@ -5,10 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.ExecutionResult;
 
 public class PageHistory extends PageHistoryReader{
+  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+
   private int failures = 0;
   private int passes = 0;
   private Date minDate = null;
@@ -16,8 +17,8 @@ public class PageHistory extends PageHistoryReader{
   private int maxAssertions = 0;
   private BarGraph barGraph;
   private String fullPageName;
-  private final HashMap<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
-  private HashMap<Date, File> pageFiles = new HashMap<Date,File>();
+  private final Map<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
+  private Map<Date, File> pageFiles = new HashMap<Date,File>();
 
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();
@@ -62,8 +63,6 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void addTestResult(TestResultRecord record, Date date) {
-    Date keyDate = trimMilliseconds(date);
-
     testResultMap.put(date, record);
   }
 
@@ -177,7 +176,7 @@ public class PageHistory extends PageHistoryReader{
     private ExecutionResult result;
 
     public PassFailReport(Date date, ExecutionResult result) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat dateFormat = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
       this.date = dateFormat.format(date);
       this.result = result;
     }

@@ -3,6 +3,7 @@ package fitnesse.responders.testHistory;
 import java.io.File;
 
 import fitnesse.reporting.history.TestHistory;
+import fitnesse.wiki.PathParser;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;
@@ -37,7 +38,7 @@ public class TestHistoryResponder implements SecureResponder {
   private Response makeTestHistoryResponse(TestHistory testHistory, Request request, String pageName) {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Test History");
-    page.setPageTitle(new PageTitle(makePageTitle(pageName)));
+    page.setPageTitle(new PageTitle(PathParser.parse(pageName)));
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
@@ -55,15 +56,10 @@ public class TestHistoryResponder implements SecureResponder {
     response.setContent(context.pageFactory.render(velocityContext, "testHistoryXML.vm"));
     return response;
   }
-  
-  private String makePageTitle(String pageName) {
-    return "".equals(pageName) ?
-      "Test History" :
-      "Test History for " + pageName;
-  }
 
   private boolean formatIsXML(Request request) {
-    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
+    String format = request.getInput("format");
+    return "xml".equalsIgnoreCase(format);
   }
 
   public SecureOperation getSecureOperation() {

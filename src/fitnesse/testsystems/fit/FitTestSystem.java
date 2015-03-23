@@ -3,6 +3,7 @@
 package fitnesse.testsystems.fit;
 
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
@@ -17,8 +18,9 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
   private final CommandRunningFitClient client;
-  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private Deque<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
+  private boolean testSystemIsStopped;
 
   public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient) {
     this.testSystemListener = new CompositeTestSystemListener();
@@ -59,9 +61,12 @@ public class FitTestSystem implements TestSystem, FitClientListener {
 
   @Override
   public void bye() throws IOException, InterruptedException {
-    client.done();
-    client.join();
-    testSystemStopped(null);
+    try {
+      client.done();
+      client.join();
+    } finally {
+      testSystemStopped(null);
+    }
   }
 
   @Override
@@ -99,11 +104,13 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem) {
+  private void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemListener.testSystemStarted(testSystem);
   }
 
   private void testSystemStopped(Throwable throwable) {
+    if (testSystemIsStopped) return;
+    testSystemIsStopped = true;
     testSystemListener.testSystemStopped(this, throwable);
   }
 

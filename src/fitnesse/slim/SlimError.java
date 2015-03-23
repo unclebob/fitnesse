@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-public class SlimError extends Error {
+public class SlimError extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
   public SlimError(String s) {

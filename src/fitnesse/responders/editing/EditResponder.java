@@ -99,7 +99,7 @@ public class EditResponder implements SecureResponder {
       int questionMarkIndex = redirectUrl.indexOf("?");
       if (questionMarkIndex > 0)
         redirectUrl = redirectUrl.substring(0, questionMarkIndex);
-      redirectUrl += "?" + request.getInput("redirectAction").toString();
+      redirectUrl += "?" + request.getInput("redirectAction");
       html.put("redirect", redirectUrl);
     }
 

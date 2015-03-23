@@ -16,6 +16,10 @@ public class VariableStore {
     variables.put(name, value);
   }
 
+  public MethodExecutionResult getSymbol(String name) {
+	return variables.get(name);
+  }
+  
   public Object getStored(String nameWithDollar) {
     if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
       return null;
@@ -33,7 +37,7 @@ public class VariableStore {
   }
 
   public Object[] replaceSymbols(Object[] args) {
-    Object result[] = new Object[args.length];
+    Object[] result = new Object[args.length];
     for (int i = 0; i < args.length; i++)
       result[i] = replaceSymbol(args[i]);
 

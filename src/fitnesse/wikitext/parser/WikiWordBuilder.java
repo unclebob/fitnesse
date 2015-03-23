@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +21,6 @@ public class WikiWordBuilder {
     }
 
     public static String expandPrefix(WikiPage wikiPage, String theWord) {
-      PageCrawler crawler = wikiPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = wikiPage.getName();
         return String.format("%s.%s", prefix, theWord.substring(1));

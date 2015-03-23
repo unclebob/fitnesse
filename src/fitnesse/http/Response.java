@@ -11,12 +11,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
+import util.FileUtil;
+
 public abstract class Response {
   public enum Format {
     XML("text/xml"),
-    HTML("text/html; charset=utf-8"),
+    HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
-    JSON("text/json");
+    JSON("text/json"),
+    JUNIT("text/junit");
     
     private final String contentType;
     
@@ -52,6 +55,8 @@ public abstract class Response {
       format = Format.HTML;
     } else if ("xml".equalsIgnoreCase(formatString)) {
       format = Format.XML;
+    } else if ("junit".equalsIgnoreCase(formatString)) {
+      format = Format.JUNIT;
     } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
     } else {
@@ -77,6 +82,10 @@ public abstract class Response {
     return Format.TEXT.contentType.equals(contentType);
   }
   
+  public boolean isJunitFormat() {
+	    return Format.JUNIT.contentType.equals(contentType);
+  }
+	  
   public boolean hasContent() {
     return contentType != null;
   }
@@ -162,7 +171,7 @@ public abstract class Response {
   public byte[] getEncodedBytes(String value) {
     // TODO: -AJM- Defer encoding to the latest responsible moment
     try {
-      return value.getBytes("UTF-8");
+      return value.getBytes(FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("Unable to encode data", e);
     }

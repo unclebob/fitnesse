@@ -5,7 +5,7 @@ package fitnesse.testutil;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
@@ -39,6 +39,11 @@ public class FitNesseUtil {
   public static FitNesseContext makeTestContext() {
     Properties properties = new Properties();
     properties.setProperty("FITNESSE_PORT", String.valueOf(PORT));
+    return makeTestContext(InMemoryPage.newInstance(), properties);
+  }
+
+
+  public static FitNesseContext makeTestContext(Properties properties) {
     return makeTestContext(InMemoryPage.newInstance(), properties);
   }
 

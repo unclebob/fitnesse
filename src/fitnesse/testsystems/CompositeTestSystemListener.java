@@ -17,7 +17,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
     for (TestSystemListener listener : listeners)
       listener.testSystemStarted(testSystem);
   }

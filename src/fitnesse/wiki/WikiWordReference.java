@@ -22,7 +22,6 @@ public class WikiWordReference {
     }
     
     private String expandPrefix(String theWord) {
-      PageCrawler crawler = currentPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = currentPage.getName();
         return String.format("%s.%s", prefix, theWord.substring(1));
@@ -45,10 +44,10 @@ public class WikiWordReference {
     public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
       WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
-      String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
+      String qualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
-      if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
-        String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
+      if (refersTo(reference, qualifiedNameOfPageToBeMoved)) {
+        String referenceTail = reference.substring(qualifiedNameOfPageToBeMoved.length());
         String childPortionOfReference = pageToBeMoved.getName();
         if (!referenceTail.isEmpty())
           childPortionOfReference += referenceTail;

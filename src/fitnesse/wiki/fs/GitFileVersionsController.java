@@ -15,6 +15,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import util.StreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -115,7 +116,6 @@ public class GitFileVersionsController implements VersionsController, RecentChan
   private Collection<GitVersionInfo> history(File file, LogCommandSpec logCommandSpec) throws GitAPIException{
     Repository repository = getRepository(file);
     Git git = new Git(repository);
-    String fileSystemPath = getPath(file, repository);
 
     Iterable<RevCommit> log = logCommandSpec.specify(git.log(), repository).call();
     List<GitVersionInfo> versions = new ArrayList<GitVersionInfo>(historyDepth);

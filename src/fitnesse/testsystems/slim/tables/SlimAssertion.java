@@ -40,8 +40,9 @@ public class SlimAssertion implements Assertion {
 
   /**
    * Get Instructions from the assertions; NOOP's are filtered out.
-   * @param assertions
-   * @return
+   *
+   * @param assertions List of SlimAssertions to filter
+   * @return all instructions from the input without NOOP's
    */
   public static List<Instruction> getInstructions(List<SlimAssertion> assertions) {
     List<Instruction> instructions = new ArrayList<Instruction>(assertions.size());

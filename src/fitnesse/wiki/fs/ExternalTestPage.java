@@ -16,7 +16,6 @@ import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.util.Clock;
 
 public class ExternalTestPage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
   private FileSystem fileSystem;
   private File path;
 

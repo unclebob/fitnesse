@@ -12,39 +12,42 @@ import java.util.List;
 
 public class UpdaterImplementation extends UpdaterBase {
 
-  private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
-  private ArrayList<String> updateList = new ArrayList<String>();
+  private List<String> updateDoNotCopyOver = new ArrayList<String>();
+  private List<String> updateList = new ArrayList<String>();
   private String fitNesseVersion;
 
   public UpdaterImplementation(FitNesseContext context) throws IOException {
     super(context);
-    createUpdateAndDoNotCopyOverLists();
-    updates = makeAllUpdates();
     fitNesseVersion = context.version.toString();
+    createUpdateAndDoNotCopyOverLists();
+    setUpdates(makeAllUpdates());
   }
 
   private Update[] makeAllUpdates() {
     List<Update> updates = new ArrayList<Update>();
-    addAllFilesToBeReplaced(updates);
-    addAllFilesThatShouldNotBeCopiedOver(updates);
+    updates.addAll(addAllFilesToBeReplaced());
+    updates.addAll(addAllFilesThatShouldNotBeCopiedOver());
     return updates.toArray(new Update[updates.size()]);
-
   }
 
-  private void addAllFilesThatShouldNotBeCopiedOver(List<Update> updates) {
+  private List<Update> addAllFilesThatShouldNotBeCopiedOver() {
+    List<Update> updates = new ArrayList<Update>();
     for (String nonCopyableFile : updateDoNotCopyOver) {
-      String path = getCorrectPathForTheDestination(nonCopyableFile);
+      File path = getCorrectPathForTheDestination(nonCopyableFile);
       String source = getCorrectPathFromJar(nonCopyableFile);
       updates.add(new FileUpdate(source, path));
     }
+    return updates;
   }
 
-  private void addAllFilesToBeReplaced(List<Update> updates) {
+  private List<Update> addAllFilesToBeReplaced() {
+    List<Update> updates = new ArrayList<Update>();
     for (String updateableFile : updateList) {
-      String path = getCorrectPathForTheDestination(updateableFile);
+      File path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);
       updates.add(new ReplacingFileUpdate(source, path));
     }
+    return updates;
   }
 
   public String getCorrectPathFromJar(String updateableFile) {
@@ -52,10 +55,10 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
 
-  public String getCorrectPathForTheDestination(String updateableFile) {
+  public File getCorrectPathForTheDestination(String updateableFile) {
     if (updateableFile.startsWith("FitNesseRoot"))
       updateableFile = updateableFile.replace("FitNesseRoot", context.getRootPagePath());
-    return FileUtil.getPathOfFile(updateableFile);
+    return new File(updateableFile).getParentFile();
   }
 
   private void createUpdateAndDoNotCopyOverLists() throws IOException {
@@ -67,13 +70,13 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   public void getUpdateFilesFromJarFile() throws IOException {
-    Update update = new FileUpdate("Resources/updateList", context.getRootPagePath());
+    Update update = new FileUpdate("Resources/updateList", new File(context.getRootPagePath()));
     update.doUpdate();
-    update = new FileUpdate("Resources/updateDoNotCopyOverList", context.getRootPagePath());
+    update = new FileUpdate("Resources/updateDoNotCopyOverList", new File(context.getRootPagePath()));
     update.doUpdate();
   }
 
-  public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
+  public void tryToParseTheFileIntoTheList(File updateFileList, List<String> list) {
     if (!updateFileList.exists())
       throw new RuntimeException("Could Not Find UpdateList");
 
@@ -85,7 +88,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  private void parseTheFileContentToAList(File updateFileList, ArrayList<String> list) throws IOException {
+  private void parseTheFileContentToAList(File updateFileList, List<String> list) throws IOException {
     String content = FileUtil.getFileContent(updateFileList);
     String[] filePaths = content.split("\n");
     for (String path : filePaths)
@@ -93,6 +96,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
+  @Override
   public boolean update() throws IOException {
     if (shouldUpdate()) {
       LOG.info("Unpacking new version of FitNesse resources. Please be patient...");

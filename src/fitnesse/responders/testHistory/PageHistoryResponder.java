@@ -9,7 +9,6 @@ import java.util.Date;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.reporting.history.TestResultRecord;
-import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
@@ -35,13 +34,11 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
-  private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
   private PageHistory pageHistory;
   private HtmlPage page;
   private FitNesseContext context;
-  private PageTitle pageTitle;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
@@ -50,7 +47,7 @@ public class PageHistoryResponder implements SecureResponder {
     if (request.hasInput("resultDate")) {
       return tryToMakeTestExecutionReport(request);
     } else if (formatIsXML(request)) {
-      return makePageHistoryXmlResponse(request);
+      return makePageHistoryXmlResponse();
     } else {
       return makePageHistoryResponse(request);
     }
@@ -65,7 +62,7 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
   
-  private Response makePageHistoryXmlResponse(Request request) {
+  private Response makePageHistoryXmlResponse() {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
 
@@ -75,12 +72,13 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   private boolean formatIsXML(Request request) {
-    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
+    String format = request.getInput("format");
+    return "xml".equalsIgnoreCase(format);
   }
 
   private Response tryToMakeTestExecutionReport(Request request) {
     Date resultDate;
-    String date = (String) request.getInput("resultDate");
+    String date = request.getInput("resultDate");
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
@@ -113,7 +111,6 @@ public class PageHistoryResponder implements SecureResponder {
       report.setDate(resultDate);
       return generateHtmlTestExecutionResponse(request, (TestExecutionReport) report);
     } else if (report instanceof SuiteExecutionReport) {
-      pageTitle.setPageType("Suite History");
       return generateHtmlSuiteExecutionResponse(request, (SuiteExecutionReport) report);
     } else
       return makeCorruptFileResponse(request);
@@ -124,8 +121,12 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
+    page.put("resultDate", dateFormat.format(report.getDate()));
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("suiteExecutionReport");
+    PageTitle pageTitle = new PageTitle("Suite History", PathParser.parse(request.getResource()), "");
+    page.setPageTitle(pageTitle);
+
     return makeResponse();
   }
 
@@ -134,9 +135,16 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
+    if (!report.getExecutionLogs().isEmpty()) {
+      page.put("resultDate", dateFormat.format(report.getDate()));
+    }
     page.put("ExecutionResult", ExecutionResult.class);
     page.setMainTemplate("testExecutionReport");
     page.setErrorNavTemplate("errorNavigator");
+    String tags = report.getResults().get(0).getTags();
+    PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
+    page.setPageTitle(pageTitle);
+
     return makeResponse();
   }
 
@@ -157,13 +165,14 @@ public class PageHistoryResponder implements SecureResponder {
 
   private void prepareResponse(Request request) {
     response = new SimpleResponse();
-    if (resultsDirectory == null)
-      resultsDirectory = context.getTestHistoryDirectory();
+    File resultsDirectory = context.getTestHistoryDirectory();
     TestHistory history = new TestHistory();
     String pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
+    PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), "");
+    page.setPageTitle(pageTitle);
 
     String tags = "";    
     if (context.getRootPage() != null){
@@ -175,15 +184,7 @@ public class PageHistoryResponder implements SecureResponder {
         tags = pageData.getAttribute(PageData.PropertySUITES);
       }
     }
-    
-    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
-    page.setPageTitle(pageTitle);
   }
-
-  public void setResultsDirectory(File resultsDirectory) {
-    this.resultsDirectory = resultsDirectory;
-  }
-
 
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();

@@ -1,5 +1,6 @@
 package fitnesse.testsystems;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,25 +10,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ClientBuilder<T> {
-  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-  public static final String[] DEFAULT_COMMAND_PATTERN = {
+  static final String COMMAND_PATTERN = "COMMAND_PATTERN";
+  static final String[] DEFAULT_COMMAND_PATTERN = {
           javaExecutable(),
           "-cp",
-          fitnesseJar(System.getProperty("java.class.path")) + System.getProperty("path.separator") + "%p",
+          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
           "%m" };
-  public static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
+  static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
           javaExecutable(),
           "-Xdebug",
           "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000",
           "-cp",
           "%p",
           "%m"};
-  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
-  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
-  public static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
-  public static final String TEST_RUNNER = "TEST_RUNNER";
-  public static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
-  public static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
+  static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
+  static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
+  static final String REMOTE_DEBUG_COMMAND = "REMOTE_DEBUG_COMMAND";
+  static final String TEST_RUNNER = "TEST_RUNNER";
+  static final String REMOTE_DEBUG_RUNNER = "REMOTE_DEBUG_RUNNER";
+  static final String CLASSPATH_PROPERTY = "CLASSPATH_PROPERTY";
 
   private final Descriptor descriptor;
 
@@ -104,7 +105,7 @@ public abstract class ClientBuilder<T> {
     return DEFAULT_COMMAND_PATTERN;
   }
 
-  private String[] parseCommandLine(String commandLine) {
+  protected String[] parseCommandLine(String commandLine) {
 		Collection<String> result = new ArrayList<String>();
 		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);
@@ -149,8 +150,8 @@ public abstract class ClientBuilder<T> {
   }
 
   protected static String fitnesseJar(String classpath) {
-    for (String pathEntry: classpath.split(System.getProperty("path.separator"))) {
-      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(System.getProperty("file.separator")));
+    for (String pathEntry: classpath.split(File.pathSeparator)) {
+      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(File.separator));
       String jarFile = paths[paths.length-1];
       if ("fitnesse-standalone.jar".equals(jarFile)) {
         return pathEntry;
@@ -174,7 +175,7 @@ public abstract class ClientBuilder<T> {
     String result = "java";
     if (javaHome != null) {
       boolean wrapInQuotes = javaHome.contains(" "); 
-      String separator = System.getProperty("file.separator");
+      String separator = File.separator;
       result = javaHome + separator + "bin" + separator + "java"; 
       if (wrapInQuotes) {
     	  result = "\"" + result + "\"";

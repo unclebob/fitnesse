@@ -1,0 +1,16 @@
+For this test to perform we reduce the timeout to 2 seconds. If the server is not responding in time, we should raise an error.
+
+#!define slim.timeout {2}
+#!define TEST_RUNNER {fitnesse.slim.test.Sleep} 
+#!define slim.flags {60}
+#|fitnesse.fixtures.Sleep|20000|
+
+!| script                        |
+|given page|TestPage|with content|${SUT_PATH} !-
+!define TEST_SYSTEM {slim}
+!define slim.timeout {2}
+!define TEST_RUNNER {fitnesse.slim.test.Sleep} 
+!define slim.flags {60}
+|fitnesse.fixtures.Sleep|20000|
+-! |
+|test results for page|TestPage|should contain|Could not complete testing: fitnesse.slim.SlimError: Error connecting to SLiM server on localhost:|

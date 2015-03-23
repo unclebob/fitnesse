@@ -19,6 +19,8 @@ import java.util.Random;
 import util.StreamReader;
 import fitnesse.util.Base64;
 
+import static util.FileUtil.CHARENCODING;
+
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();
   private static final Random RANDOM_GENERATOR = new SecureRandom();
@@ -53,7 +55,7 @@ public class RequestBuilder {
   }
 
   private String buildRequestLine() throws UnsupportedEncodingException {
-    StringBuffer text = new StringBuffer();
+    StringBuilder text = new StringBuilder();
     text.append(method).append(" ").append(resource);
     if (isGet()) {
       String inputString = inputString();
@@ -69,7 +71,7 @@ public class RequestBuilder {
   }
 
   public void send(OutputStream output) throws IOException {
-    output.write(buildRequestLine().getBytes("UTF-8"));
+    output.write(buildRequestLine().getBytes(CHARENCODING));
     output.write(ENDL);
     buildBody();
     sendHeaders(output);
@@ -81,21 +83,21 @@ public class RequestBuilder {
     addHostHeader();
     for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
       String key = iterator.next();
-      output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
+      output.write((key + ": " + headers.get(key)).getBytes(CHARENCODING));
       output.write(ENDL);
     }
   }
 
   private void buildBody() throws IOException {
     if (!isMultipart) {
-      byte[] bytes = inputString().getBytes("UTF-8");
+      byte[] bytes = inputString().getBytes(CHARENCODING);
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
       for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
         String name = iterator.next();
         Object value = inputs.get(name);
-        StringBuffer partBuffer = new StringBuffer();
+        StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
         partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
         if (value instanceof InputStreamPart) {
@@ -114,7 +116,7 @@ public class RequestBuilder {
           addBodyPart(partBuffer.toString());
         }
       }
-      StringBuffer tail = new StringBuffer();
+      StringBuilder tail = new StringBuilder();
       tail.append("--").append(getBoundary()).append("--").append("\r\n");
       addBodyPart(tail.toString());
     }
@@ -122,7 +124,7 @@ public class RequestBuilder {
   }
 
   private void addBodyPart(String input) throws UnsupportedEncodingException {
-    byte[] bytes = input.toString().getBytes("UTF-8");
+    byte[] bytes = input.getBytes(CHARENCODING);
     bodyParts.add(new ByteArrayInputStream(bytes));
     bodyLength += bytes.length;
   }
@@ -151,14 +153,14 @@ public class RequestBuilder {
   }
 
   public String inputString() throws UnsupportedEncodingException {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     boolean first = true;
     for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
       String key = iterator.next();
       String value = (String) inputs.get(key);
       if (!first)
         buffer.append("&");
-      buffer.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
+      buffer.append(key).append("=").append(URLEncoder.encode(value, CHARENCODING));
       first = false;
     }
     return buffer.toString();

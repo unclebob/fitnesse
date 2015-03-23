@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
+import fitnesse.slim.SlimError;
 import fitnesse.util.StringUtils;
 
 import fitnesse.slim.Converter;
@@ -14,6 +15,10 @@ public class DoubleConverter implements Converter<Double> {
 
   @Override
   public Double fromString(String arg) {
-    return !StringUtils.isBlank(arg) ? Double.valueOf(arg) : null;
+    try {
+      return !StringUtils.isBlank(arg) ? Double.valueOf(arg) : null;
+    } catch (NumberFormatException e) {
+      throw new SlimError(String.format("message:<<Can't convert %s to double.>>", arg), e);
+    }
   }
 }

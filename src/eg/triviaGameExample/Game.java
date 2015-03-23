@@ -1,9 +1,10 @@
 package eg.triviaGameExample;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Game {
-  private ArrayList<Player> players;
+  private Collection<Player> players;
   private boolean gameHasStarted = false;
 
   public Game() {

@@ -2,13 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.MapEditor;
-
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static fitnesse.slim.SlimException.isStopSuiteException;
 import static fitnesse.slim.SlimException.isStopTestException;
@@ -30,8 +26,6 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public StatementExecutor(SlimExecutionContext context) {
-    PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
-
     if (context == null) {
       this.context = new SlimExecutionContext();
     } else {
@@ -70,6 +64,15 @@ public class StatementExecutor implements StatementExecutorInterface {
   public void assign(String name, Object value) {
     context.setVariable(name, value);
   }
+  
+  @Override
+  public Object getSymbol(String symbolName) {
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
+    return result.returnValue();
+  }
 
   @Override
   public void create(String instanceName, String className, Object... args) throws SlimException {
@@ -89,7 +92,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (InvocationTargetException e) {
       checkExceptionForStop(e.getTargetException());
       throw new SlimException(e.getTargetException(), true);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -99,7 +102,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   public Object call(String instanceName, String methodName, Object... args) throws SlimException {
     try {
       return getMethodExecutionResult(instanceName, methodName, args).returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -111,7 +114,7 @@ public class StatementExecutor implements StatementExecutorInterface {
       MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
       context.setVariable(variable, result);
       return result.returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }

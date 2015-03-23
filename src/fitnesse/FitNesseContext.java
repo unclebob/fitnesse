@@ -21,8 +21,11 @@ import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wikitext.parser.VariableSource;
 
 public class FitNesseContext {
-  public final static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
-  public final static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
+  private static final String WIKI_PROTOCOL_PROPERTY = "wiki.protocol";
+  public static final String SSL_PARAMETER_CLASS_PROPERTY = "wiki.protocol.ssl.parameter.class";
+  public static final String SSL_CLIENT_AUTH_PROPERTY = "wiki.protocol.ssl.client.auth";
+  public static final String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
+  public static final String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static final String testResultsDirectoryName = "testResults";
 
   public final FitNesseVersion version;
@@ -44,6 +47,9 @@ public class FitNesseContext {
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
+  public final boolean useHTTPS;
+  public String sslParameterClassName;
+  public final boolean sslClientAuth;
   private final Properties properties;
 
   protected FitNesseContext(FitNesseVersion version, WikiPageFactory wikiPageFactory, String rootPath,
@@ -70,6 +76,11 @@ public class FitNesseContext {
     variableSource = new SystemVariableSource(properties);
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
+    String protocol = variableSource.getProperty(WIKI_PROTOCOL_PROPERTY);
+    this.useHTTPS = (protocol == null ?  false : (protocol.equalsIgnoreCase("https")));
+    String clientAuth = variableSource.getProperty(SSL_CLIENT_AUTH_PROPERTY);
+    this.sslClientAuth = (clientAuth == null) ? false : (clientAuth.equalsIgnoreCase("required"));
+    this.sslParameterClassName = variableSource.getProperty(SSL_PARAMETER_CLASS_PROPERTY);
   }
 
   public WikiPage getRootPage() {
@@ -85,7 +96,11 @@ public class FitNesseContext {
 
   }
   public File getTestHistoryDirectory() {
-    return new File(String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName));
+    String testHistoryPath = getProperty("test.history.path");
+    if (testHistoryPath == null) {
+      testHistoryPath = String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName);
+    }
+    return new File(testHistoryPath);
   }
 
   public String getTestProgressPath() {
@@ -93,7 +108,7 @@ public class FitNesseContext {
   }
 
   public String getRootPagePath() {
-    return String.format("%s%s%s", rootPath, File.separator, rootDirectoryName);
+    return String.format("%s/%s", rootPath, rootDirectoryName);
   }
 
   public Properties getProperties() {

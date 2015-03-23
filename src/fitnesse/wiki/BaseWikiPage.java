@@ -13,7 +13,6 @@ import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
 
 public abstract class BaseWikiPage implements WikiPage, WikitextPage {
-  private static final long serialVersionUID = 1L;
 
   private final String name;
   private final WikiPage parent;

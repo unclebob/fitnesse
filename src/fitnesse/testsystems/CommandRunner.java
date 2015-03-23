@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 
 import static java.util.Arrays.asList;
+import static util.FileUtil.CHARENCODING;
 
 public class CommandRunner {
-  private static final String DEFAULT_CHARSET_NAME = "UTF-8";
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
@@ -34,9 +34,10 @@ public class CommandRunner {
 
   /**
    *
-   * @param command
-   * @param input
-   * @param environmentVariables
+   * @param command Commands to run
+   * @param input INput
+   * @param environmentVariables Map of environment variables
+   * @param executionLogListener Execution Log Listener
    * @param timeout Time-out in seconds.
    */
   public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
@@ -144,6 +145,12 @@ public class CommandRunner {
     }
   }
 
+  public boolean isDead() {
+	  if (process !=null) return isDead(process);
+	  //if there is or was never a process due to a remote / manual start then it is alive!
+	  return false;
+  }
+
   public void kill() {
     if (process != null) {
       process.destroy();
@@ -179,7 +186,7 @@ public class CommandRunner {
 
   protected void sendInput(OutputStream stdin) throws IOException {
     try {
-      stdin.write(input.getBytes(DEFAULT_CHARSET_NAME));
+      stdin.write(input.getBytes(CHARENCODING));
       stdin.flush();
     } finally {
       try {
@@ -196,7 +203,7 @@ public class CommandRunner {
 
     public OutputReadingRunnable(InputStream input, OutputWriter writer) {
       try {
-        reader = new BufferedReader(new InputStreamReader(input, DEFAULT_CHARSET_NAME));
+        reader = new BufferedReader(new InputStreamReader(input, CHARENCODING));
       } catch (UnsupportedEncodingException e) {
         exceptionOccurred(e);
       }
