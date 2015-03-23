@@ -138,7 +138,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       String codeMirrorDir = base + "codemirror/";
       addFile(codeMirrorDir + "codemirror.css", "codemirror/codemirror.css");
       addFile(codeMirrorDir + "/addon/simple.js", "addon/simple.js");
-//      addFile(codeMirrorDir + "/addon/foldgutter.js", "addon/foldgutter.js");
+      addFile(codeMirrorDir + "/addon/foldgutter.js", "addon/foldgutter.js");
       addFile(codeMirrorDir + "/addon/foldgutter.css", "addon/foldgutter.css");
       addFile(codeMirrorDir + "/fitnesse/fitnesse.js", "fitnesse/fitnesse.js");
     }
