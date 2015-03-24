@@ -71,10 +71,43 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /''(?:[^\\]|\\.)*?''/, token: "variable"},
     //Strike
     {regex: /--(?:[^\\]|\\.)*?--/, token: "variable-3"},
-    //Strike
+    //Style
     {regex: /!style_/, token: "keyword"},
     //Cross Reference
     {regex: /!see [\.\w]+/, token: "link"},
+    //Headers
+    {regex: /!\d.*/, token: "header"},
+    //Centering
+    {regex: /!c/, token: "header"},
+    //Note
+    {regex: /!note/, token: "quote"},
+    //Image
+    {regex: /!img/, token: "quote"},
+    //External links
+    {regex: /https?:\/\/[\dA-Za-z\.\/\?#-]+/, token: "link"},
+    //Lists
+    {regex: /^\s+[*\d]+ .*/, token: "string"},
+    //Variable
+    {regex: /!define/, token: "quote"},
+    //Classpath
+    {regex: /!path/, token: "quote"},
+    //Table
+    {regex: /\|.*/, token: "variable-3"},
+    //Hash-Table
+    {regex: /!{.*}/, token: "link"},
+    //Collapsable Sections
+    {regex: /!\*+.*/, token: "header"},
+    {regex: /\*+!/, token: "header"},
+    //Table of contents
+    {regex: /!contents.*/, token: "keyword"},
+    //Include
+    {regex: /!include +/, token: "keyword"},
+    //Help
+    {regex: /!help (-editable)?/, token: "keyword"},
+    //Last modified
+    {regex: /!lastmodified/, token: "keyword"},
+    //Today
+    {regex: /!today/, token: "keyword"},
     // The regex matches the token, the token property contains the type
     {regex: /"(?:[^\\]|\\.)*?"/, token: "string"},
     // You can match multiple tokens at once. Note that the captured
@@ -86,23 +119,6 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
      token: "number"},
     {regex: /#.*/, token: "comment"},
-    {regex: /\|.*/, token: "variable-3"},
     {regex: /[-+*\/=<>!]+/, token: "operator"},
-    // indent and dedent properties guide autoindentation
-    {regex: /[\{\[\(]/, indent: true},
-    {regex: /[\}\]\)]/, dedent: true},
-    {regex: /[a-z$][\w$]*/, token: "variable"},
-    // You can embed other modes with the mode property. This rule
-    // causes all code between << and >> to be highlighted with the XML
-    // mode.
-    {regex: /<</, token: "meta", mode: {spec: "xml", end: />>/}}
-  ],
-  // The meta property contains global information about the mode. It
-  // can contain properties like lineComment, which are supported by
-  // all modes, and also directives like dontIndentStates, which are
-  // specific to simple modes.
-  meta: {
-    dontIndentStates: ["comment"],
-    lineComment: "#"
-  }
+  ]
 });
