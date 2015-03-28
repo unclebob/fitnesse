@@ -13,9 +13,9 @@ import org.apache.velocity.VelocityContext;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureReadOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.Response.Format;
@@ -187,6 +187,6 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
+    return new SecureReadOperation();
   }
 }

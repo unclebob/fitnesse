@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureReadOperation;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
@@ -97,6 +97,6 @@ public class ExecutionLogResponder implements SecureResponder {
   }
 
   public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
+    return new SecureReadOperation();
   }
 }
