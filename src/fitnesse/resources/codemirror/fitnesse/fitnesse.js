@@ -44,8 +44,6 @@ function findTable(cm, start) {
   if (!cm.getLine(start.line).match(tableRowRegexp) ||
       (cm.getLine(previousLineIndex) && cm.getLine(previousLineIndex).match(tableRowRegexp)))
     return undefined;
-  console.log(cm.getLine(previousLineIndex));
-  console.log(cm.getLine(previousLineIndex).match(tableRowRegexp));
 
   var lastLineNo = cm.lastLine();
   var end = start.line, nextLine = cm.getLine(end + 1);
