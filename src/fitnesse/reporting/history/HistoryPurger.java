@@ -54,10 +54,28 @@ public class HistoryPurger {
   }
 
   private void deleteIfExpired(File file) {
-    if (file.isDirectory()) {
+    if (file.isDirectory() && file.getName().startsWith(".")) {
+      deleteHiddenDirectoryIfAllPurged(file);
+    } else if (file.isDirectory()) {
       deleteDirectoryIfExpired(file);
     } else
       deleteFileIfExpired(file);
+  }
+
+  // Delete hidden subdirectory if all other files in directory will be purged. For .svn, .git, etc.
+  public void deleteHiddenDirectoryIfAllPurged(File subDirectory){
+      File directory = subDirectory.getParentFile();
+      for(File other: directory.listFiles()){
+          if(!other.isDirectory()){
+              String name = other.getName();
+              try {
+                  tryExtractDateFromTestHistoryName(name);
+              } catch (ParseException e) { return; }
+              Date date = getDateFromPageHistoryFileName(name);
+              if (date.getTime() > expirationDate.getTime()) return;
+          }
+      }
+      FileUtil.deleteFileSystemDirectory(subDirectory);
   }
 
   private void deleteDirectoryIfExpired(File file) {

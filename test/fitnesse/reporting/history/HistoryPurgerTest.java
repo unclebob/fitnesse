@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
@@ -98,6 +100,7 @@ public class HistoryPurgerTest {
   public void shouldDeletePageHistoryDirectoryIfEmptiedByPurge() throws Exception {
     File pageDirectory = addPageDirectory("SomePage");
     addTestResult(pageDirectory, "20090614000000_1_0_0_0");
+    addSubDirectory(pageDirectory, ".svn");
     
     historyPurger.deleteTestHistoryOlderThanDays();
     
@@ -109,12 +112,14 @@ public class HistoryPurgerTest {
   public void fileWithInvalidDateWillNotBeRemoved() throws Exception {
     File pageDirectory = addPageDirectory("SomePage");
     addTestResult(pageDirectory, "someFile");
+    addSubDirectory(pageDirectory, ".svn");
     
     historyPurger.deleteTestHistoryOlderThanDays();
     
-    String[] files = new File(resultsDirectory, "SomePage").list();
-    assertEquals(1, files.length);
-    assertEquals("someFile.xml", files[0]);
+    List<String> files = Arrays.asList(new File(resultsDirectory, "SomePage").list());
+    assertEquals(2, files.size());
+    assertTrue(files.contains(".svn"));
+    assertTrue(files.contains("someFile.xml"));
   }
 
   private void removeResultsDirectory() {
@@ -126,6 +131,12 @@ public class HistoryPurgerTest {
     File testResultFile = new File(pageDirectory, testResultFileName + ".xml");
     testResultFile.createNewFile();
     return testResultFile;
+  }
+
+  private File addSubDirectory(File pageDirectory, String subDirectoryName) throws IOException {
+      File subDirectoryFile = new File(pageDirectory, subDirectoryName);
+      subDirectoryFile.mkdirs();
+      return subDirectoryFile;
   }
 
   private File addPageDirectory(String pageName) {
