@@ -1,4 +1,18 @@
-!2 20150226
+!2 ${FITNESSE_VERSION}
+
+ * Remove global slim timeout during testing; this issue was introduced in v20150226 ([[660][https://github.com/unclebob/fitnesse/pull/660]])
+ * Expose table of symbols to [[!-TableTable-!][UserGuide.WritingAcceptanceTests.SliM.TableTable]] fixtures ([[644][https://github.com/unclebob/fitnesse/pull/644]])
+ * Improve messages when Slim server crashes ([[662][https://github.com/unclebob/fitnesse/pull/662]])
+ * Make the "bootstrap" theme the default ([[679][https://github.com/unclebob/fitnesse/pull/679]])
+ * Relaxed Test & Page History to require only secure-read permission ([[696][https://github.com/unclebob/fitnesse/pull/696]])
+ * Slim converters produce user friendly errors ([[682][https://github.com/unclebob/fitnesse/pull/682]])
+ * Documentation updates ([[668][https://github.com/unclebob/fitnesse/pull/668]], [[672][https://github.com/unclebob/fitnesse/pull/672]], [[681][https://github.com/unclebob/fitnesse/pull/681]])
+ * Issues fixed:
+   * Fixes in file paths ([[667][https://github.com/unclebob/fitnesse/pull/667]], [[692][https://github.com/unclebob/fitnesse/pull/692]])
+   * Fix issue with ''!'' in spreadsheet translation ([[678][https://github.com/unclebob/fitnesse/pull/678]])
+   * Revert old behavior for Slim String converter: pass empty string for empty cells instead of ''null'' ([[687][https://github.com/unclebob/fitnesse/pull/687]])
+
+!2 v20150226
  * Fixed lot's of code style issues ([[588][https://github.com/unclebob/fitnesse/pull/588]], [[618][https://github.com/unclebob/fitnesse/pull/618]], [[619][https://github.com/unclebob/fitnesse/pull/619]][[628][https://github.com/unclebob/fitnesse/pull/628]], [[632][https://github.com/unclebob/fitnesse/pull/632]], [[634][https://github.com/unclebob/fitnesse/pull/634]], [[645][https://github.com/unclebob/fitnesse/pull/645]])
  * Table coloring for Slim tables ([[569][https://github.com/unclebob/fitnesse/pull/569]])
  * Improved extensibility of Slim tables ([[620][https://github.com/unclebob/fitnesse/pull/620]])
