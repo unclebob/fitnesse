@@ -1,4 +1,12 @@
-# Bylaws for the committers of FitNesse.
+# Contributing to FitNesse
+
+This document describes some general guidelines for contributing to FitNesse. By respecting those guidelines you'll help improve FitNesse.
+
+## Submitting issues
+
+The [GitHub issues](https://github.com/unclebob/fitnesse/issues) section is only for bugs and feature requests. Please refer to [the mailing list](https://groups.yahoo.com/groups/fitnesse/) or [Stack Overflow](http://stackoverflow.com/search?q=fitnesse) for general advice. Even for possible bugs it's appreciated that they are discussed on those channels before submitting them as issues in the bug tracking system.
+
+## Bylaws for the committers of FitNesse
 
 1.  Use the FitNesse coding style.
 
