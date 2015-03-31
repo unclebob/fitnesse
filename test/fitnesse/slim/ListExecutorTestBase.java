@@ -138,7 +138,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {
     statements.add(Arrays.asList("id", "call", "testSlim", "echoString", ""));
-    respondsWith(Arrays.asList(Arrays.asList("id", null)));
+    respondsWith(Arrays.asList(Arrays.asList("id", "")));
   }
 
   @Test
@@ -146,7 +146,7 @@ public abstract class ListExecutorTestBase {
     statements.add(0, Arrays.asList("i2", "import", getTestClassPath() + ".testSlimInThisPackageShouldNotBeTheOneUsed"));
     statements.add(Arrays.asList("id", "call", "testSlim", "returnString"));
     expectedResults.add(0, Arrays.asList("i2", "OK"));
-    respondsWith(Arrays.asList(Arrays.asList("id", (Object) "string")));
+    respondsWith(Arrays.asList(Arrays.asList("id", "string")));
   }
 
   @Test

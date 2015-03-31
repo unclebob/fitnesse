@@ -13,6 +13,6 @@ public class StringConverter implements Converter<String> {
   }
 
   public String fromString(String arg) {
-    return !StringUtils.isBlank(arg) ? arg : null;
+    return arg;
   }
 }
