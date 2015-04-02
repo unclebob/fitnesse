@@ -29,6 +29,8 @@ public interface WikiPage extends Comparable<Object> {
 
   String getName();
 
+  String getFirstTitle();
+
   PageData getData();
 
   /**

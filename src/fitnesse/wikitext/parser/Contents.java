@@ -12,6 +12,7 @@ public class Contents extends SymbolType implements Rule, Translation {
     public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
     public static final String PROPERTY_CHARACTERS_DEFAULT = "*+@>-";
     public static final String REGRACE_TOC = "REGRACE_TOC";
+    public static final String SHOW_TITLES_IN_TOC = "SHOW_TITLES_IN_TOC";
 
     public Contents() {
         super("Contents");

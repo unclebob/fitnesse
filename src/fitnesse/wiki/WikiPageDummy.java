@@ -35,6 +35,11 @@ public class WikiPageDummy implements WikiPage {
   }
 
   @Override
+  public String getFirstTitle() {
+      return null;
+  }
+
+  @Override
   public WikiPage getParent() {
     return parent;
   }

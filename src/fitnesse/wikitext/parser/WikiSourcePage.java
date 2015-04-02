@@ -30,6 +30,10 @@ public class WikiSourcePage implements SourcePage {
         return page.getData().getContent();
     }
 
+    public String getFirstTitle() {
+        return page.getFirstTitle();
+    }
+
     public boolean targetExists(String wikiWordPath) {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPage parentPage = page.getParent();

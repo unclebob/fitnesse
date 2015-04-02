@@ -8,4 +8,5 @@ Use !contents to list all or some of the child pages of the current page along w
     -h   ...show help property text--define HELP_TOC {true} for global;
     -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
               defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Skip(-)
-              define PROPERTY_CHARACTERS {*+@>-} to change.}}}
+              define PROPERTY_CHARACTERS {*+@>-} to change.
+    -t   ...show first title found in the child page instead of its name}}}
