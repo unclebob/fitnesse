@@ -25,8 +25,17 @@ public class FirstTitleTranslator extends HtmlTranslator {
         }
         return result;
     }
+
     public FirstTitleTranslator(SourcePage currentPage, ParsingPage parsingPage) {
         super(currentPage, parsingPage);
+    }
+
+    public String translate(Symbol symbol) {
+        if (capturedFirstTitle){
+            return "";
+        } else {
+            return super.translate(symbol);
+        }
     }
 
 }
