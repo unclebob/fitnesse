@@ -87,6 +87,9 @@ public class FitNesse {
     Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
+    if (response.getStatus() != 200){
+        throw new Exception("error loading page: " + response.getStatus());
+    }
     response.withoutHttpHeaders();
     MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
     sender.doSending(response);
