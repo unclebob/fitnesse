@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
-import fitnesse.util.StringUtils;
-
 import fitnesse.slim.Converter;
 
 public class StringConverter implements Converter<String> {
