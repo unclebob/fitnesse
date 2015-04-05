@@ -22,18 +22,17 @@ public abstract class Instruction {
   }
 
   public final InstructionResult execute(InstructionExecutor executor) {
-    SecurityManager oldSecurityManager = System.getSecurityManager();
-    System.setSecurityManager(new SystemExitSecurityManager(oldSecurityManager));
     
     InstructionResult result;
     try {
+      SystemExitSecurityManager.activateIfWanted();
       result = executeInternal(executor);
     } catch (SlimException e) {
       result = new InstructionResult.Error(getId(), e);
     } catch (SystemExitException e) {
       result = new InstructionResult.Error(getId(), e);
     } finally {
-      System.setSecurityManager(oldSecurityManager);
+      SystemExitSecurityManager.restoreOriginalSecurityManager();
     }
     return result;
   }
