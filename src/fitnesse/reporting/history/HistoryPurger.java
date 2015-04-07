@@ -78,7 +78,7 @@ public class HistoryPurger {
     try {
       return tryExtractDateFromTestHistoryName(name);
     } catch (ParseException e) {
-      LOG.log(Level.SEVERE, format("Can not determine date from test history file %s", name));
+      LOG.log(Level.INFO, format("Can not determine date from test history file %s", name));
       return new Date();
     }
   }
