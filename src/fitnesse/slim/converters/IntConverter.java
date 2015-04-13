@@ -3,7 +3,6 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimServer;
 import fitnesse.util.StringUtils;
 
 import fitnesse.slim.Converter;
