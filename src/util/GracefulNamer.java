@@ -69,11 +69,11 @@ public class GracefulNamer {
   }
 
   private interface GracefulNameState {
-    public void letter(char c);
+    void letter(char c);
 
-    public void digit(char c);
+    void digit(char c);
 
-    public void other(char c);
+    void other(char c);
   }
 
   private class InWordState implements GracefulNameState {
