@@ -8,8 +8,8 @@ import java.util.List;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import org.junit.Test;
 
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;
+import static fitnesse.testsystems.slim.tables.Disgracer.disgraceClassName;
+import static fitnesse.testsystems.slim.tables.Disgracer.disgraceMethodName;
 import static org.junit.Assert.assertEquals;
 
 public class SlimTableTest {

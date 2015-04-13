@@ -2,8 +2,6 @@ package fitnesse.testsystems.slim;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fitnesse.FitNesseContext;
