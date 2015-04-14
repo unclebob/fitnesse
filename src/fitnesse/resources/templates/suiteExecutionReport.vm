@@ -28,13 +28,11 @@
     <th class="numeric">Wrong</th>
     <th class="numeric">Ignored</th>
     <th class="numeric">Exceptions</th>
+    <th>Page</th>
     #if($suiteExecutionReport.hasRunTimes())
     <th class="numeric">Run&nbsp;time&nbsp;(ms)</th>
     #end
-    <th>Page</th>
-    <th>Path</th>
   </tr>
-  #set ($previousPage = $suiteExecutionReport.getRootPath())
   #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())
   #set($counts = $pageHistoryReference.getTestSummary())
   <tr class="$ExecutionResult.getExecutionResult($pageHistoryReference.pageName, $counts)">
@@ -50,17 +48,14 @@
     <td class="numeric">
       $counts.Exceptions
     </td>
+    <td>
+      <a href="$pageHistoryReference.pageName?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
+    </td>
     #if($suiteExecutionReport.hasRunTimes())
     <td class="numeric">
       $pageHistoryReference.RunTimeInMillis
     </td>
     #end
-    <td>
-      <a href="$pageHistoryReference.pageName?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getRelativePageName()</a>
-    </td>
-    <td>
-      $pageHistoryReference.subtractFromFront($previousPage)
-    </td>
   </tr>
   #end
 </table>
