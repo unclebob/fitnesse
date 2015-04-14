@@ -7,6 +7,8 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static util.FileUtil.CHARENCODING;
+
 public class StackTraceEnricher {
   private Map<String, ClassMetaInformation> elementInformation;
 
@@ -23,7 +25,7 @@ public class StackTraceEnricher {
   }
 
   public void printStackTrace(Throwable throwable, OutputStream stream) throws IOException {
-    stream.write(getStackTraceAsString(throwable).getBytes());
+    stream.write(getStackTraceAsString(throwable).getBytes(CHARENCODING));
     stream.flush();
   }
 

@@ -294,7 +294,7 @@ public class FileSystemPage extends BaseWikiPage {
       //a strange behavior on windows.
       content = content.replaceAll("\n", separator);
 
-      return new ByteArrayInputStream(content.getBytes("UTF-8"));
+      return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
     }
 
     @Override
@@ -327,7 +327,7 @@ public class FileSystemPage extends BaseWikiPage {
     public InputStream getContent() throws IOException {
       WikiPageProperties propertiesToSave = new WikiPageProperties(data.getProperties());
       removeAlwaysChangingProperties(propertiesToSave);
-      return new ByteArrayInputStream(propertiesToSave.toXml().getBytes("UTF-8"));
+      return new ByteArrayInputStream(propertiesToSave.toXml().getBytes(FileUtil.CHARENCODING));
     }
 
     @Override

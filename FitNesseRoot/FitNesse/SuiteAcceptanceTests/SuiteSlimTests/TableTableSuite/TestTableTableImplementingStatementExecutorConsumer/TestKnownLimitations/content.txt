@@ -1,0 +1,27 @@
+|import|
+|fitnesse.slim.test|
+
+
+!1 FitNesse do not take into account assignments to known symbols
+
+|script|test slim|
+|$X=|echo int|99|
+
+|table: Table Table Inc First Col Statement Executor Consumer |
+|$X|$X=| Here FitNesse knows $X before the table and as a result won't take into account the new assignment to $X. It means that although in the SUT $X is known to have the value 100, in the Wiki side of things it is believed to be 99. $X is then replaced greedily in the next table by 99 instead of using $X which would be resolved by the SUT as 100. |
+
+|script|test slim|$X|
+|check|return Constructor Arg|100|
+
+
+!1 FitNesse replaces symbols too greedily
+
+|script|test slim|
+|$X=|echo int|99|
+
+|table: Table Table Inc First Col Statement Executor Consumer |
+|$X|$X=|
+|$X|$Y=| Here FitNesse knows $X before the table and thus replaces it greedily when passing the table to the fixture. The fixture does not even know that the first cell contained $X in the first place, the Slim code passes 99 instead of $X. Hence 100 is assigned to $Y instead of 101. |
+
+|script|test slim|$Y|
+|check|return Constructor Arg|101|

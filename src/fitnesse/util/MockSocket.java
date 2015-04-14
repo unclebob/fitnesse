@@ -16,6 +16,8 @@ import java.net.SocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import util.FileUtil;
+
 public class MockSocket extends Socket {
   private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
 
@@ -72,7 +74,7 @@ public class MockSocket extends Socket {
   public String getOutput() {
     if (output instanceof ByteArrayOutputStream) {
       try {
-        return ((ByteArrayOutputStream) output).toString("UTF-8");
+        return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
       } catch (UnsupportedEncodingException e) {
         throw new RuntimeException(e);
       }

@@ -312,6 +312,9 @@
 	</target>
 
 	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar" description="Publish a snapshot to oss.sonatype.org">
+		<fail unless="upload.user" message="supply upload.user on the command line"/>
+		<fail unless="upload.password" message="supply upload.password on the command line"/>
+		<fail unless="pgp.password" message="supply pgp.password on the command line"/>
 		<ivy:settings id="ivy.publish.instance"
 			file="ivysettings-sonatype.xml" />
 		<ivy:publish resolver="sonatype-nexus-snapshots"

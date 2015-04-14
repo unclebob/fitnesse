@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import util.FileUtil;
 import util.StreamReader;
 
 public class SlimStreamReader extends StreamReader {
@@ -16,8 +17,8 @@ public class SlimStreamReader extends StreamReader {
   }
 
   public static void sendSlimMessage(OutputStream writer, String message) throws IOException {
-    byte[] msgChars = message.getBytes(CHARENCODING);
-    byte[] msgLength = String.format(SlimVersion.LENGTH_FORMAT, msgChars.length).getBytes(CHARENCODING);
+    byte[] msgChars = message.getBytes(FileUtil.CHARENCODING);
+    byte[] msgLength = String.format(SlimVersion.LENGTH_FORMAT, msgChars.length).getBytes(FileUtil.CHARENCODING);
     writer.write(msgLength, 0, msgLength.length);
     writer.write(msgChars, 0, msgChars.length);
     writer.flush();
@@ -25,7 +26,7 @@ public class SlimStreamReader extends StreamReader {
 
   public static void sendSlimHeader(OutputStream writer, String header) throws IOException {
     // The Header has no length information as prefix
-    byte[] msgChars = header.getBytes(CHARENCODING);
+    byte[] msgChars = header.getBytes(FileUtil.CHARENCODING);
     writer.write(msgChars, 0, msgChars.length);
     writer.flush();
   }

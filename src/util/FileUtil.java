@@ -2,17 +2,37 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 public class FileUtil {
+
+  public static final String CHARENCODING = "UTF-8";
 
   public static File createFile(String path, String content) {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
 
   public static File createFile(String path, InputStream content) {
-    String[] names = path.split("/");
+    String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
     if (names.length == 1)
       return createFile(new File(path), content);
     else {
@@ -29,7 +49,7 @@ public class FileUtil {
 
   public static File createFile(File file, String content) {
     try {
-      return createFile(file, content.getBytes("UTF-8"));
+      return createFile(file, content.getBytes(CHARENCODING));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
@@ -122,7 +142,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input), "UTF-8");
+    return new String(getFileBytes(input), CHARENCODING);
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
@@ -168,7 +188,7 @@ public class FileUtil {
 
   public static String toString(InputStream input) throws IOException {
     String result = "";
-    Scanner s = new Scanner(input, "UTF-8");
+    Scanner s = new Scanner(input, CHARENCODING);
     s.useDelimiter("\\A");
     result = s.hasNext() ? s.next() : "";
     s.close();
@@ -196,29 +216,6 @@ public class FileUtil {
     fileList.addAll(dirSet);
     fileList.addAll(fileSet);
     return fileList.toArray(new File[fileList.size()]);
-  }
-
-  public static String buildPath(String[] parts) {
-    String separator = System.getProperty("file.separator");
-    StringBuilder builder = new StringBuilder();
-    for (String part: parts) {
-      if (builder.length() > 0) {
-        builder.append(separator);
-      }
-      builder.append(part);
-    }
-    return builder.toString();
-  }
-
-  public static List<String> breakFilenameIntoParts(String fileName) {
-    List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("/")));
-    return parts;
-  }
-
-  public static String getPathOfFile(String fileName) {
-    List<String> parts = breakFilenameIntoParts(fileName);
-    parts.remove(parts.size()-1);
-    return buildPath(parts.toArray(new String[parts.size()]));
   }
 
   public static void close(Writer writer) {

@@ -17,4 +17,9 @@ public class Sleep {
 		Thread.sleep(this.timer);
 		return "WakeUp " + this.timer;
 	}
+
+  public static void main(String[] args) throws InterruptedException {
+    new Sleep(Integer.parseInt(args[0]) * 1000);
+  }
+
 }

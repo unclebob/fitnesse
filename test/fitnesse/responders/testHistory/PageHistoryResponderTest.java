@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
@@ -52,8 +53,9 @@ public class PageHistoryResponderTest {
     resultsDirectory.mkdir();
     history = new TestHistory();
     responder = new PageHistoryResponder();
-    responder.setResultsDirectory(resultsDirectory);
-    context = FitNesseUtil.makeTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    context = FitNesseUtil.makeTestContext(properties);
   }
 
   @After

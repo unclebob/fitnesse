@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-#set($tests = $suiteExecutionReport.finalCounts.right+$suiteExecutionReport.finalCounts.wrong+$suiteExecutionReport.finalCounts.ignores+$suiteExecutionReport.finalCounts.exceptions)
-<testsuite name="#escape($suiteExecutionReport.rootPath)" tests="$tests" failures="$suiteExecutionReport.finalCounts.wrong" disabled="$suiteExecutionReport.finalCounts.ignores" errors="$suiteExecutionReport.finalCounts.exceptions" time="$suiteExecutionReport.totalRunTimeInMillis">
+<testsuite name="#escape($suiteExecutionReport.rootPath)" tests="$suiteExecutionReport.pageHistoryReferences.size()" failures="$suiteExecutionReport.finalCounts.wrong" disabled="$suiteExecutionReport.finalCounts.ignores" errors="$suiteExecutionReport.finalCounts.exceptions" time="$suiteExecutionReport.totalRunTimeInMillis">
   #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
     #set($classname = $formatter.getClassName($reference))    
     <testcase name="#escape($reference.pageName)" assertions="$reference.testSummary.right" time="$reference.RunTimeInMillis">

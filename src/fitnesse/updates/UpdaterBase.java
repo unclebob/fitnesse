@@ -16,13 +16,17 @@ import fitnesse.Updater;
 public class UpdaterBase implements Updater {
   protected static final Logger LOG = Logger.getLogger(UpdaterBase.class.getName());
 
-  public FitNesseContext context;
-  public Properties rootProperties;
-  public Update[] updates;
+  protected final FitNesseContext context;
+  private Properties rootProperties;
+  private Update[] updates;
 
   public UpdaterBase(FitNesseContext context) throws IOException {
     this.context = context;
     rootProperties = loadProperties();
+  }
+
+  protected void setUpdates(Update[] updates) {
+    this.updates = updates;
   }
 
   public Properties getProperties() {
@@ -46,8 +50,7 @@ public class UpdaterBase implements Updater {
   }
 
   private File getPropertiesFile() {
-    String filename = context.getRootPagePath() + "/properties";
-    return new File(filename);
+    return new File(context.getRootPagePath(), "properties");
   }
 
   public void saveProperties() throws IOException {
@@ -88,7 +91,7 @@ public class UpdaterBase implements Updater {
     }
   }
 
-  private Update[] getUpdates() {
+  Update[] getUpdates() {
     return updates;
   }
 

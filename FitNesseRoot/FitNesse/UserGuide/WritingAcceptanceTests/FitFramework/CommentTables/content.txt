@@ -8,5 +8,5 @@ You can make comment tables using the ''Comment'' table notation. It's simple. S
 |and will not participate|
 |in the tests on this page.|
 
-If you click the Test button on a page containing such comment tables, FitNesse and the FitFramework will ignore the comment tables.
+If you click the Test button on a page containing such comment tables, FitNesse and the [[!-FitFramework-!][<UserGuide.WritingAcceptanceTests.FitFramework]] will ignore the comment tables.
 

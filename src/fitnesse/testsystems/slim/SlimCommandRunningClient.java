@@ -86,17 +86,16 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void connect() throws IOException {
     final int sleepStep = 50; // milliseconds
-    int maxTries = connectionTimeout * 1000 / sleepStep;
+    long timeOut = System.currentTimeMillis() + connectionTimeout * 1000;
+    LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
-        throw new SlimError("Error SLiM server died before a conection could be established.");
+        throw new SlimError("Error SLiM server died before a connection could be established.");
       }
-      LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout + " remaining retries: " + maxTries);
       try {
-        maxTries--;
         client = SocketFactory.tryCreateClientSocket(hostName, port, useSSL, sslParameterClassName);
       } catch (IOException e) {
-        if (maxTries <= 1) {
+        if (System.currentTimeMillis() > timeOut) {
           throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
         } else {
           try {
@@ -107,7 +106,7 @@ public class SlimCommandRunningClient implements SlimClient {
         }
       }
     }
-    LOG.fine("Connected to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout + " remaining retries: " + maxTries);
+    LOG.fine("Connected to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
 
     reader = SlimStreamReader.getReader(client);
     writer = SlimStreamReader.getByteWriter(client);

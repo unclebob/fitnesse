@@ -10,6 +10,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 
@@ -76,10 +77,20 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
     return wasInterrupted;
   }
 
-  @Override
-  public void errorOccurred(Throwable cause) {
+  private void errorOccurred(Throwable cause) {
     wasInterrupted = true;
-    super.errorOccurred(cause);
+    try {
+      writeData(String.format("<span class=\"error\">Could not complete testing: %s</span>", cause.toString()));
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to write response to output: " + cause.toString(), e);
+    }
+  }
+
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    if (cause != null) {
+      errorOccurred(cause);
+    }
   }
 
   @Override
@@ -132,9 +143,6 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   public String executionStatus() {
     if (wasInterrupted)
       return makeExecutionStatusLink(ExecutionStatus.ERROR);
-
-//    if (log.hasCapturedOutput())
-//      return makeExecutionStatusLink(ExecutionStatus.OUTPUT);
 
     return makeExecutionStatusLink(ExecutionStatus.OK);
   }

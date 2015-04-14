@@ -272,7 +272,7 @@ public class ZipFileVersionsController implements VersionsController {
 
     @Override
     public InputStream getContent() throws IOException {
-      return new ByteArrayInputStream(content.getBytes("UTF-8"));
+      return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
     }
 
     @Override

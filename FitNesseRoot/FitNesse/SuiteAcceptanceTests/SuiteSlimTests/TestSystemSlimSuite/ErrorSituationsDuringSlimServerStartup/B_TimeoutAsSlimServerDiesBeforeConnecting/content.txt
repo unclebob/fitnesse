@@ -13,5 +13,5 @@ We use a test runner class which doesn't exists. This ensures the slim server di
 | check | request page | TestPage?test | 200 |
 | ensure | content contains | TEST_SYSTEM=SLIM|
 | check | request page | TestPage?executionLog| 200 |
-|ensure |content contains |Error SLiM server died before a conection could be established.|
+|ensure |content contains |Error SLiM server died before a connection could be established.|
 | #show | content |

@@ -2,13 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.MapEditor;
-
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static fitnesse.slim.SlimException.isStopSuiteException;
 import static fitnesse.slim.SlimException.isStopTestException;
@@ -30,8 +26,6 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public StatementExecutor(SlimExecutionContext context) {
-    PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
-
     if (context == null) {
       this.context = new SlimExecutionContext();
     } else {
@@ -69,6 +63,15 @@ public class StatementExecutor implements StatementExecutorInterface {
   @Override
   public void assign(String name, Object value) {
     context.setVariable(name, value);
+  }
+  
+  @Override
+  public Object getSymbol(String symbolName) {
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
+    return result.returnValue();
   }
 
   @Override

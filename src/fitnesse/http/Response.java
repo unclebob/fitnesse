@@ -11,10 +11,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
+import util.FileUtil;
+
 public abstract class Response {
   public enum Format {
     XML("text/xml"),
-    HTML("text/html; charset=utf-8"),
+    HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
     JSON("text/json"),
     JUNIT("text/junit");
@@ -169,7 +171,7 @@ public abstract class Response {
   public byte[] getEncodedBytes(String value) {
     // TODO: -AJM- Defer encoding to the latest responsible moment
     try {
-      return value.getBytes("UTF-8");
+      return value.getBytes(FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("Unable to encode data", e);
     }

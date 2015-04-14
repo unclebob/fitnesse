@@ -1,0 +1,34 @@
+|import|
+|fitnesse.slim.test|
+
+!1 Make a table table define a new symbol and use this symbol in subsequent rows
+
+|script|test slim|
+|$X=|echo int|99|
+
+|table: Table Table Inc First Col Statement Executor Consumer |
+|$X|$Y=|
+|$Y|$Z=|
+
+|script|test slim|$Y|
+|check|return Constructor Arg|100|
+
+|script|test slim|$Z|
+|check|return Constructor Arg|101|
+
+!1 Make a table table use a symbol, assign into another one and use this symbol in subsequent rows
+
+|script|test slim|
+|$X=|echo int|99|
+|$Y=|echo int|44|
+
+|table: Table Table Inc First Col Statement Executor Consumer |
+|$X|$Y=|
+|$Y|$Z=|
+
+|script|test slim|$Z|
+|check|return Constructor Arg|101|
+
+!1 Known Limitations
+
+See sub-page about [[known limitations][TestTableTableImplementingStatementExecutorConsumer.TestKnownLimitations]].

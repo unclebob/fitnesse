@@ -9,6 +9,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 
 import org.ietf.jgss.*;
+import util.FileUtil;
 
 import java.util.Properties;
 import java.io.UnsupportedEncodingException;
@@ -147,7 +148,7 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   static byte[] getToken(String authHeader) throws UnsupportedEncodingException {
-    byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
+    byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes(FileUtil.CHARENCODING);
     byte[] inputToken = Base64.decode(inputTokenEncoded);
     return inputToken;
   }
@@ -159,7 +160,7 @@ public class NegotiateAuthenticator extends Authenticator {
   */
     GSSContext gssContext = manager.createContext(serverCreds);
     byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
-    String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+    String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), FileUtil.CHARENCODING);
     if (!gssContext.isEstablished())
       request.setCredentials(null, replyToken);
     else {

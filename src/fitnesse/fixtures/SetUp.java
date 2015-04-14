@@ -45,7 +45,7 @@ public class SetUp extends Fixture {
 
   private static Properties asProperties(String configuration) throws Exception {
     Properties properties = new Properties();
-    properties.load(new ByteArrayInputStream(configuration.getBytes("utf-8")));
+    properties.load(new ByteArrayInputStream(configuration.getBytes(FileUtil.CHARENCODING)));
     return properties;
   }
 }

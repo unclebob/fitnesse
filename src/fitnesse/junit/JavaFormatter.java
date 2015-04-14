@@ -15,6 +15,7 @@ import java.util.Map;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
+import util.FileUtil;
 
 /**
  * Used to run tests from a JUnit test suite.
@@ -60,7 +61,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     public TestResultPage(String outputPath, String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
-      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), FileUtil.CHARENCODING);
       writeHeaderFor(testName);
     }
 
@@ -72,7 +73,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       currentWriter.write("<html><head><title>");
       currentWriter.write(testName);
       currentWriter
-        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=" + FileUtil.CHARENCODING + "'/>"
           + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
           + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
           + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");

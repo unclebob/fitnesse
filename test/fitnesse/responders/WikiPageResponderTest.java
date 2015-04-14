@@ -62,7 +62,7 @@ public class WikiPageResponderTest {
     assertSubString("child content", body);
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
-    assertSubString("<h5> Wiki Page tags</h5>", body);
+    assertSubString("<span class=\"tag\">Wiki Page tags</span>", body);
   }
 
   @Test

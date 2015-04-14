@@ -150,7 +150,7 @@ public class FitServer {
     socket = new Socket(host, port);
     socketOutput = socket.getOutputStream();
     socketReader = new StreamReader(socket.getInputStream());
-    byte[] bytes = httpRequest.getBytes("UTF-8");
+    byte[] bytes = httpRequest.getBytes(FileUtil.CHARENCODING);
     socketOutput.write(bytes);
     socketOutput.flush();
     print("http request sent" + "\n");
@@ -185,7 +185,7 @@ public class FitServer {
 
   public static byte[] readTable(Parse table) throws Exception {
     ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-    OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, "UTF-8");
+    OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, FileUtil.CHARENCODING);
     PrintWriter writer = new PrintWriter(streamWriter);
     Parse more = table.more;
     table.more = null;

@@ -12,7 +12,7 @@ Let's look at our division test table again:
 
 What '''really''' happens when we click that test button? (Try clicking it again.) What gets run?
 
- * First, FitNesse submits the test table to [[Slim][<UserGuide.SliM]], the underlying test system (FitNesse is a wiki GUI built on top of Slim).
+ * First, FitNesse submits the test table to [[Slim][<UserGuide.WritingAcceptanceTests.SliM]], the underlying test system (FitNesse is a wiki GUI built on top of Slim).
  * Slim looks for and runs the fixture code corresponding to the test table.
  * By design, the fixture code calls some underlying application code to do the real work, and report results back to the fixture
  * Fit gives Fitnesse back the results from running the fixture code
@@ -30,7 +30,7 @@ public class Division {
 } }}}
 
 !3 How Slim Uses Fixture Code to Process the Test Table
-The Division table is an example of a [[Decision Table][<UserGuide.SliM.DecisionTable]]; just one of many different kinds of tables. Slim processes the rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding fields in our Division class using the setter functions. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So the Decision Table directs Slim to call setNumerator(10) and setDenominator(2); and then to call quotient().  The value is returned to the Decision Table which colors the appropriate cell.
+The Division table is an example of a [[Decision Table][<UserGuide.WritingAcceptanceTests.SliM.DecisionTable]]; just one of many different kinds of tables. Slim processes the rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding fields in our Division class using the setter functions. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So the Decision Table directs Slim to call setNumerator(10) and setDenominator(2); and then to call quotient().  The value is returned to the Decision Table which colors the appropriate cell.
 
 Click the Test button again and see what happens to the column of expected outputs under the ''quotient?'' header. For each cell of expected output, the Decision Table compares the value it expects to get back with what it actually gets. If the return value matches the value in the corresponding table cell, FitNesse turns the cell green. Otherwise FitNesse turns the cell red, and shows both the expected and actual values. (If Slim encounters an exception, or cannot find a fixture, field, or method, it turns the corresponding table cell yellow, and inserts a stack trace.)
 
@@ -193,4 +193,4 @@ Note the ''execute'' method of !style_code(!-GameTurnFixture-!).  This will be c
  * Often the test tables on a page need to share an object. We've illustrated the use of a static variable to solve this problem. Your mileage may vary.
 
 !2 Learning More
-To learn more about the different styles of test tables and the fixture code used to process them, see [[Slim][<UserGuide.SliM]].
+To learn more about the different styles of test tables and the fixture code used to process them, see [[Slim][<UserGuide.WritingAcceptanceTests.SliM]].

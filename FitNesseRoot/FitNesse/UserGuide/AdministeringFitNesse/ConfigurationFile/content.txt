@@ -22,13 +22,6 @@ See also: CommandLineArguments.
 
 The class specified must implement the ''fitnesse.wiki.!-WikiPageFactory-!'' interface. It must provide a public default constructor or a constructor with the form:''public !-WikiPageFactory-!(Properties properties).'' The Properties define the properties defined in the configuration properties file and on the command line.
 
-!3 Html Page Factory
-''required property:'' '''!-HtmlPageFactory-! = <class name>'''
-
-''motivation:'' Full customization of look and feel.
-
-The class specified must extend the ''fitnesse.html.!-HtmlPageFactory-!'' class and it must also provide a constructor that accept a Properties object.  The custom !-HtmlPageFactory-! will over ride the newPage() method to return a derivative of ''fitnesse.html.!-HtmlPage-!''.  The custom !-HtmlPage-! class should make use of any of the public !-HtmlTag-! member variables.
-
 !3 Versions Controller
 ''required property:'' '''!-VersionsController-! = <class name>'''
 
@@ -41,14 +34,14 @@ By default FitNesse makes backups of pages (as zip files). This property can be 
 
 ''motivation:'' If you have a custom versions controller installed, it's nice to see those changes on the recent changes page
 
-By default FitNesse maintains a page ([[RecentChanges][.RecentChanges]]) that keeps track of changes made to the wiki. If you're using Git versioning, it's much more convenient to just list the changes from the SCM, instead of the ones maintained in the files (let alone the potential merge conflicts). For Git, !-fitnesse.wiki.fs.GitFileVersionsController-! supports the !-fitnesse.wiki.RecentChanges-! interface, so changes of the repository can be displayed, instead of the ones maintained in the !-RecentChanges-! file.
+By default FitNesse maintains a page ([[!-RecentChanges-!][.RecentChanges]]) that keeps track of changes made to the wiki. If you're using Git versioning, it's much more convenient to just list the changes from the SCM, instead of the ones maintained in the files (let alone the potential merge conflicts). For Git, !-fitnesse.wiki.fs.GitFileVersionsController-! supports the !-fitnesse.wiki.RecentChanges-! interface, so changes of the repository can be displayed, instead of the ones maintained in the !-RecentChanges-! file.
 
 !3 Responders
 ''required property:'' '''!-Responders-! = <key:class name>[,<key:class name>]'''
 
 ''motivation:'' Allows functional customization.  With this plugin you can customize the way FitNesse responds to HTTP requests.
 
-The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to generate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the .RecentChanges page.
+The property provided should be a comma separated list of key:value pairs, where value is the name of a class that implements ''fitnesse.Responder''.  The key is used in the URL to designate which responder to invoke.  An example responder plugin might be an !-RssResponder-! that would generate RSS feeds for wiki page updates.  To do this you would first create the !-RssResponder-! to generate the RSS.  Then add the plugin property !style_code[''!-Responders=rss:your.package.RssResponder-!''].  Then to invoke it you would use a URL like !style_code(''!-http://fitnesse.org/RecentChanges?responder=rss-!'') to get a feed on all the changes made to the [[!-RecentChanges-!][.RecentChanges]] page.
 
 !4 Disabled Responder
 The !-DisabledResponder-! is provided as a way to turn off at a very deep level other responders.  Using the Responders property in the !style_code(plugins.properties), you can disable any existing responder by defining it to use the !-DisabledResponder-! instead.  For example, the following line, will disable the addChild and new responders.
@@ -151,6 +144,8 @@ In case there are situations where you can not get your tests working with the d
 
 ''motivation:'' Register multiple Responders, symbol types, !-WikiPage-! factories, test systems, Slim tables or comparators from a single Java class, instead of multiple entries in plugins.properties.
 
+Please also have a look at the page on WritingPlugins. It provides an alternative (simpler) way to register plugins by using the Java Service loader facility.
+
 Plugins classes can provide one or more of the following methods to register components:
 
  * '''registerResponders(!-ResponderFactory-! responderFactory)''' - register responders using ''!-ResponderFactory.addResponder(String key, Class responderClass)-!''
@@ -165,3 +160,15 @@ Plugins are instantiated by FitNesse's !-ComponentFactory-!. By doing so they 
  * Plugin(!-ComponentFactory-! componentFactory)
  * Plugin(Properties properties)
  * Plugin()
+
+!1 Other properties
+
+There are more properties which can be used to tweak parts of FitNesse:
+
+ * '''newpage.default.content''' - default page content for an empty page, in case you're not creating a new page based on a template page.
+ * '''VersionsController.days''' - number of days to keep old page versions around when using the Zip file based versions controller.
+ * '''test.history.days''' - The number of days to keep test results around. Cleaned up after a new test run.
+ * '''test.history.path''' - Location to store the test results. The default location is ''!-FitNesseRoot-!/files/testResults''.
+ * Any variable that can be defined on a wiki page.
+
+The Slim test system has a set of [[custom properties][<UserGuide.WritingAcceptanceTests.SliM]] that can either be set on a page or in the configuration file.

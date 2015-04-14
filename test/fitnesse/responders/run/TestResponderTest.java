@@ -147,6 +147,7 @@ public class TestResponderTest {
 
     String errorLogContent = getExecutionLog();
     assertNotSubString("Exception", errorLogContent);
+    assertSubString("No execution log available.", errorLogContent);
   }
 
   @Test
@@ -251,7 +252,7 @@ public class TestResponderTest {
   @Test
   public void testResultsIncludeActions() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<nav>", results);
+    assertSubString("<nav", results);
   }
 
   @Test

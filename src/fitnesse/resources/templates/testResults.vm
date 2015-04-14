@@ -5,12 +5,12 @@
   #foreach ($result in $response.Results)
   <result>
     <counts>
-      <right>$result.Right</right>
-      <wrong>$result.Wrong</wrong>
-      <ignores>$result.Ignores</ignores>
-      <exceptions>$result.Exceptions</exceptions>
+      <right>$!result.right</right>
+      <wrong>$!result.wrong</wrong>
+      <ignores>$!result.ignores</ignores>
+      <exceptions>$!result.exceptions</exceptions>
     </counts>
-    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
+   <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
     <content>#escape($result.Content)</content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)

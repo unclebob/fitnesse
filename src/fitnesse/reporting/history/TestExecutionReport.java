@@ -178,12 +178,20 @@ public class TestExecutionReport extends ExecutionReport {
     }
 
     public TestSummary getTestSummary() {
-      return new TestSummary(
-        Integer.parseInt(right),
-        Integer.parseInt(wrong),
-        Integer.parseInt(ignores),
-        Integer.parseInt(exceptions)
-      );
+      try {
+        return new TestSummary(
+                Integer.parseInt(right),
+                Integer.parseInt(wrong),
+                Integer.parseInt(ignores),
+                Integer.parseInt(exceptions)
+        );
+      } catch (NumberFormatException e) {
+        return new TestSummary();
+      }
+    }
+
+    public void addInstruction(InstructionResult instructionResult) {
+      instructions.add(instructionResult);
     }
   }
 

@@ -13,6 +13,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
+import java.util.Properties;
 
 public class PurgeHistoryResponderTest {
   private File resultsDirectory;
@@ -27,8 +28,9 @@ public class PurgeHistoryResponderTest {
     removeResultsDirectory();
     resultsDirectory.mkdir();
     responder = new PurgeHistoryResponder();
-    responder.setResultsDirectory(resultsDirectory);
-    context = FitNesseUtil.makeTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    context = FitNesseUtil.makeTestContext(properties);
     request = new MockRequest();
     request.setResource("TestPage");
   }
@@ -72,7 +74,7 @@ public class PurgeHistoryResponderTest {
     public int daysDeleted = -1;
 
     @Override
-    public void deleteTestHistoryOlderThanDays(int days) {
+    public void deleteTestHistoryOlderThanDays(File resultsDirectory, int days) {
       daysDeleted = days;
     }
   }

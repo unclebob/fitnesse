@@ -28,7 +28,7 @@ public class MemoryFileSystem implements FileSystem {
     public void makeFile(File file, InputStream content) throws IOException {
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       FileUtil.copyBytes(content, buf);
-      makeFile(file, buf.toString("UTF-8"));
+      makeFile(file, buf.toString(FileUtil.CHARENCODING));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream getInputStream(File file) throws IOException {
-    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes("UTF-8"));
+    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes(FileUtil.CHARENCODING));
   }
 
   @Override

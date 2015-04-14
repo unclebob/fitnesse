@@ -4,6 +4,7 @@ package fitnesse.http;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.util.Base64;
+import util.FileUtil;
 import util.StreamReader;
 
 import java.io.*;
@@ -298,7 +299,7 @@ public class Request {
 
   public static String decodeContent(String content) {
     try {
-      return URLDecoder.decode(content, "UTF-8");
+      return URLDecoder.decode(content, FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       return "URLDecoder Error";
     }

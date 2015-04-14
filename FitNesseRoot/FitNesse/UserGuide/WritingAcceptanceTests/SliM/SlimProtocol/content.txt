@@ -1,4 +1,7 @@
 !2 The Slim Protocol, version 0.4
+
+!-FitNesse-! communicates with Slim over a socket (see >PortManagement).  When you hit the ''Test'' button, !-FitNesse-! starts up a !-SlimServer-! process by issuing the appropriate command line.  !-FitNesse-! then sends a list of instructions to the !-SlimServer-!, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
+
 {{{
              instruction list
   +----------+    o--->     +------------+      +----------+       +-----+
@@ -6,8 +9,6 @@
   +----------+    <---o     +------------+      +----------+       +-----+
                response list
 }}}
-
-!-FitNesse-! communicates with Slim over a socket (see >PortManagement).  When you hit the ''Test'' button, !-FitNesse-! starts up a !-SlimServer-! process by issuing the appropriate command line.  !-FitNesse-! then sends a list of instructions to the !-SlimServer-!, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
 
 Each instruction in the list is itself a list of strings.  Here is a typical instruction list:{{{
       [
@@ -127,9 +128,12 @@ There are some standard exception messages that every Slim implementation should
 | NO_INSTANCE ''<instance name>'' | Where ''<instance name>'' is the name of the missing instance. |
 | NO_CLASS ''<some class>'' | Where ''<some class>'' is the class that could not be found. |
 | MALFORMED_INSTRUCTION [''instruction list''] | Where ''instruction list'' is a comma separated list of the instruction strings. |
+| TIMED_OUT ''<n>'' | The instruction timed out after ''<n>'' seconds. To enforce timeouts, set the ''-s xx'' flag (via the ''slim.flags'' variable) |
 
-!4 Aborting a Test
+!4 Aborting a Test 
 If a fixture throws an exception with a ''class'' name that contains "!style_code(!-StopTest-!)", then Slim should stop executing the instructions in the current batch, and return immediately.   The response for this type of exception should be "!style_code(__EXCEPTION__:ABORT_SLIM_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
+To abort the test suite (stop execution directly), throw an exception with a class name that contains "!style_code(!-StopSuite-!)". The syntax is identical to !-StopTest-!.
 
 !3 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.

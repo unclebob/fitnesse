@@ -58,7 +58,7 @@ public class EditResponderTest {
     
     assertSubString("type=\"submit\"", body);
     assertSubString("textarea", body);
-    assertSubString("<h5> Edit Page tags</h5>", body);
+    assertSubString("<label for=\"suites\">Tags:</label>", body);
   }
 
   private SimpleResponse makeResponse() {

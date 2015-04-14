@@ -22,6 +22,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.fs.FileVersion;
+import util.FileUtil;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
@@ -32,7 +33,7 @@ public class UploadResponder implements SecureResponder {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
 
-    String resource = URLDecoder.decode(request.getResource(), "UTF-8");
+    String resource = URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING);
     final UploadedFile uploadedFile = request.getUploadedFile("file");
     final String user = request.getAuthorizationUsername();
 

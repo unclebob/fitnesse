@@ -20,6 +20,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   private final CommandRunningFitClient client;
   private Deque<TestPage> processingQueue = new LinkedList<TestPage>();
   private TestPage currentTestPage;
+  private boolean testSystemIsStopped;
 
   public FitTestSystem(String testSystemName, CommandRunningFitClient fitClient) {
     this.testSystemListener = new CompositeTestSystemListener();
@@ -60,9 +61,12 @@ public class FitTestSystem implements TestSystem, FitClientListener {
 
   @Override
   public void bye() throws IOException, InterruptedException {
-    client.done();
-    client.join();
-    testSystemStopped(null);
+    try {
+      client.done();
+      client.join();
+    } finally {
+      testSystemStopped(null);
+    }
   }
 
   @Override
@@ -105,6 +109,8 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   private void testSystemStopped(Throwable throwable) {
+    if (testSystemIsStopped) return;
+    testSystemIsStopped = true;
     testSystemListener.testSystemStopped(this, throwable);
   }
 
