@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
@@ -12,15 +13,29 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiTestPage> {
+import java.io.IOException;
+
+public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiTestPage>, TestsRunnerListener {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
+  private int totalNumberOfTests;
+  private int completedTests;
   private Throwable firstFailure;
 
   public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
     this.notifier = notifier;
     this.mainClass = mainClass;
+  }
+
+  @Override
+  public void announceNumberTestsToRun(int testsToRun) {
+    totalNumberOfTests = testsToRun;
+  }
+
+  @Override
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
+    notifyOfTestSystemException(testSystemName, cause);
   }
 
   @Override
@@ -33,6 +48,7 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
+    completedTests++;
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
     } else if (test.isTestPage()) {
@@ -65,8 +81,20 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    if (cause != null) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), cause));
+    notifyOfTestSystemException(testSystem.getName(), cause);
+  }
+
+  protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
+    Throwable t = cause;
+    if (completedTests != totalNumberOfTests) {
+      String msg = String.format(
+                            "Unable to complete suite. Error in test system %s. Completed %s of %s tests.",
+                            testSystemName, completedTests, totalNumberOfTests);
+      t = new Exception(msg, cause);
+    }
+
+    if (t != null) {
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), t));
     }
   }
 
