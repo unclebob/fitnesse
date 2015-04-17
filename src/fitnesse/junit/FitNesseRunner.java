@@ -362,8 +362,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(pages);
-    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
-    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
+    addTestSystemListeners(notifier, testRunner);
+    addExecutionLogListener(notifier, testRunner);
     try {
       executeTests(testRunner);
     } catch (AssertionError e) {
@@ -371,6 +371,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     } catch (Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
     }
+  }
+
+  protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner) {
+    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
+  }
+
+  protected void addExecutionLogListener(RunNotifier notifier, MultipleTestsRunner testRunner) {
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
   }
 
   protected List<WikiPage> initChildren() {
