@@ -65,6 +65,9 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    if (cause != null) {
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), cause));
+    }
   }
 
   private Description descriptionFor(WikiTestPage test) {
