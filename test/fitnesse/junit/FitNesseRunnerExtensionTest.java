@@ -24,8 +24,8 @@ public class FitNesseRunnerExtensionTest {
     }
 
     @Override
-    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner) {
-      testRunner.addTestSystemListener(new ListenerExtension(notifier, getTestClass().getJavaClass()));
+    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
+      testRunner.addTestSystemListener(new ListenerExtension(notifier, suiteClass));
     }
 
     @Override
