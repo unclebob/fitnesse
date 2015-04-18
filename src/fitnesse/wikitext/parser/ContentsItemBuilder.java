@@ -75,6 +75,13 @@ public class ContentsItemBuilder {
     private String buildBody(SourcePage page) {
         String itemText = page.getName();
 
+        if (hasOption("-t", Contents.SHOW_TITLES_IN_TOC)) {
+            String title = page.getFirstTitle();
+            if ((title != null) && (title.length() > 0)) {
+                itemText = title;
+            }
+        }
+
         if (hasOption("-g", Contents.REGRACE_TOC)) {
             //todo: DRY? see wikiwordbuilder
             itemText = GracefulNamer.regrace(itemText);

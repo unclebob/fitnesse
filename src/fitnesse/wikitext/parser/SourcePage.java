@@ -8,6 +8,7 @@ public interface SourcePage extends Comparable<SourcePage> {
     String getPath();
     String getFullPath();
     String getContent();
+    String getFirstTitle();
     boolean targetExists(String wikiWordPath);
     String makeFullPathOfTarget(String wikiWordPath);
     String findParentPath(String targetName);

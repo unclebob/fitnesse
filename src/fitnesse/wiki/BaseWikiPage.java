@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.CompositeVariableSource;
 import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.FirstTitleTranslator;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -37,6 +38,13 @@ public abstract class BaseWikiPage implements WikiPage, WikitextPage {
   @Override
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String getFirstTitle() {
+    FirstTitleTranslator translator = new FirstTitleTranslator(new WikiSourcePage(this), getParsingPage());
+    translator.translateTree(getSyntaxTree());
+    return translator.getFirstTitle();
   }
 
   @Override
