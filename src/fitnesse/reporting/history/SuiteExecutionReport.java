@@ -160,6 +160,14 @@ public class SuiteExecutionReport extends ExecutionReport {
       return PathParser.parse(pageName).last();
     }
 
+    public String getPath() {
+        return PathParser.parse(pageName).parentPath().toString();
+      }
+    
+    public String subtractFromFront(String operand){
+    	return  PathParser.parse(pageName).parentPath().subtractFromFront(PathParser.parse(operand)).toString();
+    }
+    
     public long getTime() {
       return time;
     }
