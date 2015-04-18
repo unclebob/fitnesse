@@ -112,6 +112,18 @@ public class FitNesseMainTest {
     assertThat(output, containsString("fitnesse.authentication.OneUserAuthenticator"));
   }
 
+  @Test(expected = Exception.class)
+  public void runningCommandWithNonExistentAddressResultsInError() throws Exception {
+    String[] args = {"-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.NonExistentTestCase?test"};
+    Arguments arguments = new Arguments(args);
+    try {
+        Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    } catch (Exception e){
+        assertEquals("error loading page: 404", e.getMessage());
+        throw e;
+    }
+  }
+
   @Test
   public void systemPropertiesTakePrecedenceOverConfiguredProperties() throws Exception {
     final String configFileName = "systemPropertiesTakePrecedenceOverConfiguredProperties.properties";
