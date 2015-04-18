@@ -157,30 +157,6 @@ public class WikiPagePathTest {
   }
 
   @Test
-  public void testCompareToWithRealWorldNames() throws Exception {
-	  //if a suite name is a substring of another suite name the order must still be correct
-	    WikiPagePath a = PathParser.parse("SuiteExecution.ExecutionLogOfSuitePage");
-	    WikiPagePath b = PathParser.parse("SuiteExecution.SuiteExecutionCleansUpHistory");
-	    WikiPagePath c = PathParser.parse("SuiteExecutionLog.ExecutionLogOfSuitePage");
-
-	    assertTrue(a.compareTo(b) < 0);    // a < b
-	    assertTrue(a.compareTo(c) < 0);    // a < b
-	    assertTrue(b.compareTo(c) < 0);    // a < b
-	    /*
-	     * The join must add a separator (dot) between the path parts to sort names as the below correctly
-	    SuiteExecution.ExecutionLogOfSuitePage
-	    SuiteExecution.SuiteExecutionCleansUpHistory 
-	    SuiteExecutionLog.ExecutionLogOfSuitePage
-	    SuiteExecutionLog.ExecutionLogOfTestPage
-	     * The order below would result without the separator.
-	    SuiteExecution.ExecutionLogOfSuitePage
-	    SuiteExecutionLog.ExecutionLogOfSuitePage
-	    SuiteExecutionLog.ExecutionLogOfTestPage
-	    SuiteExecution.SuiteExecutionCleansUpHistory 
-	    */
-	  }
-  
-  @Test
   public void testMakeAbsolute() throws Exception {
     WikiPagePath p = PathParser.parse("PathOne");
     p.makeAbsolute();
