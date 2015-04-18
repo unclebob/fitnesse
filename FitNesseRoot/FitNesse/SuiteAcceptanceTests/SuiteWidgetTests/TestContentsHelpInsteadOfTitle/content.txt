@@ -42,9 +42,7 @@
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|a href="ParentPage.FirstChild"[\s\w="]+>First Child's help</a|true|
-|contents|span class="pageHelp">: FirstChild</span|true|
 |contents|a href="ParentPage.SecondChild"[\s\w="]+>Second Child's help</a|true|
-|contents|span class="pageHelp">: SecondChild</span|true|
 #-------------------------------------------------
 !3 Implicitly Request Help Text Suffix via Variable
 '''First create the parent page.'''
@@ -67,6 +65,4 @@
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|a href="ParentPage.FirstChild"[\s\w="]+>First Child's help</a|true|
-|contents|span class="pageHelp">: FirstChild</span|true|
 |contents|a href="ParentPage.SecondChild"[\s\w="]+>Second Child's help</a|true|
-|contents|span class="pageHelp">: SecondChild</span|true|
