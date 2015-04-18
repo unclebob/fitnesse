@@ -67,7 +67,6 @@ public class ContentsItemBuilder {
             }
             else if (hasOption("-H", Contents.HELP_INSTEAD_OF_TITLE_TOC)) {
                 link.use(help);
-                listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + buildBody(page)));
             }
             else {
                 link.addAttribute("title", help);
