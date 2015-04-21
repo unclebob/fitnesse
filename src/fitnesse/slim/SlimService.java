@@ -55,6 +55,7 @@ public class SlimService {
     if (options != null) {
     	try{
     		startWithFactory(createJavaSlimFactory(options), options);
+		System.exit(0);
     	}catch (Exception e){
     		e.printStackTrace();
     		System.out.println("Exiting as exception occured: " + e.getMessage());
