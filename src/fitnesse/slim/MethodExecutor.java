@@ -43,7 +43,11 @@ public abstract class MethodExecutor {
     try {
       return interaction.methodInvoke(method, instance, convertedArgs);
     } catch (InvocationTargetException e) {
-      throw e.getCause();
+      if(e.getCause() != null){
+        throw e.getCause();
+      }else{
+        throw e.getTargetException();
+      }
     }
   }
 
