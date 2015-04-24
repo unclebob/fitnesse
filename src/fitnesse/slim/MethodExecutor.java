@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 
 public abstract class MethodExecutor {
   public MethodExecutor() {
@@ -41,7 +42,11 @@ public abstract class MethodExecutor {
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
     FixtureInteraction interaction = SlimService.getInteraction();
     try {
-      return interaction.methodInvoke(method, instance, convertedArgs);
+      if (instance instanceof InteractionAwareFixture) {
+        return ((InteractionAwareFixture) instance).aroundMethodInvoke(interaction, method, convertedArgs);
+      } else {
+        return interaction.methodInvoke(method, instance, convertedArgs);
+      }
     } catch (InvocationTargetException e) {
       if(e.getCause() != null){
         throw e.getCause();
