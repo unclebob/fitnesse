@@ -42,11 +42,17 @@ public abstract class MethodExecutor {
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
     FixtureInteraction interaction = SlimService.getInteraction();
     try {
+      Object result;
       if (instance instanceof InteractionAwareFixture) {
-        return ((InteractionAwareFixture) instance).aroundMethodInvoke(interaction, method, convertedArgs);
+        // invoke via interaction, so it can also do its thing on the aroundMethodInvoke invocation
+        Class<?> clazz = instance.getClass();
+        Method aroundMethod = clazz.getMethod("aroundMethodInvoke", FixtureInteraction.class, Method.class, Object[].class);
+        Object[] args = new Object[] { interaction, method, convertedArgs };
+        result = interaction.methodInvoke(aroundMethod, instance, args);
       } else {
-        return interaction.methodInvoke(method, instance, convertedArgs);
+        result = interaction.methodInvoke(method, instance, convertedArgs);
       }
+      return result;
     } catch (InvocationTargetException e) {
       if(e.getCause() != null){
         throw e.getCause();
