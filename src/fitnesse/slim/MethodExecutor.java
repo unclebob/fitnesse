@@ -46,7 +46,7 @@ public abstract class MethodExecutor {
       if (instance instanceof InteractionAwareFixture) {
         // invoke via interaction, so it can also do its thing on the aroundMethodInvoke invocation
         Class<?> clazz = instance.getClass();
-        Method aroundMethod = clazz.getMethod("aroundMethodInvoke", FixtureInteraction.class, Method.class, Object[].class);
+        Method aroundMethod = clazz.getMethod("aroundSlimInvoke", FixtureInteraction.class, Method.class, Object[].class);
         Object[] args = new Object[] { interaction, method, convertedArgs };
         result = interaction.methodInvoke(aroundMethod, instance, args);
       } else {

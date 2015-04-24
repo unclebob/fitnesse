@@ -23,5 +23,5 @@ public interface InteractionAwareFixture {
    * @throws Exception exception thrown by the method (may be wrapped in an InvocationTargetException,
    * which will be stripped).
    */
-  Object aroundMethodInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Exception;
+  Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Exception;
 }
