@@ -47,7 +47,7 @@ public abstract class MethodExecutor {
         // invoke via interaction, so it can also do its thing on the aroundMethodInvoke invocation
         Class<?> clazz = instance.getClass();
         Method aroundMethod = clazz.getMethod("aroundSlimInvoke", FixtureInteraction.class, Method.class, Object[].class);
-        Object[] args = new Object[] { interaction, method, convertedArgs };
+        Object[] args = { interaction, method, convertedArgs };
         result = interaction.methodInvoke(aroundMethod, instance, args);
       } else {
         result = interaction.methodInvoke(method, instance, convertedArgs);
