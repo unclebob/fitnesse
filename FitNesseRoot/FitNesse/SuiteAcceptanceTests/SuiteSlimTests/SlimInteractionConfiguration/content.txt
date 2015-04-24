@@ -1,7 +1,0 @@
-Test to see whether the slim.flags variable allows us to configure the interaction used by Slim.
-
-
-!define slim.flags {-i fitnesse.slim.fixtureInteraction.ToUpperInteraction}
-
-|script|echo fixture                |
-|check |echo|Hello World|HELLO WORLD|
