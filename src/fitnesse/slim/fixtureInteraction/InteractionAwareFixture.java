@@ -20,8 +20,8 @@ public interface InteractionAwareFixture {
    * @param method the method being invoked.
    * @param arguments the arguments to the method.
    * @return the result of the method.
-   * @throws Exception exception thrown by the method (may be wrapped in an InvocationTargetException,
+   * @throws Throwable exception thrown by the method (may be wrapped in an InvocationTargetException,
    * which will be stripped).
    */
-  Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Exception;
+  Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Throwable;
 }

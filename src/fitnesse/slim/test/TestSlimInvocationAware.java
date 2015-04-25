@@ -11,7 +11,7 @@ public class TestSlimInvocationAware extends TestSlim implements InteractionAwar
   private static final List<String> METHODS = new ArrayList<String>();
 
   @Override
-  public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Exception {
+  public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Throwable {
     METHODS.add(method.getName());
     return interaction.methodInvoke(method, this, arguments);
   }
