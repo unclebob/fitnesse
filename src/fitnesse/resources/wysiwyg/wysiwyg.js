@@ -9,6 +9,13 @@
  ****/
 
 var Wysiwyg = function (textarea, options) {
+    this.codeMirrorEditor = CodeMirror.fromTextArea(textarea, {
+        mode: "fitnesse",
+        lineNumbers: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+
     var self = this;
     var editorMode = Wysiwyg.getEditorMode();
 
@@ -36,9 +43,9 @@ var Wysiwyg = function (textarea, options) {
     // Hide both editors, so the current one gets properly shown:
     textarea.style.display = this.frame.style.display = "none";
 
-    this.textarea.parentNode.insertBefore(this.toggleEditorButtons, this.textarea);
-    this.textarea.parentNode.insertBefore(this.textareaToolbar, this.textarea);
-    this.textarea.parentNode.insertBefore(this.wysiwygToolbar, this.textarea);
+    textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
+    textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
+    textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
 
     document.getElementById("wt-style").parentNode.appendChild(this.menus[0]);
 
@@ -58,7 +65,7 @@ var Wysiwyg = function (textarea, options) {
     self.setupEditorEvents();
     self.setupFormEvent();
     if (exception) {
-        self.textarea.style.display = self.textareaToolbar.style.display = "";
+        self.codeMirrorEditor.getWrapperElement().style.display = self.textareaToolbar.style.display = "";
         self.frame.style.display = self.wysiwygToolbar.style.display = "none";
         alert("Failed to activate the wysiwyg editor.");
         throw exception;
@@ -116,12 +123,12 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
     switch (type) {
     case "textarea":
         return function (event) {
-            var textarea = self.textarea;
-            if (textarea.style.display === "none") {
+            var wrappedElement = self.codeMirrorEditor.getWrapperElement();
+            if (wrappedElement.style.display === "none") {
                 self.hideAllMenus();
                 if (event && !event.initializing) { self.loadWikiText(); }
-                textarea.style.display = "";
-                textarea.setAttribute("tabIndex", "");
+                wrappedElement.style.display = "";
+                wrappedElement.setAttribute("tabIndex", "");
                 self.syncTextAreaHeight();
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
@@ -133,6 +140,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
     case "wysiwyg":
         return function (event) {
             var frame = self.frame;
+            var wrappedElement = self.codeMirrorEditor.getWrapperElement();
             if (frame.style.display === "none") {
                 try {
                     self.loadWysiwygDocument();
@@ -141,8 +149,8 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                     alert("Failed to activate the wysiwyg editor.");
                     throw e;
                 }
-                self.textarea.style.display = "none";
-                self.textarea.setAttribute("tabIndex", "-1");
+                wrappedElement.style.display = "none";
+                wrappedElement.setAttribute("tabIndex", "-1");
                 frame.style.display = self.wysiwygToolbar.style.display = "";
                 frame.setAttribute("tabIndex", "");
                 self.textareaToolbar.style.display = "none";
@@ -154,7 +162,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
 };
 
 Wysiwyg.prototype.activeEditor = function () {
-    return this.textarea.style.display === "none" ? "wysiwyg" : "textarea";
+    return this.codeMirrorEditor.getWrapperElement().style.display === "none" ? "wysiwyg" : "textarea";
 };
 
 Wysiwyg.prototype.isModified = function () {
@@ -169,12 +177,12 @@ Wysiwyg.prototype.setupFormEvent = function () {
             if (self.activeEditor() === "wysiwyg") {
                 var body = self.frame;
                 if (self.isModified()) {
-                    self.textarea.value = self.domToWikitext(body, self.options);
+                    self.codeMirrorEditor.getDoc().setValue(self.domToWikitext(body, self.options));
                 }
             }
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
-                self.textarea.value = formatter.format(self.textarea.value);
+                self.codeMirrorEditor.getDoc().setValue(formatter.format(self.codeMirrorEditor.getDoc().getValue()));
             }
         } catch (e) {
             Wysiwyg.stopEvent(event);
@@ -421,14 +429,15 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
 };
 
 Wysiwyg.prototype.setupTextareaMenuEvents = function () {
-    var textarea = this.textarea;
+    var codeMirror = this.codeMirrorEditor;
+    var codeMirrorDoc = codeMirror.getDoc();
     var container = this.textareaToolbar;
     
     $('#tt-spreadsheet-to-wiki', container).click(function () {
         var translator = new SpreadsheetTranslator();
         translator.parseExcelTable(textarea.value);
-        textarea.value = translator.getFitNesseTables();
-        textarea.focus();
+        codeMirrorDoc.setValue(translator.getFitNesseTables());
+        codeMirror.focus();
     });
     $('#tt-wiki-to-spreadsheet', container).click(function () {
         var selection = textarea.value;
@@ -438,37 +447,37 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         selection = selection.replace(/\|\n/g, '\n');
          // replace all remaining | with \t
         selection = selection.replace(/\|/g, '\t');
-        textarea.value = selection;
-        textarea.focus();
+        codeMirrorDoc.setValue(selection);
+        codeMirror.focus();
     });
 
     $('#tt-format-wiki', container).click(function () {    
         var formatter = new WikiFormatter();
-        textarea.value = formatter.format(textarea.value);
-        textarea.focus();
+        codeMirrorDoc.setValue(formatter.format(codeMirrorDoc.getValue()));
+        codeMirror.focus();
     });
     
     $('#tt-insert-template', container).click(function () {
         var selectedValue = $('#tt-template-map').val();
         var inserter = new TemplateInserter();
-        inserter.insertInto(selectedValue, textarea);
-        textarea.focus();
+        inserter.insertInto(selectedValue, codeMirror);
+        codeMirror.focus();
     });
     
-    function setWrap(wrap) {
-        if (textarea.wrap) {
-            textarea.wrap = wrap ? 'soft' : 'off';
-        } else { // wrap attribute not supported - try Mozilla workaround
-            textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-        }
-        if (wrap) {
-            $(textarea).removeClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "true");
-        } else {
-            $(textarea).addClass('no_wrap');
-            Wysiwyg.setCookie("textwrapon", "false");
-        }
-    }
+//    function setWrap(wrap) {
+//        if (textarea.wrap) {
+//            textarea.wrap = wrap ? 'soft' : 'off';
+//        } else { // wrap attribute not supported - try Mozilla workaround
+//            textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
+//        }
+//        if (wrap) {
+//            $(textarea).removeClass('no_wrap');
+//            Wysiwyg.setCookie("textwrapon", "true");
+//        } else {
+//            $(textarea).addClass('no_wrap');
+//            Wysiwyg.setCookie("textwrapon", "false");
+//        }
+//    }
 
     function setAutoformat(autoformat) {
         if (autoformat) {
@@ -478,18 +487,18 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         }
     }
 
-    $('#tt-wrap-text', container)
-        .change(function () {
-            setWrap($(this).is(':checked'));
-        })
-        .prop('checked', Wysiwyg.getWrapOn())
-        .change();
-    $('#tt-autoformat', container)
-        .change(function () {
-            setAutoformat($(this).is(':checked'));
-        })
-        .prop('checked', Wysiwyg.getAutoformat())
-        .change();
+//    $('#tt-wrap-text', container)
+//        .change(function () {
+//            setWrap($(this).is(':checked'));
+//        })
+//        .prop('checked', Wysiwyg.getWrapOn())
+//        .change();
+//    $('#tt-autoformat', container)
+//        .change(function () {
+//            setAutoformat($(this).is(':checked'));
+//        })
+//        .prop('checked', Wysiwyg.getAutoformat())
+//        .change();
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu) {
@@ -804,7 +813,7 @@ Wysiwyg.prototype.loadWysiwygDocument = function () {
         container.removeChild(tmp);
         tmp = container.lastChild;
     }
-    var fragment = this.wikitextToFragment(this.textarea.value, this.contentDocument, this.options);
+    var fragment = this.wikitextToFragment(this.codeMirrorEditor.getDoc().getValue(), this.contentDocument, this.options);
     container.appendChild(fragment);
     this.savedWysiwygHTML = container.innerHTML;
 };
@@ -822,12 +831,12 @@ Wysiwyg.prototype.focusWysiwyg = function () {
 };
 
 Wysiwyg.prototype.loadWikiText = function () {
-    this.textarea.value = this.domToWikitext(this.frame, this.options);
+    this.codeMirrorEditor.getDoc().setValue(this.domToWikitext(this.frame, this.options));
     this.savedWysiwygHTML = null;
 };
 
 Wysiwyg.prototype.focusTextarea = function () {
-    this.textarea.focus();
+    this.codeMirrorEditor.focus();
     $(window).resize();
 };
 

@@ -131,57 +131,18 @@ $(function () {
   var textArea = $('#editor textarea');
   textArea = textArea[0];
   var codeMirrorEditor = CodeMirror.fromTextArea(textArea, {
-    height: "150px",
     mode: "fitnesse",
     lineNumbers: true,
     foldGutter: true,
     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
   });
-  var wrappedElement = codeMirrorEditor.getWrapperElement();
+  var wrappedElement = $( codeMirrorEditor.getWrapperElement());
     $(window).resize(function () {
       var h = $('#save_buttons').position().top;
       rte.height(h - rte.position().top - 6);
       wrappedElement.height(h - wrappedElement.position().top - 6);
     }).resize();
-  var updateCodeMirror = function() {
-    codeMirrorEditor.getDoc().setValue($("#pageContent")[0].value);
-    codeMirrorEditor.focus();
-  }
 
-  textArea.onpaste = updateCodeMirror;
-  textArea.onchange = updateCodeMirror;
-  textArea.onkeyup = updateCodeMirror;
-  textArea.onfocus = updateCodeMirror;
-
-  textArea.style.height = "0px";
-  textArea.style.width = "0px";
-  textArea.style.margin = "0px";
-  textArea.style.opacity = "0";
-
-  codeMirrorEditor.on("change", function(cm, change) {
-    $("#pageContent")[0].value = codeMirrorEditor.getDoc().getValue();
-  });
-  var editor = editors[0];
-  editor.frame.onshow = function() {
-    console.log("onshow");
-    wrappedElement.style.display = 'none'
-  }
-  var oldFunc = Wysiwyg.setCookie;
-  var updateCodeMirrorVisibility = function(value)
-  {
-    var display = 'none';
-    if (value == "textarea")
-    {
-      display = "";
-    }
-    wrappedElement.style.display = display;
-  }
-  updateCodeMirrorVisibility(Wysiwyg.getEditorMode());
-  Wysiwyg.setCookie = function(key, value)
-  {
-    updateCodeMirrorVisibility(value);
-    oldFunc(key, value);
-  }
 });
 </script>
 
