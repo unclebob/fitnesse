@@ -99,8 +99,11 @@ public abstract class SlimTestSystem implements TestSystem {
     initializeTest();
 
     testStarted(pageToTest);
-    processAllTablesOnPage(pageToTest);
-    testComplete(pageToTest, testContext.getTestSummary());
+    try {
+      processAllTablesOnPage(pageToTest);
+    } finally {
+      testComplete(pageToTest, testContext.getTestSummary());
+    }
   }
 
   @Override

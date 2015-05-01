@@ -7,8 +7,8 @@ import fitnesse.wiki.PathParser;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -63,6 +63,6 @@ public class TestHistoryResponder implements SecureResponder {
   }
 
   public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
+    return new SecureReadOperation();
   }
 }

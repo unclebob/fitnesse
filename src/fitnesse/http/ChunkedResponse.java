@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 
-import util.StreamReader;
-
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
   private int bytesSent = 0;

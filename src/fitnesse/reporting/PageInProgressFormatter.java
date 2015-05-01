@@ -10,6 +10,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.TestSummary;
 import util.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 public class PageInProgressFormatter implements TestSystemListener<WikiTestPage> {
@@ -21,7 +22,7 @@ public class PageInProgressFormatter implements TestSystemListener<WikiTestPage>
   }
 
   public String getLockFileName(WikiTestPage test) {
-    return context.getTestProgressPath() + "/" + test.getVariable("PAGE_PATH") + "." + test.getVariable("PAGE_NAME");
+    return context.getTestProgressPath() + File.separator + test.getVariable("PAGE_PATH") + "." + test.getVariable("PAGE_NAME");
   }
 
   @Override

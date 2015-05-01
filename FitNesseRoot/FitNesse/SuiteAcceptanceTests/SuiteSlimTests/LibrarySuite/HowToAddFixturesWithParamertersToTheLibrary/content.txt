@@ -1,0 +1,24 @@
+!|import           |
+|fitnesse.slim.test|
+
+Create a fixture with constructor parameters.
+You can do further set up by calling more methods of the fixture if required.
+At the end assign the fixture itself to a symbol. 
+
+!|script|test query|2|
+|show   |query       |
+|$tq=   |get fixture |
+
+Negative Test: This must raise an exception as the method query can not be found
+!|script|echo fixture                                |
+|check  |echo |AAA                |AAA               |
+|#check |query|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|
+
+Now add the previously created fixture symbol to the library
+|library|
+|$tq    |
+
+And here we go: We can use the methods of the fixture in any script
+!|script|echo fixture                                |
+|check  |echo |AAA                |AAA               |
+|check  |query|[[[n, 1], [2n, 2]], [[n, 2], [2n, 4]]]|

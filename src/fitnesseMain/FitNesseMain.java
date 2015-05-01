@@ -29,7 +29,13 @@ public class FitNesseMain {
       Arguments.printUsage();
       exit(1);
     }
-    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    Integer exitCode = 0;
+    try {
+        exitCode = new FitNesseMain().launchFitNesse(arguments);
+    } catch (Exception e){
+        e.printStackTrace(System.out);
+        exitCode = 1;
+    }
     if (exitCode != null) {
       exit(exitCode);
     }

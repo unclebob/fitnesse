@@ -98,17 +98,17 @@ public class FitNesseContext {
   public File getTestHistoryDirectory() {
     String testHistoryPath = getProperty("test.history.path");
     if (testHistoryPath == null) {
-      testHistoryPath = String.format("%s/files/%s", getRootPagePath(), testResultsDirectoryName);
+      testHistoryPath = String.format(unifiedPathPattern("%s/files/%s"), getRootPagePath(), testResultsDirectoryName);
     }
     return new File(testHistoryPath);
   }
 
   public String getTestProgressPath() {
-    return String.format("%s/files/testProgress/", getRootPagePath());
+    return String.format(unifiedPathPattern("%s/files/testProgress"), getRootPagePath());
   }
 
   public String getRootPagePath() {
-    return String.format("%s/%s", rootPath, rootDirectoryName);
+    return String.format(unifiedPathPattern("%s/%s"), rootPath, rootDirectoryName);
   }
 
   public Properties getProperties() {
@@ -117,5 +117,10 @@ public class FitNesseContext {
 
   public String getProperty(String name) {
     return variableSource.getProperty(name);
+  }
+  
+  private String unifiedPathPattern(String s)
+  {
+    return s.replace("/",File.separator);
   }
 }

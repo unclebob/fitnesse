@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 public class FileUtil {
 
@@ -31,7 +32,7 @@ public class FileUtil {
   }
 
   public static File createFile(String path, InputStream content) {
-    String[] names = path.split("/");
+    String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
     if (names.length == 1)
       return createFile(new File(path), content);
     else {

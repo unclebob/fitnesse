@@ -1,5 +1,13 @@
+!|script|SystemExitTableConfiguration                 |
+|set system property|prevent.system.exit|to|true|
+
+
 !|SystemExitTable                                        |
 |System exit code|exception message?                     |
 |0               |prevented system exit with exit code 0 |
 |1               |prevented system exit with exit code 1 |
 |42              |prevented system exit with exit code 42|
+
+
+!|script|SystemExitTableConfiguration                |
+|restore original system property|prevent.system.exit  |

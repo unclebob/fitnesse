@@ -98,7 +98,10 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) {
-    super.makeResponse(context, request);
+    Response result = super.makeResponse(context, request);
+    if (result != response){
+        return result;
+    }
     testRunId = runningTestingTracker.generateNextTicket();
     response.addHeader("X-FitNesse-Test-Id", testRunId);
     return response;

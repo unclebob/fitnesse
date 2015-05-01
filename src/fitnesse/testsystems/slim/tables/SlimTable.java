@@ -36,6 +36,7 @@ public abstract class SlimTable {
 
   private String tableName;
   private int instructionNumber = 0;
+  private String fixtureName;
 
   private List<SlimTable> children = new LinkedList<SlimTable>();
   private SlimTable parent = null;
@@ -123,9 +124,15 @@ public abstract class SlimTable {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
+  public void setFixtureName(String name){
+	  fixtureName = name;
+  }
+  
   protected String getFixtureName() {
-    String tableHeader = table.getCellContents(0, 0);
-    String fixtureName = getFixtureName(tableHeader);
+	if (fixtureName == null){  
+      String tableHeader = table.getCellContents(0, 0);
+      fixtureName = getFixtureName(tableHeader);
+	}
     return Disgracer.disgraceClassName(fixtureName);
   }
 
@@ -203,95 +210,6 @@ public abstract class SlimTable {
 
   public void setCustomComparatorRegistry(CustomComparatorRegistry customComparatorRegistry) {
     this.customComparatorRegistry = customComparatorRegistry;
-  }
-
-  static class Disgracer {
-    public boolean capitalizeNextWord;
-    public StringBuffer disgracedName;
-    private String name;
-
-    public Disgracer(String name) {
-      this.name = name;
-    }
-
-    public static String disgraceClassName(String name) {
-      return new Disgracer(name).disgraceClassNameIfNecessary();
-    }
-
-    public static String disgraceMethodName(String name) {
-      return new Disgracer(name).disgraceMethodNameIfNecessary();
-    }
-
-    private String disgraceMethodNameIfNecessary() {
-      if (isGraceful()) {
-        return disgraceMethodName();
-      } else {
-        return name;
-      }
-    }
-
-    private String disgraceMethodName() {
-      capitalizeNextWord = false;
-      return disgraceName();
-    }
-
-    private String disgraceClassNameIfNecessary() {
-      if (nameHasDotsBeforeEnd() || nameHasDollars())
-        return name;
-      else if (isGraceful()) {
-        return disgraceClassName();
-      } else {
-        return name;
-      }
-    }
-
-    private boolean nameHasDollars() {
-      return name.contains("$");
-    }
-
-    private String disgraceClassName() {
-      capitalizeNextWord = true;
-      return disgraceName();
-    }
-
-    private boolean nameHasDotsBeforeEnd() {
-      int dotIndex = name.indexOf(".");
-      return dotIndex != -1 && dotIndex != name.length() - 1;
-    }
-
-    private String disgraceName() {
-      disgracedName = new StringBuffer();
-      for (char c : name.toCharArray())
-        appendCharInProperCase(c);
-
-      return disgracedName.toString();
-    }
-
-    private void appendCharInProperCase(char c) {
-      if (isGraceful(c)) {
-        capitalizeNextWord = true;
-      } else {
-        appendProperlyCapitalized(c);
-      }
-    }
-
-    private void appendProperlyCapitalized(char c) {
-      disgracedName.append(capitalizeNextWord ? toUpperCase(c) : c);
-      capitalizeNextWord = false;
-    }
-
-    private boolean isGraceful() {
-      boolean isGraceful = false;
-      for (char c : name.toCharArray()) {
-        if (isGraceful(c))
-          isGraceful = true;
-      }
-      return isGraceful;
-    }
-
-    private boolean isGraceful(char c) {
-      return !(isLetterOrDigit(c) || c == '_');
-    }
   }
 
   /** SlimExpectation base class for row based expectations. */
