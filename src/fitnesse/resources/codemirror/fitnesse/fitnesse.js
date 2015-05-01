@@ -66,7 +66,7 @@ function findTable(cm, start) {
 function findHeader(cm, start) {
   var maxDepth = 100;
   var firstLine = cm.getLine(start.line);
-  if (!cm.getLine(start.line).match(/!\d.*/))
+  if (!cm.getLine(start.line).match(/!\d .+/))
     return undefined;
   var header = cm.getLine(start.line).substring(0, 2);
   console.log("header" + header);
@@ -81,7 +81,7 @@ function findHeader(cm, start) {
 
   return {
     from: CodeMirror.Pos(start.line, firstLine.length),
-    to: CodeMirror.Pos(end, cm.getLine(end).length - 1)
+    to: CodeMirror.Pos(end, cm.getLine(end).length)
   }
 }
 
@@ -99,7 +99,7 @@ CodeMirror.defineSimpleMode("fitnesse", {
     //Cross Reference
     {regex: /!see [\.\w]+/, token: "link"},
     //Headers
-    {regex: /!\d.*/, token: "header"},
+    {regex: /!\d .+/, token: "header"},
     //Centering
     {regex: /!c/, token: "header"},
     //Note
