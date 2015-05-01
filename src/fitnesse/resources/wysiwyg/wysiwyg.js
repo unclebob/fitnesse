@@ -177,12 +177,12 @@ Wysiwyg.prototype.setupFormEvent = function () {
             if (self.activeEditor() === "wysiwyg") {
                 var body = self.frame;
                 if (self.isModified()) {
-                    self.codeMirrorEditor.getDoc().setValue(self.domToWikitext(body, self.options));
+                    self.codeMirrorEditor.setValue(self.domToWikitext(body, self.options));
                 }
             }
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
-                self.codeMirrorEditor.getDoc().setValue(formatter.format(self.codeMirrorEditor.getDoc().getValue()));
+                self.codeMirrorEditor.setValue(formatter.format(self.codeMirrorEditor.getValue()));
             }
         } catch (e) {
             Wysiwyg.stopEvent(event);
@@ -430,13 +430,12 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
 
 Wysiwyg.prototype.setupTextareaMenuEvents = function () {
     var codeMirror = this.codeMirrorEditor;
-    var codeMirrorDoc = codeMirror.getDoc();
     var container = this.textareaToolbar;
     
     $('#tt-spreadsheet-to-wiki', container).click(function () {
         var translator = new SpreadsheetTranslator();
         translator.parseExcelTable(textarea.value);
-        codeMirrorDoc.setValue(translator.getFitNesseTables());
+        codeMirror.setValue(translator.getFitNesseTables());
         codeMirror.focus();
     });
     $('#tt-wiki-to-spreadsheet', container).click(function () {
@@ -447,13 +446,13 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         selection = selection.replace(/\|\n/g, '\n');
          // replace all remaining | with \t
         selection = selection.replace(/\|/g, '\t');
-        codeMirrorDoc.setValue(selection);
+        codeMirror.setValue(selection);
         codeMirror.focus();
     });
 
     $('#tt-format-wiki', container).click(function () {    
         var formatter = new WikiFormatter();
-        codeMirrorDoc.setValue(formatter.format(codeMirrorDoc.getValue()));
+        codeMirror.setValue(formatter.format(codeMirrorDoc.getValue()));
         codeMirror.focus();
     });
     
@@ -813,7 +812,7 @@ Wysiwyg.prototype.loadWysiwygDocument = function () {
         container.removeChild(tmp);
         tmp = container.lastChild;
     }
-    var fragment = this.wikitextToFragment(this.codeMirrorEditor.getDoc().getValue(), this.contentDocument, this.options);
+    var fragment = this.wikitextToFragment(this.codeMirrorEditor.getValue(), this.contentDocument, this.options);
     container.appendChild(fragment);
     this.savedWysiwygHTML = container.innerHTML;
 };
@@ -831,7 +830,7 @@ Wysiwyg.prototype.focusWysiwyg = function () {
 };
 
 Wysiwyg.prototype.loadWikiText = function () {
-    this.codeMirrorEditor.getDoc().setValue(this.domToWikitext(this.frame, this.options));
+    this.codeMirrorEditor.setValue(this.domToWikitext(this.frame, this.options));
     this.savedWysiwygHTML = null;
 };
 
