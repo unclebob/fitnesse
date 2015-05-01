@@ -86,7 +86,7 @@ function findHeader(cm, start) {
 }
 
 CodeMirror.defineSimpleMode("fitnesse", {
-  // The start state contains the rules that are intially used
+  // Here you can find all markup that Fitnesse uses
   start: [
     //Bold
     {regex: /'''(?:[^\\]|\\.)*?'''/, token: "variable-2"},
@@ -133,6 +133,7 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /!today/, token: "keyword"},
     {regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
      token: "number"},
+     //comment
     {regex: /#.*/, token: "comment"},
   ]
 });
